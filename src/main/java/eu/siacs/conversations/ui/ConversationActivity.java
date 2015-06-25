@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v4.widget.SlidingPaneLayout.PanelSlideListener;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.entities.Blockable;
@@ -752,6 +754,17 @@ public class ConversationActivity extends XmppActivity
 								showInstallPgpDialog();
 							}
 							break;
+						case R.id.encryption_choice_axolotl:
+                            Log.d(Config.LOGTAG, "Trying to enable axolotl...");
+							if(conversation.getAccount().getAxolotlService().isContactAxolotlCapable(conversation.getContact())) {
+                                Log.d(Config.LOGTAG, "Enabled axolotl for Contact " + conversation.getContact().getJid() );
+								conversation.setNextEncryption(Message.ENCRYPTION_AXOLOTL);
+								item.setChecked(true);
+							} else {
+                                Log.d(Config.LOGTAG, "Contact " + conversation.getContact().getJid() + " not axolotl capable!");
+								showAxolotlNoSessionsDialog();
+							}
+                            break;
 						default:
 							conversation.setNextEncryption(Message.ENCRYPTION_NONE);
 							break;
@@ -783,6 +796,11 @@ public class ConversationActivity extends XmppActivity
 				case Message.ENCRYPTION_PGP:
 					popup.getMenu().findItem(R.id.encryption_choice_pgp)
 						.setChecked(true);
+					break;
+				case Message.ENCRYPTION_AXOLOTL:
+                    Log.d(Config.LOGTAG, "Axolotl confirmed. Setting menu item checked!");
+					popup.getMenu().findItem(R.id.encryption_choice_axolotl)
+							.setChecked(true);
 					break;
 				default:
 					popup.getMenu().findItem(R.id.encryption_choice_none)
