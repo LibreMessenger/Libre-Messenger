@@ -660,4 +660,8 @@ public class Message extends AbstractEntity {
 	public boolean isTrusted() {
 		return this.axolotlSession != null && this.axolotlSession.isTrusted();
 	}
+
+	public void setAxolotlSession(AxolotlService.XmppAxolotlSession session) {
+		this.axolotlSession = session;
+	}
 }
