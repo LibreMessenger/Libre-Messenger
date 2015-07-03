@@ -65,7 +65,7 @@ public class FileBackend {
 			extension = "."+parts[parts.length - 1];
 		} else {
 			if (message.getType() == Message.TYPE_IMAGE || message.getType() == Message.TYPE_TEXT) {
-				extension = ".webp";
+				extension = ".jpg";
 			} else {
 				extension = "";
 			}
@@ -211,7 +211,7 @@ public class FileBackend {
 				scaledBitmap = rotate(scaledBitmap, rotation);
 			}
 
-			boolean success = scaledBitmap.compress(Bitmap.CompressFormat.WEBP, 75, os);
+			boolean success = scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 75, os);
 			if (!success) {
 				throw new FileCopyException(R.string.error_compressing_image);
 			}
