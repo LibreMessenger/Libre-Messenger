@@ -64,12 +64,12 @@ public class NotificationService {
 
 	public boolean notify(final Message message) {
 		return (message.getStatus() == Message.STATUS_RECEIVED)
-			&& notificationsEnabled()
-			&& !message.getConversation().isMuted()
-			&& (message.getConversation().getMode() == Conversation.MODE_SINGLE
-					|| conferenceNotificationsEnabled()
-					|| wasHighlightedOrPrivate(message)
-				 );
+				&& notificationsEnabled()
+				&& !message.getConversation().isMuted()
+				&& (message.getConversation().getMode() == Conversation.MODE_SINGLE
+				|| conferenceNotificationsEnabled()
+				|| wasHighlightedOrPrivate(message)
+		);
 	}
 
 	public void notifyPebble(final Message message) {
@@ -121,7 +121,7 @@ public class NotificationService {
 	@SuppressWarnings("deprecation")
 	private boolean isInteractive() {
 		final PowerManager pm = (PowerManager) mXmppConnectionService
-			.getSystemService(Context.POWER_SERVICE);
+				.getSystemService(Context.POWER_SERVICE);
 
 		final boolean isScreenOn;
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
@@ -155,9 +155,7 @@ public class NotificationService {
 				notifications.put(conversationUuid, mList);
 			}
 			final Account account = message.getConversation().getAccount();
-			final boolean doNotify = (!(this.mIsInForeground && this.mOpenConversation == null) || !isScreenOn)
-				&& !account.inGracePeriod()
-				&& !this.inMiniGracePeriod(account);
+			final boolean doNotify = !account.inGracePeriod() && !this.inMiniGracePeriod(account);
 			updateNotification(doNotify);
 			if (doNotify) {
 				notifyPebble(message);
@@ -185,7 +183,7 @@ public class NotificationService {
 
 	private void updateNotification(final boolean notify) {
 		final NotificationManager notificationManager = (NotificationManager) mXmppConnectionService
-			.getSystemService(Context.NOTIFICATION_SERVICE);
+				.getSystemService(Context.NOTIFICATION_SERVICE);
 		final SharedPreferences preferences = mXmppConnectionService.getPreferences();
 
 		final String ringtone = preferences.getString("notification_ringtone", null);
@@ -241,7 +239,7 @@ public class NotificationService {
 				conversation = messages.get(0).getConversation();
 				final String name = conversation.getName();
 				style.addLine(Html.fromHtml("<b>" + name + "</b> "
-							+ UIHelper.getMessagePreview(mXmppConnectionService,messages.get(0)).first));
+						+ UIHelper.getMessagePreview(mXmppConnectionService,messages.get(0)).first));
 				names.append(name);
 				names.append(", ");
 			}
@@ -281,9 +279,9 @@ public class NotificationService {
 						Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ?
 								R.drawable.ic_file_download_white_24dp : R.drawable.ic_action_download,
 						mXmppConnectionService.getResources().getString(R.string.download_x_file,
-							UIHelper.getFileDescriptionString(mXmppConnectionService, message)),
+								UIHelper.getFileDescriptionString(mXmppConnectionService, message)),
 						createDownloadIntent(message)
-						);
+				);
 			}
 			if ((message = getFirstLocationMessage(messages)) != null) {
 				mBuilder.addAction(R.drawable.ic_room_white_24dp,
@@ -296,16 +294,16 @@ public class NotificationService {
 	}
 
 	private void modifyForImage(final Builder builder, final Message message,
-			final ArrayList<Message> messages, final boolean notify) {
+								final ArrayList<Message> messages, final boolean notify) {
 		try {
 			final Bitmap bitmap = mXmppConnectionService.getFileBackend()
-				.getThumbnail(message, getPixel(288), false);
+					.getThumbnail(message, getPixel(288), false);
 			final ArrayList<Message> tmp = new ArrayList<>();
 			for (final Message msg : messages) {
 				if (msg.getType() == Message.TYPE_TEXT
 						&& msg.getDownloadable() == null) {
 					tmp.add(msg);
-						}
+				}
 			}
 			final BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
 			bigPictureStyle.bigPicture(bitmap);
@@ -324,7 +322,7 @@ public class NotificationService {
 	}
 
 	private void modifyForTextOnly(final Builder builder,
-			final ArrayList<Message> messages, final boolean notify) {
+								   final ArrayList<Message> messages, final boolean notify) {
 		builder.setStyle(new NotificationCompat.BigTextStyle().bigText(getMergedBodies(messages)));
 		builder.setContentText(UIHelper.getMessagePreview(mXmppConnectionService,messages.get(0)).first);
 		if (notify) {
@@ -338,7 +336,7 @@ public class NotificationService {
 					&& message.getDownloadable() == null
 					&& message.getEncryption() != Message.ENCRYPTION_PGP) {
 				return message;
-					}
+			}
 		}
 		return null;
 	}
@@ -385,7 +383,7 @@ public class NotificationService {
 
 	private PendingIntent createContentIntent(final String conversationUuid, final String downloadMessageUuid) {
 		final TaskStackBuilder stackBuilder = TaskStackBuilder
-			.create(mXmppConnectionService);
+				.create(mXmppConnectionService);
 		stackBuilder.addParentStack(ConversationActivity.class);
 
 		final Intent viewConversationIntent = new Intent(mXmppConnectionService,
@@ -439,7 +437,7 @@ public class NotificationService {
 	private PendingIntent createDisableAccountIntent(final Account account) {
 		final Intent intent = new Intent(mXmppConnectionService,XmppConnectionService.class);
 		intent.setAction(XmppConnectionService.ACTION_DISABLE_ACCOUNT);
-		intent.putExtra("account",account.getJid().toBareJid().toString());
+		intent.putExtra("account", account.getJid().toBareJid().toString());
 		return PendingIntent.getService(mXmppConnectionService,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
 	}
 
@@ -473,7 +471,7 @@ public class NotificationService {
 
 	private int getPixel(final int dp) {
 		final DisplayMetrics metrics = mXmppConnectionService.getResources()
-			.getDisplayMetrics();
+				.getDisplayMetrics();
 		return ((int) (dp * metrics.density));
 	}
 
@@ -483,7 +481,7 @@ public class NotificationService {
 
 	private boolean inMiniGracePeriod(final Account account) {
 		final int miniGrace = account.getStatus() == Account.State.ONLINE ? Config.MINI_GRACE_PERIOD
-			: Config.MINI_GRACE_PERIOD * 2;
+				: Config.MINI_GRACE_PERIOD * 2;
 		return SystemClock.elapsedRealtime() < (this.mLastNotification + miniGrace);
 	}
 
