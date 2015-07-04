@@ -13,7 +13,9 @@
         android:layout_height="48dp"
         android:layout_alignParentLeft="true"
         android:src="@drawable/ic_profile"
-        android:contentDescription="@string/account_image_description">
+        android:contentDescription="@string/account_image_description"
+        android:background="@drawable/message_border"
+        android:padding="1dp">
     </ImageView>
 
     <LinearLayout

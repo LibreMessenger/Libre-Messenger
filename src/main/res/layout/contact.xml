@@ -7,11 +7,13 @@
 
     <ImageView
         android:id="@+id/contact_photo"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_alignParentLeft="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_profile" >
+        android:src="@drawable/ic_profile"
+        android:background="@drawable/message_border"
+        android:padding="1dp">
     </ImageView>
 
     <LinearLayout

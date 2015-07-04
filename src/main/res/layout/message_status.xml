@@ -15,9 +15,10 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginRight="-1.5dp"
-        android:padding="0dp"
+        android:padding="1dp"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_profile" />
+        android:src="@drawable/ic_profile"
+        android:background="@drawable/message_border" />
 
     <TextView
         android:id="@+id/status_message"

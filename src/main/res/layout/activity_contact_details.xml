@@ -26,7 +26,8 @@
                 android:scaleType="centerCrop"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                />
+                android:background="@drawable/message_border"
+                android:padding="1dp" />
 
             <LinearLayout
                 android:id="@+id/details_jidbox"
