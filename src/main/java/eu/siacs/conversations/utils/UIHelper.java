@@ -222,7 +222,12 @@ public class UIHelper {
 	public static String getMessageDisplayName(final Message message) {
 		if (message.getStatus() == Message.STATUS_RECEIVED) {
 			if (message.getConversation().getMode() == Conversation.MODE_MULTI) {
-				return getDisplayedMucCounterpart(message.getCounterpart());
+				final Contact contact = message.getContact();
+				if (message.getContact() != null) {
+					return contact != null ? contact.getDisplayName() : "";
+				} else {
+					return getDisplayedMucCounterpart(message.getCounterpart());
+				}
 			} else {
 				final Contact contact = message.getContact();
 				return contact != null ? contact.getDisplayName() : "";
