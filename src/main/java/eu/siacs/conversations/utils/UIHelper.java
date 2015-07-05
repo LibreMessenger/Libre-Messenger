@@ -221,15 +221,14 @@ public class UIHelper {
 
 	public static String getMessageDisplayName(final Message message) {
 		if (message.getStatus() == Message.STATUS_RECEIVED) {
+			final Contact contact = message.getContact();
 			if (message.getConversation().getMode() == Conversation.MODE_MULTI) {
-				final Contact contact = message.getContact();
-				if (message.getContact() != null) {
-					return contact != null ? contact.getDisplayName() : "";
+				if (contact != null) {
+					return contact.getDisplayName();
 				} else {
 					return getDisplayedMucCounterpart(message.getCounterpart());
 				}
 			} else {
-				final Contact contact = message.getContact();
 				return contact != null ? contact.getDisplayName() : "";
 			}
 		} else {
