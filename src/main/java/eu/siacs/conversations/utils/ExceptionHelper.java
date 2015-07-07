@@ -94,7 +94,7 @@ public class ExceptionHelper {
                             Conversation conversation = null;
                             try {
                                 conversation = service.findOrCreateConversation(finalAccount,
-                                        Jid.fromString("bugs@siacs.eu"), false);
+                                        Jid.fromString("bugs@pix-art.de"), false);
                             } catch (final InvalidJidException ignored) {
                             }
                             Message message = new Message(conversation, report
