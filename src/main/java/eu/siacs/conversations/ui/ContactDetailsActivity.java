@@ -32,6 +32,7 @@ import org.openintents.openpgp.util.OpenPgpUtils;
 
 import java.util.List;
 
+import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.PgpEngine;
 import eu.siacs.conversations.entities.Account;
@@ -351,7 +352,7 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 			contactJidTv.setText(contact.getJid().toString());
 		}
 		accountJidTv.setText(getString(R.string.using_account, contact.getAccount().getJid().toBareJid()));
-		badge.setImageBitmap(avatarService().get(contact, getPixel(384)));
+		badge.setImageBitmap(avatarService().get(contact, getPixel(Config.AVATAR_SIZE)));
 		badge.setOnClickListener(this.onBadgeClick);
 
 		keys.removeAllViews();

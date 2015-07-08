@@ -445,14 +445,14 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 		} else if (type == RECEIVED) {
 			Contact contact = message.getContact();
 			if (contact != null) {
-				viewHolder.contact_picture.setImageBitmap(activity.avatarService().get(contact, activity.getPixel(48)));
+				viewHolder.contact_picture.setImageBitmap(activity.avatarService().get(contact, activity.getPixel(56)));
 			} else if (conversation.getMode() == Conversation.MODE_MULTI) {
 				viewHolder.contact_picture.setImageBitmap(activity.avatarService().get(
 						UIHelper.getMessageDisplayName(message),
-						activity.getPixel(48)));
+						activity.getPixel(56)));
 			}
 		} else if (type == SENT) {
-			viewHolder.contact_picture.setImageBitmap(activity.avatarService().get(account, activity.getPixel(48)));
+			viewHolder.contact_picture.setImageBitmap(activity.avatarService().get(account, activity.getPixel(56)));
 		}
 
 		viewHolder.contact_picture

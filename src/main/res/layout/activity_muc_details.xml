@@ -37,12 +37,13 @@
 
 				<ImageView
 					android:id="@+id/your_photo"
-					android:layout_width="48dp"
-					android:layout_height="48dp"
+					android:layout_width="72dp"
+					android:layout_height="72dp"
 					android:layout_alignParentLeft="true"
 					android:src="@drawable/ic_profile"
 					android:background="@drawable/message_border"
-					android:padding="1dp">
+					android:padding="1dp"
+					android:layout_alignParentEnd="false">
 				</ImageView>
 
 				<LinearLayout
