@@ -351,7 +351,7 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 			contactJidTv.setText(contact.getJid().toString());
 		}
 		accountJidTv.setText(getString(R.string.using_account, contact.getAccount().getJid().toBareJid()));
-		badge.setImageBitmap(avatarService().get(contact, getPixel(72)));
+		badge.setImageBitmap(avatarService().get(contact, getPixel(384)));
 		badge.setOnClickListener(this.onBadgeClick);
 
 		keys.removeAllViews();
