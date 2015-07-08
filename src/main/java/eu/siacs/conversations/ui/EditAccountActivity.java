@@ -23,6 +23,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.services.XmppConnectionService.OnAccountUpdate;
@@ -424,7 +425,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		this.mPassword.setText(this.mAccount.getPassword());
 		if (this.jidToEdit != null) {
 			this.mAvatar.setVisibility(View.VISIBLE);
-			this.mAvatar.setImageBitmap(avatarService().get(this.mAccount, getPixel(72)));
+			this.mAvatar.setImageBitmap(avatarService().get(this.mAccount, getPixel(Config.AVATAR_SIZE)));
 		}
 		if (this.mAccount.isOptionSet(Account.OPTION_REGISTER)) {
 			this.mRegisterNew.setVisibility(View.VISIBLE);

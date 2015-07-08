@@ -37,7 +37,7 @@ public class AccountAdapter extends ArrayAdapter<Account> {
 		jid.setText(account.getJid().toBareJid().toString());
 		TextView statusView = (TextView) view.findViewById(R.id.account_status);
 		ImageView imageView = (ImageView) view.findViewById(R.id.account_image);
-		imageView.setImageBitmap(activity.avatarService().get(account, activity.getPixel(48)));
+		imageView.setImageBitmap(activity.avatarService().get(account, activity.getPixel(56)));
 		statusView.setText(getContext().getString(account.getStatus().getReadableId()));
 		switch (account.getStatus()) {
 			case ONLINE:

@@ -406,7 +406,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 		final User self = mucOptions.getSelf();
 		mAccountJid.setText(getString(R.string.using_account, mConversation
 					.getAccount().getJid().toBareJid()));
-		mYourPhoto.setImageBitmap(avatarService().get(mConversation.getAccount(), getPixel(48)));
+		mYourPhoto.setImageBitmap(avatarService().get(mConversation.getAccount(), getPixel(56)));
 		setTitle(mConversation.getName());
 		mFullJid.setText(mConversation.getJid().toBareJid().toString());
 		mYourNick.setText(mucOptions.getActualNick());
@@ -469,11 +469,11 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 			Bitmap bm;
 			Contact contact = user.getContact();
 			if (contact != null) {
-				bm = avatarService().get(contact, getPixel(48));
+				bm = avatarService().get(contact, getPixel(56));
 				tvDisplayName.setText(contact.getDisplayName());
 				tvStatus.setText(user.getName() + " \u2022 " + getStatus(user));
 			} else {
-				bm = avatarService().get(user.getName(), getPixel(48));
+				bm = avatarService().get(user.getName(), getPixel(56));
 				tvDisplayName.setText(user.getName());
 				tvStatus.setText(getStatus(user));
 
