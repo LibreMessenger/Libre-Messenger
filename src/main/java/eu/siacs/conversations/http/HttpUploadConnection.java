@@ -10,9 +10,11 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.entities.Account;
-import eu.siacs.conversations.entities.Downloadable;
+import eu.siacs.conversations.entities.Transferable;
 import eu.siacs.conversations.entities.DownloadableFile;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.persistance.FileBackend;
@@ -25,7 +27,7 @@ import eu.siacs.conversations.xmpp.OnIqPacketReceived;
 import eu.siacs.conversations.xmpp.jid.Jid;
 import eu.siacs.conversations.xmpp.stanzas.IqPacket;
 
-public class HttpUploadConnection implements Downloadable {
+public class HttpUploadConnection implements Transferable {
 
 	private HttpConnectionManager mHttpConnectionManager;
 	private XmppConnectionService mXmppConnectionService;
@@ -74,13 +76,13 @@ public class HttpUploadConnection implements Downloadable {
 
 	private void fail() {
 		mHttpConnectionManager.finishUploadConnection(this);
-		message.setDownloadable(null);
+		message.setTransferable(null);
 		mXmppConnectionService.markMessage(message,Message.STATUS_SEND_FAILED);
 	}
 
 	public void init(Message message) {
 		this.message = message;
-		message.setDownloadable(this);
+		message.setTransferable(this);
 		mXmppConnectionService.markMessage(message,Message.STATUS_UNSEND);
 		this.account = message.getConversation().getAccount();
 		this.file = mXmppConnectionService.getFileBackend().getFile(message, false);
@@ -133,6 +135,9 @@ public class HttpUploadConnection implements Downloadable {
 			try {
 				Log.d(Config.LOGTAG, "uploading to " + mPutUrl.toString());
 				connection = (HttpURLConnection) mPutUrl.openConnection();
+				if (connection instanceof HttpsURLConnection) {
+					mHttpConnectionManager.setupTrustManager((HttpsURLConnection) connection, true);
+				}
 				connection.setRequestMethod("PUT");
 				connection.setFixedLengthStreamingMode((int) file.getExpectedSize());
 				connection.setDoOutput(true);
@@ -159,7 +164,7 @@ public class HttpUploadConnection implements Downloadable {
 						mGetUrl = new URL(mGetUrl.toString() + "#" + CryptoHelper.bytesToHex(key));
 					}
 					mXmppConnectionService.getFileBackend().updateFileParams(message, mGetUrl);
-					message.setDownloadable(null);
+					message.setTransferable(null);
 					message.setCounterpart(message.getConversation().getJid().toBareJid());
 					if (message.getEncryption() == Message.ENCRYPTION_DECRYPTED) {
 						mXmppConnectionService.getPgpEngine().encrypt(message, new UiCallback<Message>() {

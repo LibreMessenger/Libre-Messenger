@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:textColor="@color/primarytext"
+            android:textColor="@color/black87"
             android:textSize="?attr/TextSizeHeadline" />
 
         <TextView
@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:textColor="@color/primarytext"
+            android:textColor="@color/black87"
             android:textSize="?attr/TextSizeBody" />
         <LinearLayout
             android:id="@+id/tags"
@@ -50,7 +50,7 @@
             android:id="@+id/key"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/primarytext"
+            android:textColor="@color/black87"
             android:textSize="?attr/TextSizeHeadline"
             android:typeface="monospace"
             android:visibility="gone" />

@@ -3,6 +3,7 @@ package eu.siacs.conversations.ui;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -45,9 +46,9 @@ import eu.siacs.conversations.crypto.PgpEngine;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.entities.Contact;
 import eu.siacs.conversations.entities.Conversation;
-import eu.siacs.conversations.entities.Downloadable;
+import eu.siacs.conversations.entities.Transferable;
 import eu.siacs.conversations.entities.DownloadableFile;
-import eu.siacs.conversations.entities.DownloadablePlaceholder;
+import eu.siacs.conversations.entities.TransferablePlaceholder;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.entities.MucOptions;
 import eu.siacs.conversations.entities.Presences;
@@ -439,14 +440,14 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 			MenuItem downloadFile = menu.findItem(R.id.download_file);
 			MenuItem cancelTransmission = menu.findItem(R.id.cancel_transmission);
 			if ((m.getType() == Message.TYPE_TEXT || m.getType() == Message.TYPE_PRIVATE)
-					&& m.getDownloadable() == null
+					&& m.getTransferable() == null
 					&& !GeoHelper.isGeoUri(m.getBody())
 					&& m.treatAsDownloadable() != Message.Decision.MUST) {
 				copyText.setVisible(true);
 			}
 			if ((m.getType() != Message.TYPE_TEXT
 					&& m.getType() != Message.TYPE_PRIVATE
-					&& m.getDownloadable() == null)
+					&& m.getTransferable() == null)
 					|| (GeoHelper.isGeoUri(m.getBody()))) {
 				shareWith.setVisible(true);
 			}
@@ -458,11 +459,11 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 					|| m.treatAsDownloadable() == Message.Decision.MUST) {
 				copyUrl.setVisible(true);
 			}
-			if (m.getType() == Message.TYPE_TEXT && m.getDownloadable() == null && m.treatAsDownloadable() != Message.Decision.NEVER) {
+			if (m.getType() == Message.TYPE_TEXT && m.getTransferable() == null && m.treatAsDownloadable() != Message.Decision.NEVER) {
 				downloadFile.setVisible(true);
 				downloadFile.setTitle(activity.getString(R.string.download_x_file,UIHelper.getFileDescriptionString(activity, m)));
 			}
-			if ((m.getDownloadable() != null && !(m.getDownloadable() instanceof DownloadablePlaceholder))
+			if ((m.getTransferable() != null && !(m.getTransferable() instanceof TransferablePlaceholder))
 					|| (m.isFileOrImage() && (m.getStatus() == Message.STATUS_WAITING
 					|| m.getStatus() == Message.STATUS_OFFERED))) {
 				cancelTransmission.setVisible(true);
@@ -513,7 +514,12 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 			}
 			shareIntent.setType(mime);
 		}
-		activity.startActivity(Intent.createChooser(shareIntent, getText(R.string.share_with)));
+		try {
+			activity.startActivity(Intent.createChooser(shareIntent, getText(R.string.share_with)));
+		} catch (ActivityNotFoundException e) {
+			//This should happen only on faulty androids because normally chooser is always available
+			Toast.makeText(activity,R.string.no_application_found_to_open_file,Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	private void copyText(Message message) {
@@ -529,7 +535,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 			DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
 			if (!file.exists()) {
 				Toast.makeText(activity, R.string.file_deleted, Toast.LENGTH_SHORT).show();
-				message.setDownloadable(new DownloadablePlaceholder(Downloadable.STATUS_DELETED));
+				message.setTransferable(new TransferablePlaceholder(Transferable.STATUS_DELETED));
 				return;
 			}
 		}
@@ -557,13 +563,13 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
 	private void downloadFile(Message message) {
 		activity.xmppConnectionService.getHttpConnectionManager()
-				.createNewConnection(message);
+				.createNewDownloadConnection(message);
 	}
 
 	private void cancelTransmission(Message message) {
-		Downloadable downloadable = message.getDownloadable();
-		if (downloadable != null) {
-			downloadable.cancel();
+		Transferable transferable = message.getTransferable();
+		if (transferable != null) {
+			transferable.cancel();
 		} else {
 			activity.xmppConnectionService.markMessage(message, Message.STATUS_SEND_FAILED);
 		}
@@ -757,7 +763,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 					if (message.getEncryption() == Message.ENCRYPTION_PGP
 							&& (message.getStatus() == Message.STATUS_RECEIVED || message
 							.getStatus() >= Message.STATUS_SEND)
-							&& message.getDownloadable() == null) {
+							&& message.getTransferable() == null) {
 						if (!mEncryptedMessages.contains(message)) {
 							mEncryptedMessages.add(message);
 						}
