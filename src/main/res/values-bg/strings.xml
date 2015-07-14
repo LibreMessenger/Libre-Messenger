@@ -289,7 +289,7 @@
   <string name="conference_members_only">Тази беседа е само за членове</string>
   <string name="conference_kicked">Бяхте изритан от тази конференция</string>
   <string name="using_account">използвайки профила %s</string>
-  <string name="checking_image">Проверяване на изображението на HTTP сървъра</string>
+  <string name="checking_file">Проверяване на изображението на HTTP сървъра</string>
   <string name="image_file_deleted">Изображението е изтрито</string>
   <string name="not_connected_try_again">Не сте свързани. Опитайте отново по-късно</string>
   <string name="check_image_filesize">Проверка на размера на файла с изображението</string>

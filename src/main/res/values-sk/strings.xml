@@ -289,7 +289,7 @@
   <string name="conference_members_only">Táto konverzácia je iba pre členov</string>
   <string name="conference_kicked">Vyčlenili vás z tejto konverzácie</string>
   <string name="using_account">Používa sa účet %s</string>
-  <string name="checking_image">Overuje sa obrázok na serveri HTTP</string>
+  <string name="checking_file">Overuje sa obrázok na serveri HTTP</string>
   <string name="image_file_deleted">Súbor s obrázkom bol vymazaný</string>
   <string name="not_connected_try_again">Nie ste pripojený. Skúste to neskôr</string>
   <string name="check_image_filesize">Overiť veľkosť obrázku</string>

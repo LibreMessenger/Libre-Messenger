@@ -289,7 +289,7 @@
   <string name="conference_members_only">이 회의는 멤버 전용입니다 </string>
   <string name="conference_kicked">당신은 이 회의에서 추방되었습니다  </string>
   <string name="using_account">using account %s</string>
-  <string name="checking_image">HTTP 호스트에서 이미지 확인중 </string>
+  <string name="checking_file">HTTP 호스트에서 이미지 확인중 </string>
   <string name="image_file_deleted">이미지 파일이 삭제되었습니다 </string>
   <string name="not_connected_try_again">접속중이 아닙니다. 다시 시도하세요. </string>
   <string name="check_image_filesize">이미지 파일 크기 확인 </string>

@@ -289,7 +289,7 @@
   <string name="conference_members_only">Konferentzia hau kideentzat da soilik</string>
   <string name="conference_kicked">Konferentzia honetatik kanporatua izan zara</string>
   <string name="using_account">%s kontua erabiltzen</string>
-  <string name="checking_image">Irudia egiaztatzen HTTP ostalarian</string>
+  <string name="checking_file">Irudia egiaztatzen HTTP ostalarian</string>
   <string name="image_file_deleted">Irudia ezabatu egin da</string>
   <string name="not_connected_try_again">Ez zaude konektatuta. Saiatu beranduago berriz</string>
   <string name="check_image_filesize">Irudiaren tamaina egiaztatu</string>

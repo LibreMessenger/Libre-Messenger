@@ -289,7 +289,7 @@
   <string name="conference_members_only">Questa conferenza è solo per membri</string>
   <string name="conference_kicked">Sei stato buttato fuori dalla conferenza</string>
   <string name="using_account">usando l’utente %s</string>
-  <string name="checking_image">Controlla immagine su HTTP</string>
+  <string name="checking_file">Controlla immagine su HTTP</string>
   <string name="image_file_deleted">Il file dell’immagine è stato cancellato</string>
   <string name="not_connected_try_again">Non sei connesso. Riprova più tardi</string>
   <string name="check_image_filesize">Controlla le dimensioni dell’immagine</string>

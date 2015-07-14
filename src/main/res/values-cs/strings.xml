@@ -289,7 +289,7 @@
   <string name="conference_members_only">Tato konference je pouze pro členy</string>
   <string name="conference_kicked">Vykopli tě z této konference</string>
   <string name="using_account">za použití účtu %s</string>
-  <string name="checking_image">Ověřuji obrázek na HTTP hostiteli</string>
+  <string name="checking_file">Ověřuji obrázek na HTTP hostiteli</string>
   <string name="image_file_deleted">Obrázek byl smazán</string>
   <string name="not_connected_try_again">Bez připojení. Zkus znovu později</string>
   <string name="check_image_filesize">Ověřit velikost obrázku</string>

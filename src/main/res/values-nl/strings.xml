@@ -289,7 +289,7 @@
   <string name="conference_members_only">Dit groepsgesprek is enkel voor leden</string>
   <string name="conference_kicked">Je bent uit dit groepsgesprek geschopt</string>
   <string name="using_account">account %s gebruiken</string>
-  <string name="checking_image">Afbeelding op HTTP host nakijken</string>
+  <string name="checking_file">Afbeelding op HTTP host nakijken</string>
   <string name="image_file_deleted">De afbeelding is verwijderd</string>
   <string name="not_connected_try_again">Je bent niet verbonden. Probeer later opnieuw</string>
   <string name="check_image_filesize">Bekijk bestandsgrootte van afbeelding</string>

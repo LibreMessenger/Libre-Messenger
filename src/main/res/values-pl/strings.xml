@@ -289,7 +289,7 @@
   <string name="conference_members_only">To jest zamknięty pokój</string>
   <string name="conference_kicked">Wyrzucono cię z konferencji</string>
   <string name="using_account">używając konta %s</string>
-  <string name="checking_image">Sprawdzanie obrazka na hoście HTTP</string>
+  <string name="checking_file">Sprawdzanie obrazka na hoście HTTP</string>
   <string name="image_file_deleted">Obraz został usunięty</string>
   <string name="not_connected_try_again">Brak połączenia. Spróbuj ponownie później</string>
   <string name="check_image_filesize">Sprawdź rozmiar pliku</string>

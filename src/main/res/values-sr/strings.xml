@@ -289,7 +289,7 @@
   <string name="conference_members_only">Ова конференција је само за чланове</string>
   <string name="conference_kicked">Шутнути сте из ове конференције</string>
   <string name="using_account">преко налога %s</string>
-  <string name="checking_image">Проверавам слику на ХТТП домаћину</string>
+  <string name="checking_file">Проверавам слику на ХТТП домаћину</string>
   <string name="image_file_deleted">Ова слика је обрисана</string>
   <string name="not_connected_try_again">Нисте повезани. Покушајте поново касније</string>
   <string name="check_image_filesize">Провери величину слике</string>

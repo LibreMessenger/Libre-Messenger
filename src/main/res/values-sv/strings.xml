@@ -289,7 +289,7 @@
   <string name="conference_members_only">Medlemsskap krävs för denna konferens</string>
   <string name="conference_kicked">Du har blivit utsparkad från denna konferens</string>
   <string name="using_account">använder konto %s</string>
-  <string name="checking_image">Kontrollerar bild på HTTP host</string>
+  <string name="checking_file">Kontrollerar bild på HTTP host</string>
   <string name="image_file_deleted">Bildfilen har blivit borttagen</string>
   <string name="not_connected_try_again">Du är inte ansluten. Försök igen senare</string>
   <string name="check_image_filesize">Kontrollera bildens filstorlek</string>

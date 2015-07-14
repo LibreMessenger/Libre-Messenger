@@ -289,7 +289,7 @@
   <string name="conference_members_only">この会議はメンバーのみです</string>
   <string name="conference_kicked">あなたはこの会議からキックされました</string>
   <string name="using_account">アカウント %s を使用</string>
-  <string name="checking_image">HTTP ホストの画像を確認中</string>
+  <string name="checking_file">HTTP ホストの画像を確認中</string>
   <string name="image_file_deleted">画像ファイルは削除されました</string>
   <string name="not_connected_try_again">接続されていません。後でもう一度お試しください</string>
   <string name="check_image_filesize">画像ファイルのサイズを確認</string>

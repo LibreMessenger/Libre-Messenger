@@ -289,7 +289,7 @@
   <string name="conference_members_only">La sala es nomès per membres</string>
   <string name="conference_kicked">Estàs expulsat d\'aquesta sala</string>
   <string name="using_account">Utlitzant el compte %s</string>
-  <string name="checking_image">Comprovant l\'imatge en el client HTTP</string>
+  <string name="checking_file">Comprovant l\'imatge en el client HTTP</string>
   <string name="image_file_deleted">L\'arxiu de l\'imatge ha sigut eliminada</string>
   <string name="not_connected_try_again">No estàs connectat. Intenta-ho més tard</string>
   <string name="check_image_filesize">Comprobant el tamany de l\'imatge</string>

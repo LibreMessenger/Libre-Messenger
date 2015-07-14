@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+﻿<?xml version='1.0' encoding='UTF-8'?>
 <resources>
   <string name="action_settings">Einstellungen</string>
   <string name="action_add">Neue Unterhaltung</string>
@@ -289,7 +289,7 @@
   <string name="conference_members_only">Die Konferenz ist nur für Mitglieder</string>
   <string name="conference_kicked">Du wurdest aus der Konferenz geworfen</string>
   <string name="using_account">Verwende Konto %s</string>
-  <string name="checking_image">Prüfe Bild auf HTTP-Host</string>
+  <string name="checking_file">Prüfe Datei auf HTTP-Host</string>
   <string name="image_file_deleted">Bild wurde gelöscht</string>
   <string name="not_connected_try_again">Nicht verbunden, bitte später versuchen</string>
   <string name="check_image_filesize">Bildgröße prüfen</string>

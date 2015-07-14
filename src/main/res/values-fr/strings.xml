@@ -289,7 +289,7 @@
   <string name="conference_members_only">Cette conférence est réservée aux membres</string>
   <string name="conference_kicked">Vous avez été éjecté de cette conférence</string>
   <string name="using_account">utiliser le compte %s</string>
-  <string name="checking_image">Vérification de l\'image</string>
+  <string name="checking_file">Vérification de l\'image</string>
   <string name="image_file_deleted">L\'image a été suprimée</string>
   <string name="not_connected_try_again">Vous n\'êtes pas connecté. Merci de retenter plus tard.</string>
   <string name="check_image_filesize">Vérifier la taille de l\'image</string>

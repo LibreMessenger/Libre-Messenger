@@ -289,7 +289,7 @@
   <string name="conference_members_only">Conference ini hanya untuk member terdaftar</string>
   <string name="conference_kicked">Anda telah ditendang dari conference ini</string>
   <string name="using_account">menggunakan akun %s</string>
-  <string name="checking_image">Mengecek gambar di host HTTP</string>
+  <string name="checking_file">Mengecek gambar di host HTTP</string>
   <string name="image_file_deleted">Berkas gambar telah dihapus</string>
   <string name="not_connected_try_again">Anda tidak terhubung. Coba lagi nanti</string>
   <string name="check_image_filesize">Cek ukuran berkas gambar</string>

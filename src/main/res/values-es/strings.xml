@@ -289,7 +289,7 @@
   <string name="conference_members_only">Esta conversación es solo para miembros</string>
   <string name="conference_kicked">Has sido expulsado de esta conversación</string>
   <string name="using_account">Usando cuenta %s</string>
-  <string name="checking_image">Comprobando imagen en servidor HTTP</string>
+  <string name="checking_file">Comprobando imagen en servidor HTTP</string>
   <string name="image_file_deleted">El archivo de imagen ha sido eliminado</string>
   <string name="not_connected_try_again">No estás conectado. Inténtalo más tarde</string>
   <string name="check_image_filesize">Comprobar el tamaño del archivo de imagen</string>

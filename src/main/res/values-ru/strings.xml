@@ -289,7 +289,7 @@
   <string name="conference_members_only">Эта конференция требует членства</string>
   <string name="conference_kicked">Вы были удалены из конференции</string>
   <string name="using_account">использовать учётную запись %s</string>
-  <string name="checking_image">Проверка изображения на узле HTTP</string>
+  <string name="checking_file">Проверка изображения на узле HTTP</string>
   <string name="image_file_deleted">Файл изображения был удалён</string>
   <string name="not_connected_try_again">Вы неподключены. Попробуйте позже</string>
   <string name="check_image_filesize">Проверить размер файла изображения</string>

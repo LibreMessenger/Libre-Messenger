@@ -289,7 +289,7 @@
   <string name="conference_members_only">Αυτή η συνδιάσκεψη είναι μόνο για μέλη</string>
   <string name="conference_kicked">Έχετε διωχθει από αυτή την συνδιάσκεψη</string>
   <string name="using_account">χρήση λογαριασμού %s</string>
-  <string name="checking_image">Έλεγχος εικόνας στον διακομιστή HTTP</string>
+  <string name="checking_file">Έλεγχος εικόνας στον διακομιστή HTTP</string>
   <string name="image_file_deleted">Το αρχείο εικόνας έχει διαγραφεί</string>
   <string name="not_connected_try_again">Δεν είστε συνδεμένοι. Δοκιμάστε ξανά αργότερα</string>
   <string name="check_image_filesize">Ελέγξτε το μέγεθος του αρχείου εικόνας</string>
