@@ -250,6 +250,7 @@ public class ConversationActivity extends XmppActivity
 		listView.setUndoStyle(EnhancedListView.UndoStyle.SINGLE_POPUP);
 		listView.setUndoHideDelay(5000);
 		listView.setRequireTouchBeforeDismiss(false);
+		listView.setSwipeDirection(START); // swipe to left to close conversation
 
 		mContentView = findViewById(R.id.content_view_spl);
 		if (mContentView == null) {
