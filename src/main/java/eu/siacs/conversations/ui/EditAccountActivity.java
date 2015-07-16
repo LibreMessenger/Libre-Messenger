@@ -124,11 +124,11 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				mAccount.setOption(Account.OPTION_REGISTER, registerNewAccount);
 				xmppConnectionService.createAccount(mAccount);
 			}
-			if (jidToEdit != null) {
+			if (jidToEdit != null && !mAccount.isOptionSet(Account.OPTION_DISABLED)) {
 				finish();
 			} else {
 				updateSaveButton();
-				updateAccountInformation();
+				updateAccountInformation(true);
 			}
 
 		}
@@ -164,7 +164,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 					updateSaveButton();
 				}
 				if (mAccount != null) {
-					updateAccountInformation();
+					updateAccountInformation(false);
 				}
 			}
 		});
@@ -385,7 +385,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				xmppConnectionService.getKnownHosts());
 		if (this.jidToEdit != null) {
 			this.mAccount = xmppConnectionService.findAccountByJid(jidToEdit);
-			updateAccountInformation();
+			updateAccountInformation(true);
 		} else if (this.xmppConnectionService.getAccounts().size() == 0) {
 			if (getActionBar() != null) {
 				getActionBar().setDisplayHomeAsUpEnabled(false);
@@ -420,9 +420,11 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void updateAccountInformation() {
-		this.mAccountJid.setText(this.mAccount.getJid().toBareJid().toString());
-		this.mPassword.setText(this.mAccount.getPassword());
+	private void updateAccountInformation(boolean init) {
+		if (init) {
+			this.mAccountJid.setText(this.mAccount.getJid().toBareJid().toString());
+			this.mPassword.setText(this.mAccount.getPassword());
+		}
 		if (this.jidToEdit != null) {
 			this.mAvatar.setVisibility(View.VISIBLE);
 			this.mAvatar.setImageBitmap(avatarService().get(this.mAccount, getPixel(Config.AVATAR_SIZE)));
@@ -502,7 +504,9 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		} else {
 			if (this.mAccount.errorStatus()) {
 				this.mAccountJid.setError(getString(this.mAccount.getStatus().getReadableId()));
-				this.mAccountJid.requestFocus();
+				if (init) {
+					this.mAccountJid.requestFocus();
+				}
 			} else {
 				this.mAccountJid.setError(null);
 			}
