@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/account_image"
-            android:layout_width="194dp"
-            android:layout_height="194dp" />
+            android:layout_width="300dp"
+            android:layout_height="300dp" />
     </LinearLayout>
 
     <TextView
