@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import eu.siacs.conversations.entities.Contact;
 import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.Message;
 
@@ -40,6 +41,7 @@ public class GeoHelper {
 			return intents;
 		}
 		final Conversation conversation = message.getConversation();
+		final Contact contact = message.getContact();
 		String label;
 		if (conversation.getMode() == Conversation.MODE_SINGLE && message.getStatus() == Message.STATUS_RECEIVED) {
 			try {
@@ -57,6 +59,16 @@ public class GeoHelper {
 		if (conversation.getMode() == Conversation.MODE_SINGLE) {
 			if (message.getStatus() == Message.STATUS_RECEIVED) {
 				locationPluginIntent.putExtra("name",conversation.getName());
+				locationPluginIntent.putExtra("jid",message.getCounterpart().toString());
+			}
+			else {
+				locationPluginIntent.putExtra("jid",conversation.getAccount().getJid().toString());
+			}
+		} else {
+			if (message.getStatus() == Message.STATUS_RECEIVED) {
+				if (contact != null) {
+					locationPluginIntent.putExtra("name",contact.getDisplayName());
+				} 
 				locationPluginIntent.putExtra("jid",message.getCounterpart().toString());
 			}
 			else {
