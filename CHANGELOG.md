@@ -1,5 +1,15 @@
 ###Changelog
 
+####Version 1.5.0
+* upload files to HTTP host and share them in MUCs. requires new [HttpUploadComponent](https://github.com/siacs/HttpUploadComponent) on server side
+
+####Version 1.4.5
+* fixes to message parser to not display some ejabberd muc status messages
+
+####Version 1.4.4
+* added unread count badges on supported devices
+* rewrote message parser
+
 ####Version 1.4.0
 * send button turns into quick action button to offer faster access to take photo, send location or record audio
 * visually seperate merged messages

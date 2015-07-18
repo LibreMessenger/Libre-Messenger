@@ -13,7 +13,9 @@
         android:layout_height="48dp"
         android:layout_alignParentLeft="true"
         android:src="@drawable/ic_profile"
-        android:contentDescription="@string/account_image_description">
+        android:contentDescription="@string/account_image_description"
+        android:background="@drawable/message_border"
+        android:padding="1dp">
     </ImageView>
 
     <LinearLayout
@@ -32,7 +34,7 @@
             android:layout_height="wrap_content"
             android:scrollHorizontally="false"
             android:singleLine="true"
-            android:textColor="@color/primarytext"
+            android:textColor="@color/black87"
             android:textSize="?attr/TextSizeHeadline" />
 
         <TextView
@@ -40,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/account_status_unknown"
-            android:textColor="@color/secondarytext"
+            android:textColor="@color/black54"
             android:textSize="?attr/TextSizeBody"
             android:textStyle="bold" />
     </LinearLayout>

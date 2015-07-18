@@ -16,7 +16,7 @@
             android:summary="@string/pref_xmpp_resource_summary"
             android:title="@string/pref_xmpp_resource" />
         <ListPreference
-            android:defaultValue="524288"
+            android:defaultValue="1048576"
             android:entries="@array/filesizes"
             android:entryValues="@array/filesizes_values"
             android:key="auto_accept_file_size"
@@ -101,7 +101,7 @@
             android:summary="@string/pref_use_larger_font_summary"
             android:title="@string/pref_use_larger_font" />
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="send_button_status"
             android:summary="@string/pref_use_send_button_to_indicate_status_summary"
             android:title="@string/pref_use_send_button_to_indicate_status" />
@@ -163,12 +163,12 @@
 			</PreferenceCategory>
             <PreferenceCategory android:title="@string/pref_expert_options_other" >
                 <CheckBoxPreference
-                    android:defaultValue="false"
+                    android:defaultValue="true"
                     android:key="indicate_received"
                     android:summary="@string/pref_use_indicate_received_summary"
                     android:title="@string/pref_use_indicate_received" />
                 <CheckBoxPreference
-                    android:defaultValue="false"
+                    android:defaultValue="true"
                     android:key="keep_foreground_service"
                     android:title="@string/pref_keep_foreground_service"
                     android:summary="@string/pref_keep_foreground_service_summary" />
@@ -176,7 +176,7 @@
         </PreferenceScreen>
 
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="never_send"
             android:summary="@string/pref_never_send_crash_summary"
             android:title="@string/pref_never_send_crash" />

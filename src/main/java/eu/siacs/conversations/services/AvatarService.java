@@ -44,11 +44,11 @@ public class AvatarService {
 		if (avatar != null || cachedOnly) {
 			return avatar;
 		}
-		if (contact.getProfilePhoto() != null) {
-			avatar = mXmppConnectionService.getFileBackend().cropCenterSquare(Uri.parse(contact.getProfilePhoto()), size);
-		}
 		if (avatar == null && contact.getAvatar() != null) {
 			avatar = mXmppConnectionService.getFileBackend().getAvatar(contact.getAvatar(), size);
+		}
+		if (avatar == null && contact.getProfilePhoto() != null) {
+			avatar = mXmppConnectionService.getFileBackend().cropCenterSquare(Uri.parse(contact.getProfilePhoto()), size);
 		}
 		if (avatar == null) {
             avatar = get(contact.getDisplayName(), size, cachedOnly);
@@ -265,11 +265,11 @@ public class AvatarService {
 		Contact contact = user.getContact();
 		if (contact != null) {
 			Uri uri = null;
-			if (contact.getProfilePhoto() != null) {
-				uri = Uri.parse(contact.getProfilePhoto());
-			} else if (contact.getAvatar() != null) {
+			if (contact.getAvatar() != null) {
 				uri = mXmppConnectionService.getFileBackend().getAvatarUri(
 						contact.getAvatar());
+			} else if (contact.getProfilePhoto() != null) {
+				uri = Uri.parse(contact.getProfilePhoto());
 			}
 			if (uri != null) {
 				Bitmap bitmap = mXmppConnectionService.getFileBackend()

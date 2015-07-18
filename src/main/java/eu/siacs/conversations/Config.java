@@ -16,7 +16,7 @@ public final class Config {
 	public static final int CARBON_GRACE_PERIOD = 60;
 	public static final int MINI_GRACE_PERIOD = 750;
 
-	public static final int AVATAR_SIZE = 192;
+	public static final int AVATAR_SIZE = 384;
 	public static final Bitmap.CompressFormat AVATAR_FORMAT = Bitmap.CompressFormat.WEBP;
 
 	public static final int MESSAGE_MERGE_WINDOW = 20;
@@ -31,6 +31,8 @@ public final class Config {
 	public static final boolean DISABLE_STRING_PREP = false; // setting to true might increase startup performance
 	public static final boolean EXTENDED_SM_LOGGING = true; // log stanza counts
 	public static final boolean RESET_ATTEMPT_COUNT_ON_NETWORK_CHANGE = true; //setting to true might increase power consumption
+
+	public static final boolean ENCRYPT_ON_HTTP_UPLOADED = false;
 
 	public static final long MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000;
 	public static final long MAM_MAX_CATCHUP =  MILLISECONDS_IN_DAY / 2;

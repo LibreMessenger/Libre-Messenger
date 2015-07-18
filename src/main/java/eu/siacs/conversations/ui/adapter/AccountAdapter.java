@@ -37,7 +37,7 @@ public class AccountAdapter extends ArrayAdapter<Account> {
 		jid.setText(account.getJid().toBareJid().toString());
 		TextView statusView = (TextView) view.findViewById(R.id.account_status);
 		ImageView imageView = (ImageView) view.findViewById(R.id.account_image);
-		imageView.setImageBitmap(activity.avatarService().get(account, activity.getPixel(48)));
+		imageView.setImageBitmap(activity.avatarService().get(account, activity.getPixel(56)));
 		statusView.setText(getContext().getString(account.getStatus().getReadableId()));
 		switch (account.getStatus()) {
 			case ONLINE:
@@ -52,7 +52,7 @@ public class AccountAdapter extends ArrayAdapter<Account> {
 				break;
 		}
 		final Switch tglAccountState = (Switch) view.findViewById(R.id.tgl_account_status);
-		final boolean isDisabled = (account.getStatus() == Account.State.DISABLED) ? true : false;
+		final boolean isDisabled = (account.getStatus() == Account.State.DISABLED);
 		tglAccountState.setOnCheckedChangeListener(null);
 		tglAccountState.setChecked(!isDisabled);
 		tglAccountState.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
