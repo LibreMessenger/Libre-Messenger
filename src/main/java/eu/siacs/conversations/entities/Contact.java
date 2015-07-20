@@ -32,7 +32,7 @@ public class Contact implements ListItem, Blockable {
 	public static final String LAST_PRESENCE = "last_presence";
 	public static final String LAST_TIME = "last_time";
 	public static final String GROUPS = "groups";
-	public Lastseen lastseen = new Lastseen();
+	public static Lastseen lastseen = new Lastseen();
 	protected String accountUuid;
 	protected String systemName;
 	protected String serverName;

@@ -978,12 +978,13 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 	protected void updateStatusMessages() {
 		synchronized (this.messageList) {
 			if (conversation.getMode() == Conversation.MODE_SINGLE) {
+				/*
 				ChatState state = conversation.getIncomingChatState();
 				if (state == ChatState.COMPOSING) {
 					this.messageList.add(Message.createStatusMessage(conversation, getString(R.string.contact_is_typing, conversation.getName())));
 				} else if (state == ChatState.PAUSED) {
 					this.messageList.add(Message.createStatusMessage(conversation, getString(R.string.contact_has_stopped_typing, conversation.getName())));
-				} else {
+				} else { */
 					for (int i = this.messageList.size() - 1; i >= 0; --i) {
 						if (this.messageList.get(i).getStatus() == Message.STATUS_RECEIVED) {
 							return;
@@ -995,7 +996,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 							}
 						}
 					}
-				}
+				//}
 			}
 		}
 	}
