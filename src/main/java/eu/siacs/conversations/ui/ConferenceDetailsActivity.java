@@ -27,7 +27,6 @@ import org.openintents.openpgp.util.OpenPgpUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.PgpEngine;
@@ -38,8 +37,8 @@ import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.MucOptions;
 import eu.siacs.conversations.entities.MucOptions.User;
 import eu.siacs.conversations.services.XmppConnectionService;
-import eu.siacs.conversations.services.XmppConnectionService.OnMucRosterUpdate;
 import eu.siacs.conversations.services.XmppConnectionService.OnConversationUpdate;
+import eu.siacs.conversations.services.XmppConnectionService.OnMucRosterUpdate;
 import eu.siacs.conversations.xmpp.jid.Jid;
 
 public class ConferenceDetailsActivity extends XmppActivity implements OnConversationUpdate, OnMucRosterUpdate, XmppConnectionService.OnAffiliationChanged, XmppConnectionService.OnRoleChanged, XmppConnectionService.OnConferenceOptionsPushed {
@@ -283,7 +282,9 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 				MenuItem removeFromRoom = menu.findItem(R.id.remove_from_room);
 				MenuItem banFromConference = menu.findItem(R.id.ban_from_conference);
 				startConversation.setVisible(true);
-				showContactDetails.setVisible(true);
+				if (contact != null) {
+					showContactDetails.setVisible(true);
+				}
 				if (self.getAffiliation().ranks(MucOptions.Affiliation.ADMIN) &&
 						self.getAffiliation().outranks(user.getAffiliation())) {
 					if (mAdvancedMode) {
@@ -305,14 +306,17 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 			}
 
 		}
-		super.onCreateContextMenu(menu,v,menuInfo);
+		super.onCreateContextMenu(menu, v, menuInfo);
 	}
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_contact_details:
-				switchToContactDetails(mSelectedUser.getContact());
+				Contact contact = mSelectedUser.getContact();
+				if (contact != null) {
+					switchToContactDetails(contact);
+				}
 				return true;
 			case R.id.start_conversation:
 				startConversation(mSelectedUser);

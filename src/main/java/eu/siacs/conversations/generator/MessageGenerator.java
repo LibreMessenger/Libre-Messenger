@@ -1,12 +1,18 @@
 package eu.siacs.conversations.generator;
 
+import android.util.Log;
+
+import net.java.otr4j.OtrException;
+import net.java.otr4j.session.Session;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import net.java.otr4j.OtrException;
-import net.java.otr4j.session.Session;
+import eu.siacs.conversations.Config;
+import eu.siacs.conversations.crypto.axolotl.AxolotlService;
+import eu.siacs.conversations.crypto.axolotl.XmppAxolotlMessage;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.Message;
@@ -21,7 +27,7 @@ public class MessageGenerator extends AbstractGenerator {
 		super(service);
 	}
 
-	private MessagePacket preparePacket(Message message, boolean addDelay) {
+	private MessagePacket preparePacket(Message message) {
 		Conversation conversation = message.getConversation();
 		Account account = conversation.getAccount();
 		MessagePacket packet = new MessagePacket();
@@ -44,13 +50,10 @@ public class MessageGenerator extends AbstractGenerator {
 		}
 		packet.setFrom(account.getJid());
 		packet.setId(message.getUuid());
-		if (addDelay) {
-			addDelay(packet, message.getTimeSent());
-		}
 		return packet;
 	}
 
-	private void addDelay(MessagePacket packet, long timestamp) {
+	public void addDelay(MessagePacket packet, long timestamp) {
 		final SimpleDateFormat mDateFormat = new SimpleDateFormat(
 				"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
 		mDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -59,16 +62,24 @@ public class MessageGenerator extends AbstractGenerator {
 		delay.setAttribute("stamp", mDateFormat.format(date));
 	}
 
-	public MessagePacket generateOtrChat(Message message) {
-		return generateOtrChat(message, false);
+	public MessagePacket generateAxolotlChat(Message message) {
+		MessagePacket packet = preparePacket(message);
+		AxolotlService service = message.getConversation().getAccount().getAxolotlService();
+		Log.d(Config.LOGTAG, AxolotlService.getLogprefix(message.getConversation().getAccount())+"Submitting message to axolotl service for send processing...");
+		XmppAxolotlMessage axolotlMessage = service.encrypt(message);
+		if (axolotlMessage == null) {
+			return null;
+		}
+		packet.setAxolotlMessage(axolotlMessage.toXml());
+		return packet;
 	}
 
-	public MessagePacket generateOtrChat(Message message, boolean addDelay) {
+	public MessagePacket generateOtrChat(Message message) {
 		Session otrSession = message.getConversation().getOtrSession();
 		if (otrSession == null) {
 			return null;
 		}
-		MessagePacket packet = preparePacket(message, addDelay);
+		MessagePacket packet = preparePacket(message);
 		packet.addChild("private", "urn:xmpp:carbons:2");
 		packet.addChild("no-copy", "urn:xmpp:hints");
 		packet.addChild("no-permanent-store", "urn:xmpp:hints");
@@ -87,11 +98,7 @@ public class MessageGenerator extends AbstractGenerator {
 	}
 
 	public MessagePacket generateChat(Message message) {
-		return generateChat(message, false);
-	}
-
-	public MessagePacket generateChat(Message message, boolean addDelay) {
-		MessagePacket packet = preparePacket(message, addDelay);
+		MessagePacket packet = preparePacket(message);
 		if (message.hasFileOnRemoteHost()) {
 			packet.setBody(message.getFileParams().url.toString());
 		} else {
@@ -101,11 +108,7 @@ public class MessageGenerator extends AbstractGenerator {
 	}
 
 	public MessagePacket generatePgpChat(Message message) {
-		return generatePgpChat(message, false);
-	}
-
-	public MessagePacket generatePgpChat(Message message, boolean addDelay) {
-		MessagePacket packet = preparePacket(message, addDelay);
+		MessagePacket packet = preparePacket(message);
 		packet.setBody("This is an XEP-0027 encrypted message");
 		if (message.getEncryption() == Message.ENCRYPTION_DECRYPTED) {
 			packet.addChild("x", "jabber:x:encrypted").setContent(message.getEncryptedBody());
@@ -129,8 +132,7 @@ public class MessageGenerator extends AbstractGenerator {
 		packet.setType(MessagePacket.TYPE_NORMAL);
 		packet.setTo(to);
 		packet.setFrom(account.getJid());
-		Element received = packet.addChild("displayed",
-				"urn:xmpp:chat-markers:0");
+		Element received = packet.addChild("displayed","urn:xmpp:chat-markers:0");
 		received.setAttribute("id", id);
 		return packet;
 	}

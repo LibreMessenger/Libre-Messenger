@@ -29,6 +29,7 @@ import android.widget.QuickContactBadge;
 import android.widget.TextView;
 
 import org.openintents.openpgp.util.OpenPgpUtils;
+import org.whispersystems.libaxolotl.IdentityKey;
 
 import java.util.List;
 
@@ -155,6 +156,11 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 
 	@Override
 	public void onAccountUpdate() {
+		refreshUi();
+	}
+
+	@Override
+	public void OnUpdateBlocklist(final Status status) {
 		refreshUi();
 	}
 
@@ -363,19 +369,23 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 			View view = inflater.inflate(R.layout.contact_key, keys, false);
 			TextView key = (TextView) view.findViewById(R.id.key);
 			TextView keyType = (TextView) view.findViewById(R.id.key_type);
-			ImageButton remove = (ImageButton) view
+			ImageButton removeButton = (ImageButton) view
 				.findViewById(R.id.button_remove);
-			remove.setVisibility(View.VISIBLE);
+			removeButton.setVisibility(View.VISIBLE);
 			keyType.setText("OTR Fingerprint");
 			key.setText(CryptoHelper.prettifyFingerprint(otrFingerprint));
 			keys.addView(view);
-			remove.setOnClickListener(new OnClickListener() {
+			removeButton.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
 					confirmToDeleteFingerprint(otrFingerprint);
 				}
 			});
+		}
+		for(final IdentityKey identityKey : xmppConnectionService.databaseBackend.loadIdentityKeys(
+				contact.getAccount(), contact.getJid().toBareJid().toString())) {
+			hasKeys |= addFingerprintRow(keys, contact.getAccount(), identityKey);
 		}
 		if (contact.getPgpKeyId() != 0) {
 			hasKeys = true;
@@ -458,17 +468,5 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 			this.contact = account.getRoster().getContact(contactJid);
 			populateView();
 		}
-	}
-
-	@Override
-	public void OnUpdateBlocklist(final Status status) {
-		runOnUiThread(new Runnable() {
-
-			@Override
-			public void run() {
-				invalidateOptionsMenu();
-				populateView();
-			}
-		});
 	}
 }

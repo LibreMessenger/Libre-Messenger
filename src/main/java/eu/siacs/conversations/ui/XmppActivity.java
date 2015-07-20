@@ -43,8 +43,11 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
@@ -56,6 +59,8 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 import net.java.otr4j.session.SessionID;
 
+import org.whispersystems.libaxolotl.IdentityKey;
+
 import java.io.FileNotFoundException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -65,6 +70,7 @@ import java.util.concurrent.RejectedExecutionException;
 
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
+import eu.siacs.conversations.crypto.axolotl.AxolotlService;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.entities.Contact;
 import eu.siacs.conversations.entities.Conversation;
@@ -74,7 +80,10 @@ import eu.siacs.conversations.entities.Presences;
 import eu.siacs.conversations.services.AvatarService;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.services.XmppConnectionService.XmppConnectionBinder;
+import eu.siacs.conversations.ui.widget.Switch;
+import eu.siacs.conversations.utils.CryptoHelper;
 import eu.siacs.conversations.utils.ExceptionHelper;
+import eu.siacs.conversations.xmpp.OnNewKeysAvailable;
 import eu.siacs.conversations.xmpp.OnUpdateBlocklist;
 import eu.siacs.conversations.xmpp.jid.InvalidJidException;
 import eu.siacs.conversations.xmpp.jid.Jid;
@@ -116,7 +125,7 @@ public abstract class XmppActivity extends Activity {
 	protected ConferenceInvite mPendingConferenceInvite = null;
 
 
-	protected void refreshUi() {
+	protected final void refreshUi() {
 		final long diff = SystemClock.elapsedRealtime() - mLastUiRefresh;
 		if (diff > Config.REFRESH_UI_INTERVAL) {
 			mRefreshUiHandler.removeCallbacks(mRefreshUiRunnable);
@@ -128,9 +137,7 @@ public abstract class XmppActivity extends Activity {
 		}
 	}
 
-	protected void refreshUiReal() {
-
-	};
+	abstract protected void refreshUiReal();
 
 	protected interface OnValueEdited {
 		public void onValueEdited(String value);
@@ -287,6 +294,9 @@ public abstract class XmppActivity extends Activity {
 		if (this instanceof XmppConnectionService.OnShowErrorToast) {
 			this.xmppConnectionService.setOnShowErrorToastListener((XmppConnectionService.OnShowErrorToast) this);
 		}
+		if (this instanceof OnNewKeysAvailable) {
+			this.xmppConnectionService.setOnNewKeysAvailableListener((OnNewKeysAvailable) this);
+		}
 	}
 
 	protected void unregisterListeners() {
@@ -307,6 +317,9 @@ public abstract class XmppActivity extends Activity {
 		}
 		if (this instanceof XmppConnectionService.OnShowErrorToast) {
 			this.xmppConnectionService.removeOnShowErrorToastListener();
+		}
+		if (this instanceof OnNewKeysAvailable) {
+			this.xmppConnectionService.removeOnNewKeysAvailableListener();
 		}
 	}
 
@@ -443,7 +456,7 @@ public abstract class XmppActivity extends Activity {
 
 					@Override
 					public void userInputRequried(PendingIntent pi,
-												  Account account) {
+					                              Account account) {
 						try {
 							startIntentSenderForResult(pi.getIntentSender(),
 									REQUEST_ANNOUNCE_PGP, null, 0, 0, 0);
@@ -585,6 +598,105 @@ public abstract class XmppActivity extends Activity {
 		editor.setText(previousValue);
 		builder.setView(view);
 		builder.setNegativeButton(R.string.cancel, null);
+		builder.create().show();
+	}
+
+	protected boolean addFingerprintRow(LinearLayout keys, final Account account, IdentityKey identityKey) {
+		final String fingerprint = identityKey.getFingerprint().replaceAll("\\s", "");
+		final AxolotlService.SQLiteAxolotlStore.Trust trust = account.getAxolotlService()
+				.getFingerprintTrust(fingerprint);
+		return addFingerprintRowWithListeners(keys, account, identityKey, trust, true,
+				new CompoundButton.OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+						if (isChecked != (trust == AxolotlService.SQLiteAxolotlStore.Trust.TRUSTED)) {
+							account.getAxolotlService().setFingerprintTrust(fingerprint,
+									(isChecked) ? AxolotlService.SQLiteAxolotlStore.Trust.TRUSTED :
+											AxolotlService.SQLiteAxolotlStore.Trust.UNTRUSTED);
+						}
+						refreshUi();
+						xmppConnectionService.updateAccountUi();
+						xmppConnectionService.updateConversationUi();
+					}
+				},
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						account.getAxolotlService().setFingerprintTrust(fingerprint,
+								AxolotlService.SQLiteAxolotlStore.Trust.UNTRUSTED);
+						refreshUi();
+						xmppConnectionService.updateAccountUi();
+						xmppConnectionService.updateConversationUi();
+					}
+				}
+
+		);
+	}
+
+	protected boolean addFingerprintRowWithListeners(LinearLayout keys, final Account account,
+	                                              final IdentityKey identityKey,
+	                                              AxolotlService.SQLiteAxolotlStore.Trust trust,
+	                                              boolean showTag,
+	                                              CompoundButton.OnCheckedChangeListener
+			                                             onCheckedChangeListener,
+	                                              View.OnClickListener onClickListener) {
+		if (trust == AxolotlService.SQLiteAxolotlStore.Trust.COMPROMISED) {
+			return false;
+		}
+		View view = getLayoutInflater().inflate(R.layout.contact_key, keys, false);
+		TextView key = (TextView) view.findViewById(R.id.key);
+		TextView keyType = (TextView) view.findViewById(R.id.key_type);
+		Switch trustToggle = (Switch) view.findViewById(R.id.tgl_trust);
+		trustToggle.setVisibility(View.VISIBLE);
+		trustToggle.setOnCheckedChangeListener(onCheckedChangeListener);
+		trustToggle.setOnClickListener(onClickListener);
+		view.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				showPurgeKeyDialog(account, identityKey);
+				return true;
+			}
+		});
+
+		switch (trust) {
+			case UNTRUSTED:
+			case TRUSTED:
+				trustToggle.setChecked(trust == AxolotlService.SQLiteAxolotlStore.Trust.TRUSTED, false);
+				trustToggle.setEnabled(true);
+				break;
+			case UNDECIDED:
+				trustToggle.setChecked(false, false);
+				trustToggle.setEnabled(false);
+				break;
+		}
+
+		if (showTag) {
+			keyType.setText(getString(R.string.axolotl_fingerprint));
+		} else {
+			keyType.setVisibility(View.GONE);
+		}
+
+		key.setText(CryptoHelper.prettifyFingerprint(identityKey.getFingerprint()));
+		keys.addView(view);
+		return true;
+	}
+
+	public void showPurgeKeyDialog(final Account account, final IdentityKey identityKey) {
+		Builder builder = new Builder(this);
+		builder.setTitle(getString(R.string.purge_key));
+		builder.setIconAttribute(android.R.attr.alertDialogIcon);
+		builder.setMessage(getString(R.string.purge_key_desc_part1)
+				+ "\n\n" + CryptoHelper.prettifyFingerprint(identityKey.getFingerprint())
+				+ "\n\n" + getString(R.string.purge_key_desc_part2));
+		builder.setNegativeButton(getString(R.string.cancel), null);
+		builder.setPositiveButton(getString(R.string.accept),
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						account.getAxolotlService().purgeKey(identityKey);
+						refreshUi();
+					}
+				});
 		builder.create().show();
 	}
 
