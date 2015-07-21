@@ -325,7 +325,7 @@ public class ConversationActivity extends XmppActivity
                         if (state == ChatState.COMPOSING) {
                             ab.setSubtitle(getString(R.string.contact_is_typing, conversation.getName()));
                         } else if (state == ChatState.PAUSED) {
-                            ab.setSubtitle(getString(R.string.contact_has_stopped_typing, conversation.getName()));
+                            ab.setSubtitle(null);
                         }
                     }
 				} else {
