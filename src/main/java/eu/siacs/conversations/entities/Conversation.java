@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import eu.siacs.conversations.Config;
+import eu.siacs.conversations.R;
 import eu.siacs.conversations.xmpp.chatstate.ChatState;
 import eu.siacs.conversations.xmpp.jid.InvalidJidException;
 import eu.siacs.conversations.xmpp.jid.Jid;
@@ -350,7 +351,7 @@ public class Conversation extends AbstractEntity implements Blockable {
 			if (generatedName != null) {
 				return generatedName;
 			} else {
-				return getJid().getLocalpart();
+				return null; //getJid().getLocalpart();
 			}
 		} else {
 			return null;

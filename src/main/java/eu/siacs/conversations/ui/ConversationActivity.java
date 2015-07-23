@@ -337,7 +337,7 @@ public class ConversationActivity extends XmppActivity
 							ab.setSubtitle(null);
 						}
 					} else if (useSubjectToIdentifyConference()){
-                        ab.setSubtitle(conversation.getParticipants() + ", " + getText(R.string.you));
+                        ab.setSubtitle(conversation.getParticipants());
                     }
 				} else {
 					ab.setTitle(conversation.getJid().toBareJid().toString());
