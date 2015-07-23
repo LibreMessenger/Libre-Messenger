@@ -17,6 +17,8 @@
         android:layout_alignParentTop="true"
         android:scaleType="fitXY"
         android:src="@drawable/ic_profile"
+        android:background="@drawable/message_border"
+        android:padding="1dp"
         app:riv_corner_radius="2dp" />
 
     <LinearLayout
