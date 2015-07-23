@@ -30,7 +30,7 @@
             android:title="@string/pref_confirm_messages" />
 
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="chat_states"
             android:summary="@string/pref_chat_states_summary"
             android:title="@string/pref_chat_states" />
@@ -83,7 +83,7 @@
             android:title="@string/pref_sound" />
 
         <CheckBoxPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:dependency="show_notification"
             android:key="always_notify_in_conference"
             android:summary="@string/pref_conference_notifications_summary"

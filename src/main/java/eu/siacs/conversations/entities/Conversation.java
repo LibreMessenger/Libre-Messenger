@@ -179,13 +179,13 @@ public class Conversation extends AbstractEntity implements Blockable {
 		}
 	}
 
-	public void findUnsentMessagesWithOtrEncryption(OnMessageFound onMessageFound) {
+	public void findUnsentMessagesWithEncryption(int encryptionType, OnMessageFound onMessageFound) {
 		synchronized (this.messages) {
 			for (Message message : this.messages) {
 				if ((message.getStatus() == Message.STATUS_UNSEND || message.getStatus() == Message.STATUS_WAITING)
-						&& (message.getEncryption() == Message.ENCRYPTION_OTR)) {
+						&& (message.getEncryption() == encryptionType)) {
 					onMessageFound.onMessageFound(message);
-						}
+				}
 			}
 		}
 	}
@@ -341,6 +341,19 @@ public class Conversation extends AbstractEntity implements Blockable {
 			}
 		} else {
 			return this.getContact().getDisplayName();
+		}
+	}
+
+	public String getParticipants() {
+		if (getMode() == MODE_MULTI) {
+			String generatedName = getMucOptions().createNameFromParticipants();
+			if (generatedName != null) {
+				return generatedName;
+			} else {
+				return getJid().getLocalpart();
+			}
+		} else {
+			return null;
 		}
 	}
 
@@ -517,6 +530,13 @@ public class Conversation extends AbstractEntity implements Blockable {
 
 	public boolean isOtrFingerprintVerified() {
 		return getContact().getOtrFingerprints().contains(getOtrFingerprint());
+	}
+
+	/**
+	 * short for is Private and Non-anonymous
+	 */
+	public boolean isPnNA() {
+		return mode == MODE_SINGLE || (getMucOptions().membersOnly() && getMucOptions().nonanonymous());
 	}
 
 	public synchronized MucOptions getMucOptions() {

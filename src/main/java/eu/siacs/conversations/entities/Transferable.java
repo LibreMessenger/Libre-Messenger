@@ -2,9 +2,55 @@ package eu.siacs.conversations.entities;
 
 public interface Transferable {
 
-	String[] VALID_IMAGE_EXTENSIONS = {"webp", "jpeg", "jpg", "png", "jpe"};
-	String[] VALID_CRYPTO_EXTENSIONS = {"pgp", "gpg", "otr"};
-	String[] WELL_KNOWN_EXTENSIONS = {"pdf","m4a","mp3","avi","mp4","apk","vcf"};
+	String[] VALID_IMAGE_EXTENSIONS = {
+			"webp",
+			"jpeg",
+			"jpg",
+			"png",
+			"jpe",
+			"gif",
+			"tif"
+	};
+	String[] VALID_CRYPTO_EXTENSIONS = {
+			"pgp",
+			"gpg",
+			"otr"
+	};
+	String[] WELL_KNOWN_EXTENSIONS = {
+			//documents
+			"pdf",
+			"doc",
+			"docx",
+			"txt",
+			//audio
+			"m4a",
+            "m4b",
+			"mp3",
+			"mp2",
+			"wav",
+			"aac",
+			"aif",
+			"aiff",
+			"aifc",
+			"mid",
+			"midi",
+			//video
+			"avi",
+			"mp4",
+			"mpeg",
+			"mpg",
+			"mpe",
+			"mov",
+            "3gp",
+			//applications
+			"apk",
+			//calendar
+			"vcf",
+			//compressed
+			"zip",
+			"rar",
+
+	};
 
 	int STATUS_UNKNOWN = 0x200;
 	int STATUS_CHECKING = 0x201;

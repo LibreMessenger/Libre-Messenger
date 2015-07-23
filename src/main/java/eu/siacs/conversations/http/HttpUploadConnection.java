@@ -14,9 +14,9 @@ import javax.net.ssl.HttpsURLConnection;
 
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.entities.Account;
-import eu.siacs.conversations.entities.Transferable;
 import eu.siacs.conversations.entities.DownloadableFile;
 import eu.siacs.conversations.entities.Message;
+import eu.siacs.conversations.entities.Transferable;
 import eu.siacs.conversations.persistance.FileBackend;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.ui.UiCallback;
@@ -33,6 +33,7 @@ public class HttpUploadConnection implements Transferable {
 	private XmppConnectionService mXmppConnectionService;
 
 	private boolean canceled = false;
+	private boolean delayed = false;
 	private Account account;
 	private DownloadableFile file;
 	private Message message;
@@ -80,15 +81,18 @@ public class HttpUploadConnection implements Transferable {
 		mXmppConnectionService.markMessage(message,Message.STATUS_SEND_FAILED);
 	}
 
-	public void init(Message message) {
+	public void init(Message message, boolean delay) {
 		this.message = message;
 		message.setTransferable(this);
 		mXmppConnectionService.markMessage(message,Message.STATUS_UNSEND);
 		this.account = message.getConversation().getAccount();
 		this.file = mXmppConnectionService.getFileBackend().getFile(message, false);
 		this.file.setExpectedSize(this.file.getSize());
+		this.delayed = delay;
 
-		if (Config.ENCRYPT_ON_HTTP_UPLOADED) {
+		if (Config.ENCRYPT_ON_HTTP_UPLOADED
+				|| message.getEncryption() == Message.ENCRYPTION_AXOLOTL
+				|| message.getEncryption() == Message.ENCRYPTION_OTR) {
 			this.key = new byte[48];
 			mXmppConnectionService.getRNG().nextBytes(this.key);
 			this.file.setKey(this.key);
@@ -157,7 +161,7 @@ public class HttpUploadConnection implements Transferable {
 				os.close();
 				is.close();
 				int code = connection.getResponseCode();
-				if (code == 200) {
+				if (code == 200 || code == 201) {
 					Log.d(Config.LOGTAG, "finished uploading file");
 					Message.FileParams params = message.getFileParams();
 					if (key != null) {
@@ -170,7 +174,7 @@ public class HttpUploadConnection implements Transferable {
 						mXmppConnectionService.getPgpEngine().encrypt(message, new UiCallback<Message>() {
 							@Override
 							public void success(Message message) {
-								mXmppConnectionService.resendMessage(message);
+								mXmppConnectionService.resendMessage(message,delayed);
 							}
 
 							@Override
@@ -184,7 +188,7 @@ public class HttpUploadConnection implements Transferable {
 							}
 						});
 					} else {
-						mXmppConnectionService.resendMessage(message);
+						mXmppConnectionService.resendMessage(message,delayed);
 					}
 				} else {
 					fail();

@@ -1,5 +1,10 @@
 package eu.siacs.conversations.xmpp.jingle;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.os.SystemClock;
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -8,17 +13,13 @@ import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.os.SystemClock;
-import android.util.Log;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.entities.Conversation;
-import eu.siacs.conversations.entities.Transferable;
 import eu.siacs.conversations.entities.DownloadableFile;
-import eu.siacs.conversations.entities.TransferablePlaceholder;
 import eu.siacs.conversations.entities.Message;
+import eu.siacs.conversations.entities.Transferable;
+import eu.siacs.conversations.entities.TransferablePlaceholder;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.xml.Element;
 import eu.siacs.conversations.xmpp.OnIqPacketReceived;
@@ -59,7 +60,6 @@ public class JingleConnection implements Transferable {
 	private String contentCreator;
 
 	private int mProgress = 0;
-	private long mLastGuiRefresh = 0;
 
 	private boolean receivedCandidate = false;
 	private boolean sentCandidate = false;
@@ -368,7 +368,10 @@ public class JingleConnection implements Transferable {
 					message, false);
 			if (message.getEncryption() == Message.ENCRYPTION_OTR) {
 				Conversation conversation = this.message.getConversation();
-				this.mXmppConnectionService.renewSymmetricKey(conversation);
+				if (!this.mXmppConnectionService.renewSymmetricKey(conversation)) {
+					Log.d(Config.LOGTAG,account.getJid().toBareJid()+": could not set symmetric key");
+					cancel();
+				}
 				content.setFileOffer(this.file, true);
 				this.file.setKey(conversation.getSymmetricKey());
 			} else {
@@ -898,10 +901,7 @@ public class JingleConnection implements Transferable {
 
 	public void updateProgress(int i) {
 		this.mProgress = i;
-		if (SystemClock.elapsedRealtime() - this.mLastGuiRefresh > Config.PROGRESS_UI_UPDATE_INTERVAL) {
-			this.mLastGuiRefresh = SystemClock.elapsedRealtime();
-			mXmppConnectionService.updateConversationUi();
-		}
+		mXmppConnectionService.updateConversationUi();
 	}
 
 	interface OnProxyActivated {

@@ -52,16 +52,17 @@ import de.duenndns.ssl.MemorizingTrustManager;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.PgpEngine;
+import eu.siacs.conversations.crypto.axolotl.XmppAxolotlMessage;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.entities.Blockable;
 import eu.siacs.conversations.entities.Bookmark;
 import eu.siacs.conversations.entities.Contact;
 import eu.siacs.conversations.entities.Conversation;
-import eu.siacs.conversations.entities.Transferable;
-import eu.siacs.conversations.entities.TransferablePlaceholder;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.entities.MucOptions;
 import eu.siacs.conversations.entities.MucOptions.OnRenameListener;
+import eu.siacs.conversations.entities.Transferable;
+import eu.siacs.conversations.entities.TransferablePlaceholder;
 import eu.siacs.conversations.generator.IqGenerator;
 import eu.siacs.conversations.generator.MessageGenerator;
 import eu.siacs.conversations.generator.PresenceGenerator;
@@ -85,6 +86,7 @@ import eu.siacs.conversations.xmpp.OnContactStatusChanged;
 import eu.siacs.conversations.xmpp.OnIqPacketReceived;
 import eu.siacs.conversations.xmpp.OnMessageAcknowledged;
 import eu.siacs.conversations.xmpp.OnMessagePacketReceived;
+import eu.siacs.conversations.xmpp.OnKeyStatusUpdated;
 import eu.siacs.conversations.xmpp.OnPresencePacketReceived;
 import eu.siacs.conversations.xmpp.OnStatusChanged;
 import eu.siacs.conversations.xmpp.OnUpdateBlocklist;
@@ -273,7 +275,10 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 					}
 				}
 				syncDirtyContacts(account);
-				scheduleWakeUpCall(Config.PING_MAX_INTERVAL,account.getUuid().hashCode());
+				account.getAxolotlService().publishOwnDeviceIdIfNeeded();
+				account.getAxolotlService().publishBundlesIfNeeded();
+
+				scheduleWakeUpCall(Config.PING_MAX_INTERVAL, account.getUuid().hashCode());
 			} else if (account.getStatus() == Account.State.OFFLINE) {
 				resetSendingToWaiting(account);
 				if (!account.isOptionSet(Account.OPTION_DISABLED)) {
@@ -304,6 +309,8 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 	private int rosterChangedListenerCount = 0;
 	private OnMucRosterUpdate mOnMucRosterUpdate = null;
 	private int mucRosterChangedListenerCount = 0;
+	private OnKeyStatusUpdated mOnKeyStatusUpdated = null;
+	private int keyStatusUpdatedListenerCount = 0;
 	private SecureRandom mRandom;
 	private OpenPgpServiceConnection pgpServiceConnection;
 	private PgpEngine mPgpEngine = null;
@@ -591,9 +598,6 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		this.databaseBackend = DatabaseBackend.getInstance(getApplicationContext());
 		this.accounts = databaseBackend.getAccounts();
 
-		for (final Account account : this.accounts) {
-			account.initAccountServices(this);
-		}
 		restoreFromDatabase();
 
 		getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, contactObserver);
@@ -674,22 +678,22 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		}
 	}
 
-	private void sendFileMessage(final Message message) {
+	private void sendFileMessage(final Message message, final boolean delay) {
 		Log.d(Config.LOGTAG, "send file message");
 		final Account account = message.getConversation().getAccount();
 		final XmppConnection connection = account.getXmppConnection();
 		if (connection != null && connection.getFeatures().httpUpload()) {
-			mHttpConnectionManager.createNewUploadConnection(message);
+			mHttpConnectionManager.createNewUploadConnection(message, delay);
 		} else {
 			mJingleConnectionManager.createNewConnection(message);
 		}
 	}
 
 	public void sendMessage(final Message message) {
-		sendMessage(message, false);
+		sendMessage(message, false, false);
 	}
 
-	private void sendMessage(final Message message, final boolean resend) {
+	private void sendMessage(final Message message, final boolean resend, final boolean delay) {
 		final Account account = message.getConversation().getAccount();
 		final Conversation conversation = message.getConversation();
 		account.deactivateGracePeriod();
@@ -699,7 +703,8 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 
 		if (!resend && message.getEncryption() != Message.ENCRYPTION_OTR) {
 			message.getConversation().endOtrIfNeeded();
-			message.getConversation().findUnsentMessagesWithOtrEncryption(new Conversation.OnMessageFound() {
+			message.getConversation().findUnsentMessagesWithEncryption(Message.ENCRYPTION_OTR,
+					new Conversation.OnMessageFound() {
 				@Override
 				public void onMessageFound(Message message) {
 					markMessage(message,Message.STATUS_SEND_FAILED);
@@ -712,24 +717,24 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 				case Message.ENCRYPTION_NONE:
 					if (message.needsUploading()) {
 						if (account.httpUploadAvailable() || message.fixCounterpart()) {
-							this.sendFileMessage(message);
+							this.sendFileMessage(message,delay);
 						} else {
 							break;
 						}
 					} else {
-						packet = mMessageGenerator.generateChat(message,resend);
+						packet = mMessageGenerator.generateChat(message);
 					}
 					break;
 				case Message.ENCRYPTION_PGP:
 				case Message.ENCRYPTION_DECRYPTED:
 					if (message.needsUploading()) {
 						if (account.httpUploadAvailable() || message.fixCounterpart()) {
-							this.sendFileMessage(message);
+							this.sendFileMessage(message,delay);
 						} else {
 							break;
 						}
 					} else {
-						packet = mMessageGenerator.generatePgpChat(message,resend);
+						packet = mMessageGenerator.generatePgpChat(message);
 					}
 					break;
 				case Message.ENCRYPTION_OTR:
@@ -743,7 +748,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 						if (message.needsUploading()) {
 							mJingleConnectionManager.createNewConnection(message);
 						} else {
-							packet = mMessageGenerator.generateOtrChat(message,resend);
+							packet = mMessageGenerator.generateOtrChat(message);
 						}
 					} else if (otrSession == null) {
 						if (message.fixCounterpart()) {
@@ -753,6 +758,24 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 						}
 					}
 					break;
+				case Message.ENCRYPTION_AXOLOTL:
+					if (message.needsUploading()) {
+						if (account.httpUploadAvailable() || message.fixCounterpart()) {
+							this.sendFileMessage(message,delay);
+						} else {
+							break;
+						}
+					} else {
+						XmppAxolotlMessage axolotlMessage = account.getAxolotlService().fetchAxolotlMessageFromCache(message);
+						if (axolotlMessage == null) {
+							account.getAxolotlService().prepareMessage(message,delay);
+							message.setAxolotlFingerprint(account.getAxolotlService().getOwnPublicKey().getFingerprint().replaceAll("\\s", ""));
+						} else {
+							packet = mMessageGenerator.generateAxolotlChat(message, axolotlMessage);
+						}
+					}
+					break;
+
 			}
 			if (packet != null) {
 				if (account.getXmppConnection().getFeatures().sm() || conversation.getMode() == Conversation.MODE_MULTI) {
@@ -780,6 +803,9 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 						conversation.startOtrSession(message.getCounterpart().getResourcepart(), false);
 					}
 					break;
+				case Message.ENCRYPTION_AXOLOTL:
+					message.setAxolotlFingerprint(account.getAxolotlService().getOwnPublicKey().getFingerprint().replaceAll("\\s", ""));
+					break;
 			}
 		}
 
@@ -799,6 +825,9 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 			updateConversationUi();
 		}
 		if (packet != null) {
+			if (delay) {
+				mMessageGenerator.addDelay(packet,message.getTimeSent());
+			}
 			if (conversation.setOutgoingChatState(Config.DEFAULT_CHATSTATE)) {
 				if (this.sendChatStates()) {
 					packet.addChild(ChatState.toElement(conversation.getOutgoingChatState()));
@@ -813,13 +842,13 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 
 			@Override
 			public void onMessageFound(Message message) {
-				resendMessage(message);
+				resendMessage(message, true);
 			}
 		});
 	}
 
-	public void resendMessage(final Message message) {
-		sendMessage(message, true);
+	public void resendMessage(final Message message, final boolean delay) {
+		sendMessage(message, true, delay);
 	}
 
 	public void fetchRosterFromServer(final Account account) {
@@ -830,9 +859,8 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		} else {
 			Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": fetching roster");
 		}
-		iqPacket.query(Xmlns.ROSTER).setAttribute("ver",
-				account.getRosterVersion());
-		account.getXmppConnection().sendIqPacket(iqPacket, mIqParser);
+		iqPacket.query(Xmlns.ROSTER).setAttribute("ver",account.getRosterVersion());
+		sendIqPacket(account,iqPacket,mIqParser);
 	}
 
 	public void fetchBookmarks(final Account account) {
@@ -944,6 +972,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 					Log.d(Config.LOGTAG,"restoring roster");
 					for(Account account : accounts) {
 						databaseBackend.readRoster(account.getRoster());
+						account.initAccountServices(XmppConnectionService.this);
 					}
 					getBitmapCache().evictAll();
 					Looper.prepare();
@@ -1343,6 +1372,31 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		}
 	}
 
+	public void setOnKeyStatusUpdatedListener(final OnKeyStatusUpdated listener) {
+		synchronized (this) {
+			if (checkListeners()) {
+				switchToForeground();
+			}
+			this.mOnKeyStatusUpdated = listener;
+			if (this.keyStatusUpdatedListenerCount < 2) {
+				this.keyStatusUpdatedListenerCount++;
+			}
+		}
+	}
+
+	public void removeOnNewKeysAvailableListener() {
+		synchronized (this) {
+			this.keyStatusUpdatedListenerCount--;
+			if (this.keyStatusUpdatedListenerCount <= 0) {
+				this.keyStatusUpdatedListenerCount = 0;
+				this.mOnKeyStatusUpdated = null;
+				if (checkListeners()) {
+					switchToBackground();
+				}
+			}
+		}
+	}
+
 	public void setOnMucRosterUpdateListener(OnMucRosterUpdate listener) {
 		synchronized (this) {
 			if (checkListeners()) {
@@ -1373,7 +1427,8 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 				&& this.mOnConversationUpdate == null
 				&& this.mOnRosterUpdate == null
 				&& this.mOnUpdateBlocklist == null
-				&& this.mOnShowErrorToast == null);
+				&& this.mOnShowErrorToast == null
+				&& this.mOnKeyStatusUpdated == null);
 	}
 
 	private void switchToForeground() {
@@ -1785,7 +1840,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 				account.getJid().toBareJid() + " otr session established with "
 						+ conversation.getJid() + "/"
 						+ otrSession.getSessionID().getUserID());
-		conversation.findUnsentMessagesWithOtrEncryption(new Conversation.OnMessageFound() {
+		conversation.findUnsentMessagesWithEncryption(Message.ENCRYPTION_OTR, new Conversation.OnMessageFound() {
 
 			@Override
 			public void onMessageFound(Message message) {
@@ -1798,8 +1853,9 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 				if (message.needsUploading()) {
 					mJingleConnectionManager.createNewConnection(message);
 				} else {
-					MessagePacket outPacket = mMessageGenerator.generateOtrChat(message, true);
+					MessagePacket outPacket = mMessageGenerator.generateOtrChat(message);
 					if (outPacket != null) {
+						mMessageGenerator.addDelay(outPacket, message.getTimeSent());
 						message.setStatus(Message.STATUS_SEND);
 						databaseBackend.updateMessage(message);
 						sendMessagePacket(account, outPacket);
@@ -2261,6 +2317,12 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		}
 	}
 
+	public void keyStatusUpdated() {
+		if(mOnKeyStatusUpdated != null) {
+			mOnKeyStatusUpdated.onKeyStatusUpdated();
+		}
+	}
+
 	public Account findAccountByJid(final Jid accountJid) {
 		for (Account account : this.accounts) {
 			if (account.getJid().toBareJid().equals(accountJid.toBareJid())) {
@@ -2472,7 +2534,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		}
 		for (final Message msg : messages) {
 			markMessage(msg, Message.STATUS_WAITING);
-			this.resendMessage(msg);
+			this.resendMessage(msg,true);
 		}
 	}
 

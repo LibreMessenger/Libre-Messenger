@@ -19,12 +19,15 @@ public final class Config {
 	public static final int AVATAR_SIZE = 384;
 	public static final Bitmap.CompressFormat AVATAR_FORMAT = Bitmap.CompressFormat.WEBP;
 
+	public static final int IMAGE_SIZE = 1920;
+	public static final Bitmap.CompressFormat IMAGE_FORMAT = Bitmap.CompressFormat.JPEG;
+	public static final int IMAGE_QUALITY = 75;
+
 	public static final int MESSAGE_MERGE_WINDOW = 20;
 
 	public static final int PAGE_SIZE = 50;
 	public static final int MAX_NUM_PAGES = 3;
 
-	public static final int PROGRESS_UI_UPDATE_INTERVAL = 750;
 	public static final int REFRESH_UI_INTERVAL = 500;
 
 	public static final boolean NO_PROXY_LOOKUP = false; //useful to debug ibb
@@ -34,12 +37,14 @@ public final class Config {
 
 	public static final boolean ENCRYPT_ON_HTTP_UPLOADED = false;
 
+	public static final boolean SHOW_REGENERATE_AXOLOTL_KEYS_BUTTON = false;
+
 	public static final long MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000;
 	public static final long MAM_MAX_CATCHUP =  MILLISECONDS_IN_DAY / 2;
 	public static final int MAM_MAX_MESSAGES = 500;
 
 	public static final ChatState DEFAULT_CHATSTATE = ChatState.ACTIVE;
-	public static final int TYPING_TIMEOUT = 3;
+	public static final int TYPING_TIMEOUT = 5;
 
 	public static final String ENABLED_CIPHERS[] = {
 		"TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",

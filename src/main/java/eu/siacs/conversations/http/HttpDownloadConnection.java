@@ -18,9 +18,9 @@ import javax.net.ssl.SSLHandshakeException;
 
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
-import eu.siacs.conversations.entities.Transferable;
 import eu.siacs.conversations.entities.DownloadableFile;
 import eu.siacs.conversations.entities.Message;
+import eu.siacs.conversations.entities.Transferable;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.utils.CryptoHelper;
 
@@ -35,7 +35,6 @@ public class HttpDownloadConnection implements Transferable {
 	private int mStatus = Transferable.STATUS_UNKNOWN;
 	private boolean acceptedAutomatically = false;
 	private int mProgress = 0;
-	private long mLastGuiRefresh = 0;
 
 	public HttpDownloadConnection(HttpConnectionManager manager) {
 		this.mHttpConnectionManager = manager;
@@ -70,7 +69,8 @@ public class HttpDownloadConnection implements Transferable {
 			String secondToLast = parts.length >= 2 ? parts[parts.length -2] : null;
 			if ("pgp".equals(lastPart) || "gpg".equals(lastPart)) {
 				this.message.setEncryption(Message.ENCRYPTION_PGP);
-			} else if (message.getEncryption() != Message.ENCRYPTION_OTR) {
+			} else if (message.getEncryption() != Message.ENCRYPTION_OTR
+					&& message.getEncryption() != Message.ENCRYPTION_AXOLOTL) {
 				this.message.setEncryption(Message.ENCRYPTION_NONE);
 			}
 			String extension;
@@ -86,7 +86,8 @@ public class HttpDownloadConnection implements Transferable {
 				this.file.setKey(CryptoHelper.hexToBytes(reference));
 			}
 
-			if (this.message.getEncryption() == Message.ENCRYPTION_OTR
+			if ((this.message.getEncryption() == Message.ENCRYPTION_OTR
+					|| this.message.getEncryption() == Message.ENCRYPTION_AXOLOTL)
 					&& this.file.getKey() == null) {
 				this.message.setEncryption(Message.ENCRYPTION_NONE);
 					}
@@ -242,10 +243,7 @@ public class HttpDownloadConnection implements Transferable {
 
 	public void updateProgress(int i) {
 		this.mProgress = i;
-		if (SystemClock.elapsedRealtime() - this.mLastGuiRefresh > Config.PROGRESS_UI_UPDATE_INTERVAL) {
-			this.mLastGuiRefresh = SystemClock.elapsedRealtime();
-			mXmppConnectionService.updateConversationUi();
-		}
+		mXmppConnectionService.updateConversationUi();
 	}
 
 	@Override

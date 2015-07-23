@@ -62,12 +62,12 @@ public class NotificationService {
 
 	public boolean notify(final Message message) {
 		return (message.getStatus() == Message.STATUS_RECEIVED)
-				&& notificationsEnabled()
-				&& !message.getConversation().isMuted()
-				&& (message.getConversation().getMode() == Conversation.MODE_SINGLE
-				|| conferenceNotificationsEnabled()
-				|| wasHighlightedOrPrivate(message)
-		);
+			&& notificationsEnabled()
+			&& !message.getConversation().isMuted()
+			&& (message.getConversation().isPnNA()
+					|| conferenceNotificationsEnabled()
+					|| wasHighlightedOrPrivate(message)
+				 );
 	}
 
 	public void notifyPebble(final Message message) {
