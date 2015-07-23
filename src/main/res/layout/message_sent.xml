@@ -105,18 +105,4 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-    <ImageView
-        android:id="@+id/message_photo"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="-1.5dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_profile"
-        android:background="@drawable/message_border"
-        android:paddingTop="1dp"
-        android:paddingRight="1dp"
-        android:paddingBottom="1dp"
-        android:paddingLeft="0dp" />
 </RelativeLayout>
