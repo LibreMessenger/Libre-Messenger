@@ -29,18 +29,20 @@ import org.whispersystems.libaxolotl.IdentityKey;
 
 import java.util.Set;
 
+import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.services.XmppConnectionService.OnAccountUpdate;
 import eu.siacs.conversations.ui.adapter.KnownHostsAdapter;
 import eu.siacs.conversations.utils.CryptoHelper;
 import eu.siacs.conversations.utils.UIHelper;
+import eu.siacs.conversations.xmpp.OnKeyStatusUpdated;
 import eu.siacs.conversations.xmpp.XmppConnection.Features;
 import eu.siacs.conversations.xmpp.jid.InvalidJidException;
 import eu.siacs.conversations.xmpp.jid.Jid;
 import eu.siacs.conversations.xmpp.pep.Avatar;
 
-public class EditAccountActivity extends XmppActivity implements OnAccountUpdate{
+public class EditAccountActivity extends XmppActivity implements OnAccountUpdate, OnKeyStatusUpdated {
 
 	private AutoCompleteTextView mAccountJid;
 	private EditText mPassword;
@@ -546,16 +548,18 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 								}
 							}
 						});
-				this.mRegenerateAxolotlKeyButton
-						.setVisibility(View.VISIBLE);
-				this.mRegenerateAxolotlKeyButton
-						.setOnClickListener(new View.OnClickListener() {
+				if (Config.SHOW_REGENERATE_AXOLOTL_KEYS_BUTTON) {
+					this.mRegenerateAxolotlKeyButton
+							.setVisibility(View.VISIBLE);
+					this.mRegenerateAxolotlKeyButton
+							.setOnClickListener(new View.OnClickListener() {
 
-							@Override
-							public void onClick(final View v) {
-								showRegenerateAxolotlKeyDialog();
-							}
-						});
+								@Override
+								public void onClick(final View v) {
+									showRegenerateAxolotlKeyDialog();
+								}
+							});
+				}
 			} else {
 				this.mAxolotlFingerprintBox.setVisibility(View.GONE);
 			}
@@ -617,5 +621,10 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 					}
 				});
 		builder.create().show();
+	}
+
+	@Override
+	public void onKeyStatusUpdated() {
+		refreshUi();
 	}
 }

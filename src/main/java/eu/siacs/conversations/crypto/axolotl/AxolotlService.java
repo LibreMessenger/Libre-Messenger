@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.whispersystems.libaxolotl.AxolotlAddress;
 import org.whispersystems.libaxolotl.DuplicateMessageException;
 import org.whispersystems.libaxolotl.IdentityKey;
@@ -30,6 +31,7 @@ import org.whispersystems.libaxolotl.state.SessionRecord;
 import org.whispersystems.libaxolotl.state.SignedPreKeyRecord;
 import org.whispersystems.libaxolotl.util.KeyHelper;
 
+import java.security.Security;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -51,7 +53,6 @@ import eu.siacs.conversations.xmpp.OnIqPacketReceived;
 import eu.siacs.conversations.xmpp.jid.InvalidJidException;
 import eu.siacs.conversations.xmpp.jid.Jid;
 import eu.siacs.conversations.xmpp.stanzas.IqPacket;
-import eu.siacs.conversations.xmpp.stanzas.MessagePacket;
 
 public class AxolotlService {
 
@@ -68,7 +69,7 @@ public class AxolotlService {
 	private final SQLiteAxolotlStore axolotlStore;
 	private final SessionMap sessions;
 	private final Map<Jid, Set<Integer>> deviceIds;
-	private final Map<String, MessagePacket> messageCache;
+	private final Map<String, XmppAxolotlMessage> messageCache;
 	private final FetchStatusMap fetchStatusMap;
 	private final SerialSingleThreadExecutor executor;
 
@@ -98,25 +99,52 @@ public class AxolotlService {
 		private int currentPreKeyId = 0;
 
 		public enum Trust {
-			UNDECIDED, // 0
-			TRUSTED,
-			UNTRUSTED,
-			COMPROMISED;
+			UNDECIDED(0),
+			TRUSTED(1),
+			UNTRUSTED(2),
+			COMPROMISED(3),
+			INACTIVE(4);
+
+			private static final Map<Integer, Trust> trustsByValue = new HashMap<>();
+
+			static {
+				for (Trust trust : Trust.values()) {
+					trustsByValue.put(trust.getCode(), trust);
+				}
+			}
+
+			private final int code;
+
+			Trust(int code){
+				this.code = code;
+			}
+
+			public int getCode() {
+				return this.code;
+			}
 
 			public String toString() {
 				switch(this){
 					case UNDECIDED:
-						return "Trust undecided";
+						return "Trust undecided "+getCode();
 					case TRUSTED:
-						return "Trusted";
+						return "Trusted "+getCode();
+					case COMPROMISED:
+						return "Compromised "+getCode();
+					case INACTIVE:
+						return "Inactive "+getCode();
 					case UNTRUSTED:
 					default:
-						return "Untrusted";
+						return "Untrusted "+getCode();
 				}
 			}
 
 			public static Trust fromBoolean(Boolean trusted) {
 				return trusted?TRUSTED:UNTRUSTED;
+			}
+
+			public static Trust fromCode(int code) {
+				return trustsByValue.get(code);
 			}
 		};
 
@@ -515,15 +543,22 @@ public class AxolotlService {
 			return fingerprint;
 		}
 
-		private SQLiteAxolotlStore.Trust getTrust() {
+		protected void setTrust(SQLiteAxolotlStore.Trust trust) {
+			sqLiteAxolotlStore.setFingerprintTrust(fingerprint, trust);
+		}
+
+		protected SQLiteAxolotlStore.Trust getTrust() {
 			return sqLiteAxolotlStore.getFingerprintTrust(fingerprint);
 		}
 
 		@Nullable
 		public byte[] processReceiving(XmppAxolotlMessage.XmppAxolotlMessageHeader incomingHeader) {
 			byte[] plaintext = null;
-			switch (getTrust()) {
+			SQLiteAxolotlStore.Trust trust = getTrust();
+			switch (trust) {
+				case INACTIVE:
 				case UNDECIDED:
+				case UNTRUSTED:
 				case TRUSTED:
 					try {
 						try {
@@ -550,10 +585,13 @@ public class AxolotlService {
 						Log.w(Config.LOGTAG, AxolotlService.getLogprefix(account)+"Error decrypting axolotl header, "+e.getClass().getName()+": " + e.getMessage());
 					}
 
+					if (plaintext != null && trust == SQLiteAxolotlStore.Trust.INACTIVE) {
+						setTrust(SQLiteAxolotlStore.Trust.TRUSTED);
+					}
+
 					break;
 
 				case COMPROMISED:
-				case UNTRUSTED:
 				default:
 					// ignore
 					break;
@@ -639,21 +677,28 @@ public class AxolotlService {
 			this.fillMap(store);
 		}
 
+		private void putDevicesForJid(String bareJid, List<Integer> deviceIds, SQLiteAxolotlStore store) {
+			for (Integer deviceId : deviceIds) {
+				AxolotlAddress axolotlAddress = new AxolotlAddress(bareJid, deviceId);
+				Log.d(Config.LOGTAG, AxolotlService.getLogprefix(account)+"Building session for remote address: "+axolotlAddress.toString());
+				String fingerprint = store.loadSession(axolotlAddress).getSessionState().getRemoteIdentityKey().getFingerprint().replaceAll("\\s", "");
+				this.put(axolotlAddress, new XmppAxolotlSession(account, store, axolotlAddress, fingerprint));
+			}
+		}
+
 		private void fillMap(SQLiteAxolotlStore store) {
+			List<Integer> deviceIds = store.getSubDeviceSessions(account.getJid().toBareJid().toString());
+			putDevicesForJid(account.getJid().toBareJid().toString(), deviceIds, store);
 			for (Contact contact : account.getRoster().getContacts()) {
 				Jid bareJid = contact.getJid().toBareJid();
 				if (bareJid == null) {
 					continue; // FIXME: handle this?
 				}
 				String address = bareJid.toString();
-				List<Integer> deviceIDs = store.getSubDeviceSessions(address);
-				for (Integer deviceId : deviceIDs) {
-					AxolotlAddress axolotlAddress = new AxolotlAddress(address, deviceId);
-					Log.d(Config.LOGTAG, AxolotlService.getLogprefix(account)+"Building session for remote address: "+axolotlAddress.toString());
-					String fingerprint = store.loadSession(axolotlAddress).getSessionState().getRemoteIdentityKey().getFingerprint().replaceAll("\\s", "");
-					this.put(axolotlAddress, new XmppAxolotlSession(account, store, axolotlAddress, fingerprint));
-				}
+				deviceIds = store.getSubDeviceSessions(address);
+				putDevicesForJid(address, deviceIds, store);
 			}
+
 		}
 
 		@Override
@@ -678,6 +723,9 @@ public class AxolotlService {
 	}
 
 	public AxolotlService(Account account, XmppConnectionService connectionService) {
+		if (Security.getProvider("BC") == null) {
+			Security.addProvider(new BouncyCastleProvider());
+		}
 		this.mXmppConnectionService = connectionService;
 		this.account = account;
 		this.axolotlStore = new SQLiteAxolotlStore(this.account, this.mXmppConnectionService);
@@ -741,15 +789,40 @@ public class AxolotlService {
 		return this.deviceIds.get(account.getJid().toBareJid());
 	}
 
+	private void setTrustOnSessions(final Jid jid, @NonNull final Set<Integer> deviceIds,
+	                                final SQLiteAxolotlStore.Trust from,
+	                                final SQLiteAxolotlStore.Trust to) {
+		for(Integer deviceId:deviceIds) {
+			AxolotlAddress address = new AxolotlAddress(jid.toBareJid().toString(), deviceId);
+			XmppAxolotlSession session = sessions.get(address);
+			if (session != null && session.getFingerprint() != null
+					&& session.getTrust() == from) {
+				session.setTrust(to);
+			}
+		}
+	}
+
 	public void registerDevices(final Jid jid, @NonNull final Set<Integer> deviceIds) {
-		if(deviceIds.contains(getOwnDeviceId())) {
-			Log.d(Config.LOGTAG, AxolotlService.getLogprefix(account)+"Skipping own Device ID:"+ jid + ":"+getOwnDeviceId());
-			deviceIds.remove(getOwnDeviceId());
+		if(jid.toBareJid().equals(account.getJid().toBareJid())) {
+			if (deviceIds.contains(getOwnDeviceId())) {
+				deviceIds.remove(getOwnDeviceId());
+			}
+			for(Integer deviceId : deviceIds) {
+				AxolotlAddress ownDeviceAddress = new AxolotlAddress(jid.toBareJid().toString(),deviceId);
+				if(sessions.get(ownDeviceAddress) == null) {
+					buildSessionFromPEP(null, ownDeviceAddress, false);
+				}
+			}
 		}
-		for(Integer i:deviceIds) {
-			Log.d(Config.LOGTAG, AxolotlService.getLogprefix(account)+"Adding Device ID:"+ jid + ":"+i);
-		}
+		Set<Integer> expiredDevices = new HashSet<>(axolotlStore.getSubDeviceSessions(jid.toBareJid().toString()));
+		expiredDevices.removeAll(deviceIds);
+		setTrustOnSessions(jid, expiredDevices, SQLiteAxolotlStore.Trust.TRUSTED,
+				SQLiteAxolotlStore.Trust.INACTIVE);
+		Set<Integer> newDevices = new HashSet<>(deviceIds);
+		setTrustOnSessions(jid, newDevices, SQLiteAxolotlStore.Trust.INACTIVE,
+				SQLiteAxolotlStore.Trust.TRUSTED);
 		this.deviceIds.put(jid, deviceIds);
+		mXmppConnectionService.keyStatusUpdated();
 		publishOwnDeviceIdIfNeeded();
 	}
 
@@ -911,11 +984,10 @@ public class AxolotlService {
 			Log.d(Config.LOGTAG, AxolotlService.getLogprefix(account)+"Retrieving bundle: " + bundlesPacket);
 			mXmppConnectionService.sendIqPacket(account, bundlesPacket, new OnIqPacketReceived() {
 				private void finish() {
-					AxolotlAddress ownAddress = new AxolotlAddress(conversation.getAccount().getJid().toBareJid().toString(),0);
-					AxolotlAddress foreignAddress = new AxolotlAddress(conversation.getJid().toBareJid().toString(),0);
+					AxolotlAddress ownAddress = new AxolotlAddress(account.getJid().toBareJid().toString(),0);
 					if (!fetchStatusMap.getAll(ownAddress).containsValue(FetchStatus.PENDING)
-							&& !fetchStatusMap.getAll(foreignAddress).containsValue(FetchStatus.PENDING)) {
-						if (flushWaitingQueueAfterFetch) {
+							&& !fetchStatusMap.getAll(address).containsValue(FetchStatus.PENDING)) {
+						if (flushWaitingQueueAfterFetch && conversation != null) {
 							conversation.findUnsentMessagesWithEncryption(Message.ENCRYPTION_AXOLOTL,
 									new Conversation.OnMessageFound() {
 										@Override
@@ -924,7 +996,7 @@ public class AxolotlService {
 										}
 									});
 						}
-						mXmppConnectionService.newKeysAvailable();
+						mXmppConnectionService.keyStatusUpdated();
 					}
 				}
 
@@ -1050,11 +1122,17 @@ public class AxolotlService {
 		final String content;
 		if (message.hasFileOnRemoteHost()) {
 				content = message.getFileParams().url.toString();
-			} else {
-				content = message.getBody();
-			}
-		final XmppAxolotlMessage axolotlMessage = new XmppAxolotlMessage(message.getContact().getJid().toBareJid(),
-				getOwnDeviceId(), content);
+		} else {
+			content = message.getBody();
+		}
+		final XmppAxolotlMessage axolotlMessage;
+		try {
+			axolotlMessage = new XmppAxolotlMessage(message.getContact().getJid().toBareJid(),
+					getOwnDeviceId(), content);
+		} catch (CryptoFailedException e) {
+			Log.w(Config.LOGTAG, getLogprefix(account) + "Failed to encrypt message: " + e.getMessage());
+			return null;
+		}
 
 		if(findSessionsforContact(message.getContact()).isEmpty()) {
 			return null;
@@ -1085,14 +1163,13 @@ public class AxolotlService {
 		executor.execute(new Runnable() {
 			@Override
 			public void run() {
-				MessagePacket packet = mXmppConnectionService.getMessageGenerator()
-						.generateAxolotlChat(message);
-				if (packet == null) {
+				XmppAxolotlMessage axolotlMessage = encrypt(message);
+				if (axolotlMessage == null) {
 					mXmppConnectionService.markMessage(message, Message.STATUS_SEND_FAILED);
 					//mXmppConnectionService.updateConversationUi();
 				} else {
 					Log.d(Config.LOGTAG, AxolotlService.getLogprefix(account)+"Generated message, caching: " + message.getUuid());
-					messageCache.put(message.getUuid(), packet);
+					messageCache.put(message.getUuid(), axolotlMessage);
 					mXmppConnectionService.resendMessage(message,delay);
 				}
 			}
@@ -1108,15 +1185,15 @@ public class AxolotlService {
 		}
 	}
 
-	public MessagePacket fetchPacketFromCache(Message message) {
-		MessagePacket packet = messageCache.get(message.getUuid());
-		if (packet != null) {
+	public XmppAxolotlMessage fetchAxolotlMessageFromCache(Message message) {
+		XmppAxolotlMessage axolotlMessage = messageCache.get(message.getUuid());
+		if (axolotlMessage != null) {
 			Log.d(Config.LOGTAG, AxolotlService.getLogprefix(account)+"Cache hit: " + message.getUuid());
 			messageCache.remove(message.getUuid());
 		} else {
 			Log.d(Config.LOGTAG, AxolotlService.getLogprefix(account)+"Cache miss: " + message.getUuid());
 		}
-		return packet;
+		return axolotlMessage;
 	}
 
 	public XmppAxolotlMessage.XmppAxolotlPlaintextMessage processReceiving(XmppAxolotlMessage message) {
@@ -1144,7 +1221,12 @@ public class AxolotlService {
 				byte[] payloadKey = session.processReceiving(header);
 				if (payloadKey != null) {
 					Log.d(Config.LOGTAG, AxolotlService.getLogprefix(account)+"Got payload key from axolotl header. Decrypting message...");
-					plaintextMessage = message.decrypt(session, payloadKey, session.getFingerprint());
+					try{
+						plaintextMessage = message.decrypt(session, payloadKey, session.getFingerprint());
+					} catch (CryptoFailedException e) {
+						Log.w(Config.LOGTAG, getLogprefix(account) + "Failed to decrypt message: " + e.getMessage());
+						break;
+					}
 				}
 				Integer preKeyId = session.getPreKeyId();
 				if (preKeyId != null) {

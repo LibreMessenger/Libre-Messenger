@@ -108,8 +108,8 @@
 	<string name="pref_vibrate_summary">Also vibrate when a new message arrives</string>
 	<string name="pref_sound">Sound</string>
 	<string name="pref_sound_summary">Play ringtone with notification</string>
-	<string name="pref_conference_notifications">Conference notifications</string>
-	<string name="pref_conference_notifications_summary">Always notify when a new conference message arrives instead of only when highlighted</string>
+	<string name="pref_conference_notifications">Notifications in Public Conferences</string>
+	<string name="pref_conference_notifications_summary">Always notify when a message arrives in a public conference instead of only when highlighted</string>
 	<string name="pref_notification_grace_period">Notification grace period</string>
 	<string name="pref_notification_grace_period_summary">Disable notifications for a short time after a carbon copy was received</string>
 	<string name="pref_advanced_options">Advanced Options</string>
@@ -497,4 +497,6 @@
 	<string name="choose_quick_action">Choose quick action</string>
 	<string name="file_not_found_on_remote_host">File not found on remote server</string>
 	<string name="search_for_contacts_or_groups">Search for contacts or groups</string>
+	<string name="send_private_message">Send private message</string>
+	<string name="user_has_left_conference">%s has left the conference!</string>
 </resources>

@@ -19,6 +19,10 @@ public final class Config {
 	public static final int AVATAR_SIZE = 384;
 	public static final Bitmap.CompressFormat AVATAR_FORMAT = Bitmap.CompressFormat.WEBP;
 
+	public static final int IMAGE_SIZE = 1920;
+	public static final Bitmap.CompressFormat IMAGE_FORMAT = Bitmap.CompressFormat.WEBP;
+	public static final int IMAGE_QUALITY = 75;
+
 	public static final int MESSAGE_MERGE_WINDOW = 20;
 
 	public static final int PAGE_SIZE = 50;
@@ -32,6 +36,8 @@ public final class Config {
 	public static final boolean RESET_ATTEMPT_COUNT_ON_NETWORK_CHANGE = true; //setting to true might increase power consumption
 
 	public static final boolean ENCRYPT_ON_HTTP_UPLOADED = false;
+
+	public static final boolean SHOW_REGENERATE_AXOLOTL_KEYS_BUTTON = false;
 
 	public static final long MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000;
 	public static final long MAM_MAX_CATCHUP =  MILLISECONDS_IN_DAY / 2;
