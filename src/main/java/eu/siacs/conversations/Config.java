@@ -20,7 +20,7 @@ public final class Config {
 	public static final Bitmap.CompressFormat AVATAR_FORMAT = Bitmap.CompressFormat.WEBP;
 
 	public static final int IMAGE_SIZE = 1920;
-	public static final Bitmap.CompressFormat IMAGE_FORMAT = Bitmap.CompressFormat.WEBP;
+	public static final Bitmap.CompressFormat IMAGE_FORMAT = Bitmap.CompressFormat.JPEG;
 	public static final int IMAGE_QUALITY = 75;
 
 	public static final int MESSAGE_MERGE_WINDOW = 20;
@@ -44,7 +44,7 @@ public final class Config {
 	public static final int MAM_MAX_MESSAGES = 500;
 
 	public static final ChatState DEFAULT_CHATSTATE = ChatState.ACTIVE;
-	public static final int TYPING_TIMEOUT = 8;
+	public static final int TYPING_TIMEOUT = 5;
 
 	public static final String ENABLED_CIPHERS[] = {
 		"TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
