@@ -17,6 +17,7 @@ import android.provider.MediaStore;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v4.widget.SlidingPaneLayout.PanelSlideListener;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,6 +52,7 @@ import eu.siacs.conversations.services.XmppConnectionService.OnRosterUpdate;
 import eu.siacs.conversations.ui.adapter.ConversationAdapter;
 import eu.siacs.conversations.utils.ExceptionHelper;
 import eu.siacs.conversations.xmpp.OnUpdateBlocklist;
+import eu.siacs.conversations.xmpp.chatstate.ChatState;
 import eu.siacs.conversations.xmpp.jid.InvalidJidException;
 import eu.siacs.conversations.xmpp.jid.Jid;
 
@@ -306,12 +308,12 @@ public class ConversationActivity extends XmppActivity
 	public void switchToConversation(Conversation conversation) {
 		setSelectedConversation(conversation);
 		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				ConversationActivity.this.mConversationFragment.reInit(getSelectedConversation());
-				openConversation();
-			}
-		});
+            @Override
+            public void run() {
+                ConversationActivity.this.mConversationFragment.reInit(getSelectedConversation());
+                openConversation();
+            }
+        });
 	}
 
 	private void updateActionBarTitle() {
@@ -327,13 +329,25 @@ public class ConversationActivity extends XmppActivity
 				ab.setHomeButtonEnabled(true);
 				if (conversation.getMode() == Conversation.MODE_SINGLE || useSubjectToIdentifyConference()) {
 					ab.setTitle(conversation.getName());
+					if (conversation.getMode() == Conversation.MODE_SINGLE) {
+						ChatState state = conversation.getIncomingChatState();
+						if (state == ChatState.COMPOSING) {
+							ab.setSubtitle(getString(R.string.contact_is_typing, conversation.getName()));
+						} else if (state == ChatState.PAUSED) {
+							ab.setSubtitle(null);
+						}
+					} else if (useSubjectToIdentifyConference()){
+                        ab.setSubtitle(conversation.getParticipants() + ", " + getText(R.string.you));
+                    }
 				} else {
 					ab.setTitle(conversation.getJid().toBareJid().toString());
+                    ab.setSubtitle(null);
 				}
 			} else {
 				ab.setDisplayHomeAsUpEnabled(false);
-				ab.setHomeButtonEnabled(false);
+                ab.setHomeButtonEnabled(false);
 				ab.setTitle(R.string.app_name);
+                ab.setSubtitle(null);
 			}
 		}
 	}
