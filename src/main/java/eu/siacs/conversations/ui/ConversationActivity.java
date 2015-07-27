@@ -335,7 +335,9 @@ public class ConversationActivity extends XmppActivity
 							ab.setSubtitle(getString(R.string.contact_is_typing, conversation.getName()));
 						} else if (state == ChatState.PAUSED) {
 							ab.setSubtitle(null);
-						}
+						} else {
+                            ab.setSubtitle(null);
+                        }
 					} else if (useSubjectToIdentifyConference()){
                         ab.setSubtitle(conversation.getParticipants());
                     }
@@ -346,7 +348,7 @@ public class ConversationActivity extends XmppActivity
 			} else {
 				ab.setDisplayHomeAsUpEnabled(false);
                 ab.setHomeButtonEnabled(false);
-				ab.setTitle(R.string.app_name);
+                ab.setTitle(R.string.app_name);
                 ab.setSubtitle(null);
 			}
 		}
