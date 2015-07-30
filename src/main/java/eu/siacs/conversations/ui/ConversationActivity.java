@@ -332,7 +332,7 @@ public class ConversationActivity extends XmppActivity
 					if (conversation.getMode() == Conversation.MODE_SINGLE) {
 						ChatState state = conversation.getIncomingChatState();
 						if (state == ChatState.COMPOSING) {
-							ab.setSubtitle(getString(R.string.contact_is_typing, conversation.getName()));
+							ab.setSubtitle(getString(R.string.is_typing));
 						} else if (state == ChatState.PAUSED) {
 							ab.setSubtitle(null);
 						} else {

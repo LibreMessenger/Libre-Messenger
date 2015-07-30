@@ -499,4 +499,5 @@
 	<string name="search_for_contacts_or_groups">Search for contacts or groups</string>
 	<string name="send_private_message">Send private message</string>
 	<string name="user_has_left_conference">%s has left the conference!</string>
+	<string name="is_typing">is typing...</string>
 </resources>
