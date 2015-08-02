@@ -349,7 +349,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 	public void attachLocationToConversation(final Conversation conversation,
 											 final Uri uri,
 											 final UiCallback<Message> callback) {
-		int encryption = conversation.getNextEncryption(forceEncryption());
+		int encryption = conversation.getNextEncryption();
 		if (encryption == Message.ENCRYPTION_PGP) {
 			encryption = Message.ENCRYPTION_DECRYPTED;
 		}
@@ -368,12 +368,10 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 			final Uri uri,
 			final UiCallback<Message> callback) {
 		final Message message;
-		if (conversation.getNextEncryption(forceEncryption()) == Message.ENCRYPTION_PGP) {
-			message = new Message(conversation, "",
-					Message.ENCRYPTION_DECRYPTED);
+		if (conversation.getNextEncryption() == Message.ENCRYPTION_PGP) {
+			message = new Message(conversation, "", Message.ENCRYPTION_DECRYPTED);
 		} else {
-			message = new Message(conversation, "",
-					conversation.getNextEncryption(forceEncryption()));
+			message = new Message(conversation, "", conversation.getNextEncryption());
 		}
 		message.setCounterpart(conversation.getNextCounterpart());
 		message.setType(Message.TYPE_FILE);
@@ -409,12 +407,10 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 	public void attachImageToConversation(final Conversation conversation,
 			final Uri uri, final UiCallback<Message> callback) {
 		final Message message;
-		if (conversation.getNextEncryption(forceEncryption()) == Message.ENCRYPTION_PGP) {
-			message = new Message(conversation, "",
-					Message.ENCRYPTION_DECRYPTED);
+		if (conversation.getNextEncryption() == Message.ENCRYPTION_PGP) {
+			message = new Message(conversation, "", Message.ENCRYPTION_DECRYPTED);
 		} else {
-			message = new Message(conversation, "",
-					conversation.getNextEncryption(forceEncryption()));
+			message = new Message(conversation, "",conversation.getNextEncryption());
 		}
 		message.setCounterpart(conversation.getNextCounterpart());
 		message.setType(Message.TYPE_IMAGE);
@@ -424,7 +420,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 			public void run() {
 				try {
 					getFileBackend().copyImageToPrivateStorage(message, uri);
-					if (conversation.getNextEncryption(forceEncryption()) == Message.ENCRYPTION_PGP) {
+					if (conversation.getNextEncryption() == Message.ENCRYPTION_PGP) {
 						getPgpEngine().encrypt(message, callback);
 					} else {
 						callback.success(message);
@@ -759,6 +755,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 					}
 					break;
 				case Message.ENCRYPTION_AXOLOTL:
+					message.setAxolotlFingerprint(account.getAxolotlService().getOwnPublicKey().getFingerprint().replaceAll("\\s", ""));
 					if (message.needsUploading()) {
 						if (account.httpUploadAvailable() || message.fixCounterpart()) {
 							this.sendFileMessage(message,delay);
@@ -768,8 +765,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 					} else {
 						XmppAxolotlMessage axolotlMessage = account.getAxolotlService().fetchAxolotlMessageFromCache(message);
 						if (axolotlMessage == null) {
-							account.getAxolotlService().prepareMessage(message,delay);
-							message.setAxolotlFingerprint(account.getAxolotlService().getOwnPublicKey().getFingerprint().replaceAll("\\s", ""));
+							account.getAxolotlService().preparePayloadMessage(message, delay);
 						} else {
 							packet = mMessageGenerator.generateAxolotlChat(message, axolotlMessage);
 						}
@@ -2533,8 +2529,9 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 			}
 		}
 		for (final Message msg : messages) {
+			msg.setTime(System.currentTimeMillis());
 			markMessage(msg, Message.STATUS_WAITING);
-			this.resendMessage(msg,true);
+			this.resendMessage(msg,false);
 		}
 	}
 

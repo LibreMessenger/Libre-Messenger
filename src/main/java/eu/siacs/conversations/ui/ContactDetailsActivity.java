@@ -111,6 +111,7 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 	private LinearLayout keys;
 	private LinearLayout tags;
 	private boolean showDynamicTags;
+	private String messageFingerprint;
 
 	private DialogInterface.OnClickListener addToPhonebook = new DialogInterface.OnClickListener() {
 
@@ -193,6 +194,7 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 			} catch (final InvalidJidException ignored) {
 			}
 		}
+		this.messageFingerprint = getIntent().getStringExtra("fingerprint");
 		setContentView(R.layout.activity_contact_details);
 
 		contactJidTv = (TextView) findViewById(R.id.details_contactjid);
@@ -386,7 +388,8 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 		}
 		for(final IdentityKey identityKey : xmppConnectionService.databaseBackend.loadIdentityKeys(
 				contact.getAccount(), contact.getJid().toBareJid().toString())) {
-			hasKeys |= addFingerprintRow(keys, contact.getAccount(), identityKey);
+			boolean highlight = identityKey.getFingerprint().replaceAll("\\s", "").equals(messageFingerprint);
+			hasKeys |= addFingerprintRow(keys, contact.getAccount(), identityKey, highlight);
 		}
 		if (contact.getPgpKeyId() != 0) {
 			hasKeys = true;

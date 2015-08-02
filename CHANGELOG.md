@@ -1,8 +1,13 @@
 ###Changelog
 
+####Version 1.6.0
+* new multi-end-to-multi-end encryption method
+* show unexpected encryption changes as red chat bubbles
+* always notify in private/non-anonymous conferences
+
 ####Version 1.5.2
 * added new message bubbles
-* added subtitles to chatviews in ActionBar to display typing info in single chats and participants names in conferences
+* added subtitles to chatviews in ActionBar to display typing info in single chats and participant names in conferences
 * some bug fixes
 
 ####Version 1.5.1

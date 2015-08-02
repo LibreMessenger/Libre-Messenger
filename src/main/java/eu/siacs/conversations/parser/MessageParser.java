@@ -73,11 +73,9 @@ public class MessageParser extends AbstractParser implements
 			body = otrSession.transformReceiving(body);
 			SessionStatus status = otrSession.getSessionStatus();
 			if (body == null && status == SessionStatus.ENCRYPTED) {
-				conversation.setNextEncryption(Message.ENCRYPTION_OTR);
 				mXmppConnectionService.onOtrSessionEstablished(conversation);
 				return null;
 			} else if (body == null && status == SessionStatus.FINISHED) {
-				conversation.setNextEncryption(Message.ENCRYPTION_NONE);
 				conversation.resetOtrSession();
 				mXmppConnectionService.updateConversationUi();
 				return null;
@@ -101,8 +99,8 @@ public class MessageParser extends AbstractParser implements
 	private Message parseAxolotlChat(Element axolotlMessage, Jid from, String id, Conversation conversation, int status) {
 		Message finishedMessage = null;
 		AxolotlService service = conversation.getAccount().getAxolotlService();
-		XmppAxolotlMessage xmppAxolotlMessage = new XmppAxolotlMessage(from.toBareJid(), axolotlMessage);
-		XmppAxolotlMessage.XmppAxolotlPlaintextMessage plaintextMessage = service.processReceiving(xmppAxolotlMessage);
+		XmppAxolotlMessage xmppAxolotlMessage = XmppAxolotlMessage.fromElement(axolotlMessage, from.toBareJid());
+		XmppAxolotlMessage.XmppAxolotlPlaintextMessage plaintextMessage = service.processReceivingPayloadMessage(xmppAxolotlMessage);
 		if(plaintextMessage != null) {
 			finishedMessage = new Message(conversation, plaintextMessage.getPlaintext(), Message.ENCRYPTION_AXOLOTL, status);
 			finishedMessage.setAxolotlFingerprint(plaintextMessage.getFingerprint());
@@ -202,6 +200,13 @@ public class MessageParser extends AbstractParser implements
 		if (packet.getType() == MessagePacket.TYPE_ERROR) {
 			Jid from = packet.getFrom();
 			if (from != null) {
+				Element error = packet.findChild("error");
+				String text = error == null ? null : error.findChildContent("text");
+				if (text != null) {
+					Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": sending message to "+ from+ " failed - " + text);
+				} else if (error != null) {
+					Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": sending message to "+ from+ " failed - " + error);
+				}
 				Message message = mXmppConnectionService.markMessage(account,
 						from.toBareJid(),
 						packet.getId(),
@@ -223,6 +228,7 @@ public class MessageParser extends AbstractParser implements
 		final MessagePacket packet;
 		Long timestamp = null;
 		final boolean isForwarded;
+		boolean isCarbon = false;
 		String serverMsgId = null;
 		final Element fin = original.findChild("fin", "urn:xmpp:mam:0");
 		if (fin != null) {
@@ -253,7 +259,8 @@ public class MessageParser extends AbstractParser implements
 				return;
 			}
 			timestamp = f != null ? f.second : null;
-			isForwarded = f != null;
+			isCarbon = f != null;
+			isForwarded = isCarbon;
 		} else {
 			packet = original;
 			isForwarded = false;
@@ -265,7 +272,7 @@ public class MessageParser extends AbstractParser implements
 		final String body = packet.getBody();
 		final Element mucUserElement = packet.findChild("x", "http://jabber.org/protocol/muc#user");
 		final String pgpEncrypted = packet.findChildContent("x", "jabber:x:encrypted");
-		final Element axolotlEncrypted = packet.findChild("axolotl_message", AxolotlService.PEP_PREFIX);
+		final Element axolotlEncrypted = packet.findChild(XmppAxolotlMessage.CONTAINERTAG, AxolotlService.PEP_PREFIX);
 		int status;
 		final Jid counterpart;
 		final Jid to = packet.getTo();
@@ -339,6 +346,7 @@ public class MessageParser extends AbstractParser implements
 			message.setCounterpart(counterpart);
 			message.setRemoteMsgId(remoteMsgId);
 			message.setServerMsgId(serverMsgId);
+			message.setCarbon(isCarbon);
 			message.setTime(timestamp);
 			message.markable = packet.hasChild("markable", "urn:xmpp:chat-markers:0");
 			if (conversation.getMode() == Conversation.MODE_MULTI) {

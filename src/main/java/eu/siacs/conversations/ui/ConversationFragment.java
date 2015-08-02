@@ -293,23 +293,27 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 		if (body.length() == 0 || this.conversation == null) {
 			return;
 		}
-		Message message = new Message(conversation, body, conversation.getNextEncryption(activity.forceEncryption()));
+		Message message = new Message(conversation, body, conversation.getNextEncryption());
 		if (conversation.getMode() == Conversation.MODE_MULTI) {
 			if (conversation.getNextCounterpart() != null) {
 				message.setCounterpart(conversation.getNextCounterpart());
 				message.setType(Message.TYPE_PRIVATE);
 			}
 		}
-		if (conversation.getNextEncryption(activity.forceEncryption()) == Message.ENCRYPTION_OTR) {
-			sendOtrMessage(message);
-		} else if (conversation.getNextEncryption(activity.forceEncryption()) == Message.ENCRYPTION_PGP) {
-			sendPgpMessage(message);
-		} else if (conversation.getNextEncryption(activity.forceEncryption()) == Message.ENCRYPTION_AXOLOTL) {
-			if(!activity.trustKeysIfNeeded(ConversationActivity.REQUEST_TRUST_KEYS_TEXT)) {
-				sendAxolotlMessage(message);
-			}
-		} else {
-			sendPlainTextMessage(message);
+		switch (conversation.getNextEncryption()) {
+			case Message.ENCRYPTION_OTR:
+				sendOtrMessage(message);
+				break;
+			case Message.ENCRYPTION_PGP:
+				sendPgpMessage(message);
+				break;
+			case Message.ENCRYPTION_AXOLOTL:
+				if(!activity.trustKeysIfNeeded(ConversationActivity.REQUEST_TRUST_KEYS_TEXT)) {
+					sendAxolotlMessage(message);
+				}
+				break;
+			default:
+				sendPlainTextMessage(message);
 		}
 	}
 
@@ -320,7 +324,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 					R.string.send_private_message_to,
 					conversation.getNextCounterpart().getResourcepart()));
 		} else {
-			switch (conversation.getNextEncryption(activity.forceEncryption())) {
+			switch (conversation.getNextEncryption()) {
 				case Message.ENCRYPTION_NONE:
 					mEditMessage
 							.setHint(getString(R.string.send_plain_text_message));
@@ -392,12 +396,13 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 							highlightInConference(user);
 						}
 					} else {
-						activity.switchToContactDetails(message.getContact());
+						activity.switchToContactDetails(message.getContact(), message.getAxolotlFingerprint());
 					}
 				} else {
 					Account account = message.getConversation().getAccount();
 					Intent intent = new Intent(activity, EditAccountActivity.class);
 					intent.putExtra("jid", account.getJid().toBareJid().toString());
+					intent.putExtra("fingerprint", message.getAxolotlFingerprint());
 					startActivity(intent);
 				}
 			}
@@ -832,7 +837,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 					} catch (final NoSuchElementException ignored) {
 
 					}
-					activity.xmppConnectionService.updateConversationUi();
+					activity.refreshUi();
 				}
 			});
 		}
@@ -1210,11 +1215,11 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 		if (resultCode == Activity.RESULT_OK) {
 			if (requestCode == ConversationActivity.REQUEST_TRUST_KEYS_TEXT) {
 				final String body = mEditMessage.getText().toString();
-				Message message = new Message(conversation, body, conversation.getNextEncryption(activity.forceEncryption()));
+				Message message = new Message(conversation, body, conversation.getNextEncryption());
 				sendAxolotlMessage(message);
 			} else if (requestCode == ConversationActivity.REQUEST_TRUST_KEYS_MENU) {
 				int choice = data.getIntExtra("choice", ConversationActivity.ATTACHMENT_CHOICE_INVALID);
-				activity.selectPresenceToAttachFile(choice, conversation.getNextEncryption(activity.forceEncryption()));
+				activity.selectPresenceToAttachFile(choice, conversation.getNextEncryption());
 			}
 		}
 	}
