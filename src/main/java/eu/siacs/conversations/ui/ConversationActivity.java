@@ -414,6 +414,7 @@ public class ConversationActivity extends XmppActivity
 					menuContactDetails.setVisible(false);
 					menuAttach.setVisible(getSelectedConversation().getAccount().httpUploadAvailable());
 					menuInviteContact.setVisible(getSelectedConversation().getMucOptions().canInvite());
+                    menuSecure.setVisible(!Config.HIDE_ENCRYPTION_IN_UI);
 					menuSecure.setVisible(!Config.HIDE_PGP_IN_UI); //if pgp is hidden conferences have no choice of encryption
 				} else {
 					menuMucDetails.setVisible(false);
