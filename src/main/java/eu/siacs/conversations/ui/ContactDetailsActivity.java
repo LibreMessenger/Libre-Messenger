@@ -360,7 +360,13 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 		} else {
 			contactJidTv.setText(contact.getJid().toString());
 		}
-		accountJidTv.setText(getString(R.string.using_account, contact.getAccount().getJid().toBareJid()));
+		String account;
+		if (Config.DOMAIN_LOCK != null) {
+			account = contact.getAccount().getJid().getLocalpart();
+		} else {
+			account = contact.getAccount().getJid().toBareJid().toString();
+		}
+		accountJidTv.setText(getString(R.string.using_account, account));
 		badge.setImageBitmap(avatarService().get(contact, getPixel(Config.AVATAR_SIZE)));
 		badge.setOnClickListener(this.onBadgeClick);
 

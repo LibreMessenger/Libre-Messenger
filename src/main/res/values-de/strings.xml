@@ -449,4 +449,7 @@
   <string name="file_not_found_on_remote_host">Datei auf Server nicht gefunden</string>
   <string name="search_for_contacts_or_groups">Nach Kontakten oder Konferenzen suchen</string>
   <string name="is_typing">schreibt...</string>
+  <string name="username">Benutzername</string>
+	<string name="username_hint">Benutzername</string>
+	<string name="invalid_username">Das ist kein gültiger Benutzername</string>
 </resources>
