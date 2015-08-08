@@ -378,7 +378,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 		viewHolder.messageBody.setVisibility(View.GONE);
 		viewHolder.image.setVisibility(View.VISIBLE);
 		FileParams params = message.getFileParams();
-		double target = metrics.density * 288;
+		double target = metrics.density * 200;
 		int scalledW;
 		int scalledH;
 		if (params.width <= params.height) {
@@ -484,14 +484,14 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 		} else if (type == RECEIVED) {
 			Contact contact = message.getContact();
 			if (contact != null) {
-				viewHolder.contact_picture.setImageBitmap(activity.avatarService().get(contact, activity.getPixel(56)));
+				viewHolder.contact_picture.setImageBitmap(activity.avatarService().get(contact, activity.getPixel(48)));
 			} else if (conversation.getMode() == Conversation.MODE_MULTI) {
 				viewHolder.contact_picture.setImageBitmap(activity.avatarService().get(
 						UIHelper.getMessageDisplayName(message),
-						activity.getPixel(56)));
+						activity.getPixel(48)));
 			}
 		} else if (type == SENT) {
-			viewHolder.contact_picture.setImageBitmap(activity.avatarService().get(account, activity.getPixel(56)));
+			viewHolder.contact_picture.setImageBitmap(activity.avatarService().get(account, activity.getPixel(48)));
 		}
 
 		viewHolder.contact_picture
