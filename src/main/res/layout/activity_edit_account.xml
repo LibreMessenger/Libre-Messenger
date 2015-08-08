@@ -12,501 +12,476 @@
         android:layout_above="@+id/button_bar"
         android:layout_alignParentTop="true" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
-        <RelativeLayout
-            android:id="@+id/editor"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:background="@drawable/infocard_border"
-            android:orientation="vertical"
-            android:padding="@dimen/infocard_padding">
-
-        <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/avater"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginRight="16dp"
-            android:layout_centerHorizontal="true"
-            android:contentDescription="@string/account_image_description"
-            app:riv_corner_radius="2dp"/>
-
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_toRightOf="@+id/avater">
-        <TextView
-            android:id="@+id/account_jid_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/account_settings_jabber_id"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody" />
-
-        <AutoCompleteTextView
-            android:id="@+id/account_jid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/account_settings_example_jabber_id"
-            android:inputType="textEmailAddress"
-            android:textColor="@color/black87"
-            android:textColorHint="@color/black54"
-            android:textSize="?attr/TextSizeBody" />
+            android:orientation="vertical" >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/account_settings_password"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody" />
+            <RelativeLayout
+                android:id="@+id/editor"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:background="@drawable/infocard_border"
+                android:orientation="vertical"
+                android:padding="@dimen/infocard_padding">
+                <com.makeramen.roundedimageview.RoundedImageView
+                    android:id="@+id/avater"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxHeight="384dp"
+                    android:maxWidth="384dp"
+                    android:contentDescription="@string/account_image_description"
+                    app:riv_corner_radius="2dp"
+                    android:background="@drawable/message_border"
+                    android:padding="1dp"
+                    android:adjustViewBounds="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="16dp" />
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_below="@+id/avater">
+                    <TextView
+                        android:id="@+id/account_jid_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/account_settings_jabber_id"
+                        android:textColor="@color/black87"
+                        android:textSize="?attr/TextSizeBody" />
 
-        <EditText
-            android:id="@+id/account_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:textColor="@color/black87"
-            android:textColorHint="@color/black54"
-            android:textSize="?attr/TextSizeBody" />
+                    <AutoCompleteTextView
+                        android:id="@+id/account_jid"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/account_settings_example_jabber_id"
+                        android:inputType="textEmailAddress"
+                        android:textColor="@color/black87"
+                        android:textColorHint="@color/black54"
+                        android:textSize="?attr/TextSizeBody" />
 
-        <AutoCompleteTextView
-            android:id="@+id/account_jid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/account_settings_example_jabber_id"
-            android:inputType="textEmailAddress"
-            android:textColor="@color/black87"
-            android:textColorHint="@color/black54"
-            android:textSize="?attr/TextSizeBody" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/account_settings_password"
+                        android:textColor="@color/black87"
+                        android:textSize="?attr/TextSizeBody" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/account_settings_password"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody" />
+                    <EditText
+                        android:id="@+id/account_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/password"
+                        android:inputType="textPassword"
+                        android:textColor="@color/black87"
+                        android:textColorHint="@color/black54"
+                        android:textSize="?attr/TextSizeBody" />
 
-        <EditText
-            android:id="@+id/account_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:textColor="@color/black87"
-            android:textColorHint="@color/black54"
-            android:textSize="?attr/TextSizeBody" />
+                    <CheckBox
+                        android:id="@+id/account_register_new"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/register_account"
+                        android:textColor="@color/black87"
+                        android:textSize="?attr/TextSizeBody" />
 
-        <CheckBox
-            android:id="@+id/account_register_new"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/register_account"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody" />
+                    <TextView
+                        android:id="@+id/account_confirm_password_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/account_settings_confirm_password"
+                        android:textColor="@color/black87"
+                        android:textSize="?attr/TextSizeBody"
+                        android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/account_confirm_password_desc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/account_settings_confirm_password"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody"
-            android:visibility="gone" />
+                    <EditText
+                        android:id="@+id/account_password_confirm"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:hint="@string/confirm_password"
+                        android:inputType="textPassword"
+                        android:visibility="gone"
+                        android:textColor="@color/black87"
+                        android:textColorHint="@color/black54"
+                        android:textSize="?attr/TextSizeBody" />
+                </LinearLayout>
+            </RelativeLayout>
 
-        <EditText
-            android:id="@+id/account_password_confirm"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/confirm_password"
-            android:inputType="textPassword"
-            android:visibility="gone"
-            android:textColor="@color/black87"
-            android:textColorHint="@color/black54"
-            android:textSize="?attr/TextSizeBody" />
-    </LinearLayout>
-</RelativeLayout>
+            <LinearLayout
+                android:id="@+id/stats"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:background="@drawable/infocard_border"
+                android:orientation="vertical"
+                android:padding="@dimen/infocard_padding"
+                android:visibility="gone" >
 
-<LinearLayout
-android:id="@+id/stats"
-android:layout_width="fill_parent"
-android:layout_height="fill_parent"
-android:layout_marginLeft="@dimen/activity_horizontal_margin"
-android:layout_marginRight="@dimen/activity_horizontal_margin"
-android:layout_marginTop="@dimen/activity_vertical_margin"
-android:layout_marginBottom="@dimen/activity_vertical_margin"
-android:background="@drawable/infocard_border"
-android:orientation="vertical"
-android:padding="@dimen/infocard_padding"
-android:visibility="gone" >
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stretchColumns="1" >
 
-<TableLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:stretchColumns="1" >
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        tools:ignore="UselessParent">
 
-    <TableRow
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        tools:ignore="UselessParent">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/server_info_session_established"
+                            android:textColor="@color/black87"
+                            android:textSize="?attr/TextSizeBody" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/server_info_session_established"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody" />
+                        <TextView
+                            android:id="@+id/session_est"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:textColor="@color/black87"
+                            android:textSize="?attr/TextSizeBody"
+                            tools:ignore="RtlHardcoded"/>
+                    </TableRow>
 
-        <TextView
-            android:id="@+id/session_est"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody"
-            tools:ignore="RtlHardcoded"/>
-    </TableRow>
+                </TableLayout>
+                <TableLayout
+                    android:id="@+id/server_info_more"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stretchColumns="1"
+                    android:visibility="gone" >
 
-</TableLayout>
-<TableLayout
-    android:id="@+id/server_info_more"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:stretchColumns="1"
-    android:visibility="gone" >
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
 
-    <TableRow
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/server_info_pep"
+                            android:textColor="@color/black87"
+                            android:textSize="?attr/TextSizeBody" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/server_info_pep"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody" />
+                        <TextView
+                            android:id="@+id/server_info_pep"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:textColor="@color/black87"
+                            android:textSize="?attr/TextSizeBody"
+                            tools:ignore="RtlHardcoded"/>
+                    </TableRow>
 
-        <TextView
-            android:id="@+id/server_info_pep"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody"
-            tools:ignore="RtlHardcoded"/>
-    </TableRow>
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
 
-    <TableRow
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/server_info_blocking"
+                            android:textColor="@color/black87"
+                            android:textSize="?attr/TextSizeBody" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/server_info_blocking"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody" />
+                        <TextView
+                            android:id="@+id/server_info_blocking"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:textColor="@color/black87"
+                            android:textSize="?attr/TextSizeBody"
+                            tools:ignore="RtlHardcoded"/>
+                    </TableRow>
 
-        <TextView
-            android:id="@+id/server_info_blocking"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody"
-            tools:ignore="RtlHardcoded"/>
-    </TableRow>
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
 
-    <TableRow
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/server_info_stream_management"
+                            android:textColor="@color/black87"
+                            android:textSize="?attr/TextSizeBody" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/server_info_stream_management"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody" />
+                        <TextView
+                            android:id="@+id/server_info_sm"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:textColor="@color/black87"
+                            android:textSize="?attr/TextSizeBody"
+                            tools:ignore="RtlHardcoded"/>
+                    </TableRow>
 
-        <TextView
-            android:id="@+id/server_info_sm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody"
-            tools:ignore="RtlHardcoded"/>
-    </TableRow>
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
 
-    <TableRow
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/server_info_roster_version"
+                            android:textColor="@color/black87"
+                            android:textSize="?attr/TextSizeBody" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/server_info_roster_version"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody" />
+                        <TextView
+                            android:id="@+id/server_info_roster_version"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:textColor="@color/black87"
+                            android:textSize="?attr/TextSizeBody"
+                            tools:ignore="RtlHardcoded"/>
+                    </TableRow>
 
-        <TextView
-            android:id="@+id/server_info_roster_version"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody"
-            tools:ignore="RtlHardcoded"/>
-    </TableRow>
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
 
-    <TableRow
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/server_info_carbon_messages"
+                            android:textColor="@color/black87"
+                            android:textSize="?attr/TextSizeBody" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/server_info_carbon_messages"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody" />
+                        <TextView
+                            android:id="@+id/server_info_carbons"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:textColor="@color/black87"
+                            android:textSize="?attr/TextSizeBody"
+                            tools:ignore="RtlHardcoded"/>
+                    </TableRow>
 
-        <TextView
-            android:id="@+id/server_info_carbons"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody"
-            tools:ignore="RtlHardcoded"/>
-    </TableRow>
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
 
-    <TableRow
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/server_info_mam"
+                            android:textColor="@color/black87"
+                            android:textSize="?attr/TextSizeBody" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/server_info_mam"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody" />
+                        <TextView
+                            android:id="@+id/server_info_mam"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:textColor="@color/black87"
+                            android:textSize="?attr/TextSizeBody"
+                            tools:ignore="RtlHardcoded"/>
+                    </TableRow>
 
-        <TextView
-            android:id="@+id/server_info_mam"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody"
-            tools:ignore="RtlHardcoded"/>
-    </TableRow>
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
 
-    <TableRow
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/server_info_csi"
+                            android:textColor="@color/black87"
+                            android:textSize="?attr/TextSizeBody" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/server_info_csi"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody" />
+                        <TextView
+                            android:id="@+id/server_info_csi"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:textColor="@color/black87"
+                            android:textSize="?attr/TextSizeBody"
+                            tools:ignore="RtlHardcoded"/>
+                    </TableRow>
+                </TableLayout>
 
-        <TextView
-            android:id="@+id/server_info_csi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody"
-            tools:ignore="RtlHardcoded"/>
-    </TableRow>
-</TableLayout>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/otr_fingerprint_box"
+                    android:layout_marginTop="32dp">
 
-<RelativeLayout
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:id="@+id/otr_fingerprint_box"
-    android:layout_marginTop="32dp">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_toLeftOf="@+id/action_copy_to_clipboard"
+                        android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/action_copy_to_clipboard"
-        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/otr_fingerprint"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black87"
+                            android:textSize="?attr/TextSizeBody"
+                            android:typeface="monospace"
+                            android:fontFamily="monospace"/>
 
-        <TextView
-            android:id="@+id/otr_fingerprint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody"
-            android:typeface="monospace"
-            android:fontFamily="monospace"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black54"
+                            android:textSize="?attr/TextSizeInfo"
+                            android:text="@string/otr_fingerprint"/>
+                    </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black54"
-            android:textSize="?attr/TextSizeInfo"
-            android:text="@string/otr_fingerprint"/>
-    </LinearLayout>
+                    <ImageButton
+                        android:id="@+id/action_copy_to_clipboard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="?android:selectableItemBackground"
+                        android:padding="@dimen/image_button_padding"
+                        android:src="?attr/icon_copy"
+                        android:visibility="visible"
+                        android:contentDescription="@string/copy_otr_clipboard_description"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/axolotl_fingerprint_box"
+                    android:layout_marginTop="32dp">
 
-    <ImageButton
-        android:id="@+id/action_copy_to_clipboard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:background="?android:selectableItemBackground"
-        android:padding="@dimen/image_button_padding"
-        android:src="?attr/icon_copy"
-        android:visibility="visible"
-        android:contentDescription="@string/copy_otr_clipboard_description"/>
-</RelativeLayout>
-<RelativeLayout
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:id="@+id/axolotl_fingerprint_box"
-    android:layout_marginTop="32dp">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_toLeftOf="@+id/axolotl_actions"
+                        android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/axolotl_actions"
-        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/axolotl_fingerprint"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black87"
+                            android:textSize="?attr/TextSizeBody"
+                            android:typeface="monospace"
+                            android:fontFamily="monospace"/>
 
-        <TextView
-            android:id="@+id/axolotl_fingerprint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody"
-            android:typeface="monospace"
-            android:fontFamily="monospace"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black54"
+                            android:textSize="?attr/TextSizeInfo"
+                            android:text="@string/this_device_axolotl_fingerprint"/>
+                    </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black54"
-            android:textSize="?attr/TextSizeInfo"
-            android:text="@string/this_device_axolotl_fingerprint"/>
-    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/axolotl_actions"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/axolotl_actions"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:orientation="vertical">
+                        <ImageButton
+                            android:id="@+id/action_copy_axolotl_to_clipboard"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="?android:selectableItemBackground"
+                            android:padding="@dimen/image_button_padding"
+                            android:src="?attr/icon_copy"
+                            android:visibility="visible"
+                            android:contentDescription="@string/copy_axolotl_clipboard_description"/>
+                        <ImageButton
+                            android:id="@+id/action_regenerate_axolotl_key"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="?android:selectableItemBackground"
+                            android:padding="@dimen/image_button_padding"
+                            android:src="?attr/icon_refresh"
+                            android:visibility="gone"
+                            android:contentDescription="@string/regenerate_axolotl_key"/>
 
-        <ImageButton
-            android:id="@+id/action_copy_axolotl_to_clipboard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?android:selectableItemBackground"
-            android:padding="@dimen/image_button_padding"
-            android:src="?attr/icon_copy"
-            android:visibility="visible"
-            android:contentDescription="@string/copy_axolotl_clipboard_description"/>
-        <ImageButton
-            android:id="@+id/action_regenerate_axolotl_key"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?android:selectableItemBackground"
-            android:padding="@dimen/image_button_padding"
-            android:src="?attr/icon_refresh"
-            android:visibility="gone"
-            android:contentDescription="@string/regenerate_axolotl_key"/>
+                    </LinearLayout>
+                </RelativeLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/other_device_keys_card"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:background="@drawable/infocard_border"
+                android:orientation="vertical"
+                android:padding="@dimen/infocard_padding"
+                android:visibility="gone">
 
-    </LinearLayout>
-</RelativeLayout>
-</LinearLayout>
-<LinearLayout
-android:id="@+id/other_device_keys_card"
-android:layout_width="fill_parent"
-android:layout_height="wrap_content"
-android:layout_marginLeft="@dimen/activity_horizontal_margin"
-android:layout_marginRight="@dimen/activity_horizontal_margin"
-android:layout_marginTop="@dimen/activity_vertical_margin"
-android:layout_marginBottom="@dimen/activity_vertical_margin"
-android:background="@drawable/infocard_border"
-android:orientation="vertical"
-android:padding="@dimen/infocard_padding"
-android:visibility="gone">
+                <TextView
+                    android:id="@+id/other_device_keys_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black87"
+                    android:textSize="?attr/TextSizeHeadline"
+                    android:textStyle="bold"
+                    android:text="@string/other_devices"/>
 
-<TextView
-    android:id="@+id/other_device_keys_title"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:textColor="@color/black87"
-    android:textSize="?attr/TextSizeHeadline"
-    android:textStyle="bold"
-    android:text="@string/other_devices"/>
-
-<LinearLayout
-    android:id="@+id/other_device_keys"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:divider="?android:dividerHorizontal"
-    android:orientation="vertical"
-    android:showDividers="middle" >
-</LinearLayout>
-</LinearLayout>
-    </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/other_device_keys"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="?android:dividerHorizontal"
+                    android:orientation="vertical"
+                    android:showDividers="middle" >
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
     </ScrollView>
 
-<LinearLayout
-android:id="@+id/button_bar"
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:layout_alignParentBottom="true"
-android:layout_alignParentStart="true"
-android:layout_alignParentEnd="true"
-android:layout_alignParentLeft="true"
-android:layout_alignParentRight="true" >
+    <LinearLayout
+        android:id="@+id/button_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true" >
 
-<Button
-    android:id="@+id/cancel_button"
-    style="?android:attr/borderlessButtonStyle"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_weight="1"
-    android:text="@string/cancel"
-    android:textColor="@color/black87" />
+        <Button
+            android:id="@+id/cancel_button"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cancel"
+            android:textColor="@color/black87" />
 
-<View
-    android:layout_width="1dp"
-    android:layout_height="fill_parent"
-    android:layout_marginBottom="7dp"
-    android:layout_marginTop="7dp"
-    android:background="@color/black12" />
+        <View
+            android:layout_width="1dp"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="7dp"
+            android:layout_marginTop="7dp"
+            android:background="@color/black12" />
 
-<Button
-    android:id="@+id/save_button"
-    style="?android:attr/borderlessButtonStyle"
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_weight="1"
-    android:enabled="false"
-    android:text="@string/save"
-    android:textColor="@color/black54" />
-</LinearLayout>
+        <Button
+            android:id="@+id/save_button"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="@string/save"
+            android:textColor="@color/black54" />
+    </LinearLayout>
 
-    </RelativeLayout>
+</RelativeLayout>

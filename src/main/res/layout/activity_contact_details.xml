@@ -21,13 +21,16 @@
 
             <QuickContactBadge
                 android:id="@+id/details_contact_badge"
-                android:layout_width="300dp"
-                android:layout_height="300dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxHeight="384dp"
+                android:maxWidth="384dp"
                 android:scaleType="centerCrop"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/message_border"
-                android:padding="1dp" />
+                android:padding="1dp"
+                android:adjustViewBounds="true"/>
 
             <LinearLayout
                 android:id="@+id/details_jidbox"
