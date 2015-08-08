@@ -9,9 +9,9 @@ public final class Config {
 	public static final String LOGTAG = "conversations";
 
 
-	public static final String DOMAIN_LOCK = null; //only allow account creation for this domain
+	public static final String DOMAIN_LOCK = "pix-art.de"; //only allow account creation for this domain
 	public static final boolean DISALLOW_REGISTRATION_IN_UI = false; //hide the register checkbox
-	public static final boolean HIDE_PGP_IN_UI = false; //some more consumer focused clients might want to disable OpenPGP
+	public static final boolean HIDE_PGP_IN_UI = true; //some more consumer focused clients might want to disable OpenPGP
 
 	public static final int PING_MAX_INTERVAL = 300;
 	public static final int PING_MIN_INTERVAL = 30;
