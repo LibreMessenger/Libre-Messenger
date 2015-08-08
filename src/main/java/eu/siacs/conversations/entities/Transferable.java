@@ -34,6 +34,7 @@ public interface Transferable {
 			"aifc",
 			"mid",
 			"midi",
+			"3gpp",
 			//video
 			"avi",
 			"mp4",
