@@ -1,5 +1,7 @@
 package eu.siacs.conversations.services;
 
+import android.content.Context;
+import android.os.PowerManager;
 import android.util.Log;
 import android.util.Pair;
 
@@ -49,17 +51,13 @@ public class AbstractConnectionManager {
 		}
 	}
 
-	public static Pair<InputStream,Integer> createInputStream(DownloadableFile file, boolean gcm) {
+	public static Pair<InputStream,Integer> createInputStream(DownloadableFile file, boolean gcm) throws FileNotFoundException {
 		FileInputStream is;
 		int size;
-		try {
-			is = new FileInputStream(file);
-			size = (int) file.getSize();
-			if (file.getKey() == null) {
-				return new Pair<InputStream,Integer>(is,size);
-			}
-		} catch (FileNotFoundException e) {
-			return null;
+		is = new FileInputStream(file);
+		size = (int) file.getSize();
+		if (file.getKey() == null) {
+			return new Pair<InputStream,Integer>(is,size);
 		}
 		try {
 			if (gcm) {
@@ -72,7 +70,8 @@ public class AbstractConnectionManager {
 				Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 				cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(file.getKey(), "AES"), ips);
 				Log.d(Config.LOGTAG, "opening encrypted input stream");
-				return new Pair<InputStream,Integer>(new CipherInputStream(is, cipher),(size / 16 + 1) * 16);
+				final int s = Config.REPORT_WRONG_FILESIZE_IN_OTR_JINGLE ? size : (size / 16 + 1) * 16;
+				return new Pair<InputStream,Integer>(new CipherInputStream(is, cipher),s);
 			}
 		} catch (InvalidKeyException e) {
 			return null;
@@ -116,5 +115,10 @@ public class AbstractConnectionManager {
 		} catch (InvalidAlgorithmParameterException e) {
 			return null;
 		}
+	}
+
+	public PowerManager.WakeLock createWakeLock(String name) {
+		PowerManager powerManager = (PowerManager) mXmppConnectionService.getSystemService(Context.POWER_SERVICE);
+		return powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,name);
 	}
 }

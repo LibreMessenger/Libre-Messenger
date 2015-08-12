@@ -3,9 +3,11 @@ package eu.siacs.conversations.http;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.PowerManager;
 import android.util.Log;
 import android.util.Pair;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -103,7 +105,13 @@ public class HttpUploadConnection implements Transferable {
 			mXmppConnectionService.getRNG().nextBytes(this.key);
 			this.file.setKeyAndIv(this.key);
 		}
-		Pair<InputStream,Integer> pair = AbstractConnectionManager.createInputStream(file,true);
+		Pair<InputStream,Integer> pair;
+		try {
+			pair = AbstractConnectionManager.createInputStream(file, true);
+		} catch (FileNotFoundException e) {
+			fail();
+			return;
+		}
 		this.file.setExpectedSize(pair.second);
 		this.mFileInputStream = pair.first;
 		Jid host = account.getXmppConnection().findDiscoItemByFeature(Xmlns.HTTP_UPLOAD);
@@ -143,7 +151,9 @@ public class HttpUploadConnection implements Transferable {
 		private void upload() {
 			OutputStream os = null;
 			HttpURLConnection connection = null;
+			PowerManager.WakeLock wakeLock = mHttpConnectionManager.createWakeLock("http_upload_"+message.getUuid());
 			try {
+				wakeLock.acquire();
 				Log.d(Config.LOGTAG, "uploading to " + mPutUrl.toString());
 				connection = (HttpURLConnection) mPutUrl.openConnection();
 				if (connection instanceof HttpsURLConnection) {
@@ -211,6 +221,7 @@ public class HttpUploadConnection implements Transferable {
 				if (connection != null) {
 					connection.disconnect();
 				}
+				wakeLock.release();
 			}
 		}
 	}

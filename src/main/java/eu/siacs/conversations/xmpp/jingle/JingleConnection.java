@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.util.Log;
 import android.util.Pair;
 
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -28,7 +29,6 @@ import eu.siacs.conversations.entities.TransferablePlaceholder;
 import eu.siacs.conversations.persistance.FileBackend;
 import eu.siacs.conversations.services.AbstractConnectionManager;
 import eu.siacs.conversations.services.XmppConnectionService;
-import eu.siacs.conversations.utils.Xmlns;
 import eu.siacs.conversations.xml.Element;
 import eu.siacs.conversations.xmpp.OnIqPacketReceived;
 import eu.siacs.conversations.xmpp.jid.Jid;
@@ -97,15 +97,13 @@ public class JingleConnection implements Transferable {
 		public void onFileTransmitted(DownloadableFile file) {
 			if (responder.equals(account.getJid())) {
 				sendSuccess();
-				if (acceptedAutomatically) {
-					message.markUnread();
-					JingleConnection.this.mXmppConnectionService
-							.getNotificationService().push(message);
-				}
 				mXmppConnectionService.getFileBackend().updateFileParams(message);
 				mXmppConnectionService.databaseBackend.createMessage(message);
-				mXmppConnectionService.markMessage(message,
-						Message.STATUS_RECEIVED);
+				mXmppConnectionService.markMessage(message,Message.STATUS_RECEIVED);
+				if (acceptedAutomatically) {
+					message.markUnread();
+					JingleConnection.this.mXmppConnectionService.getNotificationService().push(message);
+				}
 			} else {
 				if (message.getEncryption() == Message.ENCRYPTION_PGP || message.getEncryption() == Message.ENCRYPTION_DECRYPTED) {
 					file.delete();
@@ -274,7 +272,7 @@ public class JingleConnection implements Transferable {
 										});
 								mergeCandidate(candidate);
 							} else {
-								Log.d(Config.LOGTAG,"no primary candidate of our own was found");
+								Log.d(Config.LOGTAG, "no primary candidate of our own was found");
 								sendInitRequest();
 							}
 						}
@@ -393,7 +391,11 @@ public class JingleConnection implements Transferable {
 					}
 				}
 				this.mFileOutputStream = AbstractConnectionManager.createOutputStream(this.file,message.getEncryption() == Message.ENCRYPTION_AXOLOTL);
-				this.file.setExpectedSize(size);
+				if (message.getEncryption() == Message.ENCRYPTION_OTR && Config.REPORT_WRONG_FILESIZE_IN_OTR_JINGLE) {
+					this.file.setExpectedSize((size / 16 + 1) * 16);
+				} else {
+					this.file.setExpectedSize(size);
+				}
 				Log.d(Config.LOGTAG, "receiving file: expecting size of " + this.file.getExpectedSize());
 			} else {
 				this.sendCancel();
@@ -412,26 +414,31 @@ public class JingleConnection implements Transferable {
 			content.setTransportId(this.transportId);
 			this.file = this.mXmppConnectionService.getFileBackend().getFile(message, false);
 			Pair<InputStream,Integer> pair;
-			if (message.getEncryption() == Message.ENCRYPTION_OTR) {
-				Conversation conversation = this.message.getConversation();
-				if (!this.mXmppConnectionService.renewSymmetricKey(conversation)) {
-					Log.d(Config.LOGTAG,account.getJid().toBareJid()+": could not set symmetric key");
-					cancel();
+			try {
+				if (message.getEncryption() == Message.ENCRYPTION_OTR) {
+					Conversation conversation = this.message.getConversation();
+					if (!this.mXmppConnectionService.renewSymmetricKey(conversation)) {
+						Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": could not set symmetric key");
+						cancel();
+					}
+					this.file.setKeyAndIv(conversation.getSymmetricKey());
+					pair = AbstractConnectionManager.createInputStream(this.file, false);
+					this.file.setExpectedSize(pair.second);
+					content.setFileOffer(this.file, true);
+				} else if (message.getEncryption() == Message.ENCRYPTION_AXOLOTL) {
+					this.file.setKey(mXmppAxolotlMessage.getInnerKey());
+					this.file.setIv(mXmppAxolotlMessage.getIV());
+					pair = AbstractConnectionManager.createInputStream(this.file, true);
+					this.file.setExpectedSize(pair.second);
+					content.setFileOffer(this.file, false).addChild(mXmppAxolotlMessage.toElement());
+				} else {
+					pair = AbstractConnectionManager.createInputStream(this.file, false);
+					this.file.setExpectedSize(pair.second);
+					content.setFileOffer(this.file, false);
 				}
-				this.file.setKeyAndIv(conversation.getSymmetricKey());
-				pair = AbstractConnectionManager.createInputStream(this.file,false);
-				this.file.setExpectedSize(pair.second);
-				content.setFileOffer(this.file, true);
-			} else if (message.getEncryption() == Message.ENCRYPTION_AXOLOTL) {
-				this.file.setKey(mXmppAxolotlMessage.getInnerKey());
-				this.file.setIv(mXmppAxolotlMessage.getIV());
-				pair = AbstractConnectionManager.createInputStream(this.file,true);
-				this.file.setExpectedSize(pair.second);
-				content.setFileOffer(this.file, false).addChild(mXmppAxolotlMessage.toElement());
-			} else {
-				pair = AbstractConnectionManager.createInputStream(this.file,false);
-				this.file.setExpectedSize(pair.second);
-				content.setFileOffer(this.file, false);
+			} catch (FileNotFoundException e) {
+				cancel();
+				return;
 			}
 			this.mFileInputStream = pair.first;
 			this.transportId = this.mJingleConnectionManager.nextRandomId();
@@ -1011,5 +1018,9 @@ public class JingleConnection implements Transferable {
 	@Override
 	public int getProgress() {
 		return this.mProgress;
+	}
+
+	public AbstractConnectionManager getConnectionManager() {
+		return this.mJingleConnectionManager;
 	}
 }

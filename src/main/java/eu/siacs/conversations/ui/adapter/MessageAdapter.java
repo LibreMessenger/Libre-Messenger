@@ -303,8 +303,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 				}
 				final Spannable span = new SpannableString(privateMarker + " "
 						+ formattedBody);
-				span.setSpan(new ForegroundColorSpan(activity
-							.getSecondaryTextColor()), 0, privateMarker
+				span.setSpan(new ForegroundColorSpan(getMessageTextColor(type,false)), 0, privateMarker
 						.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 				span.setSpan(new StyleSpan(Typeface.BOLD), 0,
 						privateMarker.length(),
@@ -396,10 +395,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(Intent.ACTION_VIEW);
-				intent.setDataAndType(activity.xmppConnectionService
-						.getFileBackend().getJingleFileUri(message), "image/*");
-				getContext().startActivity(intent);
+				openDownloadable(message);
 			}
 		});
 		viewHolder.image.setOnLongClickListener(openContextMenu);
