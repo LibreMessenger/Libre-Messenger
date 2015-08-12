@@ -353,7 +353,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		this.mAxolotlFingerprint = (TextView) findViewById(R.id.axolotl_fingerprint);
 		this.mAxolotlFingerprintBox = (RelativeLayout) findViewById(R.id.axolotl_fingerprint_box);
 		this.mAxolotlFingerprintToClipboardButton = (ImageButton) findViewById(R.id.action_copy_axolotl_to_clipboard);
-		this.mRegenerateAxolotlKeyButton = (ImageButton) findViewById(R.id.action_regenerate_axolotl_key);
+		this.mRegenerateAxolotlKeyButton = (ImageButton) findViewById(R.id.action_regenerate_omemo_key);
 		this.keysCard = (LinearLayout) findViewById(R.id.other_device_keys_card);
 		this.keys = (LinearLayout) findViewById(R.id.other_device_keys);
 		this.mSaveButton = (Button) findViewById(R.id.save_button);
