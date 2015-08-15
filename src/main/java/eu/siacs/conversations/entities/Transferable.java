@@ -45,8 +45,10 @@ public interface Transferable {
             "3gp",
 			//applications
 			"apk",
-			//calendar
+			//contact
 			"vcf",
+			//calendar
+			"ics",
 			//compressed
 			"zip",
 			"rar",
