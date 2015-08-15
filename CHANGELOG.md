@@ -4,6 +4,8 @@
 * new multi-end-to-multi-end encryption method
 * show unexpected encryption changes as red chat bubbles
 * always notify in private/non-anonymous conferences
+* some bugfixes
+* hard coded pix-art.de as standard server
 
 ####Version 1.5.2
 * added new message bubbles
@@ -13,11 +15,13 @@
 ####Version 1.5.1
 * fixed rare crashes
 * improved otr support
+* moved typing info to ActionBar
 
 ####Version 1.5.0
-* upload files to HTTP host and share them in MUCs. requires new [HttpUploadComponent](https://github.com/siacs/HttpUploadComponent) on server side
-* bigger avatars
+* new file transfer mode to offline contacts and conferences for files smaller than 20 MB: upload files to HTTP host and share them in MUCs. requires new [HttpUploadComponent](https://github.com/siacs/HttpUploadComponent) on server side
 * default image format is JPEG
+* small layout modifications with bigger avatars
+* show contacts name in locations shared in conferences
 
 ####Version 1.4.5
 * fixes to message parser to not display some ejabberd muc status messages
