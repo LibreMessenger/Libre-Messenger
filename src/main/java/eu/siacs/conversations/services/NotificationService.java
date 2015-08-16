@@ -295,7 +295,7 @@ public class NotificationService {
 								final ArrayList<Message> messages, final boolean notify) {
 		try {
 			final Bitmap bitmap = mXmppConnectionService.getFileBackend()
-					.getThumbnail(message, getPixel(288), false);
+					.getThumbnail(message, getPixel(200), false);
 			final ArrayList<Message> tmp = new ArrayList<>();
 			for (final Message msg : messages) {
 				if (msg.getType() == Message.TYPE_TEXT
