@@ -412,6 +412,7 @@
   <string name="hide_offline">Ukryj niedostępnych</string>
   <string name="disable_account">Wyłącz konto</string>
   <string name="contact_is_typing">%s pisze...</string>
+  <string name="is_typing">pisze...</string>
   <string name="contact_has_stopped_typing">%s przestał(a) pisać</string>
   <string name="pref_chat_states">Powiadomienia pisania</string>
   <string name="pref_chat_states_summary">Powiadamiaj rozmówcę, kiedy rozpoczynasz nową wiadomość</string>

@@ -415,6 +415,7 @@
   <string name="hide_offline">オフラインを非表示にする</string>
   <string name="disable_account">アカウントを無効にする</string>
   <string name="contact_is_typing">%s は入力中...</string>
+  <string name="is_typing">は入力中...</string>
   <string name="contact_has_stopped_typing">%s は入力を停止しました</string>
   <string name="pref_chat_states">入力中通知</string>
   <string name="pref_chat_states_summary">あなたが新しいメッセージを書いている時に、連絡先に知らせます</string>

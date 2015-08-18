@@ -415,6 +415,7 @@
   <string name="hide_offline">Сакриј неповезане</string>
   <string name="disable_account">Онемогући налог</string>
   <string name="contact_is_typing">%s куца...</string>
+  <string name="is_typing">куца...</string>
   <string name="contact_has_stopped_typing">%s престаде да куца</string>
   <string name="pref_chat_states">Обавештења о куцању</string>
   <string name="pref_chat_states_summary">Обзнаните контакту кад куцате нову поруку</string>
