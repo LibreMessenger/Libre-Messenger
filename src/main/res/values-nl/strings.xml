@@ -415,6 +415,7 @@
   <string name="hide_offline">Offline verbergen</string>
   <string name="disable_account">Account uitzetten</string>
   <string name="contact_is_typing">%s is aan het typen...</string>
+  <string name="is_typing">is aan het typen...</string>
   <string name="contact_has_stopped_typing">%s is gestopt met typen</string>
   <string name="pref_chat_states">Aan het typen meldingen</string>
   <string name="pref_chat_states_summary">Laat je contacten weten wanneer je een nieuw bericht aan het schrijven bent</string>

@@ -412,6 +412,7 @@
   <string name="hide_offline">오프라인 숨기기 </string>
   <string name="disable_account">계정 해제 </string>
   <string name="contact_is_typing">%s 이(가) 입력중입니다... </string>
+  <string name="is_typing">이(가) 입력중입니다... </string>
   <string name="contact_has_stopped_typing">%s 이(가) 입력을 중단했습니다 </string>
   <string name="pref_chat_states">입력 알림 </string>
   <string name="pref_chat_states_summary">새 메세지를 작성할 때 이를 연락처에게 알립니다 </string>

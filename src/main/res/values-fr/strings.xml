@@ -411,6 +411,7 @@
   <string name="hide_offline">Cacher hors-ligne</string>
   <string name="disable_account">Désactiver le compte</string>
   <string name="contact_is_typing">%s écrit un message...</string>
+  <string name="is_typing">écrit un message...</string>
   <string name="contact_has_stopped_typing">%s a arrêté d\'écrire</string>
   <string name="pref_chat_states">Notifications d\'écriture</string>
   <string name="pref_chat_states_summary">Permettre à votre contact de savoir que vous écrivez un message</string>

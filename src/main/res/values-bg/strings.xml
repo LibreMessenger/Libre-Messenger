@@ -415,6 +415,7 @@
   <string name="hide_offline">Скриване на тези извън линия</string>
   <string name="disable_account">Деактивиране на профила</string>
   <string name="contact_is_typing">%s пише...</string>
+  <string name="is_typing">пише...</string>
   <string name="contact_has_stopped_typing">%s спря да пише</string>
   <string name="pref_chat_states">Известия за писането</string>
   <string name="pref_chat_states_summary">Позволяване на контакта Ви да вижда, когато пишете ново съобщение</string>

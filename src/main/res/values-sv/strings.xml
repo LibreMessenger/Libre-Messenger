@@ -415,6 +415,7 @@
   <string name="hide_offline">Dölj ej anslutna</string>
   <string name="disable_account">Deaktivera konton</string>
   <string name="contact_is_typing">%s skriver...</string>
+  <string name="is_typing">skriver...</string>
   <string name="contact_has_stopped_typing">%s har slutat skriva</string>
   <string name="pref_chat_states">Skriv-notifieringar</string>
   <string name="pref_chat_states_summary">Låter dina kontakter veta när du skriver ett nytt meddelande</string>

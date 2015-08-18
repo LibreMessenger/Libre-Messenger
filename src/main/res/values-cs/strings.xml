@@ -415,6 +415,7 @@
   <string name="hide_offline">Skrýt offline</string>
   <string name="disable_account">Vypnout účet</string>
   <string name="contact_is_typing">%s píše...</string>
+  <string name="is_typing">píše...</string>
   <string name="contact_has_stopped_typing">%s přestal(a) psát</string>
   <string name="pref_chat_states">Upozornění při psaní</string>
   <string name="pref_chat_states_summary">Oznamovat kontaktům že píšete novou zprávu</string>

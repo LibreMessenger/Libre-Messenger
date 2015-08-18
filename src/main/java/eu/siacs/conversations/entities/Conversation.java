@@ -343,6 +343,19 @@ public class Conversation extends AbstractEntity implements Blockable {
 			return this.getContact().getDisplayName();
 		}
 	}
+	
+	public String getParticipants() {
+		if (getMode() == MODE_MULTI) {
+			String generatedName = getMucOptions().createNameFromParticipants();
+			if (generatedName != null) {
+				return generatedName;
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
+	}
 
 	public String getAccountUuid() {
 		return this.accountUuid;

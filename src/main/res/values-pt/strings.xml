@@ -285,6 +285,7 @@
   <string name="sending_x_file">Enviando %s</string>
   <string name="offering_x_file">Oferecendo %s</string>
   <string name="contact_is_typing">%s está digitando...</string>
+  <string name="is_typing">está digitando...</string>
   <string name="contact_has_stopped_typing">%s parou de digitar</string>
   <string name="pref_chat_states">Notificações de digitação</string>
   <string name="send_location">Enviar localização</string>
