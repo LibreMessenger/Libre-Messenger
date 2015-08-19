@@ -20,7 +20,9 @@
             android:layout_height="wrap_content"
             android:maxHeight="384dp"
             android:maxWidth="384dp"
-            android:adjustViewBounds="true"/>
+            android:adjustViewBounds="true"
+            android:padding="1dp"
+            android:background="@drawable/message_border" />
     </LinearLayout>
 
     <TextView
