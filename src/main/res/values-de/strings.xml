@@ -211,7 +211,7 @@
   <string name="this_device_omemo_fingerprint">Eigener OMEMO-Fingerabdruck</string>
   <string name="other_devices">Andere Geräte</string>
   <string name="trust_omemo_fingerprints">OMEMO-Fingerabdruck vertrauen</string>
-  <string name="fetching_keys">Schlüssel abrufen...</string>
+  <string name="fetching_keys">Schlüssel abrufen…</string>
   <string name="done">Erledigt</string>
   <string name="verify">Verifizieren</string>
   <string name="decrypt">Entschlüsseln</string>
