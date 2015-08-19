@@ -149,7 +149,6 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 
 		@Override
 		public void onBind(final Account account) {
-			resetSendingToWaiting(account);
 			account.getRoster().clearPresences();
 			fetchRosterFromServer(account);
 			fetchBookmarks(account);
@@ -277,6 +276,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 				}
 				scheduleWakeUpCall(Config.PING_MAX_INTERVAL, account.getUuid().hashCode());
 			} else if (account.getStatus() == Account.State.OFFLINE) {
+				resetSendingToWaiting(account);
 				if (!account.isOptionSet(Account.OPTION_DISABLED)) {
 					int timeToReconnect = mRandom.nextInt(20) + 10;
 					scheduleWakeUpCall(timeToReconnect,account.getUuid().hashCode());

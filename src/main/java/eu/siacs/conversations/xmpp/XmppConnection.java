@@ -49,6 +49,7 @@ import eu.siacs.conversations.crypto.sasl.Plain;
 import eu.siacs.conversations.crypto.sasl.SaslMechanism;
 import eu.siacs.conversations.crypto.sasl.ScramSha1;
 import eu.siacs.conversations.entities.Account;
+import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.generator.IqGenerator;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.utils.CryptoHelper;
@@ -150,7 +151,6 @@ public class XmppConnection implements Runnable {
 			shouldAuthenticate = shouldBind = !account.isOptionSet(Account.OPTION_REGISTER);
 			tagReader = new XmlReader(wakeLock);
 			tagWriter = new TagWriter();
-			packetCallbacks.clear();
 			this.changeStatus(Account.State.CONNECTING);
 			if (DNSHelper.isIp(account.getServer().toString())) {
 				socket = new Socket();
@@ -197,10 +197,7 @@ public class XmppConnection implements Runnable {
 							socket = new Socket();
 							socket.connect(addr, Config.SOCKET_TIMEOUT * 1000);
 							socketError = false;
-						} catch (final UnknownHostException e) {
-							Log.d(Config.LOGTAG, account.getJid().toBareJid().toString() + ": " + e.getMessage());
-							i++;
-						} catch (final IOException e) {
+						} catch (final Throwable e) {
 							Log.d(Config.LOGTAG, account.getJid().toBareJid().toString() + ": " + e.getMessage());
 							i++;
 						}
@@ -320,7 +317,7 @@ public class XmppConnection implements Runnable {
 											+ ") enabled (resumable)");
 								} else {
 									Log.d(Config.LOGTAG, account.getJid().toBareJid().toString()
-											+ ": stream managment(" + smVersion + ") enabled");
+											+ ": stream management(" + smVersion + ") enabled");
 								}
 								this.lastSessionStarted = SystemClock.elapsedRealtime();
 								this.stanzasReceived = 0;
@@ -347,6 +344,13 @@ public class XmppConnection implements Runnable {
 									mStanzaQueue.clear();
 									Log.d(Config.LOGTAG,"resending "+failedStanzas.size()+" stanzas");
 									for(AbstractAcknowledgeableStanza packet : failedStanzas) {
+										if (packet instanceof MessagePacket) {
+											MessagePacket message = (MessagePacket) packet;
+											mXmppConnectionService.markMessage(account,
+													message.getTo().toBareJid(),
+													message.getId(),
+													Message.STATUS_UNSEND);
+										}
 										sendPacket(packet);
 									}
 								} catch (final NumberFormatException ignored) {
@@ -470,26 +474,28 @@ public class XmppConnection implements Runnable {
 				this.jingleListener.onJinglePacketReceived(account,(JinglePacket) packet);
 			}
 		} else {
-			if (packetCallbacks.containsKey(packet.getId())) {
-				final Pair<IqPacket, OnIqPacketReceived> packetCallbackDuple = packetCallbacks.get(packet.getId());
-				// Packets to the server should have responses from the server
-				if (packetCallbackDuple.first.toServer(account)) {
-					if (packet.fromServer(account)) {
-						packetCallbackDuple.second.onIqPacketReceived(account, packet);
-						packetCallbacks.remove(packet.getId());
+			synchronized (this.packetCallbacks) {
+				if (packetCallbacks.containsKey(packet.getId())) {
+					final Pair<IqPacket, OnIqPacketReceived> packetCallbackDuple = packetCallbacks.get(packet.getId());
+					// Packets to the server should have responses from the server
+					if (packetCallbackDuple.first.toServer(account)) {
+						if (packet.fromServer(account)) {
+							packetCallbackDuple.second.onIqPacketReceived(account, packet);
+							packetCallbacks.remove(packet.getId());
+						} else {
+							Log.e(Config.LOGTAG, account.getJid().toBareJid().toString() + ": ignoring spoofed iq packet");
+						}
 					} else {
-						Log.e(Config.LOGTAG,account.getJid().toBareJid().toString()+": ignoring spoofed iq packet");
+						if (packet.getFrom().equals(packetCallbackDuple.first.getTo())) {
+							packetCallbackDuple.second.onIqPacketReceived(account, packet);
+							packetCallbacks.remove(packet.getId());
+						} else {
+							Log.e(Config.LOGTAG, account.getJid().toBareJid().toString() + ": ignoring spoofed iq packet");
+						}
 					}
-				} else {
-					if (packet.getFrom().equals(packetCallbackDuple.first.getTo())) {
-						packetCallbackDuple.second.onIqPacketReceived(account, packet);
-						packetCallbacks.remove(packet.getId());
-					} else {
-						Log.e(Config.LOGTAG,account.getJid().toBareJid().toString()+": ignoring spoofed iq packet");
-					}
+				} else if (packet.getType() == IqPacket.TYPE.GET || packet.getType() == IqPacket.TYPE.SET) {
+					this.unregisteredIqListener.onIqPacketReceived(account, packet);
 				}
-			} else if (packet.getType() == IqPacket.TYPE.GET|| packet.getType() == IqPacket.TYPE.SET) {
-				this.unregisteredIqListener.onIqPacketReceived(account, packet);
 			}
 		}
 	}
@@ -720,13 +726,15 @@ public class XmppConnection implements Runnable {
 	}
 
 	private void clearIqCallbacks() {
-		Log.d(Config.LOGTAG,account.getJid().toBareJid()+": clearing iq iq callbacks");
+		Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": clearing iq iq callbacks");
 		final IqPacket failurePacket = new IqPacket(IqPacket.TYPE.ERROR);
-		Iterator<Entry<String, Pair<IqPacket, OnIqPacketReceived>>> iterator = this.packetCallbacks.entrySet().iterator();
-		while(iterator.hasNext()) {
-			Entry<String, Pair<IqPacket, OnIqPacketReceived>> entry = iterator.next();
-			entry.getValue().second.onIqPacketReceived(account,failurePacket);
-			iterator.remove();
+		synchronized (this.packetCallbacks) {
+			Iterator<Entry<String, Pair<IqPacket, OnIqPacketReceived>>> iterator = this.packetCallbacks.entrySet().iterator();
+			while (iterator.hasNext()) {
+				Entry<String, Pair<IqPacket, OnIqPacketReceived>> entry = iterator.next();
+				entry.getValue().second.onIqPacketReceived(account, failurePacket);
+				iterator.remove();
+			}
 		}
 	}
 
@@ -764,7 +772,7 @@ public class XmppConnection implements Runnable {
 		sendServiceDiscoveryInfo(account.getServer());
 		sendServiceDiscoveryInfo(account.getJid().toBareJid());
 		sendServiceDiscoveryItems(account.getServer());
-		Log.d(Config.LOGTAG, account.getJid().toBareJid()+ ": online with resource " + account.getResource());
+		Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": online with resource " + account.getResource());
 		changeStatus(Account.State.ONLINE);
 		if (bindListener != null) {
 			bindListener.onBind(account);
@@ -899,7 +907,9 @@ public class XmppConnection implements Runnable {
 			packet.setAttribute("id", id);
 		}
 		if (callback != null) {
-			packetCallbacks.put(packet.getId(), new Pair<>(packet, callback));
+			synchronized (this.packetCallbacks) {
+				packetCallbacks.put(packet.getId(), new Pair<>(packet, callback));
+			}
 		}
 		this.sendPacket(packet);
 	}
