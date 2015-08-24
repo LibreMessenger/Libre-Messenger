@@ -1,5 +1,14 @@
 ###Changelog
 
+####Version 1.6.3
+* bug fixes
+
+####Version 1.6.2
+* fixed issues with connection time out when server does not support ping
+
+####Version 1.6.1
+* fixed crashes
+
 ####Version 1.6.0
 * new multi-end-to-multi-end encryption method
 * show unexpected encryption changes as red chat bubbles

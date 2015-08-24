@@ -34,7 +34,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.net.ssl.HostnameVerifier;
@@ -86,7 +85,7 @@ public class XmppConnection implements Runnable {
 	private XmlReader tagReader;
 	private TagWriter tagWriter;
 	private final Features features = new Features(this);
-	private boolean shouldBind = true;
+	private boolean needsBinding = true;
 	private boolean shouldAuthenticate = true;
 	private Element streamFeatures;
 	private final HashMap<Jid, Info> disco = new HashMap<>();
@@ -102,7 +101,7 @@ public class XmppConnection implements Runnable {
 	private long lastConnect = 0;
 	private long lastSessionStarted = 0;
 	private int attempt = 0;
-	private final Map<String, Pair<IqPacket, OnIqPacketReceived>> packetCallbacks = new Hashtable<>();
+	private final Hashtable<String, Pair<IqPacket, OnIqPacketReceived>> packetCallbacks = new Hashtable<>();
 	private OnPresencePacketReceived presenceListener = null;
 	private OnJinglePacketReceived jingleListener = null;
 	private OnIqPacketReceived unregisteredIqListener = null;
@@ -148,7 +147,7 @@ public class XmppConnection implements Runnable {
 		lastPingSent = SystemClock.elapsedRealtime();
 		this.attempt++;
 		try {
-			shouldAuthenticate = shouldBind = !account.isOptionSet(Account.OPTION_REGISTER);
+			shouldAuthenticate = needsBinding = !account.isOptionSet(Account.OPTION_REGISTER);
 			tagReader = new XmlReader(wakeLock);
 			tagWriter = new TagWriter();
 			this.changeStatus(Account.State.CONNECTING);
@@ -616,19 +615,18 @@ public class XmppConnection implements Runnable {
 			} else {
 				throw new IncompatibleServerException();
 			}
-		} else if (this.streamFeatures.hasChild("sm", "urn:xmpp:sm:"
-					+ smVersion)
-				&& streamId != null) {
+		} else if (this.streamFeatures.hasChild("sm", "urn:xmpp:sm:" + smVersion) && streamId != null) {
 			if (Config.EXTENDED_SM_LOGGING) {
 				Log.d(Config.LOGTAG,account.getJid().toBareJid()+": resuming after stanza #"+stanzasReceived);
 			}
 			final ResumePacket resume = new ResumePacket(this.streamId, stanzasReceived, smVersion);
 			this.tagWriter.writeStanzaAsync(resume);
-		} else if (this.streamFeatures.hasChild("bind") && shouldBind) {
-			sendBindRequest();
-		} else {
-			disconnect(true);
-			changeStatus(Account.State.INCOMPATIBLE_SERVER);
+		} else if (needsBinding) {
+			if (this.streamFeatures.hasChild("bind")) {
+				sendBindRequest();
+			} else {
+				throw new IncompatibleServerException();
+			}
 		}
 	}
 
@@ -649,8 +647,8 @@ public class XmppConnection implements Runnable {
 
 			@Override
 			public void onIqPacketReceived(final Account account, final IqPacket packet) {
-				final Element instructions = packet.query().findChild("instructions");
-				if (packet.query().hasChild("username")
+				if (packet.getType() == IqPacket.TYPE.RESULT
+						&& packet.query().hasChild("username")
 						&& (packet.query().hasChild("password"))) {
 					final IqPacket register = new IqPacket(IqPacket.TYPE.SET);
 					final Element username = new Element("username").setContent(account.getUsername());
@@ -677,6 +675,7 @@ public class XmppConnection implements Runnable {
 						}
 					});
 				} else {
+					final Element instructions = packet.query().findChild("instructions");
 					changeStatus(Account.State.REGISTRATION_FAILED);
 					disconnect(true);
 					Log.d(Config.LOGTAG, account.getJid().toBareJid()
@@ -694,6 +693,7 @@ public class XmppConnection implements Runnable {
 			} catch (final InterruptedException ignored) {
 			}
 		}
+		needsBinding = false;
 		clearIqCallbacks();
 		final IqPacket iq = new IqPacket(IqPacket.TYPE.SET);
 		iq.addChild("bind", "urn:ietf:params:xml:ns:xmpp-bind")
@@ -716,9 +716,11 @@ public class XmppConnection implements Runnable {
 							sendPostBindInitialization();
 						}
 					} else {
+						Log.d(Config.LOGTAG,account.getJid()+": disconnecting because of bind failure");
 						disconnect(true);
 					}
 				} else {
+					Log.d(Config.LOGTAG,account.getJid()+": disconnecting because of bind failure");
 					disconnect(true);
 				}
 			}
@@ -726,16 +728,24 @@ public class XmppConnection implements Runnable {
 	}
 
 	private void clearIqCallbacks() {
-		Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": clearing iq iq callbacks");
-		final IqPacket failurePacket = new IqPacket(IqPacket.TYPE.ERROR);
+		final IqPacket failurePacket = new IqPacket(IqPacket.TYPE.TIMEOUT);
+		final ArrayList<OnIqPacketReceived> callbacks = new ArrayList<>();
 		synchronized (this.packetCallbacks) {
-			Iterator<Entry<String, Pair<IqPacket, OnIqPacketReceived>>> iterator = this.packetCallbacks.entrySet().iterator();
+			if (this.packetCallbacks.size() == 0) {
+				return;
+			}
+			Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": clearing "+this.packetCallbacks.size()+" iq callbacks");
+			final Iterator<Pair<IqPacket, OnIqPacketReceived>> iterator = this.packetCallbacks.values().iterator();
 			while (iterator.hasNext()) {
-				Entry<String, Pair<IqPacket, OnIqPacketReceived>> entry = iterator.next();
-				entry.getValue().second.onIqPacketReceived(account, failurePacket);
+				Pair<IqPacket, OnIqPacketReceived> entry = iterator.next();
+				callbacks.add(entry.second);
 				iterator.remove();
 			}
 		}
+		for(OnIqPacketReceived callback : callbacks) {
+			callback.onIqPacketReceived(account,failurePacket);
+		}
+		Log.d(Config.LOGTAG,account.getJid().toBareJid()+": done clearing iq callbacks. "+this.packetCallbacks.size()+" left");
 	}
 
 	private void sendStartSession() {
@@ -747,6 +757,7 @@ public class XmppConnection implements Runnable {
 				if (packet.getType() == IqPacket.TYPE.RESULT) {
 					sendPostBindInitialization();
 				} else {
+					Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": could not init sessions");
 					disconnect(true);
 				}
 			}
@@ -792,26 +803,29 @@ public class XmppConnection implements Runnable {
 
 				@Override
 				public void onIqPacketReceived(final Account account, final IqPacket packet) {
-					final List<Element> elements = packet.query().getChildren();
-					final Info info = new Info();
-					for (final Element element : elements) {
-						if (element.getName().equals("identity")) {
-							String type = element.getAttribute("type");
-							String category = element.getAttribute("category");
-							if (type != null && category != null) {
-								info.identities.add(new Pair<>(category,type));
+					if (packet.getType() == IqPacket.TYPE.RESULT) {
+						final List<Element> elements = packet.query().getChildren();
+						final Info info = new Info();
+						for (final Element element : elements) {
+							if (element.getName().equals("identity")) {
+								String type = element.getAttribute("type");
+								String category = element.getAttribute("category");
+								if (type != null && category != null) {
+									info.identities.add(new Pair<>(category, type));
+								}
+							} else if (element.getName().equals("feature")) {
+								info.features.add(element.getAttribute("var"));
 							}
-						} else if (element.getName().equals("feature")) {
-							info.features.add(element.getAttribute("var"));
 						}
-					}
-					disco.put(jid, info);
-
-					if (account.getServer().equals(jid)) {
-						enableAdvancedStreamFeatures();
-						for (final OnAdvancedStreamFeaturesLoaded listener : advancedStreamFeaturesLoadedListeners) {
-							listener.onAdvancedStreamFeaturesAvailable(account);
+						disco.put(jid, info);
+						if (account.getServer().equals(jid)) {
+							enableAdvancedStreamFeatures();
+							for (final OnAdvancedStreamFeaturesLoaded listener : advancedStreamFeaturesLoadedListeners) {
+								listener.onAdvancedStreamFeaturesAvailable(account);
+							}
 						}
+					} else {
+						Log.d(Config.LOGTAG,account.getJid().toBareJid()+": could not query disco info for "+jid.toString());
 					}
 				}
 			});
@@ -836,14 +850,18 @@ public class XmppConnection implements Runnable {
 
 			@Override
 			public void onIqPacketReceived(final Account account, final IqPacket packet) {
-				final List<Element> elements = packet.query().getChildren();
-				for (final Element element : elements) {
-					if (element.getName().equals("item")) {
-						final Jid jid = element.getAttributeAsJid("jid");
-						if (jid != null && !jid.equals(account.getServer())) {
-							sendServiceDiscoveryInfo(jid);
+				if (packet.getType() == IqPacket.TYPE.RESULT) {
+					final List<Element> elements = packet.query().getChildren();
+					for (final Element element : elements) {
+						if (element.getName().equals("item")) {
+							final Jid jid = element.getAttributeAsJid("jid");
+							if (jid != null && !jid.equals(account.getServer())) {
+								sendServiceDiscoveryInfo(jid);
+							}
 						}
 					}
+				} else {
+					Log.d(Config.LOGTAG,account.getJid().toBareJid()+": could not query disco items of "+server);
 				}
 			}
 		});
@@ -877,6 +895,8 @@ public class XmppConnection implements Runnable {
 			Log.d(Config.LOGTAG,
 					account.getJid().toBareJid() + ": switching resource due to conflict ("
 					+ account.getResource() + ")");
+		} else if (streamError != null) {
+			Log.d(Config.LOGTAG,account.getJid().toBareJid()+": stream error "+streamError.toString());
 		}
 	}
 
