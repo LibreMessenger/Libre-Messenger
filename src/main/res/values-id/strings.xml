@@ -412,6 +412,7 @@
   <string name="hide_offline">Sembunyikan Offline</string>
   <string name="disable_account">Nonaktifkan Akun</string>
   <string name="contact_is_typing">%s sedang mengetik...</string>
+  <string name="is_typing">sedang mengetik...</string>
   <string name="contact_has_stopped_typing">%s telah berhenti mengetik</string>
   <string name="pref_chat_states">Notifikasi ketik pesan</string>
   <string name="pref_chat_states_summary">Biarkan kontak Anda tahu ketika Anda sedang menulis pesan baru</string>

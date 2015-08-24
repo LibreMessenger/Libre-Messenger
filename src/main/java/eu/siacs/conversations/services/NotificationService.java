@@ -62,12 +62,12 @@ public class NotificationService {
 
 	public boolean notify(final Message message) {
 		return (message.getStatus() == Message.STATUS_RECEIVED)
-			&& notificationsEnabled()
-			&& !message.getConversation().isMuted()
-			&& (message.getConversation().isPnNA()
-					|| conferenceNotificationsEnabled()
-					|| wasHighlightedOrPrivate(message)
-				 );
+				&& notificationsEnabled()
+				&& !message.getConversation().isMuted()
+				&& (message.getConversation().isPnNA()
+				|| conferenceNotificationsEnabled()
+				|| wasHighlightedOrPrivate(message)
+		);
 	}
 
 	public void notifyPebble(final Message message) {
@@ -153,7 +153,9 @@ public class NotificationService {
 				notifications.put(conversationUuid, mList);
 			}
 			final Account account = message.getConversation().getAccount();
-			final boolean doNotify = !account.inGracePeriod() && !this.inMiniGracePeriod(account);
+			final boolean doNotify = (!(this.mIsInForeground && this.mOpenConversation == null) || !isScreenOn)
+					&& !account.inGracePeriod()
+					&& !this.inMiniGracePeriod(account);
 			updateNotification(doNotify);
 			if (doNotify) {
 				notifyPebble(message);
@@ -295,7 +297,7 @@ public class NotificationService {
 								final ArrayList<Message> messages, final boolean notify) {
 		try {
 			final Bitmap bitmap = mXmppConnectionService.getFileBackend()
-					.getThumbnail(message, getPixel(288), false);
+					.getThumbnail(message, getPixel(200), false);
 			final ArrayList<Message> tmp = new ArrayList<>();
 			for (final Message msg : messages) {
 				if (msg.getType() == Message.TYPE_TEXT
@@ -436,7 +438,7 @@ public class NotificationService {
 	private PendingIntent createDisableAccountIntent(final Account account) {
 		final Intent intent = new Intent(mXmppConnectionService,XmppConnectionService.class);
 		intent.setAction(XmppConnectionService.ACTION_DISABLE_ACCOUNT);
-		intent.putExtra("account", account.getJid().toBareJid().toString());
+		intent.putExtra("account",account.getJid().toBareJid().toString());
 		return PendingIntent.getService(mXmppConnectionService,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
 	}
 

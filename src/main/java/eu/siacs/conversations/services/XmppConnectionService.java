@@ -150,13 +150,23 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		@Override
 		public void onBind(final Account account) {
 			account.getRoster().clearPresences();
-			account.pendingConferenceJoins.clear();
-			account.pendingConferenceLeaves.clear();
 			fetchRosterFromServer(account);
 			fetchBookmarks(account);
 			sendPresence(account);
 			connectMultiModeConversations(account);
-			updateConversationUi();
+			for (Conversation conversation : account.pendingConferenceLeaves) {
+				leaveMuc(conversation);
+			}
+			account.pendingConferenceLeaves.clear();
+			for (Conversation conversation : account.pendingConferenceJoins) {
+				joinMuc(conversation);
+			}
+			account.pendingConferenceJoins.clear();
+			mMessageArchiveService.executePendingQueries(account);
+			mJingleConnectionManager.cancelInTransmission();
+			syncDirtyContacts(account);
+			account.getAxolotlService().publishOwnDeviceIdIfNeeded();
+			account.getAxolotlService().publishBundlesIfNeeded();
 		}
 	};
 	private final OnMessageAcknowledged mOnMessageAcknowledgedListener = new OnMessageAcknowledged() {
@@ -214,7 +224,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 	private OnIqPacketReceived mDefaultIqHandler = new OnIqPacketReceived() {
 		@Override
 		public void onIqPacketReceived(Account account, IqPacket packet) {
-			if (packet.getType() == IqPacket.TYPE.ERROR) {
+			if (packet.getType() != IqPacket.TYPE.RESULT) {
 				Element error = packet.findChild("error");
 				String text = error != null ? error.findChildContent("text") : null;
 				if (text != null) {
@@ -248,14 +258,15 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 				mOnAccountUpdate.onAccountUpdate();
 			}
 			if (account.getStatus() == Account.State.ONLINE) {
-				for (Conversation conversation : account.pendingConferenceLeaves) {
-					leaveMuc(conversation);
+				if (connection != null && connection.getFeatures().csi()) {
+					if (checkListeners()) {
+						Log.d(Config.LOGTAG, account.getJid().toBareJid()+ " sending csi//inactive");
+						connection.sendInactive();
+					} else {
+						Log.d(Config.LOGTAG, account.getJid().toBareJid()+ " sending csi//active");
+						connection.sendActive();
+					}
 				}
-				for (Conversation conversation : account.pendingConferenceJoins) {
-					joinMuc(conversation);
-				}
-				mMessageArchiveService.executePendingQueries(account);
-				mJingleConnectionManager.cancelInTransmission();
 				List<Conversation> conversations = getConversations();
 				for (Conversation conversation : conversations) {
 					if (conversation.getAccount() == account) {
@@ -263,23 +274,9 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 						sendUnsentMessages(conversation);
 					}
 				}
-				if (connection != null && connection.getFeatures().csi()) {
-					if (checkListeners()) {
-						Log.d(Config.LOGTAG, account.getJid().toBareJid()
-								+ " sending csi//inactive");
-						connection.sendInactive();
-					} else {
-						Log.d(Config.LOGTAG, account.getJid().toBareJid()
-								+ " sending csi//active");
-						connection.sendActive();
-					}
-				}
-				syncDirtyContacts(account);
-				account.getAxolotlService().publishOwnDeviceIdIfNeeded();
-				account.getAxolotlService().publishBundlesIfNeeded();
-
 				scheduleWakeUpCall(Config.PING_MAX_INTERVAL, account.getUuid().hashCode());
 			} else if (account.getStatus() == Account.State.OFFLINE) {
+				resetSendingToWaiting(account);
 				if (!account.isOptionSet(Account.OPTION_DISABLED)) {
 					int timeToReconnect = mRandom.nextInt(20) + 10;
 					scheduleWakeUpCall(timeToReconnect,account.getUuid().hashCode());
@@ -859,7 +856,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 			Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": fetching roster");
 		}
 		iqPacket.query(Xmlns.ROSTER).setAttribute("ver", account.getRosterVersion());
-		sendIqPacket(account,iqPacket,mIqParser);
+		sendIqPacket(account, iqPacket, mIqParser);
 	}
 
 	public void fetchBookmarks(final Account account) {
@@ -870,28 +867,31 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 
 			@Override
 			public void onIqPacketReceived(final Account account, final IqPacket packet) {
-				final Element query = packet.query();
-				final List<Bookmark> bookmarks = new CopyOnWriteArrayList<>();
-				final Element storage = query.findChild("storage",
-						"storage:bookmarks");
-				if (storage != null) {
-					for (final Element item : storage.getChildren()) {
-						if (item.getName().equals("conference")) {
-							final Bookmark bookmark = Bookmark.parse(item, account);
-							bookmarks.add(bookmark);
-							Conversation conversation = find(bookmark);
-							if (conversation != null) {
-								conversation.setBookmark(bookmark);
-							} else if (bookmark.autojoin() && bookmark.getJid() != null) {
-								conversation = findOrCreateConversation(
-										account, bookmark.getJid(), true);
-								conversation.setBookmark(bookmark);
-								joinMuc(conversation);
+				if (packet.getType() == IqPacket.TYPE.RESULT) {
+					final Element query = packet.query();
+					final List<Bookmark> bookmarks = new CopyOnWriteArrayList<>();
+					final Element storage = query.findChild("storage", "storage:bookmarks");
+					if (storage != null) {
+						for (final Element item : storage.getChildren()) {
+							if (item.getName().equals("conference")) {
+								final Bookmark bookmark = Bookmark.parse(item, account);
+								bookmarks.add(bookmark);
+								Conversation conversation = find(bookmark);
+								if (conversation != null) {
+									conversation.setBookmark(bookmark);
+								} else if (bookmark.autojoin() && bookmark.getJid() != null) {
+									conversation = findOrCreateConversation(
+											account, bookmark.getJid(), true);
+									conversation.setBookmark(bookmark);
+									joinMuc(conversation);
+								}
 							}
 						}
 					}
+					account.setBookmarks(bookmarks);
+				} else {
+					Log.d(Config.LOGTAG,account.getJid().toBareJid()+": could not fetch bookmarks");
 				}
-				account.setBookmarks(bookmarks);
 			}
 		};
 		sendIqPacket(account, iqPacket, callback);
@@ -1478,6 +1478,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		}
 	}
 
+
 	public void joinMuc(Conversation conversation) {
 		Account account = conversation.getAccount();
 		account.pendingConferenceJoins.remove(conversation);
@@ -1674,7 +1675,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		sendIqPacket(conversation.getAccount(), request, new OnIqPacketReceived() {
 			@Override
 			public void onIqPacketReceived(Account account, IqPacket packet) {
-				if (packet.getType() != IqPacket.TYPE.ERROR) {
+				if (packet.getType() == IqPacket.TYPE.RESULT) {
 					ArrayList<String> features = new ArrayList<>();
 					for (Element child : packet.query().getChildren()) {
 						if (child != null && child.getName().equals("feature")) {
@@ -1698,7 +1699,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		sendIqPacket(conversation.getAccount(), request, new OnIqPacketReceived() {
 			@Override
 			public void onIqPacketReceived(Account account, IqPacket packet) {
-				if (packet.getType() != IqPacket.TYPE.ERROR) {
+				if (packet.getType() == IqPacket.TYPE.RESULT) {
 					Data data = Data.parse(packet.query().findChild("x", "jabber:x:data"));
 					for (Field field : data.getFields()) {
 						if (options.containsKey(field.getName())) {
@@ -1712,12 +1713,10 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 					sendIqPacket(account, set, new OnIqPacketReceived() {
 						@Override
 						public void onIqPacketReceived(Account account, IqPacket packet) {
-							if (packet.getType() == IqPacket.TYPE.RESULT) {
-								if (callback != null) {
+							if (callback != null) {
+								if (packet.getType() == IqPacket.TYPE.RESULT) {
 									callback.onPushSucceeded();
-								}
-							} else {
-								if (callback != null) {
+								} else {
 									callback.onPushFailed();
 								}
 							}
@@ -1954,10 +1953,8 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 						final IqPacket packet = XmppConnectionService.this.mIqGenerator
 								.publishAvatarMetadata(avatar);
 						sendIqPacket(account, packet, new OnIqPacketReceived() {
-
 							@Override
-							public void onIqPacketReceived(Account account,
-														   IqPacket result) {
+							public void onIqPacketReceived(Account account, IqPacket result) {
 								if (result.getType() == IqPacket.TYPE.RESULT) {
 									if (account.setAvatar(avatar.getFilename())) {
 										getAvatarService().clear(account);

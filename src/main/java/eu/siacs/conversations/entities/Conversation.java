@@ -344,14 +344,14 @@ public class Conversation extends AbstractEntity implements Blockable {
 			return this.getContact().getDisplayName();
 		}
 	}
-
+	
 	public String getParticipants() {
 		if (getMode() == MODE_MULTI) {
 			String generatedName = getMucOptions().createNameFromParticipants();
 			if (generatedName != null) {
 				return generatedName;
 			} else {
-				return null; //getJid().getLocalpart();
+				return null;
 			}
 		} else {
 			return null;
@@ -566,7 +566,7 @@ public class Conversation extends AbstractEntity implements Blockable {
 	private int getMostRecentlyUsedOutgoingEncryption() {
 		synchronized (this.messages) {
 			for(int i = this.messages.size() -1; i >= 0; --i) {
-				final Message m = this.messages.get(0);
+				final Message m = this.messages.get(i);
 				if (!m.isCarbon() && m.getStatus() != Message.STATUS_RECEIVED) {
 					final int e = m.getEncryption();
 					if (e == Message.ENCRYPTION_DECRYPTED || e == Message.ENCRYPTION_DECRYPTION_FAILED) {
@@ -583,7 +583,7 @@ public class Conversation extends AbstractEntity implements Blockable {
 	private int getMostRecentlyUsedIncomingEncryption() {
 		synchronized (this.messages) {
 			for(int i = this.messages.size() -1; i >= 0; --i) {
-				final Message m = this.messages.get(0);
+				final Message m = this.messages.get(i);
 				if (m.getStatus() == Message.STATUS_RECEIVED) {
 					final int e = m.getEncryption();
 					if (e == Message.ENCRYPTION_DECRYPTED || e == Message.ENCRYPTION_DECRYPTION_FAILED) {

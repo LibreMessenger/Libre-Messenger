@@ -202,6 +202,7 @@
   <string name="reception_failed">Odbiór nieudany</string>
   <string name="your_fingerprint">Twój odcisk klucza</string>
   <string name="otr_fingerprint">Odcisk klucza OTR</string>
+  <string name="other_devices">Pozostałe urządzenia</string>
   <string name="verify">Weryfikuj</string>
   <string name="decrypt">Odszyfruj</string>
   <string name="conferences">Konferencje</string>
@@ -412,6 +413,7 @@
   <string name="hide_offline">Ukryj niedostępnych</string>
   <string name="disable_account">Wyłącz konto</string>
   <string name="contact_is_typing">%s pisze...</string>
+  <string name="is_typing">pisze...</string>
   <string name="contact_has_stopped_typing">%s przestał(a) pisać</string>
   <string name="pref_chat_states">Powiadomienia pisania</string>
   <string name="pref_chat_states_summary">Powiadamiaj rozmówcę, kiedy rozpoczynasz nową wiadomość</string>
@@ -445,4 +447,5 @@
   <string name="none">Brak</string>
   <string name="recently_used">Ostatnio używana</string>
   <string name="choose_quick_action">Wybierz szybką akcję</string>
+  <string name="user_has_left_conference">%s opuścił(a) konferencję!</string>
 </resources>

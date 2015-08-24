@@ -133,7 +133,6 @@ public class FileBackend {
 		if (path == null) {
 			return false;
 		}
-		Log.d(Config.LOGTAG,"using image as is. path: "+path);
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
 		try {
@@ -358,11 +357,7 @@ public class FileBackend {
 					file.delete();
 					return false;
 				}
-			} catch (FileNotFoundException e) {
-				return false;
-			} catch (IOException e) {
-				return false;
-			} catch (NoSuchAlgorithmException e) {
+			} catch (IllegalArgumentException | IOException | NoSuchAlgorithmException e) {
 				return false;
 			} finally {
 				close(os);
@@ -389,6 +384,9 @@ public class FileBackend {
 			BitmapFactory.Options options = new BitmapFactory.Options();
 			options.inSampleSize = calcSampleSize(image, size);
 			is = mXmppConnectionService.getContentResolver().openInputStream(image);
+			if (is == null) {
+				return null;
+			}
 			Bitmap input = BitmapFactory.decodeStream(is, null, options);
 			if (input == null) {
 				return null;
@@ -415,6 +413,9 @@ public class FileBackend {
 			BitmapFactory.Options options = new BitmapFactory.Options();
 			options.inSampleSize = calcSampleSize(image,Math.max(newHeight, newWidth));
 			is = mXmppConnectionService.getContentResolver().openInputStream(image);
+			if (is == null) {
+				return null;
+			}
 			Bitmap source = BitmapFactory.decodeStream(is, null, options);
 			if (source == null) {
 				return null;
