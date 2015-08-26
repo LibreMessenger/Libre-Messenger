@@ -327,7 +327,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 			switch (conversation.getNextEncryption()) {
 				case Message.ENCRYPTION_NONE:
 					mEditMessage
-							.setHint(getString(R.string.send_plain_text_message));
+							.setHint(getString(R.string.send_unencrypted_message));
 					break;
 				case Message.ENCRYPTION_OTR:
 					mEditMessage.setHint(getString(R.string.send_otr_message));
@@ -662,6 +662,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 		this.mEditMessage.setText("");
 		this.mEditMessage.append(this.conversation.getNextMessage());
 		this.mEditMessage.setKeyboardListener(this);
+		messageListAdapter.updatePreferences();
 		this.messagesView.setAdapter(messageListAdapter);
 		updateMessages();
 		this.messagesLoaded = true;

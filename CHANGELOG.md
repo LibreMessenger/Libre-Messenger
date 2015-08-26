@@ -1,5 +1,13 @@
 ###Changelog
 
+####Version 1.6.5
+* more OMEMO fixes
+
+####Version 1.6.4
+* setting to enable white chat bubbles
+* limit OMEMO key publish attempts to work around broken PEP
+* various bug fixes
+
 ####Version 1.6.3
 * bug fixes
 
