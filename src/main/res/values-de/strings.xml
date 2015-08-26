@@ -76,7 +76,7 @@
   <string name="delete_messages">Nachrichten löschen</string>
   <string name="also_end_conversation">Diese Unterhaltung danach beenden</string>
   <string name="choose_presence">Ressource des Kontakts auswählen</string>
-  <string name="send_unencrypted_message">Sende unverschlüsselte Nachricht</string>
+  <string name="send_unencrypted_message">Normal schreiben…</string>
   <string name="send_otr_message">OTR-verschlüsselt schreiben…</string>
   <string name="send_omemo_message">OMEMO-verschlüsselt schreiben…</string>
   <string name="send_pgp_message">OpenPGP-verschlüsselt schreiben…</string>
