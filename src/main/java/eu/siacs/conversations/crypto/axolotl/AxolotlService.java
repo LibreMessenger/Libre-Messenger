@@ -50,6 +50,7 @@ public class AxolotlService {
 	public static final String LOGPREFIX = "AxolotlService";
 
 	public static final int NUM_KEYS_TO_PUBLISH = 100;
+	public static final int publishTriesThreshold = 3;
 
 	private final Account account;
 	private final XmppConnectionService mXmppConnectionService;
@@ -59,6 +60,8 @@ public class AxolotlService {
 	private final Map<String, XmppAxolotlMessage> messageCache;
 	private final FetchStatusMap fetchStatusMap;
 	private final SerialSingleThreadExecutor executor;
+	private int numPublishTriesOnEmptyPep = 0;
+	private boolean pepBroken = false;
 
 	private static class AxolotlAddressMap<T> {
 		protected Map<String, Map<Integer, T>> map;
@@ -228,8 +231,7 @@ public class AxolotlService {
 		axolotlStore.regenerate();
 		sessions.clear();
 		fetchStatusMap.clear();
-		publishBundlesIfNeeded();
-		publishOwnDeviceIdIfNeeded();
+		publishBundlesIfNeeded(true);
 	}
 
 	public int getOwnDeviceId() {
@@ -255,8 +257,15 @@ public class AxolotlService {
 
 	public void registerDevices(final Jid jid, @NonNull final Set<Integer> deviceIds) {
 		if (jid.toBareJid().equals(account.getJid().toBareJid())) {
+			if (!deviceIds.isEmpty()) {
+				Log.d(Config.LOGTAG, getLogprefix(account) + "Received non-empty own device list. Resetting publish attemps and pepBroken status.");
+				pepBroken = false;
+				numPublishTriesOnEmptyPep = 0;
+			}
 			if (deviceIds.contains(getOwnDeviceId())) {
 				deviceIds.remove(getOwnDeviceId());
+			} else {
+				publishOwnDeviceId(deviceIds);
 			}
 			for (Integer deviceId : deviceIds) {
 				AxolotlAddress ownDeviceAddress = new AxolotlAddress(jid.toBareJid().toString(), deviceId);
@@ -282,10 +291,13 @@ public class AxolotlService {
 				XmppAxolotlSession.Trust.UNTRUSTED);
 		this.deviceIds.put(jid, deviceIds);
 		mXmppConnectionService.keyStatusUpdated();
-		publishOwnDeviceIdIfNeeded();
 	}
 
 	public void wipeOtherPepDevices() {
+		if (pepBroken) {
+			Log.d(Config.LOGTAG, getLogprefix(account) + "wipeOtherPepDevices called, but PEP is broken. Ignoring... ");
+			return;
+		}
 		Set<Integer> deviceIds = new HashSet<>();
 		deviceIds.add(getOwnDeviceId());
 		IqPacket publish = mXmppConnectionService.getIqGenerator().publishDeviceIds(deviceIds);
@@ -303,6 +315,10 @@ public class AxolotlService {
 	}
 
 	public void publishOwnDeviceIdIfNeeded() {
+		if (pepBroken) {
+			Log.d(Config.LOGTAG, getLogprefix(account) + "publishOwnDeviceIdIfNeeded called, but PEP is broken. Ignoring... ");
+			return;
+		}
 		IqPacket packet = mXmppConnectionService.getIqGenerator().retrieveDeviceIds(account.getJid().toBareJid());
 		mXmppConnectionService.sendIqPacket(account, packet, new OnIqPacketReceived() {
 			@Override
@@ -310,118 +326,148 @@ public class AxolotlService {
 				if (packet.getType() == IqPacket.TYPE.RESULT) {
 					Element item = mXmppConnectionService.getIqParser().getItem(packet);
 					Set<Integer> deviceIds = mXmppConnectionService.getIqParser().deviceIds(item);
-					if (deviceIds == null) {
-						deviceIds = new HashSet<Integer>();
-					}
 					if (!deviceIds.contains(getOwnDeviceId())) {
-						deviceIds.add(getOwnDeviceId());
-						IqPacket publish = mXmppConnectionService.getIqGenerator().publishDeviceIds(deviceIds);
-						Log.d(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Own device " + getOwnDeviceId() + " not in PEP devicelist. Publishing: " + publish);
-						mXmppConnectionService.sendIqPacket(account, publish, new OnIqPacketReceived() {
-							@Override
-							public void onIqPacketReceived(Account account, IqPacket packet) {
-								// TODO: implement this!
-							}
-						});
+						publishOwnDeviceId(deviceIds);
 					}
 				} else {
-					Log.d(Config.LOGTAG, getLogprefix(account) + "Error received while publishing device ID:" + packet.findChild("error"));
+					Log.d(Config.LOGTAG, getLogprefix(account) + "Error received while retrieving Device Ids" + packet.findChild("error"));
 				}
 			}
 		});
 	}
 
-	public void publishBundlesIfNeeded() {
+	public void publishOwnDeviceId(Set<Integer> deviceIds) {
+		if (!deviceIds.contains(getOwnDeviceId())) {
+			Log.d(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Own device " + getOwnDeviceId() + " not in PEP devicelist.");
+			if (deviceIds.isEmpty()) {
+				if (numPublishTriesOnEmptyPep >= publishTriesThreshold) {
+					Log.w(Config.LOGTAG, getLogprefix(account) + "Own device publish attempt threshold exceeded, aborting...");
+					pepBroken = true;
+					return;
+				} else {
+					numPublishTriesOnEmptyPep++;
+					Log.w(Config.LOGTAG, getLogprefix(account) + "Own device list empty, attempting to publish (try " + numPublishTriesOnEmptyPep + ")");
+				}
+			} else {
+				numPublishTriesOnEmptyPep = 0;
+			}
+			deviceIds.add(getOwnDeviceId());
+			IqPacket publish = mXmppConnectionService.getIqGenerator().publishDeviceIds(deviceIds);
+			mXmppConnectionService.sendIqPacket(account, publish, new OnIqPacketReceived() {
+				@Override
+				public void onIqPacketReceived(Account account, IqPacket packet) {
+					if (packet.getType() != IqPacket.TYPE.RESULT) {
+						Log.d(Config.LOGTAG, getLogprefix(account) + "Error received while publishing own device id" + packet.findChild("error"));
+					}
+				}
+			});
+		}
+	}
+
+	public void publishBundlesIfNeeded(final boolean announceAfter) {
+		if (pepBroken) {
+			Log.d(Config.LOGTAG, getLogprefix(account) + "publishBundlesIfNeeded called, but PEP is broken. Ignoring... ");
+			return;
+		}
 		IqPacket packet = mXmppConnectionService.getIqGenerator().retrieveBundlesForDevice(account.getJid().toBareJid(), getOwnDeviceId());
 		mXmppConnectionService.sendIqPacket(account, packet, new OnIqPacketReceived() {
 			@Override
 			public void onIqPacketReceived(Account account, IqPacket packet) {
-				if (packet.getType() == IqPacket.TYPE.RESULT) {
-					PreKeyBundle bundle = mXmppConnectionService.getIqParser().bundle(packet);
-					Map<Integer, ECPublicKey> keys = mXmppConnectionService.getIqParser().preKeyPublics(packet);
-					boolean flush = false;
-					if (bundle == null) {
-						Log.w(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Received invalid bundle:" + packet);
-						bundle = new PreKeyBundle(-1, -1, -1, null, -1, null, null, null);
-						flush = true;
+				PreKeyBundle bundle = mXmppConnectionService.getIqParser().bundle(packet);
+				Map<Integer, ECPublicKey> keys = mXmppConnectionService.getIqParser().preKeyPublics(packet);
+				boolean flush = false;
+				if (bundle == null) {
+					Log.w(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Received invalid bundle:" + packet);
+					bundle = new PreKeyBundle(-1, -1, -1, null, -1, null, null, null);
+					flush = true;
+				}
+				if (keys == null) {
+					Log.w(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Received invalid prekeys:" + packet);
+				}
+				try {
+					boolean changed = false;
+					// Validate IdentityKey
+					IdentityKeyPair identityKeyPair = axolotlStore.getIdentityKeyPair();
+					if (flush || !identityKeyPair.getPublicKey().equals(bundle.getIdentityKey())) {
+						Log.i(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Adding own IdentityKey " + identityKeyPair.getPublicKey() + " to PEP.");
+						changed = true;
 					}
-					if (keys == null) {
-						Log.w(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Received invalid prekeys:" + packet);
-					}
-					try {
-						boolean changed = false;
-						// Validate IdentityKey
-						IdentityKeyPair identityKeyPair = axolotlStore.getIdentityKeyPair();
-						if (flush || !identityKeyPair.getPublicKey().equals(bundle.getIdentityKey())) {
-							Log.i(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Adding own IdentityKey " + identityKeyPair.getPublicKey() + " to PEP.");
-							changed = true;
-						}
 
-						// Validate signedPreKeyRecord + ID
-						SignedPreKeyRecord signedPreKeyRecord;
-						int numSignedPreKeys = axolotlStore.loadSignedPreKeys().size();
-						try {
-							signedPreKeyRecord = axolotlStore.loadSignedPreKey(bundle.getSignedPreKeyId());
-							if (flush
-									|| !bundle.getSignedPreKey().equals(signedPreKeyRecord.getKeyPair().getPublicKey())
-									|| !Arrays.equals(bundle.getSignedPreKeySignature(), signedPreKeyRecord.getSignature())) {
-								Log.i(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Adding new signedPreKey with ID " + (numSignedPreKeys + 1) + " to PEP.");
-								signedPreKeyRecord = KeyHelper.generateSignedPreKey(identityKeyPair, numSignedPreKeys + 1);
-								axolotlStore.storeSignedPreKey(signedPreKeyRecord.getId(), signedPreKeyRecord);
-								changed = true;
-							}
-						} catch (InvalidKeyIdException e) {
+					// Validate signedPreKeyRecord + ID
+					SignedPreKeyRecord signedPreKeyRecord;
+					int numSignedPreKeys = axolotlStore.loadSignedPreKeys().size();
+					try {
+						signedPreKeyRecord = axolotlStore.loadSignedPreKey(bundle.getSignedPreKeyId());
+						if (flush
+								|| !bundle.getSignedPreKey().equals(signedPreKeyRecord.getKeyPair().getPublicKey())
+								|| !Arrays.equals(bundle.getSignedPreKeySignature(), signedPreKeyRecord.getSignature())) {
 							Log.i(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Adding new signedPreKey with ID " + (numSignedPreKeys + 1) + " to PEP.");
 							signedPreKeyRecord = KeyHelper.generateSignedPreKey(identityKeyPair, numSignedPreKeys + 1);
 							axolotlStore.storeSignedPreKey(signedPreKeyRecord.getId(), signedPreKeyRecord);
 							changed = true;
 						}
-
-						// Validate PreKeys
-						Set<PreKeyRecord> preKeyRecords = new HashSet<>();
-						if (keys != null) {
-							for (Integer id : keys.keySet()) {
-								try {
-									PreKeyRecord preKeyRecord = axolotlStore.loadPreKey(id);
-									if (preKeyRecord.getKeyPair().getPublicKey().equals(keys.get(id))) {
-										preKeyRecords.add(preKeyRecord);
-									}
-								} catch (InvalidKeyIdException ignored) {
-								}
-							}
-						}
-						int newKeys = NUM_KEYS_TO_PUBLISH - preKeyRecords.size();
-						if (newKeys > 0) {
-							List<PreKeyRecord> newRecords = KeyHelper.generatePreKeys(
-									axolotlStore.getCurrentPreKeyId() + 1, newKeys);
-							preKeyRecords.addAll(newRecords);
-							for (PreKeyRecord record : newRecords) {
-								axolotlStore.storePreKey(record.getId(), record);
-							}
-							changed = true;
-							Log.i(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Adding " + newKeys + " new preKeys to PEP.");
-						}
-
-
-						if (changed) {
-							IqPacket publish = mXmppConnectionService.getIqGenerator().publishBundles(
-									signedPreKeyRecord, axolotlStore.getIdentityKeyPair().getPublicKey(),
-									preKeyRecords, getOwnDeviceId());
-							Log.d(Config.LOGTAG, AxolotlService.getLogprefix(account) + ": Bundle " + getOwnDeviceId() + " in PEP not current. Publishing: " + publish);
-							mXmppConnectionService.sendIqPacket(account, publish, new OnIqPacketReceived() {
-								@Override
-								public void onIqPacketReceived(Account account, IqPacket packet) {
-									// TODO: implement this!
-									Log.d(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Published bundle, got: " + packet);
-								}
-							});
-						}
-					} catch (InvalidKeyException e) {
-						Log.e(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Failed to publish bundle " + getOwnDeviceId() + ", reason: " + e.getMessage());
-						return;
+					} catch (InvalidKeyIdException e) {
+						Log.i(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Adding new signedPreKey with ID " + (numSignedPreKeys + 1) + " to PEP.");
+						signedPreKeyRecord = KeyHelper.generateSignedPreKey(identityKeyPair, numSignedPreKeys + 1);
+						axolotlStore.storeSignedPreKey(signedPreKeyRecord.getId(), signedPreKeyRecord);
+						changed = true;
 					}
-				} else {
-					Log.d(Config.LOGTAG, getLogprefix(account) + "Error received while publishing Bundle:" + packet.findChild("error"));
+
+					// Validate PreKeys
+					Set<PreKeyRecord> preKeyRecords = new HashSet<>();
+					if (keys != null) {
+						for (Integer id : keys.keySet()) {
+							try {
+								PreKeyRecord preKeyRecord = axolotlStore.loadPreKey(id);
+								if (preKeyRecord.getKeyPair().getPublicKey().equals(keys.get(id))) {
+									preKeyRecords.add(preKeyRecord);
+								}
+							} catch (InvalidKeyIdException ignored) {
+							}
+						}
+					}
+					int newKeys = NUM_KEYS_TO_PUBLISH - preKeyRecords.size();
+					if (newKeys > 0) {
+						List<PreKeyRecord> newRecords = KeyHelper.generatePreKeys(
+								axolotlStore.getCurrentPreKeyId() + 1, newKeys);
+						preKeyRecords.addAll(newRecords);
+						for (PreKeyRecord record : newRecords) {
+							axolotlStore.storePreKey(record.getId(), record);
+						}
+						changed = true;
+						Log.i(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Adding " + newKeys + " new preKeys to PEP.");
+					}
+
+
+					if (changed) {
+						IqPacket publish = mXmppConnectionService.getIqGenerator().publishBundles(
+								signedPreKeyRecord, axolotlStore.getIdentityKeyPair().getPublicKey(),
+								preKeyRecords, getOwnDeviceId());
+						Log.d(Config.LOGTAG, AxolotlService.getLogprefix(account) + ": Bundle " + getOwnDeviceId() + " in PEP not current. Publishing: " + publish);
+						mXmppConnectionService.sendIqPacket(account, publish, new OnIqPacketReceived() {
+							@Override
+							public void onIqPacketReceived(Account account, IqPacket packet) {
+								if (packet.getType() == IqPacket.TYPE.RESULT) {
+									Log.d(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Successfully published bundle. ");
+									if (announceAfter) {
+										Log.d(Config.LOGTAG, getLogprefix(account) + "Announcing device " + getOwnDeviceId());
+										publishOwnDeviceIdIfNeeded();
+									}
+								} else {
+									Log.d(Config.LOGTAG, getLogprefix(account) + "Error received while publishing bundle: " + packet.findChild("error"));
+								}
+							}
+						});
+					} else {
+						Log.d(Config.LOGTAG, getLogprefix(account) + "Bundle " + getOwnDeviceId() + " in PEP was current");
+						if (announceAfter) {
+							Log.d(Config.LOGTAG, getLogprefix(account) + "Announcing device " + getOwnDeviceId());
+							publishOwnDeviceIdIfNeeded();
+						}
+					}
+				} catch (InvalidKeyException e) {
+					Log.e(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Failed to publish bundle " + getOwnDeviceId() + ", reason: " + e.getMessage());
+					return;
 				}
 			}
 		});
@@ -699,7 +745,7 @@ public class AxolotlService {
 			plaintextMessage = message.decrypt(session, getOwnDeviceId());
 			Integer preKeyId = session.getPreKeyId();
 			if (preKeyId != null) {
-				publishBundlesIfNeeded();
+				publishBundlesIfNeeded(false);
 				session.resetPreKeyId();
 			}
 		} catch (CryptoFailedException e) {
