@@ -84,9 +84,9 @@ import eu.siacs.conversations.xml.Element;
 import eu.siacs.conversations.xmpp.OnBindListener;
 import eu.siacs.conversations.xmpp.OnContactStatusChanged;
 import eu.siacs.conversations.xmpp.OnIqPacketReceived;
+import eu.siacs.conversations.xmpp.OnKeyStatusUpdated;
 import eu.siacs.conversations.xmpp.OnMessageAcknowledged;
 import eu.siacs.conversations.xmpp.OnMessagePacketReceived;
-import eu.siacs.conversations.xmpp.OnKeyStatusUpdated;
 import eu.siacs.conversations.xmpp.OnPresencePacketReceived;
 import eu.siacs.conversations.xmpp.OnStatusChanged;
 import eu.siacs.conversations.xmpp.OnUpdateBlocklist;
@@ -165,8 +165,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 			mMessageArchiveService.executePendingQueries(account);
 			mJingleConnectionManager.cancelInTransmission();
 			syncDirtyContacts(account);
-			account.getAxolotlService().publishOwnDeviceIdIfNeeded();
-			account.getAxolotlService().publishBundlesIfNeeded();
+			account.getAxolotlService().publishBundlesIfNeeded(true);
 		}
 	};
 	private final OnMessageAcknowledged mOnMessageAcknowledgedListener = new OnMessageAcknowledged() {
@@ -2216,7 +2215,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		}
 		for (Conversation conversation : getConversations()) {
 			if (conversation.getJid().toBareJid().equals(recipient) && conversation.getAccount() == account) {
-				final Message message = conversation.findSentMessageWithUuid(uuid);
+				final Message message = conversation.findSentMessageWithUuidOrRemoteId(uuid);
 				if (message != null) {
 					markMessage(message, status);
 				}
@@ -2226,8 +2225,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		return null;
 	}
 
-	public boolean markMessage(Conversation conversation, String uuid,
-							   int status) {
+	public boolean markMessage(Conversation conversation, String uuid, int status) {
 		if (uuid == null) {
 			return false;
 		} else {

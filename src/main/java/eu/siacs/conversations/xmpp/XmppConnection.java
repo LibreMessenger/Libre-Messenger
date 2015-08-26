@@ -318,7 +318,6 @@ public class XmppConnection implements Runnable {
 									Log.d(Config.LOGTAG, account.getJid().toBareJid().toString()
 											+ ": stream management(" + smVersion + ") enabled");
 								}
-								this.lastSessionStarted = SystemClock.elapsedRealtime();
 								this.stanzasReceived = 0;
 								final RequestPacket r = new RequestPacket(smVersion);
 								tagWriter.writeStanzaAsync(r);
@@ -473,28 +472,32 @@ public class XmppConnection implements Runnable {
 				this.jingleListener.onJinglePacketReceived(account,(JinglePacket) packet);
 			}
 		} else {
+			OnIqPacketReceived callback = null;
 			synchronized (this.packetCallbacks) {
 				if (packetCallbacks.containsKey(packet.getId())) {
 					final Pair<IqPacket, OnIqPacketReceived> packetCallbackDuple = packetCallbacks.get(packet.getId());
 					// Packets to the server should have responses from the server
 					if (packetCallbackDuple.first.toServer(account)) {
 						if (packet.fromServer(account)) {
-							packetCallbackDuple.second.onIqPacketReceived(account, packet);
+							callback = packetCallbackDuple.second;
 							packetCallbacks.remove(packet.getId());
 						} else {
 							Log.e(Config.LOGTAG, account.getJid().toBareJid().toString() + ": ignoring spoofed iq packet");
 						}
 					} else {
 						if (packet.getFrom().equals(packetCallbackDuple.first.getTo())) {
-							packetCallbackDuple.second.onIqPacketReceived(account, packet);
+							callback = packetCallbackDuple.second;
 							packetCallbacks.remove(packet.getId());
 						} else {
 							Log.e(Config.LOGTAG, account.getJid().toBareJid().toString() + ": ignoring spoofed iq packet");
 						}
 					}
 				} else if (packet.getType() == IqPacket.TYPE.GET || packet.getType() == IqPacket.TYPE.SET) {
-					this.unregisteredIqListener.onIqPacketReceived(account, packet);
+					callback = this.unregisteredIqListener;
 				}
+			}
+			if (callback != null) {
+				callback.onIqPacketReceived(account,packet);
 			}
 		}
 	}
@@ -784,6 +787,7 @@ public class XmppConnection implements Runnable {
 		sendServiceDiscoveryInfo(account.getJid().toBareJid());
 		sendServiceDiscoveryItems(account.getServer());
 		Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": online with resource " + account.getResource());
+		this.lastSessionStarted = SystemClock.elapsedRealtime();
 		changeStatus(Account.State.ONLINE);
 		if (bindListener != null) {
 			bindListener.onBind(account);
@@ -954,7 +958,7 @@ public class XmppConnection implements Runnable {
 			AbstractAcknowledgeableStanza stanza = (AbstractAcknowledgeableStanza) packet;
 			++stanzasSent;
 			this.mStanzaQueue.put(stanzasSent, stanza);
-			if (stanza instanceof MessagePacket && stanza.getId() != null && this.streamId != null) {
+			if (stanza instanceof MessagePacket && stanza.getId() != null && getFeatures().sm()) {
 				if (Config.EXTENDED_SM_LOGGING) {
 					Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": requesting ack for message stanza #" + stanzasSent);
 				}
@@ -1100,12 +1104,7 @@ public class XmppConnection implements Runnable {
 	}
 
 	public long getLastSessionEstablished() {
-		final long diff;
-		if (this.lastSessionStarted == 0) {
-			diff = SystemClock.elapsedRealtime() - this.lastConnect;
-		} else {
-			diff = SystemClock.elapsedRealtime() - this.lastSessionStarted;
-		}
+		final long diff = SystemClock.elapsedRealtime() - this.lastSessionStarted;
 		return System.currentTimeMillis() - diff;
 	}
 
