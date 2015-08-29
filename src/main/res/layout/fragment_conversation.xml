@@ -13,7 +13,7 @@
         android:layout_above="@+id/snackbar"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@color/lightyellow"
+        android:background="@color/background_floating_material_light"
         android:divider="@null"
         android:dividerHeight="0dp"
         android:listSelector="@android:color/transparent"

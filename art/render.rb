@@ -49,6 +49,7 @@ images = {
 	'message_bubble_received_warning.svg' => ['message_bubble_received_warning.9', 0],
 	'message_bubble_received_white.svg' => ['message_bubble_received_white.9', 0],
 	'message_bubble_sent.svg' => ['message_bubble_sent.9', 0],
+	'message_bubble_sent_white.svg' => ['message_bubble_sent_white.9', 0],
 	}
 
 # Executable paths for Mac OSX

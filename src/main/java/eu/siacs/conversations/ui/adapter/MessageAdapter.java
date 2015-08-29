@@ -124,9 +124,9 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 
 	private int getMessageTextColor(boolean onDark, boolean primary) {
 		if (onDark) {
-			return activity.getResources().getColor(primary ? R.color.white : R.color.white70);
+			return activity.getResources().getColor(primary ? R.color.green900 : R.color.primary);
 		} else {
-			return activity.getResources().getColor(primary ? R.color.black87 : R.color.black54);
+			return activity.getResources().getColor(primary ? R.color.green900 : R.color.primary);
 		}
 	}
 
@@ -577,7 +577,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 			}
 		}
 
-		boolean darkBackground = (type == RECEIVED && (!isInValidSession || !mUseWhiteBackground));
+		boolean darkBackground = (type == SENT && (!isInValidSession || !mUseWhiteBackground));
 
 		if (type == STATUS) {
 			if ("LOAD_MORE".equals(message.getBody())) {
@@ -705,16 +705,20 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 
 		if (type == RECEIVED) {
 			if(isInValidSession) {
-				if (mUseWhiteBackground) {
-					viewHolder.message_box.setBackgroundResource(R.drawable.message_bubble_received_white);
-				} else {
-					viewHolder.message_box.setBackgroundResource(R.drawable.message_bubble_received);
-				}
+				viewHolder.message_box.setBackgroundResource(R.drawable.message_bubble_received);
 				viewHolder.encryption.setVisibility(View.GONE);
 			} else {
 				viewHolder.message_box.setBackgroundResource(R.drawable.message_bubble_received_warning);
 				viewHolder.encryption.setVisibility(View.VISIBLE);
 				viewHolder.encryption.setText(CryptoHelper.encryptionTypeToText(message.getEncryption()));
+			}
+		}
+
+		if (type == SENT) {
+			if (mUseWhiteBackground) {
+				viewHolder.message_box.setBackgroundResource(R.drawable.message_bubble_sent_white);
+			} else {
+				viewHolder.message_box.setBackgroundResource(R.drawable.message_bubble_sent);
 			}
 		}
 

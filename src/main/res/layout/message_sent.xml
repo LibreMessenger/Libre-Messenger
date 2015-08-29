@@ -57,8 +57,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:autoLink="web"
-                android:textColorLink="@color/black87"
-                android:textColor="@color/black87"
+                android:textColorLink="@color/black54"
+                android:textColor="@color/black54"
                 android:textColorHighlight="@color/grey500"
                 android:textSize="?attr/TextSizeBody" />
 
@@ -89,7 +89,7 @@
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
                     android:text="@string/sending"
-                    android:textColor="@color/black54"
+                    android:textColor="@color/primary_dark"
                     android:textSize="?attr/TextSizeInfo" />
 
                 <ImageView
