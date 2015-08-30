@@ -687,6 +687,10 @@ public class Conversation extends AbstractEntity implements Blockable {
 		}
 	}
 
+	public void resetLastMessageTransmitted() {
+		this.setAttribute(ATTRIBUTE_LAST_MESSAGE_TRANSMITTED,String.valueOf(-1));
+	}
+
 	public boolean setLastMessageTransmitted(long value) {
 		long before = getLastMessageTransmitted();
 		if (value - before > 1000) {
