@@ -1,4 +1,6 @@
 ###Changelog
+####Version 1.6.8
+* bug fixes
 
 ####Version 1.6.7
 * bug fixes
