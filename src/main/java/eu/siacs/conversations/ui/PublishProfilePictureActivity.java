@@ -219,7 +219,7 @@ public class PublishProfilePictureActivity extends XmppActivity {
 
 	protected void loadImageIntoPreview(Uri uri) {
 		Bitmap bm = xmppConnectionService.getFileBackend().cropCenterSquare(
-				uri, 384);
+				uri, Config.AVATAR_SIZE);
 		if (bm == null) {
 			disablePublishButton();
 			this.hintOrWarning.setTextColor(getWarningTextColor());
