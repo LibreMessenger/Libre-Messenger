@@ -523,4 +523,6 @@
     <string name="update">Update</string>
     <string name="new_version">New version:</string>
     <string name="current_version">installed version:</string>
+	<string name="no_update_available">No update available</string>
+	<string name="download_started">Download started</string>
 </resources>

@@ -490,4 +490,6 @@
   <string name="title_activity_updater">Update Dienst</string>
   <string name="update">Aktualisieren</string>
   <string name="update_available">Eine neuere Version von Conversations ist verfügbar. Jetzt aktualisieren?</string>
+  <string name="download_started">Download gestartet</string>
+  <string name="no_update_available">Kein Update verfügbar</string>
 </resources>

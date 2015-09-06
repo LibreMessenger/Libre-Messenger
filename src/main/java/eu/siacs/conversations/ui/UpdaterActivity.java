@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -155,8 +156,11 @@ public class UpdaterActivity extends Activity {
                                         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
                                         request.setAllowedOverRoaming(false);
                                         request.setTitle("Conversations Update");
-                                        request.setDestinationInExternalFilesDir(UpdaterActivity.this, Environment.DIRECTORY_DOWNLOADS,"MyAndroidApp.apk");
+                                        request.setDestinationInExternalFilesDir(UpdaterActivity.this, Environment.DIRECTORY_DOWNLOADS, "MyAndroidApp.apk");
                                         downloadReference = downloadManager.enqueue(request);
+                                        Toast.makeText(getApplicationContext(),
+                                                getText(R.string.download_started),
+                                                Toast.LENGTH_LONG).show();
                                     }
                                 })
                                 .setNegativeButton(R.string.remind_later, new DialogInterface.OnClickListener() {
@@ -166,6 +170,12 @@ public class UpdaterActivity extends Activity {
                                 });
                         //show the alert message
                         builder.create().show();
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(),
+                                getText(R.string.no_update_available),
+                                Toast.LENGTH_LONG).show();
                     }
 
                 }
