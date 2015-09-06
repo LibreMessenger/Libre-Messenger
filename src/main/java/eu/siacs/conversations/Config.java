@@ -54,6 +54,8 @@ public final class Config {
 	public static final ChatState DEFAULT_CHATSTATE = ChatState.ACTIVE;
 	public static final int TYPING_TIMEOUT = 5;
 
+	public static final String UPDATE_URL = "http://xmpp.pix-art.de/update/";
+
 	public static final String ENABLED_CIPHERS[] = {
 		"TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
 		"TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA384",

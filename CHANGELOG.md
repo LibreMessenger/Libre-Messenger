@@ -1,4 +1,8 @@
 ###Changelog
+####Version 1.6.9-beta
+* bug fixes
+* update checker with in app version updates
+
 ####Version 1.6.8
 * bug fixes
 

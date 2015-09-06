@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    package="eu.siacs.conversations"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="eu.siacs.conversations" >
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -14,8 +13,9 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.NFC" />
-
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" tools:node="remove" />
+    <uses-permission
+        android:name="android.permission.READ_PHONE_STATE"
+        tools:node="remove" />
 
     <application
         android:allowBackup="true"
@@ -47,8 +47,8 @@
         <activity
             android:name=".ui.StartConversationActivity"
             android:configChanges="orientation|screenSize"
-            android:launchMode="singleTask"
-            android:label="@string/title_activity_start_conversation" >
+            android:label="@string/title_activity_start_conversation"
+            android:launchMode="singleTask" >
             <intent-filter>
                 <action android:name="android.intent.action.SENDTO" />
 
@@ -82,9 +82,9 @@
         <activity
             android:name=".ui.BlocklistActivity"
             android:label="@string/title_activity_block_list" />
-	    <activity
-		    android:name=".ui.ChangePasswordActivity"
-		    android:label="@string/change_password_on_server" />
+        <activity
+            android:name=".ui.ChangePasswordActivity"
+            android:label="@string/change_password_on_server" />
         <activity
             android:name=".ui.ManageAccountActivity"
             android:configChanges="orientation|screenSize"
@@ -136,11 +136,11 @@
         <activity
             android:name=".ui.TrustKeysActivity"
             android:label="@string/trust_omemo_fingerprints"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name="de.duenndns.ssl.MemorizingActivity"
             android:theme="@style/ConversationsTheme"
-            tools:replace="android:theme"/>
+            tools:replace="android:theme" />
         <activity
             android:name=".ui.AboutActivity"
             android:label="@string/title_activity_about"
@@ -149,6 +149,21 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="eu.siacs.conversations.ui.SettingsActivity" />
         </activity>
+        <activity
+            android:name=".ui.UpdaterActivity"
+            android:label="@string/title_activity_updater" >
+        </activity>
+
+        <service
+            android:name=".services.UpdaterWebService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
+        <service
+            android:name=".services.CheckAppVersionService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
     </application>
 
 </manifest>

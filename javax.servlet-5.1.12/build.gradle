@@ -1,0 +1,2 @@
+configurations.create("default")
+artifacts.add("default", file('javax.servlet-5.1.12.jar'))

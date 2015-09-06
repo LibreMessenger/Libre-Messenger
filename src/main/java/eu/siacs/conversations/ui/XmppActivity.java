@@ -330,6 +330,9 @@ public abstract class XmppActivity extends Activity {
 			case R.id.action_settings:
 				startActivity(new Intent(this, SettingsActivity.class));
 				break;
+			case R.id.action_check_updates:
+				startActivity(new Intent(this, UpdaterActivity.class));
+				break;
 			case R.id.action_accounts:
 				startActivity(new Intent(this, ManageAccountActivity.class));
 				break;

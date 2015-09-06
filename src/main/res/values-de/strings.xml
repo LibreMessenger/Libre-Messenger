@@ -482,4 +482,12 @@
   <string name="download_failed_could_not_connect">Download fehlgeschlagen: keine Verbindung zum Host</string>
   <string name="pref_use_white_background">Weißen Hintergrund benutzen</string>
   <string name="pref_use_white_background_summary">Empfangene Nachrichten als schwarzen Text auf weißem Hintergrund anzeigen</string>
+  <string name="account_status_dns_timeout">Zeitüberschreibung beim DNS</string>
+  <string name="action_check_update">Auf Updates prüfen</string>
+  <string name="current_version">Installierte Version:</string>
+  <string name="new_version">Neue Version: </string>
+  <string name="remind_later">später</string>
+  <string name="title_activity_updater">Update Dienst</string>
+  <string name="update">Aktualisieren</string>
+  <string name="update_available">Eine neuere Version von Conversations ist verfügbar. Jetzt aktualisieren?</string>
 </resources>
