@@ -38,6 +38,11 @@ public class UpdaterActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //ActionBar
+        getActionBar().setDisplayHomeAsUpEnabled(false);
+        getActionBar().setHomeButtonEnabled(false);
+
         setContentView(R.layout.activity_updater);
 
         //Overall information about the contents of a package
