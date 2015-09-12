@@ -26,11 +26,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import eu.siacs.conversations.Config;
 import org.whispersystems.libaxolotl.IdentityKey;
-
 import java.util.Set;
-
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
+import eu.siacs.conversations.crypto.axolotl.AxolotlService;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.services.XmppConnectionService.OnAccountUpdate;
 import eu.siacs.conversations.ui.adapter.KnownHostsAdapter;
@@ -540,7 +539,12 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				this.mServerInfoSm.setText(R.string.server_info_unavailable);
 			}
 			if (features.pep()) {
-				this.mServerInfoPep.setText(R.string.server_info_available);
+				AxolotlService axolotlService = this.mAccount.getAxolotlService();
+				if (axolotlService != null && axolotlService.isPepBroken()) {
+					this.mServerInfoPep.setText(R.string.server_info_broken);
+				} else {
+					this.mServerInfoPep.setText(R.string.server_info_available);
+				}
 			} else {
 				this.mServerInfoPep.setText(R.string.server_info_unavailable);
 			}
@@ -572,7 +576,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 			} else {
 				this.mOtrFingerprintBox.setVisibility(View.GONE);
 			}
-			final String axolotlFingerprint = this.mAccount.getAxolotlService().getOwnPublicKey().getFingerprint();
+			final String axolotlFingerprint = this.mAccount.getAxolotlService().getOwnFingerprint();
 			if (axolotlFingerprint != null) {
 				this.mAxolotlFingerprintBox.setVisibility(View.VISIBLE);
 				this.mAxolotlFingerprint.setText(CryptoHelper.prettifyFingerprint(axolotlFingerprint));
@@ -607,16 +611,15 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 			} else {
 				this.mAxolotlFingerprintBox.setVisibility(View.GONE);
 			}
-			final IdentityKey ownKey = mAccount.getAxolotlService().getOwnPublicKey();
+			final String ownFingerprint = mAccount.getAxolotlService().getOwnFingerprint();
 			boolean hasKeys = false;
 			keys.removeAllViews();
-			for(final IdentityKey identityKey : xmppConnectionService.databaseBackend.loadIdentityKeys(
-					mAccount, mAccount.getJid().toBareJid().toString())) {
-				if(ownKey.equals(identityKey)) {
+			for (final String fingerprint : mAccount.getAxolotlService().getFingerprintsForOwnSessions()) {
+				if(ownFingerprint.equals(fingerprint)) {
 					continue;
 				}
-				boolean highlight = identityKey.getFingerprint().replaceAll("\\s", "").equals(messageFingerprint);
-				hasKeys |= addFingerprintRow(keys, mAccount, identityKey, highlight);
+				boolean highlight = fingerprint.equals(messageFingerprint);
+				hasKeys |= addFingerprintRow(keys, mAccount, fingerprint, highlight);
 			}
 			if (hasKeys) {
 				keysCard.setVisibility(View.VISIBLE);

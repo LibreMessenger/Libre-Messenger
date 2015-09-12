@@ -18,8 +18,10 @@ import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v4.widget.SlidingPaneLayout.PanelSlideListener;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Surface;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -89,6 +91,8 @@ public class ConversationActivity extends XmppActivity
 	final private List<Uri> mPendingFileUris = new ArrayList<>();
 	private Uri mPendingGeoUri = null;
 	private boolean forbidProcessingPendings = false;
+
+	private boolean conversationWasSelectedByKeyboard = false;
 
 	private View mContentView;
 
@@ -186,17 +190,18 @@ public class ConversationActivity extends XmppActivity
 
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View clickedView,
-                                    int position, long arg3) {
-                if (getSelectedConversation() != conversationList.get(position)) {
-                    setSelectedConversation(conversationList.get(position));
-                    ConversationActivity.this.mConversationFragment.reInit(getSelectedConversation());
-                }
-                hideConversationsOverview();
-                openConversation();
-            }
-        });
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View clickedView,
+					int position, long arg3) {
+				if (getSelectedConversation() != conversationList.get(position)) {
+					setSelectedConversation(conversationList.get(position));
+					ConversationActivity.this.mConversationFragment.reInit(getSelectedConversation());
+					conversationWasSelectedByKeyboard = false;
+				}
+				hideConversationsOverview();
+				openConversation();
+			}
+		});
 
 		listView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
 
@@ -493,7 +498,7 @@ public class ConversationActivity extends XmppActivity
 
 	private Intent getInstallApkIntent(final String packageId) {
 		Intent intent = new Intent(Intent.ACTION_VIEW);
-		intent.setData(Uri.parse("market://details?id="+packageId));
+		intent.setData(Uri.parse("market://details?id=" + packageId));
 		if (intent.resolveActivity(getPackageManager()) != null) {
 			return intent;
 		} else {
@@ -732,13 +737,13 @@ public class ConversationActivity extends XmppActivity
 				intent.putExtra("account", conversation.getAccount().getJid().toBareJid().toString());
 				switch (menuItem.getItemId()) {
 					case R.id.scan_fingerprint:
-						intent.putExtra("mode",VerifyOTRActivity.MODE_SCAN_FINGERPRINT);
+						intent.putExtra("mode", VerifyOTRActivity.MODE_SCAN_FINGERPRINT);
 						break;
 					case R.id.ask_question:
-						intent.putExtra("mode",VerifyOTRActivity.MODE_ASK_QUESTION);
+						intent.putExtra("mode", VerifyOTRActivity.MODE_ASK_QUESTION);
 						break;
 					case R.id.manual_verification:
-						intent.putExtra("mode",VerifyOTRActivity.MODE_MANUAL_VERIFICATION);
+						intent.putExtra("mode", VerifyOTRActivity.MODE_MANUAL_VERIFICATION);
 						break;
 				}
 				startActivity(intent);
@@ -872,6 +877,113 @@ public class ConversationActivity extends XmppActivity
 			showConversationsOverview();
 		} else {
 			moveTaskToBack(true);
+		}
+	}
+
+	@Override
+	public boolean onKeyUp(int key, KeyEvent event) {
+		int rotation = getWindowManager().getDefaultDisplay().getRotation();
+		final int upKey;
+		final int downKey;
+		switch(rotation) {
+			case Surface.ROTATION_90:
+				upKey = KeyEvent.KEYCODE_DPAD_LEFT;
+				downKey = KeyEvent.KEYCODE_DPAD_RIGHT;
+				break;
+			case Surface.ROTATION_180:
+				upKey = KeyEvent.KEYCODE_DPAD_DOWN;
+				downKey = KeyEvent.KEYCODE_DPAD_UP;
+				break;
+			case Surface.ROTATION_270:
+				upKey = KeyEvent.KEYCODE_DPAD_RIGHT;
+				downKey = KeyEvent.KEYCODE_DPAD_LEFT;
+				break;
+			default:
+				upKey = KeyEvent.KEYCODE_DPAD_UP;
+				downKey = KeyEvent.KEYCODE_DPAD_DOWN;
+		}
+		final boolean modifier = event.isCtrlPressed() || event.isAltPressed();
+		if (modifier && key == KeyEvent.KEYCODE_TAB && isConversationsOverviewHideable()) {
+			toggleConversationsOverview();
+			return true;
+		} else if (modifier && key == downKey) {
+			if (isConversationsOverviewHideable() && !isConversationsOverviewVisable()) {
+				showConversationsOverview();;
+			}
+			return selectDownConversation();
+		} else if (modifier && key == upKey) {
+			if (isConversationsOverviewHideable() && !isConversationsOverviewVisable()) {
+				showConversationsOverview();
+			}
+			return selectUpConversation();
+		} else if (modifier && key == KeyEvent.KEYCODE_1) {
+			return openConversationByIndex(0);
+		} else if (modifier && key == KeyEvent.KEYCODE_2) {
+			return openConversationByIndex(1);
+		} else if (modifier && key == KeyEvent.KEYCODE_3) {
+			return openConversationByIndex(2);
+		} else if (modifier && key == KeyEvent.KEYCODE_4) {
+			return openConversationByIndex(3);
+		} else if (modifier && key == KeyEvent.KEYCODE_5) {
+			return openConversationByIndex(4);
+		} else if (modifier && key == KeyEvent.KEYCODE_6) {
+			return openConversationByIndex(5);
+		} else if (modifier && key == KeyEvent.KEYCODE_7) {
+			return openConversationByIndex(6);
+		} else if (modifier && key == KeyEvent.KEYCODE_8) {
+			return openConversationByIndex(7);
+		} else if (modifier && key == KeyEvent.KEYCODE_9) {
+			return openConversationByIndex(8);
+		} else if (modifier && key == KeyEvent.KEYCODE_0) {
+			return openConversationByIndex(9);
+		} else {
+			return super.onKeyUp(key, event);
+		}
+	}
+
+	private void toggleConversationsOverview() {
+		if (isConversationsOverviewVisable()) {
+			hideConversationsOverview();
+			if (mConversationFragment != null) {
+				mConversationFragment.setFocusOnInputField();
+			}
+		} else {
+			showConversationsOverview();
+		}
+	}
+
+	private boolean selectUpConversation() {
+		if (this.mSelectedConversation != null) {
+			int index = this.conversationList.indexOf(this.mSelectedConversation);
+			if (index > 0) {
+				return openConversationByIndex(index - 1);
+			}
+		}
+		return false;
+	}
+
+	private boolean selectDownConversation() {
+		if (this.mSelectedConversation != null) {
+			int index = this.conversationList.indexOf(this.mSelectedConversation);
+			if (index != -1 && index < this.conversationList.size() - 1) {
+				return openConversationByIndex(index + 1);
+			}
+		}
+		return false;
+	}
+
+	private boolean openConversationByIndex(int index) {
+		try {
+			this.conversationWasSelectedByKeyboard = true;
+			setSelectedConversation(this.conversationList.get(index));
+			this.mConversationFragment.reInit(getSelectedConversation());
+			if (index > listView.getLastVisiblePosition() - 1 || index < listView.getFirstVisiblePosition() + 1) {
+				this.listView.setSelection(index);
+			}
+			openConversation();
+			return true;
+		} catch (IndexOutOfBoundsException e) {
+			return false;
 		}
 	}
 
@@ -1367,5 +1479,9 @@ public class ConversationActivity extends XmppActivity
 				Toast.makeText(ConversationActivity.this,resId,Toast.LENGTH_SHORT).show();
 			}
 		});
+	}
+
+	public boolean highlightSelectedConversations() {
+		return !isConversationsOverviewHideable() || this.conversationWasSelectedByKeyboard;
 	}
 }

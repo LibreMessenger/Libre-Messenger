@@ -1,10 +1,14 @@
 ###Changelog
-####Version 1.6.9-beta
+
+####Version 1.6.9
+* basic keyboard support
 * bug fixes
 * update checker with in app version updates
 
 ####Version 1.6.8
-* bug fixes
+* reworked 'enter is send' setting
+* reworked DNS server discovery on lolipop devices
+* various bug fixes
 
 ####Version 1.6.7
 * bug fixes

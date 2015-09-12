@@ -348,7 +348,9 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 	}
 
 	public void setupIme() {
-		if (activity.usingEnterKey() && activity.enterIsSend()) {
+		if (activity == null) {
+			return;
+		} else if (activity.usingEnterKey() && activity.enterIsSend()) {
 			mEditMessage.setInputType(mEditMessage.getInputType() & (~InputType.TYPE_TEXT_FLAG_MULTI_LINE));
 			mEditMessage.setInputType(mEditMessage.getInputType() & (~InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE));
 		} else if (activity.usingEnterKey()) {
@@ -855,6 +857,10 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 		updateChatMsgHint();
 	}
 
+	public void setFocusOnInputField() {
+		mEditMessage.requestFocus();
+	}
+
 	enum SendButtonAction {TEXT, TAKE_PHOTO, SEND_LOCATION, RECORD_VOICE, CANCEL, CHOOSE_PICTURE}
 
 	private int getSendButtonImageResource(SendButtonAction action, int status) {
@@ -1194,6 +1200,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 		if (status == Account.State.ONLINE && conversation.setOutgoingChatState(ChatState.COMPOSING)) {
 			activity.xmppConnectionService.sendChatState(conversation);
 		}
+		activity.hideConversationsOverview();
 		updateSendButton();
 	}
 
