@@ -188,6 +188,8 @@
   <string name="server_info_blocking">XEP-0191: Blocking Command</string>
   <string name="server_info_roster_version">XEP-0237: Roster Versioning</string>
   <string name="server_info_stream_management">XEP-0198: Stream Management</string>
+  <string name="server_info_pep">XEP-0163: PEP (Avatars / OMEMO)</string>
+  <string name="server_info_http_upload">XEP-0363: HTTP File Upload</string>
   <string name="server_info_available">eskuragarri</string>
   <string name="server_info_unavailable">ez eskuragarri</string>
   <string name="missing_public_keys">Gako publikoen iragarpenak faltan</string>
@@ -406,7 +408,6 @@
   <string name="public_conference">Publikoki edonor sar daiteken konferentzia</string>
   <string name="private_conference">Konferentzia pribatua, kideentzat soilik</string>
   <string name="conference_options">Konferentziaren aukerak</string>
-  <string name="members_only">Pribatua (kideak soilik)</string>
   <string name="non_anonymous">Ez anonimoa</string>
   <string name="modified_conference_options">Konferentziaren aukerak aldatu dira</string>
   <string name="could_not_modify_conference_options">Konferentziaren aukerak ezin izan dira aldatu</string>

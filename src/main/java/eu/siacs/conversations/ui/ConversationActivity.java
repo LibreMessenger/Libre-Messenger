@@ -417,7 +417,7 @@ public class ConversationActivity extends XmppActivity
 				}
 				if (this.getSelectedConversation().getMode() == Conversation.MODE_MULTI) {
 					menuContactDetails.setVisible(false);
-					menuAttach.setVisible(getSelectedConversation().getAccount().httpUploadAvailable());
+					menuAttach.setVisible(getSelectedConversation().getAccount().httpUploadAvailable() && getSelectedConversation().getMucOptions().participating());
 					menuInviteContact.setVisible(getSelectedConversation().getMucOptions().canInvite());
                     menuSecure.setVisible(!Config.HIDE_ENCRYPTION_IN_UI);
 					menuSecure.setVisible(!Config.HIDE_PGP_IN_UI); //if pgp is hidden conferences have no choice of encryption
