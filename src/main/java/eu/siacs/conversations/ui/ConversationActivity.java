@@ -204,65 +204,68 @@ public class ConversationActivity extends XmppActivity
 		});
 
 		listView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
+			@Override
+			public EnhancedListView.Undoable onDismiss(final EnhancedListView enhancedListView, final int position) {
 
-            @Override
-            public EnhancedListView.Undoable onDismiss(final EnhancedListView enhancedListView, final int position) {
+				final int index = listView.getFirstVisiblePosition();
+				View v = listView.getChildAt(0);
+				final int top = (v == null) ? 0 : (v.getTop() - listView.getPaddingTop());
 
-                final int index = listView.getFirstVisiblePosition();
-                View v = listView.getChildAt(0);
-                final int top = (v == null) ? 0 : (v.getTop() - listView.getPaddingTop());
+				try {
+					swipedConversation = listAdapter.getItem(position);
+				} catch (IndexOutOfBoundsException e) {
+					return null;
+				}
+				listAdapter.remove(swipedConversation);
+				swipedConversation.markRead();
+				xmppConnectionService.getNotificationService().clear(swipedConversation);
 
-                swipedConversation = listAdapter.getItem(position);
-                listAdapter.remove(swipedConversation);
-                swipedConversation.markRead();
-                xmppConnectionService.getNotificationService().clear(swipedConversation);
+				final boolean formerlySelected = (getSelectedConversation() == swipedConversation);
+				if (position == 0 && listAdapter.getCount() == 0) {
+					endConversation(swipedConversation, false, true);
+					return null;
+				} else if (formerlySelected) {
+					setSelectedConversation(listAdapter.getItem(0));
+					ConversationActivity.this.mConversationFragment
+							.reInit(getSelectedConversation());
+				}
 
-                final boolean formerlySelected = (getSelectedConversation() == swipedConversation);
-                if (position == 0 && listAdapter.getCount() == 0) {
-                    endConversation(swipedConversation, false, true);
-                    return null;
-                } else if (formerlySelected) {
-                    setSelectedConversation(listAdapter.getItem(0));
-                    ConversationActivity.this.mConversationFragment
-                            .reInit(getSelectedConversation());
-                }
+				return new EnhancedListView.Undoable() {
 
-                return new EnhancedListView.Undoable() {
+					@Override
+					public void undo() {
+						listAdapter.insert(swipedConversation, position);
+						if (formerlySelected) {
+							setSelectedConversation(swipedConversation);
+							ConversationActivity.this.mConversationFragment
+									.reInit(getSelectedConversation());
+						}
+						swipedConversation = null;
+						listView.setSelectionFromTop(index + (listView.getChildCount() < position ? 1 : 0), top);
+					}
 
-                    @Override
-                    public void undo() {
-                        listAdapter.insert(swipedConversation, position);
-                        if (formerlySelected) {
-                            setSelectedConversation(swipedConversation);
-                            ConversationActivity.this.mConversationFragment
-                                    .reInit(getSelectedConversation());
-                        }
-                        swipedConversation = null;
-                        listView.setSelectionFromTop(index + (listView.getChildCount() < position ? 1 : 0), top);
-                    }
+					@Override
+					public void discard() {
+						if (!swipedConversation.isRead()
+								&& swipedConversation.getMode() == Conversation.MODE_SINGLE) {
+							swipedConversation = null;
+							return;
+						}
+						endConversation(swipedConversation, false, false);
+						swipedConversation = null;
+					}
 
-                    @Override
-                    public void discard() {
-                        if (!swipedConversation.isRead()
-                                && swipedConversation.getMode() == Conversation.MODE_SINGLE) {
-                            swipedConversation = null;
-                            return;
-                        }
-                        endConversation(swipedConversation, false, false);
-                        swipedConversation = null;
-                    }
-
-                    @Override
-                    public String getTitle() {
-                        if (swipedConversation.getMode() == Conversation.MODE_MULTI) {
-                            return getResources().getString(R.string.title_undo_swipe_out_muc);
-                        } else {
-                            return getResources().getString(R.string.title_undo_swipe_out_conversation);
-                        }
-                    }
-                };
-            }
-        });
+					@Override
+					public String getTitle() {
+						if (swipedConversation.getMode() == Conversation.MODE_MULTI) {
+							return getResources().getString(R.string.title_undo_swipe_out_muc);
+						} else {
+							return getResources().getString(R.string.title_undo_swipe_out_conversation);
+						}
+					}
+				};
+			}
+		});
 		listView.enableSwipeToDismiss();
 		listView.setSwipingLayout(R.id.swipeable_item);
 		listView.setUndoStyle(EnhancedListView.UndoStyle.SINGLE_POPUP);
