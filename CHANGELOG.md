@@ -1,5 +1,11 @@
 ###Changelog
 
+####Version 1.6.10
+* fixed facebook login
+* fixed bug with ejabberd mam
+* use official HTTP File Upload namespace
+* run app updater automatically
+
 ####Version 1.6.9
 * basic keyboard support
 * bug fixes
