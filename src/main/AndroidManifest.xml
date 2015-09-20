@@ -151,7 +151,7 @@
         </activity>
         <activity
             android:name=".ui.UpdaterActivity"
-            android:label="@string/title_activity_updater" >
+            android:theme="@style/Platform.AppCompat.Light.Dialog" >
         </activity>
 
         <service

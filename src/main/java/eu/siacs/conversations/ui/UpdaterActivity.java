@@ -33,18 +33,20 @@ public class UpdaterActivity extends Activity {
     private int versionCode = 0;
     String appURI = "";
 
+
+    /*
+    // run Updater
+        Log.d(Config.LOGTAG, "Start automatic AppUpdater");
+        Intent AppUpdater = new Intent(ConversationActivity.this, UpdaterActivity.class);
+        startActivity(AppUpdater);
+     */
+
     private DownloadManager downloadManager;
     private long downloadReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //ActionBar
-        getActionBar().setDisplayHomeAsUpEnabled(false);
-        getActionBar().setHomeButtonEnabled(false);
-
-        setContentView(R.layout.activity_updater);
 
         //Overall information about the contents of a package
         //This corresponds to all of the information collected from AndroidManifest.xml.
@@ -59,10 +61,11 @@ public class UpdaterActivity extends Activity {
         String version = pInfo.versionName;
         //get the app version Code for checking
         versionCode = pInfo.versionCode;
+        /*
         //display the current version in a TextView
         TextView currentversionText = (TextView) findViewById(R.id.current_versionName);
         currentversionText.setText(getText(R.string.current_version) + version);
-
+*/
         //Broadcast receiver for our Web Request
         IntentFilter filter = new IntentFilter(MyWebReceiver.PROCESS_RESPONSE);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
@@ -79,7 +82,6 @@ public class UpdaterActivity extends Activity {
             msgIntent.putExtra(UpdaterWebService.REQUEST_STRING, Config.UPDATE_URL);
             startService(msgIntent);
         }
-
     }
 
     /*@Override
@@ -136,21 +138,24 @@ public class UpdaterActivity extends Activity {
                     //get the latest version from the JSON string
                     int latestVersionCode = responseObj.getInt("latestVersionCode");
                     String latestVersion = responseObj.getString("latestVersion");
+                    /*
                     //display the new version in a TextView
                     TextView versionText = (TextView) findViewById(R.id.versionName);
                     versionText.setText(getText(R.string.new_version) + latestVersion);
+                    */
                     //get the lastest application URI from the JSON string
                     appURI = responseObj.getString("appURI");
                     //check if we need to upgrade?
                     if(latestVersionCode > versionCode){
                         //oh yeah we do need an upgrade, let the user know send an alert message
                         AlertDialog.Builder builder = new AlertDialog.Builder(UpdaterActivity.this);
+                        builder.setCancelable(false);
                         builder.setMessage(R.string.update_available)
                                 .setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
                                     //if the user agrees to upgrade
                                     public void onClick(DialogInterface dialog, int id) {
                                         //start downloading the file using the download manager
-                                        downloadManager = (DownloadManager)getSystemService(DOWNLOAD_SERVICE);
+                                        downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
                                         Uri Download_Uri = Uri.parse(appURI);
                                         DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
                                         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
@@ -161,11 +166,13 @@ public class UpdaterActivity extends Activity {
                                         Toast.makeText(getApplicationContext(),
                                                 getText(R.string.download_started),
                                                 Toast.LENGTH_LONG).show();
+                                        UpdaterActivity.this.finish();
                                     }
                                 })
                                 .setNegativeButton(R.string.remind_later, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         // User cancelled the dialog
+                                        UpdaterActivity.this.finish();
                                     }
                                 });
                         //show the alert message
@@ -176,6 +183,7 @@ public class UpdaterActivity extends Activity {
                         Toast.makeText(getApplicationContext(),
                                 getText(R.string.no_update_available),
                                 Toast.LENGTH_LONG).show();
+                        UpdaterActivity.this.finish();
                     }
 
                 }
