@@ -27,7 +27,7 @@ repositories {
 dependencies {
 	compile project(':libs:openpgp-api-lib')
 	compile project(':libs:MemorizingTrustManager')
-	compile 'com.android.support:support-v13:23.0.0'
+	compile 'com.android.support:support-v13:23.0.1'
 	compile 'org.bouncycastle:bcprov-jdk15on:1.52'
 	compile 'org.jitsi:org.otr4j:0.22'
 	compile 'org.gnu.inet:libidn:1.15'
@@ -46,13 +46,13 @@ dependencies {
 
 android {
 	compileSdkVersion 23
-	buildToolsVersion "23.0.0"
+	buildToolsVersion "23.0.1"
 
 	defaultConfig {
 		minSdkVersion 14
 		targetSdkVersion 21
-		versionCode 96
-		versionName "1.6.9"
+		versionCode 97
+		versionName "1.6.10"
 		project.ext.set(archivesBaseName, archivesBaseName + "-" + versionName);
 	}
 
