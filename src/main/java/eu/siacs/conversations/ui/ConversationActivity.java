@@ -173,6 +173,10 @@ public class ConversationActivity extends XmppActivity
 		}
 
 		setContentView(R.layout.fragment_conversations_overview);
+        // run Updater
+        Log.d(Config.LOGTAG, "Start automatic AppUpdater");
+        Intent AppUpdater = new Intent(ConversationActivity.this, UpdaterActivity.class);
+        startActivity(AppUpdater);
 
 		this.mConversationFragment = new ConversationFragment();
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
