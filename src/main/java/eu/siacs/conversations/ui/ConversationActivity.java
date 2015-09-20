@@ -6,10 +6,12 @@ import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -85,7 +87,7 @@ public class ConversationActivity extends XmppActivity
 	private static final String STATE_PANEL_OPEN = "state_panel_open";
 	private static final String STATE_PENDING_URI = "state_pending_uri";
 
-	private String mOpenConverstaion = null;
+    private String mOpenConverstaion = null;
 	private boolean mPanelOpen = true;
 	final private List<Uri> mPendingImageUris = new ArrayList<>();
 	final private List<Uri> mPendingFileUris = new ArrayList<>();
@@ -172,11 +174,9 @@ public class ConversationActivity extends XmppActivity
 			}
 		}
 
-		setContentView(R.layout.fragment_conversations_overview);
-        // run Updater
-        Log.d(Config.LOGTAG, "Start automatic AppUpdater");
-        Intent AppUpdater = new Intent(ConversationActivity.this, UpdaterActivity.class);
-        startActivity(AppUpdater);
+        AppUpdate();
+
+        setContentView(R.layout.fragment_conversations_overview);
 
 		this.mConversationFragment = new ConversationFragment();
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -315,6 +315,32 @@ public class ConversationActivity extends XmppActivity
 			});
 		}
 	}
+
+    protected void AppUpdate(){
+		String PREFS_NAME = "UpdateTimeStamp";
+        SharedPreferences UpdateTimeStamp = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        long lastUpdateTime = UpdateTimeStamp.getLong("lastUpdateTime", 0);
+
+        Log.d(Config.LOGTAG, "AppUpdater - LastUpdateTime: " + lastUpdateTime);
+
+        if ((lastUpdateTime + (60 * 60 * 1000)) < System.currentTimeMillis()) {
+            lastUpdateTime = System.currentTimeMillis();
+            SharedPreferences.Editor editor = UpdateTimeStamp.edit();
+            editor.putLong("lastUpdateTime", lastUpdateTime);
+            editor.commit();
+
+            // run AppUpdater
+            Log.d(Config.LOGTAG, "AppUpdater - CurrentTime: " + lastUpdateTime);
+            Intent AppUpdater = new Intent(this, UpdaterActivity.class);
+            startActivity(AppUpdater);
+            Log.d(Config.LOGTAG, "AppUpdater started");
+
+        } else {
+
+            Log.d(Config.LOGTAG, "AppUpdater stopped");
+            return;
+        }
+    }
 
 	@Override
 	public void switchToConversation(Conversation conversation) {
@@ -1044,6 +1070,7 @@ public class ConversationActivity extends XmppActivity
 			sendReadMarkerIfNecessary(getSelectedConversation());
 		}
 
+		AppUpdate();
 	}
 
 	@Override

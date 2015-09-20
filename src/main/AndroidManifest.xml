@@ -151,7 +151,8 @@
         </activity>
         <activity
             android:name=".ui.UpdaterActivity"
-            android:theme="@style/Platform.AppCompat.Light.Dialog" >
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.Dialog" >
         </activity>
 
         <service

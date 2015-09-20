@@ -35,9 +35,9 @@ public class UpdaterActivity extends Activity {
 
 
     /*
-    // run Updater
+        // run AppUpdater
         Log.d(Config.LOGTAG, "Start automatic AppUpdater");
-        Intent AppUpdater = new Intent(ConversationActivity.this, UpdaterActivity.class);
+        Intent AppUpdater = new Intent(this, UpdaterActivity.class);
         startActivity(AppUpdater);
      */
 
@@ -99,7 +99,17 @@ public class UpdaterActivity extends Activity {
         super.onDestroy();
     }
 
-    //check for internet connection
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+        //check for internet connection
     private boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
@@ -161,12 +171,11 @@ public class UpdaterActivity extends Activity {
                                         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
                                         request.setAllowedOverRoaming(false);
                                         request.setTitle("Conversations Update");
-                                        request.setDestinationInExternalFilesDir(UpdaterActivity.this, Environment.DIRECTORY_DOWNLOADS, "MyAndroidApp.apk");
+                                        request.setDestinationInExternalFilesDir(UpdaterActivity.this, Environment.DIRECTORY_DOWNLOADS, "Conversations.apk");
                                         downloadReference = downloadManager.enqueue(request);
                                         Toast.makeText(getApplicationContext(),
                                                 getText(R.string.download_started),
                                                 Toast.LENGTH_LONG).show();
-                                        UpdaterActivity.this.finish();
                                     }
                                 })
                                 .setNegativeButton(R.string.remind_later, new DialogInterface.OnClickListener() {
@@ -182,7 +191,8 @@ public class UpdaterActivity extends Activity {
                     {
                         Toast.makeText(getApplicationContext(),
                                 getText(R.string.no_update_available),
-                                Toast.LENGTH_LONG).show();
+                                Toast.LENGTH_SHORT).show();
+
                         UpdaterActivity.this.finish();
                     }
 
