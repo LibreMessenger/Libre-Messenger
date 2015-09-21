@@ -16,7 +16,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
-import android.widget.TextView;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -50,8 +50,8 @@ public class UpdaterActivity extends Activity {
         
         //disable touch events
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
         //Overall information about the contents of a package
         //This corresponds to all of the information collected from AndroidManifest.xml.
         PackageInfo pInfo = null;
@@ -173,6 +173,7 @@ public class UpdaterActivity extends Activity {
                         //oh yeah we do need an upgrade, let the user know send an alert message
                         AlertDialog.Builder builder = new AlertDialog.Builder(UpdaterActivity.this);
                         builder.setCancelable(false);
+
                         builder.setMessage(R.string.update_available)
                                 .setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
                                     //if the user agrees to upgrade
