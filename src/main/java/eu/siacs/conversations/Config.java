@@ -57,6 +57,7 @@ public final class Config {
 	public static final int TYPING_TIMEOUT = 5;
 
 	public static final String UPDATE_URL = "http://xmpp.pix-art.de/update/";
+	public static final long UPDATE_CHECK_TIMER = 24 * 60 * 60; // in seconds
 
 	public static final String ENABLED_CIPHERS[] = {
 		"TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",

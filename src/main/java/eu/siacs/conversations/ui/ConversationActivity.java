@@ -19,7 +19,6 @@ import android.provider.MediaStore;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v4.widget.SlidingPaneLayout.PanelSlideListener;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -323,7 +322,7 @@ public class ConversationActivity extends XmppActivity
 
         Log.d(Config.LOGTAG, "AppUpdater - LastUpdateTime: " + lastUpdateTime);
 
-        if ((lastUpdateTime + (60 * 60 * 1000)) < System.currentTimeMillis()) {
+        if ((lastUpdateTime + (Config.UPDATE_CHECK_TIMER * 1000)) < System.currentTimeMillis()) {
             lastUpdateTime = System.currentTimeMillis();
             SharedPreferences.Editor editor = UpdateTimeStamp.edit();
             editor.putLong("lastUpdateTime", lastUpdateTime);
