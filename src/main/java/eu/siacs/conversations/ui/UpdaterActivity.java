@@ -47,7 +47,11 @@ public class UpdaterActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        
+        //disable touch events
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        
         //Overall information about the contents of a package
         //This corresponds to all of the information collected from AndroidManifest.xml.
         PackageInfo pInfo = null;
@@ -80,6 +84,10 @@ public class UpdaterActivity extends Activity {
         if(isNetworkAvailable(this)){
             Intent msgIntent = new Intent(this, UpdaterWebService.class);
             msgIntent.putExtra(UpdaterWebService.REQUEST_STRING, Config.UPDATE_URL);
+            
+            Toast.makeText(getApplicationContext(),
+                                getText(R.string.checking_for_updates),
+                                Toast.LENGTH_LONG).show();
             startService(msgIntent);
         }
     }
@@ -97,6 +105,8 @@ public class UpdaterActivity extends Activity {
         this.unregisterReceiver(receiver);
         this.unregisterReceiver(downloadReceiver);
         super.onDestroy();
+        //enable touch events
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
     @Override
@@ -157,6 +167,9 @@ public class UpdaterActivity extends Activity {
                     appURI = responseObj.getString("appURI");
                     //check if we need to upgrade?
                     if(latestVersionCode > versionCode){
+                        //enable touch events
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                        
                         //oh yeah we do need an upgrade, let the user know send an alert message
                         AlertDialog.Builder builder = new AlertDialog.Builder(UpdaterActivity.this);
                         builder.setCancelable(false);
