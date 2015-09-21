@@ -1,9 +1,12 @@
 ###Changelog
 
+####Version 1.6.11
+* optimized app updater and increased app update check period to once a
+day
+
 ####Version 1.6.10
 * fixed facebook login
 * fixed bug with ejabberd mam
-* use official HTTP File Upload namespace
 * run app updater automatically
 
 ####Version 1.6.9
