@@ -488,6 +488,7 @@
   <string name="current_version">Installierte Version:</string>
   <string name="new_version">Neue Version: </string>
   <string name="remind_later">später</string>
+  <string name="checking_for_updates">Auf Conversations Updates prüfen</string>
   <string name="title_activity_updater">Update Dienst</string>
   <string name="update">Aktualisieren</string>
   <string name="update_available">Eine neuere Version von Conversations ist verfügbar. Jetzt aktualisieren?</string>
