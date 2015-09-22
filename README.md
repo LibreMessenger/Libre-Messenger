@@ -2,7 +2,9 @@
 
 Conversations: the very last word in instant messaging
 
-[![Google Play](http://developer.android.com/images/brand/en_generic_rgb_wo_60.png)](https://play.google.com/store/apps/details?id=eu.siacs.conversations&referrer=utm_source%3Dgithub) [![Amazon App Store](https://images-na.ssl-images-amazon.com/images/G/01/AmazonMobileApps/amazon-apps-store-us-black.png)](http://www.amazon.com/dp/B00WD35AAC/)
+This is a fork of the official [Conversations](https://github.com/siacs/Conversations) app with some modifications described under features.
+
+Conversations can be downloaded from github [releases](https://github.com/kriztan/Conversations/releases)
 
 ![screenshots](https://raw.githubusercontent.com/siacs/Conversations/master/screenshots.png)
 
@@ -28,16 +30,22 @@ Conversations: the very last word in instant messaging
 * Multiple accounts / unified inbox
 * Very low impact on battery life
 
+our individual changes:
+* accounts are hard linked to pix-art.de
+* increased avatar-sizes in account- and contact-details with prefering XMPP-avatars over addressbook avatars
+* in-app self updater with dayly check for updates
+* moved writing info from chatwindow into actionbar-subtitle
+* display group chat members in actionbar-subtitle
+* images are transfered as JPEG
+* support more file-types for file-transfer (pdf, doc, docx, txt, m4a, m4b, mp3, mp2, wav, aac, aif, aiff, aifc, mid, midi, 3gpp, avi, mp4, mpeg, mpg, mpe, mov, 3gp, apk, vcf, ics, zip, rar)
+* show contacts name in locations shared in conferences
 
 ### XMPP Features
 
-Conversations works with every XMPP server out there. However XMPP is an
+This Conversations works only with `pix-art.de`. However XMPP is an
 extensible protocol. These extensions are standardized as well in so called
 XEP's. Conversations supports a couple of these to make the overall user
-experience better. There is a chance that your current XMPP server does not
-support these extensions; therefore to get the most out of Conversations you
-should consider either switching to an XMPP server that does or — even better —
-run your own XMPP server for you and your friends. These XEP's are:
+experience better. Our XMPP-Server is prosody and supports all of the listed XEP's:
 
 * [XEP-0065: SOCKS5 Bytestreams](http://xmpp.org/extensions/xep-0065.html) (or mod_proxy65). Will be used to transfer
   files if both parties are behind a firewall (NAT).
@@ -62,11 +70,15 @@ run your own XMPP server for you and your friends. These XEP's are:
 
 ## Team
 
-#### Head of Development
+#### Head of Development (original Conversations)
 
-* [Daniel Gultsch](https://github.com/inputmice)
+* [Daniel Gultsch](https://github.com/inputmice) 
 
-#### Code Contributions
+#### Head of Development (modified Conversations)
+
+* [Christian Schneppe](https://github.com/kriztan)
+
+#### Code Contributions (original Conversations)
 
 (In order of appearance)
 
@@ -84,7 +96,9 @@ run your own XMPP server for you and your friends. These XEP's are:
 * [fiaxh](https://github.com/fiaxh) (OMEMO)
 
 #### Translations
-Translations are managed on [Transifex](https://www.transifex.com/projects/p/conversations/)
+Translations are managed on [Transifex](https://www.transifex.com/projects/p/conversations/) for original features
+
+Translations for our own features are managed on github. If you would like to help translation the app create a pull-request.
 
 ## FAQ
 
@@ -96,55 +110,13 @@ Conversations is entirely open source and licensed under GPLv3. So if you are a
 software developer you can check out the sources from GitHub and use ant to
 build your apk file.
 
-The more convenient way — which not only gives you automatic updates but also
-supports the further development of Conversations — is to buy the App in the
-Google [Play Store](https://play.google.com/store/apps/details?id=eu.siacs.conversations&referrer=utm_source%3Dgithub).
-
-Buying the App from the Play Store will also give you access to our [beta test](#beta).
-
-#### I don't have a Google Account but I would still like to make a contribution
-
-I accept donations over PayPal, Bitcoin and Flattr. For donations via PayPal you
-can use the email address `donate@siacs.eu` or the button below.
-
-[![Donate with PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CW3SYT3KG5PDL)
-
-**Disclaimer:** I'm not a huge fan of PayPal and their business policies. For
-larger contributions please get in touch with me beforehand and we can talk
-about bank transfer (SEPA).
-
-My Bitcoin Address is: `1NxSU1YxYzJVDpX1rcESAA3NJki7kRgeeu`
-
-
-[![Flattr this!](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=inputmice&url=http%3A%2F%2Fconversations.siacs.eu&title=Conversations&tags=github&category=software)
+Our modified version of Conversation can be downloaded from github [releases](https://github.com/kriztan/Conversations/releases)
 
 #### How do I create an account?
 
-XMPP, like email, is a federated protocol which means that there is not one
-company you can create an 'official XMPP account' with. Instead there are
-hundreds, or even thousands, of provider out there. To find one use a web search
-engine of your choice. Or maybe your university has one. Or you can run your
-own. Or ask a friend to run one. Once you've found one, you can use
-Conversations to create an account. Just select 'register new account on server'
-within the create account dialog.
+With our Conversations app you can only create and use accounts on `pix-art.de`. You can create your own account for free. Aftre creating your own `pix-art.de` account you'll find me in your contact list. If you have any questions about our app or our service feel free to ask me.
 
-#### Where can I set up a custom hostname / port
-Conversations will automatically look up the SRV records for your domain name
-which can point to any hostname port combination. If your server doesn’t provide
-those please contact your admin and have them read
-[this](http://prosody.im/doc/dns#srv_records)
-
-#### Conversations doesn't work for me. Where can I get help?
-
-You can join our conference room on `conversations@conference.siacs.eu`.
-A lot of people in there are able to answer basic questions about the usage of
-Conversations or can provide you with tips on running your own XMPP server. If
-you found a bug or your app crashes please read the Developer / Report Bugs
-section of this document.
-
-#### I need professional support with Conversations or setting up my server
-
-I'm available for hire. Contact me at `inputmice@siacs.eu`.
+You can join our conference room on `support@room.pix-art.de`.
 
 #### How does the address book integration work?
 
@@ -214,119 +186,17 @@ Making these status and priority optional isn't a solution either because
 Conversations is trying to get rid of old behaviours and set an example for
 other clients.
 
-#### Conversations is missing a certain feature
-
-I'm open for new feature suggestions. You can use the [issue tracker][issues] on
-GitHub.  Please take some time to browse through the issues to see if someone
-else already suggested it. Be assured that I read each and every ticket. If I
-like it I will leave it open until it's implemented. If I don't like it I will
-close it (usually with a short comment). If I don't comment on an feature
-request that's probably a good sign because this means I agree with you.
-Commenting with +1 on either open or closed issues won't change my mind, nor
-will it accelerate the development.
-
-#### You closed my feature request but I want it really really badly
-
-Just write it yourself and send me a pull request. If I like it I will happily
-merge it if I don't at least you and like minded people get to enjoy it.
-
-#### I need a feature and I need it now!
-
-I am available for hire. Contact me via XMPP: `inputmice@siacs.eu`
-
 ### Security
 
-#### Why are there two end-to-end encryption methods and which one should I choose?
+#### Encryption methodes
 
-In most cases OTR should be the encryption method of choice. It works out of the
-box with most contacts as long as they are online. However PGP can, in some
-cases, (message carbons to multiple clients) be more flexible.
-
-#### How do I use OpenPGP
-
-Before you continue reading you should note that the OpenPGP support in
-Conversations is experimental. This is not because it will make the app unstable
-but because the fundamental concepts of PGP aren't ready for widespread use.
-The way PGP works is that you trust Key IDs instead of JID's or email addresses.
-So in theory your contact list should consist of Public-Key-IDs instead of
-JID's. But of course no email or XMPP client out there implements these
-concepts. Plus PGP in the context of instant messaging has a couple of
-downsides: It is vulnerable to replay attacks, it is rather verbose, and
-decrypting and encrypting takes longer than OTR. It is however asynchronous and
-works well with message carbons.
-
-To use OpenPGP you have to install the open source app
-[OpenKeychain](http://www.openkeychain.org) and then long press on the account in
-manage accounts and choose renew PGP announcement from the contextual menu.
-
-#### How does the encryption for conferences work?
-
-For conferences the only supported encryption method is OpenPGP (OTR does not
-work with multiple participants). Every participant has to announce their
-OpenPGP key (see answer above). If you would like to send encrypted messages to
-a conference you have to make sure that you have every participant's public key
-in your OpenKeychain. Right now there is no check in Conversations to ensure
-that. You have to take care of that yourself. Go to the conference details and
-touch every key id (The hexadecimal number below a contact). This will send you
-to OpenKeychain which will assist you on adding the key.  This works best in
-very small conferences with contacts you are already using OpenPGP with. This
-feature is regarded experimental. Conversations is the only client that uses
-XEP-0027 with conferences. (The XEP neither specifically allows nor disallows
-this.)
-
-### Development
-
-<a name="beta"></a>
-#### Beta testing
-If you bought the App on [Google Play](https://play.google.com/store/apps/details?id=eu.siacs.conversations)
-you can get access to the latest beta version by joining the
-[Conversations Beta Testers](https://plus.google.com/communities/107649347599361240873)
-community on Google+ and then using [this link](https://play.google.com/apps/testing/eu.siacs.conversations)
-to sign up for the beta test.
-
-#### How do I build Conversations
-
-Make sure to have ANDROID_HOME point to your Android SDK
-
-    git clone https://github.com/siacs/Conversations.git
-    cd Conversations
-    ./gradlew build
-
-
-[![Build Status](https://travis-ci.org/siacs/Conversations.svg?branch=development)](https://travis-ci.org/siacs/Conversations)
-
-### How do I update/add external libraries?
-
-If the library you want to update is in Maven Central or JCenter (or has its own
-Maven repo), add it or update its version in `build.gradle`. If the library is
-in the `libs/` directory, you can update it using a subtree merge by doing the
-following (using `minidns` as an example):
-
-    git remote add minidns https://github.com/rtreffer/minidns.git
-    git fetch minidns
-    git merge -s subtree minidns master
-
-To add a new dependency to the `libs/` directory (replacing "name", "branch" and
-"url" as necessary):
-
-    git remote add name url
-    git merge -s ours --no-commit name/branch
-    git read-tree --prefix=libs/name -u name/branch
-    git commit -m "Subtree merged in name"
-
-#### How do I debug Conversations
-
-If something goes wrong Conversations usually exposes very little information in
-the UI (other than the fact that something didn't work). However with adb
-(android debug bridge) you squeeze some more information out of Conversations.
-These information are especially useful if you are experiencing trouble with
-your connection or with file transfer.
-
-    adb -d logcat -v time -s conversations
+At the moment we have disabled the end-to-end encryption methodes because we force TLS encrypted connections. Unecrypted connections were denied. 
 
 #### I found a bug
 
-Please report it to our [issue tracker][issues]. If your app crashes please
+If you have troubles or problems please report them first into our support chat `support@room.pix-art.de`, so we can decide if it's an issue caused by our features or a global issue.
+
+Only global issues should be reported into the Conversations [issue tracker][issues]. If your app crashes please
 provide a stack trace. If you are experiencing misbehaviour please provide
 detailed steps to reproduce. Always mention whether you are running the latest
 Play Store version or the current HEAD. If you are having problems connecting to
