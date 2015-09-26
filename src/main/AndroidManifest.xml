@@ -154,17 +154,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.Dialog" >
         </activity>
-
         <service
             android:name=".services.UpdaterWebService"
-            android:enabled="true"
-            android:exported="true" >
         </service>
         <service
             android:name=".services.CheckAppVersionService"
-            android:enabled="true"
-            android:exported="true" >
         </service>
+        <service android:name=".services.ExportLogsService" />
     </application>
 
 </manifest>
