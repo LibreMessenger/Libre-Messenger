@@ -100,18 +100,18 @@
                     android:layout_height="?attr/TextSizeInfo"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="4sp"
-                    android:alpha="0.54"
                     android:gravity="center_vertical"
-                    android:src="@drawable/ic_received_indicator" />
+                    android:src="@drawable/ic_received_indicator"
+                    android:alpha="0.54" />
                 <ImageView
                     android:id="@+id/indicator_read"
                     android:layout_width="?attr/TextSizeInfo"
                     android:layout_height="?attr/TextSizeInfo"
                     android:layout_gravity="center_vertical"
-                    android:alpha="0.54"
                     android:gravity="center_vertical"
                     android:src="@drawable/ic_read_indicator"
-                    android:layout_marginLeft="-6sp" />
+                    android:layout_marginLeft="-8sp"
+                    android:alpha="0.54" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
