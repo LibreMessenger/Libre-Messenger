@@ -1025,9 +1025,9 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 							return;
 						} else {
 							if (this.messageList.get(i).getStatus() == Message.STATUS_SEND_DISPLAYED) {
-								this.messageList.add(i + 1,
-										Message.createStatusMessage(conversation, getString(R.string.contact_has_read_up_to_this_point, conversation.getName())));
-								return;
+//								this.messageList.add(i + 1,
+//										Message.createStatusMessage(conversation, getString(R.string.contact_has_read_up_to_this_point, conversation.getName())));
+//								return;
 							}
 						}
 					}

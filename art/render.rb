@@ -14,6 +14,7 @@ images = {
 	'conversations_baloon.svg' => ['ic_launcher', 48],
 	'conversations_mono.svg' => ['ic_notification', 24],
 	'ic_received_indicator.svg' => ['ic_received_indicator', 12],
+	'ic_read_indicator.svg' => ['ic_read_indicator', 12],
 	'ic_send_text_offline.svg' => ['ic_send_text_offline', 36],
 	'ic_send_text_online.svg' => ['ic_send_text_online', 36],
 	'ic_send_text_away.svg' => ['ic_send_text_away', 36],

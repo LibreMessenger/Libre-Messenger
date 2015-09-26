@@ -112,6 +112,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 		boolean error = false;
 		if (viewHolder.indicatorReceived != null) {
 			viewHolder.indicatorReceived.setVisibility(View.GONE);
+			viewHolder.indicatorRead.setVisibility(View.GONE);
 		}
 		boolean multiReceived = message.getConversation().getMode() == Conversation.MODE_MULTI
 			&& message.getMergedStatus() <= Message.STATUS_RECEIVED;
@@ -149,6 +150,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 			case Message.STATUS_SEND_DISPLAYED:
 				if (mIndicateReceived) {
 					viewHolder.indicatorReceived.setVisibility(View.VISIBLE);
+					viewHolder.indicatorRead.setVisibility(View.VISIBLE);
 				}
 				break;
 			case Message.STATUS_SEND_FAILED:
@@ -436,6 +438,8 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 						.findViewById(R.id.message_time);
 					viewHolder.indicatorReceived = (ImageView) view
 						.findViewById(R.id.indicator_received);
+					viewHolder.indicatorRead = (ImageView) view
+							.findViewById(R.id.indicator_read);
 					break;
 				case RECEIVED:
 					view = activity.getLayoutInflater().inflate(
@@ -648,6 +652,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 		protected ImageView image;
 		protected ImageView indicator;
 		protected ImageView indicatorReceived;
+		protected ImageView indicatorRead;
 		protected TextView time;
 		protected TextView messageBody;
 		protected ImageView contact_picture;
