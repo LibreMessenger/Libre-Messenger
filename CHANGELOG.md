@@ -1,5 +1,9 @@
 ###Changelog
 
+####Version 1.6.12
+* added blue tick as read indicator
+* added backup to SD option
+
 ####Version 1.6.11
 * optimized app updater and increased app update check period to once a
 day
