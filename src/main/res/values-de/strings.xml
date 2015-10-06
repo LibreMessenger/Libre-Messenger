@@ -491,7 +491,7 @@
   <string name="checking_for_updates">Auf Conversations Updates prüfen</string>
   <string name="title_activity_updater">Update Dienst</string>
   <string name="update">Aktualisieren</string>
-  <string name="update_available">Eine neuere Version von Conversations ist verfügbar. Jetzt aktualisieren?</string>
+  <string name="update_available">Conversations %1$s mit folgenden Änderungen %2$s ist verfügbar. Möchtest Du von Conversations %3$s auf Conversations %1$s aktualisieren?</string>
   <string name="download_started">Download gestartet</string>
   <string name="no_update_available">Kein Update verfügbar</string>
   <string name="account_status_dns_timeout">Zeitüberschreitung bei der Namensauflösung</string>
