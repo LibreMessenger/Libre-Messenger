@@ -523,6 +523,7 @@
 	<string name="action_check_update">Check for Updates</string>
 	<string name="title_activity_updater">Update Service</string>
 	<string name="update_available">There is newer version of this application available. Upgrade now?</string>
+	<string name="update_available">Conversations %1$s with the following changes %2$s is available. Update Conversations %3$s to Conversations %1$s now?</string>
 	<string name="checking_for_updates">Checking for Conversations updates</string>
 	<string name="remind_later">later</string>
 	<string name="update">Update</string>
