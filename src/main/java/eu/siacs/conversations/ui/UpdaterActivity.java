@@ -158,6 +158,7 @@ public class UpdaterActivity extends Activity {
                     //get the latest version from the JSON string
                     int latestVersionCode = responseObj.getInt("latestVersionCode");
                     String latestVersion = responseObj.getString("latestVersion");
+                    String changelog = responseObj.getString("changelog");
                     /*
                     //display the new version in a TextView
                     TextView versionText = (TextView) findViewById(R.id.versionName);
@@ -174,7 +175,8 @@ public class UpdaterActivity extends Activity {
                         AlertDialog.Builder builder = new AlertDialog.Builder(UpdaterActivity.this);
                         builder.setCancelable(false);
 
-                        builder.setMessage(R.string.update_available)
+                        String UpdateMessageInfo = getResources().getString(R.string.update_available);
+                        builder.setMessage(String.format(UpdateMessageInfo, changelog, latestVersion, version)
                                 .setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
                                     //if the user agrees to upgrade
                                     public void onClick(DialogInterface dialog, int id) {
