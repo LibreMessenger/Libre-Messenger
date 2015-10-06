@@ -34,7 +34,7 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REPLACED" />
-                <data android:scheme="eu.siacs.conversations"/>
+                <data android:scheme="package" android:path="eu.siacs.conversations" />
             </intent-filter>
         </receiver>
 
