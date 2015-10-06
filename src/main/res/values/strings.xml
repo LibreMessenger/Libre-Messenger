@@ -522,7 +522,7 @@
 	<string name="account_status_dns_timeout">Timeout in DNS</string>
 	<string name="action_check_update">Check for Updates</string>
 	<string name="title_activity_updater">Update Service</string>
-	<string name="update_available">There is newer version of this application available. Upgrade now?</string>
+	<string name="update_available">Conversations %1$s with the following changes is available:\n\n%2$s\n\nUpdate Conversations %3$s to Conversations %1$s now?</string>
 	<string name="checking_for_updates">Checking for Conversations updates</string>
 	<string name="remind_later">later</string>
 	<string name="update">Update</string>
