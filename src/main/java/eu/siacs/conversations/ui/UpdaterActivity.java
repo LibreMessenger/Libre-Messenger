@@ -155,9 +155,21 @@ public class UpdaterActivity extends Activity {
                 boolean success = responseObj.getBoolean("success");
                 //if the reponse was successful check further
                 if(success){
+                    //Overall information about the contents of a package
+                    //This corresponds to all of the information collected from AndroidManifest.xml.
+                    PackageInfo pInfo = null;
+                    try {
+                        pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+                    }
+                    catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    //get the app version Name for display
+                    String version = pInfo.versionName;
                     //get the latest version from the JSON string
                     int latestVersionCode = responseObj.getInt("latestVersionCode");
                     String latestVersion = responseObj.getString("latestVersion");
+                    String changelog = responseObj.getString("changelog");
                     /*
                     //display the new version in a TextView
                     TextView versionText = (TextView) findViewById(R.id.versionName);
@@ -174,7 +186,8 @@ public class UpdaterActivity extends Activity {
                         AlertDialog.Builder builder = new AlertDialog.Builder(UpdaterActivity.this);
                         builder.setCancelable(false);
 
-                        builder.setMessage(R.string.update_available)
+                        String UpdateMessageInfo = getResources().getString(R.string.update_available);
+                        builder.setMessage(String.format(UpdateMessageInfo, latestVersion, changelog, version))
                                 .setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
                                     //if the user agrees to upgrade
                                     public void onClick(DialogInterface dialog, int id) {
