@@ -1,5 +1,10 @@
 ###Changelog
 
+####Version 1.6.13
+* show changelog into update alert
+* bugfixes
+* use MAM for MUCs if available
+
 ####Version 1.6.12
 * added blue tick as read indicator
 * tab completion for MUC nicks

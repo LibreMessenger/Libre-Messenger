@@ -51,8 +51,8 @@ android {
 	defaultConfig {
 		minSdkVersion 14
 		targetSdkVersion 21
-		versionCode 99
-		versionName "1.6.12"
+		versionCode 100
+		versionName "1.6.13 beta1"
 		project.ext.set(archivesBaseName, archivesBaseName + "-" + versionName);
 	}
 
