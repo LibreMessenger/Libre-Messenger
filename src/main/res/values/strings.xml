@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
 	<string name="app_name" translatable="false">Conversations</string>
@@ -531,5 +531,9 @@
 	<string name="no_update_available">No update available</string>
 	<string name="download_started">Download started</string>
 	<string name="server_info_broken">Broken</string>
-
+	<string name="pref_presence_settings">Presence settings</string>
+	<string name="pref_away_when_screen_off">Away when screen is off</string>
+	<string name="pref_away_when_screen_off_summary">Marks your resource as away when the screen is turned off</string>
+	<string name="pref_xa_on_silent_mode">Not available in silent mode</string>
+	<string name="pref_xa_on_silent_mode_summary">Marks your resource as not available when phone is in silent mode</string>
 </resources>
