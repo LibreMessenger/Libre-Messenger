@@ -12,7 +12,7 @@ public final class Config {
 	public static final String DOMAIN_LOCK = "pix-art.de"; //only allow account creation for this domain
 	public static final boolean DISALLOW_REGISTRATION_IN_UI = false; //hide the register checkbox
 	public static final boolean HIDE_PGP_IN_UI = true; //some more consumer focused clients might want to disable OpenPGP
-	public static final boolean HIDE_ENCRYPTION_IN_UI = true; //completely hide encryption options in menu bar
+	public static final boolean HIDE_ENCRYPTION_IN_UI = false; //completely hide encryption options in menu bar
 
 	public static final boolean LEGACY_NAMESPACE_HTTP_UPLOAD = true; // true = 'eu:siacs:conversations:http:upload' false = 'urn:xmpp:http:upload'
 
@@ -56,7 +56,7 @@ public final class Config {
 	public static final ChatState DEFAULT_CHATSTATE = ChatState.ACTIVE;
 	public static final int TYPING_TIMEOUT = 5;
 
-	public static final String UPDATE_URL = "http://xmpp.pix-art.de/update/";
+	public static final String UPDATE_URL = "http://xmpp.pix-art.de/update/beta";
 	public static final long UPDATE_CHECK_TIMER = 24 * 60 * 60; // in seconds
 
 	public static final String ENABLED_CIPHERS[] = {
