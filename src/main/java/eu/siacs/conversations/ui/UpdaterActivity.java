@@ -22,6 +22,8 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.services.UpdaterWebService;
@@ -126,9 +128,9 @@ public class UpdaterActivity extends Activity {
             NetworkInfo[] info = connectivity.getAllNetworkInfo();
             if (info != null) {
                 for (int i = 0; i < info.length; i++) {
-                    Log.v(LOG_TAG, String.valueOf(i));
+                    Log.d(Config.LOGTAG, "AppUpdater: " + String.valueOf(i));
                     if (info[i].getState() == NetworkInfo.State.CONNECTED) {
-                        Log.v(LOG_TAG, "connected!");
+                        Log.d(Config.LOGTAG, "AppUpdater: connected to update Server!");
                         return true;
                     }
                 }
@@ -146,7 +148,7 @@ public class UpdaterActivity extends Activity {
         public void onReceive(Context context, Intent intent) {
 
             String reponseMessage = intent.getStringExtra(UpdaterWebService.RESPONSE_MESSAGE);
-            Log.v(LOG_TAG, reponseMessage);
+            Log.d(Config.LOGTAG, "AppUpdater: " + reponseMessage);
 
             //parse the JSON response
             JSONObject responseObj;
@@ -179,6 +181,7 @@ public class UpdaterActivity extends Activity {
                     appURI = responseObj.getString("appURI");
                     //check if we need to upgrade?
                     if(latestVersionCode > versionCode){
+                        Log.d(Config.LOGTAG, "AppUpdater: update available");
                         //enable touch events
                         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         
@@ -199,6 +202,18 @@ public class UpdaterActivity extends Activity {
                                         request.setAllowedOverRoaming(false);
                                         request.setTitle("Conversations Update");
                                         request.setDestinationInExternalFilesDir(UpdaterActivity.this, Environment.DIRECTORY_DOWNLOADS, "Conversations.apk");
+                                        //delete old downloaded version files
+                                        File dir = new File(getExternalFilesDir(null), Environment.DIRECTORY_DOWNLOADS);
+                                        Log.d(Config.LOGTAG, "AppUpdater - Delete old update files in: " + dir);
+                                        if (dir.isDirectory())
+                                        {
+                                            String[] children = dir.list();
+                                            for (int i = 0; i < children.length; i++)
+                                            {
+                                                new File(dir, children[i]).delete();
+                                            }
+                                        }
+
                                         downloadReference = downloadManager.enqueue(request);
                                         Toast.makeText(getApplicationContext(),
                                                 getText(R.string.download_started),
@@ -219,7 +234,7 @@ public class UpdaterActivity extends Activity {
                         Toast.makeText(getApplicationContext(),
                                 getText(R.string.no_update_available),
                                 Toast.LENGTH_SHORT).show();
-
+                        Log.d(Config.LOGTAG, "AppUpdater: no update available");
                         UpdaterActivity.this.finish();
                     }
 
@@ -242,16 +257,14 @@ public class UpdaterActivity extends Activity {
             long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
             if(downloadReference == referenceId){
 
-                Log.v(LOG_TAG, "Downloading of the new app version complete");
+                Log.d(Config.LOGTAG, "AppUpdater: Downloading of the new app version complete. Starting installation");
                 //start the installation of the latest version
                 Intent installIntent = new Intent(Intent.ACTION_VIEW);
                 installIntent.setDataAndType(downloadManager.getUriForDownloadedFile(downloadReference),
                         "application/vnd.android.package-archive");
                 installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(installIntent);
-
             }
         }
     };
-
 }

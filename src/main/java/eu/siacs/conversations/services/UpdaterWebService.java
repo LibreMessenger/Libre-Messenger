@@ -18,13 +18,12 @@ import org.apache.http.params.HttpParams;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import eu.siacs.conversations.Config;
 import eu.siacs.conversations.ui.UpdaterActivity.MyWebReceiver;
 
 public class UpdaterWebService extends IntentService{
-    private static final String LOG_TAG = "MyWebService";
-    public static final String REQUEST_STRING = "myRequest";
-    public static final String RESPONSE_STRING = "myResponse";
-    public static final String RESPONSE_MESSAGE = "myResponseMessage";
+    public static final String REQUEST_STRING = "";
+    public static final String RESPONSE_MESSAGE = "";
 
     private String URL = null;
     private static final int REGISTRATION_TIMEOUT = 3 * 1000;
@@ -38,7 +37,7 @@ public class UpdaterWebService extends IntentService{
     protected void onHandleIntent(Intent intent) {
 
         String requestString = intent.getStringExtra(REQUEST_STRING);
-        Log.v(LOG_TAG, requestString);
+        Log.d(Config.LOGTAG, "AppUpdater: " + requestString);
         String responseMessage = "";
 
         try {
@@ -63,19 +62,19 @@ public class UpdaterWebService extends IntentService{
             }
 
             else{
-                Log.w("HTTP1:",statusLine.getReasonPhrase());
+                Log.d(Config.LOGTAG, "AppUpdater: HTTP1:" + statusLine.getReasonPhrase());
                 response.getEntity().getContent().close();
                 throw new IOException(statusLine.getReasonPhrase());
             }
 
         } catch (ClientProtocolException e) {
-            Log.w("HTTP2:",e );
+            Log.d(Config.LOGTAG, "AppUpdater: HTTP2:" + e);
             responseMessage = e.getMessage();
         } catch (IOException e) {
-            Log.w("HTTP3:",e );
+            Log.d(Config.LOGTAG, "AppUpdater: HTTP3:" + e);
             responseMessage = e.getMessage();
         }catch (Exception e) {
-            Log.w("HTTP4:",e );
+            Log.d(Config.LOGTAG, "AppUpdater: HTTP4:" + e);
             responseMessage = e.getMessage();
         }
 
