@@ -38,7 +38,6 @@ public class CheckAppVersionService extends HttpServlet {
         out.println(myObj.toString());
         out.close();
 
-
     }
 
 }

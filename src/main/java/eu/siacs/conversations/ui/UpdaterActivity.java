@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -30,8 +31,7 @@ import eu.siacs.conversations.services.UpdaterWebService;
 
 public class UpdaterActivity extends Activity {
 
-    private static final String LOG_TAG = Config.LOGTAG + "AppUpgrade";
-    private MyWebReceiver receiver;
+    private UpdateReceiver receiver = null;
     private int versionCode = 0;
     String appURI = "";
 
@@ -49,33 +49,16 @@ public class UpdaterActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        //disable touch events
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
-        //Overall information about the contents of a package
-        //This corresponds to all of the information collected from AndroidManifest.xml.
-        PackageInfo pInfo = null;
-        try {
-            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-        }
-        catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        //get the app version Name for display
-        String version = pInfo.versionName;
-        //get the app version Code for checking
-        versionCode = pInfo.versionCode;
-        /*
-        //display the current version in a TextView
-        TextView currentversionText = (TextView) findViewById(R.id.current_versionName);
-        currentversionText.setText(getText(R.string.current_version) + version);
-*/
+        //set activity
+        setContentView(R.layout.activity_updater);
+        TextView textView = (TextView) findViewById(R.id.updater);
+        textView.setText(R.string.update_info);
+
         //Broadcast receiver for our Web Request
-        IntentFilter filter = new IntentFilter(MyWebReceiver.PROCESS_RESPONSE);
+        IntentFilter filter = new IntentFilter(UpdateReceiver.PROCESS_RESPONSE);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
-        receiver = new MyWebReceiver();
+        receiver = new UpdateReceiver();
         registerReceiver(receiver, filter);
 
         //Broadcast receiver for the download manager
@@ -89,18 +72,11 @@ public class UpdaterActivity extends Activity {
             
             Toast.makeText(getApplicationContext(),
                                 getText(R.string.checking_for_updates),
-                                Toast.LENGTH_LONG).show();
+                                Toast.LENGTH_SHORT).show();
             startService(msgIntent);
         }
     }
 
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_main, menu);
-        return true;
-    }
-*/
     @Override
     public void onDestroy() {
         //unregister your receivers
@@ -140,12 +116,15 @@ public class UpdaterActivity extends Activity {
     }
 
     //broadcast receiver to get notification when the web request finishes
-    public class MyWebReceiver extends BroadcastReceiver {
+    public class UpdateReceiver extends BroadcastReceiver {
 
         public static final String PROCESS_RESPONSE = "eu.siacs.conversations.intent.action.PROCESS_RESPONSE";
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            //disable touch events
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
             String reponseMessage = intent.getStringExtra(UpdaterWebService.RESPONSE_MESSAGE);
             Log.d(Config.LOGTAG, "AppUpdater: " + reponseMessage);
@@ -167,33 +146,43 @@ public class UpdaterActivity extends Activity {
                         e.printStackTrace();
                     }
                     //get the app version Name for display
-                    String version = pInfo.versionName;
+                    final String versionName = pInfo.versionName;
+                    final int versionCode = pInfo.versionCode;
                     //get the latest version from the JSON string
                     int latestVersionCode = responseObj.getInt("latestVersionCode");
                     String latestVersion = responseObj.getString("latestVersion");
                     String changelog = responseObj.getString("changelog");
-                    /*
-                    //display the new version in a TextView
-                    TextView versionText = (TextView) findViewById(R.id.versionName);
-                    versionText.setText(getText(R.string.new_version) + latestVersion);
-                    */
                     //get the lastest application URI from the JSON string
                     appURI = responseObj.getString("appURI");
                     //check if we need to upgrade?
                     if(latestVersionCode > versionCode){
                         Log.d(Config.LOGTAG, "AppUpdater: update available");
+                        //delete old downloaded version files
+                        File dir = new File(getExternalFilesDir(null), Environment.DIRECTORY_DOWNLOADS);
+                        Log.d(Config.LOGTAG, "AppUpdater - Delete old update files in: " + dir);
+                        if (dir.isDirectory())
+                        {
+                            String[] children = dir.list();
+                            for (int i = 0; i < children.length; i++)
+                            {
+                                new File(dir, children[i]).delete();
+                            }
+                        }
                         //enable touch events
                         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                        
+
                         //oh yeah we do need an upgrade, let the user know send an alert message
                         AlertDialog.Builder builder = new AlertDialog.Builder(UpdaterActivity.this);
                         builder.setCancelable(false);
 
                         String UpdateMessageInfo = getResources().getString(R.string.update_available);
-                        builder.setMessage(String.format(UpdateMessageInfo, latestVersion, changelog, version))
+                        builder.setMessage(String.format(UpdateMessageInfo, latestVersion, changelog, versionName))
                                 .setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
                                     //if the user agrees to upgrade
                                     public void onClick(DialogInterface dialog, int id) {
+                                        //disable touch events
+                                        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                                                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                                         //start downloading the file using the download manager
                                         downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
                                         Uri Download_Uri = Uri.parse(appURI);
@@ -201,19 +190,7 @@ public class UpdaterActivity extends Activity {
                                         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
                                         request.setAllowedOverRoaming(false);
                                         request.setTitle("Conversations Update");
-                                        request.setDestinationInExternalFilesDir(UpdaterActivity.this, Environment.DIRECTORY_DOWNLOADS, "Conversations.apk");
-                                        //delete old downloaded version files
-                                        File dir = new File(getExternalFilesDir(null), Environment.DIRECTORY_DOWNLOADS);
-                                        Log.d(Config.LOGTAG, "AppUpdater - Delete old update files in: " + dir);
-                                        if (dir.isDirectory())
-                                        {
-                                            String[] children = dir.list();
-                                            for (int i = 0; i < children.length; i++)
-                                            {
-                                                new File(dir, children[i]).delete();
-                                            }
-                                        }
-
+                                        request.setDestinationInExternalFilesDir(UpdaterActivity.this, Environment.DIRECTORY_DOWNLOADS, "Conversations" + versionName + ".apk");
                                         downloadReference = downloadManager.enqueue(request);
                                         Toast.makeText(getApplicationContext(),
                                                 getText(R.string.download_started),
@@ -252,7 +229,6 @@ public class UpdaterActivity extends Activity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-
             //check if the broadcast message is for our Enqueued download
             long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
             if(downloadReference == referenceId){
@@ -264,7 +240,13 @@ public class UpdaterActivity extends Activity {
                         "application/vnd.android.package-archive");
                 installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(installIntent);
+                UpdaterActivity.this.finish();
             }
         }
     };
+
+    //disable back button
+    @Override
+    public void onBackPressed() {
+    }
 }

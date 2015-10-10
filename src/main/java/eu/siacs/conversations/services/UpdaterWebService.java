@@ -19,15 +19,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import eu.siacs.conversations.Config;
-import eu.siacs.conversations.ui.UpdaterActivity.MyWebReceiver;
+import eu.siacs.conversations.ui.UpdaterActivity.UpdateReceiver;
 
 public class UpdaterWebService extends IntentService{
     public static final String REQUEST_STRING = "";
     public static final String RESPONSE_MESSAGE = "";
 
     private String URL = null;
-    private static final int REGISTRATION_TIMEOUT = 3 * 1000;
-    private static final int WAIT_TIMEOUT = 30 * 1000;
+    public static final int REGISTRATION_TIMEOUT = 3 * 1000;
+    public static final int WAIT_TIMEOUT = 30 * 1000;
 
     public UpdaterWebService() {
         super("UpdaterWebService");
@@ -54,6 +54,7 @@ public class UpdaterWebService extends IntentService{
             HttpResponse response = httpclient.execute(httpGet);
 
             StatusLine statusLine = response.getStatusLine();
+            Log.d(Config.LOGTAG, "AppUpdater: HTTP Status Code: " + statusLine.getStatusCode());
             if(statusLine.getStatusCode() == HttpStatus.SC_OK){
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 response.getEntity().writeTo(out);
@@ -80,7 +81,7 @@ public class UpdaterWebService extends IntentService{
 
 
         Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction(MyWebReceiver.PROCESS_RESPONSE);
+        broadcastIntent.setAction(UpdateReceiver.PROCESS_RESPONSE);
         broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
         broadcastIntent.putExtra(RESPONSE_MESSAGE, responseMessage);
         sendBroadcast(broadcastIntent);

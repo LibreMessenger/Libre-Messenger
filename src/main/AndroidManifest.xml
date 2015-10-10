@@ -158,7 +158,8 @@
         <activity
             android:name=".ui.UpdaterActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/ConversationsTheme" >
+            android:theme="@style/ConversationsTheme"
+            android:label="@string/title_activity_updater" >
         </activity>
         <service android:name=".services.UpdaterWebService" />
         <service android:name=".services.CheckAppVersionService" />
