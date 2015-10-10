@@ -52,7 +52,7 @@ android {
 		minSdkVersion 14
 		targetSdkVersion 21
 		versionCode 100
-		versionName "1.6.13 beta1"
+		versionName "1.6.13 beta"
 		project.ext.set(archivesBaseName, archivesBaseName + "-" + versionName);
 	}
 
