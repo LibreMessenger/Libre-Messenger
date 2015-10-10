@@ -536,4 +536,5 @@
 	<string name="pref_away_when_screen_off_summary">Marks your resource as away when the screen is turned off</string>
 	<string name="pref_xa_on_silent_mode">Not available in silent mode</string>
 	<string name="pref_xa_on_silent_mode_summary">Marks your resource as not available when phone is in silent mode</string>
+	<string name="update_info">Conversation is checking for an update. If an update is available you will be asked, if you want to update your version. The update process is downloading and installing the new version automatically.</string>
 </resources>

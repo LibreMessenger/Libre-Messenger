@@ -496,4 +496,13 @@
   <string name="no_update_available">Kein Update verfügbar</string>
   <string name="account_status_dns_timeout">Zeitüberschreitung bei der Namensauflösung</string>
   <string name="server_info_broken">Fehlerhaft</string>
+  <string name="update_info">Conversation prüft auf eine neuere Version. Wenn ein Update verfügbar ist, wirst du gefragt, ob du deine Version aktualisieren möchtest. Der Update Dienst lädt und installiert die neue Version automatisch.</string>
+  <string name="notification_export_logs_title">Schreibe Chats auf SD Karte</string>
+  <string name="pref_away_when_screen_off">Abwesend, wenn Bildschirm abgeschaltet</string>
+  <string name="pref_away_when_screen_off_summary">Setze deinen Status auf abwesend, wenn dein Bildschirm abgeschaltet ist</string>
+  <string name="pref_export_logs">Exportiere Chats</string>
+  <string name="pref_export_logs_summary">Schreibe Chats auf SD Karte</string>
+  <string name="pref_presence_settings">Status Einstellungen</string>
+  <string name="pref_xa_on_silent_mode">Nicht verfügbar wenn stumm geschlatet</string>
+  <string name="pref_xa_on_silent_mode_summary">Setze deinen Status auf nicht verfügbar, wenn dein Gerät stumm geschaltet ist</string>
 </resources>
