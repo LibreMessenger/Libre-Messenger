@@ -1,9 +1,12 @@
 ###Changelog
 
 ####Version 1.6.13
-* show changelog into update alert
 * bugfixes
 * use MAM for MUCs if available
+* added changelog to AppUpdater dialog
+* ability to set different status messages in silent mode or when screen is off
+* show client-to-client encryption in chatview
+* delete old version files in download folder on updating
 
 ####Version 1.6.12
 * added blue tick as read indicator
@@ -12,8 +15,7 @@
 * bug fixes
 
 ####Version 1.6.11
-* optimized app updater and increased app update check period to once a
-day
+* optimized app updater and increased app update check period to once a day
 
 ####Version 1.6.10
 * fixed facebook login
