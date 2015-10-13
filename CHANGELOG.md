@@ -7,6 +7,7 @@
 * ability to set different status messages in silent mode or when screen is off
 * show client-to-client encryption in chatview
 * delete old version files in download folder on updating
+* use standard namespace for file transfers
 
 ####Version 1.6.12
 * added blue tick as read indicator
