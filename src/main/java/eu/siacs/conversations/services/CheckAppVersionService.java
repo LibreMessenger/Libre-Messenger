@@ -30,7 +30,7 @@ public class CheckAppVersionService extends HttpServlet {
 
         //send a JSON response with the app Version and file URI
         JsonObject myObj = new JsonObject();
-        myObj.addProperty("success", true);
+        myObj.addProperty("success", false);
         myObj.addProperty("latestVersionCode", 2);
         myObj.addProperty("latestVersion", "1.0.0");
         myObj.addProperty("changelog", "");
