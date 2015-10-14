@@ -215,6 +215,12 @@ public class UpdaterActivity extends Activity {
                         UpdaterActivity.this.finish();
                     }
 
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            getText(R.string.failed),
+                            Toast.LENGTH_LONG).show();
+                    Log.d(Config.LOGTAG, "AppUpdater: contact to server not successfull");
+                    UpdaterActivity.this.finish();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
