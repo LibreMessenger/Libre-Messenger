@@ -1,10 +1,14 @@
 package eu.siacs.conversations.ui;
 
+import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.security.KeyChain;
+import android.security.KeyChainAliasCallback;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -31,17 +35,21 @@ import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.axolotl.AxolotlService;
 import eu.siacs.conversations.entities.Account;
+import eu.siacs.conversations.services.XmppConnectionService.OnCaptchaRequested;
+import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.services.XmppConnectionService.OnAccountUpdate;
 import eu.siacs.conversations.ui.adapter.KnownHostsAdapter;
 import eu.siacs.conversations.utils.CryptoHelper;
 import eu.siacs.conversations.utils.UIHelper;
 import eu.siacs.conversations.xmpp.OnKeyStatusUpdated;
 import eu.siacs.conversations.xmpp.XmppConnection.Features;
+import eu.siacs.conversations.xmpp.forms.Data;
 import eu.siacs.conversations.xmpp.jid.InvalidJidException;
 import eu.siacs.conversations.xmpp.jid.Jid;
 import eu.siacs.conversations.xmpp.pep.Avatar;
 
-public class EditAccountActivity extends XmppActivity implements OnAccountUpdate, OnKeyStatusUpdated {
+public class EditAccountActivity extends XmppActivity implements OnAccountUpdate,
+		OnKeyStatusUpdated, OnCaptchaRequested, KeyChainAliasCallback, XmppConnectionService.OnShowErrorToast {
 
 	private AutoCompleteTextView mAccountJid;
 	private EditText mPassword;
@@ -72,8 +80,10 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 	private ImageButton mRegenerateAxolotlKeyButton;
 	private LinearLayout keys;
 	private LinearLayout keysCard;
+	private AlertDialog mCaptchaDialog = null;
 
 	private Jid jidToEdit;
+	private boolean mInitMode = false;
 	private Account mAccount;
 	private String messageFingerprint;
 
@@ -83,6 +93,9 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 
 		@Override
 		public void onClick(final View v) {
+			if (mInitMode && mAccount != null) {
+				mAccount.setOption(Account.OPTION_DISABLED, false);
+			}
 			if (mAccount != null && mAccount.getStatus() == Account.State.DISABLED && !accountInfoEdited()) {
 				mAccount.setOption(Account.OPTION_DISABLED, false);
 				xmppConnectionService.updateAccount(mAccount);
@@ -97,7 +110,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 			final Jid jid;
 			try {
 				if (Config.DOMAIN_LOCK != null) {
-					jid = Jid.fromParts(mAccountJid.getText().toString(),Config.DOMAIN_LOCK,null);
+					jid = Jid.fromParts(mAccountJid.getText().toString(), Config.DOMAIN_LOCK, null);
 				} else {
 					jid = Jid.fromString(mAccountJid.getText().toString());
 				}
@@ -129,12 +142,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				}
 			}
 			if (mAccount != null) {
-				try {
-					mAccount.setUsername(jid.hasLocalpart() ? jid.getLocalpart() : "");
-					mAccount.setServer(jid.getDomainpart());
-				} catch (final InvalidJidException ignored) {
-					return;
-				}
+				mAccount.setJid(jid);
 				mAccountJid.setError(null);
 				mPasswordConfirm.setError(null);
 				mAccount.setPassword(password);
@@ -152,9 +160,9 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				mAccount.setOption(Account.OPTION_REGISTER, registerNewAccount);
 				xmppConnectionService.createAccount(mAccount);
 			}
-			if (jidToEdit != null
-					&& !mAccount.isOptionSet(Account.OPTION_DISABLED)
-					&& !registerNewAccount) {
+			if (!mAccount.isOptionSet(Account.OPTION_DISABLED)
+					&& !registerNewAccount
+					&& !mInitMode) {
 				finish();
 			} else {
 				updateSaveButton();
@@ -177,14 +185,12 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				&& mAccount.getStatus() != Account.State.ONLINE
 				&& mFetchingAvatar) {
 			startActivity(new Intent(getApplicationContext(),
-						ManageAccountActivity.class));
+					ManageAccountActivity.class));
 			finish();
-		} else if (jidToEdit == null && mAccount != null
-				&& mAccount.getStatus() == Account.State.ONLINE) {
+		} else if (mInitMode && mAccount != null && mAccount.getStatus() == Account.State.ONLINE) {
 			if (!mFetchingAvatar) {
 				mFetchingAvatar = true;
-				xmppConnectionService.checkForAvatar(mAccount,
-						mAvatarFetchCallback);
+				xmppConnectionService.checkForAvatar(mAccount, mAvatarFetchCallback);
 			}
 		} else {
 			updateSaveButton();
@@ -198,6 +204,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 	public void onAccountUpdate() {
 		refreshUi();
 	}
+
 	private final UiCallback<Avatar> mAvatarFetchCallback = new UiCallback<Avatar>() {
 
 		@Override
@@ -236,8 +243,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		@Override
 		public void onClick(final View view) {
 			if (mAccount != null) {
-				final Intent intent = new Intent(getApplicationContext(),
-						PublishProfilePictureActivity.class);
+				final Intent intent = new Intent(getApplicationContext(), PublishProfilePictureActivity.class);
 				intent.putExtra("account", mAccount.getJid().toBareJid().toString());
 				startActivity(intent);
 			}
@@ -269,7 +275,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 	}
 
 	protected void updateSaveButton() {
-		if (accountInfoEdited() && jidToEdit != null) {
+		if (accountInfoEdited() && !mInitMode) {
 			this.mSaveButton.setText(R.string.save);
 			this.mSaveButton.setEnabled(true);
 			this.mSaveButton.setTextColor(getPrimaryTextColor());
@@ -277,14 +283,14 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 			this.mSaveButton.setEnabled(false);
 			this.mSaveButton.setTextColor(getSecondaryTextColor());
 			this.mSaveButton.setText(R.string.account_status_connecting);
-		} else if (mAccount != null && mAccount.getStatus() == Account.State.DISABLED) {
+		} else if (mAccount != null && mAccount.getStatus() == Account.State.DISABLED && !mInitMode) {
 			this.mSaveButton.setEnabled(true);
 			this.mSaveButton.setTextColor(getPrimaryTextColor());
 			this.mSaveButton.setText(R.string.enable);
 		} else {
 			this.mSaveButton.setEnabled(true);
 			this.mSaveButton.setTextColor(getPrimaryTextColor());
-			if (jidToEdit != null) {
+			if (!mInitMode) {
 				if (mAccount != null && mAccount.isOnlineAndConnected()) {
 					this.mSaveButton.setText(R.string.save);
 					if (!accountInfoEdited()) {
@@ -316,7 +322,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 
 	@Override
 	protected String getShareableUri() {
-		if (mAccount!=null) {
+		if (mAccount != null) {
 			return mAccount.getShareableUri();
 		} else {
 			return "";
@@ -367,7 +373,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		final OnCheckedChangeListener OnCheckedShowConfirmPassword = new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(final CompoundButton buttonView,
-					final boolean isChecked) {
+										 final boolean isChecked) {
 				if (isChecked) {
 					mPasswordConfirm.setVisibility(View.VISIBLE);
 				} else {
@@ -391,6 +397,10 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		final MenuItem showMoreInfo = menu.findItem(R.id.action_server_info_show_more);
 		final MenuItem changePassword = menu.findItem(R.id.action_change_password_on_server);
 		final MenuItem clearDevices = menu.findItem(R.id.action_clear_devices);
+		final MenuItem renewCertificate = menu.findItem(R.id.action_renew_certificate);
+
+		renewCertificate.setVisible(mAccount != null && mAccount.getPrivateKeyAlias() != null);
+
 		if (mAccount != null && mAccount.isOnlineAndConnected()) {
 			if (!mAccount.getXmppConnection().getFeatures().blocking()) {
 				showBlocklist.setVisible(false);
@@ -421,8 +431,9 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 			} catch (final InvalidJidException | NullPointerException ignored) {
 				this.jidToEdit = null;
 			}
+			this.mInitMode = getIntent().getBooleanExtra("init", false) || this.jidToEdit == null;
 			this.messageFingerprint = getIntent().getStringExtra("fingerprint");
-			if (this.jidToEdit != null) {
+			if (!mInitMode) {
 				this.mRegisterNew.setVisibility(View.GONE);
 				if (getActionBar() != null) {
 					getActionBar().setTitle(getString(R.string.account_details));
@@ -440,7 +451,15 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 	protected void onBackendConnected() {
 		if (this.jidToEdit != null) {
 			this.mAccount = xmppConnectionService.findAccountByJid(jidToEdit);
-			updateAccountInformation(true);
+			if (this.mAccount != null) {
+				if (this.mAccount.getPrivateKeyAlias() != null) {
+					this.mPassword.setHint(R.string.authenticate_with_certificate);
+					if (this.mInitMode) {
+						this.mPassword.requestFocus();
+					}
+				}
+				updateAccountInformation(true);
+			}
 		} else if (this.xmppConnectionService.getAccounts().size() == 0) {
 			if (getActionBar() != null) {
 				getActionBar().setDisplayHomeAsUpEnabled(false);
@@ -479,20 +498,35 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 			case R.id.action_clear_devices:
 				showWipePepDialog();
 				break;
+			case R.id.action_renew_certificate:
+				renewCertificate();
+				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
+	private void renewCertificate() {
+		KeyChain.choosePrivateKeyAlias(this, this, null, null, null, -1, null);
+	}
+
+	@Override
+	public void alias(String alias) {
+		if (alias != null) {
+			xmppConnectionService.updateKeyInAccount(mAccount, alias);
+		}
+	}
+
 	private void updateAccountInformation(boolean init) {
 		if (init) {
+			this.mAccountJid.getEditableText().clear();
 			if (Config.DOMAIN_LOCK != null) {
-				this.mAccountJid.setText(this.mAccount.getJid().getLocalpart());
+				this.mAccountJid.getEditableText().append(this.mAccount.getJid().getLocalpart());
 			} else {
-				this.mAccountJid.setText(this.mAccount.getJid().toBareJid().toString());
+				this.mAccountJid.getEditableText().append(this.mAccount.getJid().toBareJid().toString());
 			}
 			this.mPassword.setText(this.mAccount.getPassword());
 		}
-		if (this.jidToEdit != null) {
+		if (!mInitMode) {
 			this.mAvatar.setVisibility(View.VISIBLE);
 			this.mAvatar.setImageBitmap(avatarService().get(this.mAccount, getPixel(Config.AVATAR_SIZE)));
 		}
@@ -507,7 +541,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		if (this.mAccount.isOnlineAndConnected() && !this.mFetchingAvatar) {
 			this.mStats.setVisibility(View.VISIBLE);
 			this.mSessionEst.setText(UIHelper.readableTimeDifferenceFull(this, this.mAccount.getXmppConnection()
-						.getLastSessionEstablished()));
+					.getLastSessionEstablished()));
 			Features features = this.mAccount.getXmppConnection().getFeatures();
 			if (features.rosterVersioning()) {
 				this.mServerInfoRosterVersion.setText(R.string.server_info_available);
@@ -518,7 +552,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				this.mServerInfoCarbons.setText(R.string.server_info_available);
 			} else {
 				this.mServerInfoCarbons
-					.setText(R.string.server_info_unavailable);
+						.setText(R.string.server_info_unavailable);
 			}
 			if (features.mam()) {
 				this.mServerInfoMam.setText(R.string.server_info_available);
@@ -560,21 +594,21 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				this.mOtrFingerprintBox.setVisibility(View.VISIBLE);
 				this.mOtrFingerprint.setText(CryptoHelper.prettifyFingerprint(otrFingerprint));
 				this.mOtrFingerprintToClipboardButton
-					.setVisibility(View.VISIBLE);
+						.setVisibility(View.VISIBLE);
 				this.mOtrFingerprintToClipboardButton
-					.setOnClickListener(new View.OnClickListener() {
+						.setOnClickListener(new View.OnClickListener() {
 
-						@Override
-						public void onClick(final View v) {
+							@Override
+							public void onClick(final View v) {
 
-							if (copyTextToClipboard(otrFingerprint, R.string.otr_fingerprint)) {
-								Toast.makeText(
-										EditAccountActivity.this,
-										R.string.toast_message_otr_fingerprint,
-										Toast.LENGTH_SHORT).show();
+								if (copyTextToClipboard(otrFingerprint, R.string.otr_fingerprint)) {
+									Toast.makeText(
+											EditAccountActivity.this,
+											R.string.toast_message_otr_fingerprint,
+											Toast.LENGTH_SHORT).show();
+								}
 							}
-						}
-					});
+						});
 			} else {
 				this.mOtrFingerprintBox.setVisibility(View.GONE);
 			}
@@ -617,7 +651,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 			boolean hasKeys = false;
 			keys.removeAllViews();
 			for (final String fingerprint : mAccount.getAxolotlService().getFingerprintsForOwnSessions()) {
-				if(ownFingerprint.equals(fingerprint)) {
+				if (ownFingerprint.equals(fingerprint)) {
 					continue;
 				}
 				boolean highlight = fingerprint.equals(messageFingerprint);
@@ -651,7 +685,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
-						mAccount.getAxolotlService().regenerateKeys();
+						mAccount.getAxolotlService().regenerateKeys(false);
 					}
 				});
 		builder.create().show();
@@ -676,5 +710,80 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 	@Override
 	public void onKeyStatusUpdated() {
 		refreshUi();
+	}
+
+	@Override
+	public void onCaptchaRequested(final Account account, final String id, final Data data,
+								   final Bitmap captcha) {
+		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		final ImageView view = new ImageView(this);
+		final LinearLayout layout = new LinearLayout(this);
+		final EditText input = new EditText(this);
+
+		view.setImageBitmap(captcha);
+		view.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+		input.setHint(getString(R.string.captcha_hint));
+
+		layout.setOrientation(LinearLayout.VERTICAL);
+		layout.addView(view);
+		layout.addView(input);
+
+		builder.setTitle(getString(R.string.captcha_required));
+		builder.setView(layout);
+
+		builder.setPositiveButton(getString(R.string.ok),
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						String rc = input.getText().toString();
+						data.put("username", account.getUsername());
+						data.put("password", account.getPassword());
+						data.put("ocr", rc);
+						data.submit();
+
+						if (xmppConnectionServiceBound) {
+							xmppConnectionService.sendCreateAccountWithCaptchaPacket(
+									account, id, data);
+						}
+					}
+				});
+		builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				if (xmppConnectionService != null) {
+					xmppConnectionService.sendCreateAccountWithCaptchaPacket(account, null, null);
+				}
+			}
+		});
+
+		builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+			@Override
+			public void onCancel(DialogInterface dialog) {
+				if (xmppConnectionService != null) {
+					xmppConnectionService.sendCreateAccountWithCaptchaPacket(account, null, null);
+				}
+			}
+		});
+
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				if ((mCaptchaDialog != null) && mCaptchaDialog.isShowing()) {
+					mCaptchaDialog.dismiss();
+				}
+				mCaptchaDialog = builder.create();
+				mCaptchaDialog.show();
+			}
+		});
+	}
+
+	public void onShowErrorToast(final int resId) {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				Toast.makeText(EditAccountActivity.this, resId, Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
 }

@@ -25,8 +25,12 @@ import android.os.PowerManager.WakeLock;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
+import android.security.KeyChain;
+import android.security.KeyChainException;
 import android.util.Log;
 import android.util.LruCache;
+import android.util.DisplayMetrics;
+import android.util.Pair;
 
 import net.java.otr4j.OtrException;
 import net.java.otr4j.session.Session;
@@ -34,11 +38,18 @@ import net.java.otr4j.session.SessionID;
 import net.java.otr4j.session.SessionImpl;
 import net.java.otr4j.session.SessionStatus;
 
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.bouncycastle.asn1.x500.style.IETFUtils;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 import org.openintents.openpgp.util.OpenPgpApi;
 import org.openintents.openpgp.util.OpenPgpServiceConnection;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -161,7 +172,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 			mMessageArchiveService.executePendingQueries(account);
 			mJingleConnectionManager.cancelInTransmission();
 			syncDirtyContacts(account);
-			account.getAxolotlService().publishBundlesIfNeeded(true);
+			account.getAxolotlService().publishBundlesIfNeeded(true, false);
 		}
 	};
 	private final OnMessageAcknowledged mOnMessageAcknowledgedListener = new OnMessageAcknowledged() {
@@ -244,6 +255,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 	private int showErrorToastListenerCount = 0;
 	private int unreadCount = -1;
 	private OnAccountUpdate mOnAccountUpdate = null;
+	private OnCaptchaRequested mOnCaptchaRequested = null;
 	private OnStatusChanged statusListener = new OnStatusChanged() {
 
 		@Override
@@ -302,6 +314,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		}
 	};
 	private int accountChangedListenerCount = 0;
+	private int captchaRequestedListenerCount = 0;
 	private OnRosterUpdate mOnRosterUpdate = null;
 	private OnUpdateBlocklist mOnUpdateBlocklist = null;
 	private int updateBlocklistListenerCount = 0;
@@ -658,6 +671,15 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		toggleForegroundService();
 		updateUnreadCountBadge();
 		toggleScreenEventReceiver();
+	}
+
+	@Override
+	public void onTrimMemory(int level) {
+		super.onTrimMemory(level);
+		if (level >= TRIM_MEMORY_COMPLETE) {
+			Log.d(Config.LOGTAG,"clear cache due to low memory");
+			getBitmapCache().evictAll();
+		}
 	}
 
 	@Override
@@ -1059,7 +1081,14 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 					for (Conversation conversation : conversations) {
 						conversation.addAll(0, databaseBackend.getMessages(conversation, Config.PAGE_SIZE));
 						checkDeletedFiles(conversation);
+						conversation.findUnreadMessages(new Conversation.OnMessageFound() {
+							@Override
+							public void onMessageFound(Message message) {
+								mNotificationService.pushFromBacklog(message);
+							}
+						});
 					}
+					mNotificationService.finishBacklog();
 					mRestoredFromDatabase = true;
 					Log.d(Config.LOGTAG,"restored all messages");
 					updateConversationUi();
@@ -1285,6 +1314,67 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		updateAccountUi();
 	}
 
+	public void createAccountFromKey(final String alias, final OnAccountCreated callback) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					X509Certificate[] chain = KeyChain.getCertificateChain(XmppConnectionService.this, alias);
+					Pair<Jid,String> info = CryptoHelper.extractJidAndName(chain[0]);
+					if (findAccountByJid(info.first) == null) {
+						Account account = new Account(info.first, "");
+						account.setPrivateKeyAlias(alias);
+						account.setOption(Account.OPTION_DISABLED, true);
+						createAccount(account);
+						callback.onAccountCreated(account);
+						if (Config.X509_VERIFICATION) {
+							try {
+								getMemorizingTrustManager().getNonInteractive().checkClientTrusted(chain, "RSA");
+							} catch (CertificateException e) {
+								callback.informUser(R.string.certificate_chain_is_not_trusted);
+							}
+						}
+					} else {
+						callback.informUser(R.string.account_already_exists);
+					}
+				} catch (Exception e) {
+					callback.informUser(R.string.unable_to_parse_certificate);
+				}
+			}
+		}).start();
+
+	}
+
+	public void updateKeyInAccount(final Account account, final String alias) {
+		Log.d(Config.LOGTAG, "update key in account " + alias);
+		try {
+			X509Certificate[] chain = KeyChain.getCertificateChain(XmppConnectionService.this, alias);
+			Pair<Jid, String> info = CryptoHelper.extractJidAndName(chain[0]);
+			if (account.getJid().toBareJid().equals(info.first)) {
+				account.setPrivateKeyAlias(alias);
+				databaseBackend.updateAccount(account);
+				if (Config.X509_VERIFICATION) {
+					try {
+						getMemorizingTrustManager().getNonInteractive().checkClientTrusted(chain, "RSA");
+					} catch (CertificateException e) {
+						showErrorToastInUi(R.string.certificate_chain_is_not_trusted);
+					}
+					account.getAxolotlService().regenerateKeys(true);
+				}
+			} else {
+				showErrorToastInUi(R.string.jid_does_not_match_certificate);
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (KeyChainException e) {
+			e.printStackTrace();
+		} catch (InvalidJidException e) {
+			e.printStackTrace();
+		} catch (CertificateEncodingException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void updateAccount(final Account account) {
 		this.statusListener.onStatusChanged(account);
 		databaseBackend.updateAccount(account);
@@ -1409,6 +1499,31 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		}
 	}
 
+	public void setOnCaptchaRequestedListener(OnCaptchaRequested listener) {
+		synchronized (this) {
+			if (checkListeners()) {
+				switchToForeground();
+			}
+			this.mOnCaptchaRequested = listener;
+			if (this.captchaRequestedListenerCount < 2) {
+				this.captchaRequestedListenerCount++;
+			}
+		}
+	}
+
+	public void removeOnCaptchaRequestedListener() {
+		synchronized (this) {
+			this.captchaRequestedListenerCount--;
+			if (this.captchaRequestedListenerCount <= 0) {
+				this.mOnCaptchaRequested = null;
+				this.captchaRequestedListenerCount = 0;
+				if (checkListeners()) {
+					switchToBackground();
+				}
+			}
+		}
+	}
+
 	public void setOnRosterUpdateListener(final OnRosterUpdate listener) {
 		synchronized (this) {
 			if (checkListeners()) {
@@ -1513,6 +1628,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		return (this.mOnAccountUpdate == null
 				&& this.mOnConversationUpdate == null
 				&& this.mOnRosterUpdate == null
+				&& this.mOnCaptchaRequested == null
 				&& this.mOnUpdateBlocklist == null
 				&& this.mOnShowErrorToast == null
 				&& this.mOnKeyStatusUpdated == null);
@@ -2414,6 +2530,20 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		}
 	}
 
+	public boolean displayCaptchaRequest(Account account, String id, Data data, Bitmap captcha) {
+		boolean rc = false;
+		if (mOnCaptchaRequested != null) {
+			DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
+			Bitmap scaled = Bitmap.createScaledBitmap(captcha, (int)(captcha.getWidth() * metrics.scaledDensity),
+						(int)(captcha.getHeight() * metrics.scaledDensity), false);
+
+			mOnCaptchaRequested.onCaptchaRequested(account, id, data, scaled);
+			rc = true;
+		}
+
+		return rc;
+	}
+
 	public void updateBlocklistUi(final OnUpdateBlocklist.Status status) {
 		if (mOnUpdateBlocklist != null) {
 			mOnUpdateBlocklist.OnUpdateBlocklist(status);
@@ -2452,7 +2582,9 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 
 	public void markRead(final Conversation conversation) {
 		mNotificationService.clear(conversation);
-		conversation.markRead();
+		for(Message message : conversation.markRead()) {
+			databaseBackend.updateMessage(message);
+		}
 		updateUnreadCountBadge();
 	}
 
@@ -2567,6 +2699,13 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		XmppConnection connection = account.getXmppConnection();
 		if (connection != null) {
 			connection.sendPresencePacket(packet);
+		}
+	}
+
+	public void sendCreateAccountWithCaptchaPacket(Account account, String id, Data data) {
+		XmppConnection connection = account.getXmppConnection();
+		if (connection != null) {
+			connection.sendCaptchaRegistryRequest(id, data);
 		}
 	}
 
@@ -2699,54 +2838,66 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		}
 	}
 
-	public interface OnMoreMessagesLoaded {
-		public void onMoreMessagesLoaded(int count, Conversation conversation);
+	public interface OnAccountCreated {
+		void onAccountCreated(Account account);
+		void informUser(int r);
+	}
 
-		public void informUser(int r);
+	public interface OnMoreMessagesLoaded {
+		void onMoreMessagesLoaded(int count, Conversation conversation);
+
+		void informUser(int r);
 	}
 
 	public interface OnAccountPasswordChanged {
-		public void onPasswordChangeSucceeded();
+		void onPasswordChangeSucceeded();
 
-		public void onPasswordChangeFailed();
+		void onPasswordChangeFailed();
 	}
 
 	public interface OnAffiliationChanged {
-		public void onAffiliationChangedSuccessful(Jid jid);
+		void onAffiliationChangedSuccessful(Jid jid);
 
-		public void onAffiliationChangeFailed(Jid jid, int resId);
+		void onAffiliationChangeFailed(Jid jid, int resId);
 	}
 
 	public interface OnRoleChanged {
-		public void onRoleChangedSuccessful(String nick);
+		void onRoleChangedSuccessful(String nick);
 
-		public void onRoleChangeFailed(String nick, int resid);
+		void onRoleChangeFailed(String nick, int resid);
 	}
 
 	public interface OnConversationUpdate {
-		public void onConversationUpdate();
+		void onConversationUpdate();
 	}
 
 	public interface OnAccountUpdate {
-		public void onAccountUpdate();
+		void onAccountUpdate();
+	}
+
+	public interface OnCaptchaRequested {
+		void onCaptchaRequested(Account account,
+					String id,
+					Data data,
+					Bitmap captcha);
 	}
 
 	public interface OnRosterUpdate {
-		public void onRosterUpdate();
+		void onRosterUpdate();
 	}
 
 	public interface OnMucRosterUpdate {
-		public void onMucRosterUpdate();
+		void onMucRosterUpdate();
 	}
 
 	public interface OnConferenceConfigurationFetched {
-		public void onConferenceConfigurationFetched(Conversation conversation);
+		void onConferenceConfigurationFetched(Conversation conversation);
 	}
 
 	public interface OnConferenceOptionsPushed {
-		public void onPushSucceeded();
+		void onPushSucceeded();
 
-		public void onPushFailed();
+		void onPushFailed();
 	}
 
 	public interface OnShowErrorToast {

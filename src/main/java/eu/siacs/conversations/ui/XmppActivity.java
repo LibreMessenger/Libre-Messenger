@@ -281,6 +281,9 @@ public abstract class XmppActivity extends Activity {
 		if (this instanceof XmppConnectionService.OnAccountUpdate) {
 			this.xmppConnectionService.setOnAccountListChangedListener((XmppConnectionService.OnAccountUpdate) this);
 		}
+		if (this instanceof XmppConnectionService.OnCaptchaRequested) {
+			this.xmppConnectionService.setOnCaptchaRequestedListener((XmppConnectionService.OnCaptchaRequested) this);
+		}
 		if (this instanceof XmppConnectionService.OnRosterUpdate) {
 			this.xmppConnectionService.setOnRosterUpdateListener((XmppConnectionService.OnRosterUpdate) this);
 		}
@@ -304,6 +307,9 @@ public abstract class XmppActivity extends Activity {
 		}
 		if (this instanceof XmppConnectionService.OnAccountUpdate) {
 			this.xmppConnectionService.removeOnAccountListChangedListener();
+		}
+		if (this instanceof XmppConnectionService.OnCaptchaRequested) {
+			this.xmppConnectionService.removeOnCaptchaRequestedListener();
 		}
 		if (this instanceof XmppConnectionService.OnRosterUpdate) {
 			this.xmppConnectionService.removeOnRosterUpdateListener();
@@ -438,8 +444,13 @@ public abstract class XmppActivity extends Activity {
 	}
 
 	public void switchToAccount(Account account) {
+		switchToAccount(account,false);
+	}
+
+	public void switchToAccount(Account account, boolean init) {
 		Intent intent = new Intent(this, EditAccountActivity.class);
 		intent.putExtra("jid", account.getJid().toBareJid().toString());
+		intent.putExtra("init", init);
 		startActivity(intent);
 	}
 
@@ -617,6 +628,9 @@ public abstract class XmppActivity extends Activity {
 	protected boolean addFingerprintRow(LinearLayout keys, final Account account, final String fingerprint, boolean highlight) {
 		final XmppAxolotlSession.Trust trust = account.getAxolotlService()
 				.getFingerprintTrust(fingerprint);
+		if (trust == null) {
+			return false;
+		}
 		return addFingerprintRowWithListeners(keys, account, fingerprint, highlight, trust, true,
 				new CompoundButton.OnCheckedChangeListener() {
 					@Override
