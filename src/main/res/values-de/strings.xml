@@ -335,9 +335,6 @@
   <string name="conversations_foreground_service">Conversations</string>
   <string name="pref_keep_foreground_service">Den Dienst im Vordergrund ausführen.</string>
   <string name="pref_keep_foreground_service_summary">Verhindert, dass Android Conversations beendet und die Verbindung unterbricht</string>
-  <string name="pref_export_logs">Chats exportieren</string>
-  <string name="pref_export_logs_summary">Chats auf SD-Karte schreiben</string>
-  <string name="notification_export_logs_title">Chats auf SD-Karte schreiben</string>
   <string name="choose_file">Datei auswählen</string>
   <string name="receiving_x_file">Empfange  %1$s (%2$d%% abgeschlossen)</string>
   <string name="download_x_file">%s wird heruntergeladen</string>
@@ -499,17 +496,10 @@
   <string name="no_update_available">Kein Update verfügbar</string>
   <string name="account_status_dns_timeout">Zeitüberschreitung bei der Namensauflösung</string>
   <string name="server_info_broken">Fehlerhaft</string>
-<<<<<<< HEAD
   <string name="update_info">Conversation prüft auf eine neuere Version. Wenn ein Update verfügbar ist, wirst du gefragt, ob du deine Version aktualisieren möchtest. Der Update Dienst lädt und installiert die neue Version automatisch.</string>
   <string name="notification_export_logs_title">Schreibe Chats auf SD Karte</string>
-  <string name="pref_away_when_screen_off">Abwesend</string>
-  <string name="pref_away_when_screen_off_summary">Setze deinen Status auf abwesend, wenn dein Bildschirm abgeschaltet ist</string>
   <string name="pref_export_logs">Exportiere Chats</string>
   <string name="pref_export_logs_summary">Schreibe Chats auf SD Karte</string>
-  <string name="pref_presence_settings">Status Einstellungen</string>
-  <string name="pref_xa_on_silent_mode">Nicht verfügbar</string>
-  <string name="pref_xa_on_silent_mode_summary">Setze deinen Status auf nicht verfügbar, wenn dein Gerät stumm geschaltet ist</string>
-=======
   <string name="pref_presence_settings">Status Einstellungen</string>
   <string name="pref_away_when_screen_off">Abwesend</string>
   <string name="pref_away_when_screen_off_summary">Setze deinen Status auf abwesend, wenn dein Bildschirm abgeschaltet ist</string>
@@ -524,5 +514,5 @@
   <string name="certificate_chain_is_not_trusted">Zertifikat wird nicht vertraut</string>
   <string name="jid_does_not_match_certificate">Jabber-ID stimmt nicht dem Zertifikat überein</string>
   <string name="action_renew_certificate">Zertifikat erneuern</string>
->>>>>>> refs/remotes/siacs/master
+
 </resources>
