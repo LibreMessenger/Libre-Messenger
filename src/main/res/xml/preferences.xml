@@ -123,6 +123,11 @@
             android:key="show_dynamic_tags"
             android:summary="@string/pref_show_dynamic_tags_summary"
             android:title="@string/pref_show_dynamic_tags"/>
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="indicate_received"
+            android:summary="@string/pref_use_indicate_received_summary"
+            android:title="@string/pref_use_indicate_received"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:key="advanced"
@@ -172,11 +177,6 @@
                     android:title="@string/pref_xa_on_silent_mode"/>
             </PreferenceCategory>
             <PreferenceCategory android:title="@string/pref_expert_options_other">
-                <CheckBoxPreference
-                    android:defaultValue="true"
-                    android:key="indicate_received"
-                    android:summary="@string/pref_use_indicate_received_summary"
-                    android:title="@string/pref_use_indicate_received"/>
                 <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="keep_foreground_service"
