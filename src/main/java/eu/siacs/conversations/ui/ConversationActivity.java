@@ -54,6 +54,7 @@ import eu.siacs.conversations.services.XmppConnectionService.OnConversationUpdat
 import eu.siacs.conversations.services.XmppConnectionService.OnRosterUpdate;
 import eu.siacs.conversations.ui.adapter.ConversationAdapter;
 import eu.siacs.conversations.utils.ExceptionHelper;
+import eu.siacs.conversations.utils.UIHelper;
 import eu.siacs.conversations.xmpp.OnUpdateBlocklist;
 import eu.siacs.conversations.xmpp.chatstate.ChatState;
 import eu.siacs.conversations.xmpp.jid.InvalidJidException;
@@ -370,9 +371,9 @@ public class ConversationActivity extends XmppActivity
 						if (state == ChatState.COMPOSING) {
 							ab.setSubtitle(getString(R.string.is_typing));
 						} else if (state == ChatState.PAUSED) {
-							ab.setSubtitle(null);
+							ab.setSubtitle(UIHelper.lastseen(getApplicationContext(), conversation.getContact().lastseen.time));
 						} else {
-                            ab.setSubtitle(null);
+							ab.setSubtitle(UIHelper.lastseen(getApplicationContext(), conversation.getContact().lastseen.time));
                         }
 					} else if (useSubjectToIdentifyConference()){
                         ab.setSubtitle(conversation.getParticipants());
