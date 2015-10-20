@@ -2,6 +2,8 @@ package eu.siacs.conversations.services;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.util.Log;
 
 import org.apache.http.HttpResponse;
@@ -19,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import eu.siacs.conversations.Config;
+import eu.siacs.conversations.R;
 import eu.siacs.conversations.ui.UpdaterActivity.UpdateReceiver;
 
 public class UpdaterWebService extends IntentService{
@@ -39,6 +42,15 @@ public class UpdaterWebService extends IntentService{
         String requestString = intent.getStringExtra(REQUEST_STRING);
         Log.d(Config.LOGTAG, "AppUpdater: " + requestString);
         String responseMessage = "";
+        PackageInfo pInfo = null;
+        try {
+            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        //get the app version Name for display
+        final String versionName = pInfo.versionName;
 
         try {
 
@@ -51,6 +63,7 @@ public class UpdaterWebService extends IntentService{
             ConnManagerParams.setTimeout(params, WAIT_TIMEOUT);
 
             HttpGet httpGet = new HttpGet(URL);
+            httpGet.setHeader("User-Agent", getString(R.string.app_name) + " " + versionName);
             HttpResponse response = httpclient.execute(httpGet);
 
             StatusLine statusLine = response.getStatusLine();
