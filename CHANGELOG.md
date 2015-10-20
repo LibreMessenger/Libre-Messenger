@@ -1,13 +1,20 @@
 ###Changelog
 
+####Version 1.7.0
+* redownload deleted files from HTTP hosts
+* bug fixes
+* show lastseen info as subitle in single chats
+
 ####Version 1.6.13
 * bugfixes
-* use MAM for MUCs if available
-* added changelog to AppUpdater dialog
-* ability to set different status messages in silent mode or when screen is off
+* fetching MUC history via MAM
+* Expert setting to automatically set presence
 * show client-to-client encryption in chatview
+* added changelog to AppUpdater dialog
 * delete old version files in download folder on updating
 * use standard namespace for file transfers
+* CAPTCHA support
+* SASL EXTERNAL (client certifiates)
 
 ####Version 1.6.12
 * added blue tick as read indicator
