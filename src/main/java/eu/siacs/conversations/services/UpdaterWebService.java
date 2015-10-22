@@ -41,7 +41,7 @@ public class UpdaterWebService extends IntentService{
 
         String requestString = intent.getStringExtra(REQUEST_STRING);
         Log.d(Config.LOGTAG, "AppUpdater: " + requestString);
-        String responseMessage = "";
+        String responseMessage;
         PackageInfo pInfo = null;
         try {
             pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -73,23 +73,21 @@ public class UpdaterWebService extends IntentService{
                 response.getEntity().writeTo(out);
                 out.close();
                 responseMessage = out.toString();
-            }
-
-            else{
-                Log.d(Config.LOGTAG, "AppUpdater: HTTP1:" + statusLine.getReasonPhrase());
+            } else {
+                Log.e(Config.LOGTAG, "AppUpdater: HTTP1:" + statusLine.getReasonPhrase());
                 response.getEntity().getContent().close();
                 throw new IOException(statusLine.getReasonPhrase());
             }
 
         } catch (ClientProtocolException e) {
-            Log.d(Config.LOGTAG, "AppUpdater: HTTP2:" + e);
-            responseMessage = e.getMessage();
+            Log.e(Config.LOGTAG, "AppUpdater: HTTP2:" + e);
+            responseMessage = "";
         } catch (IOException e) {
-            Log.d(Config.LOGTAG, "AppUpdater: HTTP3:" + e);
-            responseMessage = e.getMessage();
+            Log.e(Config.LOGTAG, "AppUpdater: HTTP3:" + e);
+            responseMessage = "";
         }catch (Exception e) {
-            Log.d(Config.LOGTAG, "AppUpdater: HTTP4:" + e);
-            responseMessage = e.getMessage();
+            Log.e(Config.LOGTAG, "AppUpdater: HTTP4:" + e);
+            responseMessage = "";
         }
 
 
