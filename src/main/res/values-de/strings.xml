@@ -336,8 +336,8 @@
   <string name="pref_keep_foreground_service">Den Dienst im Vordergrund ausführen.</string>
   <string name="pref_keep_foreground_service_summary">Verhindert, dass Android Conversations beendet und die Verbindung unterbricht</string>
   <string name="choose_file">Datei auswählen</string>
-  <string name="receiving_x_file">Empfange  %1$s (%2$d%% abgeschlossen)</string>
-  <string name="download_x_file">%s wird heruntergeladen</string>
+  <string name="receiving_x_file">Empfange %1$s (%2$d%% abgeschlossen)</string>
+  <string name="download_x_file">%s herunterladen</string>
   <string name="file">Datei</string>
   <string name="open_x_file">%s öffnen</string>
   <string name="sending_file">Senden (%1$d%% abgeschlossen)</string>
