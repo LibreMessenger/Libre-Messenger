@@ -164,7 +164,8 @@
         </activity>
         <activity
             android:name=".ui.UpdaterActivity"
-            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTask"
             android:theme="@style/ConversationsTheme"
             android:label="@string/title_activity_updater" >
         </activity>
