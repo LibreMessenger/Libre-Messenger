@@ -323,7 +323,6 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
 		setTrustOnSessions(jid, newDevices, XmppAxolotlSession.Trust.INACTIVE_UNTRUSTED,
 				XmppAxolotlSession.Trust.UNTRUSTED);
 		this.deviceIds.put(jid, deviceIds);
-		findDevicesWithoutSession(jid);
 		mXmppConnectionService.keyStatusUpdated(null);
 	}
 
@@ -515,6 +514,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
 
 					if (changed) {
 						if (account.getPrivateKeyAlias() != null && Config.X509_VERIFICATION) {
+							mXmppConnectionService.publishDisplayName(account);
 							publishDeviceVerificationAndBundle(signedPreKeyRecord, preKeyRecords, announce, wipe);
 						} else {
 							publishDeviceBundle(signedPreKeyRecord, preKeyRecords, announce, wipe);

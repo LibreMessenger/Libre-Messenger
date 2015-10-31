@@ -63,7 +63,7 @@ import eu.siacs.conversations.xmpp.jid.InvalidJidException;
 import eu.siacs.conversations.xmpp.jid.Jid;
 
 public class ConversationActivity extends XmppActivity
-        implements OnAccountUpdate, OnConversationUpdate, OnRosterUpdate, OnUpdateBlocklist, XmppConnectionService.OnShowErrorToast {
+implements OnAccountUpdate, OnConversationUpdate, OnRosterUpdate, OnUpdateBlocklist, XmppConnectionService.OnShowErrorToast {
 
     public static final String ACTION_DOWNLOAD = "eu.siacs.conversations.action.DOWNLOAD";
 
@@ -1249,8 +1249,7 @@ public class ConversationActivity extends XmppActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_DECRYPT_PGP) {
-                mConversationFragment.hideSnackbar();
-                mConversationFragment.updateMessages();
+                mConversationFragment.onActivityResult(requestCode, resultCode, data);
             } else if (requestCode == ATTACHMENT_CHOICE_CHOOSE_IMAGE) {
                 mPendingImageUris.clear();
                 mPendingImageUris.addAll(extractUriFromIntent(data));
@@ -1295,6 +1294,9 @@ public class ConversationActivity extends XmppActivity
         } else {
             mPendingImageUris.clear();
             mPendingFileUris.clear();
+            if (requestCode == ConversationActivity.REQUEST_DECRYPT_PGP) {
+               mConversationFragment.onActivityResult(requestCode, resultCode, data);
+			      }
         }
     }
 

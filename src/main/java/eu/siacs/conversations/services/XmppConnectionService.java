@@ -37,6 +37,7 @@ import net.java.otr4j.session.SessionID;
 import net.java.otr4j.session.SessionImpl;
 import net.java.otr4j.session.SessionStatus;
 
+import org.openintents.openpgp.IOpenPgpService;
 import org.openintents.openpgp.util.OpenPgpApi;
 import org.openintents.openpgp.util.OpenPgpServiceConnection;
 
@@ -659,7 +660,19 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, contactObserver);
 		this.fileObserver.startWatching();
 
-		this.pgpServiceConnection = new OpenPgpServiceConnection(getApplicationContext(), "org.sufficientlysecure.keychain");
+		this.pgpServiceConnection = new OpenPgpServiceConnection(getApplicationContext(), "org.sufficientlysecure.keychain", new OpenPgpServiceConnection.OnBound() {
+			@Override
+			public void onBound(IOpenPgpService service) {
+				for (Account account : accounts) {
+					if (account.getPgpDecryptionService() != null) {
+						account.getPgpDecryptionService().onOpenPgpServiceBound();
+					}
+				}
+			}
+
+			@Override
+			public void onError(Exception e) { }
+		});
 		this.pgpServiceConnection.bindToService();
 
 		this.pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -1075,8 +1088,8 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 				public void run() {
 					Log.d(Config.LOGTAG, "restoring roster");
 					for (Account account : accounts) {
-						account.initAccountServices(XmppConnectionService.this);
 						databaseBackend.readRoster(account.getRoster());
+						account.initAccountServices(XmppConnectionService.this); //roster needs to be loaded at this stage
 					}
 					getBitmapCache().evictAll();
 					Looper.prepare();
@@ -1331,6 +1344,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 						Account account = new Account(info.first, "");
 						account.setPrivateKeyAlias(alias);
 						account.setOption(Account.OPTION_DISABLED, true);
+						account.setDisplayName(info.second);
 						createAccount(account);
 						callback.onAccountCreated(account);
 						if (Config.X509_VERIFICATION) {
@@ -1359,6 +1373,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 			Pair<Jid, String> info = CryptoHelper.extractJidAndName(chain[0]);
 			if (account.getJid().toBareJid().equals(info.first)) {
 				account.setPrivateKeyAlias(alias);
+				account.setDisplayName(info.second);
 				databaseBackend.updateAccount(account);
 				if (Config.X509_VERIFICATION) {
 					try {
@@ -1415,7 +1430,13 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 			if (account.getXmppConnection() != null) {
 				this.disconnect(account, true);
 			}
-			databaseBackend.deleteAccount(account);
+			Runnable runnable = new Runnable() {
+				@Override
+				public void run() {
+					databaseBackend.deleteAccount(account);
+				}
+			};
+			mDatabaseExecutor.execute(runnable);
 			this.accounts.remove(account);
 			updateAccountUi();
 			getNotificationService().updateErrorNotification();
@@ -2615,8 +2636,17 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 
 	public void markRead(final Conversation conversation) {
 		mNotificationService.clear(conversation);
-		for (Message message : conversation.markRead()) {
-			databaseBackend.updateMessage(message);
+		final List<Message> readMessages = conversation.markRead();
+		if (readMessages.size() > 0) {
+			Runnable runnable = new Runnable() {
+				@Override
+				public void run() {
+					for (Message message : readMessages) {
+						databaseBackend.updateMessage(message);
+					}
+				}
+			};
+			mDatabaseExecutor.execute(runnable);
 		}
 		updateUnreadCountBadge();
 	}
@@ -2832,12 +2862,13 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		conversation.clearMessages();
 		conversation.setHasMessagesLeftOnServer(false); //avoid messages getting loaded through mam
 		conversation.resetLastMessageTransmitted();
-		new Thread(new Runnable() {
+		Runnable runnable = new Runnable() {
 			@Override
 			public void run() {
 				databaseBackend.deleteMessagesInConversation(conversation);
 			}
-		}).start();
+		};
+		mDatabaseExecutor.execute(runnable);
 	}
 
 	public void sendBlockRequest(final Blockable blockable) {
@@ -2865,6 +2896,21 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 					if (packet.getType() == IqPacket.TYPE.RESULT) {
 						account.getBlocklist().remove(jid);
 						updateBlocklistUi(OnUpdateBlocklist.Status.UNBLOCKED);
+					}
+				}
+			});
+		}
+	}
+
+	public void publishDisplayName(Account account) {
+		String displayName = account.getDisplayName();
+		if (displayName != null && !displayName.isEmpty()) {
+			IqPacket publish = mIqGenerator.publishNick(displayName);
+			sendIqPacket(account, publish, new OnIqPacketReceived() {
+				@Override
+				public void onIqPacketReceived(Account account, IqPacket packet) {
+					if (packet.getType() == IqPacket.TYPE.ERROR) {
+						Log.d(Config.LOGTAG,account.getJid().toBareJid()+": could not publish nick");
 					}
 				}
 			});

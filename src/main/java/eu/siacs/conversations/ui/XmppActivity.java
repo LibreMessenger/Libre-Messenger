@@ -444,7 +444,7 @@ public abstract class XmppActivity extends Activity {
 	}
 
 	public void switchToAccount(Account account) {
-		switchToAccount(account,false);
+		switchToAccount(account, false);
 	}
 
 	public void switchToAccount(Account account, boolean init) {
