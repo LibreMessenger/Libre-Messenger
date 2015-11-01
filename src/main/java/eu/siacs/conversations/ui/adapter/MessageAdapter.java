@@ -187,7 +187,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 						.getAccount().getAxolotlService().getFingerprintTrust(
 								message.getAxolotlFingerprint());
 
-				if(trust == null || trust != XmppAxolotlSession.Trust.TRUSTED) {
+				if(trust == null || (!trust.trusted() && !trust.trustedInactive())) {
 					viewHolder.indicator.setColorFilter(activity.getWarningTextColor());
 					viewHolder.indicator.setAlpha(1.0f);
 				} else {
