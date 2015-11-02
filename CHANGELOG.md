@@ -2,6 +2,7 @@
 
 ####Versrion 1.7.1
 * performance improvements when opening a conversation
+* bug fixes
 
 ####Version 1.7.0
 * redownload deleted files from HTTP hosts
