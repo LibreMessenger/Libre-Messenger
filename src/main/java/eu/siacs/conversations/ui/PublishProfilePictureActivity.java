@@ -152,7 +152,7 @@ public class PublishProfilePictureActivity extends XmppActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK && requestCode == Crop.REQUEST_PICK) {
 			Uri destination = Uri.fromFile(new File(getCacheDir(), "croppedAvatar"));
-			Crop.of(data.getData(), destination).withMaxSize(384,384).asSquare().start(PublishProfilePictureActivity.this);
+			Crop.of(data.getData(), destination).withMaxSize(Config.AVATAR_SIZE, Config.AVATAR_SIZE).asSquare().start(PublishProfilePictureActivity.this);
 		}
 		if (requestCode == Crop.REQUEST_CROP) {
 			this.avatarUri = Uri.fromFile(new File(getCacheDir(), "croppedAvatar"));
