@@ -26,6 +26,7 @@ import java.io.IOException;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.entities.Account;
+import eu.siacs.conversations.persistance.FileBackend;
 import eu.siacs.conversations.utils.PhoneHelper;
 import eu.siacs.conversations.xmpp.jid.InvalidJidException;
 import eu.siacs.conversations.xmpp.jid.Jid;
@@ -231,41 +232,18 @@ public class PublishProfilePictureActivity extends XmppActivity {
 		}
 	}
 
-	private int calculateInSampleSize(
-			BitmapFactory.Options options, int reqWidth, int reqHeight) {
-		// Raw height and width of image
-		final int height = options.outHeight;
-		final int width = options.outWidth;
-		int inSampleSize = 1;
-
-		if (height > reqHeight || width > reqWidth) {
-
-			final int halfHeight = height / 2;
-			final int halfWidth = width / 2;
-
-			// Calculate the largest inSampleSize value that is a power of 2 and keeps both
-			// height and width larger than the requested height and width.
-			while ((halfHeight / inSampleSize) > reqHeight
-					&& (halfWidth / inSampleSize) > reqWidth) {
-				inSampleSize *= 2;
-			}
-		}
-
-		return inSampleSize;
-	}
-
-	private Bitmap loadScaledBitmap(String filePath, int reqWidth, int reqHeight) {
+	private Bitmap loadScaledBitmap(String filePath, int reqSize) {
 		final BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(filePath,options);
-		options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+		options.inSampleSize = FileBackend.calcSampleSize(new File(filePath), reqSize);
 		options.inJustDecodeBounds = false;
 		return BitmapFactory.decodeFile(filePath,options);
 	}
 	protected void loadImageIntoPreview(Uri uri) {
 		Bitmap bm = null;
 		try{
-			bm = loadScaledBitmap(uri.getPath(), Config.AVATAR_SIZE, Config.AVATAR_SIZE);
+			bm = loadScaledBitmap(uri.getPath(), Config.AVATAR_SIZE);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
