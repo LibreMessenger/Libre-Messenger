@@ -140,7 +140,12 @@ public class PublishProfilePictureActivity extends XmppActivity {
 
 			@Override
 			public void onClick(View v) {
-				Crop.pickImage(PublishProfilePictureActivity.this);
+				Intent attachFileIntent = new Intent();
+				attachFileIntent.setType("image/*");
+				attachFileIntent.setAction(Intent.ACTION_GET_CONTENT);
+				Intent chooser = Intent.createChooser(attachFileIntent,
+						getString(R.string.attach_file));
+				startActivityForResult(chooser, REQUEST_CHOOSE_FILE);
 			}
 		});
 		this.defaultUri = PhoneHelper.getSefliUri(getApplicationContext());
@@ -150,9 +155,12 @@ public class PublishProfilePictureActivity extends XmppActivity {
 	protected void onActivityResult(int requestCode, int resultCode,
 			final Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_OK && requestCode == Crop.REQUEST_PICK) {
-			Uri destination = Uri.fromFile(new File(getCacheDir(), "croppedAvatar"));
-			Crop.of(data.getData(), destination).withMaxSize(Config.AVATAR_SIZE, Config.AVATAR_SIZE).asSquare().start(PublishProfilePictureActivity.this);
+		if (resultCode == RESULT_OK) {
+			if (requestCode == REQUEST_CHOOSE_FILE) {
+				this.avatarUri = data.getData();
+				Uri destination = Uri.fromFile(new File(getCacheDir(), "croppedAvatar"));
+				Crop.of(this.avatarUri, destination).withMaxSize(Config.AVATAR_SIZE, Config.AVATAR_SIZE).asSquare().start(PublishProfilePictureActivity.this);
+			}
 		}
 		if (requestCode == Crop.REQUEST_CROP) {
 			this.avatarUri = Uri.fromFile(new File(getCacheDir(), "croppedAvatar"));
