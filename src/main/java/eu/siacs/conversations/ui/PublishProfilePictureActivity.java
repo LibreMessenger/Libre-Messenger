@@ -1,10 +1,14 @@
 package eu.siacs.conversations.ui;
 
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -12,6 +16,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.soundcloud.android.crop.Crop;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
@@ -32,6 +42,7 @@ public class PublishProfilePictureActivity extends XmppActivity {
 	private Button cancelButton;
 	private Button publishButton;
 
+	final static int REQUEST_CROP_PICTURE = 92374;
 	private Uri avatarUri;
 	private Uri defaultUri;
 	private OnLongClickListener backToDefaultListener = new OnLongClickListener() {
@@ -129,12 +140,7 @@ public class PublishProfilePictureActivity extends XmppActivity {
 
 			@Override
 			public void onClick(View v) {
-				Intent attachFileIntent = new Intent();
-				attachFileIntent.setType("image/*");
-				attachFileIntent.setAction(Intent.ACTION_GET_CONTENT);
-				Intent chooser = Intent.createChooser(attachFileIntent,
-						getString(R.string.attach_file));
-				startActivityForResult(chooser, REQUEST_CHOOSE_FILE);
+				Crop.pickImage(PublishProfilePictureActivity.this);
 			}
 		});
 		this.defaultUri = PhoneHelper.getSefliUri(getApplicationContext());
@@ -144,13 +150,13 @@ public class PublishProfilePictureActivity extends XmppActivity {
 	protected void onActivityResult(int requestCode, int resultCode,
 			final Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_OK) {
-			if (requestCode == REQUEST_CHOOSE_FILE) {
-				this.avatarUri = data.getData();
-				if (xmppConnectionServiceBound) {
-					loadImageIntoPreview(this.avatarUri);
-				}
-			}
+		if (resultCode == RESULT_OK && requestCode == Crop.REQUEST_PICK) {
+			Uri destination = Uri.fromFile(new File(getCacheDir(), "croppedAvatar"));
+			Crop.of(data.getData(), destination).withMaxSize(Config.AVATAR_SIZE, Config.AVATAR_SIZE).asSquare().start(PublishProfilePictureActivity.this);
+		}
+		if (requestCode == Crop.REQUEST_CROP) {
+			this.avatarUri = Uri.fromFile(new File(getCacheDir(), "croppedAvatar"));
+			loadImageIntoPreview(this.avatarUri);
 		}
 	}
 
@@ -218,8 +224,13 @@ public class PublishProfilePictureActivity extends XmppActivity {
 	}
 
 	protected void loadImageIntoPreview(Uri uri) {
-		Bitmap bm = xmppConnectionService.getFileBackend().cropCenterSquare(
-				uri, Config.AVATAR_SIZE);
+		Bitmap bm = null;
+		try{
+			bm = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		if (bm == null) {
 			disablePublishButton();
 			this.hintOrWarning.setTextColor(getWarningTextColor());
@@ -261,5 +272,4 @@ public class PublishProfilePictureActivity extends XmppActivity {
 	public void refreshUiReal() {
 		//nothing to do. This Activity doesn't implement any listeners
 	}
-
 }
