@@ -169,6 +169,7 @@
             android:theme="@style/ConversationsTheme"
             android:label="@string/title_activity_updater" >
         </activity>
+        <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
         <service android:name=".services.UpdaterWebService" />
         <service android:name=".services.CheckAppVersionService" />
         <service android:name=".services.ExportLogsService" />
