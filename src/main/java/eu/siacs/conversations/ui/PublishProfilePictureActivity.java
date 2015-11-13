@@ -159,7 +159,7 @@ public class PublishProfilePictureActivity extends XmppActivity {
 			if (requestCode == REQUEST_CHOOSE_FILE) {
 				this.avatarUri = data.getData();
 				Uri destination = Uri.fromFile(new File(getCacheDir(), "croppedAvatar"));
-				Crop.of(this.avatarUri, destination).withMaxSize(Config.AVATAR_SIZE, Config.AVATAR_SIZE).asSquare().start(PublishProfilePictureActivity.this);
+				Crop.of(this.avatarUri, destination).asSquare().start(PublishProfilePictureActivity.this);
 			}
 		}
 		if (requestCode == Crop.REQUEST_CROP) {
@@ -231,11 +231,42 @@ public class PublishProfilePictureActivity extends XmppActivity {
 		}
 	}
 
+	private int calculateInSampleSize(
+			BitmapFactory.Options options, int reqWidth, int reqHeight) {
+		// Raw height and width of image
+		final int height = options.outHeight;
+		final int width = options.outWidth;
+		int inSampleSize = 1;
+
+		if (height > reqHeight || width > reqWidth) {
+
+			final int halfHeight = height / 2;
+			final int halfWidth = width / 2;
+
+			// Calculate the largest inSampleSize value that is a power of 2 and keeps both
+			// height and width larger than the requested height and width.
+			while ((halfHeight / inSampleSize) > reqHeight
+					&& (halfWidth / inSampleSize) > reqWidth) {
+				inSampleSize *= 2;
+			}
+		}
+
+		return inSampleSize;
+	}
+
+	private Bitmap loadScaledBitmap(String filePath, int reqWidth, int reqHeight) {
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(filePath,options);
+		options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+		options.inJustDecodeBounds = false;
+		return BitmapFactory.decodeFile(filePath,options);
+	}
 	protected void loadImageIntoPreview(Uri uri) {
 		Bitmap bm = null;
 		try{
-			bm = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-		} catch (IOException e) {
+			bm = loadScaledBitmap(uri.getPath(), Config.AVATAR_SIZE, Config.AVATAR_SIZE);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
