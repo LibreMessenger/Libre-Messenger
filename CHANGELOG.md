@@ -1,5 +1,9 @@
 ###Changelog
 
+####Versrion 1.7.2
+* let users crop their avatars
+* bug fixes
+
 ####Versrion 1.7.1
 * performance improvements when opening a conversation
 * bug fixes
