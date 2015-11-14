@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey200" >
+    android:background="@color/lightyellow"
+    android:clickable="false">
 
     <ListView
         android:id="@+id/messages_view"
@@ -12,7 +13,7 @@
         android:layout_above="@+id/snackbar"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@color/grey200"
+        android:background="@color/lightyellow"
         android:divider="@null"
         android:dividerHeight="0dp"
         android:listSelector="@android:color/transparent"
@@ -27,7 +28,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:background="@color/grey50" >
+        android:background="@color/grey50"
+        android:clickable="true">
 
         <eu.siacs.conversations.ui.EditMessage
             android:id="@+id/textinput"
