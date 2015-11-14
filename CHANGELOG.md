@@ -1,5 +1,10 @@
 ###Changelog
 
+####Versrion 1.7.3
+* changed app name from Conversations to Pix-Art Messenger
+* changed chat background to light yellow
+* added own name for sent locations
+
 ####Versrion 1.7.2
 * let users crop their avatars
 * bug fixes
