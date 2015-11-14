@@ -62,6 +62,7 @@ public class GeoHelper {
 				locationPluginIntent.putExtra("jid",message.getCounterpart().toString());
 			}
 			else {
+				locationPluginIntent.putExtra("name", conversation.getAccount().getUsername());
 				locationPluginIntent.putExtra("jid",conversation.getAccount().getJid().toString());
 			}
 		} else {
@@ -72,6 +73,7 @@ public class GeoHelper {
 				locationPluginIntent.putExtra("jid",message.getCounterpart().toString());
 			}
 			else {
+				locationPluginIntent.putExtra("name", conversation.getAccount().getUsername());
 				locationPluginIntent.putExtra("jid",conversation.getAccount().getJid().toString());
 			}
 		}
