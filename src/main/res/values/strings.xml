@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<string name="app_name" translatable="false">Conversations</string>
+	<string name="app_name" translatable="false">Pix-Art Messenger</string>
 	<string name="action_settings">Settings</string>
 	<string name="action_add">New conversation</string>
 	<string name="action_accounts">Manage accounts</string>
@@ -60,8 +60,8 @@
 	<string name="unblock">Unblock</string>
 	<string name="save">Save</string>
 	<string name="ok">OK</string>
-	<string name="crash_report_title">Conversations has crashed</string>
-	<string name="crash_report_message">By sending in stack traces you are helping the ongoing development of Conversations\n<b>Warning:</b> This will use your XMPP account to send the stack trace to the developer.</string>
+	<string name="crash_report_title">Pix-Art Messenger has crashed</string>
+	<string name="crash_report_message">By sending in stack traces you are helping the ongoing development of Pix-Art Messenger\n<b>Warning:</b> This will use your XMPP account to send the stack trace to the developer.</string>
 	<string name="send_now">Send now</string>
 	<string name="send_never">Never ask again</string>
 	<string name="problem_connecting_to_account">Unable to connect to account</string>
@@ -88,15 +88,15 @@
 	<string name="send_unencrypted">Send unencrypted</string>
 	<string name="decryption_failed">Decryption failed. Maybe you don’t have the proper private key.</string>
 	<string name="openkeychain_required">OpenKeychain</string>
-	<string name="openkeychain_required_long">Conversations utilizes a third party app called <b>OpenKeychain</b> to encrypt and decrypt messages and to manage your public keys.\n\nOpenKeychain is licensed under GPLv3 and available on F-Droid and Google Play.\n\n<small>(Please restart Conversations afterwards.)</small></string>
+	<string name="openkeychain_required_long">Pix-Art Messenger utilizes a third party app called <b>OpenKeychain</b> to encrypt and decrypt messages and to manage your public keys.\n\nOpenKeychain is licensed under GPLv3 and available on F-Droid and Google Play.\n\n<small>(Please restart Pix-Art Messenger afterwards.)</small></string>
 	<string name="restart">Restart</string>
 	<string name="install">Install</string>
 	<string name="offering">offering…</string>
 	<string name="waiting">waiting…</string>
 	<string name="no_pgp_key">No OpenPGP Key found</string>
-	<string name="contact_has_no_pgp_key">Conversations is unable to encrypt your messages because your contact is not announcing his or hers public key.\n\n<small>Please ask your contact to setup OpenPGP.</small></string>
+	<string name="contact_has_no_pgp_key">Pix-Art Messenger is unable to encrypt your messages because your contact is not announcing his or hers public key.\n\n<small>Please ask your contact to setup OpenPGP.</small></string>
 	<string name="no_pgp_keys">No OpenPGP Keys found</string>
-	<string name="contacts_have_no_pgp_keys">Conversations is unable to encrypt your messages because your contacts are not announcing their public key.\n\n<small>Please ask your contacts to setup OpenPGP.</small></string>
+	<string name="contacts_have_no_pgp_keys">Pix-Art Messenger is unable to encrypt your messages because your contacts are not announcing their public key.\n\n<small>Please ask your contacts to setup OpenPGP.</small></string>
 	<string name="encrypted_message_received"><i>Encrypted message received. Touch to decrypt.</i></string>
 	<string name="pref_general">General</string>
 	<string name="pref_xmpp_resource">XMPP resource</string>
@@ -116,7 +116,7 @@
 	<string name="pref_notification_grace_period_summary">Disable notifications for a short time after a carbon copy was received</string>
 	<string name="pref_advanced_options">Advanced Options</string>
 	<string name="pref_never_send_crash">Never send crash reports</string>
-	<string name="pref_never_send_crash_summary">By sending in stack traces you are helping the ongoing development of Conversations</string>
+	<string name="pref_never_send_crash_summary">By sending in stack traces you are helping the ongoing development of Pix-Art Messenger</string>
 	<string name="pref_confirm_messages">Confirm Messages</string>
 	<string name="pref_confirm_messages_summary">Let your contact know when you have received and read a message</string>
 	<string name="pref_ui_options">UI Options</string>
@@ -283,9 +283,10 @@
 	<string name="pref_dont_save_encrypted_summary">Warning: This could lead to message loss</string>
 	<string name="pref_expert_options">Expert options</string>
 	<string name="pref_expert_options_summary">Please be careful with these</string>
-	<string name="title_activity_about">About Conversations</string>
+	<string name="title_activity_about">About Pix-Art Messenger</string>
 	<string name="pref_about_conversations_summary">Build and licensing information</string>
 	<string name="pref_about_message" translatable="false">
+			Pix-Art Messenger is a fork of Conversations.
 			Conversations • the very last word in instant messaging.
 			\n\nCopyright © 2014 Daniel Gultsch
 			\n\nThis program is free software: you can redistribute it and/or modify
@@ -369,7 +370,7 @@
 	<string name="verified">Verified!</string>
 	<string name="smp_requested">Contact requested SMP verification</string>
 	<string name="no_otr_session_found">No valid OTR session has been found!</string>
-	<string name="conversations_foreground_service">Conversations</string>
+	<string name="conversations_foreground_service">Pix-Art Messenger</string>
 	<string name="pref_keep_foreground_service">Keep service in foreground</string>
 	<string name="pref_keep_foreground_service_summary">Prevents the operating system from killing your connection</string>
 	<string name="pref_export_logs">Export Logs</string>
@@ -473,7 +474,7 @@
 	<string name="vcard">Contact</string>
 	<string name="received_x_file">Received %s</string>
 	<string name="disable_foreground_service">Disable foreground service</string>
-	<string name="touch_to_open_conversations">Touch to open Conversations</string>
+	<string name="touch_to_open_conversations">Touch to open Pix-Art Messenger</string>
 	<string name="avatar_has_been_published">Avatar has been published!</string>
 	<string name="sending_x_file">Sending %s</string>
 	<string name="offering_x_file">Offering %s</string>
@@ -527,8 +528,8 @@
 	<string name="account_status_dns_timeout">Timeout in DNS</string>
 	<string name="action_check_update">Check for Updates</string>
 	<string name="title_activity_updater">Update Service</string>
-	<string name="update_available">Conversations %1$s with the following changes is available:\n\n%2$s\n\nUpdate Conversations %3$s to Conversations %1$s now?</string>
-	<string name="checking_for_updates">Checking for Conversations updates</string>
+	<string name="update_available">Pix-Art Messenger %1$s with the following changes is available:\n\n%2$s\n\nUpdate Pix-Art Messenger %3$s to Pix-Art Messenger %1$s now?</string>
+	<string name="checking_for_updates">Checking for Pix-Art Messenger updates</string>
 	<string name="remind_later">later</string>
 	<string name="update">Update</string>
 	<string name="new_version">New version:</string>

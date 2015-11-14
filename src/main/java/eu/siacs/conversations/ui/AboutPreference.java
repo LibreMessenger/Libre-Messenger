@@ -26,7 +26,7 @@ public class AboutPreference extends Preference {
     }
 
     private void setSummary() {
-		setSummary("Conversations " + PhoneHelper.getVersionName(getContext()));
+		setSummary("Pix-Art Messenger " + PhoneHelper.getVersionName(getContext()));
 	}
 }
 
