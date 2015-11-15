@@ -490,7 +490,7 @@
   <string name="remind_later">später</string>
   <string name="checking_for_updates">Auf Pix-Art Messenger Updates prüfen</string>
   <string name="title_activity_updater">Update Dienst</string>
-  <string name="update">Aktualisieren</string>
+  <string name="update">aktualisieren</string>
   <string name="update_available">Pix-Art Messenger %1$s mit folgenden Änderungen ist verfügbar:\n\n%2$s\n\nMöchtest Du von Pix-Art Messenger %3$s auf Pix-Art Messenger %1$s aktualisieren?</string>
   <string name="download_started">Download gestartet</string>
   <string name="no_update_available">Kein Update verfügbar</string>
@@ -519,5 +519,6 @@
   <string name="crop__pick_error">Keine Bildquellen verfügbar</string>
   <string name="crop__done">übernehmen</string>
   <string name="crop__cancel">abbrechen</string>
+  <string name="changelog">Änderungen</string>
 
 </resources>

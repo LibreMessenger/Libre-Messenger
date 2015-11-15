@@ -285,9 +285,8 @@
 	<string name="pref_expert_options_summary">Please be careful with these</string>
 	<string name="title_activity_about">About Pix-Art Messenger</string>
 	<string name="pref_about_conversations_summary">Build and licensing information</string>
-	<string name="pref_about_message" translatable="false">
-			Pix-Art Messenger is a fork of Conversations.
-			Conversations • the very last word in instant messaging.
+	<string name="pref_about_message" translatable="false">Pix-Art Messenger is a fork of Conversations.
+			\n\nConversations • the very last word in instant messaging.
 			\n\nCopyright © 2014 Daniel Gultsch
 			\n\nThis program is free software: you can redistribute it and/or modify
 			it under the terms of the GNU General Public License as published by
@@ -299,7 +298,8 @@
 			GNU General Public License for more details.
 			\n\nYou should have received a copy of the GNU General Public License
 			along with this program. If not, see https://www.gnu.org/licenses
-			\n\nDownload the full source code at https://github.com/siacs/Conversations
+			\n\nDownload the full original source code at https://github.com/siacs/Conversations
+            \n\nDownload the forked and modified source code at https://github.com/kriztan/Conversations
 			\n\n\nLibraries
 			\n\nhttps://www.bouncycastle.org\n(The MIT License (MIT))
 			\n\nhttps://www.gnu.org/software/libidn\n(Apache License, Version 2.0)
@@ -315,8 +315,7 @@
 			\n\nhttps://github.com/kyleduo/SwitchButton\n(Apache License, Version 2.0)
 			\n\nhttps://github.com/WhisperSystems/libaxolotl-java\n(GPLv3)
 			\n\nhttps://github.com/vinc3m1/RoundedImageView\n(Apache License, Version 2.0)
-			\n\nhttps://github.com/jdamcd/android-crop\n(Apache License, Version 2.0)
-	</string>
+			\n\nhttps://github.com/jdamcd/android-crop\n(Apache License, Version 2.0)</string>
 	<string name="title_pref_quiet_hours">Quiet Hours</string>
 	<string name="title_pref_quiet_hours_start_time">Start time</string>
 	<string name="title_pref_quiet_hours_end_time">End time</string>
@@ -531,7 +530,7 @@
 	<string name="update_available">Pix-Art Messenger %1$s with the following changes is available:\n\n%2$s\n\nUpdate Pix-Art Messenger %3$s to Pix-Art Messenger %1$s now?</string>
 	<string name="checking_for_updates">Checking for Pix-Art Messenger updates</string>
 	<string name="remind_later">later</string>
-	<string name="update">Update</string>
+	<string name="update">update</string>
 	<string name="new_version">New version:</string>
 	<string name="current_version">installed version:</string>
 	<string name="no_update_available">No update available</string>
@@ -542,7 +541,7 @@
 	<string name="pref_away_when_screen_off_summary">Marks your resource as away when the screen is turned off</string>
 	<string name="pref_xa_on_silent_mode">Not available in silent mode</string>
 	<string name="pref_xa_on_silent_mode_summary">Marks your resource as not available when phone is in silent mode</string>
-	<string name="update_info">Conversation is checking for an update. If an update is available you will be asked, if you want to update your version. The update process is downloading and installing the new version automatically.</string>
+	<string name="update_info">Pix-Art Messenger is checking for an update. If an update is available you will be asked, if you want to update your version. The update process is downloading and installing the new version automatically.</string>
 	<string name="action_add_account_with_certificate">Add account with certificate</string>
 	<string name="unable_to_parse_certificate">Unable to parse certificate</string>
 	<string name="authenticate_with_certificate">Leave empty to authenticate w/ certificate</string>
@@ -555,4 +554,5 @@
 	<string name="error_fetching_omemo_key">Error fetching OMEMO key!</string>
 	<string name="verified_omemo_key_with_certificate">Verified OMEMO key with certificate!</string>
 	<string name="device_does_not_support_certificates">Your device does not support the selection of client certificates!</string>
+	<string name="changelog">Changes</string>
 </resources>
