@@ -5,7 +5,7 @@
 		<item>Mobile</item>
 		<item>Phone</item>
 		<item>Tablet</item>
-		<item>Conversations</item>
+		<item>Pix-Art Messenger</item>
 		<item>Android</item>
 	</string-array>
 	<string-array name="filesizes">
@@ -17,7 +17,7 @@
 		<item>10 MiB</item>
 	</string-array>
 	<string-array name="filesizes_values">
-		<item>0</item>
+		<item>1</item>
 		<item>262144</item>
 		<item>524288</item>
 		<item>1048576</item>
