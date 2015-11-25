@@ -133,6 +133,17 @@
         android:key="advanced"
         android:title="@string/pref_advanced_options">
         <PreferenceScreen
+            android:key="plugins"
+            android:summary="@string/pref_plugins_summary"
+            android:title="@string/pref_plugins">
+            <Preference
+                android:title="@string/pref_plugin_location"
+                android:summary="@string/pref_plugin_location_summary">
+                <intent android:action="android.intent.action.VIEW"
+                android:data="https://github.com/kriztan/ShareLocationPlugin/releases/download/0.2/ShareLocationPlugin-0.2.apk" />
+            </Preference>
+        </PreferenceScreen>
+        <PreferenceScreen
             android:key="expert"
             android:summary="@string/pref_expert_options_summary"
             android:title="@string/pref_expert_options">
