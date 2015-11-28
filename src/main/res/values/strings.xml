@@ -559,4 +559,12 @@
 	<string name="pref_plugins_summary">Download plugins for Pix-Art Messenger</string>
 	<string name="pref_plugin_location">Share-Location</string>
 	<string name="pref_plugin_location_summary">Send and receive locations</string>
+	<string name="pref_connection_options">Connection options</string>
+	<string name="pref_use_tor">Connect via Tor</string>
+	<string name="pref_use_tor_summary">Tunnel all connections through the TOR network. Requires Orbot</string>
+	<string name="account_settings_hostname">Hostname</string>
+	<string name="account_settings_port">Port</string>
+	<string name="hostname_or_onion">Server- or .onion-Address</string>
+	<string name="not_a_valid_port">This is not a valid port number</string>
+	<string name="not_valid_hostname">This is not a valid hostname</string>
 </resources>

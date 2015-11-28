@@ -2113,8 +2113,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 	}
 
 	public void createContact(Contact contact) {
-		SharedPreferences sharedPref = getPreferences();
-		boolean autoGrant = sharedPref.getBoolean("grant_new_contacts", true);
+		boolean autoGrant = getPreferences().getBoolean("grant_new_contacts", true);
 		if (autoGrant) {
 			contact.setOption(Contact.Options.PREEMPTIVE_GRANT);
 			contact.setOption(Contact.Options.ASKING);
@@ -2551,10 +2550,6 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 				.getDefaultSharedPreferences(getApplicationContext());
 	}
 
-	public boolean forceEncryption() {
-		return getPreferences().getBoolean("force_encryption", false);
-	}
-
 	public boolean confirmMessages() {
 		return getPreferences().getBoolean("confirm_messages", true);
 	}
@@ -2569,6 +2564,10 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 
 	public boolean indicateReceived() {
 		return getPreferences().getBoolean("indicate_received", false);
+	}
+
+	public boolean useTorToConnect() {
+		return getPreferences().getBoolean("use_tor", false);
 	}
 
 	public int unreadCount() {
