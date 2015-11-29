@@ -28,8 +28,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:background="@color/grey50"
-        android:clickable="true">
+        android:background="@color/grey200"
+        android:clickable="true"
+        android:paddingTop="4dp"
+        android:paddingLeft="2dp"
+        android:paddingBottom="2dp">
 
         <eu.siacs.conversations.ui.EditMessage
             android:id="@+id/textinput"
@@ -47,7 +50,7 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingTop="12dp"
-            android:textColor="@color/black87" >
+            android:textColor="@color/black87">
 
             <requestFocus />
         </eu.siacs.conversations.ui.EditMessage>

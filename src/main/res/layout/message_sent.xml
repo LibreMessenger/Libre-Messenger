@@ -31,7 +31,8 @@
         android:background="@drawable/message_bubble_sent"
         android:minHeight="53dp"
         android:layout_marginLeft="-4dp"
-        android:longClickable="true">
+        android:longClickable="true"
+        android:layout_marginBottom="-4dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
