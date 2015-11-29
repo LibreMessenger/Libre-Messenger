@@ -9,13 +9,6 @@
             android:title="@string/pref_grant_presence_updates"/>
 
         <ListPreference
-            android:defaultValue="Mobile"
-            android:entries="@array/resources"
-            android:entryValues="@array/resources"
-            android:key="resource"
-            android:summary="@string/pref_xmpp_resource_summary"
-            android:title="@string/pref_xmpp_resource"/>
-        <ListPreference
             android:defaultValue="1048576"
             android:entries="@array/filesizes"
             android:entryValues="@array/filesizes_values"
@@ -91,11 +84,6 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_ui_options">
         <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="use_subject"
-            android:summary="@string/pref_conference_name_summary"
-            android:title="@string/pref_conference_name"/>
-        <CheckBoxPreference
             android:defaultValue="false"
             android:key="use_white_background"
             android:title="@string/pref_use_white_background"
@@ -118,11 +106,6 @@
             android:key="quick_action"
             android:summary="@string/pref_quick_action_summary"
             android:title="@string/pref_quick_action"/>
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="show_dynamic_tags"
-            android:summary="@string/pref_show_dynamic_tags_summary"
-            android:title="@string/pref_show_dynamic_tags"/>
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="indicate_received"
@@ -147,6 +130,27 @@
             android:key="expert"
             android:summary="@string/pref_expert_options_summary"
             android:title="@string/pref_expert_options">
+            <PreferenceCategory android:title="@string/pref_general">
+            <ListPreference
+                android:defaultValue="Mobile"
+                android:entries="@array/resources"
+                android:entryValues="@array/resources"
+                android:key="resource"
+                android:summary="@string/pref_xmpp_resource_summary"
+                android:title="@string/pref_xmpp_resource"/>
+            </PreferenceCategory>
+            <PreferenceCategory android:title="@string/pref_ui_options">
+            <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="use_subject"
+                android:summary="@string/pref_conference_name_summary"
+                android:title="@string/pref_conference_name"/>
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="show_dynamic_tags"
+                android:summary="@string/pref_show_dynamic_tags_summary"
+                android:title="@string/pref_show_dynamic_tags"/>
+            </PreferenceCategory>
             <PreferenceCategory android:title="@string/pref_encryption_settings">
                 <CheckBoxPreference
                     android:defaultValue="false"
@@ -199,7 +203,6 @@
                         android:summary="@string/pref_export_logs_summary"/>
             </PreferenceCategory>
         </PreferenceScreen>
-
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="never_send"
