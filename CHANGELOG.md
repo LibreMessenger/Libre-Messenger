@@ -1,5 +1,10 @@
 ###Changelog
 
+####Versrion 1.7.4
+* Own contact picture in tile for conferences with only one other occupant
+* added button to updater dialog to show full changelog
+* added plugin loader to settings
+
 ####Versrion 1.7.3
 * changed app name from Conversations to Pix-Art Messenger
 * changed chat background to light yellow
