@@ -19,6 +19,7 @@ import android.provider.MediaStore;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v4.widget.SlidingPaneLayout.PanelSlideListener;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +34,8 @@ import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.Toast;
 
 import net.java.otr4j.session.SessionStatus;
+
+import org.openintents.openpgp.util.OpenPgpApi;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -63,7 +66,7 @@ import eu.siacs.conversations.xmpp.jid.InvalidJidException;
 import eu.siacs.conversations.xmpp.jid.Jid;
 
 public class ConversationActivity extends XmppActivity
-implements OnAccountUpdate, OnConversationUpdate, OnRosterUpdate, OnUpdateBlocklist, XmppConnectionService.OnShowErrorToast {
+        implements OnAccountUpdate, OnConversationUpdate, OnRosterUpdate, OnUpdateBlocklist, XmppConnectionService.OnShowErrorToast {
 
     public static final String ACTION_DOWNLOAD = "eu.siacs.conversations.action.DOWNLOAD";
 
@@ -562,16 +565,16 @@ implements OnAccountUpdate, OnConversationUpdate, OnRosterUpdate, OnUpdateBlockl
         }
         final Conversation conversation = getSelectedConversation();
         final int encryption = conversation.getNextEncryption();
+        final int mode = conversation.getMode();
         if (encryption == Message.ENCRYPTION_PGP) {
             if (hasPgp()) {
-                if (conversation.getContact().getPgpKeyId() != 0) {
+                if (mode == Conversation.MODE_SINGLE && conversation.getContact().getPgpKeyId() != 0) {
                     xmppConnectionService.getPgpEngine().hasKey(
                             conversation.getContact(),
                             new UiCallback<Contact>() {
 
                                 @Override
-                                public void userInputRequried(PendingIntent pi,
-                                                              Contact contact) {
+                                public void userInputRequried(PendingIntent pi, Contact contact) {
                                     ConversationActivity.this.runIntent(pi, attachmentChoice);
                                 }
 
@@ -585,6 +588,16 @@ implements OnAccountUpdate, OnConversationUpdate, OnRosterUpdate, OnUpdateBlockl
                                     displayErrorDialog(error);
                                 }
                             });
+                } else if (mode == Conversation.MODE_MULTI && conversation.getMucOptions().pgpKeysInUse()) {
+                    if (!conversation.getMucOptions().everybodyHasKeys()) {
+                        Toast warning = Toast
+                                .makeText(this,
+                                        R.string.missing_public_keys,
+                                        Toast.LENGTH_LONG);
+                        warning.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+                        warning.show();
+                    }
+                    selectPresenceToAttachFile(attachmentChoice, encryption);
                 } else {
                     final ConversationFragment fragment = (ConversationFragment) getFragmentManager()
                             .findFragmentByTag("conversation");
@@ -821,7 +834,7 @@ implements OnAccountUpdate, OnConversationUpdate, OnRosterUpdate, OnUpdateBlockl
                             break;
                         case R.id.encryption_choice_pgp:
                             if (hasPgp()) {
-                                if (conversation.getAccount().getKeys().has("pgp_signature")) {
+                                if (conversation.getAccount().getPgpSignature() != null) {
                                     conversation.setNextEncryption(Message.ENCRYPTION_PGP);
                                     item.setChecked(true);
                                 } else {
@@ -1250,6 +1263,15 @@ implements OnAccountUpdate, OnConversationUpdate, OnRosterUpdate, OnUpdateBlockl
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_DECRYPT_PGP) {
                 mConversationFragment.onActivityResult(requestCode, resultCode, data);
+            } else if (requestCode == REQUEST_CHOOSE_PGP_ID) {
+                if (data.getExtras().containsKey(OpenPgpApi.EXTRA_SIGN_KEY_ID)) {
+                    mSelectedConversation.getAccount().setPgpSignId(data.getExtras().getLong(OpenPgpApi.EXTRA_SIGN_KEY_ID));
+                    announcePgp(mSelectedConversation.getAccount(), null);
+                } else {
+                    choosePgpSignId(mSelectedConversation.getAccount());
+                }
+            } else if (requestCode == REQUEST_ANNOUNCE_PGP) {
+                announcePgp(mSelectedConversation.getAccount(), null);
             } else if (requestCode == ATTACHMENT_CHOICE_CHOOSE_IMAGE) {
                 mPendingImageUris.clear();
                 mPendingImageUris.addAll(extractUriFromIntent(data));
@@ -1295,8 +1317,8 @@ implements OnAccountUpdate, OnConversationUpdate, OnRosterUpdate, OnUpdateBlockl
             mPendingImageUris.clear();
             mPendingFileUris.clear();
             if (requestCode == ConversationActivity.REQUEST_DECRYPT_PGP) {
-               mConversationFragment.onActivityResult(requestCode, resultCode, data);
-			      }
+                mConversationFragment.onActivityResult(requestCode, resultCode, data);
+            }
         }
     }
 

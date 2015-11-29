@@ -9,6 +9,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.PgpEngine;
 import eu.siacs.conversations.xml.Element;
+import eu.siacs.conversations.xmpp.forms.Data;
+import eu.siacs.conversations.xmpp.forms.Field;
 import eu.siacs.conversations.xmpp.jid.InvalidJidException;
 import eu.siacs.conversations.xmpp.jid.Jid;
 import eu.siacs.conversations.xmpp.stanzas.PresencePacket;
@@ -104,10 +106,6 @@ public class MucOptions {
 	}
 
 	public interface OnRenameListener extends OnEventListener {
-
-	}
-
-	public interface OnJoinListener extends OnEventListener {
 
 	}
 
@@ -211,11 +209,11 @@ public class MucOptions {
 	private Account account;
 	private List<User> users = new CopyOnWriteArrayList<>();
 	private List<String> features = new ArrayList<>();
+	private Data form = new Data();
 	private Conversation conversation;
 	private boolean isOnline = false;
 	private int error = ERROR_UNKNOWN;
 	private OnRenameListener onRenameListener = null;
-	private OnJoinListener onJoinListener = null;
 	private User self = new User();
 	private String subject = null;
 	private String password = null;
@@ -231,12 +229,22 @@ public class MucOptions {
 		this.features.addAll(features);
 	}
 
+	public void updateFormData(Data form) {
+		this.form = form;
+	}
+
 	public boolean hasFeature(String feature) {
 		return this.features.contains(feature);
 	}
 
 	public boolean canInvite() {
-		 return !membersOnly() || self.getAffiliation().ranks(Affiliation.ADMIN);
+		Field field = this.form.getFieldByName("muc#roomconfig_allowinvites");
+		return !membersOnly() || self.getRole().ranks(Role.MODERATOR) || (field != null && "1".equals(field.getValue()));
+	}
+
+	public boolean canChangeSubject() {
+		Field field = this.form.getFieldByName("muc#roomconfig_changesubject");
+		return self.getRole().ranks(Role.MODERATOR) || (field != null && "1".equals(field.getValue()));
 	}
 
 	public boolean participating() {
@@ -317,9 +325,6 @@ public class MucOptions {
 									onRenameListener.onSuccess();
 								}
 								mNickChangingInProgress = false;
-							} else if (this.onJoinListener != null) {
-								this.onJoinListener.onSuccess();
-								this.onJoinListener = null;
 							}
 						} else {
 							addUser(user);
@@ -328,14 +333,11 @@ public class MucOptions {
 							Element signed = packet.findChild("x", "jabber:x:signed");
 							if (signed != null) {
 								Element status = packet.findChild("status");
-								String msg;
-								if (status != null) {
-									msg = status.getContent();
-								} else {
-									msg = "";
+								String msg = status == null ? "" : status.getContent();
+								long keyId = pgp.fetchKeyId(account, msg, signed.getContent());
+								if (keyId != 0) {
+									user.setPgpKeyId(keyId);
 								}
-								user.setPgpKeyId(pgp.fetchKeyId(account, msg,
-										signed.getContent()));
 							}
 						}
 					}
@@ -381,10 +383,6 @@ public class MucOptions {
 	private void setError(int error) {
 		this.isOnline = false;
 		this.error = error;
-		if (onJoinListener != null) {
-			onJoinListener.onFailure();
-			onJoinListener = null;
-		}
 	}
 
 	private List<String> getStatusCodes(Element x) {
@@ -438,10 +436,6 @@ public class MucOptions {
 		this.onRenameListener = listener;
 	}
 
-	public void setOnJoinListener(OnJoinListener listener) {
-		this.onJoinListener = listener;
-	}
-
 	public void setOffline() {
 		this.users.clear();
 		this.error = 0;
@@ -491,11 +485,12 @@ public class MucOptions {
 				ids.add(user.getPgpKeyId());
 			}
 		}
-		long[] primitivLongArray = new long[ids.size()];
+		ids.add(account.getPgpId());
+		long[] primitiveLongArray = new long[ids.size()];
 		for (int i = 0; i < ids.size(); ++i) {
-			primitivLongArray[i] = ids.get(i);
+			primitiveLongArray[i] = ids.get(i);
 		}
-		return primitivLongArray;
+		return primitiveLongArray;
 	}
 
 	public boolean pgpKeysInUse() {
