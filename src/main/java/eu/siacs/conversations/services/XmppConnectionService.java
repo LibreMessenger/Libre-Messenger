@@ -37,7 +37,7 @@ import net.java.otr4j.session.SessionID;
 import net.java.otr4j.session.SessionImpl;
 import net.java.otr4j.session.SessionStatus;
 
-import org.openintents.openpgp.IOpenPgpService;
+import org.openintents.openpgp.IOpenPgpService2;
 import org.openintents.openpgp.util.OpenPgpApi;
 import org.openintents.openpgp.util.OpenPgpServiceConnection;
 
@@ -662,7 +662,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 
 		this.pgpServiceConnection = new OpenPgpServiceConnection(getApplicationContext(), "org.sufficientlysecure.keychain", new OpenPgpServiceConnection.OnBound() {
 			@Override
-			public void onBound(IOpenPgpService service) {
+			public void onBound(IOpenPgpService2 service) {
 				for (Account account : accounts) {
 					if (account.getPgpDecryptionService() != null) {
 						account.getPgpDecryptionService().onOpenPgpServiceBound();
@@ -812,7 +812,9 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		final Conversation conversation = message.getConversation();
 		account.deactivateGracePeriod();
 		MessagePacket packet = null;
-		boolean saveInDb = true;
+		final boolean addToConversation = conversation.getMode() != Conversation.MODE_MULTI
+				|| account.getServerIdentity() != XmppConnection.Identity.SLACK;
+		boolean saveInDb = addToConversation;
 		message.setStatus(Message.STATUS_WAITING);
 
 		if (!resend && message.getEncryption() != Message.ENCRYPTION_OTR) {
@@ -924,7 +926,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		}
 
 		if (resend) {
-			if (packet != null) {
+			if (packet != null && addToConversation) {
 				if (account.getXmppConnection().getFeatures().sm() || conversation.getMode() == Conversation.MODE_MULTI) {
 					markMessage(message, Message.STATUS_UNSEND);
 				} else {
@@ -932,7 +934,9 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 				}
 			}
 		} else {
-			conversation.add(message);
+			if (addToConversation) {
+				conversation.add(message);
+			}
 			if (saveInDb && (message.getEncryption() == Message.ENCRYPTION_NONE || saveEncryptedMessages())) {
 				databaseBackend.createMessage(message);
 			}
@@ -1688,16 +1692,16 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		List<Conversation> conversations = getConversations();
 		for (Conversation conversation : conversations) {
 			if (conversation.getMode() == Conversation.MODE_MULTI && conversation.getAccount() == account) {
-				joinMuc(conversation, true);
+				joinMuc(conversation, true, null);
 			}
 		}
 	}
 
 	public void joinMuc(Conversation conversation) {
-		joinMuc(conversation, false);
+		joinMuc(conversation, false, null);
 	}
 
-	private void joinMuc(Conversation conversation, boolean now) {
+	private void joinMuc(Conversation conversation, boolean now, final OnConferenceJoined onConferenceJoined) {
 		Account account = conversation.getAccount();
 		account.pendingConferenceJoins.remove(conversation);
 		account.pendingConferenceLeaves.remove(conversation);
@@ -1730,11 +1734,12 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 					}
 					String sig = account.getPgpSignature();
 					if (sig != null) {
-						packet.addChild("status").setContent("online");
 						packet.addChild("x", "jabber:x:signed").setContent(sig);
 					}
 					sendPresencePacket(account, packet);
-					fetchConferenceConfiguration(conversation);
+					if (onConferenceJoined != null) {
+						onConferenceJoined.onConferenceJoined(conversation);
+					}
 					if (!joinJid.equals(conversation.getJid())) {
 						conversation.setContactJid(joinJid);
 						databaseBackend.updateConversation(conversation);
@@ -1752,18 +1757,8 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 
 				@Override
 				public void onFetchFailed(final Conversation conversation, Element error) {
-					conversation.getMucOptions().setOnJoinListener(new MucOptions.OnJoinListener() {
-						@Override
-						public void onSuccess() {
-							fetchConferenceConfiguration(conversation);
-						}
-
-						@Override
-						public void onFailure() {
-
-						}
-					});
 					join(conversation);
+					fetchConferenceConfiguration(conversation);
 				}
 			});
 
@@ -1889,34 +1884,37 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 				String name = new BigInteger(75, getRNG()).toString(32);
 				Jid jid = Jid.fromParts(name, server, null);
 				final Conversation conversation = findOrCreateConversation(account, jid, true);
-				joinMuc(conversation);
-				Bundle options = new Bundle();
-				options.putString("muc#roomconfig_persistentroom", "1");
-				options.putString("muc#roomconfig_membersonly", "1");
-				options.putString("muc#roomconfig_publicroom", "0");
-				options.putString("muc#roomconfig_whois", "anyone");
-				pushConferenceConfiguration(conversation, options, new OnConferenceOptionsPushed() {
+				joinMuc(conversation, true, new OnConferenceJoined() {
 					@Override
-					public void onPushSucceeded() {
-						for (Jid invite : jids) {
-							invite(conversation, invite);
-						}
-						if (account.countPresences() > 1) {
-							directInvite(conversation, account.getJid().toBareJid());
-						}
-						if (callback != null) {
-							callback.success(conversation);
-						}
-					}
+					public void onConferenceJoined(final Conversation conversation) {
+						Bundle options = new Bundle();
+						options.putString("muc#roomconfig_persistentroom", "1");
+						options.putString("muc#roomconfig_membersonly", "1");
+						options.putString("muc#roomconfig_publicroom", "0");
+						options.putString("muc#roomconfig_whois", "anyone");
+						pushConferenceConfiguration(conversation, options, new OnConferenceOptionsPushed() {
+							@Override
+							public void onPushSucceeded() {
+								for (Jid invite : jids) {
+									invite(conversation, invite);
+								}
+								if (account.countPresences() > 1) {
+									directInvite(conversation, account.getJid().toBareJid());
+								}
+								if (callback != null) {
+									callback.success(conversation);
+								}
+							}
 
-					@Override
-					public void onPushFailed() {
-						if (callback != null) {
-							callback.error(R.string.conference_creation_failed, conversation);
-						}
+							@Override
+							public void onPushFailed() {
+								if (callback != null) {
+									callback.error(R.string.conference_creation_failed, conversation);
+								}
+							}
+						});
 					}
 				});
-
 			} catch (InvalidJidException e) {
 				if (callback != null) {
 					callback.error(R.string.conference_creation_failed, null);
@@ -1942,13 +1940,18 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 			public void onIqPacketReceived(Account account, IqPacket packet) {
 				if (packet.getType() == IqPacket.TYPE.RESULT) {
 					ArrayList<String> features = new ArrayList<>();
-					for (Element child : packet.query().getChildren()) {
+					Element query = packet.query();
+					for (Element child : query.getChildren()) {
 						if (child != null && child.getName().equals("feature")) {
 							String var = child.getAttribute("var");
 							if (var != null) {
 								features.add(var);
 							}
 						}
+					}
+					Element form = query.findChild("x","jabber:x:data");
+					if (form != null) {
+						conversation.getMucOptions().updateFormData(Data.parse(form));
 					}
 					conversation.getMucOptions().updateFeatures(features);
 					if (callback != null) {
@@ -2974,6 +2977,10 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		void onConferenceConfigurationFetched(Conversation conversation);
 
 		void onFetchFailed(Conversation conversation, Element error);
+	}
+
+	public interface OnConferenceJoined {
+		void onConferenceJoined(Conversation conversation);
 	}
 
 	public interface OnConferenceOptionsPushed {
