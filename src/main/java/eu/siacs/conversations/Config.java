@@ -20,7 +20,7 @@ public final class Config {
 	public static final boolean HIDE_ENCRYPTION_IN_UI = false; //completely hide encryption options in menu bar
 	public static final boolean PARANOID_MODE = false; //disables ability to send unencrypted 1-on-1 chats and forces TOR
 
-	public static final boolean SHOW_CONNECTED_ACCOUNTS = true; //show number of connected accounts in foreground notification
+	public static final boolean SHOW_CONNECTED_ACCOUNTS = false; //show number of connected accounts in foreground notification
 
 	public static final boolean LEGACY_NAMESPACE_HTTP_UPLOAD = false; // true = 'eu:siacs:conversations:http:upload' false = 'urn:xmpp:http:upload'
 
