@@ -326,6 +326,11 @@ public class AvatarService {
 			if (drawTile(canvas, uri, left, top, right, bottom)) {
 				return true;
 			}
+		} else if (user.getAvatar() != null) {
+			Uri uri = mXmppConnectionService.getFileBackend().getAvatarUri(user.getAvatar());
+			if (drawTile(canvas, uri, left, top, right, bottom)) {
+				return true;
+			}
 		}
 		String name = contact != null ? contact.getDisplayName() : user.getName();
 		drawTile(canvas, name, left, top, right, bottom);
