@@ -28,7 +28,6 @@
   <string name="minutes_ago">vor %d Minuten</string>
   <string name="unread_conversations">ungelesene Unterhaltungen</string>
   <string name="sending">senden…</string>
-  <string name="encrypted_message">Nachricht wird entschlüsselt. Bitte warten …</string>
   <string name="nick_in_use">Nickname wird bereits verwendet</string>
   <string name="admin">Administrator</string>
   <string name="owner">Eigentümer</string>
@@ -524,5 +523,23 @@
   <string name="pref_plugins_summary">Lade Plugins für Pix-Art Messenger herunter</string>
   <string name="pref_plugin_location">Standort-Freigabe</string>
   <string name="pref_plugin_location_summary">Standorte senden und empfangen</string>
+  <string name="account_settings_hostname">Hostname</string>
+  <string name="account_settings_port">Port</string>
+  <string name="account_status_tor_unavailable">TOR Netzwerk nicht verfügbar</string>
+  <string name="connected_accounts">%1$d von %2$d Konten verbunden</string>
+  <string name="device_does_not_support_certificates">Dein Gerät unterstützt keine Klient-Zertifikate!</string>
+  <string name="error_fetching_omemo_key">Fehler beim Empfang des OMEMO Schlüssels</string>
+  <string name="hostname_or_onion">Server- oder .onion-Adresse</string>
+  <string name="message_decrypting">Nachricht wird entschlüsselt. Bitte warten…</string>
+  <string name="not_a_valid_port">Dies ist keine gültige Port-Nummer</string>
+  <string name="not_valid_hostname">Dies ist kein gültiger Hostname</string>
+  <string name="omemo_fingerprint_x509">v\\OMEMO-Fingerabdruck </string>
+  <string name="omemo_fingerprint_x509_selected_message">v\\OMEMO-Fingerabdruck der Nachricht</string>
+  <string name="pgp_message">OpenPGP verschlüsselte Nachricht</string>
+  <string name="pref_connection_options">Verbindungs-Optionen</string>
+  <string name="pref_use_tor">Verbunden über TOR</string>
+  <string name="pref_use_tor_summary">Alle Verbindungen über das TOR-Netzwerk tunneln. Benötigt Orbot</string>
+  <string name="send_omemo_x509_message">v\\OMEMO-verschlüsselte Nachricht senden</string>
+  <string name="verified_omemo_key_with_certificate">OMEMO Schlüssel mit Zertifikat bestätigt!</string>
 
 </resources>
