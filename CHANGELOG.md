@@ -1,16 +1,20 @@
 ###Changelog
 
-####Versrion 1.7.4
+####Version 1.8.0
+* TOR/ORBOT support in advanced settings
+* show vcard avatars of participants in a conference
 * Own contact picture in tile for conferences with only one other occupant
 * added button to updater dialog to show full changelog
 * added plugin loader to settings
+* fixed PGP encrypted file transfer
+* bug fixes
 
 ####Versrion 1.7.3
 * changed app name from Conversations to Pix-Art Messenger
 * changed chat background to light yellow
 * added own name for sent locations
 
-####Versrion 1.7.2
+####Version 1.7.2
 * let users crop their avatars
 * bug fixes
 
