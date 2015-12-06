@@ -193,8 +193,8 @@ public class UpdaterActivity extends Activity {
                                             downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
                                             Uri Download_Uri = Uri.parse(appURI);
                                             DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
-                                            request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
-                                            request.setAllowedOverRoaming(false);
+                                            //request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
+                                            //request.setAllowedOverRoaming(false);
                                             request.setTitle("Pix-Art Messenger Update");
                                             request.setDestinationInExternalFilesDir(UpdaterActivity.this, Environment.DIRECTORY_DOWNLOADS, "Conversations" + versionName + ".apk");
                                             downloadReference = downloadManager.enqueue(request);
