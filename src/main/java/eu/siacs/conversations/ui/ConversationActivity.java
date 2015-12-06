@@ -1413,6 +1413,7 @@ public class ConversationActivity extends XmppActivity
 
                     @Override
                     public void success(Message message) {
+                        hidePrepareFileToast();
                         xmppConnectionService.sendMessage(message);
                     }
 
