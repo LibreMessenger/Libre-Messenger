@@ -316,12 +316,8 @@
 			\n\nhttps://github.com/kyleduo/SwitchButton\n(Apache License, Version 2.0)
 			\n\nhttps://github.com/WhisperSystems/libaxolotl-java\n(GPLv3)
 			\n\nhttps://github.com/vinc3m1/RoundedImageView\n(Apache License, Version 2.0)
-<<<<<<< HEAD
-			\n\nhttps://github.com/jdamcd/android-crop\n(Apache License, Version 2.0)</string>
-=======
 			\n\nhttps://github.com/jdamcd/android-crop\n(Apache License, Version 2.0)
 	</string>
->>>>>>> 43dd681239ea5a287f5761597de5dcdc4daed3de
 	<string name="title_pref_quiet_hours">Quiet Hours</string>
 	<string name="title_pref_quiet_hours_start_time">Start time</string>
 	<string name="title_pref_quiet_hours_end_time">End time</string>
@@ -486,10 +482,7 @@
 	<string name="hide_offline">Hide offline</string>
 	<string name="disable_account">Disable Account</string>
 	<string name="contact_is_typing">%s is typing…</string>
-<<<<<<< HEAD
 	<string name="is_typing">is typing…</string>
-=======
->>>>>>> 43dd681239ea5a287f5761597de5dcdc4daed3de
 	<string name="contact_has_stopped_typing">%s has stopped typing</string>
 	<string name="pref_chat_states">Typing notifications</string>
 	<string name="pref_chat_states_summary">Let your contact know when you are writing a new message</string>
@@ -533,7 +526,6 @@
 	<string name="elv_undo">undo</string>
 	<string name="pref_use_white_background">Use white background</string>
 	<string name="pref_use_white_background_summary">Show received messages as black text on a white background</string>
-<<<<<<< HEAD
 	<string name="account_status_dns_timeout">Timeout in DNS</string>
 	<string name="action_check_update">Check for Updates</string>
 	<string name="title_activity_updater">Update Service</string>
@@ -545,8 +537,6 @@
 	<string name="current_version">installed version:</string>
 	<string name="no_update_available">No update available</string>
 	<string name="download_started">Download started</string>
-=======
->>>>>>> 43dd681239ea5a287f5761597de5dcdc4daed3de
 	<string name="account_status_tor_unavailable">TOR network unavailable</string>
 	<string name="server_info_broken">Broken</string>
 	<string name="pref_presence_settings">Presence settings</string>
@@ -567,7 +557,6 @@
 	<string name="error_fetching_omemo_key">Error fetching OMEMO key!</string>
 	<string name="verified_omemo_key_with_certificate">Verified OMEMO key with certificate!</string>
 	<string name="device_does_not_support_certificates">Your device does not support the selection of client certificates!</string>
-<<<<<<< HEAD
 	<string name="changelog">Changes</string>
 	<string name="pref_plugins">Plugins</string>
 	<string name="pref_plugins_summary">Download plugins for Pix-Art Messenger</string>
@@ -575,10 +564,6 @@
 	<string name="pref_plugin_location_summary">Send and receive locations</string>
 	<string name="pref_connection_options">Connection options</string>
 	<string name="pref_use_tor">Connect via TOR</string>
-=======
-	<string name="pref_connection_options">Connection options</string>
-	<string name="pref_use_tor">Connect via Tor</string>
->>>>>>> 43dd681239ea5a287f5761597de5dcdc4daed3de
 	<string name="pref_use_tor_summary">Tunnel all connections through the TOR network. Requires Orbot</string>
 	<string name="account_settings_hostname">Hostname</string>
 	<string name="account_settings_port">Port</string>
@@ -592,11 +577,7 @@
 	</plurals>
 	<string name="shared_file_with_x">Shared file with %s</string>
 	<string name="shared_image_with_x">Shared image with %s</string>
-<<<<<<< HEAD
 	<string name="no_storage_permission">Pix-Art Messenger needs access to external storage</string>
-=======
-	<string name="no_storage_permission">Conversations need access to external storage</string>
->>>>>>> 43dd681239ea5a287f5761597de5dcdc4daed3de
 	<string name="sync_with_contacts">Synchronize with contacts</string>
-	<string name="sync_with_contacts_long">Conversations wants to match your XMPP roster with your contacts to show their full names and avatars.\n\nConversations will only read your contacts and match them locally without uploading them to your server.\n\nYou will now be asked to grant permission to access your contacts.</string>
+	<string name="sync_with_contacts_long">Pix-Art Messenger wants to match your XMPP roster with your contacts to show their full names and avatars.\n\nPix-Art Messenger will only read your contacts and match them locally without uploading them to your server.\n\nYou will now be asked to grant permission to access your contacts.</string>
 </resources>
