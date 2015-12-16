@@ -14,7 +14,10 @@ public final class Config {
 
 	public static final boolean HIDE_PGP_IN_UI = false; //some more consumer focused clients might want to disable OpenPGP
 	public static final boolean HIDE_ENCRYPTION_IN_UI = false; //completely hide encryption options in menu bar
-	public static final boolean PARANOID_MODE = false; //disables ability to send unencrypted 1-on-1 chats and forces TOR
+
+	public static final boolean FORCE_ENCRYPTION = false; //disables ability to send unencrypted 1-on-1
+	public static final boolean FORCE_ORBOT = false; // always use TOR
+	public static final boolean HIDE_MESSAGE_TEXT_IN_NOTIFICATION = false;
 
 	public static final boolean SHOW_CONNECTED_ACCOUNTS = false; //show number of connected accounts in foreground notification
 
@@ -25,6 +28,8 @@ public final class Config {
 	public static final int PING_TIMEOUT = 15;
 	public static final int SOCKET_TIMEOUT = 15;
 	public static final int CONNECT_TIMEOUT = 60;
+	public static final int CONNECT_DISCO_TIMEOUT = 20;
+
 	public static final int CARBON_GRACE_PERIOD = 90;
 	public static final int MINI_GRACE_PERIOD = 750;
 
