@@ -316,7 +316,8 @@
 			\n\nhttps://github.com/kyleduo/SwitchButton\n(Apache License, Version 2.0)
 			\n\nhttps://github.com/WhisperSystems/libaxolotl-java\n(GPLv3)
 			\n\nhttps://github.com/vinc3m1/RoundedImageView\n(Apache License, Version 2.0)
-			\n\nhttps://github.com/jdamcd/android-crop\n(Apache License, Version 2.0)</string>
+			\n\nhttps://github.com/jdamcd/android-crop\n(Apache License, Version 2.0)
+	</string>
 	<string name="title_pref_quiet_hours">Quiet Hours</string>
 	<string name="title_pref_quiet_hours_start_time">Start time</string>
 	<string name="title_pref_quiet_hours_end_time">End time</string>
@@ -578,5 +579,5 @@
 	<string name="shared_image_with_x">Shared image with %s</string>
 	<string name="no_storage_permission">Pix-Art Messenger needs access to external storage</string>
 	<string name="sync_with_contacts">Synchronize with contacts</string>
-	<string name="sync_with_contacts_long">Conversations wants to match your XMPP roster with your contacts to show their full names and avatars.\n\nConversations will only read your contacts and match them locally without uploading them to your server.\n\nYou will now be asked to grant permission to access your contacts.</string>
+	<string name="sync_with_contacts_long">Pix-Art Messenger wants to match your XMPP roster with your contacts to show their full names and avatars.\n\nPix-Art Messenger will only read your contacts and match them locally without uploading them to your server.\n\nYou will now be asked to grant permission to access your contacts.</string>
 </resources>
