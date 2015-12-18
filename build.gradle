@@ -57,8 +57,8 @@ android {
 		minSdkVersion 14
 		targetSdkVersion 23
 
-		versionCode 110
-		versionName "1.8.1"
+		versionCode 111
+		versionName "1.8.2"
 		
 		project.ext.set(archivesBaseName, archivesBaseName + "-" + versionName);
 	}

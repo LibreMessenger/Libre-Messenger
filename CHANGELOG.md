@@ -1,5 +1,8 @@
 ###Changelog
 
+####Version 1.8.2
+* bug fixes
+
 ####Version 1.8.1
 * enabled direct share on Android 6.0
 * ask for permissions on Android 6.0
