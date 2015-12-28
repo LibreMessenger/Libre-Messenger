@@ -468,7 +468,7 @@ public class ConversationActivity extends XmppActivity
 					menuAttach.setVisible(getSelectedConversation().getAccount().httpUploadAvailable() && getSelectedConversation().getMucOptions().participating());
 					menuInviteContact.setVisible(getSelectedConversation().getMucOptions().canInvite());
 					menuSecure.setVisible(!Config.HIDE_ENCRYPTION_IN_UI);
-					menuSecure.setVisible(!Config.HIDE_PGP_IN_UI); //if pgp is hidden conferences have no choice of encryption
+					menuSecure.setVisible(!Config.HIDE_PGP_IN_UI && !Config.X509_VERIFICATION); //if pgp is hidden conferences have no choice of encryption
 				} else {
 					menuMucDetails.setVisible(false);
 				}
@@ -922,8 +922,9 @@ public class ConversationActivity extends XmppActivity
 			MenuItem none = popup.getMenu().findItem(R.id.encryption_choice_none);
 			MenuItem pgp = popup.getMenu().findItem(R.id.encryption_choice_pgp);
 			MenuItem axolotl = popup.getMenu().findItem(R.id.encryption_choice_axolotl);
-			pgp.setVisible(!Config.HIDE_PGP_IN_UI);
+			pgp.setVisible(!Config.HIDE_PGP_IN_UI && !Config.X509_VERIFICATION);
 			none.setVisible(!Config.FORCE_ENCRYPTION);
+			otr.setVisible(!Config.X509_VERIFICATION);
 			if (conversation.getMode() == Conversation.MODE_MULTI) {
 				otr.setVisible(false);
 				axolotl.setVisible(false);
