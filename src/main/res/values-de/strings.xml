@@ -533,12 +533,6 @@
   <string name="omemo_fingerprint_x509_selected_message">v\\OMEMO-Fingerabdruck der Nachricht</string>
   <string name="send_omemo_x509_message">v\\OMEMO-verschlüsselte Nachricht senden</string>
   <string name="verified_omemo_key_with_certificate">OMEMO Schlüssel mit Zertifikat bestätigt!</string>
-  <string name="no_storage_permission">Pix-Art Messenger benötigt Zugriff auf externen Speicher</string>
-  <string name="openkeychain_not_installed">Bitte OpenKeychain installieren</string>
-  <string name="shared_file_with_x">Mit %s geteilte Datei</string>
-  <string name="shared_image_with_x">Mit %s geteiltes Bild</string>
-  <string name="sync_with_contacts">Mit Kontakten synchronisieren</string>
-  <string name="sync_with_contacts_long">Pix-Art Messenger möchte deine Chat-Kontaktliste mit deinem Telefon-Kontakten abgleichen, um vollständige Namen und Avatare anzuzeigen.\n\nPix-Art Messenger wird deine Kontakte nur lokal lesen und abgleichen und benötigt keinen Abgleich mit dem Server.\n\nDu wirst gefragt, ob du den Zugriff auf deine Kontakte erlauben möchtest.</string>
   <string name="pref_connection_options">Verbindungs-Optionen</string>
   <string name="pref_use_tor">Mit TOR verbinden</string>
   <string name="pref_use_tor_summary">Alle Verbindungen über das TOR-Netzwerk tunneln. Benötigt Orbot</string>
@@ -554,7 +548,7 @@
   </plurals>
   <string name="shared_file_with_x">Datei mit %s geteilt</string>
   <string name="shared_image_with_x">Bild mit %s geteilt</string>
-  <string name="no_storage_permission">Conversations benötigt Zugriff auf externen Speicher</string>
+  <string name="no_storage_permission">Pix-Art Messenger benötigt Zugriff auf externen Speicher</string>
   <string name="sync_with_contacts">Mit Kontakten synchronisieren</string>
-  <string name="sync_with_contacts_long">Conversations möchte deine XMPP-Kontaktliste mit deinen Kontakten abgleichen, um deren vollständige Namen und Avatare anzuzeigen.\n\nConversations wird deine Kontakte nur lokal lesen und abgleichen und überträgt diese nicht auf den Server.\n\nDu wirst nun gefragt, ob du den Zugriff auf deine Kontakte erlauben möchtest.</string>
+  <string name="sync_with_contacts_long">Pix-Art Messenger möchte deine Chat-Kontaktliste mit deinem Telefon-Kontakten abgleichen, um vollständige Namen und Avatare anzuzeigen.\n\nPix-Art Messenger wird deine Kontakte nur lokal lesen und abgleichen und benötigt keinen Abgleich mit dem Server.\n\nDu wirst gefragt, ob du den Zugriff auf deine Kontakte erlauben möchtest.</string>
 </resources>
