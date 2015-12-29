@@ -2,6 +2,7 @@
 
 ####Version 1.8.3
 * brought text selection back
+* hide settings, manage accounts and updater in all menus except in the main activity
 * bug fixes
 
 ####Version 1.8.2
