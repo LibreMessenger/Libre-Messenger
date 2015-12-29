@@ -441,6 +441,9 @@ public class ConversationActivity extends XmppActivity
 		final MenuItem menuInviteContact = menu.findItem(R.id.action_invite);
 		final MenuItem menuMute = menu.findItem(R.id.action_mute);
 		final MenuItem menuUnmute = menu.findItem(R.id.action_unmute);
+		final MenuItem menuAccounts = menu.findItem(R.id.action_accounts);
+		final MenuItem menuSettings = menu.findItem(R.id.action_settings);
+		final MenuItem menuUpdater = menu.findItem(R.id.action_check_updates);
 
 		if (isConversationsOverviewVisable() && isConversationsOverviewHideable()) {
 			menuArchive.setVisible(false);
@@ -454,6 +457,11 @@ public class ConversationActivity extends XmppActivity
 			menuUnmute.setVisible(false);
 		} else {
 			menuAdd.setVisible(!isConversationsOverviewHideable());
+			//hide settings, accounts and updater in all menus except in main window
+			menuAccounts.setVisible(false);
+			menuSettings.setVisible(false);
+			menuUpdater.setVisible(false);
+
 			if (this.getSelectedConversation() != null) {
 				menuSecure.setVisible(!Config.HIDE_ENCRYPTION_IN_UI);
 				if (this.getSelectedConversation().getNextEncryption() != Message.ENCRYPTION_NONE) {
