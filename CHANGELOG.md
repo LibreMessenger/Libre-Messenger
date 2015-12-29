@@ -1,9 +1,12 @@
 ###Changelog
 
 ####Version 1.8.3
+* brought text selection back
 * bug fixes
 
 ####Version 1.8.2
+* fixed stuck at 'connecting...' bug
+* make message box behave correctly with multiple links
 * bug fixes
 
 ####Version 1.8.1
