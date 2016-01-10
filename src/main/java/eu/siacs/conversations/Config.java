@@ -21,6 +21,8 @@ public final class Config {
 
 	public static final boolean SHOW_CONNECTED_ACCOUNTS = false; //show number of connected accounts in foreground notification
 
+	public static final boolean ALWAYS_NOTIFY_BY_DEFAULT = false;
+
 	public static final boolean LEGACY_NAMESPACE_HTTP_UPLOAD = false; // true = 'eu:siacs:conversations:http:upload' false = 'urn:xmpp:http:upload'
 
 	public static final int PING_MAX_INTERVAL = 300;
@@ -39,6 +41,7 @@ public final class Config {
 	public static final int IMAGE_SIZE = 1920;
 	public static final Bitmap.CompressFormat IMAGE_FORMAT = Bitmap.CompressFormat.JPEG;
 	public static final int IMAGE_QUALITY = 75;
+	public static final int IMAGE_MAX_SIZE = 524288; //512KiB
 
 	public static final int MESSAGE_MERGE_WINDOW = 20;
 

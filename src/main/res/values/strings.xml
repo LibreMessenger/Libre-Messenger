@@ -111,8 +111,6 @@
 	<string name="pref_vibrate_summary">Also vibrate when a new message arrives</string>
 	<string name="pref_sound">Sound</string>
 	<string name="pref_sound_summary">Play ringtone with notification</string>
-	<string name="pref_conference_notifications">Notifications in Public Conferences</string>
-	<string name="pref_conference_notifications_summary">Always notify when a message arrives in a public conference instead of only when highlighted</string>
 	<string name="pref_notification_grace_period">Notification grace period</string>
 	<string name="pref_notification_grace_period_summary">Disable notifications for a short time after a carbon copy was received</string>
 	<string name="pref_advanced_options">Advanced Options</string>
@@ -268,7 +266,6 @@
 	<string name="skip">Skip</string>
 	<string name="disable_notifications">Disable notifications</string>
 	<string name="disable_notifications_for_this_conversation">Disable notifications for this conversation</string>
-	<string name="notifications_disabled">Notifications are disabled</string>
 	<string name="enable">Enable</string>
 	<string name="conference_requires_password">Conference requires password</string>
 	<string name="enter_password">Enter password</string>
@@ -290,7 +287,7 @@
 	<string name="pref_about_conversations_summary">Build and licensing information</string>
 	<string name="pref_about_message" translatable="false">Pix-Art Messenger is a fork of Conversations.
 			\n\nConversations • the very last word in instant messaging.
-			\n\nCopyright © 2014 Daniel Gultsch
+			\n\nCopyright © 2014-2016 Daniel Gultsch
 			\n\nThis program is free software: you can redistribute it and/or modify
 			it under the terms of the GNU General Public License as published by
 			the Free Software Foundation, either version 3 of the License, or
@@ -590,4 +587,12 @@
 	<string name="certificate_sha1">SHA1</string>
 	<string name="certicate_info_not_available">(Not available)</string>
 	<string name="certificate_not_found">No certificate found</string>
+	<string name="notify_on_all_messages">Notify on all messages</string>
+	<string name="notify_only_when_highlighted">Notify only when highlighted</string>
+	<string name="notify_never">Notifications disabled</string>
+	<string name="notify_paused">Notifications paused</string>
+	<string name="pref_picture_compression">Compress Pictures</string>
+	<string name="pref_picture_compression_summary">Resize and compressed pictures</string>
+	<string name="always">Always</string>
+	<string name="automatically">Automatically</string>
 </resources>

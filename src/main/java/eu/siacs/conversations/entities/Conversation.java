@@ -48,6 +48,7 @@ public class Conversation extends AbstractEntity implements Blockable {
 	public static final String ATTRIBUTE_NEXT_ENCRYPTION = "next_encryption";
 	public static final String ATTRIBUTE_MUC_PASSWORD = "muc_password";
 	public static final String ATTRIBUTE_MUTED_TILL = "muted_till";
+	public static final String ATTRIBUTE_ALWAYS_NOTIFY = "always_notify";
 
 	private String name;
 	private String contactUuid;
@@ -560,7 +561,7 @@ public class Conversation extends AbstractEntity implements Blockable {
 	/**
 	 * short for is Private and Non-anonymous
 	 */
-	public boolean isPnNA() {
+	private boolean isPnNA() {
 		return mode == MODE_SINGLE || (getMucOptions().membersOnly() && getMucOptions().nonanonymous());
 	}
 
@@ -707,8 +708,16 @@ public class Conversation extends AbstractEntity implements Blockable {
 		synchronized (this.messages) {
 			for (int i = this.messages.size() - 1; i >= 0; --i) {
 				Message message = this.messages.get(i);
-				if ((message.getStatus() == Message.STATUS_UNSEND || message.getStatus() == Message.STATUS_SEND) && message.getBody() != null && message.getBody().equals(body)) {
-					return message;
+				if (message.getStatus() == Message.STATUS_UNSEND || message.getStatus() == Message.STATUS_SEND) {
+					String otherBody;
+					if (message.hasFileOnRemoteHost()) {
+						otherBody = message.getFileParams().url.toString();
+					} else {
+						otherBody = message.body;
+					}
+					if (otherBody != null && otherBody.equals(body)) {
+						return message;
+					}
 				}
 			}
 			return null;
@@ -733,6 +742,10 @@ public class Conversation extends AbstractEntity implements Blockable {
 
 	public boolean isMuted() {
 		return System.currentTimeMillis() < this.getLongAttribute(ATTRIBUTE_MUTED_TILL, 0);
+	}
+
+	public boolean alwaysNotify() {
+		return mode == MODE_SINGLE || getBooleanAttribute(ATTRIBUTE_ALWAYS_NOTIFY,Config.ALWAYS_NOTIFY_BY_DEFAULT || isPnNA());
 	}
 
 	public boolean setAttribute(String key, String value) {
@@ -775,6 +788,15 @@ public class Conversation extends AbstractEntity implements Blockable {
 			} catch (NumberFormatException e) {
 				return defaultValue;
 			}
+		}
+	}
+
+	public boolean getBooleanAttribute(String key, boolean defaultValue) {
+		String value = this.getAttribute(key);
+		if (value == null) {
+			return defaultValue;
+		} else {
+			return Boolean.parseBoolean(value);
 		}
 	}
 
