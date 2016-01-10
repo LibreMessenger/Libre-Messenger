@@ -553,4 +553,20 @@
   <string name="no_storage_permission">Pix-Art Messenger benötigt Zugriff auf externen Speicher</string>
   <string name="sync_with_contacts">Mit Kontakten synchronisieren</string>
   <string name="sync_with_contacts_long">Pix-Art Messenger möchte deine Chat-Kontaktliste mit deinem Telefon-Kontakten abgleichen, um vollständige Namen und Avatare anzuzeigen.\n\nPix-Art Messenger wird deine Kontakte nur lokal lesen und abgleichen und benötigt keinen Abgleich mit dem Server.\n\nDu wirst gefragt, ob du den Zugriff auf deine Kontakte erlauben möchtest.</string>
+  <string name="always">Immer</string>
+  <string name="automatically">Automatisch</string>
+  <string name="certicate_info_not_available">(nicht verfügbar)</string>
+  <string name="certificate_cn">Gemeinsamer Name</string>
+  <string name="certificate_subject">Betreff</string>
+  <string name="certificate_sha1"></string>
+  <string name="certificate_o">Organisation</string>
+  <string name="certificate_not_found">Kein Zertifikat gefunden</string>
+  <string name="certificate_issuer">Aussteller</string>
+  <string name="certificate_information">Zertifikat-Information</string>
+  <string name="notify_never">Benachrichtigungen deaktivierten</string>
+  <string name="notify_on_all_messages">Bei allen Nachrichten benachrichtigen</string>
+  <string name="notify_only_when_highlighted">Nur benachrichtigen, wenn ich angesprochen werde</string>
+  <string name="notify_paused">Benachrichtigungen pausiert</string>
+  <string name="pref_picture_compression">Bilder komprimieren</string>
+  <string name="pref_picture_compression_summary">Bildgröße ändern und komprimieren</string>
 </resources>
