@@ -179,7 +179,7 @@ public class PublishProfilePictureActivity extends XmppActivity {
 						source = Uri.parse("file://"+original);
 					}
 					Uri destination = Uri.fromFile(new File(getCacheDir(), "croppedAvatar"));
-					final int size = getPixel(192);
+					final int size = getPixel(Config.AVATAR_SIZE);
 					Crop.of(source, destination).asSquare().withMaxSize(size, size).start(this);
 					break;
 				case Crop.REQUEST_CROP:
