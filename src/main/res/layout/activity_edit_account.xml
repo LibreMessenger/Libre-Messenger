@@ -177,6 +177,48 @@
                 </LinearLayout>
             </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/battery_optimization"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:background="@drawable/infocard_border"
+                android:orientation="vertical"
+                android:padding="@dimen/infocard_padding"
+                android:visibility="gone">
+                <TextView
+                    android:id="@+id/batt_op_headline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/battery_optimizations_enabled"
+                    android:textColor="@color/black87"
+                    android:textSize="?attr/TextSizeHeadline"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/batt_op_body"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/batt_op_headline"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/battery_optimizations_enabled_explained"
+                    android:textColor="@color/black87"
+                    android:textSize="?attr/TextSizeBody"/>
+                <Button
+                    android:id="@+id/batt_op_disable"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_marginRight="-8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true" android:layout_below="@+id/batt_op_body"
+                    android:text="@string/disable" android:textColor="@color/accent"/>
+            </RelativeLayout>
+
             <LinearLayout
                 android:id="@+id/stats"
                 android:layout_width="fill_parent"
@@ -205,7 +247,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/server_info_session_established"
                             android:textColor="@color/black87"
-                            android:textSize="?attr/TextSizeBody" />
+                            android:textSize="?attr/TextSizeBody"/>
 
                         <TextView
                             android:id="@+id/session_est"
@@ -235,7 +277,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/server_info_pep"
                             android:textColor="@color/black87"
-                            android:textSize="?attr/TextSizeBody" />
+                            android:textSize="?attr/TextSizeBody"/>
 
                         <TextView
                             android:id="@+id/server_info_pep"
@@ -256,7 +298,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/server_info_blocking"
                             android:textColor="@color/black87"
-                            android:textSize="?attr/TextSizeBody" />
+                            android:textSize="?attr/TextSizeBody"/>
 
                         <TextView
                             android:id="@+id/server_info_blocking"
@@ -277,7 +319,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/server_info_stream_management"
                             android:textColor="@color/black87"
-                            android:textSize="?attr/TextSizeBody" />
+                            android:textSize="?attr/TextSizeBody"/>
 
                         <TextView
                             android:id="@+id/server_info_sm"
@@ -298,7 +340,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/server_info_roster_version"
                             android:textColor="@color/black87"
-                            android:textSize="?attr/TextSizeBody" />
+                            android:textSize="?attr/TextSizeBody"/>
 
                         <TextView
                             android:id="@+id/server_info_roster_version"
@@ -319,7 +361,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/server_info_carbon_messages"
                             android:textColor="@color/black87"
-                            android:textSize="?attr/TextSizeBody" />
+                            android:textSize="?attr/TextSizeBody"/>
 
                         <TextView
                             android:id="@+id/server_info_carbons"
@@ -340,7 +382,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/server_info_mam"
                             android:textColor="@color/black87"
-                            android:textSize="?attr/TextSizeBody" />
+                            android:textSize="?attr/TextSizeBody"/>
 
                         <TextView
                             android:id="@+id/server_info_mam"
@@ -361,7 +403,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/server_info_csi"
                             android:textColor="@color/black87"
-                            android:textSize="?attr/TextSizeBody" />
+                            android:textSize="?attr/TextSizeBody"/>
 
                         <TextView
                             android:id="@+id/server_info_csi"
@@ -382,7 +424,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/server_info_http_upload"
                             android:textColor="@color/black87"
-                            android:textSize="?attr/TextSizeBody" />
+                            android:textSize="?attr/TextSizeBody"/>
 
                         <TextView
                             android:id="@+id/server_info_http_upload"
@@ -416,13 +458,14 @@
                             android:textColor="@color/black87"
                             android:textSize="?attr/TextSizeBody"
                             android:typeface="monospace" />
-
+                            
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/otr_fingerprint"
                             android:textColor="@color/black54"
                             android:textSize="?attr/TextSizeInfo" />
+
                     </LinearLayout>
 
                     <ImageButton
@@ -487,7 +530,7 @@
                             android:visibility="visible" />
 
                         <ImageButton
-                            android:id="@+id/action_regenerate_omemo_key"
+                            android:id="@+id/action_regenerate_axolotl_key"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="?android:selectableItemBackground"
@@ -495,7 +538,6 @@
                             android:padding="@dimen/image_button_padding"
                             android:src="?attr/icon_refresh"
                             android:visibility="gone" />
-
                     </LinearLayout>
                 </RelativeLayout>
             </LinearLayout>
@@ -528,7 +570,8 @@
                     android:layout_height="wrap_content"
                     android:divider="?android:dividerHorizontal"
                     android:orientation="vertical"
-                    android:showDividers="middle"></LinearLayout>
+                    android:showDividers="middle">
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
@@ -550,14 +593,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/cancel"
-            android:textColor="@color/black87" />
+            android:textColor="@color/black87"/>
 
         <View
             android:layout_width="1dp"
             android:layout_height="fill_parent"
             android:layout_marginBottom="7dp"
             android:layout_marginTop="7dp"
-            android:background="@color/black12" />
+            android:background="@color/black12"/>
 
         <Button
             android:id="@+id/save_button"
@@ -567,7 +610,7 @@
             android:layout_weight="1"
             android:enabled="false"
             android:text="@string/save"
-            android:textColor="@color/black54" />
+            android:textColor="@color/black54"/>
     </LinearLayout>
 
 </RelativeLayout>

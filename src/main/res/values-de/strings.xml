@@ -9,7 +9,7 @@
   <string name="action_secure">Verschlüsselte Unterhaltung</string>
   <string name="action_add_account">Konto hinzufügen</string>
   <string name="action_edit_contact">Namen bearbeiten</string>
-  <string name="action_add_phone_book">Zum Telefonbuch hinzufügen</string>
+  <string name="action_add_phone_book">Zu Telefonbuch hinzufügen</string>
   <string name="action_delete_contact">Aus Kontaktliste entfernen</string>
   <string name="action_block_contact">Kontakt sperren</string>
   <string name="action_unblock_contact">Kontakt entsperren</string>
@@ -108,8 +108,6 @@
   <string name="pref_vibrate_summary">Vibrieren bei Erhalt einer neuen Nachricht</string>
   <string name="pref_sound">Benachrichtigungston</string>
   <string name="pref_sound_summary">Benachrichtigungston wiedergeben</string>
-  <string name="pref_conference_notifications">Benachrichtigungen in öffentlichen Konferenzen</string>
-  <string name="pref_conference_notifications_summary">Bei jeder Nachricht in öffentlichen Konferenzen benachrichtigen und nicht nur, wenn ich angesprochen werde</string>
   <string name="pref_notification_grace_period">Gnadenfrist</string>
   <string name="pref_notification_grace_period_summary">Deaktiviere Benachrichtigungen für eine kurze Zeit nach Erhalt einer Nachricht, die von einem anderen deiner Clients kommt.</string>
   <string name="pref_advanced_options">Erweiterte Optionen</string>
@@ -174,7 +172,7 @@
   <string name="passwords_do_not_match">Passwörter stimmen nicht überein</string>
   <string name="invalid_jid">Ungültige Jabber-ID</string>
   <string name="error_out_of_memory">Zu wenig Speicher vorhanden. Das Bild ist zu groß</string>
-  <string name="add_phone_book_text">Möchtest du %s zum Telefonbuch hinzufügen?</string>
+  <string name="add_phone_book_text">%s zum Telefonbuch hinzufügen</string>
   <string name="contact_status_online">online</string>
   <string name="contact_status_free_to_chat">bereit</string>
   <string name="contact_status_away">abwesend</string>
@@ -244,7 +242,7 @@
   <string name="add_back">Auch hinzufügen</string>
   <string name="contact_has_read_up_to_this_point">%s hat bis zu diesem Punkt gelesen</string>
   <string name="publish">Veröffentlichen</string>
-  <string name="touch_to_choose_picture">Avatar anklicken, um ein Bild aus der Galerie auszuwählen</string>
+  <string name="touch_to_choose_picture">Avatar antippen, um Bild aus Galerie auszuwählen</string>
   <string name="publish_avatar_explanation">Achtung: Jeder, der deinen Status sehen darf, sieht auch deinen Avatar.</string>
   <string name="publishing">Veröffentliche…</string>
   <string name="error_publish_avatar_server_reject">Der Server hat die Veröffentlichung des Avatars abgelehnt.</string>
@@ -263,7 +261,6 @@
   <string name="skip">Überspringen</string>
   <string name="disable_notifications">Benachrichtigungen deaktivieren</string>
   <string name="disable_notifications_for_this_conversation">Benachrichtigungen für diese Unterhaltung deaktivieren</string>
-  <string name="notifications_disabled">Benachrichtigungen sind deaktiviert</string>
   <string name="enable">Aktivieren</string>
   <string name="conference_requires_password">Konferenz ist passwortgeschützt</string>
   <string name="enter_password">Passwort eingeben</string>
@@ -322,7 +319,6 @@
   <string name="verify_otr">OTR prüfen</string>
   <string name="remote_fingerprint">Fingerabdruck der Gegenseite</string>
   <string name="scan">Scannen</string>
-  <string name="or_touch_phones">(oder Touch-Handys)</string>
   <string name="smp">Socialist Millionaire Protocol</string>
   <string name="shared_secret_hint">Hinweis oder Frage</string>
   <string name="shared_secret_secret">Gemeinsamer Schlüssel</string>
@@ -509,7 +505,7 @@
   <string name="pref_away_when_screen_off">Abwesend bei abgeschaltetem Bildschirm</string>
   <string name="pref_away_when_screen_off_summary">Setzt deinen Status auf \"abwesend\", solange dein Bildschirm abgeschaltet ist</string>
   <string name="pref_xa_on_silent_mode">Nicht verfügbar bei Stummschaltung</string>
-  <string name="pref_xa_on_silent_mode_summary">Setzt deinen Status auf \"nicht verfügbar\", solange dein Gerät stummgeschaltet ist</string>
+  <string name="pref_xa_on_silent_mode_summary">Setzt deinen Status auf \"nicht verfügbar\", solange dein Telefon lautlos ist</string>
   <string name="action_add_account_with_certificate">Konto mit Zertifikat hinzufügen</string>
   <string name="unable_to_parse_certificate">Zertifikat kann nicht gelesen werden</string>
   <string name="authenticate_with_certificate">Leer lassen, um mit Zertifikat anzumelden</string>
@@ -536,7 +532,7 @@
   <string name="send_omemo_x509_message">v\\OMEMO-verschlüsselte Nachricht senden</string>
   <string name="verified_omemo_key_with_certificate">OMEMO Schlüssel mit Zertifikat bestätigt!</string>
   <string name="pref_connection_options">Verbindungs-Optionen</string>
-  <string name="pref_use_tor">Mit TOR verbinden</string>
+  <string name="pref_use_tor">Über TOR verbinden</string>
   <string name="pref_use_tor_summary">Alle Verbindungen über das TOR-Netzwerk tunneln. Benötigt Orbot</string>
   <string name="account_settings_hostname">Hostname</string>
   <string name="account_settings_port">Port</string>
@@ -552,21 +548,25 @@
   <string name="shared_image_with_x">Bild mit %s geteilt</string>
   <string name="no_storage_permission">Pix-Art Messenger benötigt Zugriff auf externen Speicher</string>
   <string name="sync_with_contacts">Mit Kontakten synchronisieren</string>
-  <string name="sync_with_contacts_long">Pix-Art Messenger möchte deine Chat-Kontaktliste mit deinem Telefon-Kontakten abgleichen, um vollständige Namen und Avatare anzuzeigen.\n\nPix-Art Messenger wird deine Kontakte nur lokal lesen und abgleichen und benötigt keinen Abgleich mit dem Server.\n\nDu wirst gefragt, ob du den Zugriff auf deine Kontakte erlauben möchtest.</string>
-  <string name="always">Immer</string>
-  <string name="automatically">Automatisch</string>
-  <string name="certicate_info_not_available">(nicht verfügbar)</string>
-  <string name="certificate_cn">Gemeinsamer Name</string>
+  <string name="sync_with_contacts_long">Pix-Art Messenger möchte deine XMPP-Kontaktliste mit deinen Kontakten abgleichen, um deren vollständige Namen und Avatare anzuzeigen.\n\nConversations wird deine Kontakte nur lokal lesen und abgleichen und überträgt diese nicht auf den Server.\n\nDu wirst nun gefragt, ob du den Zugriff auf deine Kontakte erlauben möchtest.</string>
+  <string name="certificate_information">Zertifikatinformationen</string>
   <string name="certificate_subject">Betreff</string>
-  <string name="certificate_sha1"></string>
-  <string name="certificate_o">Organisation</string>
-  <string name="certificate_not_found">Kein Zertifikat gefunden</string>
   <string name="certificate_issuer">Aussteller</string>
-  <string name="certificate_information">Zertifikat-Information</string>
-  <string name="notify_never">Benachrichtigungen deaktivierten</string>
+  <string name="certificate_cn">Gemeinsamer Name</string>
+  <string name="certificate_o">Organisation</string>
+  <string name="certificate_sha1">SHA1</string>
+  <string name="certicate_info_not_available">(Nicht verfügbar)</string>
+  <string name="certificate_not_found">Kein Zertifikat gefunden</string>
   <string name="notify_on_all_messages">Bei allen Nachrichten benachrichtigen</string>
   <string name="notify_only_when_highlighted">Nur benachrichtigen, wenn ich angesprochen werde</string>
+  <string name="notify_never">Benachrichtigungen deaktiviert</string>
   <string name="notify_paused">Benachrichtigungen pausiert</string>
   <string name="pref_picture_compression">Bilder komprimieren</string>
-  <string name="pref_picture_compression_summary">Bildgröße ändern und komprimieren</string>
+  <string name="pref_picture_compression_summary">Bildgröße anpassen und komprimieren</string>
+  <string name="always">Immer</string>
+  <string name="automatically">Automatisch</string>
+  <string name="battery_optimizations_enabled">Batterieoptimierung aktiv</string>
+  <string name="battery_optimizations_enabled_explained">Dein Telefon wendet Batterioptimierungen bei Conversations an, welche verspätete Benachrichtigungen oder Nachrichtenverlust verursachen können.\nEs ist empfehlenswert diese zu deaktivieren.</string>
+  <string name="battery_optimizations_enabled_dialog">Dein Telefon wendet Batterioptimierungen bei Conversations an, welche verspätete Benachrichtigungen oder Nachrichtenverlust verursachen können. Es ist empfehlenswert dies zu deaktivieren.</string>
+  <string name="disable">Deaktivieren</string>
 </resources>

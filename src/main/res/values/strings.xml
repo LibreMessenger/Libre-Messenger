@@ -11,7 +11,7 @@
 	<string name="action_secure">Secure conversation</string>
 	<string name="action_add_account">Add account</string>
 	<string name="action_edit_contact">Edit name</string>
-	<string name="action_add_phone_book">Add to phone book</string>
+	<string name="action_add_phone_book">Add to address book</string>
 	<string name="action_delete_contact">Delete from roster</string>
 	<string name="action_block_contact">Block contact</string>
 	<string name="action_unblock_contact">Unblock contact</string>
@@ -175,7 +175,7 @@
 	<string name="passwords_do_not_match">Passwords do not match</string>
 	<string name="invalid_jid">This is not a valid Jabber ID</string>
 	<string name="error_out_of_memory">Out of memory. Image is too large</string>
-	<string name="add_phone_book_text">Do you want to add %s to your devices’s contact list?</string>
+	<string name="add_phone_book_text">Do you want to add %s to your address book?</string>
 	<string name="contact_status_online">online</string>
 	<string name="contact_status_free_to_chat">free to chat</string>
 	<string name="contact_status_away">away</string>
@@ -356,7 +356,6 @@
 	<string name="verify_otr">Verify OTR</string>
 	<string name="remote_fingerprint">Remote Fingerprint</string>
 	<string name="scan">scan</string>
-	<string name="or_touch_phones">(or touch phones)</string>
 	<string name="smp">Socialist Millionaire Protocol</string>
 	<string name="shared_secret_hint">Hint or Question</string>
 	<string name="shared_secret_secret">Shared Secret</string>
@@ -410,6 +409,7 @@
 	<string name="purge_key">Purge key</string>
 	<string name="purge_key_desc_part1">Are you sure you want to purge this key?</string>
 	<string name="purge_key_desc_part2">It will irreversibly be considered compromised, and you can never build a session with it again.</string>
+	<string name="error_no_keys_to_trust_server_error">There are no usable keys available for this contact.\nFetching new keys from the server has been unsuccessful. Maybe there is something wrong with your contacts server.</string>
 	<string name="error_no_keys_to_trust">There are no usable keys available for this contact. If you have purged any of their keys, they need to generate new ones.</string>
 	<string name="error_trustkeys_title">Error</string>
 	<string name="fetching_history_from_server">Fetching history from server</string>
@@ -525,7 +525,6 @@
 	<string name="elv_undo">undo</string>
 	<string name="pref_use_white_background">Use white background</string>
 	<string name="pref_use_white_background_summary">Show received messages as black text on a white background</string>
-	<string name="account_status_dns_timeout">Timeout in DNS</string>
 	<string name="action_check_update">Check for Updates</string>
 	<string name="title_activity_updater">Update Service</string>
 	<string name="update_available">Pix-Art Messenger %1$s with the following changes is available:\n\n%2$s\n\nUpdate Pix-Art Messenger %3$s to Pix-Art Messenger %1$s now?</string>
@@ -536,14 +535,14 @@
 	<string name="current_version">installed version:</string>
 	<string name="no_update_available">No update available</string>
 	<string name="download_started">Download started</string>
-	<string name="account_status_tor_unavailable">TOR network unavailable</string>
+	<string name="account_status_tor_unavailable">Tor network unavailable</string>
 	<string name="server_info_broken">Broken</string>
 	<string name="pref_presence_settings">Presence settings</string>
 	<string name="pref_away_when_screen_off">Away when screen is off</string>
 	<string name="pref_away_when_screen_off_summary">Marks your resource as away when the screen is turned off</string>
 	<string name="pref_xa_on_silent_mode">Not available in silent mode</string>
-	<string name="pref_xa_on_silent_mode_summary">Marks your resource as not available when phone is in silent mode</string>
 	<string name="update_info">Pix-Art Messenger is checking for an update. If an update is available you will be asked, if you want to update your version. The update process is downloading and installing the new version automatically.</string>
+	<string name="pref_xa_on_silent_mode_summary">Marks your resource as not available when device is in silent mode</string>
 	<string name="action_add_account_with_certificate">Add account with certificate</string>
 	<string name="unable_to_parse_certificate">Unable to parse certificate</string>
 	<string name="authenticate_with_certificate">Leave empty to authenticate w/ certificate</string>
@@ -562,8 +561,8 @@
 	<string name="pref_plugin_location">Share-Location</string>
 	<string name="pref_plugin_location_summary">Send and receive locations</string>
 	<string name="pref_connection_options">Connection options</string>
-	<string name="pref_use_tor">Connect via TOR</string>
-	<string name="pref_use_tor_summary">Tunnel all connections through the TOR network. Requires Orbot</string>
+	<string name="pref_use_tor">Connect via Tor</string>
+	<string name="pref_use_tor_summary">Tunnel all connections through the Tor network. Requires Orbot</string>
 	<string name="account_settings_hostname">Hostname</string>
 	<string name="account_settings_port">Port</string>
 	<string name="hostname_or_onion">Server- or .onion-Address</string>
@@ -595,4 +594,8 @@
 	<string name="pref_picture_compression_summary">Resize and compressed pictures</string>
 	<string name="always">Always</string>
 	<string name="automatically">Automatically</string>
+	<string name="battery_optimizations_enabled">Battery optimizations enabled</string>
+	<string name="battery_optimizations_enabled_explained">Your device is doing some heavy battery optimizations on Conversations that might lead to delayed notifications or even message loss.\nIt is recommended to disable those.</string>
+	<string name="battery_optimizations_enabled_dialog">Your device is doing some heavy battery optimizations on Conversations that might lead to delayed notifications or even message loss.\n\nYou will now be asked to disable those.</string>
+	<string name="disable">Disable</string>
 </resources>

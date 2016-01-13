@@ -1,5 +1,6 @@
 package eu.siacs.conversations.ui;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ActionBar;
@@ -35,6 +36,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.text.InputType;
@@ -91,6 +93,7 @@ public abstract class XmppActivity extends Activity {
 	protected static final int REQUEST_ANNOUNCE_PGP = 0x0101;
 	protected static final int REQUEST_INVITE_TO_CONVERSATION = 0x0102;
 	protected static final int REQUEST_CHOOSE_PGP_ID = 0x0103;
+	protected static final int REQUEST_BATTERY_OP = 0x13849ff;
 
 	public XmppConnectionService xmppConnectionService;
 	public boolean xmppConnectionServiceBound = false;
@@ -372,6 +375,15 @@ public abstract class XmppActivity extends Activity {
 		final ActionBar ab = getActionBar();
 		if (ab!=null) {
 			ab.setDisplayHomeAsUpEnabled(true);
+		}
+	}
+
+	protected boolean showBatteryOptimizationWarning() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
+			return !pm.isIgnoringBatteryOptimizations(getPackageName());
+		} else {
+			return false;
 		}
 	}
 
@@ -783,6 +795,19 @@ public abstract class XmppActivity extends Activity {
 					}
 				});
 		builder.create().show();
+	}
+
+	public boolean hasStoragePermission(int requestCode) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+				requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, requestCode);
+				return false;
+			} else {
+				return true;
+			}
+		} else {
+			return true;
+		}
 	}
 
 	public void selectPresence(final Conversation conversation,
