@@ -372,6 +372,7 @@
   <string name="purge_key">Schlüssel löschen</string>
   <string name="purge_key_desc_part1">Soll dieser Schlüssel gelöscht werden?</string>
   <string name="purge_key_desc_part2">Dieser Vorgang kann nicht rückgängig gemacht werden und es kann nie wieder eine Verbindung mit diesem Schlüssel hergestellt werden.</string>
+  <string name="error_no_keys_to_trust_server_error">Für diesen Kontakt sind keine benutzbaren Schlüssel verfügbar.\nNeue Schlüssel vom Server herunterzuladen war nicht erfolgreich. Vielleicht stimmt etwas mit dem Server deines Kontakts nicht.</string>
   <string name="error_no_keys_to_trust">Es sind keine Schlüssel für diesen Kontakt verfügbar. Falls sie gelöscht wurden, müssen diese neu erstellt werden.</string>
   <string name="error_trustkeys_title">Fehler</string>
   <string name="fetching_history_from_server">Lade Chatverlauf…</string>
@@ -498,7 +499,7 @@
   <string name="download_started">Download gestartet</string>
   <string name="no_update_available">Kein Update verfügbar</string>
   <string name="account_status_dns_timeout">Zeitüberschreitung bei der Namensauflösung</string>
-  <string name="account_status_tor_unavailable">TOR-Netzwerk nicht verfügbar</string>
+  <string name="account_status_tor_unavailable">Tor-Netzwerk nicht verfügbar</string>
   <string name="server_info_broken">Fehlerhaft</string>
   <string name="update_info">Conversation prüft auf eine neuere Version. Wenn ein Update verfügbar ist, wirst du gefragt, ob du deine Version aktualisieren möchtest. Der Update Dienst lädt und installiert die neue Version automatisch.</string>
   <string name="pref_presence_settings">Status Einstellungen</string>
@@ -533,7 +534,7 @@
   <string name="verified_omemo_key_with_certificate">OMEMO Schlüssel mit Zertifikat bestätigt!</string>
   <string name="pref_connection_options">Verbindungs-Optionen</string>
   <string name="pref_use_tor">Über TOR verbinden</string>
-  <string name="pref_use_tor_summary">Alle Verbindungen über das TOR-Netzwerk tunneln. Benötigt Orbot</string>
+  <string name="pref_use_tor_summary">Alle Verbindungen über das Tor-Netzwerk tunneln. Benötigt Orbot</string>
   <string name="account_settings_hostname">Hostname</string>
   <string name="account_settings_port">Port</string>
   <string name="hostname_or_onion">Server- oder .onion-Adresse</string>
