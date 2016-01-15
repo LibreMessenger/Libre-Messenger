@@ -530,7 +530,7 @@
                             android:visibility="visible" />
 
                         <ImageButton
-                            android:id="@+id/action_regenerate_axolotl_key"
+                            android:id="@+id/action_regenerate_omemo_key"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="?android:selectableItemBackground"
