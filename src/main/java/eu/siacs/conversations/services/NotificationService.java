@@ -541,9 +541,6 @@ public class NotificationService {
 			cancelIcon = R.drawable.ic_action_cancel;
 		}
 		mBuilder.setSmallIcon(R.drawable.ic_link_white_24dp);
-		mBuilder.addAction(cancelIcon,
-				mXmppConnectionService.getString(R.string.disable_foreground_service),
-				createDisableForeground());
 		return mBuilder.build();
 	}
 
