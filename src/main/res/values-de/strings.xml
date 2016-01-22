@@ -570,4 +570,8 @@
   <string name="battery_optimizations_enabled_explained">Dein Telefon wendet Batterioptimierungen bei Conversations an, welche verspätete Benachrichtigungen oder Nachrichtenverlust verursachen können.\nEs ist empfehlenswert diese zu deaktivieren.</string>
   <string name="battery_optimizations_enabled_dialog">Dein Telefon wendet Batterioptimierungen bei Conversations an, welche verspätete Benachrichtigungen oder Nachrichtenverlust verursachen können. Es ist empfehlenswert dies zu deaktivieren.</string>
   <string name="disable">Deaktivieren</string>
+  <string name="cancel_update">Update abbrechen?</string>
+  <string name="no">Nein</string>
+  <string name="selection_too_large">Das ausgewählte Bild ist zu groß</string>
+  <string name="yes">Ja</string>
 </resources>
