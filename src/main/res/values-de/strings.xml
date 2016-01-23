@@ -574,4 +574,5 @@
   <string name="no">Nein</string>
   <string name="selection_too_large">Das ausgewählte Bild ist zu groß</string>
   <string name="yes">Ja</string>
+  <string name="selection_too_large">Der ausgewählte Bereich ist zu groß</string>
 </resources>

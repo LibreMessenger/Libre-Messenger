@@ -95,6 +95,8 @@ public abstract class XmppActivity extends Activity {
 	protected static final int REQUEST_CHOOSE_PGP_ID = 0x0103;
 	protected static final int REQUEST_BATTERY_OP = 0x13849ff;
 
+	public static final String EXTRA_ACCOUNT = "account";
+
 	public XmppConnectionService xmppConnectionService;
 	public boolean xmppConnectionServiceBound = false;
 	protected boolean registeredListeners = false;
@@ -450,7 +452,7 @@ public abstract class XmppActivity extends Activity {
 	public void switchToContactDetails(Contact contact, String messageFingerprint) {
 		Intent intent = new Intent(this, ContactDetailsActivity.class);
 		intent.setAction(ContactDetailsActivity.ACTION_VIEW_CONTACT);
-		intent.putExtra("account", contact.getAccount().getJid().toBareJid().toString());
+		intent.putExtra(EXTRA_ACCOUNT, contact.getAccount().getJid().toBareJid().toString());
 		intent.putExtra("contact", contact.getJid().toString());
 		intent.putExtra("fingerprint", messageFingerprint);
 		startActivity(intent);
@@ -485,7 +487,7 @@ public abstract class XmppActivity extends Activity {
 		intent.putExtra("conversation", conversation.getUuid());
 		intent.putExtra("multiple", true);
 		intent.putExtra("show_enter_jid", true);
-		intent.putExtra("account", conversation.getAccount().getJid().toBareJid().toString());
+		intent.putExtra(EXTRA_ACCOUNT, conversation.getAccount().getJid().toBareJid().toString());
 		startActivityForResult(intent, REQUEST_INVITE_TO_CONVERSATION);
 	}
 
@@ -980,7 +982,7 @@ public abstract class XmppActivity extends Activity {
 				@Override
 				public NdefMessage createNdefMessage(NfcEvent nfcEvent) {
 					return new NdefMessage(new NdefRecord[]{
-						NdefRecord.createUri(getShareableUri()),
+							NdefRecord.createUri(getShareableUri()),
 							NdefRecord.createApplicationRecord("eu.siacs.conversations")
 					});
 				}
@@ -1057,6 +1059,15 @@ public abstract class XmppActivity extends Activity {
 			bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
 			return bitmap;
 		} catch (final WriterException e) {
+			return null;
+		}
+	}
+
+	protected Account extractAccount(Intent intent) {
+		String jid = intent != null ? intent.getStringExtra(EXTRA_ACCOUNT) : null;
+		try {
+			return jid != null ? xmppConnectionService.findAccountByJid(Jid.fromString(jid)) : null;
+		} catch (InvalidJidException e) {
 			return null;
 		}
 	}

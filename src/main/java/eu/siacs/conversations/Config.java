@@ -15,7 +15,9 @@ public final class Config {
 	public static final boolean HIDE_PGP_IN_UI = false; //some more consumer focused clients might want to disable OpenPGP
 	public static final boolean HIDE_ENCRYPTION_IN_UI = false; //completely hide encryption options in menu bar
 
-	public static final boolean FORCE_ENCRYPTION = false; //disables ability to send unencrypted 1-on-1
+	public static final boolean FORCE_E2E_ENCRYPTION = false; //disables ability to send unencrypted 1-on-1
+	public static final boolean ALLOW_NON_TLS_CONNECTIONS = false; //very dangerous. you should have a good reason to set this to true
+
 	public static final boolean FORCE_ORBOT = false; // always use TOR
 	public static final boolean HIDE_MESSAGE_TEXT_IN_NOTIFICATION = false;
 

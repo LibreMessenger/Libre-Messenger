@@ -602,4 +602,5 @@
 	<string name="cancel_update">Cancel update check?</string>
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
+	<string name="no_accounts">(No activated accounts)</string>
 </resources>
