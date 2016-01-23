@@ -34,6 +34,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import net.java.otr4j.session.SessionStatus;
@@ -70,7 +71,7 @@ import eu.siacs.conversations.xmpp.jid.InvalidJidException;
 import eu.siacs.conversations.xmpp.jid.Jid;
 
 public class ConversationActivity extends XmppActivity
-	implements OnAccountUpdate, OnConversationUpdate, OnRosterUpdate, OnUpdateBlocklist, XmppConnectionService.OnShowErrorToast {
+	implements OnAccountUpdate, OnConversationUpdate, OnRosterUpdate, OnUpdateBlocklist, XmppConnectionService.OnShowErrorToast, View.OnClickListener {
 
 	public static final String ACTION_DOWNLOAD = "eu.siacs.conversations.action.DOWNLOAD";
 
@@ -355,12 +356,12 @@ public class ConversationActivity extends XmppActivity
 	public void switchToConversation(Conversation conversation) {
 		setSelectedConversation(conversation);
 		runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				ConversationActivity.this.mConversationFragment.reInit(getSelectedConversation());
-				openConversation();
-			}
-		});
+            @Override
+            public void run() {
+                ConversationActivity.this.mConversationFragment.reInit(getSelectedConversation());
+                openConversation();
+            }
+        });
 	}
 
 	private void updateActionBarTitle() {
@@ -374,31 +375,60 @@ public class ConversationActivity extends XmppActivity
             if (titleShouldBeName && conversation != null) {
                 ab.setDisplayHomeAsUpEnabled(true);
                 ab.setHomeButtonEnabled(true);
+				ab.setDisplayShowTitleEnabled(false);
+				ab.setDisplayShowCustomEnabled(true);
+				ab.setCustomView(R.layout.ab_title);
                 if (conversation.getMode() == Conversation.MODE_SINGLE || useSubjectToIdentifyConference()) {
-                    ab.setTitle(conversation.getName());
+                    //ab.setTitle(conversation.getName());
+					TextView abtitle = (TextView) findViewById(android.R.id.text1);
+					abtitle.setText(conversation.getName());
+                    abtitle.setOnClickListener(this);
                     if (conversation.getMode() == Conversation.MODE_SINGLE) {
                         if (conversation.getContact().getPresences().getMostAvailableStatus() == Presences.OFFLINE) {
-                            ab.setSubtitle(getString(R.string.account_status_offline));
+                            //ab.setSubtitle(getString(R.string.account_status_offline));
+                            TextView absubtitle = (TextView) findViewById(android.R.id.text2);
+                            absubtitle.setText(getString(R.string.account_status_offline));
+                            absubtitle.setOnClickListener(this);
                         } else {
                             ChatState state = conversation.getIncomingChatState();
                             if (state == ChatState.COMPOSING) {
-                                ab.setSubtitle(getString(R.string.is_typing));
+                                //ab.setSubtitle(getString(R.string.is_typing));
+                                TextView absubtitle = (TextView) findViewById(android.R.id.text2);
+                                absubtitle.setText(getString(R.string.is_typing));
+                                absubtitle.setOnClickListener(this);
                             } else if (state == ChatState.PAUSED) {
-                                ab.setSubtitle(UIHelper.lastseen(getApplicationContext(), conversation.getContact().lastseen.time));
+                                //ab.setSubtitle(UIHelper.lastseen(getApplicationContext(), conversation.getContact().lastseen.time));
+                                TextView absubtitle = (TextView) findViewById(android.R.id.text2);
+                                absubtitle.setText(UIHelper.lastseen(getApplicationContext(), conversation.getContact().lastseen.time));
+                                absubtitle.setOnClickListener(this);
                             } else {
-                                ab.setSubtitle(UIHelper.lastseen(getApplicationContext(), conversation.getContact().lastseen.time));
+                                //ab.setSubtitle(UIHelper.lastseen(getApplicationContext(), conversation.getContact().lastseen.time));
+                                TextView absubtitle = (TextView) findViewById(android.R.id.text2);
+                                absubtitle.setText(UIHelper.lastseen(getApplicationContext(), conversation.getContact().lastseen.time));
+                                absubtitle.setOnClickListener(this);
                             }
                         }
                     } else if (useSubjectToIdentifyConference()) {
-                        ab.setSubtitle(conversation.getParticipants());
+                        //ab.setSubtitle(conversation.getParticipants());
+                        TextView absubtitle = (TextView) findViewById(android.R.id.text2);
+                        absubtitle.setText(conversation.getParticipants());
+                        absubtitle.setOnClickListener(this);
                     }
                 } else {
-                    ab.setTitle(conversation.getJid().toBareJid().toString());
-                    ab.setSubtitle(null);
+                    //ab.setTitle(conversation.getJid().toBareJid().toString());
+                    TextView abtitle = (TextView) findViewById(android.R.id.text1);
+                    abtitle.setText(conversation.getJid().toBareJid().toString());
+                    abtitle.setOnClickListener(this);
+                    //ab.setSubtitle(null);
+                        TextView absubtitle = (TextView) findViewById(android.R.id.text2);
+                    absubtitle.setText(null);
+                    absubtitle.setOnClickListener(this);
                 }
             } else {
-                ab.setDisplayHomeAsUpEnabled(false);
-                ab.setHomeButtonEnabled(false);
+                    ab.setDisplayHomeAsUpEnabled(false);
+                    ab.setHomeButtonEnabled(false);
+                ab.setDisplayShowTitleEnabled(true);
+                ab.setDisplayShowCustomEnabled(false);
                 ab.setTitle(R.string.app_name);
                 ab.setSubtitle(null);
             }
@@ -431,8 +461,8 @@ public class ConversationActivity extends XmppActivity
 		getMenuInflater().inflate(R.menu.conversations, menu);
 		final MenuItem menuSecure = menu.findItem(R.id.action_security);
 		final MenuItem menuArchive = menu.findItem(R.id.action_archive);
-		final MenuItem menuMucDetails = menu.findItem(R.id.action_muc_details);
-		final MenuItem menuContactDetails = menu.findItem(R.id.action_contact_details);
+		//final MenuItem menuMucDetails = menu.findItem(R.id.action_muc_details);
+		//final MenuItem menuContactDetails = menu.findItem(R.id.action_contact_details);
 		final MenuItem menuAttach = menu.findItem(R.id.action_attach_file);
 		final MenuItem menuClearHistory = menu.findItem(R.id.action_clear_history);
 		final MenuItem menuAdd = menu.findItem(R.id.action_add);
@@ -445,8 +475,8 @@ public class ConversationActivity extends XmppActivity
 
 		if (isConversationsOverviewVisable() && isConversationsOverviewHideable()) {
 			menuArchive.setVisible(false);
-			menuMucDetails.setVisible(false);
-			menuContactDetails.setVisible(false);
+			//menuMucDetails.setVisible(false);
+			//menuContactDetails.setVisible(false);
 			menuSecure.setVisible(false);
 			menuInviteContact.setVisible(false);
 			menuAttach.setVisible(false);
@@ -470,13 +500,13 @@ public class ConversationActivity extends XmppActivity
 					}
 				}
 				if (this.getSelectedConversation().getMode() == Conversation.MODE_MULTI) {
-					menuContactDetails.setVisible(false);
+					//menuContactDetails.setVisible(false);
 					menuAttach.setVisible(getSelectedConversation().getAccount().httpUploadAvailable() && getSelectedConversation().getMucOptions().participating());
 					menuInviteContact.setVisible(getSelectedConversation().getMucOptions().canInvite());
 					menuSecure.setVisible(!Config.HIDE_ENCRYPTION_IN_UI);
 					menuSecure.setVisible(!Config.HIDE_PGP_IN_UI && !Config.X509_VERIFICATION); //if pgp is hidden conferences have no choice of encryption
 				} else {
-					menuMucDetails.setVisible(false);
+					//menuMucDetails.setVisible(false);
 				}
 				if (this.getSelectedConversation().isMuted()) {
 					menuMute.setVisible(false);
@@ -692,6 +722,7 @@ public class ConversationActivity extends XmppActivity
 				case R.id.action_archive:
 					this.endConversation(getSelectedConversation());
 					break;
+/*
 				case R.id.action_contact_details:
 					switchToContactDetails(getSelectedConversation().getContact());
 					break;
@@ -702,6 +733,7 @@ public class ConversationActivity extends XmppActivity
 					intent.putExtra("uuid", getSelectedConversation().getUuid());
 					startActivity(intent);
 					break;
+*/
 				case R.id.action_invite:
 					inviteToConversation(getSelectedConversation());
 					break;
@@ -1665,4 +1697,19 @@ public class ConversationActivity extends XmppActivity
 	public boolean highlightSelectedConversations() {
 		return !isConversationsOverviewHideable() || this.conversationWasSelectedByKeyboard;
 	}
+
+    @Override
+    public void onClick(View view) {
+        final Conversation conversation = getSelectedConversation();
+        Log.e("Con","Clicked Title");
+        if (conversation.getMode() == Conversation.MODE_SINGLE) {
+            switchToContactDetails(getSelectedConversation().getContact());
+        } else if (conversation.getMode() == Conversation.MODE_MULTI) {
+            Intent intent = new Intent(this,
+                    ConferenceDetailsActivity.class);
+            intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
+            intent.putExtra("uuid", getSelectedConversation().getUuid());
+            startActivity(intent);
+        }
+    }
 }
