@@ -37,6 +37,8 @@ public abstract class AbstractGenerator {
 			"urn:xmpp:receipts"
 	};
 	private String mVersion = null;
+
+	private String mVersionOs = null;
 	protected final String IDENTITY_NAME = "Pix-Art Messenger";
 	protected final String IDENTITY_TYPE = "phone";
 
@@ -53,6 +55,14 @@ public abstract class AbstractGenerator {
 			this.mVersion = PhoneHelper.getVersionName(mXmppConnectionService);
 		}
 		return this.mVersion;
+	}
+
+	protected String getIdentityVersionOs() {
+		if (mVersionOs == null) {
+			this.mVersionOs = "Android/" + android.os.Build.MODEL
+					+ "/" + android.os.Build.VERSION.RELEASE;
+		}
+		return this.mVersionOs;
 	}
 
 	public String getIdentityName() {
