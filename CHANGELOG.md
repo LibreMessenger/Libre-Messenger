@@ -3,6 +3,8 @@
 ####Version 1.9.2
 * prevent startup crash on Sailfish OS
 * minor bug fixes
+* removed contact-/conferece-details button
+* touch contact name or conferce name in action bar opens contact-/conference-details
 
 ####Version 1.9.1
 * minor bug fixes incl. a workaround for nimbuzz.com
