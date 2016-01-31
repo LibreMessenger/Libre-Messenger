@@ -543,6 +543,9 @@
 	<string name="pref_xa_on_silent_mode">Not available in silent mode</string>
 	<string name="update_info">Pix-Art Messenger is checking for an update. If an update is available you will be asked, if you want to update your version. The update process is downloading and installing the new version automatically.</string>
 	<string name="pref_xa_on_silent_mode_summary">Marks your resource as not available when device is in silent mode</string>
+	<string name="pref_show_connection_options">Extended connection options</string>
+	<string name="pref_show_connection_options_summary">Show hostname and port options when setting up an account</string>
+	<string name="hostname_example">xmpp.example.com</string>
 	<string name="action_add_account_with_certificate">Add account with certificate</string>
 	<string name="unable_to_parse_certificate">Unable to parse certificate</string>
 	<string name="authenticate_with_certificate">Leave empty to authenticate w/ certificate</string>
@@ -603,4 +606,5 @@
 	<string name="yes">Yes</string>
 	<string name="no">No</string>
 	<string name="no_accounts">(No activated accounts)</string>
+	<string name="this_field_is_required">This field is required</string>
 </resources>
