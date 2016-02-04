@@ -1,21 +1,28 @@
 package eu.siacs.conversations.parser;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
+
+import eu.siacs.conversations.Config;
 import eu.siacs.conversations.crypto.PgpEngine;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.entities.Contact;
 import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.entities.MucOptions;
-import eu.siacs.conversations.entities.Presences;
+import eu.siacs.conversations.entities.Presence;
+import eu.siacs.conversations.entities.ServiceDiscoveryResult;
 import eu.siacs.conversations.generator.PresenceGenerator;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.xml.Element;
+import eu.siacs.conversations.xmpp.OnIqPacketReceived;
 import eu.siacs.conversations.xmpp.OnPresencePacketReceived;
 import eu.siacs.conversations.xmpp.jid.Jid;
 import eu.siacs.conversations.xmpp.pep.Avatar;
+import eu.siacs.conversations.xmpp.stanzas.IqPacket;
 import eu.siacs.conversations.xmpp.stanzas.PresencePacket;
 
 public class PresenceParser extends AbstractParser implements
@@ -56,12 +63,13 @@ public class PresenceParser extends AbstractParser implements
 				if (x != null) {
 					Element item = x.findChild("item");
 					if (item != null && !from.isBareJid()) {
+						mucOptions.setError(MucOptions.ERROR_NO_ERROR);
 						MucOptions.User user = new MucOptions.User(mucOptions,from);
 						user.setAffiliation(item.getAttribute("affiliation"));
 						user.setRole(item.getAttribute("role"));
 						user.setJid(item.getAttributeAsJid("jid"));
 						if (codes.contains(MucOptions.STATUS_CODE_SELF_PRESENCE) || packet.getFrom().equals(mucOptions.getConversation().getJid())) {
-							mucOptions.setError(MucOptions.ERROR_NO_ERROR);
+							mucOptions.setOnline();
 							mucOptions.setSelf(user);
 							if (mucOptions.mNickChangingInProgress) {
 								if (mucOptions.onRenameListener != null) {
@@ -108,6 +116,7 @@ public class PresenceParser extends AbstractParser implements
 						mucOptions.setError(MucOptions.ERROR_MEMBERS_ONLY);
 					} else {
 						mucOptions.setError(MucOptions.ERROR_UNKNOWN);
+						Log.d(Config.LOGTAG, "unknown error in conference: " + packet);
 					}
 				} else if (!from.isBareJid()){
 					MucOptions.User user = mucOptions.deleteUser(from.getResourcepart());
@@ -160,7 +169,7 @@ public class PresenceParser extends AbstractParser implements
 		final String type = packet.getAttribute("type");
 		final Contact contact = account.getRoster().getContact(from);
 		if (type == null) {
-			String presence = from.isBareJid() ? "" : from.getResourcepart();
+			final String resource = from.isBareJid() ? "" : from.getResourcepart();
 			contact.setPresenceName(packet.findChildContent("nick", "http://jabber.org/protocol/nick"));
 			Avatar avatar = Avatar.parsePresence(packet.findChild("x", "vcard-temp:x:update"));
 			if (avatar != null && !contact.isSelf()) {
@@ -176,7 +185,15 @@ public class PresenceParser extends AbstractParser implements
 				}
 			}
 			int sizeBefore = contact.getPresences().size();
-			contact.updatePresence(presence, Presences.parseShow(packet.findChild("show")));
+
+			final Element show = packet.findChild("show");
+			final Element caps = packet.findChild("c", "http://jabber.org/protocol/caps");
+			final Presence presence = Presence.parse(show, caps);
+			contact.updatePresence(resource, presence);
+			if (presence.hasCaps() && Config.REQUEST_DISCO) {
+				mXmppConnectionService.fetchCaps(account, from, presence);
+			}
+
 			PgpEngine pgp = mXmppConnectionService.getPgpEngine();
 			Element x = packet.findChild("x", "jabber:x:signed");
 			if (pgp != null && x != null) {

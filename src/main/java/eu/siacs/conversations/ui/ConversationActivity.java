@@ -948,7 +948,7 @@ public class ConversationActivity extends XmppActivity
 			MenuItem pgp = popup.getMenu().findItem(R.id.encryption_choice_pgp);
 			MenuItem axolotl = popup.getMenu().findItem(R.id.encryption_choice_axolotl);
 			pgp.setVisible(!Config.HIDE_PGP_IN_UI && !Config.X509_VERIFICATION);
-			none.setVisible(!Config.FORCE_E2E_ENCRYPTION);
+			none.setVisible(!Config.FORCE_E2E_ENCRYPTION || conversation.getMode() == Conversation.MODE_MULTI);
 			otr.setVisible(!Config.X509_VERIFICATION);
 			if (conversation.getMode() == Conversation.MODE_MULTI) {
 				otr.setVisible(false);
@@ -1698,18 +1698,24 @@ public class ConversationActivity extends XmppActivity
 		return !isConversationsOverviewHideable() || this.conversationWasSelectedByKeyboard;
 	}
 
-    @Override
-    public void onClick(View view) {
-        final Conversation conversation = getSelectedConversation();
-        Log.e("Con","Clicked Title");
-        if (conversation.getMode() == Conversation.MODE_SINGLE) {
-            switchToContactDetails(getSelectedConversation().getContact());
-        } else if (conversation.getMode() == Conversation.MODE_MULTI) {
-            Intent intent = new Intent(this,
-                    ConferenceDetailsActivity.class);
-            intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
-            intent.putExtra("uuid", getSelectedConversation().getUuid());
-            startActivity(intent);
-        }
-    }
+  @Override
+  public void onClick(View view) {
+      final Conversation conversation = getSelectedConversation();
+      if (conversation.getMode() == Conversation.MODE_SINGLE) {
+          switchToContactDetails(getSelectedConversation().getContact());
+      } else if (conversation.getMode() == Conversation.MODE_MULTI) {
+          Intent intent = new Intent(this,
+                  ConferenceDetailsActivity.class);
+          intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
+          intent.putExtra("uuid", getSelectedConversation().getUuid());
+          startActivity(intent);
+      }
+   }
+}
+
+	public void setMessagesLoaded() {
+		if (mConversationFragment != null) {
+			mConversationFragment.setMessagesLoaded();
+		}
+	}
 }

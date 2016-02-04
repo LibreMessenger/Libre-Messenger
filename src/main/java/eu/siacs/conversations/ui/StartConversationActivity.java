@@ -63,6 +63,7 @@ import eu.siacs.conversations.entities.Bookmark;
 import eu.siacs.conversations.entities.Contact;
 import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.ListItem;
+import eu.siacs.conversations.entities.Presence;
 import eu.siacs.conversations.entities.Presences;
 import eu.siacs.conversations.services.XmppConnectionService.OnRosterUpdate;
 import eu.siacs.conversations.ui.adapter.KnownHostsAdapter;
@@ -286,7 +287,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
 		if (!conversation.getMucOptions().online()) {
 			xmppConnectionService.joinMuc(conversation);
 		}
-		if (!bookmark.autojoin()) {
+		if (!bookmark.autojoin() && getPreferences().getBoolean("autojoin", true)) {
 			bookmark.setAutojoin(true);
 			xmppConnectionService.pushBookmarks(bookmark.getAccount());
 		}
@@ -426,7 +427,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
 								jid.setError(getString(R.string.bookmark_already_exists));
 							} else {
 								final Bookmark bookmark = new Bookmark(account, conferenceJid.toBareJid());
-								bookmark.setAutojoin(true);
+								bookmark.setAutojoin(getPreferences().getBoolean("autojoin", true));
 								String nick = conferenceJid.getResourcepart();
 								if (nick != null && !nick.isEmpty()) {
 									bookmark.setNick(nick);
@@ -725,9 +726,11 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
 		for (Account account : xmppConnectionService.getAccounts()) {
 			if (account.getStatus() != Account.State.DISABLED) {
 				for (Contact contact : account.getRoster().getContacts()) {
+					Presence p = contact.getPresences().getMostAvailablePresence();
+					Presence.Status s = p == null ? Presence.Status.OFFLINE : p.getStatus();
 					if (contact.showInRoster() && contact.match(needle)
 							&& (!this.mHideOfflineContacts
-							|| contact.getPresences().getMostAvailableStatus() < Presences.OFFLINE)) {
+							|| s.compareTo(Presence.Status.OFFLINE) < 0)) {
 						this.contacts.add(contact);
 					}
 				}
@@ -803,7 +806,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
 			final AdapterView.AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) menuInfo;
 			if (mResContextMenu == R.menu.conference_context) {
 				activity.conference_context_id = acmi.position;
-			} else {
+			} else if (mResContextMenu == R.menu.contact_context){
 				activity.contact_context_id = acmi.position;
 				final Blockable contact = (Contact) activity.contacts.get(acmi.position);
 				final MenuItem blockUnblockItem = menu.findItem(R.id.context_contact_block_unblock);

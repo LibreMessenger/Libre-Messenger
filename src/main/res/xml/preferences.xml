@@ -207,6 +207,17 @@
             </PreferenceCategory>
             <PreferenceCategory android:title="@string/pref_expert_options_other">
                 <CheckBoxPreference
+                    android:key="autojoin"
+                    android:defaultValue="true"
+                    android:title="@string/pref_autojoin"
+                    android:summary="@string/pref_autojoin_summary"
+                    />
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="indicate_received"
+                    android:summary="@string/pref_use_indicate_received_summary"
+                    android:title="@string/pref_use_indicate_received"/>
+                <CheckBoxPreference
                     android:defaultValue="true"
                     android:key="keep_foreground_service"
                     android:summary="@string/pref_keep_foreground_service_summary"
