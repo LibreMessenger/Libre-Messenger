@@ -56,6 +56,7 @@ import eu.siacs.conversations.entities.Blockable;
 import eu.siacs.conversations.entities.Contact;
 import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.Message;
+import eu.siacs.conversations.entities.Presence;
 import eu.siacs.conversations.entities.Transferable;
 import eu.siacs.conversations.entities.Presences;
 import eu.siacs.conversations.services.XmppConnectionService;
@@ -384,7 +385,7 @@ public class ConversationActivity extends XmppActivity
 					abtitle.setText(conversation.getName());
                     abtitle.setOnClickListener(this);
                     if (conversation.getMode() == Conversation.MODE_SINGLE) {
-                        if (conversation.getContact().getPresences().getMostAvailableStatus() == Presences.OFFLINE) {
+                        if (conversation.getContact().getMostAvailableStatus() == Presence.Status.OFFLINE) {
                             //ab.setSubtitle(getString(R.string.account_status_offline));
                             TextView absubtitle = (TextView) findViewById(android.R.id.text2);
                             absubtitle.setText(getString(R.string.account_status_offline));
@@ -1711,7 +1712,6 @@ public class ConversationActivity extends XmppActivity
           startActivity(intent);
       }
    }
-}
 
 	public void setMessagesLoaded() {
 		if (mConversationFragment != null) {
