@@ -404,7 +404,7 @@ public class MucOptions {
 	}
 
 	public String createNameFromParticipants() {
-		if (users.size() >= 2) {
+		if (users.size() >= 1) {
 			List<String> names = new ArrayList<>();
 			for (User user : getUsers(5)) {
 				Contact contact = user.getContact();

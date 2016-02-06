@@ -58,7 +58,6 @@ import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.entities.Presence;
 import eu.siacs.conversations.entities.Transferable;
-import eu.siacs.conversations.entities.Presences;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.services.XmppConnectionService.OnAccountUpdate;
 import eu.siacs.conversations.services.XmppConnectionService.OnConversationUpdate;
@@ -357,12 +356,12 @@ public class ConversationActivity extends XmppActivity
 	public void switchToConversation(Conversation conversation) {
 		setSelectedConversation(conversation);
 		runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ConversationActivity.this.mConversationFragment.reInit(getSelectedConversation());
-                openConversation();
-            }
-        });
+			@Override
+			public void run() {
+				ConversationActivity.this.mConversationFragment.reInit(getSelectedConversation());
+				openConversation();
+			}
+		});
 	}
 
 	private void updateActionBarTitle() {
@@ -380,48 +379,46 @@ public class ConversationActivity extends XmppActivity
 				ab.setDisplayShowCustomEnabled(true);
 				ab.setCustomView(R.layout.ab_title);
                 if (conversation.getMode() == Conversation.MODE_SINGLE || useSubjectToIdentifyConference()) {
-                    //ab.setTitle(conversation.getName());
 					TextView abtitle = (TextView) findViewById(android.R.id.text1);
 					abtitle.setText(conversation.getName());
                     abtitle.setOnClickListener(this);
                     if (conversation.getMode() == Conversation.MODE_SINGLE) {
                         if (conversation.getContact().getMostAvailableStatus() == Presence.Status.OFFLINE) {
-                            //ab.setSubtitle(getString(R.string.account_status_offline));
                             TextView absubtitle = (TextView) findViewById(android.R.id.text2);
                             absubtitle.setText(getString(R.string.account_status_offline));
                             absubtitle.setOnClickListener(this);
                         } else {
                             ChatState state = conversation.getIncomingChatState();
                             if (state == ChatState.COMPOSING) {
-                                //ab.setSubtitle(getString(R.string.is_typing));
                                 TextView absubtitle = (TextView) findViewById(android.R.id.text2);
                                 absubtitle.setText(getString(R.string.is_typing));
                                 absubtitle.setOnClickListener(this);
                             } else if (state == ChatState.PAUSED) {
-                                //ab.setSubtitle(UIHelper.lastseen(getApplicationContext(), conversation.getContact().lastseen.time));
                                 TextView absubtitle = (TextView) findViewById(android.R.id.text2);
                                 absubtitle.setText(UIHelper.lastseen(getApplicationContext(), conversation.getContact().lastseen.time));
                                 absubtitle.setOnClickListener(this);
                             } else {
-                                //ab.setSubtitle(UIHelper.lastseen(getApplicationContext(), conversation.getContact().lastseen.time));
                                 TextView absubtitle = (TextView) findViewById(android.R.id.text2);
                                 absubtitle.setText(UIHelper.lastseen(getApplicationContext(), conversation.getContact().lastseen.time));
                                 absubtitle.setOnClickListener(this);
                             }
                         }
                     } else if (useSubjectToIdentifyConference()) {
-                        //ab.setSubtitle(conversation.getParticipants());
-                        TextView absubtitle = (TextView) findViewById(android.R.id.text2);
-                        absubtitle.setText(conversation.getParticipants());
-                        absubtitle.setOnClickListener(this);
+                        if (conversation.getParticipants() != null) {
+							TextView absubtitle = (TextView) findViewById(android.R.id.text2);
+							absubtitle.setText(conversation.getParticipants());
+							absubtitle.setOnClickListener(this);
+						} else {
+                            TextView absubtitle = (TextView) findViewById(android.R.id.text2);
+                            absubtitle.setText(R.string.no_participants);
+                            absubtitle.setOnClickListener(this);
+						}
                     }
                 } else {
-                    //ab.setTitle(conversation.getJid().toBareJid().toString());
                     TextView abtitle = (TextView) findViewById(android.R.id.text1);
                     abtitle.setText(conversation.getJid().toBareJid().toString());
                     abtitle.setOnClickListener(this);
-                    //ab.setSubtitle(null);
-                        TextView absubtitle = (TextView) findViewById(android.R.id.text2);
+					TextView absubtitle = (TextView) findViewById(android.R.id.text2);
                     absubtitle.setText(null);
                     absubtitle.setOnClickListener(this);
                 }
@@ -1480,7 +1477,7 @@ public class ConversationActivity extends XmppActivity
 		if (conversation == null) {
 			return;
 		}
-		xmppConnectionService.attachLocationToConversation(conversation,uri, new UiCallback<Message>() {
+		xmppConnectionService.attachLocationToConversation(conversation, uri, new UiCallback<Message>() {
 
 			@Override
 			public void success(Message message) {
@@ -1619,7 +1616,7 @@ public class ConversationActivity extends XmppActivity
 	}
 
 	public boolean useWhiteBackground() {
-		return getPreferences().getBoolean("use_white_background",false);
+		return getPreferences().getBoolean("use_white_background", false);
 	}
 
 	protected boolean trustKeysIfNeeded(int requestCode) {
