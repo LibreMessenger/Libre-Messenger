@@ -498,7 +498,6 @@
   <string name="update_available">Pix-Art Messenger %1$s mit folgenden Änderungen ist verfügbar:\n\n%2$s\n\nMöchtest Du von Pix-Art Messenger %3$s auf Pix-Art Messenger %1$s aktualisieren?</string>
   <string name="download_started">Download gestartet</string>
   <string name="no_update_available">Kein Update verfügbar</string>
-  <string name="account_status_dns_timeout">Zeitüberschreitung bei der Namensauflösung</string>
   <string name="account_status_tor_unavailable">Tor-Netzwerk nicht verfügbar</string>
   <string name="server_info_broken">Fehlerhaft</string>
   <string name="update_info">Conversation prüft auf eine neuere Version. Wenn ein Update verfügbar ist, wirst du gefragt, ob du deine Version aktualisieren möchtest. Der Update Dienst lädt und installiert die neue Version automatisch.</string>
@@ -574,4 +573,13 @@
   <string name="no">Nein</string>
   <string name="yes">Ja</string>
   <string name="selection_too_large">Der ausgewählte Bereich ist zu groß</string>
+  <string name="conference_unknown_error">Unbekannter Fehler</string>
+  <string name="load_more_messages">weitere Nachrichten laden</string>
+  <string name="no_accounts">(keine aktiven Konten)</string>
+  <string name="no_participants">Keine Mitglieder</string>
+  <string name="pref_autojoin">Konferenzen automatisch beitreten</string>
+  <string name="pref_autojoin_summary">Konferenzen automatisch beitreten, wenn in der Kontaktliste aktiviert.</string>
+  <string name="pref_show_connection_options">Erweiterte Verbindungs-Optionen</string>
+  <string name="pref_show_connection_options_summary">Zeige Hostname- und Port-Optionen</string>
+  <string name="this_field_is_required">Dieses Feld ist erforderlich</string>
 </resources>

@@ -611,4 +611,5 @@
 	<string name="no">No</string>
 	<string name="no_accounts">(No activated accounts)</string>
 	<string name="this_field_is_required">This field is required</string>
+	<string name="no_participants">No participants</string>
 </resources>
