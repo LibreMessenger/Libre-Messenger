@@ -193,6 +193,7 @@
 	<string name="server_info_stream_management">XEP-0198: Stream Management</string>
 	<string name="server_info_pep">XEP-0163: PEP (Avatars / OMEMO)</string>
 	<string name="server_info_http_upload">XEP-0363: HTTP File Upload</string>
+	<string name="server_info_push">XEP-0357: Push</string>
 	<string name="server_info_available">available</string>
 	<string name="server_info_unavailable">unavailable</string>
 	<string name="missing_public_keys">Missing public key announcements</string>
@@ -552,6 +553,9 @@
 	<string name="action_add_account_with_certificate">Add account with certificate</string>
 	<string name="unable_to_parse_certificate">Unable to parse certificate</string>
 	<string name="authenticate_with_certificate">Leave empty to authenticate w/ certificate</string>
+	<string name="mam_prefs">Archiving preferences</string>
+	<string name="fetching_mam_prefs">Fetching archiving preferences. Please wait…</string>
+	<string name="unable_to_fetch_mam_prefs">Unable to fetch archiving preferences</string>
 	<string name="captcha_ocr">Captcha text</string>
 	<string name="captcha_required">Captcha required</string>
 	<string name="captcha_hint">enter the text from the image</string>

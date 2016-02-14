@@ -29,11 +29,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-import eu.siacs.conversations.Config;
 import org.whispersystems.libaxolotl.IdentityKey;
 import java.util.Set;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.axolotl.AxolotlService;
@@ -44,6 +48,7 @@ import eu.siacs.conversations.services.XmppConnectionService.OnAccountUpdate;
 import eu.siacs.conversations.ui.adapter.KnownHostsAdapter;
 import eu.siacs.conversations.utils.CryptoHelper;
 import eu.siacs.conversations.utils.UIHelper;
+import eu.siacs.conversations.xml.Element;
 import eu.siacs.conversations.xmpp.OnKeyStatusUpdated;
 import eu.siacs.conversations.xmpp.XmppConnection.Features;
 import eu.siacs.conversations.xmpp.forms.Data;
@@ -52,7 +57,7 @@ import eu.siacs.conversations.xmpp.jid.Jid;
 import eu.siacs.conversations.xmpp.pep.Avatar;
 
 public class EditAccountActivity extends XmppActivity implements OnAccountUpdate,
-		OnKeyStatusUpdated, OnCaptchaRequested, KeyChainAliasCallback, XmppConnectionService.OnShowErrorToast {
+		OnKeyStatusUpdated, OnCaptchaRequested, KeyChainAliasCallback, XmppConnectionService.OnShowErrorToast, XmppConnectionService.OnMamPreferencesFetched {
 
 	private AutoCompleteTextView mAccountJid;
 	private EditText mPassword;
@@ -73,6 +78,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 	private TextView mServerInfoBlocking;
 	private TextView mServerInfoPep;
 	private TextView mServerInfoHttpUpload;
+	private TextView mServerInfoPush;
 	private TextView mSessionEst;
 	private TextView mOtrFingerprint;
 	private TextView mAxolotlFingerprint;
@@ -218,6 +224,8 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 			finish();
 		}
 	};
+	private Toast mFetchingMamPrefsToast;
+	private TableRow mPushRow;
 
 	public void refreshUiReal() {
 		invalidateOptionsMenu();
@@ -417,6 +425,8 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		this.mServerInfoSm = (TextView) findViewById(R.id.server_info_sm);
 		this.mServerInfoPep = (TextView) findViewById(R.id.server_info_pep);
 		this.mServerInfoHttpUpload = (TextView) findViewById(R.id.server_info_http_upload);
+		this.mPushRow = (TableRow) findViewById(R.id.push_row);
+		this.mServerInfoPush = (TextView) findViewById(R.id.server_info_push);
 		this.mOtrFingerprint = (TextView) findViewById(R.id.otr_fingerprint);
 		this.mOtrFingerprintBox = (RelativeLayout) findViewById(R.id.otr_fingerprint_box);
 		this.mOtrFingerprintToClipboardButton = (ImageButton) findViewById(R.id.action_copy_to_clipboard);
@@ -465,6 +475,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		final MenuItem changePassword = menu.findItem(R.id.action_change_password_on_server);
 		final MenuItem clearDevices = menu.findItem(R.id.action_clear_devices);
 		final MenuItem renewCertificate = menu.findItem(R.id.action_renew_certificate);
+		final MenuItem mamPrefs = menu.findItem(R.id.action_mam_prefs);
 
 		renewCertificate.setVisible(mAccount != null && mAccount.getPrivateKeyAlias() != null);
 
@@ -475,6 +486,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 			if (!mAccount.getXmppConnection().getFeatures().register()) {
 				changePassword.setVisible(false);
 			}
+			mamPrefs.setVisible(mAccount.getXmppConnection().getFeatures().mam());
 			Set<Integer> otherDevices = mAccount.getAxolotlService().getOwnDeviceIds();
 			if (otherDevices == null || otherDevices.isEmpty()) {
 				clearDevices.setVisible(false);
@@ -485,6 +497,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 			showMoreInfo.setVisible(false);
 			changePassword.setVisible(false);
 			clearDevices.setVisible(false);
+			mamPrefs.setVisible(false);
 		}
 		return true;
 	}
@@ -567,6 +580,9 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				final Intent changePasswordIntent = new Intent(this, ChangePasswordActivity.class);
 				changePasswordIntent.putExtra(EXTRA_ACCOUNT, mAccount.getJid().toString());
 				startActivity(changePasswordIntent);
+				break;
+			case R.id.action_mam_prefs:
+				editMamPrefs();
 				break;
 			case R.id.action_clear_devices:
 				showWipePepDialog();
@@ -668,6 +684,14 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				this.mServerInfoHttpUpload.setText(R.string.server_info_available);
 			} else {
 				this.mServerInfoHttpUpload.setText(R.string.server_info_unavailable);
+			}
+
+			this.mPushRow.setVisibility(xmppConnectionService.getPushManagementService().available(mAccount) ? View.VISIBLE : View.GONE);
+
+			if (features.push()) {
+				this.mServerInfoPush.setText(R.string.server_info_available);
+			} else {
+				this.mServerInfoPush.setText(R.string.server_info_unavailable);
 			}
 			final String otrFingerprint = this.mAccount.getOtrFingerprint();
 			if (otrFingerprint != null) {
@@ -799,6 +823,12 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		builder.create().show();
 	}
 
+	private void editMamPrefs() {
+		this.mFetchingMamPrefsToast = Toast.makeText(this, R.string.fetching_mam_prefs, Toast.LENGTH_LONG);
+		this.mFetchingMamPrefsToast.show();
+		xmppConnectionService.fetchMamPreferences(mAccount, this);
+	}
+
 	@Override
 	public void onKeyStatusUpdated(AxolotlService.FetchStatus report) {
 		refreshUi();
@@ -875,6 +905,51 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 			@Override
 			public void run() {
 				Toast.makeText(EditAccountActivity.this, resId, Toast.LENGTH_SHORT).show();
+			}
+		});
+	}
+
+	@Override
+	public void onPreferencesFetched(final Element prefs) {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				if (mFetchingMamPrefsToast != null) {
+					mFetchingMamPrefsToast.cancel();
+				}
+				AlertDialog.Builder builder = new Builder(EditAccountActivity.this);
+				builder.setTitle(R.string.mam_prefs);
+				String defaultAttr = prefs.getAttribute("default");
+				final List<String> defaults = Arrays.asList("never", "roster", "always");
+				final AtomicInteger choice = new AtomicInteger(Math.max(0,defaults.indexOf(defaultAttr)));
+				builder.setSingleChoiceItems(R.array.mam_prefs, choice.get(), new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						choice.set(which);
+					}
+				});
+				builder.setNegativeButton(R.string.cancel, null);
+				builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						prefs.setAttribute("default",defaults.get(choice.get()));
+						xmppConnectionService.pushMamPreferences(mAccount, prefs);
+					}
+				});
+				builder.create().show();
+			}
+		});
+	}
+
+	@Override
+	public void onPreferencesFetchFailed() {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				if (mFetchingMamPrefsToast != null) {
+					mFetchingMamPrefsToast.cancel();
+				}
+				Toast.makeText(EditAccountActivity.this,R.string.unable_to_fetch_mam_prefs,Toast.LENGTH_LONG).show();
 			}
 		});
 	}

@@ -37,6 +37,8 @@ public final class Config {
 	public static final int CARBON_GRACE_PERIOD = 90;
 	public static final int MINI_GRACE_PERIOD = 750;
 
+	public static final boolean CLOSE_TCP_WHEN_SWITCHING_TO_BACKGROUND = false;
+
 	public static final int AVATAR_SIZE = 640;
 	public static final Bitmap.CompressFormat AVATAR_FORMAT = Bitmap.CompressFormat.WEBP;
 
@@ -118,6 +120,5 @@ public final class Config {
 	};
 
 	private Config() {
-
 	}
 }
