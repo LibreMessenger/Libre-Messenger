@@ -789,7 +789,8 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 					showSnackbar(R.string.conference_members_only, R.string.leave, leaveMuc);
 					break;
 				case MucOptions.KICKED_FROM_ROOM:
-					showSnackbar(R.string.conference_kicked, R.string.join, joinMuc);
+					//showSnackbar(R.string.conference_kicked, R.string.join, joinMuc);
+					activity.xmppConnectionService.joinMuc(conversation);
 					break;
 				case MucOptions.ERROR_UNKNOWN:
 					showSnackbar(R.string.conference_unknown_error, R.string.try_again, joinMuc);
