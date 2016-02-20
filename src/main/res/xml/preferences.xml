@@ -151,7 +151,7 @@
                 android:summary="@string/pref_show_dynamic_tags_summary"
                 android:title="@string/pref_show_dynamic_tags"/>
             </PreferenceCategory>
-            <PreferenceCategory android:title="@string/pref_encryption_settings">
+            <PreferenceCategory android:title="@string/pref_security_settings">
                 <CheckBoxPreference
                     android:defaultValue="false"
                     android:key="dont_save_encrypted"
@@ -166,6 +166,11 @@
                     android:key="remove_trusted_certificates"
                     android:summary="@string/pref_remove_trusted_certificates_summary"
                     android:title="@string/pref_remove_trusted_certificates_title"/>
+                <CheckBoxPreference
+                    android:defaultValue="true"
+                    android:key="allow_message_correction"
+                    android:title="@string/pref_allow_message_correction"
+                    android:summary="@string/pref_allow_message_correction_summary"/>
             </PreferenceCategory>
             <PreferenceCategory
                 android:key="connection_options"

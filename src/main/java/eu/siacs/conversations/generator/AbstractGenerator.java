@@ -38,6 +38,9 @@ public abstract class AbstractGenerator {
 			"urn:xmpp:chat-markers:0",
 			"urn:xmpp:receipts"
 	};
+	private final String[] MESSAGE_CORRECTION_FEATURES = {
+			"urn:xmpp:message-correct:0"
+	};
 	private String mVersion = null;
 
 	private String mVersionOs = null;
@@ -98,6 +101,9 @@ public abstract class AbstractGenerator {
 		features.addAll(Arrays.asList(FEATURES));
 		if (mXmppConnectionService.confirmMessages()) {
 			features.addAll(Arrays.asList(MESSAGE_CONFIRMATION_FEATURES));
+		}
+		if (mXmppConnectionService.allowMessageCorrection()) {
+			features.addAll(Arrays.asList(MESSAGE_CORRECTION_FEATURES));
 		}
 		Collections.sort(features);
 		return features;

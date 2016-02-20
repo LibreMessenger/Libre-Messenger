@@ -15,6 +15,7 @@ import eu.siacs.conversations.R;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.xml.Element;
 import eu.siacs.conversations.xmpp.OnIqPacketReceived;
+import eu.siacs.conversations.xmpp.XmppConnection;
 import eu.siacs.conversations.xmpp.forms.Data;
 import eu.siacs.conversations.xmpp.jid.InvalidJidException;
 import eu.siacs.conversations.xmpp.jid.Jid;
@@ -75,9 +76,9 @@ public class PushManagementService {
 			@Override
 			public void onIqPacketReceived(Account account, IqPacket packet) {
 				if (packet.getType() == IqPacket.TYPE.RESULT) {
-					Log.d(Config.LOGTAG,account.getJid().toBareJid()+": successfully enabled push on server");
+					Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": successfully enabled push on server");
 				} else if (packet.getType() == IqPacket.TYPE.ERROR) {
-					Log.d(Config.LOGTAG,account.getJid().toBareJid()+": enabling push on server failed");
+					Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": enabling push on server failed");
 				}
 			}
 		});
@@ -100,11 +101,16 @@ public class PushManagementService {
 
 
 	public boolean available(Account account) {
-		return account.getXmppConnection().getFeatures().push() && playServicesAvailable();
+		final XmppConnection connection = account.getXmppConnection();
+		return connection != null && connection.getFeatures().push() && playServicesAvailable();
 	}
 
 	private boolean playServicesAvailable() {
 		return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(mXmppConnectionService) == ConnectionResult.SUCCESS;
+	}
+
+	public boolean isStub() {
+		return false;
 	}
 
 	interface OnGcmInstanceTokenRetrieved {

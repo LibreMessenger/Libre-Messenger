@@ -332,6 +332,7 @@ public class IqGenerator extends AbstractGenerator {
 		Data data = new Data();
 		data.setFormType("http://jabber.org/protocol/pubsub#publish-options");
 		data.put("secret",secret);
+		data.submit();
 		enable.addChild(data);
 		return packet;
 	}
