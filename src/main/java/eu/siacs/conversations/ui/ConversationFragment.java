@@ -53,6 +53,7 @@ import eu.siacs.conversations.entities.MucOptions;
 import eu.siacs.conversations.entities.Presence;
 import eu.siacs.conversations.entities.Transferable;
 import eu.siacs.conversations.entities.TransferablePlaceholder;
+import eu.siacs.conversations.services.MessageArchiveService;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.ui.XmppActivity.OnPresenceSelected;
 import eu.siacs.conversations.ui.XmppActivity.OnValueEdited;
@@ -808,27 +809,29 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 				&& !conversation.getMucOptions().online()
 				&& account.getStatus() == Account.State.ONLINE) {
 			switch (conversation.getMucOptions().getError()) {
-				case MucOptions.ERROR_NICK_IN_USE:
+				case NICK_IN_USE:
 					showSnackbar(R.string.nick_in_use, R.string.edit, clickToMuc);
 					break;
-				case MucOptions.ERROR_NO_RESPONSE:
-					showSnackbar(R.string.conference_not_found, R.string.leave, leaveMuc);
+				case NO_RESPONSE:
+					showSnackbar(R.string.joining_conference, 0, null);
 					break;
-				case MucOptions.ERROR_PASSWORD_REQUIRED:
+				case PASSWORD_REQUIRED:
 					showSnackbar(R.string.conference_requires_password, R.string.enter_password, enterPassword);
 					break;
-				case MucOptions.ERROR_BANNED:
+				case BANNED:
 					showSnackbar(R.string.conference_banned, R.string.leave, leaveMuc);
 					break;
-				case MucOptions.ERROR_MEMBERS_ONLY:
+				case MEMBERS_ONLY:
 					showSnackbar(R.string.conference_members_only, R.string.leave, leaveMuc);
 					break;
-				case MucOptions.KICKED_FROM_ROOM:
-					//showSnackbar(R.string.conference_kicked, R.string.join, joinMuc);
-					activity.xmppConnectionService.joinMuc(conversation);
+				case KICKED:
+					showSnackbar(R.string.conference_kicked, R.string.join, joinMuc);
 					break;
-				case MucOptions.ERROR_UNKNOWN:
-					showSnackbar(R.string.conference_unknown_error, R.string.try_again, joinMuc);
+				case UNKNOWN:
+					showSnackbar(R.string.conference_unknown_error, R.string.join, joinMuc);
+					break;
+				case SHUTDOWN:
+					showSnackbar(R.string.conference_shutdown, R.string.join, joinMuc);
 					break;
 				default:
 					break;
@@ -1053,10 +1056,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
 	protected void updateStatusMessages() {
 		synchronized (this.messageList) {
-			final XmppConnection connection = conversation.getAccount().getXmppConnection();
-			if (conversation.getLastClearHistory() != 0
-					&& connection != null
-					&& connection.getFeatures().mam()) {
+			if (showLoadMoreMessages(conversation)) {
 				this.messageList.add(0, Message.createLoadMoreMessage(conversation));
 			}
 			if (conversation.getMode() == Conversation.MODE_SINGLE) {
@@ -1082,14 +1082,30 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 		}
 	}
 
-	protected void showSnackbar(final int message, final int action,
-								final OnClickListener clickListener) {
+	private boolean showLoadMoreMessages(final Conversation c) {
+		final boolean mam = hasMamSupport(c);
+		final MessageArchiveService service = activity.xmppConnectionService.getMessageArchiveService();
+		return mam && (c.getLastClearHistory() != 0  || (c.countMessages() == 0 && c.hasMessagesLeftOnServer()  && !service.queryInProgress(c)));
+	}
+
+	private boolean hasMamSupport(final Conversation c) {
+		if (c.getMode() == Conversation.MODE_SINGLE) {
+			final XmppConnection connection = c.getAccount().getXmppConnection();
+			return connection != null && connection.getFeatures().mam();
+		} else {
+			return c.getMucOptions().mamSupport();
+		}
+	}
+
+	protected void showSnackbar(final int message, final int action, final OnClickListener clickListener) {
 		snackbar.setVisibility(View.VISIBLE);
 		snackbar.setOnClickListener(null);
 		snackbarMessage.setText(message);
 		snackbarMessage.setOnClickListener(null);
-		snackbarAction.setVisibility(View.VISIBLE);
-		snackbarAction.setText(action);
+		snackbarAction.setVisibility(clickListener == null ? View.GONE : View.VISIBLE);
+		if (action != 0) {
+			snackbarAction.setText(action);
+		}
 		snackbarAction.setOnClickListener(clickListener);
 	}
 
