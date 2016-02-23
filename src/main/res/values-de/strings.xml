@@ -237,7 +237,6 @@
   <string name="bookmark_already_exists">Die Konferenz befindet sich bereits auf deiner Kontaktliste</string>
   <string name="you">Du</string>
   <string name="action_edit_subject">Konferenz-Thema bearbeiten</string>
-  <string name="conference_not_found">Konferenz nicht gefunden</string>
   <string name="leave">Verlassen</string>
   <string name="contact_added_you">Der Kontakt hat dich zur Kontaktliste hinzugefügt</string>
   <string name="add_back">Auch hinzufügen</string>
@@ -592,4 +591,6 @@
   <string name="this_field_is_required">Dieses Feld ist erforderlich</string>
   <string name="correct_message">Nachricht korrigieren</string>
   <string name="send_corrected_message">Korrigierte Nachricht senden</string>
+  <string name="conference_shutdown">Konferenz wurde geschlossen</string>
+  <string name="joining_conference">Konferent wird beigetreten…</string>
 </resources>
