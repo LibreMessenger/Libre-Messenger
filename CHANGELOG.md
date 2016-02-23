@@ -1,9 +1,7 @@
 ###Changelog
 
 ####Version 1.10.0
-* Support for XEP-0357: Push Notifications
 * Support for XEP-0308: Last Message Correction
-* introduced build flavors to make dependence on play-services optional
 
 ####Version 1.9.4
 * prevent cleared Conversations from reloading history with MAM
