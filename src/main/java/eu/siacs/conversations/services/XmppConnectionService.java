@@ -262,7 +262,6 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 			if (mPushManagementService.available(account)) {
 				mPushManagementService.registerPushTokenOnServer(account);
 			}
-			mMessageArchiveService.executePendingQueries(account);
 			connectMultiModeConversations(account);
 			syncDirtyContacts(account);
 		}
@@ -276,6 +275,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 				mOnAccountUpdate.onAccountUpdate();
 			}
 			if (account.getStatus() == Account.State.ONLINE) {
+				mMessageArchiveService.executePendingQueries(account);
 				if (connection != null && connection.getFeatures().csi()) {
 					if (checkListeners()) {
 						Log.d(Config.LOGTAG, account.getJid().toBareJid() + " sending csi//inactive");
@@ -351,7 +351,9 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 	}
 
 	public PgpEngine getPgpEngine() {
-		if (pgpServiceConnection != null && pgpServiceConnection.isBound()) {
+		if (!Config.supportOpenPgp()) {
+			return null;
+		} else if (pgpServiceConnection != null && pgpServiceConnection.isBound()) {
 			if (this.mPgpEngine == null) {
 				this.mPgpEngine = new PgpEngine(new OpenPgpApi(
 						getApplicationContext(),
@@ -689,20 +691,23 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, contactObserver);
 		this.fileObserver.startWatching();
 
-		this.pgpServiceConnection = new OpenPgpServiceConnection(getApplicationContext(), "org.sufficientlysecure.keychain", new OpenPgpServiceConnection.OnBound() {
-			@Override
-			public void onBound(IOpenPgpService2 service) {
-				for (Account account : accounts) {
-					if (account.getPgpDecryptionService() != null) {
-						account.getPgpDecryptionService().onOpenPgpServiceBound();
+		if (Config.supportOpenPgp()) {
+			this.pgpServiceConnection = new OpenPgpServiceConnection(getApplicationContext(), "org.sufficientlysecure.keychain", new OpenPgpServiceConnection.OnBound() {
+				@Override
+				public void onBound(IOpenPgpService2 service) {
+					for (Account account : accounts) {
+						if (account.getPgpDecryptionService() != null) {
+							account.getPgpDecryptionService().onOpenPgpServiceBound();
+						}
 					}
 				}
-			}
 
-			@Override
-			public void onError(Exception e) { }
-		});
-		this.pgpServiceConnection.bindToService();
+				@Override
+				public void onError(Exception e) {
+				}
+			});
+			this.pgpServiceConnection.bindToService();
+		}
 
 		this.pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		this.wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "XmppConnectionService");
