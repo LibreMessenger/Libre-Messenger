@@ -485,7 +485,6 @@ public class ConversationActivity extends XmppActivity
 			menuUpdater.setVisible(false);
 
 			if (this.getSelectedConversation() != null) {
-				menuSecure.setVisible(!Config.HIDE_ENCRYPTION_IN_UI);
 				if (this.getSelectedConversation().getNextEncryption() != Message.ENCRYPTION_NONE) {
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 						menuSecure.setIcon(R.drawable.ic_lock_white_24dp);
@@ -499,7 +498,7 @@ public class ConversationActivity extends XmppActivity
 					menuInviteContact.setVisible(getSelectedConversation().getMucOptions().canInvite());
 					menuSecure.setVisible(Config.supportOpenPgp() && Config.multipleEncryptionChoices()); //only if pgp is supported we have a choice
 				} else {
-					menuMucDetails.setVisible(false);
+					//menuMucDetails.setVisible(false);
 					menuSecure.setVisible(Config.multipleEncryptionChoices());
 				}
 				if (this.getSelectedConversation().isMuted()) {
