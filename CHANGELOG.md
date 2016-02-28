@@ -1,7 +1,7 @@
 ###Changelog
 
 ####Version 1.10.1
-* made message correction opt-in
+* support only one account
 * various bug fixes
 
 ####Version 1.10.0
