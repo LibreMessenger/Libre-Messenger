@@ -39,7 +39,7 @@ public final class Config {
 	public static final String DOMAIN_LOCK = "pix-art.de"; //only allow account creation for this domain
 	public static final String CONFERENCE_DOMAIN_LOCK = null; //only allow conference creation for this domain
 	public static final boolean LOCK_DOMAINS_IN_CONVERSATIONS = false; //only add contacts and conferences for own domains
-	public static final boolean LOCK_SETTINGS = true; //set to true to disallow account and settings editing
+	public static final boolean LOCK_SETTINGS = false; //set to true to disallow account and settings editing
 
 	public static final boolean DISALLOW_REGISTRATION_IN_UI = false; //hide the register checkbox
 
@@ -77,7 +77,7 @@ public final class Config {
 
 	public static final int MESSAGE_MERGE_WINDOW = 20;
 
-	public static final int PAGE_SIZE = 50;
+	public static final int PAGE_SIZE = 20;
 	public static final int MAX_NUM_PAGES = 3;
 
 	public static final int REFRESH_UI_INTERVAL = 500;
