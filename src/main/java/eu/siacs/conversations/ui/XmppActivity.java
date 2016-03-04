@@ -42,6 +42,7 @@ import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -378,6 +379,19 @@ public abstract class XmppActivity extends Activity {
 		if (ab!=null) {
 			ab.setDisplayHomeAsUpEnabled(true);
 		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		final MenuItem menuSettings = menu.findItem(R.id.action_settings);
+		final MenuItem menuManageAccounts = menu.findItem(R.id.action_accounts);
+		if (menuSettings != null) {
+			menuSettings.setVisible(!Config.LOCK_SETTINGS);
+		}
+		if (menuManageAccounts != null) {
+			menuManageAccounts.setVisible(!Config.LOCK_SETTINGS);
+		}
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	protected boolean showBatteryOptimizationWarning() {
@@ -788,7 +802,7 @@ public abstract class XmppActivity extends Activity {
 				+ "\n\n" + CryptoHelper.prettifyFingerprint(fingerprint.substring(2))
 				+ "\n\n" + getString(R.string.purge_key_desc_part2));
 		builder.setNegativeButton(getString(R.string.cancel), null);
-		builder.setPositiveButton(getString(R.string.accept),
+		builder.setPositiveButton(getString(R.string.purge_key),
 				new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {

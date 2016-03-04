@@ -550,6 +550,8 @@
 	<string name="pref_xa_on_silent_mode">Not available in silent mode</string>
 	<string name="update_info">Pix-Art Messenger is checking for an update. If an update is available you will be asked, if you want to update your version. The update process is downloading and installing the new version automatically.</string>
 	<string name="pref_xa_on_silent_mode_summary">Marks your resource as not available when device is in silent mode</string>
+	<string name="pref_treat_vibrate_as_silent">Treat vibrate as silent mode</string>
+	<string name="pref_treat_vibrate_as_silent_summary">Marks your resource as not available when device is on vibrate</string>
 	<string name="pref_show_connection_options">Extended connection settings</string>
 	<string name="pref_show_connection_options_summary">Show hostname and port settings when setting up an account</string>
 	<string name="hostname_example">xmpp.example.com</string>
@@ -622,5 +624,5 @@
 	<string name="no_participants">No participants</string>
 	<string name="correct_message">Correct message</string>
 	<string name="send_corrected_message">Send corrected message</string>
->>>>>>> refs/heads/pr/73
+	<string name="no_keys_just_confirm">You already trust this contact. By selecting \'done\' you are just confirming that %s is part of this conference.</string>
 </resources>
