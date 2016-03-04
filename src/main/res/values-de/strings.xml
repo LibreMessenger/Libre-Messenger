@@ -92,9 +92,8 @@
   <string name="offering">angeboten…</string>
   <string name="waiting">warten…</string>
   <string name="no_pgp_key">Kein OpenPGP-Schlüssel gefunden</string>
-  <string name="contact_has_no_pgp_key">Pix-Art Messenger ist nicht in der Lage, deine Nachrichten zu verschlüsseln, weil dein Kontakt seinen oder ihren Schlüssel nicht preisgibt.\n\n<small>Bitte sag deinem Kontakt, er oder sie möge OpenPGP einrichten.</small></string>
-  <string name="no_pgp_keys">Keine OpenPGP-Schlüssel gefunden</string>
   <string name="contacts_have_no_pgp_keys">Pix-Art Messenger ist nicht in der Lage, deine Nachrichten zu verschlüsseln, weil deine Kontakte ihre Schlüssel nicht preisgeben.\n\n<small>Bitte sage deinen Kontakten, sie mögen OpenPGP einrichten.</small></string>
+  <string name="no_pgp_keys">Keine OpenPGP-Schlüssel gefunden</string>
   <string name="encrypted_message_received"><i>Verschlüsselte Nachricht erhalten. Antippen zum Entschlüsseln.</i></string>
   <string name="pref_general">Allgemeines</string>
   <string name="pref_xmpp_resource">XMPP-Ressource</string>
@@ -593,4 +592,9 @@
   <string name="send_corrected_message">Korrigierte Nachricht senden</string>
   <string name="conference_shutdown">Konferenz wurde geschlossen</string>
   <string name="joining_conference">Konferent wird beigetreten…</string>
+  <string name="conference_name">Konferenz-Name</string>
+  <string name="invalid_conference_name">Ungültiger Konferenz-Name</string>
+  <string name="no_keys_just_confirm">Du vertraust diesem Kontakt bereits. Mit einem Klick auf \'Erledigt\' bestätigst du lediglich, dass %s Teil dieser Konferenz ist.</string>
+  <string name="pref_treat_vibrate_as_silent">Vibrationsmodus wie stummgeschaltet behandeln</string>
+  <string name="pref_treat_vibrate_as_silent_summary">Setzt deinen Status auf nicht verfügbar, wenn sich dein Gerät im Vibrationsmodus befindet</string>
 </resources>
