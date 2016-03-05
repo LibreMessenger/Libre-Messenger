@@ -2,6 +2,7 @@
 
 ####Version 1.11.0
 * OMEMO encrypted conferences
+* resend failed filetransfers automatically
 
 ####Version 1.10.1
 * support only one account
