@@ -1,59 +1,60 @@
 package eu.siacs.conversations.entities;
 
+import java.util.Arrays;
+import java.util.List;
+
 public interface Transferable {
-
-	String[] VALID_IMAGE_EXTENSIONS = {
-			"webp",
-			"jpeg",
-			"jpg",
-			"png",
-			"jpe",
-			"gif",
-			"tif"
-	};
-	String[] VALID_CRYPTO_EXTENSIONS = {
-			"pgp",
-			"gpg",
-			"otr"
-	};
-	String[] WELL_KNOWN_EXTENSIONS = {
-			//documents
-			"pdf",
-			"doc",
-			"docx",
-			"txt",
-			//audio
-			"m4a",
-            "m4b",
-			"mp3",
-			"mp2",
-			"wav",
-			"aac",
-			"aif",
-			"aiff",
-			"aifc",
-			"mid",
-			"midi",
-			"3gpp",
-			//video
-			"avi",
-			"mp4",
-			"mpeg",
-			"mpg",
-			"mpe",
-			"mov",
-            "3gp",
-			//applications
-			"apk",
-			//contact
-			"vcf",
-			//calendar
-			"ics",
-			//compressed
-			"zip",
-			"rar",
-
-	};
+	List<String> VALID_IMAGE_EXTENSIONS = Arrays.asList(
+		"webp",
+		"jpeg",
+		"jpg",
+		"png",
+		"jpe",
+		"gif",
+		"tif"
+	);
+	List<String> VALID_CRYPTO_EXTENSIONS = Arrays.asList(
+		"pgp",
+		"gpg",
+		"otr"
+	);
+	List<String> WELL_KNOWN_EXTENSIONS = Arrays.asList(
+		//documents
+		"pdf",
+		"doc",
+		"docx",
+		"txt",
+		//audio
+		"m4a",
+    "m4b",
+		"mp3",
+		"mp2",
+		"wav",
+		"aac",
+		"aif",
+		"aiff",
+		"aifc",
+		"mid",
+		"midi",
+		"3gpp",
+		//video
+		"avi",
+		"mp4",
+		"mpeg",
+		"mpg",
+		"mpe",
+		"mov",
+    "3gp",
+		//applications
+		"apk",
+		//contact
+		"vcf",
+		//calendar
+		"ics",
+		//compressed
+		"zip",
+		"rar",
+	);
 
 	int STATUS_UNKNOWN = 0x200;
 	int STATUS_CHECKING = 0x201;
