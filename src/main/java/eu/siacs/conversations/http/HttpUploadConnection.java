@@ -94,8 +94,12 @@ public class HttpUploadConnection implements Transferable {
 	private void fail() {
 		mHttpConnectionManager.finishUploadConnection(this);
 		message.setTransferable(null);
-		mXmppConnectionService.markMessage(message, Message.STATUS_SEND_FAILED);
-		FileBackend.close(mFileInputStream);
+        if (!canceled){
+            mXmppConnectionService.resendMessage(message, delayed);
+		} else {
+            mXmppConnectionService.markMessage(message, Message.STATUS_SEND_FAILED);
+            FileBackend.close(mFileInputStream);
+        }
 	}
 
 	public void init(Message message, boolean delay) {
