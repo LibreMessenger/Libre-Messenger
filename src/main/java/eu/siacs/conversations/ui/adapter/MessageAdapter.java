@@ -639,7 +639,8 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 				displayLocationMessage(viewHolder,message);
 			} else if (message.bodyIsHeart()) {
 				displayHeartMessage(viewHolder, message.getBody().trim());
-			} else if (message.treatAsDownloadable() == Message.Decision.MUST) {
+			} else if (message.treatAsDownloadable() == Message.Decision.MUST ||
+					message.treatAsDownloadable() == Message.Decision.SHOULD) {
 				try {
 					URL url = new URL(message.getBody());
 					displayDownloadableMessage(viewHolder,
