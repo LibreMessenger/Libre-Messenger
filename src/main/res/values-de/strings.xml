@@ -597,4 +597,7 @@
   <string name="no_keys_just_confirm">Du vertraust diesem Kontakt bereits. Mit einem Klick auf \'Erledigt\' bestätigst du lediglich, dass %s Teil dieser Konferenz ist.</string>
   <string name="pref_treat_vibrate_as_silent">Vibrationsmodus wie stummgeschaltet behandeln</string>
   <string name="pref_treat_vibrate_as_silent_summary">Setzt deinen Status auf nicht verfügbar, wenn sich dein Gerät im Vibrationsmodus befindet</string>
+  <string name="check_x_filesize_on_host">%1$s-Größe auf %2$s prüfen</string>
+  <string name="select_image_and_crop">Bild auswählen und zuschneiden</string>
+  <string name="contact_has_no_pgp_key">Pix-Art Messenger ist nicht in der Lage, deine Nachrichten zu verschlüsseln, weil dein Kontakt seinen Schlüssel nicht preisgibt.\n\n</string>
 </resources>
