@@ -158,7 +158,7 @@
   <string name="mgmt_account_disable">Vorübergehend abschalten</string>
   <string name="mgmt_account_publish_avatar">Avatar veröffentlichen</string>
   <string name="mgmt_account_publish_pgp">Öffentlichen OpenPGP-Schlüssel veröffentlichen</string>
-  <string name="mgmt_account_enable">Anschalten</string>
+  <string name="mgmt_account_enable">Aktivieren </string>
   <string name="mgmt_account_are_you_sure">Bist du dir sicher?</string>
   <string name="mgmt_account_delete_confirm_text">Wenn du dein Konto löschst, gehen alle Gesprächsverläufe verloren</string>
   <string name="attach_record_voice">Sprache aufzeichnen</string>
@@ -213,7 +213,7 @@
   <string name="other_devices">Andere Geräte</string>
   <string name="trust_omemo_fingerprints">OMEMO-Fingerabdruck vertrauen</string>
   <string name="fetching_keys">Schlüssel werden abgerufen …</string>
-  <string name="done">Erledigt</string>
+  <string name="done">Fertig</string>
   <string name="verify">Überprüfen</string>
   <string name="decrypt">Entschlüsseln</string>
   <string name="conferences">Konferenzen</string>
@@ -236,6 +236,7 @@
   <string name="bookmark_already_exists">Die Konferenz befindet sich bereits auf deiner Kontaktliste</string>
   <string name="you">Du</string>
   <string name="action_edit_subject">Konferenz-Thema bearbeiten</string>
+  <string name="joining_conference">Konferenz wird betreten…</string>
   <string name="leave">Verlassen</string>
   <string name="contact_added_you">Der Kontakt hat dich zur Kontaktliste hinzugefügt</string>
   <string name="add_back">Auch hinzufügen</string>
@@ -392,7 +393,7 @@
   <string name="current_password">Aktuelles Passwort</string>
   <string name="new_password">Neues Passwort</string>
   <string name="password_should_not_be_empty">Das Passwort darf nicht leer sein</string>
-  <string name="enable_all_accounts">Alle Konten anschalten</string>
+  <string name="enable_all_accounts">Alle Konten aktiveren</string>
   <string name="disable_all_accounts">Alle Konten abschalten</string>
   <string name="perform_action_with">Aktion durchführen mit</string>
   <string name="no_affiliation">Keine Zugehörigkeit</string>
@@ -506,7 +507,9 @@
   <string name="pref_away_when_screen_off">Abwesend bei abgeschaltetem Bildschirm</string>
   <string name="pref_away_when_screen_off_summary">Setzt deinen Status auf \"abwesend\", solange dein Bildschirm abgeschaltet ist</string>
   <string name="pref_xa_on_silent_mode">Nicht verfügbar bei Stummschaltung</string>
-  <string name="pref_xa_on_silent_mode_summary">Setzt deinen Status auf \"nicht verfügbar\", solange dein Telefon lautlos ist</string>
+  <string name="pref_xa_on_silent_mode_summary">Setzt deinen Status auf \"nicht verfügbar\", solange dein Gerät lautlos ist</string>
+  <string name="pref_treat_vibrate_as_silent">Behandle Vibration als stumm</string>
+  <string name="pref_treat_vibrate_as_silent_summary">Setze deinen Status auf \"nicht verfügbar\" solange dein Gerät auf \"vibrieren\" ist.</string>
   <string name="hostname_example">xmpp.domain.de</string>
   <string name="action_add_account_with_certificate">Konto mit Zertifikat hinzufügen</string>
   <string name="unable_to_parse_certificate">Zertifikat kann nicht gelesen werden</string>
@@ -591,13 +594,12 @@
   <string name="correct_message">Nachricht korrigieren</string>
   <string name="send_corrected_message">Korrigierte Nachricht senden</string>
   <string name="conference_shutdown">Konferenz wurde geschlossen</string>
-  <string name="joining_conference">Konferent wird beigetreten…</string>
   <string name="conference_name">Konferenz-Name</string>
   <string name="invalid_conference_name">Ungültiger Konferenz-Name</string>
-  <string name="no_keys_just_confirm">Du vertraust diesem Kontakt bereits. Mit einem Klick auf \'Erledigt\' bestätigst du lediglich, dass %s Teil dieser Konferenz ist.</string>
-  <string name="pref_treat_vibrate_as_silent">Vibrationsmodus wie stummgeschaltet behandeln</string>
-  <string name="pref_treat_vibrate_as_silent_summary">Setzt deinen Status auf nicht verfügbar, wenn sich dein Gerät im Vibrationsmodus befindet</string>
-  <string name="check_x_filesize_on_host">%1$s-Größe auf %2$s prüfen</string>
-  <string name="select_image_and_crop">Bild auswählen und zuschneiden</string>
+    <string name="check_x_filesize_on_host">%1$s-Größe auf %2$s prüfen</string>
   <string name="contact_has_no_pgp_key">Pix-Art Messenger ist nicht in der Lage, deine Nachrichten zu verschlüsseln, weil dein Kontakt seinen Schlüssel nicht preisgibt.\n\n</string>
+  <string name="no_keys_just_confirm">Du vertraust diesem Kontakt bereits. In dem du \'Fertig\' auswählst bestätigst Du, dass %s Teil dieser Konferenz ist.</string>
+  <string name="select_image_and_crop">Bild auswählen und zuschneiden</string>
+  <string name="this_account_is_disabled">Du hast diesen Account deaktiviert</string>
+
 </resources>

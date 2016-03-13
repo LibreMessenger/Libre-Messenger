@@ -1444,7 +1444,9 @@ public class ConversationActivity extends XmppActivity
 	}
 
 	private void openBatteryOptimizationDialogIfNeeded() {
-		if (showBatteryOptimizationWarning() && getPreferences().getBoolean("show_battery_optimization", true)) {
+		if (hasAccountWithoutPush()
+				&& isOptimizingBattery()
+				&& getPreferences().getBoolean("show_battery_optimization", true)) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(R.string.battery_optimizations_enabled);
 			builder.setMessage(R.string.battery_optimizations_enabled_dialog);
@@ -1467,6 +1469,16 @@ public class ConversationActivity extends XmppActivity
 			}
 			builder.create().show();
 		}
+	}
+
+	private boolean hasAccountWithoutPush() {
+		for(Account account : xmppConnectionService.getAccounts()) {
+			if (account.getStatus() != Account.State.DISABLED
+					&& !xmppConnectionService.getPushManagementService().available(account)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void attachLocationToConversation(Conversation conversation, Uri uri) {
