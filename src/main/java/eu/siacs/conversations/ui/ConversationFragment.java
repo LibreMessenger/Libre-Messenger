@@ -320,6 +320,16 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 			}
 		}
 	};
+	private View.OnLongClickListener mSendButtonLongListener = new View.OnLongClickListener() {
+		@Override
+		public boolean onLongClick(View v) {
+			final String body = mEditMessage.getText().toString();
+			if (body.length() == 0) {
+				mEditMessage.getText().insert(0, "/me ");
+			}
+			return true;
+		}
+	};
 	private OnClickListener clickToMuc = new OnClickListener() {
 
 		@Override
@@ -445,6 +455,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
 		mSendButton = (ImageButton) view.findViewById(R.id.textSendButton);
 		mSendButton.setOnClickListener(this.mSendButtonListener);
+		mSendButton.setOnLongClickListener(this.mSendButtonLongListener);
 
 		snackbar = (RelativeLayout) view.findViewById(R.id.snackbar);
 		snackbarMessage = (TextView) view.findViewById(R.id.snackbar_message);
