@@ -455,22 +455,16 @@ public class ConversationActivity extends XmppActivity
 		getMenuInflater().inflate(R.menu.conversations, menu);
 		final MenuItem menuSecure = menu.findItem(R.id.action_security);
 		final MenuItem menuArchive = menu.findItem(R.id.action_archive);
-		//final MenuItem menuMucDetails = menu.findItem(R.id.action_muc_details);
-		//final MenuItem menuContactDetails = menu.findItem(R.id.action_contact_details);
 		final MenuItem menuAttach = menu.findItem(R.id.action_attach_file);
 		final MenuItem menuClearHistory = menu.findItem(R.id.action_clear_history);
 		final MenuItem menuAdd = menu.findItem(R.id.action_add);
 		final MenuItem menuInviteContact = menu.findItem(R.id.action_invite);
 		final MenuItem menuMute = menu.findItem(R.id.action_mute);
 		final MenuItem menuUnmute = menu.findItem(R.id.action_unmute);
-		final MenuItem menuAccounts = menu.findItem(R.id.action_accounts);
-		final MenuItem menuSettings = menu.findItem(R.id.action_settings);
 		final MenuItem menuUpdater = menu.findItem(R.id.action_check_updates);
 
 		if (isConversationsOverviewVisable() && isConversationsOverviewHideable()) {
 			menuArchive.setVisible(false);
-			//menuMucDetails.setVisible(false);
-			//menuContactDetails.setVisible(false);
 			menuSecure.setVisible(false);
 			menuInviteContact.setVisible(false);
 			menuAttach.setVisible(false);
@@ -480,8 +474,6 @@ public class ConversationActivity extends XmppActivity
 		} else {
 			menuAdd.setVisible(!isConversationsOverviewHideable());
 			//hide settings, accounts and updater in all menus except in main window
-			menuAccounts.setVisible(false);
-			menuSettings.setVisible(false);
 			menuUpdater.setVisible(false);
 
 			if (this.getSelectedConversation() != null) {
@@ -493,12 +485,10 @@ public class ConversationActivity extends XmppActivity
 					}
 				}
 				if (this.getSelectedConversation().getMode() == Conversation.MODE_MULTI) {
-					//menuContactDetails.setVisible(false);
 					menuAttach.setVisible(getSelectedConversation().getAccount().httpUploadAvailable() && getSelectedConversation().getMucOptions().participating());
 					menuInviteContact.setVisible(getSelectedConversation().getMucOptions().canInvite());
 					menuSecure.setVisible((Config.supportOpenPgp() || Config.supportOmemo()) && Config.multipleEncryptionChoices()); //only if pgp is supported we have a choice
 				} else {
-					//menuMucDetails.setVisible(false);
 					menuSecure.setVisible(Config.multipleEncryptionChoices());
 				}
 				if (this.getSelectedConversation().isMuted()) {
