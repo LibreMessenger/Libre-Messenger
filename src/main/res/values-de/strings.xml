@@ -508,8 +508,8 @@
   <string name="pref_away_when_screen_off_summary">Setzt deinen Status auf \"abwesend\", solange dein Bildschirm abgeschaltet ist</string>
   <string name="pref_xa_on_silent_mode">Nicht verfügbar bei Stummschaltung</string>
   <string name="pref_xa_on_silent_mode_summary">Setzt deinen Status auf \"nicht verfügbar\", solange dein Gerät lautlos ist</string>
-  <string name="pref_treat_vibrate_as_silent">Behandle Vibration als stumm</string>
-  <string name="pref_treat_vibrate_as_silent_summary">Setze deinen Status auf \"nicht verfügbar\" solange dein Gerät auf \"vibrieren\" ist.</string>
+  <string name="pref_treat_vibrate_as_silent">Vibration als Lautlos behandeln</string>
+  <string name="pref_treat_vibrate_as_silent_summary">Setzt deinen Status auf \"nicht verfügbar\", solange das Gerät auf Vibration geschaltet ist</string>
   <string name="hostname_example">xmpp.domain.de</string>
   <string name="action_add_account_with_certificate">Konto mit Zertifikat hinzufügen</string>
   <string name="unable_to_parse_certificate">Zertifikat kann nicht gelesen werden</string>
@@ -596,9 +596,9 @@
   <string name="conference_shutdown">Konferenz wurde geschlossen</string>
   <string name="conference_name">Konferenz-Name</string>
   <string name="invalid_conference_name">Ungültiger Konferenz-Name</string>
-    <string name="check_x_filesize_on_host">%1$s-Größe auf %2$s prüfen</string>
+  <string name="check_x_filesize_on_host">%1$s-Größe auf %2$s prüfen</string>
   <string name="contact_has_no_pgp_key">Pix-Art Messenger ist nicht in der Lage, deine Nachrichten zu verschlüsseln, weil dein Kontakt seinen Schlüssel nicht preisgibt.\n\n</string>
-  <string name="no_keys_just_confirm">Du vertraust diesem Kontakt bereits. In dem du \'Fertig\' auswählst bestätigst Du, dass %s Teil dieser Konferenz ist.</string>
+  <string name="no_keys_just_confirm">Du vertraust diesem Kontakt bereits. Durch Auswählen von \"Fertig\" bestätigst du, dass %s Teil dieser Konferenz ist.</string>
   <string name="select_image_and_crop">Bild auswählen und zuschneiden</string>
   <string name="this_account_is_disabled">Du hast diesen Account deaktiviert</string>
 
