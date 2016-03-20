@@ -81,7 +81,8 @@
                             android:id="@+id/conversation_lastimage"
                             android:layout_width="fill_parent"
                             android:layout_height="36dp"
-                            android:background="@color/black87"
+                            app:riv_border_color="@color/black12"
+                            app:riv_border_width="1dp"
                             android:scaleType="centerCrop"
                             android:visibility="gone"
                             app:riv_corner_radius="2dp"/>

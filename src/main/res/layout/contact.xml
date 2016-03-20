@@ -12,8 +12,8 @@
         android:layout_height="56dp"
         android:layout_alignParentLeft="true"
         android:src="@drawable/ic_profile"
-        android:background="@drawable/message_border"
-        android:padding="1dp"
+        app:riv_border_width="1dp"
+        app:riv_border_color="@color/black12"
         app:riv_corner_radius="2dp" />
 
     <LinearLayout
