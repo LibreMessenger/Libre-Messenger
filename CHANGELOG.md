@@ -1,5 +1,9 @@
 ###Changelog
 
+####Version 1.11.2
+* added voice recorder to plugins
+* bug fixes
+
 ####Version 1.11.1
 * fixed some bugs when sharing files with Conversations
 
