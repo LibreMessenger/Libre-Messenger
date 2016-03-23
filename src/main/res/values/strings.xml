@@ -632,4 +632,6 @@
 	<string name="select_image_and_crop">Select image and crop</string>
 	<string name="contacts_have_no_pgp_keys">Pix-Art Messenger is unable to encrypt your messages because your contacts are not announcing their public keys.\n\n</string>
 	<string name="this_account_is_disabled">You have disabled this account</string>
+	<string name="pref_plugin_voice_recorder">Voice Recorder</string>
+	<string name="pref_plugin_voice_recorder_summary">Send and receive voice messages</string>
 </resources>

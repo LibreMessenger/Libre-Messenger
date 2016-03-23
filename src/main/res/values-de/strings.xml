@@ -601,5 +601,10 @@
   <string name="no_keys_just_confirm">Du vertraust diesem Kontakt bereits. Durch Auswählen von \"Fertig\" bestätigst du, dass %s Teil dieser Konferenz ist.</string>
   <string name="select_image_and_crop">Bild auswählen und zuschneiden</string>
   <string name="this_account_is_disabled">Du hast diesen Account deaktiviert</string>
+  <string name="pref_plugin_voice_recorder">Sprachaufnahme</string>
+  <string name="pref_plugin_voice_recorder_summary">Sende und empfange Sprachnachrichten</string>
+  <string name="preparing_images">Bilder werden für Übertragung vorbereitet</string>
+  <string name="shared_images_with_x">Bilder mit %s geteilt</string>
+  <string name="sharing_files_please_wait">Teile Dateien. Bitte warten…</string>
 
 </resources>
