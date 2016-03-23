@@ -125,6 +125,12 @@
                 <intent android:action="android.intent.action.VIEW"
                 android:data="https://github.com/kriztan/ShareLocationPlugin/releases/download/0.2/ShareLocationPlugin-0.2.apk" />
             </Preference>
+            <Preference
+                android:title="@string/pref_plugin_voice_recorder"
+                android:summary="@string/pref_plugin_voice_recorder_summary">
+                <intent android:action="android.intent.action.VIEW"
+                    android:data="https://github.com/kriztan/VoiceRecorder/releases/download/0.1/VoiceRecorder-0.1.apk" />
+            </Preference>
         </PreferenceScreen>
         <PreferenceScreen
             android:key="expert"
