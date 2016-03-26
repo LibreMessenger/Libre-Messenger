@@ -35,7 +35,7 @@ dependencies {
 	compile project(':libs:MemorizingTrustManager')
 	compile 'org.sufficientlysecure:openpgp-api:10.0'
 	compile 'com.soundcloud.android:android-crop:1.0.1@aar'
-	compile 'com.android.support:support-v13:23.1.1'
+	compile 'com.android.support:support-v13:23.2.0'
 	compile 'org.bouncycastle:bcprov-jdk15on:1.52'
 	compile 'org.bouncycastle:bcmail-jdk15on:1.52'
 	compile 'org.jitsi:org.otr4j:0.22'
@@ -51,7 +51,7 @@ dependencies {
 	compile 'jetty:javax.servlet:5.1.12'
 	compile 'com.google.code.gson:gson:2.3.1'
 	compile 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
-	playstoreCompile 'com.google.android.gms:play-services-gcm:8.3.0'
+	playstoreCompile 'com.google.android.gms:play-services-gcm:8.4.0'
 }
 
 android {
@@ -61,8 +61,8 @@ android {
 	defaultConfig {
 		minSdkVersion 14
 		targetSdkVersion 23
-		versionCode 134
-		versionName "1.11.2"
+		versionCode 135
+		versionName "1.11.3"
 		archivesBaseName += "-$versionName"
 		applicationId "eu.siacs.conversations"
 	}

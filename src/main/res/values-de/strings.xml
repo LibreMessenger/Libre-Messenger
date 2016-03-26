@@ -606,5 +606,6 @@
   <string name="preparing_images">Bilder werden für Übertragung vorbereitet</string>
   <string name="shared_images_with_x">Bilder mit %s geteilt</string>
   <string name="sharing_files_please_wait">Teile Dateien. Bitte warten…</string>
+  <string name="delete_x_file">%s löschen</string>
 
 </resources>

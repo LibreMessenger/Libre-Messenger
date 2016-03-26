@@ -1,5 +1,10 @@
 ###Changelog
 
+####Version 1.11.3
+* only add image files to media scanner
+* allow to delete files
+* various bug fixes
+
 ####Version 1.11.2
 * added voice recorder to plugins
 * bug fixes
