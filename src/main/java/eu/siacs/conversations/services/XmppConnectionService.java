@@ -2809,9 +2809,9 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		if (unreadCount != count) {
 			Log.d(Config.LOGTAG, "update unread count to " + count);
 			if (count > 0) {
-				ShortcutBadger.applyCount(context, count);
+				ShortcutBadger.applyCount(getApplicationContext(), count);
 			} else {
-				ShortcutBadger.removeCount(context);
+				ShortcutBadger.removeCount(getApplicationContext());
 			}
 			unreadCount = count;
 		}
