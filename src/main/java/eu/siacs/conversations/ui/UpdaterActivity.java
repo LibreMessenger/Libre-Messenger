@@ -1,5 +1,6 @@
 package eu.siacs.conversations.ui;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
@@ -13,8 +14,10 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -35,14 +38,6 @@ public class UpdaterActivity extends Activity {
     private int versionCode = 0;
     String appURI = "";
 
-
-    /*
-        // run AppUpdater
-        Log.d(Config.LOGTAG, "Start automatic AppUpdater");
-        Intent AppUpdater = new Intent(this, UpdaterActivity.class);
-        startActivity(AppUpdater);
-     */
-
     private DownloadManager downloadManager;
     private long downloadReference;
 
@@ -61,13 +56,13 @@ public class UpdaterActivity extends Activity {
         receiver = new UpdateReceiver();
         registerReceiver(receiver, filter);
 
-        //Broadcast receiver for the download manager
-        filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
-        registerReceiver(downloadReceiver, filter);
+        //Broadcast receiver for the download manager (download complete)
+        registerReceiver(downloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
         //check of internet is available before making a web service request
         if (isNetworkAvailable(this)) {
             Intent msgIntent = new Intent(this, UpdaterWebService.class);
+            msgIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             msgIntent.putExtra(UpdaterWebService.REQUEST_STRING, Config.UPDATE_URL);
 
             Toast.makeText(getApplicationContext(),
@@ -122,14 +117,15 @@ public class UpdaterActivity extends Activity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+
             //disable touch events
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
-            String reponseMessage = intent.getStringExtra(UpdaterWebService.RESPONSE_MESSAGE);
-            Log.d(Config.LOGTAG, "AppUpdater: Reponse: " + reponseMessage);
+            String responseMessage = intent.getStringExtra(UpdaterWebService.RESPONSE_MESSAGE);
+            Log.d(Config.LOGTAG, "AppUpdater: Reponse: " + responseMessage);
 
-            if (reponseMessage == "" || reponseMessage.isEmpty() || reponseMessage == null) {
+            if (responseMessage == "" || responseMessage.isEmpty() || responseMessage == null) {
                 Toast.makeText(getApplicationContext(),
                         getText(R.string.failed),
                         Toast.LENGTH_LONG).show();
@@ -141,12 +137,12 @@ public class UpdaterActivity extends Activity {
                 JSONObject reponseObj;
 
                 try {
-                    //if the reponse was successful check further
-                    reponseObj = new JSONObject(reponseMessage);
+                    //if the response was successful check further
+                    reponseObj = new JSONObject(responseMessage);
                     boolean success = reponseObj.getBoolean("success");
                     if (success) {
                         //Overall information about the contents of a package
-                        //This correponds to all of the information collected from AndroidManifest.xml.
+                        //This corresponds to all of the information collected from AndroidManifest.xml.
                         PackageInfo pInfo = null;
                         try {
                             pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -189,18 +185,21 @@ public class UpdaterActivity extends Activity {
                                             //disable touch events
                                             getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                                                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                                            //start downloading the file using the download manager
-                                            downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-                                            Uri Download_Uri = Uri.parse(appURI);
-                                            DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
-                                            //request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
-                                            //request.setAllowedOverRoaming(false);
-                                            request.setTitle("Pix-Art Messenger Update");
-                                            request.setDestinationInExternalFilesDir(UpdaterActivity.this, Environment.DIRECTORY_DOWNLOADS, "Conversations" + versionName + ".apk");
-                                            downloadReference = downloadManager.enqueue(request);
-                                            Toast.makeText(getApplicationContext(),
-                                                    getText(R.string.download_started),
-                                                    Toast.LENGTH_LONG).show();
+                                            //ask for permissions on devices >= SDK 23
+                                            if (isStoragePermissionGranted()) {
+                                                //start downloading the file using the download manager
+                                                downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                                                Uri Download_Uri = Uri.parse(appURI);
+                                                DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
+                                                //request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
+                                                //request.setAllowedOverRoaming(false);
+                                                request.setTitle("Pix-Art Messenger Update");
+                                                request.setDestinationInExternalFilesDir(UpdaterActivity.this, Environment.DIRECTORY_DOWNLOADS, "Conversations.apk");
+                                                downloadReference = downloadManager.enqueue(request);
+                                                Toast.makeText(getApplicationContext(),
+                                                        getText(R.string.download_started),
+                                                        Toast.LENGTH_LONG).show();
+                                            }
                                         }
                                     })
                                     .setNeutralButton(R.string.changelog, new DialogInterface.OnClickListener() {
@@ -208,6 +207,7 @@ public class UpdaterActivity extends Activity {
                                         public void onClick(DialogInterface dialog, int id) {
                                             Uri uri = Uri.parse("https://github.com/kriztan/Conversations/blob/development/CHANGELOG.md"); // missing 'http://' will cause crashed
                                             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                             startActivity(intent);
                                             //restart updater to show dialog again after coming back after opening changelog
                                             recreate();
@@ -244,22 +244,43 @@ public class UpdaterActivity extends Activity {
 
     }
 
+    public boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.d(Config.LOGTAG, "AppUpdater: Permission is granted");
+                return true;
+            } else {
+
+                Log.d(Config.LOGTAG, "AppUpdater: Permission is revoked");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        } else { //permission is automatically granted on sdk<23 upon installation
+            Log.d(Config.LOGTAG, "AppUpdater: Permission is granted");
+            return true;
+        }
+    }
+
     //broadcast receiver to get notification about ongoing downloads
-    private BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
+    BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             //check if the broadcast message is for our Enqueued download
-            long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+            long referenceId = intent.getExtras().getLong(DownloadManager.EXTRA_DOWNLOAD_ID);
             if (downloadReference == referenceId) {
+                File file = new File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "Conversations.apk");
+                Log.d(Config.LOGTAG, "AppUpdater: Downloading of the new app version complete. Starting installation from " + file);
 
-                Log.d(Config.LOGTAG, "AppUpdater: Downloading of the new app version complete. Starting installation");
                 //start the installation of the latest version
-                Intent installIntent = new Intent(Intent.ACTION_VIEW);
-                installIntent.setDataAndType(downloadManager.getUriForDownloadedFile(downloadReference),
-                        "application/vnd.android.package-archive");
+                Intent installIntent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+                installIntent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+                installIntent.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
+                installIntent.putExtra(Intent.EXTRA_RETURN_RESULT, true);
                 installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(installIntent);
+
                 UpdaterActivity.this.finish();
             }
         }

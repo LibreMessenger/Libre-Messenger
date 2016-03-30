@@ -92,6 +92,7 @@ public class UpdaterWebService extends IntentService{
 
 
         Intent broadcastIntent = new Intent();
+        broadcastIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         broadcastIntent.setAction(UpdateReceiver.PROCESS_RESPONSE);
         broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
         broadcastIntent.putExtra(RESPONSE_MESSAGE, responseMessage);
