@@ -291,6 +291,8 @@
 	<string name="pref_about_message" translatable="false">Pix-Art Messenger is a fork of Conversations.
 			\n\nConversations • the very last word in instant messaging.
 			\n\nCopyright © 2014-2016 Daniel Gultsch
+			\n\nModified by Christian Schneppe
+			\n\nhttp://xmpp.pix-art.de
 			\n\nThis program is free software: you can redistribute it and/or modify
 			it under the terms of the GNU General Public License as published by
 			the Free Software Foundation, either version 3 of the License, or
@@ -302,7 +304,7 @@
 			\n\nYou should have received a copy of the GNU General Public License
 			along with this program. If not, see https://www.gnu.org/licenses
 			\n\nDownload the full original source code at https://github.com/siacs/Conversations
-            \n\nDownload the forked and modified source code at https://github.com/kriztan/Conversations
+			\n\nDownload the forked and modified source code at https://github.com/kriztan/Pix-Art-Messenger
 			\n\n\nLibraries
 			\n\nhttps://www.bouncycastle.org\n(The MIT License (MIT))
 			\n\nhttps://www.gnu.org/software/libidn\n(Apache License, Version 2.0)
