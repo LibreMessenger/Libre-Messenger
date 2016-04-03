@@ -5,6 +5,7 @@
         <item name="android:actionBarStyle">@style/ConversationsActionBar</item>
         <item name="android:actionBarWidgetTheme">@style/ConversationsActionBarWidget</item>
         <item name="android:actionBarTabStyle">@style/ConversationsActionBarTabs</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
         <item name="TextSizeInfo">12sp</item>
         <item name="TextSizeBody">14sp</item>
         <item name="TextSizeHeadline">20sp</item>
