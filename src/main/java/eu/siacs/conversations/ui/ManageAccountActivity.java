@@ -114,7 +114,7 @@ public class ManageAccountActivity extends XmppActivity implements OnAccountUpda
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		ManageAccountActivity.this.getMenuInflater().inflate(
-				R.menu.manageaccounts_context, menu);
+                R.menu.manageaccounts_context, menu);
 		AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) menuInfo;
 		this.selectedAccount = accountList.get(acmi.position);
 		if (this.selectedAccount.isOptionSet(Account.OPTION_DISABLED)) {
@@ -155,9 +155,9 @@ public class ManageAccountActivity extends XmppActivity implements OnAccountUpda
 			addAccount.setVisible(false);
 			addAccountWithCertificate.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		} else {
-			addAccount.setVisible(!Config.LOCK_SETTINGS);
+			addAccount.setVisible(!(Config.LOCK_SETTINGS || Config.SINGLE_ACCOUNT));
 		}
-		addAccountWithCertificate.setVisible(!Config.LOCK_SETTINGS);
+		addAccountWithCertificate.setVisible(!(Config.LOCK_SETTINGS || Config.SINGLE_ACCOUNT));
 
 		if (!accountsLeftToEnable()) {
 			enableAll.setVisible(false);
