@@ -1,6 +1,8 @@
 ###Changelog
 
 ####Version 1.11.4
+* fixed a bug where contacts are shown as offline
+* improved broken PEP detection
 * check maximum file size when using HTTP Upload
 * properly calculate caps hash
 * some UI improvements
