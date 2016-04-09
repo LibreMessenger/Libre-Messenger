@@ -490,6 +490,8 @@ public class ConversationActivity extends XmppActivity
 					menuInviteContact.setVisible(getSelectedConversation().getMucOptions().canInvite());
 					menuSecure.setVisible((Config.supportOpenPgp() || Config.supportOmemo()) && Config.multipleEncryptionChoices()); //only if pgp is supported we have a choice
 				} else {
+					menuContactDetails.setVisible(!this.getSelectedConversation().withSelf());
+					menuMucDetails.setVisible(false);
 					menuSecure.setVisible(Config.multipleEncryptionChoices());
 				}
 				if (this.getSelectedConversation().isMuted()) {
@@ -1382,10 +1384,6 @@ public class ConversationActivity extends XmppActivity
 			} else if (requestCode == ATTACHMENT_CHOICE_CHOOSE_FILE || requestCode == ATTACHMENT_CHOICE_RECORD_VOICE) {
 				final List<Uri> uris = extractUriFromIntent(data);
 				final Conversation c = getSelectedConversation();
-				final long max = c.getAccount()
-						.getXmppConnection()
-						.getFeatures()
-						.getMaxHttpUploadSize();
 				final OnPresenceSelected callback = new OnPresenceSelected() {
 					@Override
 					public void onPresenceSelected() {
@@ -1398,8 +1396,8 @@ public class ConversationActivity extends XmppActivity
 						}
 					}
 				};
-				if (c.getMode() == Conversation.MODE_MULTI
-						|| FileBackend.allFilesUnderSize(this, uris, max)
+				if (c == null || c.getMode() == Conversation.MODE_MULTI
+						|| FileBackend.allFilesUnderSize(this, uris, getMaxHttpUploadSize(c))
 						|| c.getNextEncryption() == Message.ENCRYPTION_OTR) {
 					callback.onPresenceSelected();
 				} else {
@@ -1446,6 +1444,10 @@ public class ConversationActivity extends XmppActivity
 				setNeverAskForBatteryOptimizationsAgain();
 			}
 		}
+	}
+
+	private long getMaxHttpUploadSize(Conversation conversation) {
+		return conversation.getAccount().getXmppConnection().getFeatures().getMaxHttpUploadSize();
 	}
 
 	private void setNeverAskForBatteryOptimizationsAgain() {

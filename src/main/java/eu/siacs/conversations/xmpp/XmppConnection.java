@@ -118,6 +118,7 @@ public class XmppConnection implements Runnable {
 	private long lastDiscoStarted = 0;
 	private AtomicInteger mPendingServiceDiscoveries = new AtomicInteger(0);
 	private AtomicBoolean mIsServiceItemsDiscoveryPending = new AtomicBoolean(true);
+	private boolean mWaitForDisco = true;
 	private final ArrayList<String> mPendingServiceDiscoveriesIds = new ArrayList<>();
 	private boolean mInteractive = false;
 	private int attempt = 0;
@@ -1011,8 +1012,9 @@ public class XmppConnection implements Runnable {
 		synchronized (this.disco) {
 			this.disco.clear();
 		}
-		mPendingServiceDiscoveries.set(mServerIdentity == Identity.NIMBUZZ ? 1 : 0);
+		mPendingServiceDiscoveries.set(0);
 		mIsServiceItemsDiscoveryPending.set(true);
+		mWaitForDisco = mServerIdentity != Identity.NIMBUZZ;
 		lastDiscoStarted = SystemClock.elapsedRealtime();
 		Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": starting service discovery");
 		mXmppConnectionService.scheduleWakeUpCall(Config.CONNECT_DISCO_TIMEOUT, account.getUuid().hashCode());
@@ -1031,13 +1033,14 @@ public class XmppConnection implements Runnable {
 		}
 		sendServiceDiscoveryInfo(account.getJid().toBareJid());
 		sendServiceDiscoveryItems(account.getServer());
+		if (!mWaitForDisco) {
+			finalizeBind();
+		}
 		this.lastSessionStarted = SystemClock.elapsedRealtime();
 	}
 
 	private void sendServiceDiscoveryInfo(final Jid jid) {
-		if (mServerIdentity != Identity.NIMBUZZ) {
-			mPendingServiceDiscoveries.incrementAndGet();
-		}
+		mPendingServiceDiscoveries.incrementAndGet();
 		final IqPacket iq = new IqPacket(IqPacket.TYPE.GET);
 		iq.setTo(jid);
 		iq.query("http://jabber.org/protocol/disco#info");
@@ -1081,7 +1084,9 @@ public class XmppConnection implements Runnable {
 					Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": could not query disco info for " + jid.toString());
 				}
 				if (packet.getType() != IqPacket.TYPE.TIMEOUT) {
-					if (mPendingServiceDiscoveries.decrementAndGet() == 0 && !mIsServiceItemsDiscoveryPending.get()) {
+					if (mPendingServiceDiscoveries.decrementAndGet() == 0
+							&& !mIsServiceItemsDiscoveryPending.get()
+							&& mWaitForDisco) {
 						finalizeBind();
 					}
 				}
@@ -1117,7 +1122,7 @@ public class XmppConnection implements Runnable {
 		final IqPacket iq = new IqPacket(IqPacket.TYPE.GET);
 		iq.setTo(server.toDomainJid());
 		iq.query("http://jabber.org/protocol/disco#items");
-		this.sendIqPacket(iq, new OnIqPacketReceived() {
+		String id = this.sendIqPacket(iq, new OnIqPacketReceived() {
 
 			@Override
 			public void onIqPacketReceived(final Account account, final IqPacket packet) {
@@ -1136,12 +1141,15 @@ public class XmppConnection implements Runnable {
 				}
 				if (packet.getType() != IqPacket.TYPE.TIMEOUT) {
 					mIsServiceItemsDiscoveryPending.set(false);
-					if (mPendingServiceDiscoveries.get() == 0) {
+					if (mPendingServiceDiscoveries.get() == 0 && mWaitForDisco) {
 						finalizeBind();
 					}
 				}
 			}
 		});
+		synchronized (this.mPendingServiceDiscoveriesIds) {
+			this.mPendingServiceDiscoveriesIds.add(id);
+		}
 	}
 
 	private void sendEnableCarbons() {
