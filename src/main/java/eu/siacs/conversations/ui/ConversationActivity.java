@@ -98,11 +98,10 @@ public class ConversationActivity extends XmppActivity
 	private static final String STATE_OPEN_CONVERSATION = "state_open_conversation";
 	private static final String STATE_PANEL_OPEN = "state_panel_open";
 	private static final String STATE_PENDING_URI = "state_pending_uri";
-
-	private String mOpenConverstaion = null;
-	private boolean mPanelOpen = true;
 	final private List<Uri> mPendingImageUris = new ArrayList<>();
 	final private List<Uri> mPendingFileUris = new ArrayList<>();
+	private String mOpenConverstaion = null;
+	private boolean mPanelOpen = true;
 	private Uri mPendingGeoUri = null;
 	private boolean forbidProcessingPendings = false;
 	private Message mPendingDownloadableMessage = null;
@@ -122,6 +121,24 @@ public class ConversationActivity extends XmppActivity
 	private boolean mActivityPaused = false;
 	private AtomicBoolean mRedirected = new AtomicBoolean(false);
 	private Pair<Integer, Intent> mPostponedActivityResult;
+
+	@SuppressLint("NewApi")
+	private static List<Uri> extractUriFromIntent(final Intent intent) {
+		List<Uri> uris = new ArrayList<>();
+		if (intent == null) {
+			return uris;
+		}
+		Uri uri = intent.getData();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2 && uri == null) {
+			ClipData clipData = intent.getClipData();
+			for (int i = 0; i < clipData.getItemCount(); ++i) {
+				uris.add(clipData.getItemAt(i).getUri());
+			}
+		} else {
+			uris.add(uri);
+		}
+		return uris;
+	}
 
 	public Conversation getSelectedConversation() {
 		return this.mSelectedConversation;
@@ -383,7 +400,7 @@ public class ConversationActivity extends XmppActivity
 					TextView abtitle = (TextView) findViewById(android.R.id.text1);
 					abtitle.setText(conversation.getName());
                     abtitle.setOnClickListener(this);
-                    if (conversation.getMode() == Conversation.MODE_SINGLE) {
+                    if (conversation.getMode() == Conversation.MODE_SINGLE && !this.getSelectedConversation().withSelf()) {
                         if (conversation.getContact().getMostAvailableStatus() == Presence.Status.OFFLINE) {
                             TextView absubtitle = (TextView) findViewById(android.R.id.text2);
                             absubtitle.setText(getString(R.string.account_status_offline));
@@ -424,8 +441,8 @@ public class ConversationActivity extends XmppActivity
                     absubtitle.setOnClickListener(this);
                 }
             } else {
-                    ab.setDisplayHomeAsUpEnabled(false);
-                    ab.setHomeButtonEnabled(false);
+                ab.setDisplayHomeAsUpEnabled(false);
+                ab.setHomeButtonEnabled(false);
                 ab.setDisplayShowTitleEnabled(true);
                 ab.setDisplayShowCustomEnabled(false);
                 ab.setTitle(R.string.app_name);
@@ -490,8 +507,6 @@ public class ConversationActivity extends XmppActivity
 					menuInviteContact.setVisible(getSelectedConversation().getMucOptions().canInvite());
 					menuSecure.setVisible((Config.supportOpenPgp() || Config.supportOmemo()) && Config.multipleEncryptionChoices()); //only if pgp is supported we have a choice
 				} else {
-					menuContactDetails.setVisible(!this.getSelectedConversation().withSelf());
-					menuMucDetails.setVisible(false);
 					menuSecure.setVisible(Config.multipleEncryptionChoices());
 				}
 				if (this.getSelectedConversation().isMuted()) {
@@ -1325,24 +1340,6 @@ public class ConversationActivity extends XmppActivity
 	protected void unregisterListeners() {
 		super.unregisterListeners();
 		xmppConnectionService.getNotificationService().setOpenConversation(null);
-	}
-
-	@SuppressLint("NewApi")
-	private static List<Uri> extractUriFromIntent(final Intent intent) {
-		List<Uri> uris = new ArrayList<>();
-		if (intent == null) {
-			return uris;
-		}
-		Uri uri = intent.getData();
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2 && uri == null) {
-			ClipData clipData = intent.getClipData();
-			for (int i = 0; i < clipData.getItemCount(); ++i) {
-				uris.add(clipData.getItemAt(i).getUri());
-			}
-		} else {
-			uris.add(uri);
-		}
-		return uris;
 	}
 
 	@Override
