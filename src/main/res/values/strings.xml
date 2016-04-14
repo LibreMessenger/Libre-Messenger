@@ -640,4 +640,6 @@
 	<string name="pref_plugin_voice_recorder">Voice Recorder</string>
 	<string name="pref_plugin_voice_recorder_summary">Send and receive voice messages</string>
 	<string name="security_error_invalid_file_access">Security error: Invalid file access</string>
+	<string name="no_application_to_share_uri">No application found to share URI</string>
+	<string name="share_uri_with">Share URI with…</string>
 </resources>

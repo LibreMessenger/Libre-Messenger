@@ -26,6 +26,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileDescriptor;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -402,6 +403,43 @@ public class FileBackend {
 		}
 	}
 
+	public Avatar getStoredPepAvatar(String hash) {
+		if (hash == null) {
+			return null;
+		}
+		Avatar avatar = new Avatar();
+		File file = new File(getAvatarPath(hash));
+		FileInputStream is = null;
+		try {
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inJustDecodeBounds = true;
+			BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+			is = new FileInputStream(file);
+			ByteArrayOutputStream mByteArrayOutputStream = new ByteArrayOutputStream();
+			Base64OutputStream mBase64OutputStream = new Base64OutputStream(mByteArrayOutputStream, Base64.DEFAULT);
+			MessageDigest digest = MessageDigest.getInstance("SHA-1");
+			DigestOutputStream os = new DigestOutputStream(mBase64OutputStream, digest);
+			byte[] buffer = new byte[4096];
+			int length;
+			while ((length = is.read(buffer)) > 0) {
+				os.write(buffer, 0, length);
+			}
+			os.flush();
+			os.close();
+			avatar.sha1sum = CryptoHelper.bytesToHex(digest.digest());
+			avatar.image = new String(mByteArrayOutputStream.toByteArray());
+			avatar.height = options.outHeight;
+			avatar.width = options.outWidth;
+			return avatar;
+		} catch (IOException e) {
+			return null;
+		} catch (NoSuchAlgorithmException e) {
+			return null;
+		} finally {
+			close(is);
+		}
+	}
+
 	public boolean isAvatarCached(Avatar avatar) {
 		File file = new File(getAvatarPath(avatar.getFilename()));
 		return file.exists();
@@ -655,13 +693,29 @@ public class FileBackend {
 	}
 
 
-	public static boolean weOwnFile(Uri uri) {
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+	public static boolean weOwnFile(Context context, Uri uri) {
+		if (uri == null || !ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
 			return false;
+		} else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+			return fileIsInFilesDir(context, uri);
 		} else {
-			return uri != null
-					&& ContentResolver.SCHEME_FILE.equals(uri.getScheme())
-					&& weOwnFileLollipop(uri);
+			return weOwnFileLollipop(uri);
+		}
+	}
+
+
+	/**
+	 * This is more than hacky but probably way better than doing nothing
+	 * Further 'optimizations' might contain to get the parents of CacheDir and NoBackupDir
+	 * and check against those as well
+	 */
+	private static boolean fileIsInFilesDir(Context context, Uri uri) {
+		try {
+			final String haystack = context.getFilesDir().getParentFile().getCanonicalPath();
+			final String needle = new File(uri.getPath()).getCanonicalPath();
+			return needle.startsWith(haystack);
+		} catch (IOException e) {
+			return false;
 		}
 	}
 
