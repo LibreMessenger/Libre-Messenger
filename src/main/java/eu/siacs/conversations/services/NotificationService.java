@@ -544,7 +544,7 @@ public class NotificationService {
 			cancelIcon = R.drawable.ic_action_cancel;
 		}
 		mBuilder.setSmallIcon(R.drawable.ic_link_white_24dp);
-		if (Config.SHOW_DISABLE_FOREGROUND) {
+		if (Config.SHOW_DISABLE_FOREGROUND && !Config.USE_ALWAYS_FOREGROUND) {
 			mBuilder.addAction(cancelIcon,
 					mXmppConnectionService.getString(R.string.disable_foreground_service),
 					createDisableForeground());
