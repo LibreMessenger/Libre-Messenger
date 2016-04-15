@@ -613,4 +613,8 @@
   <string name="mgmt_account_reconnect">neu verbinden</string>
   <string name="no_application_to_share_uri">Keine Anwendung zu Teilen der URI</string>
   <string name="share_uri_with">Teile URI mit…</string>
+  <string name="pref_attachments">Anhänge</string>
+  <string name="pref_return_to_previous">Schnell-Teilen</string>
+  <string name="pref_return_to_previous_summary">Nach dem teilen sofort wieder zur letzten App zurückkehren anstatt die Unterhalt zu öffnen</string>
+  <string name="shared_text_with_x">Text mit %s geteilt</string>
 </resources>
