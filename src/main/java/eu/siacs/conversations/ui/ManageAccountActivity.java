@@ -118,11 +118,10 @@ public class ManageAccountActivity extends XmppActivity implements OnAccountUpda
 		AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) menuInfo;
 		this.selectedAccount = accountList.get(acmi.position);
 		if (this.selectedAccount.isOptionSet(Account.OPTION_DISABLED)) {
-			menu.findItem(R.id.mgmt_account_disable).setVisible(false);
+			menu.findItem(R.id.mgmt_account_reconnect).setVisible(false);
 			menu.findItem(R.id.mgmt_account_announce_pgp).setVisible(false);
 			menu.findItem(R.id.mgmt_account_publish_avatar).setVisible(false);
 		} else {
-			menu.findItem(R.id.mgmt_account_enable).setVisible(false);
 			menu.findItem(R.id.mgmt_account_announce_pgp).setVisible(Config.supportOpenPgp());
 		}
 		menu.setHeaderTitle(this.selectedAccount.getJid().toBareJid().toString());
@@ -147,7 +146,6 @@ public class ManageAccountActivity extends XmppActivity implements OnAccountUpda
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.manageaccounts, menu);
-		MenuItem enableAll = menu.findItem(R.id.action_enable_all);
 		MenuItem addAccount = menu.findItem(R.id.action_add_account);
 		MenuItem addAccountWithCertificate = menu.findItem(R.id.action_add_account_with_cert);
 
@@ -159,13 +157,6 @@ public class ManageAccountActivity extends XmppActivity implements OnAccountUpda
 		}
 		addAccountWithCertificate.setVisible(!(Config.LOCK_SETTINGS || Config.SINGLE_ACCOUNT));
 
-		if (!accountsLeftToEnable()) {
-			enableAll.setVisible(false);
-		}
-		MenuItem disableAll = menu.findItem(R.id.action_disable_all);
-		if (!accountsLeftToDisable()) {
-			disableAll.setVisible(false);
-		}
 		return true;
 	}
 
@@ -175,10 +166,8 @@ public class ManageAccountActivity extends XmppActivity implements OnAccountUpda
 			case R.id.mgmt_account_publish_avatar:
 				publishAvatar(selectedAccount);
 				return true;
-			case R.id.mgmt_account_disable:
+			case R.id.mgmt_account_reconnect:
 				disableAccount(selectedAccount);
-				return true;
-			case R.id.mgmt_account_enable:
 				enableAccount(selectedAccount);
 				return true;
 			case R.id.mgmt_account_delete:
@@ -198,12 +187,6 @@ public class ManageAccountActivity extends XmppActivity implements OnAccountUpda
 			case R.id.action_add_account:
 				startActivity(new Intent(getApplicationContext(),
 						EditAccountActivity.class));
-				break;
-			case R.id.action_disable_all:
-				disableAllAccounts();
-				break;
-			case R.id.action_enable_all:
-				enableAllAccounts();
 				break;
 			case R.id.action_add_account_with_cert:
 				addAccountFromKey();
@@ -232,14 +215,6 @@ public class ManageAccountActivity extends XmppActivity implements OnAccountUpda
 			return true;
 		} else {
 			return super.onNavigateUp();
-		}
-	}
-
-	public void onClickTglAccountState(Account account, boolean enable) {
-		if (enable) {
-			enableAccount(account);
-		} else {
-			disableAccount(account);
 		}
 	}
 

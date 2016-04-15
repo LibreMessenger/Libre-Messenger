@@ -13,12 +13,6 @@
 		android:title="@string/action_add_account_with_certificate"
 		android:visible="true"/>
 	<item
-		android:id="@+id/action_enable_all"
-		android:title="@string/enable_all_accounts"/>
-	<item
-		android:id="@+id/action_disable_all"
-		android:title="@string/disable_all_accounts"/>
-	<item
 		android:id="@+id/action_settings"
 		android:orderInCategory="100"
 		android:showAsAction="never"

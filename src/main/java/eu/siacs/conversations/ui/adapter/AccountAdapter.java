@@ -57,17 +57,6 @@ public class AccountAdapter extends ArrayAdapter<Account> {
 				statusView.setTextColor(activity.getWarningTextColor());
 				break;
 		}
-		final Switch tglAccountState = (Switch) view.findViewById(R.id.tgl_account_status);
-		final boolean isDisabled = (account.getStatus() == Account.State.DISABLED);
-		tglAccountState.setChecked(!isDisabled,false);
-		tglAccountState.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-				if (b == isDisabled && activity instanceof ManageAccountActivity) {
-					((ManageAccountActivity) activity).onClickTglAccountState(account,b);
-				}
-			}
-		});
 		return view;
 	}
 }
