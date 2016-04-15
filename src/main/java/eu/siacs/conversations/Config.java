@@ -52,8 +52,6 @@ public final class Config {
 	public static final boolean SHOW_DISABLE_FOREGROUND = false; //if set to true the foreground notification has a button to disable it
 	public static final boolean USE_ALWAYS_FOREGROUND = true; //if set to true the foreground service is always enabled
 
-	public static final boolean ALWAYS_NOTIFY_BY_DEFAULT = false;
-
 	public static final boolean LEGACY_NAMESPACE_HTTP_UPLOAD = false; // true = 'eu:siacs:conversations:http:upload' false = 'urn:xmpp:http:upload'
 
 	public static final int PING_MAX_INTERVAL = 300;
