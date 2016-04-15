@@ -499,12 +499,12 @@
   <string name="checking_for_updates">Auf Pix-Art Messenger Updates prüfen</string>
   <string name="title_activity_updater">Update Dienst</string>
   <string name="update">aktualisieren</string>
-  <string name="update_available">Pix-Art Messenger %1$s mit folgenden Änderungen ist verfügbar:\n\n%2$s\n\nMöchtest Du von Pix-Art Messenger %3$s auf Pix-Art Messenger %1$s aktualisieren?</string>
+  <string name="update_available">Pix-Art Messenger %1$s mit folgenden Änderungen ist verfügbar:\n\n%2$s\n\nMöchtest Du auf Pix-Art Messenger %1$s aktualisieren?</string>
   <string name="download_started">Download gestartet</string>
   <string name="no_update_available">Kein Update verfügbar</string>
   <string name="account_status_tor_unavailable">Tor-Netzwerk nicht verfügbar</string>
   <string name="server_info_broken">Fehlerhaft</string>
-  <string name="update_info">Conversation prüft auf eine neuere Version. Wenn ein Update verfügbar ist, wirst du gefragt, ob du deine Version aktualisieren möchtest. Der Update Dienst lädt und installiert die neue Version automatisch.</string>
+  <string name="update_info">Pix-Art Messenger prüft auf eine neuere Version. Wenn ein Update verfügbar ist, wirst du gefragt, ob du deine Version aktualisieren möchtest. Der Update Dienst lädt und installiert die neue Version automatisch.\n\nBitte warten…</string>
   <string name="pref_presence_settings">Status</string>
   <string name="pref_away_when_screen_off">Abwesend bei abgeschaltetem Bildschirm</string>
   <string name="pref_away_when_screen_off_summary">Setzt deinen Status auf \"abwesend\", solange dein Bildschirm abgeschaltet ist</string>
