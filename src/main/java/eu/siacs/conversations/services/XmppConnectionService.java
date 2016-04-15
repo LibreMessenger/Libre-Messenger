@@ -514,10 +514,6 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 				case ACTION_CLEAR_NOTIFICATION:
 					mNotificationService.clear();
 					break;
-				case ACTION_DISABLE_FOREGROUND:
-					getPreferences().edit().putBoolean("keep_foreground_service", false).commit();
-					toggleForegroundService();
-					break;
 				case ACTION_TRY_AGAIN:
 					resetAllAttemptCounts(false);
 					interactive = true;
@@ -776,7 +772,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 	}
 
 	public void toggleForegroundService() {
-		if (getPreferences().getBoolean("keep_foreground_service", false)) {
+		if (Config.USE_ALWAYS_FOREGROUND) {
 			startForeground(NotificationService.FOREGROUND_NOTIFICATION_ID, this.mNotificationService.createForegroundNotification());
 		} else {
 			stopForeground(true);

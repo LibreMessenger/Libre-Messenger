@@ -564,7 +564,7 @@ public class NotificationService {
 				errors.add(account);
 			}
 		}
-		if (mXmppConnectionService.getPreferences().getBoolean("keep_foreground_service", false)) {
+		if (Config.USE_ALWAYS_FOREGROUND) {
 			notificationManager.notify(FOREGROUND_NOTIFICATION_ID, createForegroundNotification());
 		}
 		final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mXmppConnectionService);
