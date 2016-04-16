@@ -32,7 +32,7 @@
                 android:padding="1dp"
                 app:riv_border_color="@color/black12"
                 app:riv_border_width="1dp"
-                app:riv_corner_radius="2dp"/>
+                app:riv_corner_radius="5dp"/>
 
             <RelativeLayout
                 android:layout_width="fill_parent"
@@ -85,7 +85,7 @@
                             app:riv_border_width="1dp"
                             android:scaleType="centerCrop"
                             android:visibility="gone"
-                            app:riv_corner_radius="2dp"/>
+                            app:riv_corner_radius="5dp"/>
                     </LinearLayout>
                     <ImageView
                         android:id="@+id/notification_status"

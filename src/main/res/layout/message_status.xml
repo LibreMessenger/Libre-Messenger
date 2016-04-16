@@ -29,7 +29,7 @@
         android:scaleType="fitXY"
         android:src="@drawable/ic_profile"
         android:background="@drawable/message_border"
-        app:riv_corner_radius="1dp"/>
+        app:riv_corner_radius="5dp"/>
 
     <TextView
         android:id="@+id/status_message"
