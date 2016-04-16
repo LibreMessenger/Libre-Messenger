@@ -5,13 +5,14 @@
         <item name="android:colorPrimary">@color/primary</item>
         <item name="android:colorPrimaryDark">@color/primary_dark</item>
         <item name="android:colorAccent">@color/accent</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
 
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:actionModeBackground">@color/accent</item>
 
-        <item name="TextSizeInfo">12sp</item>
-        <item name="TextSizeBody">14sp</item>
-        <item name="TextSizeHeadline">20sp</item>
+        <item name="TextSizeInfo">14sp</item>
+        <item name="TextSizeBody">16sp</item>
+        <item name="TextSizeHeadline">22sp</item>
 
         <item name="attr/icon_add_group">@drawable/ic_group_add_white_24dp</item>
         <item name="attr/icon_add_person">@drawable/ic_person_add_white_24dp</item>
