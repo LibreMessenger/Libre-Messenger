@@ -2738,7 +2738,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 	}
 
 	public boolean sendChatStates() {
-		return getPreferences().getBoolean("chat_states", false);
+		return getPreferences().getBoolean("chat_states", true);
 	}
 
 	public boolean saveEncryptedMessages() {
@@ -2750,7 +2750,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 	}
 
 	public boolean indicateReceived() {
-		return getPreferences().getBoolean("indicate_received", false);
+		return getPreferences().getBoolean("indicate_received", true);
 	}
 
 	public boolean useTorToConnect() {
