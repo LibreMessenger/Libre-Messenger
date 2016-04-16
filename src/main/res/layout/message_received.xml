@@ -40,12 +40,13 @@
             android:orientation="vertical"
             android:padding="2dp">
 
-            <ImageView
+            <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/message_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="4dp"
+                app:riv_corner_radius="5dp"
                 android:adjustViewBounds="true"
                 android:background="@color/black87"
                 android:scaleType="centerCrop" />
