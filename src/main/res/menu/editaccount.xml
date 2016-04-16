@@ -8,7 +8,7 @@
     <item
         android:id="@+id/action_show_block_list"
         android:showAsAction="always"
-        android:icon="@drawable/ic_action_cancel"
+        android:icon="@drawable/ic_block_white_24dp"
         android:title="@string/show_block_list"/>
 
     <item
@@ -31,7 +31,7 @@
     <item
         android:id="@+id/action_change_password_on_server"
         android:showAsAction="always"
-        android:icon="@drawable/ic_action_edit"
+        android:icon="?attr/icon_edit"
         android:title="@string/change_password"/>
 
     <item
