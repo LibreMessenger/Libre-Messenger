@@ -3,6 +3,10 @@
 ####Version 1.11.7
 * Share xmpp uri from conference details
 * add setting to allow quick sharing
+* use material design icons for android < lollipop
+* make foreground service always activated
+* disable account deactivation
+* UI improvements
 * various bug fixes
 
 ####Version 1.11.6
