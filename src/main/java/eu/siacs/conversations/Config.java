@@ -36,6 +36,9 @@ public final class Config {
 
 	public static final String LOGTAG = "conversations";
 
+	public static final String XMPP_IP = "185.26.156.37"; // set to null means disable
+	public static final Integer XMPP_Port = 61000; // set to null means disable
+
 	public static final String DOMAIN_LOCK = "pix-art.de"; //only allow account creation for this domain
 	public static final String MAGIC_CREATE_DOMAIN = "pix-art.de";
 	public static final String CONFERENCE_DOMAIN_LOCK = null; //only allow conference creation for this domain

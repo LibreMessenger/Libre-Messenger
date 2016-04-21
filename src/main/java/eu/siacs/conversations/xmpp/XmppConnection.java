@@ -254,7 +254,17 @@ public class XmppConnection implements Runnable {
 			this.changeStatus(Account.State.CONNECTING);
 			final boolean useTor = mXmppConnectionService.useTorToConnect() || account.isOnion();
 			final boolean extended = mXmppConnectionService.showExtendedConnectionOptions();
-			if (useTor) {
+			if (Config.XMPP_IP != null && Config.XMPP_Port != null) {
+				socket = new Socket();
+				try {
+					socket.connect(new InetSocketAddress(Config.XMPP_IP, Config.XMPP_Port), Config.SOCKET_TIMEOUT * 1000);
+				} catch (IOException e) {
+					throw new UnknownHostException();
+				}
+                Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": connect to " + Config.XMPP_IP + ":" + Config.XMPP_Port);
+				startXmpp();
+			}
+			else if (useTor) {
 				String destination;
 				if (account.getHostname() == null || account.getHostname().isEmpty()) {
 					destination = account.getServer().toString();
