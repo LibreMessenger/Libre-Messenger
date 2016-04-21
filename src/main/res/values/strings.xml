@@ -173,7 +173,7 @@
 	<string name="attach_record_voice">Record voice</string>
 	<string name="account_settings_jabber_id">Jabber ID</string>
 	<string name="account_settings_password">Password</string>
-	<string name="account_settings_example_jabber_id">username@example.com</string>
+	<string name="account_settings_example_jabber_id">username@pix-art.de</string>
 	<string name="account_settings_confirm_password">Confirm password</string>
 	<string name="password">Password</string>
 	<string name="confirm_password">Confirm password</string>
@@ -241,7 +241,7 @@
 	<string name="contact_already_exists">The contact already exists</string>
 	<string name="join">Join</string>
 	<string name="conference_address">Conference address</string>
-	<string name="conference_address_example">room@conference.example.com</string>
+	<string name="conference_address_example">conference@room.pix-art.de</string>
 	<string name="save_as_bookmark">Save as bookmark</string>
 	<string name="delete_bookmark">Delete bookmark</string>
 	<string name="bookmark_already_exists">This bookmark already exists</string>
@@ -565,7 +565,7 @@
 	<string name="pref_treat_vibrate_as_silent_summary">Marks your resource as not available when device is on vibrate</string>
 	<string name="pref_show_connection_options">Extended connection settings</string>
 	<string name="pref_show_connection_options_summary">Show hostname and port settings when setting up an account</string>
-	<string name="hostname_example">xmpp.example.com</string>
+	<string name="hostname_example">xmpp.pix-art.de</string>
 	<string name="action_add_account_with_certificate">Add account with certificate</string>
 	<string name="unable_to_parse_certificate">Unable to parse certificate</string>
 	<string name="authenticate_with_certificate">Leave empty to authenticate w/ certificate</string>
@@ -647,11 +647,11 @@
 	<string name="no_application_to_share_uri">No application found to share URI</string>
 	<string name="share_uri_with">Share URI with…</string>
 	<string name="mgmt_account_reconnect">reconnect</string>
-	<string name="welcome_header">Pix-Art Messenger</string>
-	<string name="welcome_text">XMPP is a provider independent protocol. You can use this client with pix-art.de</string>
-	<string name="magic_create_text">We will guide you through the process of creating an account on pix-art.de.\nYou will be able to communicate with users of other providers by giving them your full Jabber ID.</string>
-	<string name="your_full_jid_will_be">Your full Jabber ID will be: %s</string>
-	<string name="create_account">Create Account</string>
-	<string name="use_own_provider">Use my own provider</string>
-	<string name="pick_your_username">Pick your username</string>
+	<string name="welcome_header" translatable="false">Pix-Art Messenger</string>
+	<string name="welcome_text">...is a free and secure XMPP/Jabber client for the use with pix-art.de</string>
+	<string name="magic_create_text">We will guide you through the process of creating an account on pix-art.de.\nYou will be able to communicate with users of this and other providers by giving them your full Jabber-ID.</string>
+	<string name="your_full_jid_will_be">Your Jabber-ID will be: %s</string>
+	<string name="create_account">Create account</string>
+	<string name="use_existing_accout">Use an existing account</string>
+	<string name="pick_your_username">Choose your username</string>
 </resources>
