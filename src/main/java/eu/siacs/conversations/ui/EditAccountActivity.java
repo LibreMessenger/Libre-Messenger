@@ -62,13 +62,11 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 
 	private AutoCompleteTextView mAccountJid;
 	private EditText mPassword;
-	private EditText mPasswordConfirm;
 	private CheckBox mRegisterNew;
 	private Button mCancelButton;
 	private Button mSaveButton;
 	private Button mDisableBatterOptimizations;
 	private TableLayout mMoreTable;
-
 	private LinearLayout mStats;
 	private RelativeLayout mBatteryOptimizations;
 	private TextView mServerInfoSm;
@@ -174,20 +172,12 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				return;
 			}
 			final String password = mPassword.getText().toString();
-			final String passwordConfirm = mPasswordConfirm.getText().toString();
-			if (registerNewAccount) {
-				if (!password.equals(passwordConfirm)) {
-					mPasswordConfirm.setError(getString(R.string.passwords_do_not_match));
-					mPasswordConfirm.requestFocus();
-					return;
-				}
-			}
+
 			if (mAccount != null) {
 				mAccount.setJid(jid);
 				mAccount.setPort(numericPort);
 				mAccount.setHostname(hostname);
 				mAccountJid.setError(null);
-				mPasswordConfirm.setError(null);
 				mAccount.setPassword(password);
 				mAccount.setOption(Account.OPTION_REGISTER, registerNewAccount);
 				xmppConnectionService.updateAccount(mAccount);
@@ -400,7 +390,6 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		}
 		this.mPassword = (EditText) findViewById(R.id.account_password);
 		this.mPassword.addTextChangedListener(this.mTextWatcher);
-		this.mPasswordConfirm = (EditText) findViewById(R.id.account_password_confirm);
 		this.mAvatar = (ImageView) findViewById(R.id.avater);
 		this.mAvatar.setOnClickListener(this.mAvatarClickListener);
 		this.mRegisterNew = (CheckBox) findViewById(R.id.account_register_new);
@@ -447,19 +436,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		this.mSaveButton.setOnClickListener(this.mSaveButtonClickListener);
 		this.mCancelButton.setOnClickListener(this.mCancelButtonClickListener);
 		this.mMoreTable = (TableLayout) findViewById(R.id.server_info_more);
-		final OnCheckedChangeListener OnCheckedShowConfirmPassword = new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(final CompoundButton buttonView,
-										 final boolean isChecked) {
-				if (isChecked) {
-					mPasswordConfirm.setVisibility(View.VISIBLE);
-				} else {
-					mPasswordConfirm.setVisibility(View.GONE);
-				}
-				updateSaveButton();
-			}
-		};
-		this.mRegisterNew.setOnCheckedChangeListener(OnCheckedShowConfirmPassword);
+
 		if (Config.DISALLOW_REGISTRATION_IN_UI) {
 			this.mRegisterNew.setVisibility(View.GONE);
 		}
@@ -546,7 +523,9 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				}
 				updateAccountInformation(true);
 			}
-		} else if (this.xmppConnectionService.getAccounts().size() == 0) {
+		}
+		if (this.xmppConnectionService.getAccounts().size() == 0
+				|| this.mAccount == xmppConnectionService.getPendingAccount()) {
 			if (getActionBar() != null) {
 				getActionBar().setDisplayHomeAsUpEnabled(false);
 				getActionBar().setDisplayShowHomeEnabled(false);
@@ -626,7 +605,6 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		mAccountJid.setEnabled(!Config.LOCK_SETTINGS);
 		mHostname.setEnabled(!Config.LOCK_SETTINGS);
 		mPort.setEnabled(!Config.LOCK_SETTINGS);
-		mPasswordConfirm.setEnabled(!Config.LOCK_SETTINGS);
 		mRegisterNew.setEnabled(!Config.LOCK_SETTINGS);
 
 		if (!mInitMode) {
@@ -638,7 +616,6 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		if (this.mAccount.isOptionSet(Account.OPTION_REGISTER)) {
 			this.mRegisterNew.setVisibility(View.VISIBLE);
 			this.mRegisterNew.setChecked(true);
-			this.mPasswordConfirm.setText(this.mAccount.getPassword());
 		} else {
 			this.mRegisterNew.setVisibility(View.GONE);
 			this.mRegisterNew.setChecked(false);

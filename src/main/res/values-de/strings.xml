@@ -166,7 +166,7 @@
   <string name="attach_record_voice">Sprache aufzeichnen</string>
   <string name="account_settings_jabber_id">Jabber-ID</string>
   <string name="account_settings_password">Passwort</string>
-  <string name="account_settings_example_jabber_id">benutzer@domain.de</string>
+  <string name="account_settings_example_jabber_id">benutzer@pix-art.de</string>
   <string name="account_settings_confirm_password">Passwort bestätigen</string>
   <string name="password">Passwort</string>
   <string name="confirm_password">Passwort bestätigen</string>
@@ -232,7 +232,7 @@
   <string name="contact_already_exists">Der Kontakt existiert bereits</string>
   <string name="join">Beitreten</string>
   <string name="conference_address">Konferenz-Adresse</string>
-  <string name="conference_address_example">raum@conference.domain.de</string>
+  <string name="conference_address_example">raum@room.pix-art.de</string>
   <string name="save_as_bookmark">Zur Kontaktliste hinzufügen</string>
   <string name="delete_bookmark">Von Kontaktliste entfernen</string>
   <string name="bookmark_already_exists">Die Konferenz befindet sich bereits auf deiner Kontaktliste</string>
@@ -512,7 +512,7 @@
   <string name="pref_xa_on_silent_mode_summary">Setzt deinen Status auf \"nicht verfügbar\", solange dein Gerät lautlos ist</string>
   <string name="pref_treat_vibrate_as_silent">Vibration als Lautlos behandeln</string>
   <string name="pref_treat_vibrate_as_silent_summary">Setzt deinen Status auf \"nicht verfügbar\", solange das Gerät auf Vibration geschaltet ist</string>
-  <string name="hostname_example">xmpp.domain.de</string>
+  <string name="hostname_example">xmpp.pix-art.de</string>
   <string name="action_add_account_with_certificate">Konto mit Zertifikat hinzufügen</string>
   <string name="unable_to_parse_certificate">Zertifikat kann nicht gelesen werden</string>
   <string name="authenticate_with_certificate">Leer lassen, um mit Zertifikat anzumelden</string>
@@ -617,4 +617,10 @@
   <string name="pref_return_to_previous">Schnell-Teilen</string>
   <string name="pref_return_to_previous_summary">Nach dem teilen sofort wieder zur letzten App zurückkehren anstatt die Unterhalt zu öffnen</string>
   <string name="shared_text_with_x">Text mit %s geteilt</string>
+  <string name="create_account">Konto erstellen</string>
+  <string name="magic_create_text">Wir erstellen nun mit dir gemeinsam ein Konto auf pix-art.de.\nDanach kannst du mit Kontakten auf diesem und anderen Servern in Kontakt treten, indem du ihnen deine Jabber-ID gibst.</string>
+  <string name="pick_your_username">Wähle deinen Benutzernamen</string>
+  <string name="use_existing_accout">Nutze ein bestehendes Konto</string>
+  <string name="welcome_text">...ist ein kostenfreier und sicherer XMPP/Jabber Client für die Benutzung mit pix-art.de</string>
+  <string name="your_full_jid_will_be">Deine Jabber-ID lautet: %s</string>
 </resources>
