@@ -23,7 +23,7 @@ public class WelcomeActivity extends Activity {
 				startActivity(intent);
 			}
 		});
-		final Button useOwnProvider = (Button) findViewById(R.id.use_own_provider);
+		final Button useOwnProvider = (Button) findViewById(R.id.use_existing_account);
 		useOwnProvider.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

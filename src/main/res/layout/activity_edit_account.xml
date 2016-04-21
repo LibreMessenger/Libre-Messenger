@@ -82,7 +82,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/password"
-                        android:inputType="textPassword"
+                        android:inputType="text"
                         android:textColor="@color/black87"
                         android:textColorHint="@color/black54"
                         android:textSize="?attr/TextSizeBody" />
@@ -153,27 +153,6 @@
                         android:text="@string/register_account"
                         android:textColor="@color/black87"
                         android:textSize="?attr/TextSizeBody" />
-
-                    <TextView
-                        android:id="@+id/account_confirm_password_desc"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/account_settings_confirm_password"
-                        android:textColor="@color/black87"
-                        android:textSize="?attr/TextSizeBody"
-                        android:visibility="gone" />
-
-                    <EditText
-                        android:id="@+id/account_password_confirm"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:hint="@string/confirm_password"
-                        android:inputType="textPassword"
-                        android:textColor="@color/black87"
-                        android:textColorHint="@color/black54"
-                        android:textSize="?attr/TextSizeBody"
-                        android:visibility="gone" />
                 </LinearLayout>
             </RelativeLayout>
 
