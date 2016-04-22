@@ -39,6 +39,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -254,14 +255,16 @@ public class XmppConnection implements Runnable {
 			this.changeStatus(Account.State.CONNECTING);
 			final boolean useTor = mXmppConnectionService.useTorToConnect() || account.isOnion();
 			final boolean extended = mXmppConnectionService.showExtendedConnectionOptions();
-			if (Config.XMPP_IP != null && Config.XMPP_Port != null) {
+			if (Config.XMPP_IP != null && Config.XMPP_Ports != null) {
+				Integer[] XMPP_Port = Config.XMPP_Ports;
+				Integer Port = XMPP_Port[new Random().nextInt(XMPP_Port.length)];
 				socket = new Socket();
 				try {
-					socket.connect(new InetSocketAddress(Config.XMPP_IP, Config.XMPP_Port), Config.SOCKET_TIMEOUT * 1000);
+					socket.connect(new InetSocketAddress(Config.XMPP_IP, Port), Config.SOCKET_TIMEOUT * 1000);
 				} catch (IOException e) {
-					throw new UnknownHostException();
+					throw new IOException();
 				}
-                Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": connect to " + Config.XMPP_IP + ":" + Config.XMPP_Port);
+                Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": connect to " + Config.XMPP_IP + ":" + Port);
 				startXmpp();
 			}
 			else if (useTor) {
