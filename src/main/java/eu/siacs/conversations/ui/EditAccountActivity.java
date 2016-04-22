@@ -14,6 +14,7 @@ import android.security.KeyChain;
 import android.security.KeyChainAliasCallback;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -594,6 +595,9 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				this.mAccountJid.getEditableText().append(this.mAccount.getJid().toBareJid().toString());
 			}
 			this.mPassword.setText(this.mAccount.getPassword());
+            if (!mInitMode) {
+                this.mPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            }
 			this.mHostname.setText("");
 			this.mHostname.getEditableText().append(this.mAccount.getHostname());
 			this.mPort.setText("");
