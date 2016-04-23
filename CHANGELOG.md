@@ -1,5 +1,11 @@
 ###Changelog
 
+####Version 1.11.8-beta
+* added welcome screen for first start
+* use IP/Port instead of query DNS to improve connection performance
+* UI improvements
+* bug fixes
+
 ####Version 1.11.7
 * Share xmpp uri from conference details
 * add setting to allow quick sharing

@@ -34,7 +34,7 @@ public final class Config {
 		return (ENCRYPTION_MASK & (ENCRYPTION_MASK - 1)) != 0;
 	}
 
-	public static final String LOGTAG = "conversations";
+	public static final String LOGTAG = "Pix-Art Messenger";
 
 	public static final String XMPP_IP = "185.26.156.37"; // set to null means disable
 	public static final Integer[] XMPP_Ports = {61000, 65000}; // set to null means disable
