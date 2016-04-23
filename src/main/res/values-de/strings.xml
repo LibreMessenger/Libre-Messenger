@@ -158,7 +158,7 @@
   <string name="mgmt_account_edit">Konto bearbeiten</string>
   <string name="mgmt_account_delete">Löschen</string>
   <string name="mgmt_account_disable">Vorübergehend abschalten</string>
-  <string name="mgmt_account_publish_avatar">Avatar veröffentlichen</string>
+  <string name="mgmt_account_publish_avatar">Profilbild veröffentlichen</string>
   <string name="mgmt_account_publish_pgp">Öffentlichen OpenPGP-Schlüssel veröffentlichen</string>
   <string name="mgmt_account_enable">Aktivieren </string>
   <string name="mgmt_account_are_you_sure">Bist du dir sicher?</string>
@@ -189,7 +189,7 @@
   <string name="server_info_blocking">XEP-0191: Blocking Command</string>
   <string name="server_info_roster_version">XEP-0237: Roster Versioning</string>
   <string name="server_info_stream_management">XEP-0198: Stream Management</string>
-  <string name="server_info_pep">XEP-0163: PEP (Avatare/OMEMO)</string>
+  <string name="server_info_pep">XEP-0163: PEP (Profilbilder/OMEMO)</string>
   <string name="server_info_http_upload">XEP-0363: HTTP File Upload</string>
   <string name="server_info_push">XEP-0357: Push</string>
   <string name="server_info_available">ja</string>
@@ -244,14 +244,14 @@
   <string name="add_back">Auch hinzufügen</string>
   <string name="contact_has_read_up_to_this_point">%s hat bis zu diesem Punkt gelesen</string>
   <string name="publish">Veröffentlichen</string>
-  <string name="touch_to_choose_picture">Avatar antippen, um Bild aus Galerie auszuwählen</string>
-  <string name="publish_avatar_explanation">Achtung: Jeder, der deinen Status sehen darf, sieht auch deinen Avatar.</string>
+  <string name="touch_to_choose_picture">Profilbild antippen, um Bild aus Galerie auszuwählen</string>
+  <string name="publish_avatar_explanation">Achtung: Jeder, der deinen Status sehen darf, sieht auch dein Profilbild.</string>
   <string name="publishing">Veröffentliche…</string>
-  <string name="error_publish_avatar_server_reject">Der Server hat die Veröffentlichung des Avatars abgelehnt.</string>
-  <string name="error_publish_avatar_converting">Bei der Konvertierung des Avatars lief etwas schief.</string>
+  <string name="error_publish_avatar_server_reject">Der Server hat die Veröffentlichung des Profilbildes abgelehnt.</string>
+  <string name="error_publish_avatar_converting">Bei der Konvertierung des Profilbildes lief etwas schief.</string>
   <string name="error_saving_avatar">Avatar kann nicht gespeichert werden</string>
   <string name="or_long_press_for_default">(Oder klicke lange, um Standard wiederherzustellen)</string>
-  <string name="error_publish_avatar_no_server_support">Dein Server unterstützt die Veröffentlichung von Avataren nicht.</string>
+  <string name="error_publish_avatar_no_server_support">Dein Server unterstützt die Veröffentlichung von Profilbildern nicht.</string>
   <string name="private_message">private Nachricht:</string>
   <string name="private_message_to">privat an %s:</string>
   <string name="send_private_message_to">Private Nachricht an %s senden…</string>
@@ -366,7 +366,7 @@
   <string name="conference_created">Konferenz erstellt!</string>
   <string name="secret_accepted">Schlüssel akzeptiert!</string>
   <string name="reset">Zurücksetzen</string>
-  <string name="account_image_description">Konto-Avatar</string>
+  <string name="account_image_description">Profilbild</string>
   <string name="copy_otr_clipboard_description">OTR-Fingerabdruck in Zwischenablage kopieren</string>
   <string name="copy_omemo_clipboard_description">OMEMO-Fingerabdruck in Zwischenablage kopieren</string>
   <string name="regenerate_omemo_key">OMEMO-Schlüssel erneuern</string>
@@ -442,7 +442,7 @@
   <string name="received_x_file">%s empfangen</string>
   <string name="touch_to_open_conversations">Antippen, um Pix-Art Messenger zu öffnen</string>
   <string name="disable_foreground_service">Vordergrund-Dienst deaktivieren</string>
-  <string name="avatar_has_been_published">Avatar wurde gespeichert</string>
+  <string name="avatar_has_been_published">Profilbild wurde gespeichert</string>
   <string name="sending_x_file">%s wird gesendet</string>
   <string name="offering_x_file">%s wird angeboten</string>
   <string name="hide_offline">Offline verstecken</string>
@@ -559,7 +559,7 @@
   <string name="shared_image_with_x">Bild mit %s geteilt</string>
   <string name="no_storage_permission">Pix-Art Messenger benötigt Zugriff auf externen Speicher</string>
   <string name="sync_with_contacts">Mit Kontakten synchronisieren</string>
-  <string name="sync_with_contacts_long">Pix-Art Messenger möchte deine XMPP-Kontaktliste mit deinen Kontakten abgleichen, um deren vollständige Namen und Avatare anzuzeigen.\n\nConversations wird deine Kontakte nur lokal lesen und abgleichen und überträgt diese nicht auf den Server.\n\nDu wirst nun gefragt, ob du den Zugriff auf deine Kontakte erlauben möchtest.</string>
+  <string name="sync_with_contacts_long">Pix-Art Messenger möchte deine XMPP-Kontaktliste mit deinen Kontakten abgleichen, um deren vollständige Namen und Profilbilder anzuzeigen.\n\nPix-Art Messenger wird deine Kontakte nur lokal lesen und verarbeiten und überträgt diese nicht auf den Server.\n\nDu wirst nun gefragt, ob du den Zugriff auf deine Kontakte erlauben möchtest.</string>
   <string name="certificate_information">Zertifikatinformationen</string>
   <string name="certificate_subject">Betreff</string>
   <string name="certificate_issuer">Aussteller</string>
@@ -618,7 +618,7 @@
   <string name="pref_return_to_previous_summary">Nach dem teilen sofort wieder zur letzten App zurückkehren anstatt die Unterhalt zu öffnen</string>
   <string name="shared_text_with_x">Text mit %s geteilt</string>
   <string name="create_account">Konto erstellen</string>
-  <string name="magic_create_text">Wir erstellen nun mit dir gemeinsam ein Konto auf pix-art.de.\nDanach kannst du mit Kontakten auf diesem und anderen Servern in Kontakt treten, indem du ihnen deine Jabber-ID gibst.</string>
+  <string name="magic_create_text">Wir erstellen nun mit dir gemeinsam ein Konto auf pix-art.de mit einem zufällig generierten Passwort, welches du benutzen oder auf der nächsten Seite ändern kannst\nDanach kannst du mit Kontakten auf diesem und anderen Servern in Kontakt treten, indem du ihnen deine Jabber-ID gibst.</string>
   <string name="pick_your_username">Wähle deinen Benutzernamen</string>
   <string name="use_existing_accout">Nutze ein bestehendes Konto</string>
   <string name="welcome_text">...ist ein kostenfreier und sicherer XMPP/Jabber Client für die Benutzung mit pix-art.de</string>

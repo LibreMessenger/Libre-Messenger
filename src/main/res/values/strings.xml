@@ -559,7 +559,7 @@
 	<string name="pref_away_when_screen_off">Away when screen is off</string>
 	<string name="pref_away_when_screen_off_summary">Marks your resource as away when the screen is turned off</string>
 	<string name="pref_xa_on_silent_mode">Not available in silent mode</string>
-	<string name="update_info">Pix-Art Messenger is checking for an update. If an update is available you will be asked, if you want to update your version. The update process is downloading and installing the new version automatically.</string>
+	<string name="update_info">Pix-Art Messenger is checking for an update. If an update is available you will be asked, if you want to update your version. The update process is downloading and installing the new version automatically.\n\nPlease wait…</string>
 	<string name="pref_xa_on_silent_mode_summary">Marks your resource as not available when device is in silent mode</string>
 	<string name="pref_treat_vibrate_as_silent">Treat vibrate as silent mode</string>
 	<string name="pref_treat_vibrate_as_silent_summary">Marks your resource as not available when device is on vibrate</string>
@@ -649,7 +649,7 @@
 	<string name="mgmt_account_reconnect">reconnect</string>
 	<string name="welcome_header" translatable="false">Pix-Art Messenger</string>
 	<string name="welcome_text">...is a free and secure XMPP/Jabber client for the use with pix-art.de</string>
-	<string name="magic_create_text">We will guide you through the process of creating an account on pix-art.de.\nYou will be able to communicate with users of this and other providers by giving them your full Jabber-ID.</string>
+	<string name="magic_create_text">We will guide you through the process of creating an account on pix-art.de with a random password, which you can use or change to your own password on the next page. \nThan you will be able to communicate with users of this and other providers by giving them your full Jabber-ID.</string>
 	<string name="your_full_jid_will_be">Your Jabber-ID will be: %s</string>
 	<string name="create_account">Create account</string>
 	<string name="use_existing_accout">Use an existing account</string>
