@@ -14,12 +14,14 @@
         android:layout_height="wrap_content"
         android:text="@string/your_account"
         android:textColor="@color/black87"
-        android:textSize="?attr/TextSizeBody" />
+        android:textSize="?attr/TextSizeBody"
+        android:visibility="gone" />
 
     <Spinner
         android:id="@+id/account"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/jabber_id"

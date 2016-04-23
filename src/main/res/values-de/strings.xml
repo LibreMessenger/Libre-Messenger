@@ -220,14 +220,14 @@
   <string name="decrypt">Entschlüsseln</string>
   <string name="conferences">Konferenzen</string>
   <string name="search">Suchen</string>
-  <string name="create_contact">Kontakt erstellen</string>
+  <string name="create_contact">Kontakt hinzufügen</string>
   <string name="enter_contact">Kontakt eingeben</string>
   <string name="join_conference">Konferenz beitreten</string>
   <string name="delete_contact">Kontakt löschen</string>
   <string name="view_contact_details">Kontakt-Details anzeigen</string>
   <string name="block_contact">Kontakt sperren</string>
   <string name="unblock_contact">Kontakt entsperren</string>
-  <string name="create">Erstellen</string>
+  <string name="create">hinzufügen</string>
   <string name="select">Auswählen</string>
   <string name="contact_already_exists">Der Kontakt existiert bereits</string>
   <string name="join">Beitreten</string>

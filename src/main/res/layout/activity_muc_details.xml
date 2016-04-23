@@ -30,7 +30,8 @@
                 android:text="@string/account_settings_example_jabber_id"
                 android:textColor="@color/black87"
                 android:textSize="?attr/TextSizeHeadline"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textIsSelectable="true" />
 
             <RelativeLayout
                 android:layout_width="fill_parent"
@@ -176,7 +177,8 @@
                 android:layout_marginTop="32dp"
                 android:text="@string/using_account"
                 android:textColor="@color/black54"
-                android:textSize="?attr/TextSizeInfo" />
+                android:textSize="?attr/TextSizeInfo"
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
