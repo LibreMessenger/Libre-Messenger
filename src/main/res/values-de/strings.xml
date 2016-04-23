@@ -617,7 +617,7 @@
   <string name="pref_return_to_previous">Schnell-Teilen</string>
   <string name="pref_return_to_previous_summary">Nach dem teilen sofort wieder zur letzten App zurückkehren anstatt die Unterhalt zu öffnen</string>
   <string name="shared_text_with_x">Text mit %s geteilt</string>
-  <string name="create_account">Konto erstellen</string>
+  <string name="create_account">Neues Konto erstellen</string>
   <string name="magic_create_text">Wir erstellen nun mit dir gemeinsam ein Konto auf pix-art.de mit einem zufällig generierten Passwort, welches du benutzen oder auf der nächsten Seite ändern kannst\nDanach kannst du mit Kontakten auf diesem und anderen Servern in Kontakt treten, indem du ihnen deine Jabber-ID gibst.</string>
   <string name="pick_your_username">Wähle deinen Benutzernamen</string>
   <string name="use_existing_accout">Nutze ein bestehendes Konto</string>
