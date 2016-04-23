@@ -82,7 +82,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/password"
-                        android:inputType="text"
+                        android:inputType="text|textNoSuggestions"
                         android:textColor="@color/black87"
                         android:textColorHint="@color/black54"
                         android:textSize="?attr/TextSizeBody" />
