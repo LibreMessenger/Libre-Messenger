@@ -582,9 +582,11 @@ public class NotificationService {
 				mXmppConnectionService.getString(R.string.try_again),
 				createTryAgainIntent());
 		if (errors.size() == 1) {
-			mBuilder.addAction(R.drawable.ic_block_white_24dp,
-					mXmppConnectionService.getString(R.string.disable_account),
-					createDisableAccountIntent(errors.get(0)));
+			if (Config.SHOW_DISABLE_FOREGROUND && !Config.USE_ALWAYS_FOREGROUND) {
+				mBuilder.addAction(R.drawable.ic_block_white_24dp,
+						mXmppConnectionService.getString(R.string.disable_account),
+						createDisableAccountIntent(errors.get(0)));
+			}
 		}
 		mBuilder.setOngoing(true);
 		//mBuilder.setLights(0xffffffff, 2000, 4000);
