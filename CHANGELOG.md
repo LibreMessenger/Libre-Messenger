@@ -1,6 +1,6 @@
 ###Changelog
 
-####Version 1.11.8-beta
+####Version 1.12.0
 * added welcome screen for first start
 * use IP/Port instead of query DNS to improve connection performance
 * UI improvements
