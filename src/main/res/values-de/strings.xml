@@ -499,7 +499,7 @@
   <string name="checking_for_updates">Auf Pix-Art Messenger Updates prüfen</string>
   <string name="title_activity_updater">Update Dienst</string>
   <string name="update">aktualisieren</string>
-  <string name="update_available">Pix-Art Messenger %1$s mit folgenden Änderungen ist verfügbar:\n\n%2$s\n\nMöchtest Du auf Pix-Art Messenger %1$s aktualisieren?</string>
+  <string name="update_available">Version %1$s ist verfügbar.\n\nDateigröße: %2$s\n\nJetzt auf Version %1$s aktualisieren?</string>
   <string name="download_started">Download gestartet</string>
   <string name="no_update_available">Kein Update verfügbar</string>
   <string name="account_status_tor_unavailable">Tor-Netzwerk nicht verfügbar</string>

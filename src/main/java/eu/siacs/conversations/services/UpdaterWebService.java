@@ -24,7 +24,7 @@ import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.ui.UpdaterActivity.UpdateReceiver;
 
-public class UpdaterWebService extends IntentService{
+public class UpdaterWebService extends IntentService {
     public static final String REQUEST_STRING = "";
     public static final String RESPONSE_MESSAGE = "";
 
@@ -45,8 +45,7 @@ public class UpdaterWebService extends IntentService{
         PackageInfo pInfo = null;
         try {
             pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-        }
-        catch (PackageManager.NameNotFoundException e) {
+        } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
         //get the app version Name for display
@@ -68,7 +67,7 @@ public class UpdaterWebService extends IntentService{
 
             StatusLine statusLine = response.getStatusLine();
             Log.d(Config.LOGTAG, "AppUpdater: HTTP Status Code: " + statusLine.getStatusCode());
-            if(statusLine.getStatusCode() == HttpStatus.SC_OK){
+            if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 response.getEntity().writeTo(out);
                 out.close();
@@ -85,7 +84,7 @@ public class UpdaterWebService extends IntentService{
         } catch (IOException e) {
             Log.e(Config.LOGTAG, "AppUpdater: HTTP3:" + e);
             responseMessage = "";
-        }catch (Exception e) {
+        } catch (Exception e) {
             Log.e(Config.LOGTAG, "AppUpdater: HTTP4:" + e);
             responseMessage = "";
         }

@@ -34,12 +34,34 @@ import eu.siacs.conversations.services.UpdaterWebService;
 
 public class UpdaterActivity extends Activity {
 
+    String appURI = "";
     private UpdateReceiver receiver = null;
     private int versionCode = 0;
-    String appURI = "";
-
     private DownloadManager downloadManager;
     private long downloadReference;
+    //broadcast receiver to get notification about ongoing downloads
+    BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //check if the broadcast message is for our Enqueued download
+            long referenceId = intent.getExtras().getLong(DownloadManager.EXTRA_DOWNLOAD_ID);
+            if (downloadReference == referenceId) {
+                File file = new File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "Conversations.apk");
+                Log.d(Config.LOGTAG, "AppUpdater: Downloading of the new app version complete. Starting installation from " + file);
+
+                //start the installation of the latest version
+                Intent installIntent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+                installIntent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+                installIntent.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
+                installIntent.putExtra(Intent.EXTRA_RETURN_RESULT, true);
+                installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(installIntent);
+
+                UpdaterActivity.this.finish();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +132,44 @@ public class UpdaterActivity extends Activity {
         return false;
     }
 
+    public boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Log.d(Config.LOGTAG, "AppUpdater: Permission is granted");
+                return true;
+            } else {
+
+                Log.d(Config.LOGTAG, "AppUpdater: Permission is revoked");
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        } else { //permission is automatically granted on sdk<23 upon installation
+            Log.d(Config.LOGTAG, "AppUpdater: Permission is granted");
+            return true;
+        }
+    }
+
+    //show warning on back pressed
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.cancel_update)
+                .setCancelable(false)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        UpdaterActivity.this.finish();
+                    }
+                })
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     //broadcast receiver to get notification when the web request finishes
     public class UpdateReceiver extends BroadcastReceiver {
 
@@ -155,7 +215,7 @@ public class UpdaterActivity extends Activity {
                         //get the latest version from the JSON string
                         int latestVersionCode = reponseObj.getInt("latestVersionCode");
                         String latestVersion = reponseObj.getString("latestVersion");
-                        String changelog = reponseObj.getString("changelog");
+                        String filesize = reponseObj.getString("filesize");
                         //get the lastest application URI from the JSON string
                         appURI = reponseObj.getString("appURI");
                         //check if we need to upgrade?
@@ -178,7 +238,7 @@ public class UpdaterActivity extends Activity {
                             builder.setCancelable(false);
 
                             String UpdateMessageInfo = getResources().getString(R.string.update_available);
-                            builder.setMessage(String.format(UpdateMessageInfo, latestVersion, changelog, versionName))
+                            builder.setMessage(String.format(UpdateMessageInfo, latestVersion, filesize, versionName))
                                     .setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
                                         //if the user agrees to upgrade
                                         public void onClick(DialogInterface dialog, int id) {
@@ -242,67 +302,5 @@ public class UpdaterActivity extends Activity {
 
         }
 
-    }
-
-    public boolean isStoragePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                Log.d(Config.LOGTAG, "AppUpdater: Permission is granted");
-                return true;
-            } else {
-
-                Log.d(Config.LOGTAG, "AppUpdater: Permission is revoked");
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                return false;
-            }
-        } else { //permission is automatically granted on sdk<23 upon installation
-            Log.d(Config.LOGTAG, "AppUpdater: Permission is granted");
-            return true;
-        }
-    }
-
-    //broadcast receiver to get notification about ongoing downloads
-    BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            //check if the broadcast message is for our Enqueued download
-            long referenceId = intent.getExtras().getLong(DownloadManager.EXTRA_DOWNLOAD_ID);
-            if (downloadReference == referenceId) {
-                File file = new File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "Conversations.apk");
-                Log.d(Config.LOGTAG, "AppUpdater: Downloading of the new app version complete. Starting installation from " + file);
-
-                //start the installation of the latest version
-                Intent installIntent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
-                installIntent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
-                installIntent.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
-                installIntent.putExtra(Intent.EXTRA_RETURN_RESULT, true);
-                installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(installIntent);
-
-                UpdaterActivity.this.finish();
-            }
-        }
-    };
-
-    //show warning on back pressed
-    @Override
-    public void onBackPressed() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.cancel_update)
-                .setCancelable(false)
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        UpdaterActivity.this.finish();
-                    }
-                })
-                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
     }
 }

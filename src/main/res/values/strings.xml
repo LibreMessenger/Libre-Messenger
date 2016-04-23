@@ -545,7 +545,7 @@
 	<string name="pref_use_white_background_summary">Show received messages as black text on a white background</string>
 	<string name="action_check_update">Check for Updates</string>
 	<string name="title_activity_updater">Update Service</string>
-	<string name="update_available">Pix-Art Messenger %1$s with the following changes is available:\n\n%2$s\n\nUpdate Pix-Art Messenger %3$s to Pix-Art Messenger %1$s now?</string>
+	<string name="update_available">Version %1$s is available.\n\nFilesize: %2$s\n\nUpdate to version %1$s now?</string>
 	<string name="checking_for_updates">Checking for Pix-Art Messenger updates</string>
 	<string name="remind_later">later</string>
 	<string name="update">update</string>

@@ -33,7 +33,7 @@ public class CheckAppVersionService extends HttpServlet {
         myObj.addProperty("success", false);
         myObj.addProperty("latestVersionCode", 2);
         myObj.addProperty("latestVersion", "1.0.0");
-        myObj.addProperty("changelog", "");
+        myObj.addProperty("filesize", "");
         myObj.addProperty("appURI", "");
         out.println(myObj.toString());
         out.close();
