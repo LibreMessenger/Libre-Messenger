@@ -161,7 +161,8 @@ public class SettingsActivity extends XmppActivity implements
 				"xa_on_silent_mode",
 				"away_when_screen_off",
 				"allow_message_correction",
-				"treat_vibrate_as_silent");
+				"treat_vibrate_as_silent",
+				"manually_change_presence");
 		if (name.equals("resource")) {
 			String resource = preferences.getString("resource", "mobile")
 					.toLowerCase(Locale.US);
@@ -180,7 +181,8 @@ public class SettingsActivity extends XmppActivity implements
 			}
 		} else if (resendPresence.contains(name)) {
 			if (xmppConnectionServiceBound) {
-				if (name.equals("away_when_screen_off")) {
+				if (name.equals("away_when_screen_off")
+						|| name.equals("manually_change_presence")) {
 					xmppConnectionService.toggleScreenEventReceiver();
 				}
 				xmppConnectionService.refreshAllPresences();

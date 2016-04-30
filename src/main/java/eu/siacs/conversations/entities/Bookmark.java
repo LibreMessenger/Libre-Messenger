@@ -1,5 +1,7 @@
 package eu.siacs.conversations.entities;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -61,9 +63,7 @@ public class Bookmark extends Element implements ListItem {
 	@Override
 	public String getDisplayJid() {
 		Jid jid = getJid();
-		if (Config.LOCK_DOMAINS_IN_CONVERSATIONS && jid != null && jid.getDomainpart().equals(Config.CONFERENCE_DOMAIN_LOCK)) {
-			return jid.getLocalpart();
-		} else if (jid != null) {
+		if (jid != null) {
 			return jid.toString();
 		} else {
 			return null;
@@ -76,7 +76,7 @@ public class Bookmark extends Element implements ListItem {
 	}
 
 	@Override
-	public List<Tag> getTags() {
+	public List<Tag> getTags(Context context) {
 		ArrayList<Tag> tags = new ArrayList<Tag>();
 		for (Element element : getChildren()) {
 			if (element.getName().equals("group") && element.getContent() != null) {
@@ -114,7 +114,8 @@ public class Bookmark extends Element implements ListItem {
 		}
 	}
 
-	public boolean match(String needle) {
+	@Override
+	public boolean match(Context context, String needle) {
 		if (needle == null) {
 			return true;
 		}
@@ -122,12 +123,12 @@ public class Bookmark extends Element implements ListItem {
 		final Jid jid = getJid();
 		return (jid != null && jid.toString().contains(needle)) ||
 			getDisplayName().toLowerCase(Locale.US).contains(needle) ||
-			matchInTag(needle);
+			matchInTag(context, needle);
 	}
 
-	private boolean matchInTag(String needle) {
+	private boolean matchInTag(Context context, String needle) {
 		needle = needle.toLowerCase(Locale.US);
-		for (Tag tag : getTags()) {
+		for (Tag tag : getTags(context)) {
 			if (tag.getName().toLowerCase(Locale.US).contains(needle)) {
 				return true;
 			}
