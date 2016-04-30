@@ -65,8 +65,8 @@ public final class Config {
 
 	public static final boolean CLOSE_TCP_WHEN_SWITCHING_TO_BACKGROUND = false;
 
-	public static final int AVATAR_SIZE = 640;
-	public static final Bitmap.CompressFormat AVATAR_FORMAT = Bitmap.CompressFormat.WEBP;
+	public static final int AVATAR_SIZE = 720;
+	public static final Bitmap.CompressFormat AVATAR_FORMAT = Bitmap.CompressFormat.JPEG;
 
 	public static final int IMAGE_SIZE = 1920;
 	public static final Bitmap.CompressFormat IMAGE_FORMAT = Bitmap.CompressFormat.JPEG;
