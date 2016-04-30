@@ -42,7 +42,8 @@
                 android:text="@string/all_accounts_on_this_device"
                 android:id="@+id/all_accounts"
                 android:textColor="@color/black87"
-                android:textSize="?attr/TextSizeBody"/>
+                android:textSize="?attr/TextSizeBody"
+                android:visibility="invisible"/>
             <Button
                 android:id="@+id/change_presence"
                 style="?android:attr/borderlessButtonStyle"
