@@ -3,6 +3,7 @@ package eu.siacs.conversations.ui;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,7 +33,9 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import android.util.Log;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -110,6 +113,13 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 
 		@Override
 		public void onClick(final View v) {
+			final String password = mPassword.getText().toString();
+			final String passwordConfirm = mPasswordConfirm.getText().toString();
+
+			if (!mInitMode && passwordChangedInMagicCreateMode()) {
+				gotoChangePassword(password);
+				return;
+			}
 			if (mInitMode && mAccount != null) {
 				mAccount.setOption(Account.OPTION_DISABLED, false);
 			}
@@ -182,6 +192,9 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				}
 			}
 			if (mAccount != null) {
+				if (mInitMode && mAccount.isOptionSet(Account.OPTION_MAGIC_CREATE)) {
+					mAccount.setOption(Account.OPTION_MAGIC_CREATE, mAccount.getPassword().contains(password));
+				}
 				mAccount.setJid(jid);
 				mAccount.setPort(numericPort);
 				mAccount.setHostname(hostname);
@@ -304,15 +317,19 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 			public void run() {
 				final Intent intent;
 				final XmppConnection connection = mAccount.getXmppConnection();
+				final boolean wasFirstAccount = xmppConnectionService != null && xmppConnectionService.getAccounts().size() == 1;
 				if (avatar != null || (connection != null && !connection.getFeatures().pep())) {
 					intent = new Intent(getApplicationContext(), StartConversationActivity.class);
-					if (xmppConnectionService != null && xmppConnectionService.getAccounts().size() == 1) {
+					if (wasFirstAccount) {
 						intent.putExtra("init", true);
 					}
 				} else {
 					intent = new Intent(getApplicationContext(), PublishProfilePictureActivity.class);
 					intent.putExtra(EXTRA_ACCOUNT, mAccount.getJid().toBareJid().toString());
 					intent.putExtra("setup", true);
+				}
+				if (wasFirstAccount) {
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				}
 				startActivity(intent);
 				finish();
@@ -329,7 +346,13 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 	}
 
 	protected void updateSaveButton() {
-		if (accountInfoEdited() && !mInitMode) {
+		boolean accountInfoEdited = accountInfoEdited();
+
+		if (!mInitMode && passwordChangedInMagicCreateMode()) {
+			this.mSaveButton.setText(R.string.change_password);
+			this.mSaveButton.setEnabled(true);
+			this.mSaveButton.setTextColor(getPrimaryTextColor());
+		} else if (accountInfoEdited && !mInitMode) {
 			this.mSaveButton.setText(R.string.save);
 			this.mSaveButton.setEnabled(true);
 			this.mSaveButton.setTextColor(getPrimaryTextColor());
@@ -348,7 +371,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 			if (!mInitMode) {
 				if (mAccount != null && mAccount.isOnlineAndConnected()) {
 					this.mSaveButton.setText(R.string.save);
-					if (!accountInfoEdited()) {
+					if (!accountInfoEdited) {
 						this.mSaveButton.setEnabled(false);
 						this.mSaveButton.setTextColor(getSecondaryTextColor());
 					}
@@ -365,16 +388,28 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		if (this.mAccount == null) {
 			return false;
 		}
+		return jidEdited() ||
+				!this.mAccount.getPassword().equals(this.mPassword.getText().toString()) ||
+				!this.mAccount.getHostname().equals(this.mHostname.getText().toString()) ||
+				!String.valueOf(this.mAccount.getPort()).equals(this.mPort.getText().toString());
+	}
+
+	protected boolean jidEdited() {
 		final String unmodified;
 		if (mUsernameMode) {
 			unmodified = this.mAccount.getJid().getLocalpart();
 		} else {
 			unmodified = this.mAccount.getJid().toBareJid().toString();
 		}
-		return !unmodified.equals(this.mAccountJid.getText().toString()) ||
-				!this.mAccount.getPassword().equals(this.mPassword.getText().toString()) ||
-				!this.mAccount.getHostname().equals(this.mHostname.getText().toString()) ||
-				!String.valueOf(this.mAccount.getPort()).equals(this.mPort.getText().toString());
+		return !unmodified.equals(this.mAccountJid.getText().toString());
+	}
+
+	protected boolean passwordChangedInMagicCreateMode() {
+		return mAccount != null
+				&& mAccount.isOptionSet(Account.OPTION_MAGIC_CREATE)
+				&& !this.mAccount.getPassword().equals(this.mPassword.getText().toString())
+				&& !this.jidEdited()
+				&& mAccount.isOnlineAndConnected();
 	}
 
 	@Override
@@ -408,7 +443,11 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
 				Uri uri = Uri.parse("package:"+getPackageName());
 				intent.setData(uri);
-				startActivityForResult(intent,REQUEST_BATTERY_OP);
+				try {
+					startActivityForResult(intent, REQUEST_BATTERY_OP);
+				} catch (ActivityNotFoundException e) {
+					Toast.makeText(EditAccountActivity.this, R.string.device_does_not_support_battery_op, Toast.LENGTH_SHORT).show();
+				}
 			}
 		});
 		this.mSessionEst = (TextView) findViewById(R.id.session_est);
@@ -472,7 +511,6 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		final MenuItem renewCertificate = menu.findItem(R.id.action_renew_certificate);
 		final MenuItem mamPrefs = menu.findItem(R.id.action_mam_prefs);
 		final MenuItem changePresence = menu.findItem(R.id.action_change_presence);
-
 		renewCertificate.setVisible(mAccount != null && mAccount.getPrivateKeyAlias() != null);
 
 		if (mAccount != null && mAccount.isOnlineAndConnected()) {
@@ -534,7 +572,6 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 	protected void onBackendConnected() {
 		if (this.jidToEdit != null) {
 			this.mAccount = xmppConnectionService.findAccountByJid(jidToEdit);
-			this.mInitMode |= this.mAccount.isOptionSet(Account.OPTION_REGISTER);
 			if (this.mAccount != null) {
 				this.mInitMode |= this.mAccount.isOptionSet(Account.OPTION_REGISTER);
 				this.mUsernameMode |= mAccount.isOptionSet(Account.OPTION_MAGIC_CREATE) && mAccount.isOptionSet(Account.OPTION_REGISTER);
@@ -547,8 +584,8 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				updateAccountInformation(true);
 			}
 		}
-		if (this.xmppConnectionService.getAccounts().size() == 0
-				|| this.mAccount == xmppConnectionService.getPendingAccount()) {
+		if ((Config.MAGIC_CREATE_DOMAIN == null && this.xmppConnectionService.getAccounts().size() == 0)
+				|| (this.mAccount != null && this.mAccount == xmppConnectionService.getPendingAccount())) {
 			if (getActionBar() != null) {
 				getActionBar().setDisplayHomeAsUpEnabled(false);
 				getActionBar().setDisplayShowHomeEnabled(false);
@@ -591,9 +628,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				item.setChecked(!item.isChecked());
 				break;
 			case R.id.action_change_password_on_server:
-				final Intent changePasswordIntent = new Intent(this, ChangePasswordActivity.class);
-				changePasswordIntent.putExtra(EXTRA_ACCOUNT, mAccount.getJid().toString());
-				startActivity(changePasswordIntent);
+				gotoChangePassword(null);
 				break;
 			case R.id.action_mam_prefs:
 				editMamPrefs();
@@ -609,6 +644,15 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void gotoChangePassword(String newPassword) {
+		final Intent changePasswordIntent = new Intent(this, ChangePasswordActivity.class);
+		changePasswordIntent.putExtra(EXTRA_ACCOUNT, mAccount.getJid().toString());
+		if (newPassword != null) {
+			changePasswordIntent.putExtra("password", newPassword);
+		}
+		startActivity(changePasswordIntent);
 	}
 
 	private void renewCertificate() {
@@ -862,65 +906,55 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 	}
 
 	@Override
-	public void onCaptchaRequested(final Account account, final String id, final Data data,
-								   final Bitmap captcha) {
-		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		final ImageView view = new ImageView(this);
-		final LinearLayout layout = new LinearLayout(this);
-		final EditText input = new EditText(this);
-
-		view.setImageBitmap(captcha);
-		view.setScaleType(ImageView.ScaleType.FIT_CENTER);
-
-		input.setHint(getString(R.string.captcha_hint));
-
-		layout.setOrientation(LinearLayout.VERTICAL);
-		layout.addView(view);
-		layout.addView(input);
-
-		builder.setTitle(getString(R.string.captcha_required));
-		builder.setView(layout);
-
-		builder.setPositiveButton(getString(R.string.ok),
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						String rc = input.getText().toString();
-						data.put("username", account.getUsername());
-						data.put("password", account.getPassword());
-						data.put("ocr", rc);
-						data.submit();
-
-						if (xmppConnectionServiceBound) {
-							xmppConnectionService.sendCreateAccountWithCaptchaPacket(
-									account, id, data);
-						}
-					}
-				});
-		builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				if (xmppConnectionService != null) {
-					xmppConnectionService.sendCreateAccountWithCaptchaPacket(account, null, null);
-				}
-			}
-		});
-
-		builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-			@Override
-			public void onCancel(DialogInterface dialog) {
-				if (xmppConnectionService != null) {
-					xmppConnectionService.sendCreateAccountWithCaptchaPacket(account, null, null);
-				}
-			}
-		});
-
+	public void onCaptchaRequested(final Account account, final String id, final Data data, final Bitmap captcha) {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
 				if ((mCaptchaDialog != null) && mCaptchaDialog.isShowing()) {
 					mCaptchaDialog.dismiss();
 				}
+				final AlertDialog.Builder builder = new AlertDialog.Builder(EditAccountActivity.this);
+				final View view = getLayoutInflater().inflate(R.layout.captcha, null);
+				final ImageView imageView = (ImageView) view.findViewById(R.id.captcha);
+				final EditText input = (EditText) view.findViewById(R.id.input);
+				imageView.setImageBitmap(captcha);
+
+				builder.setTitle(getString(R.string.captcha_required));
+				builder.setView(view);
+
+				builder.setPositiveButton(getString(R.string.ok),
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								String rc = input.getText().toString();
+								data.put("username", account.getUsername());
+								data.put("password", account.getPassword());
+								data.put("ocr", rc);
+								data.submit();
+
+								if (xmppConnectionServiceBound) {
+									xmppConnectionService.sendCreateAccountWithCaptchaPacket(
+											account, id, data);
+								}
+							}
+						});
+				builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						if (xmppConnectionService != null) {
+							xmppConnectionService.sendCreateAccountWithCaptchaPacket(account, null, null);
+						}
+					}
+				});
+
+				builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+					@Override
+					public void onCancel(DialogInterface dialog) {
+						if (xmppConnectionService != null) {
+							xmppConnectionService.sendCreateAccountWithCaptchaPacket(account, null, null);
+						}
+					}
+				});
 				mCaptchaDialog = builder.create();
 				mCaptchaDialog.show();
 			}
