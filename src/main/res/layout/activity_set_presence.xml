@@ -43,12 +43,10 @@
                 android:id="@+id/all_accounts"
                 android:textColor="@color/black87"
                 android:textSize="?attr/TextSizeBody"
-                android:visibility="invisible"/>
+                android:visibility="gone"/>
             <Button
                 android:id="@+id/change_presence"
                 style="?android:attr/borderlessButtonStyle"
-                android:layout_marginRight="-8dp"
-                android:layout_marginBottom="-8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
