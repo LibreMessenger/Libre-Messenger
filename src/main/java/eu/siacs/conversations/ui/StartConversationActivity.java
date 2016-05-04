@@ -390,13 +390,10 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
 		final View dialogView = getLayoutInflater().inflate(R.layout.join_conference_dialog, null);
 		final Spinner spinner = (Spinner) dialogView.findViewById(R.id.account);
 		final AutoCompleteTextView jid = (AutoCompleteTextView) dialogView.findViewById(R.id.jid);
-		final boolean lock = Config.LOCK_DOMAINS_IN_CONVERSATIONS && Config.CONFERENCE_DOMAIN_LOCK != null;
 		final TextView jabberIdDesc = (TextView) dialogView.findViewById(R.id.jabber_id);
-		jabberIdDesc.setText(lock ? R.string.conference_name : R.string.conference_address);
-		jid.setHint(lock ? R.string.conference_name : R.string.conference_address_example);
-		if (!lock) {
-			jid.setAdapter(new KnownHostsAdapter(this, android.R.layout.simple_list_item_1, mKnownConferenceHosts));
-		}
+		jabberIdDesc.setText(R.string.conference_address);
+		jid.setHint(R.string.conference_address_example);
+		jid.setAdapter(new KnownHostsAdapter(this, R.layout.simple_list_item, mKnownConferenceHosts));
 		if (prefilledJid != null) {
 			jid.append(prefilledJid);
 		}
@@ -422,13 +419,9 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
 						}
 						final Jid conferenceJid;
 						try {
-							if (lock) {
-								conferenceJid = Jid.fromParts(jid.getText().toString(),Config.CONFERENCE_DOMAIN_LOCK, null);
-							} else {
-								conferenceJid = Jid.fromString(jid.getText().toString());
-							}
+							conferenceJid = Jid.fromString(jid.getText().toString());
 						} catch (final InvalidJidException e) {
-							jid.setError(getString(lock ? R.string.invalid_conference_name : R.string.invalid_jid));
+							jid.setError(getString(R.string.invalid_jid));
 							return;
 						}
 
@@ -494,16 +487,15 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
 
 	public static void populateAccountSpinner(Context context, List<String> accounts, Spinner spinner) {
 		if (accounts.size() > 0) {
-			ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
-					android.R.layout.simple_spinner_item, accounts);
-			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.simple_list_item, accounts);
+			adapter.setDropDownViewResource(R.layout.simple_list_item);
 			spinner.setAdapter(adapter);
 			spinner.setEnabled(true);
 		} else {
 			ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
-					android.R.layout.simple_spinner_item,
+					R.layout.simple_list_item,
 					Arrays.asList(new String[]{context.getString(R.string.no_accounts)}));
-			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			adapter.setDropDownViewResource(R.layout.simple_list_item);
 			spinner.setAdapter(adapter);
 			spinner.setEnabled(false);
 		}
@@ -738,7 +730,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
 				for (Contact contact : account.getRoster().getContacts()) {
 					Presence p = contact.getPresences().getMostAvailablePresence();
 					Presence.Status s = p == null ? Presence.Status.OFFLINE : p.getStatus();
-					if (contact.showInRoster() && contact.match(needle)
+					if (contact.showInRoster() && contact.match(this, needle)
 							&& (!this.mHideOfflineContacts
 							|| (needle != null && !needle.trim().isEmpty())
 							|| s.compareTo(Presence.Status.OFFLINE) < 0)) {
@@ -756,7 +748,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
 		for (Account account : xmppConnectionService.getAccounts()) {
 			if (account.getStatus() != Account.State.DISABLED) {
 				for (Bookmark bookmark : account.getBookmarks()) {
-					if (bookmark.match(needle)) {
+					if (bookmark.match(this, needle)) {
 						this.conferences.add(bookmark);
 					}
 				}

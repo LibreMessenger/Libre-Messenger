@@ -381,19 +381,6 @@ public abstract class XmppActivity extends Activity {
 		}
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		final MenuItem menuSettings = menu.findItem(R.id.action_settings);
-		final MenuItem menuManageAccounts = menu.findItem(R.id.action_accounts);
-		if (menuSettings != null) {
-			menuSettings.setVisible(!Config.LOCK_SETTINGS);
-		}
-		if (menuManageAccounts != null) {
-			menuManageAccounts.setVisible(!Config.LOCK_SETTINGS);
-		}
-		return super.onCreateOptionsMenu(menu);
-	}
-
 	protected boolean isOptimizingBattery() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 			PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
@@ -536,6 +523,17 @@ public abstract class XmppActivity extends Activity {
 					displayErrorDialog(error);
 				}
 			});
+		}
+	}
+
+	@SuppressWarnings("deprecation")
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+	protected void setListItemBackgroundOnView(View view) {
+		int sdk = android.os.Build.VERSION.SDK_INT;
+		if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+			view.setBackgroundDrawable(getResources().getDrawable(R.drawable.greybackground));
+		} else {
+			view.setBackground(getResources().getDrawable(R.drawable.greybackground));
 		}
 	}
 
@@ -1009,6 +1007,10 @@ public abstract class XmppActivity extends Activity {
 		return getPreferences().getString("picture_compression", "auto").equals("never");
 	}
 
+	protected boolean manuallyChangePresence() {
+		return getPreferences().getBoolean("manually_change_presence", false);
+	}
+
 	protected void unregisterNdefPushMessageCallback() {
 		NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 		if (nfcAdapter != null && nfcAdapter.isEnabled()) {
@@ -1147,6 +1149,9 @@ public abstract class XmppActivity extends Activity {
 
 		@Override
 		protected Bitmap doInBackground(Message... params) {
+			if (isCancelled()) {
+				return null;
+			}
 			message = params[0];
 			try {
 				return xmppConnectionService.getFileBackend().getThumbnail(
@@ -1158,7 +1163,7 @@ public abstract class XmppActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(Bitmap bitmap) {
-			if (bitmap != null) {
+			if (bitmap != null && !isCancelled()) {
 				final ImageView imageView = imageViewReference.get();
 				if (imageView != null) {
 					imageView.setImageBitmap(bitmap);
@@ -1177,6 +1182,7 @@ public abstract class XmppActivity extends Activity {
 			bm = null;
 		}
 		if (bm != null) {
+			cancelPotentialWork(message, imageView);
 			imageView.setImageBitmap(bm);
 			imageView.setBackgroundColor(0x00000000);
 		} else {
@@ -1190,13 +1196,13 @@ public abstract class XmppActivity extends Activity {
 				try {
 					task.execute(message);
 				} catch (final RejectedExecutionException ignored) {
+					ignored.printStackTrace();
 				}
 			}
 		}
 	}
 
-	public static boolean cancelPotentialWork(Message message,
-			ImageView imageView) {
+	public static boolean cancelPotentialWork(Message message, ImageView imageView) {
 		final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
 
 		if (bitmapWorkerTask != null) {

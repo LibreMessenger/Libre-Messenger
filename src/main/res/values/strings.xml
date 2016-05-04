@@ -573,9 +573,8 @@
 	<string name="server_side_mam_prefs">Server-side archiving preferences</string>
 	<string name="fetching_mam_prefs">Fetching archiving preferences. Please wait…</string>
 	<string name="unable_to_fetch_mam_prefs">Unable to fetch archiving preferences</string>
-	<string name="captcha_ocr">Captcha text</string>
 	<string name="captcha_required">Captcha required</string>
-	<string name="captcha_hint">enter the text from the image</string>
+	<string name="captcha_hint">Enter the text from the image above</string>
 	<string name="certificate_chain_is_not_trusted">Certificate chain is not trusted</string>
 	<string name="jid_does_not_match_certificate">Jabber ID does not match certificate</string>
 	<string name="action_renew_certificate">Renew certificate</string>
@@ -625,8 +624,8 @@
 	<string name="always">Always</string>
 	<string name="automatically">Automatically</string>
 	<string name="battery_optimizations_enabled">Battery optimizations enabled</string>
-	<string name="battery_optimizations_enabled_explained">Your device is doing some heavy battery optimizations on Conversations that might lead to delayed notifications or even message loss.\nIt is recommended to disable those.</string>
-	<string name="battery_optimizations_enabled_dialog">Your device is doing some heavy battery optimizations on Conversations that might lead to delayed notifications or even message loss.\n\nYou will now be asked to disable those.</string>
+	<string name="battery_optimizations_enabled_explained">Your device is doing some heavy battery optimizations on Pix-Art Messenger that might lead to delayed notifications or even message loss.\nIt is recommended to disable those.</string>
+	<string name="battery_optimizations_enabled_dialog">Your device is doing some heavy battery optimizations on Pix-Art Messenger that might lead to delayed notifications or even message loss.\n\nYou will now be asked to disable those.</string>
 	<string name="disable">Disable</string>
 	<string name="selection_too_large">The selected area is too large</string>
 	<string name="cancel_update">Cancel update check?</string>
@@ -654,4 +653,17 @@
 	<string name="create_account">Create new account</string>
 	<string name="use_existing_accout">Use an existing account</string>
 	<string name="pick_your_username">Choose your username</string>
+	<string name="pref_manually_change_presence">Manually change presence</string>
+	<string name="pref_manually_change_presence_summary">Touch your avatar to change your presence</string>
+	<string name="change_presence">Change Presence</string>
+	<string name="status_message">Status message</string>
+	<string name="all_accounts_on_this_device">Set for all accounts on this device</string>
+	<string name="presence_chat">Free for Chat</string>
+	<string name="presence_online">Online</string>
+	<string name="presence_away">Away</string>
+	<string name="presence_xa">Not Available</string>
+	<string name="presence_dnd">Busy</string>
+	<string name="secure_password_generated">A secure password has been generated</string>
+	<string name="device_does_not_support_battery_op">Your device does not support opting out of battery optimization</string>
+
 </resources>

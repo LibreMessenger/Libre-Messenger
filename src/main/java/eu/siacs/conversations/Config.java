@@ -38,7 +38,6 @@ public final class Config {
 
 	public static final String XMPP_IP = "185.26.156.37"; // set to null means disable
 	public static final Integer[] XMPP_Ports = {61000, 65000}; // set to null means disable
-
 	public static final String DOMAIN_LOCK = "pix-art.de"; //only allow account creation for this domain
 	public static final String MAGIC_CREATE_DOMAIN = "pix-art.de";
 	public static final String CONFERENCE_DOMAIN_LOCK = null; //only allow conference creation for this domain
@@ -55,8 +54,6 @@ public final class Config {
 	public static final boolean SHOW_CONNECTED_ACCOUNTS = false; //show number of connected accounts in foreground notification
 	public static final boolean SHOW_DISABLE_FOREGROUND = false; //if set to true the foreground notification has a button to disable it
 	public static final boolean USE_ALWAYS_FOREGROUND = true; //if set to true the foreground service is always enabled
-
-	public static final boolean LEGACY_NAMESPACE_HTTP_UPLOAD = false; // true = 'eu:siacs:conversations:http:upload' false = 'urn:xmpp:http:upload'
 
 	public static final int PING_MAX_INTERVAL = 300;
 	public static final int PING_MIN_INTERVAL = 30;
@@ -102,8 +99,6 @@ public final class Config {
 	public static final boolean X509_VERIFICATION = false; //use x509 certificates to verify OMEMO keys
 
 	public static final boolean IGNORE_ID_REWRITE_IN_MUC = true;
-
-	public static final boolean REQUEST_DISCO = true;
 
 	public static final long MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000;
 	public static final long MAM_MAX_CATCHUP =  MILLISECONDS_IN_DAY / 2;
