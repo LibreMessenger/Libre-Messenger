@@ -14,9 +14,7 @@ import android.provider.Settings;
 import android.security.KeyChain;
 import android.security.KeyChainAliasCallback;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
-import android.text.method.PasswordTransformationMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,11 +33,14 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import android.util.Log;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.axolotl.AxolotlService;
@@ -64,11 +65,13 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 
 	private AutoCompleteTextView mAccountJid;
 	private EditText mPassword;
+	private EditText mPasswordConfirm;
 	private CheckBox mRegisterNew;
 	private Button mCancelButton;
 	private Button mSaveButton;
 	private Button mDisableBatterOptimizations;
 	private TableLayout mMoreTable;
+
 	private LinearLayout mStats;
 	private RelativeLayout mBatteryOptimizations;
 	private TextView mServerInfoSm;
@@ -196,6 +199,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				mAccount.setPort(numericPort);
 				mAccount.setHostname(hostname);
 				mAccountJid.setError(null);
+				mPasswordConfirm.setError(null);
 				mAccount.setPassword(password);
 				mAccount.setOption(Account.OPTION_REGISTER, registerNewAccount);
 				xmppConnectionService.updateAccount(mAccount);
@@ -426,6 +430,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		this.mAccountJidLabel = (TextView) findViewById(R.id.account_jid_label);
 		this.mPassword = (EditText) findViewById(R.id.account_password);
 		this.mPassword.addTextChangedListener(this.mTextWatcher);
+		this.mPasswordConfirm = (EditText) findViewById(R.id.account_password_confirm);
 		this.mAvatar = (ImageView) findViewById(R.id.avater);
 		this.mAvatar.setOnClickListener(this.mAvatarClickListener);
 		this.mRegisterNew = (CheckBox) findViewById(R.id.account_register_new);
@@ -476,7 +481,19 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		this.mSaveButton.setOnClickListener(this.mSaveButtonClickListener);
 		this.mCancelButton.setOnClickListener(this.mCancelButtonClickListener);
 		this.mMoreTable = (TableLayout) findViewById(R.id.server_info_more);
-
+		final OnCheckedChangeListener OnCheckedShowConfirmPassword = new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(final CompoundButton buttonView,
+										 final boolean isChecked) {
+				if (isChecked) {
+					mPasswordConfirm.setVisibility(View.VISIBLE);
+				} else {
+					mPasswordConfirm.setVisibility(View.GONE);
+				}
+				updateSaveButton();
+			}
+		};
+		this.mRegisterNew.setOnCheckedChangeListener(OnCheckedShowConfirmPassword);
 		if (Config.DISALLOW_REGISTRATION_IN_UI) {
 			this.mRegisterNew.setVisibility(View.GONE);
 		}
@@ -664,9 +681,6 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				this.mAccountJid.getEditableText().append(this.mAccount.getJid().toBareJid().toString());
 			}
 			this.mPassword.setText(this.mAccount.getPassword());
-            if (!mInitMode) {
-                this.mPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-			}
 			this.mHostname.setText("");
 			this.mHostname.getEditableText().append(this.mAccount.getHostname());
 			this.mPort.setText("");
@@ -684,6 +698,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		if (this.mAccount.isOptionSet(Account.OPTION_REGISTER)) {
 			this.mRegisterNew.setVisibility(View.VISIBLE);
 			this.mRegisterNew.setChecked(true);
+			this.mPasswordConfirm.setText(this.mAccount.getPassword());
 		} else {
 			this.mRegisterNew.setVisibility(View.GONE);
 			this.mRegisterNew.setChecked(false);

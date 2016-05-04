@@ -158,7 +158,6 @@ public class ManageAccountActivity extends XmppActivity implements OnAccountUpda
 			addAccount.setVisible(!(Config.LOCK_SETTINGS || Config.SINGLE_ACCOUNT));
 		}
 		addAccountWithCertificate.setVisible(!(Config.LOCK_SETTINGS || Config.SINGLE_ACCOUNT));
-		}
 		return true;
 	}
 
