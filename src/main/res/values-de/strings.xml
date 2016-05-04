@@ -100,6 +100,9 @@
   <string name="pref_xmpp_resource_summary">Der Name, mit dem sich der Client selbst identifiziert</string>
   <string name="pref_accept_files">Dateien annehmen</string>
   <string name="pref_accept_files_summary">Dateien automatisch annehmen, die kleiner sind als …</string>
+  <string name="pref_attachments">Anhänge</string>
+  <string name="pref_return_to_previous">Schnell-Teilen</string>
+  <string name="pref_return_to_previous_summary">Nach dem Teilen sofort wieder zur vorherigen App zurückkehren anstatt die Unterhaltung zu öffnen</string>
   <string name="pref_notification_settings">Benachrichtigung</string>
   <string name="pref_notifications">Benachrichtigungen</string>
   <string name="pref_notifications_summary">Benachrichtigen bei Erhalt einer neuen Nachricht</string>
@@ -558,6 +561,7 @@
   <string name="shared_file_with_x">Datei mit %s geteilt</string>
   <string name="shared_image_with_x">Bild mit %s geteilt</string>
   <string name="no_storage_permission">Pix-Art Messenger benötigt Zugriff auf externen Speicher</string>
+  <string name="shared_images_with_x">Bilder mit %s geteilt</string>
   <string name="sync_with_contacts">Mit Kontakten synchronisieren</string>
   <string name="sync_with_contacts_long">Pix-Art Messenger möchte deine XMPP-Kontaktliste mit deinen Kontakten abgleichen, um deren vollständige Namen und Profilbilder anzuzeigen.\n\nPix-Art Messenger wird deine Kontakte nur lokal lesen und verarbeiten und überträgt diese nicht auf den Server.\n\nDu wirst nun gefragt, ob du den Zugriff auf deine Kontakte erlauben möchtest.</string>
   <string name="certificate_information">Zertifikatinformationen</string>
@@ -577,8 +581,8 @@
   <string name="always">Immer</string>
   <string name="automatically">Automatisch</string>
   <string name="battery_optimizations_enabled">Batterieoptimierung aktiv</string>
-  <string name="battery_optimizations_enabled_explained">Dein Telefon wendet Batterioptimierungen bei Conversations an, welche verspätete Benachrichtigungen oder Nachrichtenverlust verursachen können.\nEs ist empfehlenswert diese zu deaktivieren.</string>
-  <string name="battery_optimizations_enabled_dialog">Dein Telefon wendet Batterioptimierungen bei Conversations an, welche verspätete Benachrichtigungen oder Nachrichtenverlust verursachen können. Es ist empfehlenswert dies zu deaktivieren.</string>
+  <string name="battery_optimizations_enabled_explained">Dein Telefon wendet Batterioptimierungen bei Pix-Art Messenger an, welche verspätete Benachrichtigungen oder Nachrichtenverlust verursachen können.\nEs ist empfehlenswert diese zu deaktivieren.</string>
+  <string name="battery_optimizations_enabled_dialog">Dein Telefon wendet Batterioptimierungen bei Pix-Art Messenger an, welche verspätete Benachrichtigungen oder Nachrichtenverlust verursachen können. Es ist empfehlenswert dies zu deaktivieren.</string>
   <string name="disable">Deaktivieren</string>
   <string name="cancel_update">Update abbrechen?</string>
   <string name="no">Nein</string>
@@ -606,16 +610,12 @@
   <string name="pref_plugin_voice_recorder">Sprachaufnahme</string>
   <string name="pref_plugin_voice_recorder_summary">Sende und empfange Sprachnachrichten</string>
   <string name="preparing_images">Bilder werden für Übertragung vorbereitet</string>
-  <string name="shared_images_with_x">Bilder mit %s geteilt</string>
   <string name="sharing_files_please_wait">Teile Dateien. Bitte warten…</string>
   <string name="delete_x_file">%s löschen</string>
   <string name="security_error_invalid_file_access">Sicherheitsfehler: Dateizugriff nicht erlaubt</string>
   <string name="mgmt_account_reconnect">neu verbinden</string>
-  <string name="no_application_to_share_uri">Keine Anwendung zu Teilen der URI</string>
+  <string name="no_application_to_share_uri">Keine Anwendung zum Teilen der URI gefunden</string>
   <string name="share_uri_with">Teile URI mit…</string>
-  <string name="pref_attachments">Anhänge</string>
-  <string name="pref_return_to_previous">Schnell-Teilen</string>
-  <string name="pref_return_to_previous_summary">Nach dem teilen sofort wieder zur letzten App zurückkehren anstatt die Unterhalt zu öffnen</string>
   <string name="shared_text_with_x">Text mit %s geteilt</string>
   <string name="create_account">Neues Konto erstellen</string>
   <string name="magic_create_text">Wir erstellen nun mit dir gemeinsam ein Konto auf pix-art.de mit einem zufällig generierten Passwort, welches du benutzen oder auf der nächsten Seite ändern kannst\nDanach kannst du mit Kontakten auf diesem und anderen Servern in Kontakt treten, indem du ihnen deine Jabber-ID gibst.</string>
@@ -623,4 +623,15 @@
   <string name="use_existing_accout">Nutze ein bestehendes Konto</string>
   <string name="welcome_text">...ist ein kostenfreier und sicherer XMPP/Jabber Client für die Benutzung mit pix-art.de</string>
   <string name="your_full_jid_will_be">Deine Jabber-ID lautet: %s</string>
+  <string name="pref_manually_change_presence">Ändere Status</string>
+  <string name="pref_manually_change_presence_summary">Tippe auf deinen Avatar, um deinen Status zu ändern</string>
+  <string name="change_presence">Status ändern</string>
+  <string name="status_message">Statusnachricht</string>
+  <string name="all_accounts_on_this_device">Für alle Konten dieses Gerätes festlegen</string>
+  <string name="presence_chat">Frei zum chatten</string>
+  <string name="presence_online">Online</string>
+  <string name="presence_away">Weg</string>
+  <string name="presence_xa">Nicht verfügbar</string>
+  <string name="presence_dnd">Beschäftigt</string>
+  <string name="secure_password_generated">Ein sicheres Passwort wurde erstellt</string>
 </resources>

@@ -13,9 +13,7 @@ import android.provider.Settings;
 import android.security.KeyChain;
 import android.security.KeyChainAliasCallback;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
-import android.text.method.PasswordTransformationMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,12 +32,12 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
-import org.whispersystems.libaxolotl.IdentityKey;
-import java.util.Set;
+import android.util.Log;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.axolotl.AxolotlService;
@@ -64,11 +62,13 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 
 	private AutoCompleteTextView mAccountJid;
 	private EditText mPassword;
+	private EditText mPasswordConfirm;
 	private CheckBox mRegisterNew;
 	private Button mCancelButton;
 	private Button mSaveButton;
 	private Button mDisableBatterOptimizations;
 	private TableLayout mMoreTable;
+
 	private LinearLayout mStats;
 	private RelativeLayout mBatteryOptimizations;
 	private TextView mServerInfoSm;
@@ -99,6 +99,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 
 	private Jid jidToEdit;
 	private boolean mInitMode = false;
+	private boolean mUsernameMode = Config.DOMAIN_LOCK != null;
 	private boolean mShowOptions = false;
 	private Account mAccount;
 	private String messageFingerprint;
@@ -118,20 +119,20 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				return;
 			}
 			final boolean registerNewAccount = mRegisterNew.isChecked() && !Config.DISALLOW_REGISTRATION_IN_UI;
-			if (Config.DOMAIN_LOCK != null && mAccountJid.getText().toString().contains("@")) {
+			if (mUsernameMode && mAccountJid.getText().toString().contains("@")) {
 				mAccountJid.setError(getString(R.string.invalid_username));
 				mAccountJid.requestFocus();
 				return;
 			}
 			final Jid jid;
 			try {
-				if (Config.DOMAIN_LOCK != null) {
-					jid = Jid.fromParts(mAccountJid.getText().toString(), Config.DOMAIN_LOCK, null);
+				if (mUsernameMode) {
+					jid = Jid.fromParts(mAccountJid.getText().toString(), getUserModeDomain(), null);
 				} else {
 					jid = Jid.fromString(mAccountJid.getText().toString());
 				}
 			} catch (final InvalidJidException e) {
-				if (Config.DOMAIN_LOCK != null) {
+				if (mUsernameMode) {
 					mAccountJid.setError(getString(R.string.invalid_username));
 				} else {
 					mAccountJid.setError(getString(R.string.invalid_jid));
@@ -165,7 +166,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 			}
 
 			if (jid.isDomainJid()) {
-				if (Config.DOMAIN_LOCK != null) {
+				if (mUsernameMode) {
 					mAccountJid.setError(getString(R.string.invalid_username));
 				} else {
 					mAccountJid.setError(getString(R.string.invalid_jid));
@@ -173,13 +174,19 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				mAccountJid.requestFocus();
 				return;
 			}
-			final String password = mPassword.getText().toString();
-
+			if (registerNewAccount) {
+				if (!password.equals(passwordConfirm)) {
+					mPasswordConfirm.setError(getString(R.string.passwords_do_not_match));
+					mPasswordConfirm.requestFocus();
+					return;
+				}
+			}
 			if (mAccount != null) {
 				mAccount.setJid(jid);
 				mAccount.setPort(numericPort);
 				mAccount.setHostname(hostname);
 				mAccountJid.setError(null);
+				mPasswordConfirm.setError(null);
 				mAccount.setPassword(password);
 				mAccount.setOption(Account.OPTION_REGISTER, registerNewAccount);
 				xmppConnectionService.updateAccount(mAccount);
@@ -359,7 +366,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 			return false;
 		}
 		final String unmodified;
-		if (Config.DOMAIN_LOCK != null) {
+		if (mUsernameMode) {
 			unmodified = this.mAccount.getJid().getLocalpart();
 		} else {
 			unmodified = this.mAccount.getJid().toBareJid().toString();
@@ -386,12 +393,9 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		this.mAccountJid = (AutoCompleteTextView) findViewById(R.id.account_jid);
 		this.mAccountJid.addTextChangedListener(this.mTextWatcher);
 		this.mAccountJidLabel = (TextView) findViewById(R.id.account_jid_label);
-		if (Config.DOMAIN_LOCK != null) {
-			this.mAccountJidLabel.setText(R.string.username);
-			this.mAccountJid.setHint(R.string.username_hint);
-		}
 		this.mPassword = (EditText) findViewById(R.id.account_password);
 		this.mPassword.addTextChangedListener(this.mTextWatcher);
+		this.mPasswordConfirm = (EditText) findViewById(R.id.account_password_confirm);
 		this.mAvatar = (ImageView) findViewById(R.id.avater);
 		this.mAvatar.setOnClickListener(this.mAvatarClickListener);
 		this.mRegisterNew = (CheckBox) findViewById(R.id.account_register_new);
@@ -438,7 +442,19 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		this.mSaveButton.setOnClickListener(this.mSaveButtonClickListener);
 		this.mCancelButton.setOnClickListener(this.mCancelButtonClickListener);
 		this.mMoreTable = (TableLayout) findViewById(R.id.server_info_more);
-
+		final OnCheckedChangeListener OnCheckedShowConfirmPassword = new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(final CompoundButton buttonView,
+										 final boolean isChecked) {
+				if (isChecked) {
+					mPasswordConfirm.setVisibility(View.VISIBLE);
+				} else {
+					mPasswordConfirm.setVisibility(View.GONE);
+				}
+				updateSaveButton();
+			}
+		};
+		this.mRegisterNew.setOnCheckedChangeListener(OnCheckedShowConfirmPassword);
 		if (Config.DISALLOW_REGISTRATION_IN_UI) {
 			this.mRegisterNew.setVisibility(View.GONE);
 		}
@@ -520,6 +536,8 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 			this.mAccount = xmppConnectionService.findAccountByJid(jidToEdit);
 			this.mInitMode |= this.mAccount.isOptionSet(Account.OPTION_REGISTER);
 			if (this.mAccount != null) {
+				this.mInitMode |= this.mAccount.isOptionSet(Account.OPTION_REGISTER);
+				this.mUsernameMode |= mAccount.isOptionSet(Account.OPTION_MAGIC_CREATE) && mAccount.isOptionSet(Account.OPTION_REGISTER);
 				if (this.mAccount.getPrivateKeyAlias() != null) {
 					this.mPassword.setHint(R.string.authenticate_with_certificate);
 					if (this.mInitMode) {
@@ -539,7 +557,10 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 			this.mCancelButton.setEnabled(false);
 			this.mCancelButton.setTextColor(getSecondaryTextColor());
 		}
-		if (Config.DOMAIN_LOCK == null) {
+		if (mUsernameMode) {
+			this.mAccountJidLabel.setText(R.string.username);
+			this.mAccountJid.setHint(R.string.username_hint);
+		} else {
 			final KnownHostsAdapter mKnownHostsAdapter = new KnownHostsAdapter(this,
 					R.layout.simple_list_item,
 					xmppConnectionService.getKnownHosts());
@@ -547,6 +568,14 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		}
 		updateSaveButton();
 		invalidateOptionsMenu();
+	}
+
+	private String getUserModeDomain() {
+		if (mAccount != null) {
+			return mAccount.getJid().getDomainpart();
+		} else {
+			return Config.DOMAIN_LOCK;
+		}
 	}
 
 	@Override
@@ -602,15 +631,12 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 	private void updateAccountInformation(boolean init) {
 		if (init) {
 			this.mAccountJid.getEditableText().clear();
-			if (Config.DOMAIN_LOCK != null) {
+			if (mUsernameMode) {
 				this.mAccountJid.getEditableText().append(this.mAccount.getJid().getLocalpart());
 			} else {
 				this.mAccountJid.getEditableText().append(this.mAccount.getJid().toBareJid().toString());
 			}
 			this.mPassword.setText(this.mAccount.getPassword());
-			if (!mInitMode) {
-				this.mPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-			}
 			this.mHostname.setText("");
 			this.mHostname.getEditableText().append(this.mAccount.getHostname());
 			this.mPort.setText("");
@@ -628,6 +654,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		if (this.mAccount.isOptionSet(Account.OPTION_REGISTER)) {
 			this.mRegisterNew.setVisibility(View.VISIBLE);
 			this.mRegisterNew.setChecked(true);
+			this.mPasswordConfirm.setText(this.mAccount.getPassword());
 		} else {
 			this.mRegisterNew.setVisibility(View.GONE);
 			this.mRegisterNew.setChecked(false);
