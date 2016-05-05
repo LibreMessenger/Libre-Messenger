@@ -23,6 +23,7 @@ configurations {
 
 dependencies {
 	compile project(':libs:MemorizingTrustManager')
+	compile project(':libs:audiowife')
 	compile 'org.sufficientlysecure:openpgp-api:10.0'
 	compile 'com.soundcloud.android:android-crop:1.0.1@aar'
 	compile 'com.android.support:support-v13:23.2.0'
