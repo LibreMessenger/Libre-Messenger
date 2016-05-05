@@ -671,5 +671,7 @@
 	<string name="presence_dnd">Busy</string>
 	<string name="secure_password_generated">A secure password has been generated</string>
 	<string name="device_does_not_support_battery_op">Your device does not support opting out of battery optimization</string>
+    <string name="share">Teilen</string>
+    <string name="no_mic_permissions">No permissions to record audio</string>
 
 </resources>

@@ -552,11 +552,11 @@ public class ConversationActivity extends XmppActivity
 						intent.addCategory(Intent.CATEGORY_OPENABLE);
 						intent.setAction(Intent.ACTION_GET_CONTENT);
 						break;
-					case ATTACHMENT_CHOICE_RECORD_VOICE:
-						intent.setAction(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
-						fallbackPackageId = "eu.siacs.conversations.voicerecorder";
-						break;
-					case ATTACHMENT_CHOICE_LOCATION:
+                    case ATTACHMENT_CHOICE_RECORD_VOICE:
+                        intent.setAction(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+                        intent.setPackage("eu.siacs.conversations");
+                        break;
+                    case ATTACHMENT_CHOICE_LOCATION:
 						intent.setAction("eu.siacs.conversations.location.request");
 						fallbackPackageId = "eu.siacs.conversations.sharelocation";
 						break;
