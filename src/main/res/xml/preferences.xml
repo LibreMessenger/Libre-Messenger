@@ -213,7 +213,7 @@
             </PreferenceCategory>
             <PreferenceCategory android:title="@string/pref_presence_settings">
                 <CheckBoxPreference
-                    android:defaultValue="false"
+                    android:defaultValue="true"
                     android:key="manually_change_presence"
                     android:title="@string/pref_manually_change_presence"
                     android:summary="@string/pref_manually_change_presence_summary"
