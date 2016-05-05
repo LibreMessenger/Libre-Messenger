@@ -6,7 +6,6 @@ import eu.siacs.conversations.xmpp.chatstate.ChatState;
 
 public final class Config {
 
-
 	private static final int UNENCRYPTED = 1;
 	private static final int OPENPGP = 2;
 	private static final int OTR = 4;
@@ -74,6 +73,8 @@ public final class Config {
 	public static final int IMAGE_MAX_SIZE = 524288; //512 KiB
 
 	public static final int FILE_MAX_SIZE = 1048576; //1 MiB
+
+	public static final int DEFAULT_ZOOM = 15; //for locations
 
 	public static final int MESSAGE_MERGE_WINDOW = 20;
 

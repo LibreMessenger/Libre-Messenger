@@ -673,5 +673,8 @@
 	<string name="device_does_not_support_battery_op">Your device does not support opting out of battery optimization</string>
     <string name="share">Teilen</string>
     <string name="no_mic_permissions">No permissions to record audio</string>
+    <string name="share_location">Share location</string>
+    <string name="location_sharing_disabled">Location sharing is disabled in settings</string>
+    <string name="locating"><![CDATA[Locating&#8230;]]></string>
 
 </resources>

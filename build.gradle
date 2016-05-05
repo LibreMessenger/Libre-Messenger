@@ -42,6 +42,9 @@ dependencies {
 	compile 'jetty:javax.servlet:5.1.12'
 	compile 'com.google.code.gson:gson:2.3.1'
 	compile 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
+	compile 'com.google.android.gms:play-services:6.5.87'
+	compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.android.support:multidex:1.0.0'
 	playstoreCompile 'com.google.android.gms:play-services-gcm:8.4.0'
 }
 
@@ -62,6 +65,9 @@ android {
 		versionName "1.12.1"
 		archivesBaseName += "-$versionName"
 		applicationId "eu.siacs.conversations"
+
+        // Enabling multidex support.
+        multiDexEnabled true
 	}
 
 	dexOptions {
