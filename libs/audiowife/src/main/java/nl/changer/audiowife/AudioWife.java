@@ -247,9 +247,9 @@ public class AudioWife {
             try {
                 totalDuration = mMediaPlayer.getDuration();
             } catch (IllegalStateException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             } catch (Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
 
