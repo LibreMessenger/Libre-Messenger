@@ -473,11 +473,12 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         Uri audioFile = Uri.fromFile(activity.xmppConnectionService.getFileBackend().getFile(message));
 
         AudioWife audioWife = audioPlayer.get(position);
+		RelativeLayout vg = new RelativeLayout(activity);
         if (audioWife == null) {
             audioWife = new AudioWife();
             audioWife.init(getContext(), audioFile);
             audioPlayer.put(position, audioWife);
-            RelativeLayout vg = new RelativeLayout(activity);
+
             LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             audioWife.useDefaultUi(vg, layoutInflater);
             viewHolder.aw_player.addView(audioWife.getPlayerUi());
