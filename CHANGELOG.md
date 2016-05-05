@@ -1,7 +1,10 @@
 ###Changelog
 
 ####Version 1.12.1
+* small bug fixes
 * expert setting to modify presence
+* added simple audio player
+* changed theme color from green to blue
 
 ####Version 1.12.0
 * added welcome screen for first start
