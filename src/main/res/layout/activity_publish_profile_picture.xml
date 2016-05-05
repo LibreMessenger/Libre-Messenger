@@ -25,13 +25,12 @@
         android:layout_below="@+id/secondary_hint"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:background="@drawable/infocard_border">
+            android:background="@drawable/infocard_border"
+            android:padding="@dimen/infocard_padding">
 
             <LinearLayout
                 android:id="@+id/account_image_wrapper"
@@ -39,20 +38,22 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="24dp"
-                android:background="@drawable/account_image_border"
                 android:layout_gravity="center_horizontal">
 
-                <ImageView
+                <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/account_image"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="16dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/message_border"
+                    android:contentDescription="@string/account_image_description"
                     android:maxHeight="384dp"
                     android:maxWidth="384dp"
-                    android:adjustViewBounds="true"
                     android:padding="1dp"
-                    android:background="@drawable/message_border" />
+                    app:riv_corner_radius="5dp" />
             </LinearLayout>
 
             <TextView
@@ -67,7 +68,8 @@
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/secondary_hint"
@@ -81,14 +83,16 @@
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:textAlignment="center" />
 
             <TextView
             android:id="@+id/account"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeHeadline" />
+            android:textSize="?attr/TextSizeHeadline"
+                android:visibility="gone" />
 
         <TextView
             android:id="@+id/hint_or_warning"
@@ -98,7 +102,9 @@
             android:minLines="3"
             android:text="@string/publish_avatar_explanation"
             android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody" />
+            android:textSize="?attr/TextSizeBody"
+            android:textAlignment="center"
+            android:layout_gravity="center_horizontal" />
     </LinearLayout>
 </LinearLayout>
     </ScrollView>
