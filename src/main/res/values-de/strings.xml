@@ -634,4 +634,12 @@
   <string name="presence_xa">Nicht verfügbar</string>
   <string name="presence_dnd">Beschäftigt</string>
   <string name="secure_password_generated">Ein sicheres Passwort wurde erstellt</string>
+  <string name="device_does_not_support_battery_op">Dein Gerät unterstützt keine Batterieoptimierungen</string>
+  <string name="locating">Lokalisiere…</string>
+  <string name="location_sharing_disabled">GPS ist in den Android-Einstellungen deaktiviert</string>
+  <string name="no_mic_permissions">Keine Berechtigung zur Audioaufnahme </string>
+  <string name="openpgp_has_been_published">Öffentlicher OpenPGP Schlüssel wurde veröffentlicht.</string>
+  <string name="republish_pgp_keys">Deine öffentliche OpenPGP Schlüssel müssen veröffentlicht werden!</string>
+  <string name="share">Teilen</string>
+  <string name="share_location">Standort teilen</string>
 </resources>
