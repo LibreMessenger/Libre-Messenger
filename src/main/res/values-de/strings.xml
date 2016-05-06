@@ -642,4 +642,7 @@
   <string name="republish_pgp_keys">Deine öffentliche OpenPGP Schlüssel müssen veröffentlicht werden!</string>
   <string name="share">Teilen</string>
   <string name="share_location">Standort teilen</string>
+  <string name="account_status_bind_failure">Bindungsfehler</string>
+  <string name="uninstall">Deinstallieren</string>
+  <string name="uninstall_plugins">Wir haben den VoiceRecorder und das ShareLocation Plugin direkt integriert. Die Plugins sind nicht länger erforderlich und sollten deinstalliert werden.</string>
 </resources>

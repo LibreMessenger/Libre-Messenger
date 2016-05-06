@@ -678,5 +678,7 @@
     <string name="location_sharing_disabled">Location sharing is disabled in settings</string>
     <string name="locating">Locating…</string>
 	<string name="captcha_ocr">Captcha Text</string>
+	<string name="uninstall_plugins">We have integrated the VoiceRecorder and ShareLocation plugin directly into the messenger. You should uninstall the plugins.</string>
+	<string name="uninstall">Uninstall</string>
 
 </resources>
