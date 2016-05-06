@@ -560,6 +560,7 @@
 	<string name="no_update_available">No update available</string>
 	<string name="download_started">Download started</string>
 	<string name="account_status_tor_unavailable">Tor network unavailable</string>
+	<string name="account_status_bind_failure">Bind failure</string>
 	<string name="server_info_broken">Broken</string>
 	<string name="pref_presence_settings">Presence</string>
 	<string name="pref_away_when_screen_off">Away when screen is off</string>

@@ -919,22 +919,23 @@ public class XmppConnection implements Runnable {
 					if (jid != null && jid.getContent() != null) {
 						try {
 							account.setResource(Jid.fromString(jid.getContent()).getResourcepart());
+							if (streamFeatures.hasChild("session")) {
+								sendStartSession();
+							} else {
+								sendPostBindInitialization();
+							}
+							return;
 						} catch (final InvalidJidException e) {
-							// TODO: Handle the case where an external JID is technically invalid?
-						}
-						if (streamFeatures.hasChild("session")) {
-							sendStartSession();
-						} else {
-							sendPostBindInitialization();
+							Log.d(Config.LOGTAG,account.getJid().toBareJid()+": server reported invalid jid ("+jid.getContent()+") on bind");
 						}
 					} else {
 						Log.d(Config.LOGTAG, account.getJid() + ": disconnecting because of bind failure. (no jid)");
-						disconnect(true);
 					}
 				} else {
 					Log.d(Config.LOGTAG, account.getJid() + ": disconnecting because of bind failure (" + packet.toString());
-					disconnect(true);
 				}
+				forceCloseSocket();
+				changeStatus(Account.State.BIND_FAILURE);
 			}
 		});
 	}
@@ -1568,7 +1569,12 @@ public class XmppConnection implements Runnable {
 				if (items.size() > 0) {
 					try {
 						long maxsize = Long.parseLong(items.get(0).getValue().getExtendedDiscoInformation(Xmlns.HTTP_UPLOAD, "max-file-size"));
-						return filesize <= maxsize;
+						if(filesize <= maxsize) {
+							return true;
+						} else {
+							Log.d(Config.LOGTAG,account.getJid().toBareJid()+": http upload is not available for files with size "+filesize+" (max is "+maxsize+")");
+							return false;
+						}
 					} catch (Exception e) {
 						return true;
 					}
