@@ -41,3 +41,4 @@ proguard/
 
 import-summary.txt
 .navigation/
+src/main/res/values/api_keys.xml
