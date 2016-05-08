@@ -3,4 +3,4 @@
 
 Pix-Art Messenger ist eine Kopie der offiziellen Android-App [Conversations](https://github.com/siacs/Conversations) mit einigen Änderungen.
 
-Weitere Informationen git es unter https://xmpp.pix-art.de
+Weitere Informationen git es unter http://jabber.pix-art.de
