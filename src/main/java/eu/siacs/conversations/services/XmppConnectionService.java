@@ -599,6 +599,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 						long timeout = Config.CONNECT_TIMEOUT - secondsSinceLastConnect;
 						if (timeout < 0) {
 							Log.d(Config.LOGTAG, account.getJid() + ": time out during connect reconnecting");
+							account.getXmppConnection().resetAttemptCount();
 							reconnectAccount(account, true, interactive);
 						} else if (discoTimeout < 0) {
 							account.getXmppConnection().sendDiscoTimeout();
@@ -2648,6 +2649,8 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 			if (connection == null) {
 				connection = createConnection(account);
 				account.setXmppConnection(connection);
+			} else {
+				connection.interrupt();
 			}
 			if (!account.isOptionSet(Account.OPTION_DISABLED)) {
 				if (!force) {
