@@ -547,6 +547,9 @@ public abstract class XmppActivity extends Activity {
 	}
 
 	protected  boolean noAccountUsesPgp() {
+		if (!hasPgp()) {
+			return true;
+		}
 		for(Account account : xmppConnectionService.getAccounts()) {
 			if (account.getPgpId() != 0) {
 				return false;
