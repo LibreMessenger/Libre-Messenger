@@ -6,7 +6,7 @@
         <item name="android:actionBarWidgetTheme">@style/ConversationsActionBarWidget</item>
         <item name="android:actionBarTabStyle">@style/ConversationsActionBarTabs</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
-        <item name="TextSizeInfo">14sp</item>
+        <item name="TextSizeInfo">12sp</item>
         <item name="TextSizeBody">16sp</item>
         <item name="TextSizeHeadline">22sp</item>
 
@@ -35,7 +35,7 @@
     </style>
 
     <style name="ConversationsTheme.LargerText" parent="ConversationsTheme">
-        <item name="TextSizeInfo">16sp</item>
+        <item name="TextSizeInfo">14sp</item>
         <item name="TextSizeBody">18sp</item>
         <item name="TextSizeHeadline">24sp</item>
     </style>
@@ -57,7 +57,7 @@
     </style>
     <style name="ConversationsDialog" parent="@android:style/Theme.Holo.Light.Dialog">
         <item name="android:windowNoTitle">true</item>
-        <item name="TextSizeInfo">12sp</item>
+        <item name="TextSizeInfo">10sp</item>
         <item name="TextSizeBody">14sp</item>
         <item name="TextSizeHeadline">20sp</item>
     </style>
