@@ -124,9 +124,9 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 
 	private int getMessageTextColor(boolean onDark, boolean primary) {
 		if (onDark) {
-			return activity.getResources().getColor(primary ? R.color.green900 : R.color.primary);
+			return activity.getResources().getColor(primary ? R.color.dark : R.color.primary);
 		} else {
-			return activity.getResources().getColor(primary ? R.color.green900 : R.color.primary);
+			return activity.getResources().getColor(primary ? R.color.dark : R.color.primary);
 		}
 	}
 

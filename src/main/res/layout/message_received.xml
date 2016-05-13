@@ -56,8 +56,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:autoLink="web"
-                android:textColorLink="@color/green900"
-                android:textColor="@color/green900"
+                android:textColorLink="@color/dark"
+                android:textColor="@color/dark"
                 android:textColorHighlight="@color/grey800"
                 android:textSize="?attr/TextSizeBody" />
 
@@ -98,9 +98,8 @@
                     android:layout_height="?attr/TextSizeInfo"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="4sp"
-                    android:alpha="0.70"
                     android:gravity="center_vertical"
-                    android:src="@drawable/ic_lock_white_18dp" />
+                    android:src="@drawable/ic_lock_blue_18dp" />
 
                 <ImageView
                     android:id="@+id/edit_indicator"
@@ -108,9 +107,8 @@
                     android:layout_height="?attr/TextSizeInfo"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="4sp"
-                    android:alpha="0.70"
                     android:gravity="center_vertical"
-                    android:src="@drawable/ic_mode_edit_white_18dp" />
+                    android:src="@drawable/ic_mode_edit_blue_18dp" />
 
                 <TextView
                     android:id="@+id/message_time"

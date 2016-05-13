@@ -141,10 +141,7 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
         ImageView profilePicture = (ImageView) view.findViewById(R.id.conversation_image);
         loadAvatar(conversation, profilePicture);
 
-        mLastMessage.setTextColor(Color.BLACK);
-
         if (conversation.getIncomingChatState().equals(ChatState.COMPOSING)) {
-            mLastMessage.setTextColor(ContextCompat.getColor(getContext(), R.color.green500));
             mLastMessage.setText(R.string.is_typing);
         }
         return view;

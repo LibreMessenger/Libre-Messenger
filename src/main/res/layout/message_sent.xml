@@ -98,9 +98,8 @@
                     android:layout_height="?attr/TextSizeInfo"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="4sp"
-                    android:alpha="0.54"
                     android:gravity="center_vertical"
-                    android:src="@drawable/ic_lock_black_18dp" />
+                    android:src="@drawable/ic_lock_blue_18dp" />
 
                 <ImageView
                     android:id="@+id/edit_indicator"
@@ -108,9 +107,8 @@
                     android:layout_height="?attr/TextSizeInfo"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="4sp"
-                    android:alpha="0.54"
                     android:gravity="center_vertical"
-                    android:src="@drawable/ic_mode_edit_black_18dp" />
+                    android:src="@drawable/ic_mode_edit_blue_18dp" />
 
                 <ImageView
                     android:id="@+id/indicator_received"
