@@ -6,7 +6,6 @@
 	<string name="action_accounts">Manage accounts</string>
 	<string name="action_end_conversation">End this conversation</string>
 	<string name="action_contact_details">Contact details</string>
-	<string name="action_muc_details">Conference details</string>
 	<string name="action_secure">Secure conversation</string>
 	<string name="action_add_account">Add account</string>
 	<string name="action_edit_contact">Edit name</string>
@@ -70,7 +69,6 @@
 	<string name="not_in_roster">The contact is not in your roster. Would you like to add it?</string>
 	<string name="add_contact">Add contact</string>
 	<string name="send_failed">delivery failed</string>
-	<string name="send_rejected">rejected</string>
 	<string name="preparing_image">Preparing image for transmission</string>
 	<string name="preparing_images">Preparing images for transmission</string>
 	<string name="sharing_files_please_wait">Sharing files. Please wait…</string>
@@ -98,7 +96,6 @@
 	<string name="no_pgp_key">No OpenPGP Key found</string>
 	<string name="contact_has_no_pgp_key">Pix-Art Messenger is unable to encrypt your messages because your contact is not announcing his or hers public key.\n\n<small>Please ask your contact to setup OpenPGP.</small></string>
 	<string name="no_pgp_keys">No OpenPGP Keys found</string>
-	<string name="encrypted_message_received"><i>Encrypted message received. Touch to decrypt.</i></string>
 	<string name="pref_general">General</string>
 	<string name="pref_xmpp_resource">XMPP resource</string>
 	<string name="pref_xmpp_resource_summary">The name this client identifies itself with</string>
@@ -116,8 +113,6 @@
 	<string name="pref_led_summary">Blink notification light when a new message arrives</string>
 	<string name="pref_sound">Ringtone</string>
 	<string name="pref_sound_summary">Play sound when a new message arrives</string>
-	<string name="pref_notification_grace_period">Notification grace period</string>
-	<string name="pref_notification_grace_period_summary">Disable notifications for a short time after a carbon copy was received</string>
 	<string name="pref_advanced_options">Advanced</string>
 	<string name="pref_never_send_crash">Never send crash reports</string>
 	<string name="pref_never_send_crash_summary">By sending in stack traces you are helping the ongoing development of Pix-Art Messenger</string>
@@ -130,9 +125,7 @@
 	<string name="error">An error has occurred</string>
 	<string name="pref_grant_presence_updates">Grant presence updates</string>
 	<string name="pref_grant_presence_updates_summary">Preemptively grant and ask for presence subscription for contacts you created</string>
-	<string name="subscriptions">Subscriptions</string>
 	<string name="your_account">Your account</string>
-	<string name="keys">Keys</string>
 	<string name="send_presence_updates">Send presence updates</string>
 	<string name="receive_presence_updates">Receive presence updates</string>
 	<string name="ask_for_presence_updates">Ask for presence updates</string>
@@ -164,12 +157,10 @@
 	<string name="encryption_choice_omemo">OMEMO</string>
 	<string name="mgmt_account_edit">Edit account</string>
 	<string name="mgmt_account_delete">Delete account</string>
-	<string name="mgmt_account_disable">Temporarily disable</string>
 	<string name="mgmt_account_publish_avatar">Publish avatar</string>
 	<string name="mgmt_account_publish_pgp">Publish OpenPGP public key</string>
 	<string name="openpgp_has_been_published">OpenPGP public key has been published.</string>
 	<string name="republish_pgp_keys">Remember to republish your OpenPGP public keys!</string>
-	<string name="mgmt_account_enable">Enable account</string>
 	<string name="mgmt_account_are_you_sure">Are you sure?</string>
 	<string name="mgmt_account_delete_confirm_text">If you delete your account your entire conversation history will be lost</string>
 	<string name="attach_record_voice">Record voice</string>
@@ -183,14 +174,6 @@
 	<string name="invalid_jid">This is not a valid Jabber ID</string>
 	<string name="error_out_of_memory">Out of memory. Image is too large</string>
 	<string name="add_phone_book_text">Do you want to add %s to your address book?</string>
-	<string name="contact_status_online">online</string>
-	<string name="contact_status_free_to_chat">free to chat</string>
-	<string name="contact_status_away">away</string>
-	<string name="contact_status_extended_away">extended away</string>
-	<string name="contact_status_do_not_disturb">do not disturb</string>
-	<string name="contact_status_offline">offline</string>
-	<string name="muc_details_conference">Conference</string>
-	<string name="muc_details_other_members">Other Members</string>
 	<string name="server_info_show_more">Server info</string>
 	<string name="server_info_mam">XEP-0313: MAM</string>
 	<string name="server_info_carbon_messages">XEP-0280: Message Carbons</string>
@@ -215,7 +198,6 @@
 	<string name="install_openkeychain">Encrypted message. Please install OpenKeychain to decrypt.</string>
 	<string name="unknown_otr_fingerprint">Unknown OTR fingerprint</string>
 	<string name="openpgp_messages_found">OpenPGP encrypted messages found</string>
-	<string name="reception_failed">Reception failed</string>
 	<string name="your_fingerprint">Your fingerprint</string>
 	<string name="otr_fingerprint">OTR fingerprint</string>
 	<string name="omemo_fingerprint">OMEMO fingerprint</string>
@@ -247,7 +229,6 @@
 	<string name="save_as_bookmark">Save as bookmark</string>
 	<string name="delete_bookmark">Delete bookmark</string>
 	<string name="bookmark_already_exists">This bookmark already exists</string>
-	<string name="you">You</string>
 	<string name="action_edit_subject">Edit conference subject</string>
 	<string name="joining_conference">Joining conference…</string>
 	<string name="leave">Leave</string>
@@ -270,14 +251,11 @@
 	<string name="account_already_exists">This account already exists</string>
 	<string name="next">Next</string>
 	<string name="server_info_session_established">Current session established</string>
-	<string name="additional_information">Additional Information</string>
 	<string name="skip">Skip</string>
 	<string name="disable_notifications">Disable notifications</string>
-	<string name="disable_notifications_for_this_conversation">Disable notifications for this conversation</string>
 	<string name="enable">Enable</string>
 	<string name="conference_requires_password">Conference requires password</string>
 	<string name="enter_password">Enter password</string>
-	<string name="missing_presence_updates">Missing presence updates from contact</string>
 	<string name="request_presence_updates">Please request presence updates from your contact first.\n\n<small>This will be used to determine what client(s) your contact is using.</small></string>
 	<string name="request_now">Request now</string>
 	<string name="delete_fingerprint">Delete Fingerprint</string>
@@ -285,8 +263,6 @@
 	<string name="ignore">Ignore</string>
 	<string name="without_mutual_presence_updates"><b>Warning:</b> Sending this without mutual presence updates could cause unexpected problems.\n\n<small>Go to contact details to verify your presence subscriptions.</small></string>
 	<string name="pref_security_settings">Security</string>
-	<string name="pref_force_encryption">Force end-to-end encryption</string>
-	<string name="pref_force_encryption_summary">Always send messages encrypted (except for conferences)</string>
 	<string name="pref_allow_message_correction">Allow message correction</string>
 	<string name="pref_allow_message_correction_summary">Allow your contacts to retroactively edit their messages</string>
 	<string name="pref_dont_save_encrypted">Don’t save encrypted messages</string>
@@ -369,15 +345,12 @@
 	<string name="message_text">Message text</string>
 	<string name="url_copied_to_clipboard">URL copied to clipboard</string>
 	<string name="message_copied_to_clipboard">Message copied to clipboard</string>
-	<string name="image_transmission_failed">Image transmission failed</string>
 	<string name="scan_qr_code">Scan QR code</string>
 	<string name="show_qr_code">Show QR code</string>
 	<string name="show_block_list">Show block list</string>
 	<string name="account_details">Account details</string>
 	<string name="verify_otr">Verify OTR</string>
 	<string name="remote_fingerprint">Remote Fingerprint</string>
-	<string name="scan">scan</string>
-	<string name="smp">Socialist Millionaire Protocol</string>
 	<string name="shared_secret_hint">Hint or Question</string>
 	<string name="shared_secret_secret">Shared Secret</string>
 	<string name="confirm">Confirm</string>
@@ -391,8 +364,6 @@
 	<string name="smp_requested">Contact requested SMP verification</string>
 	<string name="no_otr_session_found">No valid OTR session has been found!</string>
 	<string name="conversations_foreground_service">Pix-Art Messenger</string>
-	<string name="pref_keep_foreground_service">Keep service in foreground</string>
-	<string name="pref_keep_foreground_service_summary">Prevents the operating system from killing your connection</string>
 	<string name="pref_export_logs">Export Logs</string>
 	<string name="pref_export_logs_summary">Write logs to SD card</string>
 	<string name="notification_export_logs_title">Writing logs to SD card</string>
@@ -415,17 +386,13 @@
 	<string name="pref_show_dynamic_tags">Show dynamic tags</string>
 	<string name="pref_show_dynamic_tags_summary">Display read-only tags underneath contacts</string>
 	<string name="enable_notifications">Enable notifications</string>
-	<string name="conference_with">Create conference with…</string>
 	<string name="no_conference_server_found">No conference server found</string>
 	<string name="conference_creation_failed">Conference creation failed!</string>
 	<string name="conference_created">Conference created!</string>
-	<string name="secret_accepted">Secret accepted!</string>
-	<string name="reset">Reset</string>
 	<string name="account_image_description">Account avatar</string>
 	<string name="copy_otr_clipboard_description">Copy OTR fingerprint to clipboard</string>
 	<string name="copy_omemo_clipboard_description">Copy OMEMO fingerprint to clipboard</string>
 	<string name="regenerate_omemo_key">Regenerate OMEMO key</string>
-	<string name="wipe_omemo_pep">Wipe other devices from PEP</string>
 	<string name="clear_other_devices">Clear devices</string>
 	<string name="clear_other_devices_desc">Are you sure you want to clear all other devices from the OMEMO announcement? The next time your devices connect, they will reannounce themselves, but they might not receive messages sent in the meantime.</string>
 	<string name="purge_key">Purge key</string>
@@ -450,8 +417,6 @@
 	<string name="current_password">Current password</string>
 	<string name="new_password">New password</string>
 	<string name="password_should_not_be_empty">Password should not be empty</string>
-	<string name="enable_all_accounts">Enable all accounts</string>
-	<string name="disable_all_accounts">Disable all accounts</string>
 	<string name="perform_action_with">Perform action with</string>
 	<string name="no_affiliation">No affiliation</string>
 	<string name="no_role">No role</string>
@@ -502,9 +467,7 @@
 	<string name="offering_x_file">Offering %s</string>
 	<string name="hide_offline">Hide offline</string>
 	<string name="disable_account">Disable Account</string>
-	<string name="contact_is_typing">%s is typing…</string>
 	<string name="is_typing">is typing…</string>
-	<string name="contact_has_stopped_typing">%s has stopped typing</string>
 	<string name="pref_chat_states">Typing notifications</string>
 	<string name="pref_chat_states_summary">Let your contact know when you are writing a new message</string>
 	<string name="send_location">Send location</string>
@@ -541,8 +504,6 @@
 	<string name="username">Username</string>
 	<string name="username_hint">Username</string>
 	<string name="invalid_username">This is not a valid username</string>
-	<string name="conference_name">Conference name</string>
-	<string name="invalid_conference_name">This is not a valid conference name</string>
 	<string name="download_failed_server_not_found">Download failed: Server not found</string>
 	<string name="download_failed_file_not_found">Download failed: File not found</string>
 	<string name="download_failed_could_not_connect">Download failed: Could not connect to host</string>
@@ -555,8 +516,6 @@
 	<string name="checking_for_updates">Checking for Pix-Art Messenger updates</string>
 	<string name="remind_later">later</string>
 	<string name="update">update</string>
-	<string name="new_version">New version:</string>
-	<string name="current_version">installed version:</string>
 	<string name="no_update_available">No update available</string>
 	<string name="download_started">Download started</string>
 	<string name="account_status_tor_unavailable">Tor network unavailable</string>
@@ -571,8 +530,6 @@
 	<string name="pref_xa_on_silent_mode_summary">Marks your resource as not available when device is in silent mode</string>
 	<string name="pref_treat_vibrate_as_silent">Treat vibrate as silent mode</string>
 	<string name="pref_treat_vibrate_as_silent_summary">Marks your resource as not available when device is on vibrate</string>
-	<string name="pref_show_connection_options">Extended connection settings</string>
-	<string name="pref_show_connection_options_summary">Show hostname and port settings when setting up an account</string>
 	<string name="hostname_example">xmpp.pix-art.de</string>
 	<string name="action_add_account_with_certificate">Add account with certificate</string>
 	<string name="unable_to_parse_certificate">Unable to parse certificate</string>
@@ -590,10 +547,6 @@
 	<string name="verified_omemo_key_with_certificate">Verified OMEMO key with certificate!</string>
 	<string name="device_does_not_support_certificates">Your device does not support the selection of client certificates!</string>
 	<string name="changelog">Changes</string>
-	<string name="pref_plugins">Plugins</string>
-	<string name="pref_plugins_summary">Download plugins for Pix-Art Messenger</string>
-	<string name="pref_plugin_location">Share-Location</string>
-	<string name="pref_plugin_location_summary">Send and receive locations</string>
 	<string name="pref_connection_options">Connection</string>
 	<string name="pref_use_tor">Connect via Tor</string>
 	<string name="pref_use_tor_summary">Tunnel all connections through the Tor network. Requires Orbot</string>
@@ -648,8 +601,6 @@
 	<string name="select_image_and_crop">Select image and crop</string>
 	<string name="contacts_have_no_pgp_keys">Pix-Art Messenger is unable to encrypt your messages because your contacts are not announcing their public keys.\n\n</string>
 	<string name="this_account_is_disabled">You have disabled this account</string>
-	<string name="pref_plugin_voice_recorder">Voice Recorder</string>
-	<string name="pref_plugin_voice_recorder_summary">Send and receive voice messages</string>
 	<string name="security_error_invalid_file_access">Security error: Invalid file access</string>
 	<string name="no_application_to_share_uri">No application found to share URI</string>
 	<string name="share_uri_with">Share URI with…</string>
@@ -674,11 +625,9 @@
 	<string name="secure_password_generated">A secure password has been generated</string>
 	<string name="device_does_not_support_battery_op">Your device does not support opting out of battery optimization</string>
     <string name="share">Share</string>
-    <string name="no_mic_permissions">No permissions to record audio</string>
-    <string name="share_location">Share location</string>
+	<string name="share_location">Share location</string>
     <string name="location_sharing_disabled">Location sharing is disabled in settings</string>
     <string name="locating">Locating…</string>
-	<string name="captcha_ocr">Captcha Text</string>
 	<string name="uninstall_plugins">We have integrated the VoiceRecorder and ShareLocation plugin directly into the messenger. You should uninstall the plugins.</string>
 	<string name="uninstall">Uninstall</string>
 
