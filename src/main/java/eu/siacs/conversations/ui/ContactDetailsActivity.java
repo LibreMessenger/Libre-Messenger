@@ -2,6 +2,7 @@ package eu.siacs.conversations.ui;
 
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,6 +42,7 @@ import eu.siacs.conversations.crypto.axolotl.AxolotlService;
 import eu.siacs.conversations.crypto.axolotl.XmppAxolotlSession;
 import eu.siacs.conversations.entities.Account;
 import eu.siacs.conversations.entities.Contact;
+import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.ListItem;
 import eu.siacs.conversations.entities.Presence;
 import eu.siacs.conversations.services.XmppConnectionService.OnAccountUpdate;
@@ -56,6 +58,7 @@ import eu.siacs.conversations.xmpp.jid.Jid;
 public class ContactDetailsActivity extends XmppActivity implements OnAccountUpdate, OnRosterUpdate, OnUpdateBlocklist, OnKeyStatusUpdated {
 	public static final String ACTION_VIEW_CONTACT = "view_contact";
 
+	private Conversation mConversation;
 	private Contact contact;
 	private DialogInterface.OnClickListener removeFromRoster = new DialogInterface.OnClickListener() {
 
@@ -225,6 +228,18 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 		this.showDynamicTags = preferences.getBoolean("show_dynamic_tags",false);
 	}
 
+	private void share() {
+		Intent shareIntent = new Intent();
+		shareIntent.setAction(Intent.ACTION_SEND);
+		shareIntent.putExtra(Intent.EXTRA_TEXT, getShareableUri());
+		shareIntent.setType("text/plain");
+		try {
+			startActivity(Intent.createChooser(shareIntent, getText(R.string.share_uri_with)));
+		} catch (ActivityNotFoundException e) {
+			Toast.makeText(this, R.string.no_application_to_share_uri, Toast.LENGTH_SHORT).show();
+		}
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem menuItem) {
 		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -262,6 +277,9 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 					intent.putExtra("finishActivityOnSaveCompleted", true);
 					startActivity(intent);
 				}
+				break;
+			case R.id.action_share:
+				share();
 				break;
 			case R.id.action_block:
 				BlockContactDialog.show(this, xmppConnectionService, contact);
