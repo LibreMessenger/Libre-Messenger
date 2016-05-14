@@ -109,7 +109,7 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 	private Jid contactJid;
 	private TextView contactJidTv;
 	private TextView accountJidTv;
-    private TextView lastseen;
+  private TextView lastseen;
 	private TextView statusMessage;
 	private CheckBox send;
 	private CheckBox receive;
@@ -206,7 +206,7 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 
 		contactJidTv = (TextView) findViewById(R.id.details_contactjid);
 		accountJidTv = (TextView) findViewById(R.id.details_account);
-        lastseen = (TextView) findViewById(R.id.details_lastseen);
+    lastseen = (TextView) findViewById(R.id.details_lastseen);
 		statusMessage = (TextView) findViewById(R.id.status_message);
 		send = (CheckBox) findViewById(R.id.details_send_presence);
 		receive = (CheckBox) findViewById(R.id.details_receive_presence);
