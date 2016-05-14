@@ -41,7 +41,10 @@
         android:showAsAction="always"
         android:icon="?attr/icon_edit"
         android:title="@string/change_password"/>
-
+    <item
+        android:id="@+id/mgmt_account_reconnect"
+        android:showAsAction="never"
+        android:title="@string/mgmt_account_reconnect"/>
     <item
         android:id="@+id/action_clear_devices"
         android:showAsAction="never"

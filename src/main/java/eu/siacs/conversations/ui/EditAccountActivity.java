@@ -618,6 +618,15 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch (item.getItemId()) {
+			case R.id.mgmt_account_reconnect:
+				if (xmppConnectionServiceBound) {
+					unbindService(mConnection);
+					xmppConnectionServiceBound = false;
+				}
+				stopService(new Intent(EditAccountActivity.this,
+						XmppConnectionService.class));
+				finish();
+				break;
 			case R.id.action_show_block_list:
 				final Intent showBlocklistIntent = new Intent(this, BlocklistActivity.class);
 				showBlocklistIntent.putExtra(EXTRA_ACCOUNT, mAccount.getJid().toString());
