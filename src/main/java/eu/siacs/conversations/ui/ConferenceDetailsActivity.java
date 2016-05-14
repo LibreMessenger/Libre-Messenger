@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,7 +65,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 	private LinearLayout membersView;
 	private LinearLayout mMoreDetails;
 	private TextView mConferenceType;
-	private TableLayout mConferenceInfoTable;
+	private LinearLayout mConferenceInfoTable;
 	private TextView mConferenceInfoMam;
 	private TextView mNotifyStatusText;
 	private ImageButton mChangeConferenceSettingsButton;
@@ -264,7 +265,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 			}
 		});
 		this.mAdvancedMode = getPreferences().getBoolean("advanced_muc_mode", false);
-		this.mConferenceInfoTable = (TableLayout) findViewById(R.id.muc_info_more);
+		this.mConferenceInfoTable = (LinearLayout) findViewById(R.id.muc_info_more);
 		mConferenceInfoTable.setVisibility(this.mAdvancedMode ? View.VISIBLE : View.GONE);
 		this.mConferenceInfoMam = (TextView) findViewById(R.id.muc_info_mam);
 		this.mNotifyStatusButton = (ImageButton) findViewById(R.id.notification_status_button);
