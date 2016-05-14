@@ -89,7 +89,7 @@
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
                     android:text="@string/sending"
-                    android:textColor="@color/primary_dark"
+                    android:textColor="@color/primary"
                     android:textSize="?attr/TextSizeInfo" />
 
                 <ImageView
