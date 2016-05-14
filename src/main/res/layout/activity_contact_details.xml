@@ -54,7 +54,8 @@
                     android:textSize="?attr/TextSizeHeadline"
                     android:textStyle="bold"
                     android:layout_gravity="center_horizontal"
-                    android:textIsSelectable="true" />
+                    android:textIsSelectable="true"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:id="@+id/tags"
@@ -84,30 +85,6 @@
                     android:textSize="?attr/TextSizeBody"
                     android:layout_gravity="center_horizontal" />
 
-                <Button
-                    android:id="@+id/add_contact_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/add_contact"
-                    android:layout_gravity="center_horizontal" />
-
-                <CheckBox
-                    android:id="@+id/details_send_presence"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/send_presence_updates"
-                    android:textColor="@color/black87"
-                    android:textSize="?attr/TextSizeBody" />
-
-                <CheckBox
-                    android:id="@+id/details_receive_presence"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/receive_presence_updates"
-                    android:textColor="@color/black87"
-                    android:textSize="?attr/TextSizeBody" />
             </LinearLayout>
 
             <TextView
@@ -121,6 +98,49 @@
                 android:textColor="@color/black54"
                 android:textSize="?attr/TextSizeInfo"
                 android:visibility="gone" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:background="@drawable/infocard_border"
+            android:padding="@dimen/infocard_padding" >
+
+            <Button
+                android:id="@+id/add_contact_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_contact"
+                android:layout_gravity="center_horizontal"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+
+            <CheckBox
+                android:id="@+id/details_send_presence"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/send_presence_updates"
+                android:textColor="@color/black87"
+                android:textSize="?attr/TextSizeBody"
+                android:layout_below="@+id/add_contact_button"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <CheckBox
+                android:id="@+id/details_receive_presence"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/receive_presence_updates"
+                android:textColor="@color/black87"
+                android:textSize="?attr/TextSizeBody"
+                android:layout_below="@+id/details_send_presence"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
         </RelativeLayout>
 
         <LinearLayout
