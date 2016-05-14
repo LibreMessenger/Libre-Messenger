@@ -42,10 +42,15 @@
         android:showAsAction="never"
         android:title="@string/action_clear_history"/>
     <item
-        android:id="@+id/action_archive"
+        android:id="@+id/action_archive_chat"
         android:orderInCategory="60"
         android:showAsAction="never"
         android:title="@string/action_end_conversation"/>
+    <item
+        android:id="@+id/action_archive_muc"
+        android:orderInCategory="60"
+        android:showAsAction="never"
+        android:title="@string/action_end_conversation_muc"/>
     <item
         android:id="@+id/action_mute"
         android:orderInCategory="70"

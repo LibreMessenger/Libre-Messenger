@@ -594,4 +594,8 @@
   <string name="account_status_bind_failure">Bindungsfehler</string>
   <string name="uninstall">Deinstallieren</string>
   <string name="uninstall_plugins">Wir haben den VoiceRecorder und das ShareLocation Plugin direkt integriert. Die Plugins sind nicht länger erforderlich und sollten deinstalliert werden.</string>
+  <string name="account_status_host_unknown">Domäne wurde nicht erkannt</string>
+  <string name="action_end_conversation_muc">Konferenz verlassen</string>
+  <string name="default_resource"></string>
+  <string name="leave_conference_warning">Willst du die Konferenz wirklich verlassen? Du wirst keine neuen Nachrichten mehr bekommen, bis du der Konferenz erneut beitrittst.</string>
 </resources>

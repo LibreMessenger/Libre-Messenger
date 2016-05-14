@@ -299,7 +299,7 @@ public class ConversationActivity extends XmppActivity
 				};
 			}
 		});
-		listView.enableSwipeToDismiss();
+		//listView.enableSwipeToDismiss();
 		listView.setSwipingLayout(R.id.swipeable_item);
 		listView.setUndoStyle(EnhancedListView.UndoStyle.SINGLE_POPUP);
 		listView.setUndoHideDelay(10000);
@@ -540,7 +540,8 @@ public class ConversationActivity extends XmppActivity
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.conversations, menu);
 		final MenuItem menuSecure = menu.findItem(R.id.action_security);
-		final MenuItem menuArchive = menu.findItem(R.id.action_archive);
+		final MenuItem menuArchiveChat = menu.findItem(R.id.action_archive_chat);
+        final MenuItem menuArchiveMuc = menu.findItem(R.id.action_archive_muc);
 		final MenuItem menuAttach = menu.findItem(R.id.action_attach_file);
 		final MenuItem menuClearHistory = menu.findItem(R.id.action_clear_history);
 		final MenuItem menuAdd = menu.findItem(R.id.action_add);
@@ -550,7 +551,8 @@ public class ConversationActivity extends XmppActivity
 		final MenuItem menuUpdater = menu.findItem(R.id.action_check_updates);
 
 		if (isConversationsOverviewVisable() && isConversationsOverviewHideable()) {
-			menuArchive.setVisible(false);
+			menuArchiveChat.setVisible(false);
+            menuArchiveMuc.setVisible(false);
 			menuSecure.setVisible(false);
 			menuInviteContact.setVisible(false);
 			menuAttach.setVisible(false);
@@ -561,6 +563,12 @@ public class ConversationActivity extends XmppActivity
 			menuAdd.setVisible(!isConversationsOverviewHideable());
 			//hide settings, accounts and updater in all menus except in main window
 			menuUpdater.setVisible(false);
+
+            if (this.getSelectedConversation().getMode() == Conversation.MODE_SINGLE) {
+                menuArchiveMuc.setVisible(false);
+            } else {
+                menuArchiveChat.setVisible(false);
+            }
 
 			if (this.getSelectedConversation() != null) {
 				if (this.getSelectedConversation().getNextEncryption() != Message.ENCRYPTION_NONE) {
@@ -788,11 +796,24 @@ public class ConversationActivity extends XmppActivity
 				case R.id.action_attach_file:
 					attachFileDialog();
 					break;
-				case R.id.action_archive:
+				case R.id.action_archive_chat:
 					this.endConversation(getSelectedConversation());
 					break;
-/*
-				case R.id.action_contact_details:
+                case R.id.action_archive_muc:
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle(getString(R.string.action_end_conversation_muc));
+                    builder.setMessage(getString(R.string.leave_conference_warning));
+                    builder.setNegativeButton(getString(R.string.cancel), null);
+                    builder.setPositiveButton(getString(R.string.action_end_conversation_muc),
+                            new OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    endConversation(getSelectedConversation());
+                                }
+                            });
+                    builder.create().show();
+                    break;
+/*				case R.id.action_contact_details:
 					switchToContactDetails(getSelectedConversation().getContact());
 					break;
 				case R.id.action_muc_details:
@@ -864,8 +885,11 @@ public class ConversationActivity extends XmppActivity
 		builder.setTitle(getString(R.string.clear_conversation_history));
 		View dialogView = getLayoutInflater().inflate(
 				R.layout.dialog_clear_history, null);
-		final CheckBox endConversationCheckBox = (CheckBox) dialogView
-				.findViewById(R.id.end_conversation_checkbox);
+        final CheckBox endConversationCheckBox = (CheckBox) dialogView
+                .findViewById(R.id.end_conversation_checkbox);
+        if (conversation.getMode() == Conversation.MODE_SINGLE) {
+            endConversationCheckBox.setVisibility(View.VISIBLE);
+        }
 		builder.setView(dialogView);
 		builder.setNegativeButton(getString(R.string.cancel), null);
 		builder.setPositiveButton(getString(R.string.delete_messages),
@@ -874,12 +898,17 @@ public class ConversationActivity extends XmppActivity
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						ConversationActivity.this.xmppConnectionService.clearConversationHistory(conversation);
-						if (endConversationCheckBox.isChecked()) {
-							endConversation(conversation);
-						} else {
-							updateConversationList();
-							ConversationActivity.this.mConversationFragment.updateMessages();
-						}
+                        if (conversation.getMode() == Conversation.MODE_SINGLE) {
+                            if (endConversationCheckBox.isChecked()) {
+                                endConversation(conversation);
+                            } else {
+                                updateConversationList();
+                                ConversationActivity.this.mConversationFragment.updateMessages();
+                            }
+                        } else {
+                            updateConversationList();
+                            ConversationActivity.this.mConversationFragment.updateMessages();
+                        }
 					}
 				});
 		builder.create().show();

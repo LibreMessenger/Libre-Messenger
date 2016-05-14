@@ -630,5 +630,7 @@
     <string name="locating">Locating…</string>
 	<string name="uninstall_plugins">We have integrated the VoiceRecorder and ShareLocation plugin directly into the messenger. You should uninstall the plugins.</string>
 	<string name="uninstall">Uninstall</string>
+	<string name="action_end_conversation_muc">Leave conference</string>
+	<string name="leave_conference_warning">Do you really want to leave this conference? You will no longer be notified of new messages until joining the conference again.</string>
 
 </resources>
