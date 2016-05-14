@@ -395,11 +395,14 @@ public class MessageParser extends AbstractParser implements
 			if (conversation.getMode() == Conversation.MODE_MULTI) {
 				Jid trueCounterpart = conversation.getMucOptions().getTrueCounterpart(counterpart.getResourcepart());
 				message.setTrueCounterpart(trueCounterpart);
+				if (trueCounterpart != null) {
+					updateLastseen(timestamp, account, trueCounterpart, false);
+				}
 				if (!isTypeGroupChat) {
 					message.setType(Message.TYPE_PRIVATE);
 				}
 			} else {
-				updateLastseen(timestamp, account, from);
+				updateLastseen(timestamp, account, packet.getFrom(), true);
 			}
 
 			if (replacementId != null && mXmppConnectionService.allowMessageCorrection()) {
@@ -540,7 +543,7 @@ public class MessageParser extends AbstractParser implements
 					mXmppConnectionService.markRead(conversation);
 				}
 			} else {
-				updateLastseen(timestamp, account, from);
+				updateLastseen(timestamp, account, packet.getFrom(), true);
 				final Message displayedMessage = mXmppConnectionService.markMessage(account, from.toBareJid(), displayed.getAttribute("id"), Message.STATUS_SEND_DISPLAYED);
 				Message message = displayedMessage == null ? null : displayedMessage.prev();
 				while (message != null
