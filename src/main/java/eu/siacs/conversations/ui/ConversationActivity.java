@@ -564,13 +564,12 @@ public class ConversationActivity extends XmppActivity
 			//hide settings, accounts and updater in all menus except in main window
 			menuUpdater.setVisible(false);
 
-            if (this.getSelectedConversation().getMode() == Conversation.MODE_SINGLE) {
-                menuArchiveMuc.setVisible(false);
-            } else {
-                menuArchiveChat.setVisible(false);
-            }
-
 			if (this.getSelectedConversation() != null) {
+                if (this.getSelectedConversation().getMode() == Conversation.MODE_SINGLE) {
+                    menuArchiveMuc.setVisible(false);
+                } else {
+                    menuArchiveChat.setVisible(false);
+                }
 				if (this.getSelectedConversation().getNextEncryption() != Message.ENCRYPTION_NONE) {
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 						menuSecure.setIcon(R.drawable.ic_lock_white_24dp);
