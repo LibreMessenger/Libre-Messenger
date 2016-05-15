@@ -143,6 +143,7 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
 
         if (conversation.getIncomingChatState().equals(ChatState.COMPOSING)) {
             mLastMessage.setText(R.string.is_typing);
+            mLastMessage.setTypeface(null, Typeface.BOLD_ITALIC);
         }
         return view;
 	}

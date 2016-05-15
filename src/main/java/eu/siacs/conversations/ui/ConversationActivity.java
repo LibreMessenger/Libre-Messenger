@@ -16,6 +16,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -478,6 +479,7 @@ public class ConversationActivity extends XmppActivity
                             if (state == ChatState.COMPOSING) {
                                 TextView absubtitle = (TextView) findViewById(android.R.id.text2);
                                 absubtitle.setText(getString(R.string.is_typing));
+                                absubtitle.setTypeface(null, Typeface.BOLD_ITALIC);
                                 absubtitle.setOnClickListener(this);
                             } else if (state == ChatState.PAUSED) {
                                 TextView absubtitle = (TextView) findViewById(android.R.id.text2);
