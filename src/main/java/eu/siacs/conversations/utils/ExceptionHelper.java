@@ -40,8 +40,8 @@ public class ExceptionHelper {
 		try {
 			final SharedPreferences preferences = PreferenceManager
 					.getDefaultSharedPreferences(activity);
-			boolean neverSend = preferences.getBoolean("never_send", false);
-			if (neverSend) {
+			boolean crashreport = preferences.getBoolean("crashreport", true);
+			if (!crashreport) {
 				return false;
 			}
 			List<Account> accounts = service.getAccounts();
@@ -109,7 +109,7 @@ public class ExceptionHelper {
 
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							preferences.edit().putBoolean("never_send", true)
+							preferences.edit().putBoolean("crash_report", false)
 									.apply();
 						}
 					});
