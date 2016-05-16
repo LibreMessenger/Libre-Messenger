@@ -189,7 +189,9 @@ public class HttpDownloadConnection implements Transferable {
 		}
 
 		private long retrieveFileSize() throws IOException {
+			PowerManager.WakeLock wakeLock = mHttpConnectionManager.createWakeLock("http_download_"+message.getUuid());
 			try {
+				wakeLock.acquire();
 				Log.d(Config.LOGTAG, "retrieve file size. interactive:" + String.valueOf(interactive));
 				changeStatus(STATUS_CHECKING);
 				HttpURLConnection connection;
@@ -211,6 +213,7 @@ public class HttpDownloadConnection implements Transferable {
 				if (contentLength == null) {
 					throw new IOException();
 				}
+				wakeLock.release();
 				return Long.parseLong(contentLength, 10);
 			} catch (IOException e) {
 				throw e;
