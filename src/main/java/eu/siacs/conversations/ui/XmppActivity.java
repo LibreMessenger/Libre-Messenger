@@ -42,7 +42,6 @@ import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -53,12 +52,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.squareup.picasso.Picasso;
 
 import net.java.otr4j.session.SessionID;
 
@@ -67,8 +69,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.RunnableFuture;
 
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
@@ -1206,6 +1206,24 @@ public abstract class XmppActivity extends Activity {
 	}
 
 	public void loadBitmap(Message message, ImageView imageView) {
+		//new
+		/*Picasso.with(this)
+				.load(xmppConnectionService.getFileBackend().getFile(message, true))
+                .resize(300, 300)
+                .centerCrop()
+				.into(imageView);
+        Log.d(Config.LOGTAG,"Load image with picasso");*/
+
+        Glide.with(this)
+                .load(xmppConnectionService.getFileBackend().getFile(message, true))
+                .override(288, 288)
+                .fitCenter()
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .into(imageView);
+        //Log.d(Config.LOGTAG,"Load image with glide");
+
+
+		/*old
 		Bitmap bm;
 		try {
 			bm = xmppConnectionService.getFileBackend().getThumbnail(message,
@@ -1231,7 +1249,7 @@ public abstract class XmppActivity extends Activity {
 					ignored.printStackTrace();
 				}
 			}
-		}
+		}*/
 	}
 
 	public static boolean cancelPotentialWork(Message message, ImageView imageView) {
