@@ -5,9 +5,7 @@ import android.annotation.SuppressLint;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import eu.siacs.conversations.R;
@@ -26,6 +24,19 @@ public class MucOptions {
 
 	public void setSelf(User user) {
 		this.self = user;
+	}
+
+	public void changeAffiliation(Jid jid, Affiliation affiliation) {
+		User user = findUserByRealJid(jid);
+		synchronized (users) {
+			if (user != null && user.getRole() == Role.NONE) {
+				users.remove(user);
+				if (affiliation.ranks(Affiliation.MEMBER)) {
+					user.affiliation = affiliation;
+					users.add(user);
+				}
+			}
+		}
 	}
 
 	public enum Affiliation {
@@ -124,10 +135,10 @@ public class MucOptions {
 
 	}
 
-	public static class User {
+	public static class User implements Comparable<User> {
 		private Role role = Role.NONE;
 		private Affiliation affiliation = Affiliation.NONE;
-		private Jid jid;
+		private Jid realJid;
 		private Jid fullJid;
 		private long pgpKeyId = 0;
 		private Avatar avatar;
@@ -139,15 +150,11 @@ public class MucOptions {
 		}
 
 		public String getName() {
-			return this.fullJid.getResourcepart();
+			return fullJid == null ? null : fullJid.getResourcepart();
 		}
 
-		public void setJid(Jid jid) {
-			this.jid = jid;
-		}
-
-		public Jid getJid() {
-			return this.jid;
+		public void setRealJid(Jid jid) {
+			this.realJid = jid != null ? jid.toBareJid() : null;
 		}
 
 		public Role getRole() {
@@ -155,6 +162,10 @@ public class MucOptions {
 		}
 
 		public void setRole(String role) {
+			if (role == null) {
+				this.role = Role.NONE;
+				return;
+			}
 			role = role.toLowerCase();
 			switch (role) {
 				case "moderator":
@@ -172,26 +183,15 @@ public class MucOptions {
 			}
 		}
 
-		@Override
-		public boolean equals(Object other) {
-			if (this == other) {
-				return true;
-			} else if (!(other instanceof User)) {
-				return false;
-			} else {
-				User o = (User) other;
-				return getName() != null && getName().equals(o.getName())
-						&& jid != null && jid.equals(o.jid)
-						&& affiliation == o.affiliation
-						&& role == o.role;
-			}
-		}
-
 		public Affiliation getAffiliation() {
 			return this.affiliation;
 		}
 
 		public void setAffiliation(String affiliation) {
+			if (affiliation == null) {
+				this.affiliation = Affiliation.NONE;
+				return;
+			}
 			affiliation = affiliation.toLowerCase();
 			switch (affiliation) {
 				case "admin":
@@ -220,7 +220,13 @@ public class MucOptions {
 		}
 
 		public Contact getContact() {
-			return getAccount().getRoster().getContactFromRoster(getJid());
+			if (fullJid != null) {
+				return getAccount().getRoster().getContactFromRoster(realJid);
+			} else if (realJid != null){
+				return getAccount().getRoster().getContact(realJid);
+			} else {
+				return null;
+			}
 		}
 
 		public boolean setAvatar(Avatar avatar) {
@@ -243,11 +249,62 @@ public class MucOptions {
 		public Jid getFullJid() {
 			return fullJid;
 		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			User user = (User) o;
+
+			if (role != user.role) return false;
+			if (affiliation != user.affiliation) return false;
+			if (realJid != null ? !realJid.equals(user.realJid) : user.realJid != null)
+				return false;
+			return fullJid != null ? fullJid.equals(user.fullJid) : user.fullJid == null;
+
+		}
+
+		@Override
+		public int hashCode() {
+			int result = role != null ? role.hashCode() : 0;
+			result = 31 * result + (affiliation != null ? affiliation.hashCode() : 0);
+			result = 31 * result + (realJid != null ? realJid.hashCode() : 0);
+			result = 31 * result + (fullJid != null ? fullJid.hashCode() : 0);
+			return result;
+		}
+
+		@Override
+		public String toString() {
+			return "[fulljid:"+String.valueOf(fullJid)+",realjid:"+String.valueOf(realJid)+",affiliation"+affiliation.toString()+"]";
+		}
+
+		public boolean realJidMatchesAccount() {
+			return realJid != null && realJid.equals(options.account.getJid().toBareJid());
+		}
+
+		@Override
+		public int compareTo(User another) {
+			Contact ourContact = getContact();
+			Contact anotherContact = another.getContact();
+			if (ourContact != null && anotherContact != null) {
+				return ourContact.compareTo(anotherContact);
+			} else if (ourContact == null && anotherContact != null) {
+				return getName().compareToIgnoreCase(anotherContact.getDisplayName());
+			} else if (ourContact != null) {
+				return ourContact.getDisplayName().compareToIgnoreCase(another.getName());
+			} else {
+				return getName().compareToIgnoreCase(another.getName());
+			}
+		}
+
+		public Jid getRealJid() {
+			return realJid;
+		}
 	}
 
 	private Account account;
-	private final Map<String, User> users = Collections.synchronizedMap(new LinkedHashMap<String, User>());
-	private final Set<Jid> members = Collections.synchronizedSet(new HashSet<Jid>());
+	private final Set<User> users = new HashSet<>();
 	private final List<String> features = new ArrayList<>();
 	private Data form = new Data();
 	private Conversation conversation;
@@ -315,20 +372,82 @@ public class MucOptions {
 		return hasFeature("muc_moderated");
 	}
 
-	public User deleteUser(String name) {
-		return this.users.remove(name);
+	public User deleteUser(Jid jid) {
+		User user = findUserByFullJid(jid);
+		if (user != null) {
+			synchronized (users) {
+				users.remove(user);
+				if (user.affiliation.ranks(Affiliation.MEMBER) && user.realJid != null) {
+					user.role = Role.NONE;
+					user.avatar = null;
+					user.fullJid = null;
+					users.add(user);
+				}
+			}
+		}
+		return user;
 	}
 
 	public void addUser(User user) {
-		this.users.put(user.getName(), user);
+		User old;
+		if (user.fullJid == null && user.realJid != null) {
+			old = findUserByRealJid(user.realJid);
+			if (old != null) {
+				if (old.fullJid != null) {
+					return; //don't add. user already exists
+				} else {
+					synchronized (users) {
+						users.remove(old);
+					}
+				}
+			}
+		} else if (user.realJid != null) {
+			old = findUserByRealJid(user.realJid);
+			synchronized (users) {
+				if (old != null && old.fullJid == null) {
+					users.remove(old);
+				}
+			}
+		}
+		old = findUserByFullJid(user.getFullJid());
+		synchronized (this.users) {
+			if (old != null) {
+				users.remove(old);
+			}
+			this.users.add(user);
+		}
 	}
 
-	public User findUser(String name) {
-		return this.users.get(name);
+	public User findUserByFullJid(Jid jid) {
+		if (jid == null) {
+			return null;
+		}
+		synchronized (users) {
+			for (User user : users) {
+				if (jid.equals(user.getFullJid())) {
+					return user;
+				}
+			}
+		}
+		return null;
 	}
 
-	public boolean isUserInRoom(String name) {
-		return findUser(name) != null;
+	public User findUserByRealJid(Jid jid) {
+		if (jid == null) {
+			return null;
+		}
+		synchronized (users) {
+			for (User user : users) {
+				if (jid.equals(user.realJid)) {
+					return user;
+				}
+			}
+		}
+		return null;
+	}
+
+	public boolean isUserInRoom(Jid jid) {
+		return findUserByFullJid(jid) != null;
 	}
 
 	public void setError(Error error) {
@@ -341,7 +460,23 @@ public class MucOptions {
 	}
 
 	public ArrayList<User> getUsers() {
-		return new ArrayList<>(users.values());
+		return getUsers(true);
+	}
+
+	public ArrayList<User> getUsers(boolean includeOffline) {
+		synchronized (users) {
+			if (includeOffline) {
+				return new ArrayList<>(users);
+			} else {
+				ArrayList<User> onlineUsers = new ArrayList<>();
+				for (User user : users) {
+					if (user.getRole().ranks(Role.PARTICIPANT)) {
+						onlineUsers.add(user);
+					}
+				}
+				return onlineUsers;
+			}
+		}
 	}
 
 	public List<User> getUsers(int max) {
@@ -350,7 +485,9 @@ public class MucOptions {
 	}
 
 	public int getUserCount() {
-		return this.users.size();
+		synchronized (users) {
+			return users.size();
+		}
 	}
 
 	public String getProposedNick() {
@@ -386,7 +523,9 @@ public class MucOptions {
 	}
 
 	public void setOffline() {
-		this.users.clear();
+		synchronized (users) {
+			this.users.clear();
+		}
 		this.error = Error.NO_RESPONSE;
 		this.isOnline = false;
 	}
@@ -410,7 +549,7 @@ public class MucOptions {
 				Contact contact = user.getContact();
 				if (contact != null && !contact.getDisplayName().isEmpty()) {
 					names.add(contact.getDisplayName().split("\\s+")[0]);
-				} else {
+				} else if (user.getName() != null){
 					names.add(user.getName());
 				}
 			}
@@ -429,7 +568,7 @@ public class MucOptions {
 
 	public long[] getPgpKeyIds() {
 		List<Long> ids = new ArrayList<>();
-		for (User user : this.users.values()) {
+		for (User user : this.users) {
 			if (user.getPgpKeyId() != 0) {
 				ids.add(user.getPgpKeyId());
 			}
@@ -443,18 +582,22 @@ public class MucOptions {
 	}
 
 	public boolean pgpKeysInUse() {
-		for (User user : this.users.values()) {
-			if (user.getPgpKeyId() != 0) {
-				return true;
+		synchronized (users) {
+			for (User user : users) {
+				if (user.getPgpKeyId() != 0) {
+					return true;
+				}
 			}
 		}
 		return false;
 	}
 
 	public boolean everybodyHasKeys() {
-		for (User user : this.users.values()) {
-			if (user.getPgpKeyId() == 0) {
-				return false;
+		synchronized (users) {
+			for (User user : users) {
+				if (user.getPgpKeyId() == 0) {
+					return false;
+				}
 			}
 		}
 		return true;
@@ -468,12 +611,12 @@ public class MucOptions {
 		}
 	}
 
-	public Jid getTrueCounterpart(String name) {
-		if (name.equals(getSelf().getName())) {
+	public Jid getTrueCounterpart(Jid jid) {
+		if (jid.equals(getSelf().getFullJid())) {
 			return account.getJid().toBareJid();
 		}
-		User user = findUser(name);
-		return user == null ? null : user.getJid();
+		User user = findUserByFullJid(jid);
+		return user == null ? null : user.realJid;
 	}
 
 	public String getPassword() {
@@ -499,11 +642,15 @@ public class MucOptions {
 		return this.conversation;
 	}
 
-	public void putMember(Jid jid) {
-		members.add(jid);
-	}
-
 	public List<Jid> getMembers() {
-		return new ArrayList<>(members);
+		ArrayList<Jid> members = new ArrayList<>();
+		synchronized (users) {
+			for (User user : users) {
+				if (user.affiliation.ranks(Affiliation.MEMBER) && user.realJid != null) {
+					members.add(user.realJid);
+				}
+			}
+		}
+		return members;
 	}
 }

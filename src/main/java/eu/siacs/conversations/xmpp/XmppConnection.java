@@ -1040,7 +1040,7 @@ public class XmppConnection implements Runnable {
 		final String ver = caps == null ? null : caps.getAttribute("ver");
 		ServiceDiscoveryResult discoveryResult = null;
 		if (hash != null && ver != null) {
-			discoveryResult = mXmppConnectionService.databaseBackend.findDiscoveryResult(hash, ver);
+			discoveryResult = mXmppConnectionService.getCachedServiceDiscoveryResult(new Pair<>(hash, ver));
 		}
 		if (discoveryResult == null) {
 			sendServiceDiscoveryInfo(account.getServer());
@@ -1435,7 +1435,7 @@ public class XmppConnection implements Runnable {
 	}
 
 	public int getTimeToNextAttempt() {
-		final int interval = (int) (25 * Math.pow(1.5, attempt));
+		final int interval = Math.min((int) (25 * Math.pow(1.3, attempt)), 300);
 		final int secondsSinceLast = (int) ((SystemClock.elapsedRealtime() - this.lastConnect) / 1000);
 		return interval - secondsSinceLast;
 	}

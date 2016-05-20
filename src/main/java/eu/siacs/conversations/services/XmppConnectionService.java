@@ -83,6 +83,7 @@ import eu.siacs.conversations.generator.IqGenerator;
 import eu.siacs.conversations.generator.MessageGenerator;
 import eu.siacs.conversations.generator.PresenceGenerator;
 import eu.siacs.conversations.http.HttpConnectionManager;
+import eu.siacs.conversations.parser.AbstractParser;
 import eu.siacs.conversations.parser.IqParser;
 import eu.siacs.conversations.parser.MessageParser;
 import eu.siacs.conversations.parser.PresenceParser;
@@ -1762,7 +1763,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		}
 	}
 
-	private boolean checkListeners() {
+	public boolean checkListeners() {
 		return (this.mOnAccountUpdate == null
 				&& this.mOnConversationUpdate == null
 				&& this.mOnRosterUpdate == null
@@ -1894,11 +1895,15 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 
 			@Override
 			public void onIqPacketReceived(Account account, IqPacket packet) {
+
 				Element query = packet.query("http://jabber.org/protocol/muc#admin");
 				if (packet.getType() == IqPacket.TYPE.RESULT && query != null) {
 					for(Element child : query.getChildren()) {
 						if ("item".equals(child.getName())) {
-							conversation.getMucOptions().putMember(child.getAttributeAsJid("jid"));
+							MucOptions.User user = AbstractParser.parseItem(conversation,child);
+							if (!user.realJidMatchesAccount()) {
+								conversation.getMucOptions().addUser(user);
+							}
 						}
 					}
 				} else {
@@ -2170,13 +2175,15 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		}
 	}
 
-	public void changeAffiliationInConference(final Conversation conference, Jid user, MucOptions.Affiliation affiliation, final OnAffiliationChanged callback) {
+	public void changeAffiliationInConference(final Conversation conference, Jid user, final MucOptions.Affiliation affiliation, final OnAffiliationChanged callback) {
 		final Jid jid = user.toBareJid();
 		IqPacket request = this.mIqGenerator.changeAffiliation(conference, jid, affiliation.toString());
 		sendIqPacket(conference.getAccount(), request, new OnIqPacketReceived() {
 			@Override
 			public void onIqPacketReceived(Account account, IqPacket packet) {
 				if (packet.getType() == IqPacket.TYPE.RESULT) {
+					conference.getMucOptions().changeAffiliation(jid, affiliation);
+					getAvatarService().clear(conference);
 					callback.onAffiliationChangedSuccessful(jid);
 				} else {
 					callback.onAffiliationChangeFailed(jid, R.string.could_not_change_affiliation);
@@ -2188,8 +2195,8 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 	public void changeAffiliationsInConference(final Conversation conference, MucOptions.Affiliation before, MucOptions.Affiliation after) {
 		List<Jid> jids = new ArrayList<>();
 		for (MucOptions.User user : conference.getMucOptions().getUsers()) {
-			if (user.getAffiliation() == before && user.getJid() != null) {
-				jids.add(user.getJid());
+			if (user.getAffiliation() == before && user.getRealJid() != null) {
+				jids.add(user.getRealJid());
 			}
 		}
 		IqPacket request = this.mIqGenerator.changeAffiliation(conference, jids, after.toString());
@@ -2570,7 +2577,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 							} else {
 								Conversation conversation = find(account, avatar.owner.toBareJid());
 								if (conversation != null && conversation.getMode() == Conversation.MODE_MULTI) {
-									MucOptions.User user = conversation.getMucOptions().findUser(avatar.owner.getResourcepart());
+									MucOptions.User user = conversation.getMucOptions().findUserByFullJid(avatar.owner);
 									if (user != null) {
 										if (user.setAvatar(avatar)) {
 											getAvatarService().clear(user);
@@ -3169,7 +3176,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 		}
 	}
 
-	private ServiceDiscoveryResult getCachedServiceDiscoveryResult(Pair<String,String> key) {
+	public ServiceDiscoveryResult getCachedServiceDiscoveryResult(Pair<String, String> key) {
 		ServiceDiscoveryResult result = discoCache.get(key);
 		if (result != null) {
 			return result;

@@ -59,6 +59,7 @@
                 android:autoLink="web"
                 android:textColorLink="@color/dark"
                 android:textColor="@color/dark"
+                android:maxLines="256"
                 android:textColorHighlight="@color/grey800"
                 android:textSize="?attr/TextSizeBody" />
 

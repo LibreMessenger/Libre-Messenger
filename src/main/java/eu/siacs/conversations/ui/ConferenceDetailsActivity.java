@@ -1,6 +1,5 @@
 package eu.siacs.conversations.ui;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
@@ -8,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -366,13 +364,13 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 			final Contact contact = user.getContact();
 			if (contact != null) {
 				name = contact.getDisplayName();
-			} else if (user.getJid() != null){
-				name = user.getJid().toBareJid().toString();
+			} else if (user.getRealJid() != null){
+				name = user.getRealJid().toBareJid().toString();
 			} else {
 				name = user.getName();
 			}
 			menu.setHeaderTitle(name);
-			if (user.getJid() != null) {
+			if (user.getRealJid() != null) {
 				MenuItem showContactDetails = menu.findItem(R.id.action_contact_details);
 				MenuItem startConversation = menu.findItem(R.id.start_conversation);
 				MenuItem giveMembership = menu.findItem(R.id.give_membership);
@@ -425,23 +423,25 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 				startConversation(mSelectedUser);
 				return true;
 			case R.id.give_admin_privileges:
-				xmppConnectionService.changeAffiliationInConference(mConversation,mSelectedUser.getJid(), MucOptions.Affiliation.ADMIN,this);
+				xmppConnectionService.changeAffiliationInConference(mConversation,mSelectedUser.getRealJid(), MucOptions.Affiliation.ADMIN,this);
 				return true;
 			case R.id.give_membership:
-				xmppConnectionService.changeAffiliationInConference(mConversation,mSelectedUser.getJid(), MucOptions.Affiliation.MEMBER,this);
+				xmppConnectionService.changeAffiliationInConference(mConversation,mSelectedUser.getRealJid(), MucOptions.Affiliation.MEMBER,this);
 				return true;
 			case R.id.remove_membership:
-				xmppConnectionService.changeAffiliationInConference(mConversation,mSelectedUser.getJid(), MucOptions.Affiliation.NONE,this);
+				xmppConnectionService.changeAffiliationInConference(mConversation,mSelectedUser.getRealJid(), MucOptions.Affiliation.NONE,this);
 				return true;
 			case R.id.remove_admin_privileges:
-				xmppConnectionService.changeAffiliationInConference(mConversation,mSelectedUser.getJid(), MucOptions.Affiliation.MEMBER,this);
+				xmppConnectionService.changeAffiliationInConference(mConversation,mSelectedUser.getRealJid(), MucOptions.Affiliation.MEMBER,this);
 				return true;
 			case R.id.remove_from_room:
 				removeFromRoom(mSelectedUser);
 				return true;
 			case R.id.ban_from_conference:
-				xmppConnectionService.changeAffiliationInConference(mConversation,mSelectedUser.getJid(), MucOptions.Affiliation.OUTCAST,this);
-				xmppConnectionService.changeRoleInConference(mConversation,mSelectedUser.getName(), MucOptions.Role.NONE,this);
+				xmppConnectionService.changeAffiliationInConference(mConversation,mSelectedUser.getRealJid(), MucOptions.Affiliation.OUTCAST,this);
+				if (mSelectedUser.getRole() != MucOptions.Role.NONE) {
+					xmppConnectionService.changeRoleInConference(mConversation, mSelectedUser.getName(), MucOptions.Role.NONE, this);
+				}
 				return true;
 			case R.id.send_private_message:
 				privateMsgInMuc(mConversation,mSelectedUser.getName());
@@ -453,8 +453,10 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 
 	private void removeFromRoom(final User user) {
 		if (mConversation.getMucOptions().membersOnly()) {
-			xmppConnectionService.changeAffiliationInConference(mConversation,user.getJid(), MucOptions.Affiliation.NONE,this);
-			xmppConnectionService.changeRoleInConference(mConversation,mSelectedUser.getName(), MucOptions.Role.NONE,ConferenceDetailsActivity.this);
+			xmppConnectionService.changeAffiliationInConference(mConversation,user.getRealJid(), MucOptions.Affiliation.NONE,this);
+			if (user.getRole() != MucOptions.Role.NONE) {
+				xmppConnectionService.changeRoleInConference(mConversation, mSelectedUser.getName(), MucOptions.Role.NONE, ConferenceDetailsActivity.this);
+			}
 		} else {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle(R.string.ban_from_conference);
@@ -463,8 +465,10 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 			builder.setPositiveButton(R.string.ban_now,new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					xmppConnectionService.changeAffiliationInConference(mConversation,user.getJid(), MucOptions.Affiliation.OUTCAST,ConferenceDetailsActivity.this);
-					xmppConnectionService.changeRoleInConference(mConversation,mSelectedUser.getName(), MucOptions.Role.NONE,ConferenceDetailsActivity.this);
+					xmppConnectionService.changeAffiliationInConference(mConversation,user.getRealJid(), MucOptions.Affiliation.OUTCAST,ConferenceDetailsActivity.this);
+					if (user.getRole() != MucOptions.Role.NONE) {
+						xmppConnectionService.changeRoleInConference(mConversation, mSelectedUser.getName(), MucOptions.Role.NONE, ConferenceDetailsActivity.this);
+					}
 				}
 			});
 			builder.create().show();
@@ -472,8 +476,8 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 	}
 
 	protected void startConversation(User user) {
-		if (user.getJid() != null) {
-			Conversation conversation = xmppConnectionService.findOrCreateConversation(this.mConversation.getAccount(),user.getJid().toBareJid(),false);
+		if (user.getRealJid() != null) {
+			Conversation conversation = xmppConnectionService.findOrCreateConversation(this.mConversation.getAccount(),user.getRealJid().toBareJid(),false);
 			switchToConversation(conversation);
 		}
 	}
@@ -576,12 +580,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		membersView.removeAllViews();
 		final ArrayList<User> users = mucOptions.getUsers();
-		Collections.sort(users,new Comparator<User>() {
-			@Override
-			public int compare(User lhs, User rhs) {
-				return lhs.getName().compareToIgnoreCase(rhs.getName());
-			}
-		});
+		Collections.sort(users);
 		for (final User user : users) {
 			View view = inflater.inflate(R.layout.contact, membersView,false);
 			this.setListItemBackgroundOnView(view);
@@ -608,11 +607,12 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 				tvKey.setText(OpenPgpUtils.convertKeyIdToHex(user.getPgpKeyId()));
 			}
 			Contact contact = user.getContact();
+			String name = user.getName();
 			if (contact != null) {
 				tvDisplayName.setText(contact.getDisplayName());
-				tvStatus.setText(user.getName() + " \u2022 " + getStatus(user));
+				tvStatus.setText((name != null ? name+ " \u2022 " : "") + getStatus(user));
 			} else {
-				tvDisplayName.setText(user.getName());
+				tvDisplayName.setText(name == null ? "" : name);
 				tvStatus.setText(getStatus(user));
 
 			}
@@ -658,7 +658,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 
 	@Override
 	public void onAffiliationChangedSuccessful(Jid jid) {
-
+		refreshUi();
 	}
 
 	@Override

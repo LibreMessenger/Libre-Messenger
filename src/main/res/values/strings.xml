@@ -419,7 +419,7 @@
 	<string name="password_should_not_be_empty">Password should not be empty</string>
 	<string name="perform_action_with">Perform action with</string>
 	<string name="no_affiliation">No affiliation</string>
-	<string name="no_role">No role</string>
+	<string name="no_role">Offline</string>
 	<string name="outcast">Outcast</string>
 	<string name="member">Member</string>
 	<string name="advanced_mode">Advanced mode</string>
@@ -520,7 +520,7 @@
 	<string name="download_started">Download started</string>
 	<string name="account_status_tor_unavailable">Tor network unavailable</string>
 	<string name="account_status_bind_failure">Bind failure</string>
-	<string name="account_status_host_unknown">Domain not recognized</string>
+	<string name="account_status_host_unknown">Host unknown</string>
 	<string name="server_info_broken">Broken</string>
 	<string name="pref_presence_settings">Presence</string>
 	<string name="pref_away_when_screen_off">Away when screen is off</string>
@@ -624,13 +624,14 @@
 	<string name="presence_dnd">Busy</string>
 	<string name="secure_password_generated">A secure password has been generated</string>
 	<string name="device_does_not_support_battery_op">Your device does not support opting out of battery optimization</string>
-    <string name="share">Share</string>
+  <string name="share">Share</string>
 	<string name="share_location">Share location</string>
-    <string name="location_sharing_disabled">Location sharing is disabled in settings</string>
-    <string name="locating">Locating…</string>
+  <string name="location_sharing_disabled">Location sharing is disabled in settings</string>
+  <string name="locating">Locating…</string>
 	<string name="uninstall_plugins">We have integrated the VoiceRecorder and ShareLocation plugin directly into the messenger. You should uninstall the plugins.</string>
 	<string name="uninstall">Uninstall</string>
 	<string name="action_end_conversation_muc">Leave conference</string>
 	<string name="leave_conference_warning">Do you really want to leave this conference? You will no longer be notified of new messages until joining the conference again.</string>
+	<string name="show_password">Show password</string>
 
 </resources>

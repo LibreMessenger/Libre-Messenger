@@ -402,7 +402,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
 			} else if (axolotlEncrypted != null && Config.supportOmemo()) {
 				Jid origin;
 				if (conversation.getMode() == Conversation.MODE_MULTI) {
-					origin = conversation.getMucOptions().getTrueCounterpart(counterpart.getResourcepart());
+					origin = conversation.getMucOptions().getTrueCounterpart(counterpart);
 					if (origin == null) {
 						Log.d(Config.LOGTAG,"axolotl message in non anonymous conference received");
 						return;
@@ -430,7 +430,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
 			message.setOob(isOob);
 			message.markable = packet.hasChild("markable", "urn:xmpp:chat-markers:0");
 			if (conversation.getMode() == Conversation.MODE_MULTI) {
-				Jid trueCounterpart = conversation.getMucOptions().getTrueCounterpart(counterpart.getResourcepart());
+				Jid trueCounterpart = conversation.getMucOptions().getTrueCounterpart(counterpart);
 				message.setTrueCounterpart(trueCounterpart);
 				if (trueCounterpart != null) {
 					updateLastseen(timestamp, account, trueCounterpart, false);
@@ -536,8 +536,11 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
 				}
 			}
 		} else if (!packet.hasChild("body")){ //no body
+			if (Config.BACKGROUND_STANZA_LOGGING && !mXmppConnectionService.checkListeners()) {
+				Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": " + original);
+			}
+			Conversation conversation = mXmppConnectionService.find(account, from.toBareJid());
 			if (isTypeGroupChat) {
-				Conversation conversation = mXmppConnectionService.find(account, from.toBareJid());
 				if (packet.hasChild("subject")) {
 					if (conversation != null && conversation.getMode() == Conversation.MODE_MULTI) {
 						conversation.setHasMessagesLeftOnServer(conversation.countMessages() > 0);
@@ -553,17 +556,32 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
 						return;
 					}
 				}
-
-				if (conversation != null && isMucStatusMessage) {
+			}
+			if (conversation != null && mucUserElement != null && from.isBareJid()) {
+				if (mucUserElement.hasChild("status")) {
 					for (Element child : mucUserElement.getChildren()) {
 						if (child.getName().equals("status")
 								&& MucOptions.STATUS_CODE_ROOM_CONFIG_CHANGED.equals(child.getAttribute("code"))) {
 							mXmppConnectionService.fetchConferenceConfiguration(conversation);
 						}
 					}
+				} else if (mucUserElement.hasChild("item")) {
+					for(Element child : mucUserElement.getChildren()) {
+						if ("item".equals(child.getName())) {
+							MucOptions.User user = AbstractParser.parseItem(conversation,child);
+							Log.d(Config.LOGTAG,account.getJid()+": changing affiliation for "
+									+user.getRealJid()+" to "+user.getAffiliation()+" in "
+									+conversation.getJid().toBareJid());
+							if (!user.realJidMatchesAccount()) {
+								conversation.getMucOptions().addUser(user);
+							}
+						}
+					}
 				}
 			}
 		}
+
+
 
 		Element received = packet.findChild("received", "urn:xmpp:chat-markers:0");
 		if (received == null) {
