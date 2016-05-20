@@ -5,6 +5,7 @@
 * show presence of other resources as template
 * start typing in StartConversationsActivity to search
 * show addresses in locations
+* show video previews in chats
 * various bug fixes and improvements
 * fixed pgp presence signing
 
