@@ -1175,8 +1175,8 @@ public abstract class XmppActivity extends Activity {
 		Glide.with(this)
                 .load(bm)
                 .override(288, 288)
-                //.fitCenter()
-                .centerCrop()
+                .fitCenter()
+                //.centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .into(imageView);
 		//Log.d(Config.LOGTAG,"Load image with glide");
@@ -1192,8 +1192,8 @@ public abstract class XmppActivity extends Activity {
 				.load(vp)
 				.asBitmap()
 				.override(288,288)
-                //.fitCenter()
-                .centerCrop()
+                .fitCenter()
+                //.centerCrop()
 				.diskCacheStrategy(DiskCacheStrategy.RESULT)
 				.videoDecoder(fileDescriptorBitmapDecoder)
 				.into(imageView);
