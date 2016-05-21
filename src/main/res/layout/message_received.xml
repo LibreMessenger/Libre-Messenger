@@ -50,7 +50,9 @@
                 app:riv_border_width="1dp"
                 app:riv_border_color="@color/black12"
                 app:riv_corner_radius="5dp"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                android:maxHeight="400dp"
+                android:maxWidth="400dp" />
 
             <TextView
                 android:id="@+id/message_body"
