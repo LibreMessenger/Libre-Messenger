@@ -23,6 +23,7 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -1182,20 +1183,25 @@ public abstract class XmppActivity extends Activity {
 
 	}
 
-	public void loadVideoPreview(Message message, ImageView imageView) {
-		BitmapPool bitmapPool = Glide.get(getApplicationContext()).getBitmapPool();
-		int microSecond = 1000000;// 1st second of video
-		VideoBitmapDecoder videoBitmapDecoder = new VideoBitmapDecoder(microSecond);
-		FileDescriptorBitmapDecoder fileDescriptorBitmapDecoder = new FileDescriptorBitmapDecoder(videoBitmapDecoder, bitmapPool, DecodeFormat.PREFER_ARGB_8888);
-		File vp = xmppConnectionService.getFileBackend().getFile(message, true);
-		Glide.with(getApplicationContext())
-				.load(vp)
-				.asBitmap()
-				.override(400, 400)
+    public void loadVideoPreview(Message message, ImageView imageView) {
+        File vp = xmppConnectionService.getFileBackend().getFile(message, true);
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        //use one of overloaded setDataSource() functions to set your data source
+        retriever.setDataSource(this, Uri.fromFile(vp));
+        String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        long microSecond = Long.parseLong(time);
+        int duration = (int) microSecond / 2; //preview at half of video
+        BitmapPool bitmapPool = Glide.get(getApplicationContext()).getBitmapPool();
+        VideoBitmapDecoder videoBitmapDecoder = new VideoBitmapDecoder(duration);
+        FileDescriptorBitmapDecoder fileDescriptorBitmapDecoder = new FileDescriptorBitmapDecoder(videoBitmapDecoder, bitmapPool, DecodeFormat.PREFER_ARGB_8888);
+        Glide.with(getApplicationContext())
+                .load(vp)
+                .asBitmap()
+                .override(400, 400)
                 .fitCenter()
                 //.centerCrop()
-				.diskCacheStrategy(DiskCacheStrategy.RESULT)
-				.videoDecoder(fileDescriptorBitmapDecoder)
-				.into(imageView);
-	}
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .videoDecoder(fileDescriptorBitmapDecoder)
+                .into(imageView);
+    }
 }
