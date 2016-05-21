@@ -3,12 +3,10 @@ package eu.siacs.conversations.ui.adapter;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.support.v4.content.ContextCompat;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,6 +88,7 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
         ImageView notificationStatus = (ImageView) view.findViewById(R.id.notification_status);
 
         Message message = conversation.getLatestMessage();
+        String mimeType = message.getMimeType();
 
         if (!conversation.isRead()) {
             convName.setTypeface(null, Typeface.BOLD);
@@ -97,7 +96,13 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
             convName.setTypeface(null, Typeface.NORMAL);
         }
 
-        if (message.getFileParams().width > 0
+        if (mimeType != null) {
+            if (message.getMimeType().startsWith("video/")) {
+                mLastMessage.setVisibility(View.GONE);
+                imagePreview.setVisibility(View.VISIBLE);
+                activity.loadVideoPreview(message, imagePreview);
+            }
+        } else if (message.getFileParams().width > 0
                 && (message.getTransferable() == null
                 || message.getTransferable().getStatus() != Transferable.STATUS_DELETED)) {
             mLastMessage.setVisibility(View.GONE);

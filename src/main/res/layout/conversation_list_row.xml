@@ -79,13 +79,14 @@
 
                         <com.makeramen.roundedimageview.RoundedImageView
                             android:id="@+id/conversation_lastimage"
-                            android:layout_width="fill_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="36dp"
                             app:riv_border_color="@color/black12"
                             app:riv_border_width="1dp"
                             android:scaleType="centerCrop"
                             android:visibility="gone"
-                            app:riv_corner_radius="5dp"/>
+                            app:riv_corner_radius="5dp"
+                            android:maxWidth="400dp" />
                     </LinearLayout>
                     <ImageView
                         android:id="@+id/notification_status"
