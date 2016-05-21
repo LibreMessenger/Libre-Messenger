@@ -1173,13 +1173,13 @@ public abstract class XmppActivity extends Activity {
 		File bm;
 		bm = xmppConnectionService.getFileBackend().getFile(message, true);
 		Glide.with(this)
-                .load(bm)
-                .override(288, 288)
-                .fitCenter()
-                //.centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .into(imageView);
-		//Log.d(Config.LOGTAG,"Load image with glide");
+				.load(bm)
+				.override(400, 400)
+				.fitCenter()
+				//.centerCrop()
+				.diskCacheStrategy(DiskCacheStrategy.RESULT)
+				.into(imageView);
+
 	}
 
 	public void loadVideoPreview(Message message, ImageView imageView) {
@@ -1191,7 +1191,7 @@ public abstract class XmppActivity extends Activity {
 		Glide.with(getApplicationContext())
 				.load(vp)
 				.asBitmap()
-				.override(288,288)
+				.override(400, 400)
                 .fitCenter()
                 //.centerCrop()
 				.diskCacheStrategy(DiskCacheStrategy.RESULT)
