@@ -35,15 +35,5 @@
         android:orderInCategory="85"
         android:showAsAction="never"
         android:title="@string/advanced_mode"/>
-    <item
-        android:id="@+id/action_accounts"
-        android:orderInCategory="90"
-        android:showAsAction="never"
-        android:title="@string/action_accounts"/>
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
 
 </menu>
