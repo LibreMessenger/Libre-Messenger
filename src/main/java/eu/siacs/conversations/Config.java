@@ -33,6 +33,8 @@ public final class Config {
 		return (ENCRYPTION_MASK & (ENCRYPTION_MASK - 1)) != 0;
 	}
 
+	public static boolean AlwayUseOMEMO = false; //true makes OMEMO as default on every 1 to 1 chat
+
 	public static final String LOGTAG = "Pix-Art Messenger";
 
 	public static final String XMPP_IP = "185.26.156.37"; // set to null means disable
@@ -78,7 +80,7 @@ public final class Config {
 
 	public static final int MESSAGE_MERGE_WINDOW = 20;
 
-	public static final int PAGE_SIZE = 20;
+	public static final int PAGE_SIZE = 50;
 	public static final int MAX_NUM_PAGES = 3;
 
 	public static final int REFRESH_UI_INTERVAL = 500;
