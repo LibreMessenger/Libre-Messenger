@@ -2,14 +2,17 @@ package eu.siacs.conversations.ui;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -29,6 +32,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -45,9 +49,11 @@ public class ShareLocationActivity extends Activity implements OnMapReadyCallbac
 	private Button mShareButton;
 	private RelativeLayout mSnackbar;
     private RelativeLayout mLocationInfo;
+    private TextView mSnackbarLocation;
+    private TextView mSnackbarAction;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.share_locaction_activity);
 		MapFragment fragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map_fragment);
@@ -81,8 +87,10 @@ public class ShareLocationActivity extends Activity implements OnMapReadyCallbac
 			}
 		});
 		mSnackbar = (RelativeLayout) findViewById(R.id.snackbar);
-		TextView snackbarAction = (TextView) findViewById(R.id.snackbar_action);
-		snackbarAction.setOnClickListener(new View.OnClickListener() {
+        mLocationInfo = (RelativeLayout) findViewById(R.id.snackbar_location);
+        mSnackbarLocation = (TextView) findViewById(R.id.snackbar_location_message);
+		mSnackbarAction = (TextView) findViewById(R.id.snackbar_action);
+		mSnackbarAction.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
@@ -144,37 +152,19 @@ public class ShareLocationActivity extends Activity implements OnMapReadyCallbac
 	public void onLocationChanged(Location location) {
         double longitude = location.getLongitude();
         double latitude = location.getLatitude();
-        if (latitude != 0 && longitude != 0) {
-            Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
-            try {
-                List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
 
-                String address = "";
-                if (addresses != null) {
-                    Address Address = addresses.get(0);
-                    StringBuilder strAddress = new StringBuilder("");
-
-                    for (int i = 0; i < Address.getMaxAddressLineIndex(); i++) {
-                        strAddress.append(Address.getAddressLine(i)).append("\n");
-                    }
-                    address = strAddress.toString();
-                    address = address.substring(0, address.length()-1); //trim last \n
-                    mLocationInfo = (RelativeLayout) findViewById(R.id.location);
-                    TextView snackbarLocation = (TextView) findViewById(R.id.snackbar_message);
-                    snackbarLocation.setText(address);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
 		if (this.mLastLocation == null) {
 			centerOnLocation(new LatLng(location.getLatitude(), location.getLongitude()));
 			this.mShareButton.setEnabled(true);
 			this.mShareButton.setTextColor(0xde000000);
 			this.mShareButton.setText(R.string.share);
-            mLocationInfo.setVisibility(View.VISIBLE);
+            this.mLocationInfo.setVisibility(View.VISIBLE);
 		}
 		this.mLastLocation = location;
+        if (latitude != 0 && longitude != 0) {
+            Double[] lat_long = new Double[]{latitude, longitude};
+            new ReverseGeocodingTask(getBaseContext()).execute(lat_long);
+        }
 	}
 
 	@TargetApi(Build.VERSION_CODES.KITKAT)
@@ -200,4 +190,51 @@ public class ShareLocationActivity extends Activity implements OnMapReadyCallbac
 			return isLocationEnabledLegacy();
 		}
 	}
+
+    private class ReverseGeocodingTask extends AsyncTask<Double, Void, String> {
+        Context mContext;
+
+        public ReverseGeocodingTask(Context context){
+            super();
+            mContext = context;
+        }
+
+        @Override
+        protected String doInBackground(Double... params) {
+            Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
+
+            double latitude = params[0].doubleValue();
+            double longitude = params[1].doubleValue();
+
+            List<Address> addresses = null;
+            String address="";
+
+            try {
+                addresses = geocoder.getFromLocation(latitude, longitude,1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (addresses != null) {
+                Address Address = addresses.get(0);
+                StringBuilder strAddress = new StringBuilder("");
+
+                for (int i = 0; i < Address.getMaxAddressLineIndex(); i++) {
+                    strAddress.append(Address.getAddressLine(i)).append("\n");
+                }
+                address = strAddress.toString();
+                address = address.substring(0, address.length()-1); //trim last \n
+            }
+
+            return address;
+
+        }
+
+        @Override
+        protected void onPostExecute(String address) {
+            // Setting address of the touched Position
+            mSnackbarLocation.setText(address);
+            Log.d(Config.LOGTAG,"Location: Address = "+ address);
+        }
+    }
 }

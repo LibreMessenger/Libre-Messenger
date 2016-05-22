@@ -63,7 +63,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/location"
+        android:id="@+id/snackbar_location"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
@@ -76,7 +76,7 @@
         android:visibility="gone" >
 
         <TextView
-            android:id="@id/snackbar_message"
+            android:id="@id/snackbar_location_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
