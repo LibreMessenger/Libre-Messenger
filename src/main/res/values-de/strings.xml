@@ -155,6 +155,9 @@
   <string name="mgmt_account_delete">Löschen</string>
   <string name="mgmt_account_publish_avatar">Profilbild veröffentlichen</string>
   <string name="mgmt_account_publish_pgp">Öffentlichen OpenPGP-Schlüssel veröffentlichen</string>
+  <string name="openpgp_has_been_published">Öffentlicher OpenPGP Schlüssel wurde veröffentlicht.</string>
+  <string name="republish_pgp_keys">Deine öffentliche OpenPGP Schlüssel müssen veröffentlicht werden!</string>
+  <string name="mgmt_account_enable">Konto aktivieren </string>
   <string name="mgmt_account_are_you_sure">Bist du dir sicher?</string>
   <string name="mgmt_account_delete_confirm_text">Wenn du dein Profil löschst, gehen alle Gesprächsverläufe verloren</string>
   <string name="attach_record_voice">Sprache aufzeichnen</string>
@@ -367,7 +370,7 @@
   <string name="password_should_not_be_empty">Das Passwort darf nicht leer sein</string>
   <string name="perform_action_with">Aktion durchführen mit</string>
   <string name="no_affiliation">Keine Zugehörigkeit</string>
-  <string name="no_role">Keine Rolle</string>
+  <string name="no_role">Offline</string>
   <string name="outcast">Ausgeschlossen</string>
   <string name="member">Mitglied</string>
   <string name="advanced_mode">Erweiterter Modus</string>
@@ -467,6 +470,8 @@
   <string name="download_started">Download gestartet</string>
   <string name="no_update_available">Kein Update verfügbar</string>
   <string name="account_status_tor_unavailable">Tor-Netzwerk nicht verfügbar</string>
+  <string name="account_status_bind_failure">Bindungsfehler</string>
+  <string name="account_status_host_unknown">Host unbekannt</string>
   <string name="server_info_broken">Fehlerhaft</string>
   <string name="update_info">Pix-Art Messenger prüft auf eine neuere Version. Wenn ein Update verfügbar ist, wirst du gefragt, ob du deine Version aktualisieren möchtest. Der Update Dienst lädt und installiert die neue Version automatisch.\n\nBitte warten…</string>
   <string name="pref_presence_settings">Status</string>
@@ -485,7 +490,7 @@
   <string name="fetching_mam_prefs">Archivierungseinstellungen werden abgerufen. Bitte warten …</string>
   <string name="unable_to_fetch_mam_prefs">Archivierungseinstellungen konnten nicht abgerufen werden</string>
   <string name="captcha_required">Captcha erforderlich</string>
-  <string name="captcha_hint">Text aus Captcha eintragen</string>
+  <string name="captcha_hint">Gib den Text vom obigen Bild ein</string>
   <string name="certificate_chain_is_not_trusted">Zertifikat wird nicht vertraut</string>
   <string name="jid_does_not_match_certificate">Jabber-ID stimmt nicht dem Zertifikat überein</string>
   <string name="action_renew_certificate">Zertifikat erneuern</string>
@@ -598,4 +603,5 @@
   <string name="action_end_conversation_muc">Konferenz verlassen</string>
   <string name="default_resource"></string>
   <string name="leave_conference_warning">Willst du die Konferenz wirklich verlassen? Du wirst keine neuen Nachrichten mehr bekommen, bis du der Konferenz erneut beitrittst.</string>
+  <string name="show_password">Passwort anzeigen</string>
 </resources>

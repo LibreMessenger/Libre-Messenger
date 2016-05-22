@@ -574,6 +574,9 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
 									+conversation.getJid().toBareJid());
 							if (!user.realJidMatchesAccount()) {
 								conversation.getMucOptions().addUser(user);
+								mXmppConnectionService.getAvatarService().clear(conversation);
+								mXmppConnectionService.updateMucRosterUi();
+								mXmppConnectionService.updateConversationUi();
 							}
 						}
 					}
