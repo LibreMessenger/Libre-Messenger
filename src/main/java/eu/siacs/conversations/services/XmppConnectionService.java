@@ -265,6 +265,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 					}
 				}
 			}
+			account.getRoster().clearPresences();
 			mJingleConnectionManager.cancelInTransmission();
 			fetchRosterFromServer(account);
 			fetchBookmarks(account);
@@ -2243,7 +2244,6 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 				sendOfflinePresence(account);
 			}
 			account.getXmppConnection().disconnect(force);
-			account.getRoster().clearPresences();
 		}
 	}
 
@@ -2668,6 +2668,7 @@ public class XmppConnectionService extends Service implements OnPhoneContactsLoa
 				scheduleWakeUpCall(Config.CONNECT_DISCO_TIMEOUT, account.getUuid().hashCode());
 			} else {
 				disconnect(account, force);
+				account.getRoster().clearPresences();
 				connection.resetEverything();
 				account.getAxolotlService().resetBrokenness();
 			}
