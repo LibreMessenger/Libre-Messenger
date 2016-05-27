@@ -55,7 +55,7 @@ public class ShareLocationActivity extends Activity implements OnMapReadyCallbac
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.share_locaction_activity);
+		setContentView(R.layout.activity_share_locaction);
 		MapFragment fragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map_fragment);
 		fragment.getMapAsync(this);
 		mGoogleApiClient = new GoogleApiClient.Builder(this)

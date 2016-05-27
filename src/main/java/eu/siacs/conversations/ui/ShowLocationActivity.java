@@ -64,7 +64,7 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
 
-		setContentView(R.layout.show_locaction_activity);
+		setContentView(R.layout.activity_show_locaction);
 		MapFragment fragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map_fragment);
 		fragment.getMapAsync(this);
 	}
