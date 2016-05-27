@@ -27,7 +27,6 @@ import org.openintents.openpgp.util.OpenPgpUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import eu.siacs.conversations.Config;
@@ -281,7 +280,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 			case R.id.action_edit_subject:
 				if (mConversation != null) {
 					quickEdit(mConversation.getMucOptions().getSubject(),
-							R.string.action_edit_subject,
+							R.string.edit_subject_hint,
 							this.onSubjectEdited);
 				}
 				break;
@@ -486,16 +485,8 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 	}
 
 	protected void saveAsBookmark() {
-		Account account = mConversation.getAccount();
-		Bookmark bookmark = new Bookmark(account, mConversation.getJid().toBareJid());
-		if (!mConversation.getJid().isBareJid()) {
-			bookmark.setNick(mConversation.getJid().getResourcepart());
-		}
-		bookmark.setBookmarkName(mConversation.getMucOptions().getSubject());
-		bookmark.setAutojoin(getPreferences().getBoolean("autojoin",true));
-		account.getBookmarks().add(bookmark);
-		xmppConnectionService.pushBookmarks(account);
-		mConversation.setBookmark(bookmark);
+		xmppConnectionService.saveConversationAsBookmark(mConversation,
+				mConversation.getMucOptions().getSubject());
 	}
 
 	protected void deleteBookmark() {

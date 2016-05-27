@@ -155,9 +155,8 @@
   <string name="mgmt_account_delete">Löschen</string>
   <string name="mgmt_account_publish_avatar">Profilbild veröffentlichen</string>
   <string name="mgmt_account_publish_pgp">Öffentlichen OpenPGP-Schlüssel veröffentlichen</string>
-  <string name="openpgp_has_been_published">Öffentlicher OpenPGP Schlüssel wurde veröffentlicht.</string>
-  <string name="republish_pgp_keys">Deine öffentliche OpenPGP Schlüssel müssen veröffentlicht werden!</string>
-  <string name="mgmt_account_enable">Konto aktivieren </string>
+  <string name="openpgp_has_been_published">Öffentlicher OpenPGP-Schlüssel wurde veröffentlicht.</string>
+  <string name="republish_pgp_keys">Deine öffentliche OpenPGP-Schlüssel müssen veröffentlicht werden!</string>
   <string name="mgmt_account_are_you_sure">Bist du dir sicher?</string>
   <string name="mgmt_account_delete_confirm_text">Wenn du dein Profil löschst, gehen alle Gesprächsverläufe verloren</string>
   <string name="attach_record_voice">Sprache aufzeichnen</string>
@@ -225,7 +224,7 @@
   <string name="delete_bookmark">Von Kontaktliste entfernen</string>
   <string name="bookmark_already_exists">Die Konferenz befindet sich bereits auf deiner Kontaktliste</string>
   <string name="action_edit_subject">Konferenz-Thema bearbeiten</string>
-  <string name="joining_conference">Konferenz wird betreten…</string>
+  <string name="joining_conference">Konferenz wird beigetreten…</string>
   <string name="leave">Verlassen</string>
   <string name="contact_added_you">Der Kontakt hat dich zur Kontaktliste hinzugefügt</string>
   <string name="add_back">Auch hinzufügen</string>
@@ -339,8 +338,9 @@
   <string name="enable_notifications">Benachrichtigungen aktivieren</string>
   <string name="no_conference_server_found">Kein Konferenz-Server gefunden</string>
   <string name="conference_creation_failed">Erstellen der Konferenz fehlgeschlagen!</string>
-  <string name="conference_created">Konferenz erstellt!</string>
   <string name="account_image_description">Profilbild</string>
+  <string name="secret_accepted">Schlüssel akzeptiert!</string>
+  <string name="reset">Zurücksetzen</string>
   <string name="copy_otr_clipboard_description">OTR-Fingerabdruck in Zwischenablage kopieren</string>
   <string name="copy_omemo_clipboard_description">OMEMO-Fingerabdruck in Zwischenablage kopieren</string>
   <string name="regenerate_omemo_key">OMEMO-Schlüssel erneuern</string>
@@ -448,7 +448,7 @@
   <string name="pref_quick_action">Schnell-Tasten</string>
   <string name="none">keine</string>
   <string name="recently_used">zuletzt verwendet</string>
-  <string name="choose_quick_action">wähle Schnell-Taste</string>
+  <string name="choose_quick_action">Schnell-Taste auswähle</string>
   <string name="search_for_contacts_or_groups">Nach Kontakten oder Konferenzen suchen</string>
   <string name="elv_undo">Rückgängig</string>
   <string name="send_private_message">Private Nachricht senden</string>
@@ -490,7 +490,7 @@
   <string name="fetching_mam_prefs">Archivierungseinstellungen werden abgerufen. Bitte warten …</string>
   <string name="unable_to_fetch_mam_prefs">Archivierungseinstellungen konnten nicht abgerufen werden</string>
   <string name="captcha_required">Captcha erforderlich</string>
-  <string name="captcha_hint">Gib den Text vom obigen Bild ein</string>
+  <string name="captcha_hint">Gib den Text von obigem Bild ein</string>
   <string name="certificate_chain_is_not_trusted">Zertifikat wird nicht vertraut</string>
   <string name="jid_does_not_match_certificate">Jabber-ID stimmt nicht dem Zertifikat überein</string>
   <string name="action_renew_certificate">Zertifikat erneuern</string>
@@ -589,7 +589,7 @@
   <string name="presence_xa">Nicht verfügbar</string>
   <string name="presence_dnd">Beschäftigt</string>
   <string name="secure_password_generated">Ein sicheres Passwort wurde erstellt</string>
-  <string name="device_does_not_support_battery_op">Dein Gerät unterstützt keine Batterieoptimierungen</string>
+  <string name="device_does_not_support_battery_op">Dein Gerät unterstützt kein Ausschalten der Batterieoptimierung</string>
   <string name="locating">Lokalisiere…</string>
   <string name="location_sharing_disabled">GPS ist in den Android-Einstellungen deaktiviert</string>
   <string name="share">Teilen</string>
@@ -600,4 +600,13 @@
   <string name="default_resource"></string>
   <string name="leave_conference_warning">Willst du die Konferenz wirklich verlassen? Du wirst keine neuen Nachrichten mehr bekommen, bis du der Konferenz erneut beitrittst.</string>
   <string name="show_password">Passwort anzeigen</string>
+  <string name="choose_participants">Mitglieder auswählen</string>
+  <string name="conference_subject">Titel</string>
+  <string name="create_conference">Konferenz erstellen</string>
+  <string name="creating_conference">Erstelle Konferenz…</string>
+  <string name="edit_subject_hint">Der Titel dieser Konferenz</string>
+  <string name="join_or_create_conference">Konferenz beitreten oder erstellen</string>
+  <string name="mgmt_account_enable"></string>
+  <string name="registration_please_wait">Registrierung fehlgeschlagen: Bitte später versuchen</string>
+  <string name="send_message_to_x">Nachricht an %s senden</string>
 </resources>

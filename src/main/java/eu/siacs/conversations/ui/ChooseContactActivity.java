@@ -1,8 +1,10 @@
 package eu.siacs.conversations.ui;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +34,7 @@ public class ChooseContactActivity extends AbstractSearchableListItemActivity {
 
 	private Set<Contact> selected;
 	private Set<String> filterContacts;
+	public static final String EXTRA_TITLE_RES_ID = "extra_title_res_id";
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -77,6 +80,8 @@ public class ChooseContactActivity extends AbstractSearchableListItemActivity {
 							String[] selection = getSelectedContactJids();
 							data.putExtra("contacts", selection);
 							data.putExtra("multiple", true);
+							data.putExtra(EXTRA_ACCOUNT,request.getStringExtra(EXTRA_ACCOUNT));
+							data.putExtra("subject", request.getStringExtra("subject"));
 							setResult(RESULT_OK, data);
 							finish();
 							return true;
@@ -121,11 +126,28 @@ public class ChooseContactActivity extends AbstractSearchableListItemActivity {
 				data.putExtra("conversation",
 						request.getStringExtra("conversation"));
 				data.putExtra("multiple", false);
+				data.putExtra("subject", request.getStringExtra("subject"));
 				setResult(RESULT_OK, data);
 				finish();
 			}
 		});
 
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		Intent intent = getIntent();
+		@StringRes
+		int res = intent != null ? intent.getIntExtra(EXTRA_TITLE_RES_ID,R.string.title_activity_choose_contact) : R.string.title_activity_choose_contact;
+		ActionBar bar = getActionBar();
+		if (bar != null) {
+			try {
+				bar.setTitle(res);
+			} catch (Exception e) {
+				bar.setTitle(R.string.title_activity_choose_contact);
+			}
+		}
 	}
 
 	@Override
@@ -194,6 +216,7 @@ public class ChooseContactActivity extends AbstractSearchableListItemActivity {
 				data.putExtra("conversation",
 						request.getStringExtra("conversation"));
 				data.putExtra("multiple", false);
+				data.putExtra("subject", request.getStringExtra("subject"));
 				setResult(RESULT_OK, data);
 				finish();
 

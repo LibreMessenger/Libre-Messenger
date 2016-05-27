@@ -79,6 +79,7 @@
 	<string name="also_end_conversation">End this conversation afterwards</string>
 	<string name="choose_presence">Choose presence to contact</string>
 	<string name="send_unencrypted_message">Send unencrypted message</string>
+	<string name="send_message_to_x">Send message to %s</string>
 	<string name="send_otr_message">Send OTR encrypted message</string>
 	<string name="send_omemo_message">Send OMEMO encrypted message</string>
 	<string name="send_omemo_x509_message">Send v\\OMEMO encrypted message</string>
@@ -230,6 +231,7 @@
 	<string name="delete_bookmark">Delete bookmark</string>
 	<string name="bookmark_already_exists">This bookmark already exists</string>
 	<string name="action_edit_subject">Edit conference subject</string>
+	<string name="edit_subject_hint">The subject of this conference</string>
 	<string name="joining_conference">Joining conference…</string>
 	<string name="leave">Leave</string>
 	<string name="contact_added_you">Contact added you to contact list</string>
@@ -387,8 +389,9 @@
 	<string name="pref_show_dynamic_tags_summary">Display read-only tags underneath contacts</string>
 	<string name="enable_notifications">Enable notifications</string>
 	<string name="no_conference_server_found">No conference server found</string>
-	<string name="conference_creation_failed">Conference creation failed!</string>
-	<string name="conference_created">Conference created!</string>
+	<string name="conference_creation_failed">Conference creation failed!</string>s
+	<string name="secret_accepted">Secret accepted!</string>
+	<string name="reset">Reset</string>
 	<string name="account_image_description">Account avatar</string>
 	<string name="copy_otr_clipboard_description">Copy OTR fingerprint to clipboard</string>
 	<string name="copy_omemo_clipboard_description">Copy OMEMO fingerprint to clipboard</string>
@@ -633,5 +636,11 @@
 	<string name="action_end_conversation_muc">Leave conference</string>
 	<string name="leave_conference_warning">Do you really want to leave this conference? You will no longer be notified of new messages until joining the conference again.</string>
 	<string name="show_password">Show password</string>
+	<string name="registration_please_wait">Registration failed: Try again later</string>
+	<string name="create_conference">Create conference</string>
+	<string name="join_or_create_conference">Join or create conference</string>
+	<string name="conference_subject">Subject</string>
+	<string name="choose_participants">Choose participants</string>
+	<string name="creating_conference">Creating conference…</string>
 
 </resources>

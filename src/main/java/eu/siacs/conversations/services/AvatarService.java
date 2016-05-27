@@ -64,7 +64,7 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
 
 	public Bitmap get(final MucOptions.User user, final int size, boolean cachedOnly) {
 		Contact c = user.getContact();
-		if (c != null && (c.getProfilePhoto() != null || c.getAvatar() != null)) {
+		if (c != null && (c.getProfilePhoto() != null || c.getAvatar() != null || user.getAvatar() == null)) {
 			return get(c, size, cachedOnly);
 		} else {
 			return getImpl(user, size, cachedOnly);
@@ -380,12 +380,21 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
 
 	private boolean drawTile(Canvas canvas, String name, int left, int top, int right, int bottom) {
 		if (name != null) {
-			final String letter = name.isEmpty() ? "X" : name.substring(0, 1);
+			final String letter = getFirstLetter(name);
 			final int color = UIHelper.getColorForName(name);
 			drawTile(canvas, letter, color, left, top, right, bottom);
 			return true;
 		}
 		return false;
+	}
+
+	private static String getFirstLetter(String name) {
+		for(Character c : name.toCharArray()) {
+			if (Character.isLetterOrDigit(c)) {
+				return c.toString();
+			}
+		}
+		return "X";
 	}
 
 	private boolean drawTile(Canvas canvas, Uri uri, int left, int top, int right, int bottom) {
