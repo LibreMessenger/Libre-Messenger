@@ -1738,11 +1738,11 @@ public class ConversationActivity extends XmppActivity
 	}
 
 	public boolean useSendButtonToIndicateStatus() {
-		return getPreferences().getBoolean("send_button_status", false);
+		return getPreferences().getBoolean("send_button_status", true);
 	}
 
 	public boolean indicateReceived() {
-		return getPreferences().getBoolean("indicate_received", false);
+		return getPreferences().getBoolean("indicate_received", true);
 	}
 
 	public boolean useWhiteBackground() {
