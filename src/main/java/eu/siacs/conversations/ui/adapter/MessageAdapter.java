@@ -51,6 +51,7 @@ import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.entities.Message.FileParams;
 import eu.siacs.conversations.entities.Transferable;
 import eu.siacs.conversations.ui.ConversationActivity;
+import eu.siacs.conversations.ui.ShowFullscreenMessageActivity;
 import eu.siacs.conversations.utils.CryptoHelper;
 import eu.siacs.conversations.utils.GeoHelper;
 import eu.siacs.conversations.utils.UIHelper;
@@ -746,31 +747,52 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 		return view;
 	}
 
-	public void openDownloadable(Message message) {
-		DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
-		if (!file.exists()) {
-			Toast.makeText(activity,R.string.file_deleted,Toast.LENGTH_SHORT).show();
-			return;
-		}
-		Intent openIntent = new Intent(Intent.ACTION_VIEW);
-		String mime = file.getMimeType();
-		if (mime == null) {
-			mime = "*/*";
-		}
-		openIntent.setDataAndType(Uri.fromFile(file), mime);
-		PackageManager manager = activity.getPackageManager();
-		List<ResolveInfo> infos = manager.queryIntentActivities(openIntent, 0);
-		if (infos.size() == 0) {
-			openIntent.setDataAndType(Uri.fromFile(file),"*/*");
-		}
-		try {
-			getContext().startActivity(openIntent);
-			return;
-		}  catch (ActivityNotFoundException e) {
-			//ignored
-		}
-		Toast.makeText(activity,R.string.no_application_found_to_open_file,Toast.LENGTH_SHORT).show();
-	}
+    public void openDownloadable(Message message) {
+        DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
+        if (!file.exists()) {
+            Toast.makeText(activity, R.string.file_deleted, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String mime = file.getMimeType();
+
+        if (mime.startsWith("image/")) {
+            Intent intent = new Intent(getContext(), ShowFullscreenMessageActivity.class);
+            intent.putExtra("image", Uri.fromFile(file));
+            try {
+                activity.startActivity(intent);
+                return;
+            } catch (ActivityNotFoundException e) {
+                //ignored
+            }
+        } else if (mime.startsWith("video/")) {
+            Intent intent = new Intent(getContext(), ShowFullscreenMessageActivity.class);
+            intent.putExtra("video", Uri.fromFile(file));
+            try {
+                activity.startActivity(intent);
+                return;
+            } catch (ActivityNotFoundException e) {
+                //ignored
+            }
+        }
+        Intent openIntent = new Intent(Intent.ACTION_VIEW);
+        if (mime == null) {
+            mime = "*/*";
+        }
+        openIntent.setDataAndType(Uri.fromFile(file), mime);
+        PackageManager manager = activity.getPackageManager();
+        List<ResolveInfo> infos = manager.queryIntentActivities(openIntent, 0);
+        if (infos.size() == 0) {
+            openIntent.setDataAndType(Uri.fromFile(file), "*/*");
+        }
+        try {
+            getContext().startActivity(openIntent);
+            return;
+        } catch (ActivityNotFoundException e) {
+            //ignored
+        }
+        Toast.makeText(activity, R.string.no_application_found_to_open_file, Toast.LENGTH_SHORT).show();
+
+    }
 
 	public void showLocation(Message message) {
 		for(Intent intent : GeoHelper.createGeoIntentsFromMessage(message)) {

@@ -29,6 +29,7 @@
         android:label="@string/app_name"
         android:theme="@style/ConversationsTheme"
         android:name="android.support.multidex.MultiDexApplication"
+        android:largeHeap="true"
         tools:replace="android:label">
 
         <service android:name=".services.XmppConnectionService"/>
@@ -200,6 +201,11 @@
                 <action android:name="eu.siacs.conversations.location.show" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.ShowFullscreenMessageActivity"
+            android:configChanges="orientation|screenSize">
+
         </activity>
         <activity
             android:name=".ui.TrustKeysActivity"
