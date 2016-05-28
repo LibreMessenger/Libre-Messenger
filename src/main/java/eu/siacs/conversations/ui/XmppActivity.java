@@ -1193,18 +1193,22 @@ public abstract class XmppActivity extends Activity {
 		return xmppConnectionService.getAvatarService();
 	}
 
-	public void loadBitmap(Message message, ImageView imageView) {
-		File bm;
-		bm = xmppConnectionService.getFileBackend().getFile(message, true);
-		Glide.with(this)
-				.load(bm)
-				.override(400, 400)
-				.fitCenter()
-				//.centerCrop()
-				.diskCacheStrategy(DiskCacheStrategy.RESULT)
-				.into(imageView);
+    public void loadBitmap(Message message, ImageView imageView) {
+        File bm;
+        bm = xmppConnectionService.getFileBackend().getFile(message, true);
+        try {
+            Glide.with(this)
+                    .load(bm)
+                    .override(400, 400)
+                    .fitCenter()
+                    //.centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                    .into(imageView);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-	}
+    }
 
     public void loadVideoPreview(Message message, ImageView imageView) {
         File vp = xmppConnectionService.getFileBackend().getFile(message, true);
@@ -1214,7 +1218,7 @@ public abstract class XmppActivity extends Activity {
             retriever.setDataSource(this, Uri.fromFile(vp));
             String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
             long microSecond = Long.parseLong(time);
-            int duration = (int) microSecond / 2; //preview at half of video
+            int duration = (int) Math.ceil(microSecond / 2); //preview at half of video
             BitmapPool bitmapPool = Glide.get(getApplicationContext()).getBitmapPool();
             VideoBitmapDecoder videoBitmapDecoder = new VideoBitmapDecoder(duration);
             FileDescriptorBitmapDecoder fileDescriptorBitmapDecoder = new FileDescriptorBitmapDecoder(videoBitmapDecoder, bitmapPool, DecodeFormat.PREFER_ARGB_8888);

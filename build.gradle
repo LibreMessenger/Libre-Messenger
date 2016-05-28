@@ -17,6 +17,12 @@ repositories {
     mavenCentral()
 }
 
+allprojects {
+    repositories {
+        maven { url "https://jitpack.io" }
+    }
+}
+
 configurations {
     playstoreCompile
 }
@@ -24,7 +30,6 @@ configurations {
 dependencies {
     compile project(':libs:MemorizingTrustManager')
     compile project(':libs:audiowife')
-
 
     playstoreCompile 'com.google.android.gms:play-services-gcm:9.0.0'
     compile 'org.sufficientlysecure:openpgp-api:10.0'
@@ -48,6 +53,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.0.0-beta1'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.github.bumptech.glide:glide:3.5.2'
+    compile 'com.github.chrisbanes:PhotoView:1.2.6'
+    compile 'com.github.rtoshiro.fullscreenvideoview:fullscreenvideoview:1.1.0'
     compile 'com.google.android.gms:play-services-location:9.0.0'
     compile 'com.google.android.gms:play-services-maps:9.0.0'
 }
@@ -66,7 +73,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 144
-        versionName "1.12.3"
+        versionName "1.12.4"
         archivesBaseName += "-$versionName"
         applicationId "eu.siacs.conversations"
 
