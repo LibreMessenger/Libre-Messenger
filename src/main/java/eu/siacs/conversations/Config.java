@@ -40,6 +40,8 @@ public final class Config {
 	public static final String XMPP_IP = "185.26.156.37"; // set to null means disable
 	public static final Integer[] XMPP_Ports = {61000, 65000}; // set to null means disable
 
+	public static final String BUG_REPORTS = "bugs@pix-art.de";
+
 	public static final String DOMAIN_LOCK = "pix-art.de"; //only allow account creation for this domain
 	public static final String MAGIC_CREATE_DOMAIN = "pix-art.de";
 	public static final boolean SINGLE_ACCOUNT = true; //set to true to allow only one account
@@ -55,6 +57,7 @@ public final class Config {
 	public static final boolean USE_ALWAYS_FOREGROUND = true; //if set to true the foreground service is always enabled
 
 	public static final int PING_MAX_INTERVAL = 300;
+	public static final int IDLE_PING_INTERVAL = 600; //540 is minimum according to docs;
 	public static final int PING_MIN_INTERVAL = 30;
 	public static final int PING_TIMEOUT = 15;
 	public static final int SOCKET_TIMEOUT = 15;
