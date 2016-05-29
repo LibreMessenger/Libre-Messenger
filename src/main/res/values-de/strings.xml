@@ -223,8 +223,8 @@
   <string name="save_as_bookmark">Zur Kontaktliste hinzufügen</string>
   <string name="delete_bookmark">Von Kontaktliste entfernen</string>
   <string name="bookmark_already_exists">Die Konferenz befindet sich bereits auf deiner Kontaktliste</string>
-  <string name="action_edit_subject">Konferenz-Thema bearbeiten</string>
-  <string name="joining_conference">Konferenz wird beigetreten…</string>
+  <string name="action_edit_subject">Titel dieser Konferenz bearbeiten</string>
+  <string name="you">Du</string>
   <string name="leave">Verlassen</string>
   <string name="contact_added_you">Der Kontakt hat dich zur Kontaktliste hinzugefügt</string>
   <string name="add_back">Auch hinzufügen</string>
@@ -278,7 +278,7 @@
   <string name="pref_use_send_button_to_indicate_status_summary">\"Senden\"-Schaltfläche einfärben, um den Online-Status des Kontakts anzuzeigen</string>
   <string name="pref_expert_options_other">Sonstiges</string>
   <string name="pref_conference_name">Konferenz-Name</string>
-  <string name="pref_conference_name_summary">Konferenz-Thema statt Raum-JID als Namen verwenden</string>
+  <string name="pref_conference_name_summary">Titel von Konferenzen anstatt JID als Namen verwenden</string>
   <string name="toast_message_otr_fingerprint">OTR-Fingerabdruck in die Zwischenablage kopiert!</string>
   <string name="toast_message_omemo_fingerprint">OMEMO-Fingerabdruck in die Zwischenablage kopiert!</string>
   <string name="conference_banned">Du wurdest von der Konferenz ausgeschlossen</string>
@@ -609,4 +609,5 @@
   <string name="mgmt_account_enable"></string>
   <string name="registration_please_wait">Registrierung fehlgeschlagen: Bitte später versuchen</string>
   <string name="send_message_to_x">Nachricht an %s senden</string>
+
 </resources>

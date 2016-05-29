@@ -1,5 +1,12 @@
 ###Changelog
 
+####Version 1.12.4
+* new create conference dialog
+* show first unread message on top
+* show geo uri as links
+* circumvent long message DOS
+* integrate simple videoplayer and image viewer
+
 ####Version 1.12.3
 * show offline members in conferences
 * various bug fixes
