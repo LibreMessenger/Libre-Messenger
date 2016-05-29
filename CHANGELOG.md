@@ -1,5 +1,8 @@
 ###Changelog
 
+####Version 1.12.5
+* bug fixes
+
 ####Version 1.12.4
 * new create conference dialog
 * show first unread message on top
