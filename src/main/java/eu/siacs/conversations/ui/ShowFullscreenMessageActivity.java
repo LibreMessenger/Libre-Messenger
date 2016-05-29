@@ -35,11 +35,12 @@ public class ShowFullscreenMessageActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         WindowManager.LayoutParams layout = getWindow().getAttributes();
         layout.screenBrightness = 1;
         getWindow().setAttributes(layout);
-        super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
+        getWindow().addFlags(layout.FLAG_KEEP_SCREEN_ON);
         getActionBar().hide();
         setContentView(R.layout.activity_fullscreen_message);
         mImage = (PhotoView) findViewById(R.id.message_image_view);
@@ -116,6 +117,7 @@ public class ShowFullscreenMessageActivity extends Activity {
         WindowManager.LayoutParams layout = getWindow().getAttributes();
         layout.screenBrightness = -1;
         getWindow().setAttributes(layout);
+        getWindow().clearFlags(layout.FLAG_KEEP_SCREEN_ON);
         super.onStop();
     }
 }
