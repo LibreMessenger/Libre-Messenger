@@ -43,6 +43,7 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.axolotl.XmppAxolotlSession;
 import eu.siacs.conversations.entities.Account;
@@ -317,6 +318,9 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 				body = message.getMergedBody().replaceAll("^" + Message.ME_COMMAND, nick + " ");
 			} catch (ArrayIndexOutOfBoundsException e) {
 				body = message.getMergedBody();
+			}
+			if (body.length() > Config.MAX_DISPLAY_MESSAGE_CHARS) {
+				body = body.substring(0, Config.MAX_DISPLAY_MESSAGE_CHARS)+"\u2026";
 			}
 			final SpannableString formattedBody = new SpannableString(body);
 			int i = body.indexOf(Message.MERGE_SEPARATOR);
