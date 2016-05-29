@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -34,6 +35,9 @@ public class ShowFullscreenMessageActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        WindowManager.LayoutParams layout = getWindow().getAttributes();
+        layout.screenBrightness = 1;
+        getWindow().setAttributes(layout);
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         getActionBar().hide();
@@ -106,5 +110,12 @@ public class ShowFullscreenMessageActivity extends Activity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+    }
+
+    public void onStop () {
+        WindowManager.LayoutParams layout = getWindow().getAttributes();
+        layout.screenBrightness = -1;
+        getWindow().setAttributes(layout);
+        super.onStop();
     }
 }
