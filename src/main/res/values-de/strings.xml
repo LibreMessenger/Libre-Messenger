@@ -609,5 +609,6 @@
   <string name="mgmt_account_enable"></string>
   <string name="registration_please_wait">Registrierung fehlgeschlagen: Bitte später versuchen</string>
   <string name="send_message_to_x">Nachricht an %s senden</string>
+  <string name="joining_conference">Konferenz beitreten…</string>
 
 </resources>
