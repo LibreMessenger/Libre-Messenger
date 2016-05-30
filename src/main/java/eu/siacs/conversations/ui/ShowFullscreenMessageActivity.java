@@ -102,6 +102,7 @@ public class ShowFullscreenMessageActivity extends Activity {
             mVideo.setVisibility(View.VISIBLE);
             mVideo.setVideoURI(uri);
             mFullscreenbutton.setVisibility(View.INVISIBLE);
+            mVideo.setShouldAutoplay(true);
 
         } catch (IOException e) {
             e.printStackTrace();
