@@ -1,5 +1,10 @@
 ###Changelog
 
+####Version 1.13.0
+* changed applicationId
+* play videos directly without touching play button
+* bug fixes
+
 ####Version 1.12.5
 * bug fixes
 
