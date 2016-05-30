@@ -35,7 +35,7 @@ public class XmppUri {
 		String scheme = uri.getScheme();
 		String host = uri.getHost();
 		List<String> segments = uri.getPathSegments();
-		if ("https".equalsIgnoreCase(scheme) && "conversations.im".equalsIgnoreCase(host) && segments.size() >= 3) {
+		if ("https".equalsIgnoreCase(scheme) && "jabber.pix-art.de".equalsIgnoreCase(host) && segments.size() >= 3) {
 			// sample : https://conversations.im/i/foo/bar.com
 			jid = segments.get(1)+"@"+segments.get(2);
 		} else if ("xmpp".equalsIgnoreCase(scheme)) {
