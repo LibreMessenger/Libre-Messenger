@@ -1,4 +1,4 @@
 include ':libs:MemorizingTrustManager'
 include ':libs:audiowife'
-rootProject.name = 'Conversations'
+rootProject.name = 'Pix-Art Messenger'
 
