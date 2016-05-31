@@ -74,7 +74,8 @@ public class FileBackend {
 	}
 
 	public void updateMediaScanner(File file) {
-		if (file.getAbsolutePath().startsWith(getConversationsImageDirectory())) {
+		if (file.getAbsolutePath().startsWith(getConversationsImageDirectory())
+				|| file.getAbsolutePath().startsWith(getConversationsVideoDirectory())) {
 			Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
 			intent.setData(Uri.fromFile(file));
 			mXmppConnectionService.sendBroadcast(intent);
@@ -106,17 +107,21 @@ public class FileBackend {
 		if (path == null) {
 			path = message.getUuid();
 		}
-		if (path.startsWith("/")) {
-			file = new DownloadableFile(path);
-		} else {
-			String mime = message.getMimeType();
-			if (mime != null && mime.startsWith("image")) {
-				file = new DownloadableFile(getConversationsImageDirectory() + path);
-			} else {
-				file = new DownloadableFile(getConversationsFileDirectory() + path);
-			}
-		}
-		if (encrypted) {
+        if (path.startsWith("/")) {
+            file = new DownloadableFile(path);
+        } else {
+            String mime = message.getMimeType();
+            if (mime != null && mime.startsWith("image")) {
+                file = new DownloadableFile(getConversationsImageDirectory() + path);
+            } else if (mime != null && mime.startsWith("video")) {
+                file = new DownloadableFile(getConversationsVideoDirectory() + path);
+            } else if (mime != null && mime.startsWith("audio")) {
+                file = new DownloadableFile(getConversationsAudioDirectory() + path);
+            } else {
+                file = new DownloadableFile(getConversationsFileDirectory() + path);
+            }
+        }
+        if (encrypted) {
 			return new DownloadableFile(getConversationsFileDirectory() + file.getName() + ".pgp");
 		} else {
 			return file;
@@ -147,13 +152,19 @@ public class FileBackend {
 	}
 
 	public static String getConversationsFileDirectory() {
-		return  Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pix-Art Messenger/";
+		return  Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pix-Art Messenger/files/";
 	}
 
 	public static String getConversationsImageDirectory() {
-		return Environment.getExternalStoragePublicDirectory(
-				Environment.DIRECTORY_PICTURES).getAbsolutePath()
-			+ "/Pix-Art Messenger/";
+		return  Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pix-Art Messenger/images/";
+	}
+
+	public static String getConversationsVideoDirectory() {
+		return  Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pix-Art Messenger/videos/";
+	}
+
+	public static String getConversationsAudioDirectory() {
+		return  Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pix-Art Messenger/audios/";
 	}
 
 	public Bitmap resize(Bitmap originalBitmap, int size) {
