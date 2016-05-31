@@ -4,10 +4,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,43 +22,26 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 
+import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.persistance.DatabaseBackend;
 
 public class WelcomeActivity extends Activity {
 
+    boolean dbExist = checkDatabase();
+    boolean backup_existing = false;
+
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.welcome);
-        boolean dbExist = checkDatabase();
-        boolean backup_existing = false;
+
 
         //check if there is a backed up database --
         if (dbExist) {
-            //copy db from public storage to private storage
             backup_existing = true;
-        } else {
-            //if copy fails, show dialog
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.import_failed)
-                    .setCancelable(false)
-                    .setPositiveButton(R.string.create_account, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            Intent intent = new Intent(WelcomeActivity.this, MagicCreateActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                            startActivity(intent);
-                        }
-                    })
-                    .setNegativeButton(R.string.use_existing_accout, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            startActivity(new Intent(WelcomeActivity.this, EditAccountActivity.class));
-                        }
-                    });
-            AlertDialog alert = builder.create();
-            alert.show();
-            //throw new Error("Error copying database");
         }
 
         final Button ImportDatabase = (Button) findViewById(R.id.import_database);
@@ -68,19 +55,11 @@ public class WelcomeActivity extends Activity {
         ImportDatabase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //ToDo add import DB from local storage to system storage and wait until copy is complete
                 try {
                     ImportDatabase();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                //ask user to uninstall old eu.siacs.conversations before restart
-
-                //restart app
-                Intent intent = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
             }
         });
 
@@ -112,6 +91,7 @@ public class WelcomeActivity extends Activity {
         try {
             String myPath = DB_PATH + DB_NAME;
             checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+            Log.d(Config.LOGTAG,"Backup found");
         } catch (SQLiteException e) {
             //database does't exist yet.
         }
@@ -139,12 +119,61 @@ public class WelcomeActivity extends Activity {
         while ((length = myInput.read(buffer)) > 0) {
             myOutput.write(buffer, 0, length);
         }
+        Log.d(Config.LOGTAG,"Starting import of backup");
 
         // Close and clear the streams
         myOutput.flush();
         myOutput.close();
         myInput.close();
+
+        Log.d(Config.LOGTAG, "New Features - Uninstall old version of Pix-Art Messenger");
+        if (isPackageInstalled("eu.siacs.conversations")) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.uninstall_app_text)
+                    .setPositiveButton(R.string.uninstall, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            //start the deinstallation of old version
+                            if (isPackageInstalled("eu.siacs.conversations")) {
+                                Uri packageURI_VR = Uri.parse("package:eu.siacs.conversations");
+                                Intent uninstallIntent_VR = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageURI_VR);
+                                if (uninstallIntent_VR.resolveActivity(getPackageManager()) != null) {
+                                    startActivity(uninstallIntent_VR);
+                                }
+                            }
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Log.d(Config.LOGTAG, "New Features - Uninstall cancled");
+                            restart();
+                        }
+                    });
+            builder.create().show();
+        } else {
+            restart();
+        }
+
     }
 
+    private void restart() {
+        //restart app
+        Log.d(Config.LOGTAG, "Restarting " + getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName()));
+        Intent intent = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        System.exit(0);
+    }
+
+    private boolean isPackageInstalled(String targetPackage) {
+        List<ApplicationInfo> packages;
+        PackageManager pm;
+        pm = getPackageManager();
+        packages = pm.getInstalledApplications(0);
+        for (ApplicationInfo packageInfo : packages) {
+            if (packageInfo.packageName.equals(targetPackage)) return true;
+        }
+        return false;
+    }
 
 }

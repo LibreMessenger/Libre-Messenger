@@ -346,7 +346,7 @@ public class ConversationActivity extends XmppActivity
 		}
 	}
 
-    public boolean isPackageInstalled(String targetPackage){
+    private boolean isPackageInstalled(String targetPackage){
         List<ApplicationInfo> packages;
         PackageManager pm;
         pm = getPackageManager();
@@ -1280,9 +1280,6 @@ public class ConversationActivity extends XmppActivity
 		if (!isConversationsOverviewVisable() || !isConversationsOverviewHideable()) {
 			sendReadMarkerIfNecessary(getSelectedConversation());
 		}
-
-	AppUpdate();
-
 	}
 
 	@Override
@@ -1368,6 +1365,10 @@ public class ConversationActivity extends XmppActivity
 			this.mConversationFragment.messagesView.invalidateViews();
 			this.mConversationFragment.setupIme();
 		}
+
+        if (xmppConnectionService.getAccounts().size() != 0) {
+            AppUpdate();
+        }
 
 		if (this.mPostponedActivityResult != null) {
 			this.onActivityResult(mPostponedActivityResult.first, RESULT_OK, mPostponedActivityResult.second);
