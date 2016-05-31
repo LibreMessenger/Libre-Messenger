@@ -1,9 +1,16 @@
 ###Changelog
 
+####Version 1.13.1
+* add database importer from local storage as backup
+* bug fixes
+
 ####Version 1.13.0
 * changed applicationId
 * play videos directly without touching play button
+
+####Version 1.12.6
 * bug fixes
+* add database exporter to local storage as backup
 
 ####Version 1.12.5
 * bug fixes

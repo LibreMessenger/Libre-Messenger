@@ -31,7 +31,7 @@ dependencies {
     compile project(':libs:MemorizingTrustManager')
     compile project(':libs:audiowife')
 
-    playstoreCompile 'com.google.android.gms:play-services-gcm:9.0.0'
+    playstoreCompile 'com.google.android.gms:play-services-gcm:9.0.1'
     compile 'org.sufficientlysecure:openpgp-api:10.0'
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
     compile 'com.android.support:support-v13:24.0.0-beta1'
@@ -55,8 +55,8 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.5.2'
     compile 'com.github.chrisbanes:PhotoView:1.2.6'
     compile 'com.github.rtoshiro.fullscreenvideoview:fullscreenvideoview:1.1.0'
-    compile 'com.google.android.gms:play-services-location:9.0.0'
-    compile 'com.google.android.gms:play-services-maps:9.0.0'
+    compile 'com.google.android.gms:play-services-location:9.0.1'
+    compile 'com.google.android.gms:play-services-maps:9.0.1'
 }
 
 ext {
