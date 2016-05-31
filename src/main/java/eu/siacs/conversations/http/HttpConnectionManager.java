@@ -1,7 +1,5 @@
 package eu.siacs.conversations.http;
 
-import android.os.Build;
-
 import org.apache.http.conn.ssl.StrictHostnameVerifier;
 
 import java.io.IOException;

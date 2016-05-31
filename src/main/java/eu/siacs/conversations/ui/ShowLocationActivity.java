@@ -10,9 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import eu.siacs.conversations.Config;
-import eu.siacs.conversations.R;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -23,6 +20,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 import java.util.Locale;
+
+import eu.siacs.conversations.Config;
+import eu.siacs.conversations.R;
 
 public class ShowLocationActivity extends Activity implements OnMapReadyCallback {
 

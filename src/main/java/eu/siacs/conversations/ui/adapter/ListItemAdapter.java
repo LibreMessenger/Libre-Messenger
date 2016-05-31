@@ -24,7 +24,6 @@ import eu.siacs.conversations.R;
 import eu.siacs.conversations.entities.ListItem;
 import eu.siacs.conversations.ui.XmppActivity;
 import eu.siacs.conversations.utils.UIHelper;
-import eu.siacs.conversations.xmpp.jid.Jid;
 
 public class ListItemAdapter extends ArrayAdapter<ListItem> {
 

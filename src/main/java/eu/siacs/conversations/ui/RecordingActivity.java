@@ -15,8 +15,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import eu.siacs.conversations.R;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -24,6 +22,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import eu.siacs.conversations.Config;
+import eu.siacs.conversations.R;
 
 public class RecordingActivity extends Activity implements View.OnClickListener {
 

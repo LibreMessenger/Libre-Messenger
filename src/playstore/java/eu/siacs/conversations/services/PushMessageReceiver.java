@@ -2,11 +2,8 @@ package eu.siacs.conversations.services;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
-
-import eu.siacs.conversations.Config;
 
 public class PushMessageReceiver extends GcmListenerService {
 

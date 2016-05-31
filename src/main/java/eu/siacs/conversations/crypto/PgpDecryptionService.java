@@ -2,14 +2,14 @@ package eu.siacs.conversations.crypto;
 
 import android.app.PendingIntent;
 
-import eu.siacs.conversations.entities.Message;
-import eu.siacs.conversations.services.XmppConnectionService;
-import eu.siacs.conversations.ui.UiCallback;
-
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+
+import eu.siacs.conversations.entities.Message;
+import eu.siacs.conversations.services.XmppConnectionService;
+import eu.siacs.conversations.ui.UiCallback;
 
 public class PgpDecryptionService {
 

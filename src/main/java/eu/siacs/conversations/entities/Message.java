@@ -5,7 +5,6 @@ import android.database.Cursor;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
 
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.crypto.axolotl.XmppAxolotlSession;

@@ -18,9 +18,6 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import eu.siacs.conversations.Config;
-import eu.siacs.conversations.R;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -35,6 +32,9 @@ import com.google.android.gms.maps.model.LatLng;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+
+import eu.siacs.conversations.Config;
+import eu.siacs.conversations.R;
 
 public class ShareLocationActivity extends Activity implements OnMapReadyCallback,
 		GoogleApiClient.ConnectionCallbacks,

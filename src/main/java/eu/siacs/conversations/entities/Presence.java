@@ -1,6 +1,5 @@
 package eu.siacs.conversations.entities;
 
-import java.lang.Comparable;
 import java.util.Locale;
 
 import eu.siacs.conversations.xml.Element;

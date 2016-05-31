@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.os.SystemClock;
 import android.util.Pair;
 
-import eu.siacs.conversations.crypto.PgpDecryptionService;
 import net.java.otr4j.crypto.OtrCryptoEngineImpl;
 import net.java.otr4j.crypto.OtrCryptoException;
 
@@ -23,6 +22,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.crypto.OtrService;
+import eu.siacs.conversations.crypto.PgpDecryptionService;
 import eu.siacs.conversations.crypto.axolotl.AxolotlService;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.xmpp.XmppConnection;
