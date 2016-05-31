@@ -642,5 +642,8 @@
 	<string name="conference_subject">Subject</string>
 	<string name="choose_participants">Choose participants</string>
 	<string name="creating_conference">Creating conference…</string>
+	<string name="import_text">There is a backup on your device. Shall the backup be imported?</string>
+	<string name="import_database">import backup</string>
+	<string name="import_failed">The import has failed</string>
 
 </resources>

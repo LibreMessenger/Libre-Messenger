@@ -103,11 +103,10 @@ public class UpdaterActivity extends Activity {
     private void ExportDatabase() throws IOException {
 
         // Get hold of the db:
-        InputStream myInput = new
-                FileInputStream(this.getDatabasePath(DatabaseBackend.DATABASE_NAME));
+        InputStream myInput = new FileInputStream(this.getDatabasePath(DatabaseBackend.DATABASE_NAME));
 
         // Set the output folder on the SDcard
-        File directory = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pix-Art Messenger/.Database/");
+        File directory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger/.Database/");
 
         // Create the folder if it doesn't exist:
         if (!directory.exists()) {
