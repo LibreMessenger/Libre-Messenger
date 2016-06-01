@@ -54,7 +54,7 @@ import eu.siacs.conversations.utils.FileUtils;
 import eu.siacs.conversations.xmpp.pep.Avatar;
 
 public class FileBackend {
-	private final SimpleDateFormat imageDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
+	private final SimpleDateFormat fileDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
 
 	private XmppConnectionService mXmppConnectionService;
 
@@ -105,7 +105,8 @@ public class FileBackend {
 		final DownloadableFile file;
 		String path = message.getRelativeFilePath();
 		if (path == null) {
-			path = message.getUuid();
+            String filename = fileDateFormat.format(new Date(message.getTimeSent()));
+			path = filename;
 		}
         if (path.startsWith("/")) {
             file = new DownloadableFile(path);
@@ -262,7 +263,8 @@ public class FileBackend {
 		Log.d(Config.LOGTAG, "copy " + uri.toString() + " to private storage");
 		String mime = mXmppConnectionService.getContentResolver().getType(uri);
 		String extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mime);
-		message.setRelativeFilePath(message.getUuid() + "." + extension);
+        String filename = fileDateFormat.format(new Date(message.getTimeSent()));
+		message.setRelativeFilePath(filename + "." + extension);
 		copyFileToPrivateStorage(mXmppConnectionService.getFileBackend().getFile(message), uri);
 	}
 
@@ -327,15 +329,16 @@ public class FileBackend {
 	}
 
 	public void copyImageToPrivateStorage(Message message, Uri image) throws FileCopyException {
+        String filename = fileDateFormat.format(new Date(message.getTimeSent()));
 		switch(Config.IMAGE_FORMAT) {
 			case JPEG:
-				message.setRelativeFilePath(message.getUuid()+".jpg");
+				message.setRelativeFilePath(filename+".jpg");
 				break;
 			case PNG:
-				message.setRelativeFilePath(message.getUuid()+".png");
+				message.setRelativeFilePath(filename+".png");
 				break;
 			case WEBP:
-				message.setRelativeFilePath(message.getUuid()+".webp");
+				message.setRelativeFilePath(filename+".webp");
 				break;
 		}
 		copyImageToPrivateStorage(getFile(message), image);
@@ -389,7 +392,7 @@ public class FileBackend {
 		pathBuilder.append('/');
 		pathBuilder.append("Camera");
 		pathBuilder.append('/');
-		pathBuilder.append("IMG_" + this.imageDateFormat.format(new Date()) + ".jpg");
+		pathBuilder.append("IMG_" + this.fileDateFormat.format(new Date()) + ".jpg");
 		Uri uri = Uri.parse("file://" + pathBuilder.toString());
 		File file = new File(uri.toString());
 		file.getParentFile().mkdirs();

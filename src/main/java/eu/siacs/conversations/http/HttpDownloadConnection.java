@@ -10,6 +10,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.CancellationException;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -39,6 +42,8 @@ public class HttpDownloadConnection implements Transferable {
 	private int mProgress = 0;
 	private boolean mUseTor = false;
 	private boolean canceled = false;
+
+	private final SimpleDateFormat fileDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
 
 	public HttpDownloadConnection(HttpConnectionManager manager) {
 		this.mHttpConnectionManager = manager;
@@ -88,7 +93,8 @@ public class HttpDownloadConnection implements Transferable {
 			} else {
 				extension = lastPart;
 			}
-			message.setRelativeFilePath(message.getUuid() + "." + extension);
+			String filename = fileDateFormat.format(new Date(message.getTimeSent()));
+			message.setRelativeFilePath(filename + "." + extension);
 			this.file = mXmppConnectionService.getFileBackend().getFile(message, false);
 			String reference = mUrl.getRef();
 			if (reference != null && reference.length() == 96) {

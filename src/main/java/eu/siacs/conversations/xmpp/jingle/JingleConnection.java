@@ -6,7 +6,9 @@ import android.util.Pair;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -35,6 +37,7 @@ import eu.siacs.conversations.xmpp.jingle.stanzas.Reason;
 import eu.siacs.conversations.xmpp.stanzas.IqPacket;
 
 public class JingleConnection implements Transferable {
+	private final SimpleDateFormat fileDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
 
 	private JingleConnectionManager mJingleConnectionManager;
 	private XmppConnectionService mXmppConnectionService;
@@ -316,17 +319,18 @@ public class JingleConnection implements Transferable {
 			if (fileNameElement != null) {
 				String[] filename = fileNameElement.getContent()
 						.toLowerCase(Locale.US).toLowerCase().split("\\.");
+				String filename_new = fileDateFormat.format(new Date(message.getTimeSent()));
 				String extension = filename[filename.length - 1];
 				if (VALID_IMAGE_EXTENSIONS.contains(extension)) {
 					message.setType(Message.TYPE_IMAGE);
-					message.setRelativeFilePath(message.getUuid()+"."+extension);
+					message.setRelativeFilePath(filename_new+"."+extension);
 				} else if (VALID_CRYPTO_EXTENSIONS.contains(
 						filename[filename.length - 1])) {
 					if (filename.length == 3) {
 						extension = filename[filename.length - 2];
 						if (VALID_IMAGE_EXTENSIONS.contains(extension)) {
 							message.setType(Message.TYPE_IMAGE);
-							message.setRelativeFilePath(message.getUuid()+"."+extension);
+							message.setRelativeFilePath(filename_new+"."+extension);
 						} else {
 							message.setType(Message.TYPE_FILE);
 						}
@@ -350,7 +354,7 @@ public class JingleConnection implements Transferable {
 							suffix = suffix.substring(0,suffix.length() - 4);
 						}
 					}
-					message.setRelativeFilePath(message.getUuid()+"_"+suffix);
+					message.setRelativeFilePath(filename_new+"_"+suffix);
 				}
 				long size = Long.parseLong(fileSize.getContent());
 				message.setBody(Long.toString(size));
