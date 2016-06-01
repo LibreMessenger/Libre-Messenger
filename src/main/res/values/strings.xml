@@ -627,10 +627,10 @@
 	<string name="presence_dnd">Busy</string>
 	<string name="secure_password_generated">A secure password has been generated</string>
 	<string name="device_does_not_support_battery_op">Your device does not support opting out of battery optimization</string>
-  <string name="share">Share</string>
+	<string name="share">Share</string>
 	<string name="share_location">Share location</string>
-  <string name="location_sharing_disabled">Location sharing is disabled in settings</string>
-  <string name="locating">Locating…</string>
+	<string name="location_sharing_disabled">Location sharing is disabled in settings</string>
+	<string name="locating">Locating…</string>
 	<string name="uninstall_plugins">We have integrated the VoiceRecorder and ShareLocation plugin directly into the messenger. You should uninstall the plugins.</string>
 	<string name="uninstall">Uninstall</string>
 	<string name="action_end_conversation_muc">Leave conference</string>
@@ -646,5 +646,5 @@
 	<string name="import_database">Import backup</string>
 	<string name="uninstall_app_text">There is an old version of Pix-Art Messenger or Conversations installed. If you have an old Pix-Art Messenger installed, you should uninstall this version. After uninstalled the old versoin, you should choose \'import backup\' again and we will import your data to the new version.</string>
 	<string name="you">You</string>
-
+	<string name="invite_again">Invite again</string>
 </resources>
