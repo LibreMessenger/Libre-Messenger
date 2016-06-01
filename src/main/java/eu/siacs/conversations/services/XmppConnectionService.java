@@ -1790,6 +1790,7 @@ public class XmppConnectionService extends Service {
 		}
 		for (Account account : getAccounts()) {
 			if (account.getStatus() == Account.State.ONLINE) {
+				account.deactivateGracePeriod();
 				XmppConnection connection = account.getXmppConnection();
 				if (connection != null && connection.getFeatures().csi()) {
 					connection.sendActive();
