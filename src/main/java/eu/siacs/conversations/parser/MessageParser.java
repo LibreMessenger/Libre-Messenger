@@ -7,8 +7,10 @@ import android.util.Pair;
 import net.java.otr4j.session.Session;
 import net.java.otr4j.session.SessionStatus;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -53,7 +55,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
 				conversation.setOutgoingChatState(state);
 				if (state == ChatState.ACTIVE || state == ChatState.COMPOSING) {
 					mXmppConnectionService.markRead(conversation);
-					account.activateGracePeriod();
+					activateGracePeriod(account);
 				}
 				return false;
 			} else {
@@ -500,7 +502,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
 				if (status == Message.STATUS_SEND || status == Message.STATUS_SEND_RECEIVED) {
 					mXmppConnectionService.markRead(conversation);
 					if (query == null) {
-						account.activateGracePeriod();
+						activateGracePeriod(account);
 					}
 				} else {
 					message.markUnread();
@@ -640,5 +642,13 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
 					packet.getType());
 			mXmppConnectionService.sendMessagePacket(account, receipt);
 		}
+	}
+
+	private static SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
+
+	private void activateGracePeriod(Account account) {
+		long duration = mXmppConnectionService.getPreferences().getLong("race_period_length", 144) * 1000;
+		Log.d(Config.LOGTAG,account.getJid().toBareJid()+": activating grace period till "+TIME_FORMAT.format(new Date(System.currentTimeMillis() + duration)));
+		account.activateGracePeriod(duration);
 	}
 }

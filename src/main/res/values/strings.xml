@@ -114,6 +114,8 @@
 	<string name="pref_led_summary">Blink notification light when a new message arrives</string>
 	<string name="pref_sound">Ringtone</string>
 	<string name="pref_sound_summary">Play sound when a new message arrives</string>
+	<string name="pref_notification_grace_period">Grace Period</string>
+	<string name="pref_notification_grace_period_summary">The length of time Conversations keeps quite after seeing activity on another device</string>
 	<string name="pref_advanced_options">Advanced</string>
 	<string name="pref_send_crash">Send crash reports</string>
 	<string name="pref_send_crash_summary">By sending in stack traces you are helping the ongoing development of Pix-Art Messenger</string>
@@ -650,4 +652,7 @@
 	<string name="invite_again">Invite again</string>
 	<string name="inviteUser_Subject">has invited you via</string>
 	<string name="InviteText">Hello,\n\nthe user %s has invited you to Pix-Art Messenger. If you are using Android, give it a try and click the following link to start over...</string>
+	<string name="gp_short">Short</string>
+	<string name="gp_medium">Medium</string>
+	<string name="gp_long">Long</string>
 </resources>
