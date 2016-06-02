@@ -32,7 +32,7 @@
 
     <item
         android:id="@+id/action_mam_prefs"
-        android:icon="@drawable/ic_backup_white_24dp"
+        android:icon="@drawable/ic_cloud_white_24dp"
         android:showAsAction="always"
         android:title="@string/mam_prefs"/>
 
