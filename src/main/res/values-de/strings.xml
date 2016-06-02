@@ -616,5 +616,6 @@
   <string name="InviteText">Hallo,\n\n%s hat dich zu einem Gespräch mit Pix-Art Messenger eingeladen. Falls du Android Nutzer bist, probiere es aus und klicke folgenden Link...</string>
   <string name="inviteUser_Subject">hat dich eingeladen über</string>
   <string name="invite_again">Erneut einladen</string>
+  <string name="download_failed_could_not_write_file">Download fehlgeschlagen: Datei kann nicht gespeichert werden</string>
 
 </resources>
