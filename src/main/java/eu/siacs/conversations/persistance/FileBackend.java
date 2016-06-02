@@ -168,6 +168,10 @@ public class FileBackend {
 		return  Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pix-Art Messenger/audios/";
 	}
 
+	public static String getConversationsDirectory() {
+		return  Environment.getExternalStorageDirectory().getAbsolutePath()+"/Pix-Art Messenger/";
+	}
+
 	public Bitmap resize(Bitmap originalBitmap, int size) {
 		int w = originalBitmap.getWidth();
 		int h = originalBitmap.getHeight();
