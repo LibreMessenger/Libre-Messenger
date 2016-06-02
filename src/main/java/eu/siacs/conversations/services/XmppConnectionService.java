@@ -870,7 +870,7 @@ public class XmppConnectionService extends Service {
 
 	public XmppConnection createConnection(final Account account) {
 		final SharedPreferences sharedPref = getPreferences();
-		account.setResource(sharedPref.getString("resource", getString(R.string.default_resource))
+		account.setResource(sharedPref.getString("resource", "mobile")
 				.toLowerCase(Locale.getDefault()));
 		final XmppConnection connection = new XmppConnection(account, this);
 		connection.setOnMessagePacketReceivedListener(this.mMessageParser);
