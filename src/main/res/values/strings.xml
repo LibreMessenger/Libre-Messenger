@@ -273,11 +273,9 @@
 	<string name="pref_expert_options_summary">Please be careful with these</string>
 	<string name="title_activity_about">About Pix-Art Messenger</string>
 	<string name="pref_about_conversations_summary">Build and licensing information</string>
-	<string name="pref_about_message" translatable="false">Pix-Art Messenger is a fork of Conversations.
-			\n\nConversations • the very last word in instant messaging.
-			\n\nCopyright © 2014-2016 Daniel Gultsch
-			\n\nModified by Christian Schneppe
-			\n\nhttp://xmpp.pix-art.de
+	<string name="pref_about_message" translatable="false">Pix-Art Messenger
+			\n\nCopyright © 2014-2016 Christian Schneppe
+			\n\nhttp://jabber.pix-art.de
 			\n\nThis program is free software: you can redistribute it and/or modify
 			it under the terms of the GNU General Public License as published by
 			the Free Software Foundation, either version 3 of the License, or
@@ -288,8 +286,8 @@
 			GNU General Public License for more details.
 			\n\nYou should have received a copy of the GNU General Public License
 			along with this program. If not, see https://www.gnu.org/licenses
-			\n\nDownload the full original source code at https://github.com/siacs/Conversations
-			\n\nDownload the forked and modified source code at https://github.com/kriztan/Pix-Art-Messenger
+			\n\nDownload the full original source code at https://github.com/siacs/Conversations (Copyright © 2014-2016 Daniel Gultsch)
+			\n\nDownload the modified source code at https://github.com/kriztan/Pix-Art-Messenger
 			\n\n\nLibraries
 			\n\nhttps://www.bouncycastle.org\n(The MIT License (MIT))
 			\n\nhttps://www.gnu.org/software/libidn\n(Apache License, Version 2.0)
@@ -310,6 +308,9 @@
 		    \n\nhttps://github.com/google/gson\n(Apache License, Version 2.0)
 		    \n\nhttp://hc.apache.org/httpcomponents-client\n(Apache License, Version 2.0)
 		    \n\nhttp://hc.apache.org/httpcomponents-core\n(Apache License, Version 2.0)
+			\n\nhttps://github.com/bumptech/glide\n(BSD, The MIT License (MIT) and Apache License, Version 2.0)
+			\n\nhttps://github.com/chrisbanes/PhotoView\n(Apache License, Version 2.0)
+			\n\nhttps://github.com/rtoshiro/FullscreenVideoView\n(Apache License, Version 2.0)
 	</string>
 	<string name="title_pref_quiet_hours">Quiet Hours</string>
 	<string name="title_pref_quiet_hours_start_time">Start time</string>
@@ -647,4 +648,6 @@
 	<string name="uninstall_app_text">There is an old version of Pix-Art Messenger or Conversations installed. If you have an old Pix-Art Messenger installed, you should uninstall this version. After uninstalled the old versoin, you should choose \'import backup\' again and we will import your data to the new version.</string>
 	<string name="you">You</string>
 	<string name="invite_again">Invite again</string>
+	<string name="inviteUser_Subject">has invited you via</string>
+	<string name="InviteText">Hello,\n\nthe user %s has invited you to Pix-Art Messenger. If you are using Android, give it a try and click the following link to start over...</string>
 </resources>

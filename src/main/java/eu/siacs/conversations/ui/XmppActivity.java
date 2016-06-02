@@ -359,6 +359,9 @@ public abstract class XmppActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem item) {
 		switch (item.getItemId()) {
+			case R.id.action_invite_user:
+				inviteUser();
+				break;
 			case R.id.action_settings:
 				startActivity(new Intent(this, SettingsActivity.class));
 				break;
@@ -1074,6 +1077,19 @@ public abstract class XmppActivity extends Activity {
 
 	protected String getShareableUri() {
 		return null;
+	}
+
+	private void inviteUser() {
+		Account mAccount = xmppConnectionService.getAccounts().get(0);
+		String user =  mAccount.getJid().getLocalpart().toString();
+		String domain = mAccount.getJid().getDomainpart().toString();
+		String inviteURL = Config.inviteUserURL + user + "/" + domain;
+        String inviteText = getString(R.string.InviteText, user);
+		Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+		intent.setType("text/plain");
+		intent.putExtra(Intent.EXTRA_SUBJECT, user + " " + getString(R.string.inviteUser_Subject) + " " + getString(R.string.app_name));
+		intent.putExtra(Intent.EXTRA_TEXT, inviteText + "\n\n" + inviteURL);
+		startActivity(Intent.createChooser(intent, getString(R.string.invite_contact)));
 	}
 
 	@Override

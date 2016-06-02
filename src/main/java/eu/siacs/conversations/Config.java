@@ -42,6 +42,8 @@ public final class Config {
 
 	public static final String BUG_REPORTS = "bugs@pix-art.de";
 
+	public static String inviteUserURL = "https://jabber.pix-art.de/i/";
+
 	public static final String DOMAIN_LOCK = "pix-art.de"; //only allow account creation for this domain
 	public static final String MAGIC_CREATE_DOMAIN = "pix-art.de";
 	public static final boolean SINGLE_ACCOUNT = true; //set to true to allow only one account

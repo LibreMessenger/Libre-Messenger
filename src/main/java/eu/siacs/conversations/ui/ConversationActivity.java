@@ -551,6 +551,7 @@ public class ConversationActivity extends XmppActivity
 		final MenuItem menuMute = menu.findItem(R.id.action_mute);
 		final MenuItem menuUnmute = menu.findItem(R.id.action_unmute);
 		final MenuItem menuUpdater = menu.findItem(R.id.action_check_updates);
+		final MenuItem menuInviteUser = menu.findItem(R.id.action_invite_user);
 
 		if (isConversationsOverviewVisable() && isConversationsOverviewHideable()) {
 			menuArchiveChat.setVisible(false);
@@ -565,6 +566,7 @@ public class ConversationActivity extends XmppActivity
 			menuAdd.setVisible(!isConversationsOverviewHideable());
 			//hide settings, accounts and updater in all menus except in main window
 			menuUpdater.setVisible(false);
+			menuInviteUser.setVisible(false);
 
 			if (this.getSelectedConversation() != null) {
                 if (this.getSelectedConversation().getMode() == Conversation.MODE_SINGLE) {
