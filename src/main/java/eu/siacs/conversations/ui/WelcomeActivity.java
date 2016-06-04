@@ -87,11 +87,13 @@ public class WelcomeActivity extends Activity {
         SQLiteDatabase checkDB = null;
         String DB_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger/.Database/";
         String DB_NAME = "Database.bak";
+        int DB_Version = DatabaseBackend.DATABASE_VERSION;
 
         try {
-            String myPath = DB_PATH + DB_NAME;
-            checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
-            Log.d(Config.LOGTAG,"Backup found");
+            String dbPath = DB_PATH + DB_NAME;
+            checkDB = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READONLY);
+            Log.d(Config.LOGTAG, "Backup found: " + checkDB + " Version: " + checkDB.getVersion());
+
         } catch (SQLiteException e) {
             //database does't exist yet.
         }
@@ -99,7 +101,11 @@ public class WelcomeActivity extends Activity {
         if (checkDB != null) {
             checkDB.close();
         }
-        return checkDB != null ? true : false;
+        if (checkDB != null && checkDB.getVersion() <= DB_Version) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void ImportDatabase() throws IOException {
