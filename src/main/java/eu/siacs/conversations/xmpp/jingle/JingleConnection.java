@@ -319,7 +319,7 @@ public class JingleConnection implements Transferable {
 			if (fileNameElement != null) {
 				String[] filename = fileNameElement.getContent()
 						.toLowerCase(Locale.US).toLowerCase().split("\\.");
-				String filename_new = fileDateFormat.format(new Date(message.getTimeSent()));
+				String filename_new = fileDateFormat.format(new Date(message.getTimeSent()))+"_"+message.getUuid().substring(0,4);
 				String extension = filename[filename.length - 1];
 				if (VALID_IMAGE_EXTENSIONS.contains(extension)) {
 					message.setType(Message.TYPE_IMAGE);

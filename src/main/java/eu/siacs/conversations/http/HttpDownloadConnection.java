@@ -93,7 +93,7 @@ public class HttpDownloadConnection implements Transferable {
 			} else {
 				extension = lastPart;
 			}
-			String filename = fileDateFormat.format(new Date(message.getTimeSent()));
+			String filename = fileDateFormat.format(new Date(message.getTimeSent()))+"_"+message.getUuid().substring(0,4);
 			message.setRelativeFilePath(filename + "." + extension);
 			this.file = mXmppConnectionService.getFileBackend().getFile(message, false);
 			String reference = mUrl.getRef();

@@ -105,7 +105,7 @@ public class FileBackend {
 		final DownloadableFile file;
 		String path = message.getRelativeFilePath();
 		if (path == null) {
-            String filename = fileDateFormat.format(new Date(message.getTimeSent()));
+            String filename = fileDateFormat.format(new Date(message.getTimeSent()))+"_"+message.getUuid().substring(0,4);
 			path = filename;
 		}
         if (path.startsWith("/")) {
@@ -267,7 +267,7 @@ public class FileBackend {
 		Log.d(Config.LOGTAG, "copy " + uri.toString() + " to private storage");
 		String mime = mXmppConnectionService.getContentResolver().getType(uri);
 		String extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mime);
-        String filename = fileDateFormat.format(new Date(message.getTimeSent()));
+        String filename = fileDateFormat.format(new Date(message.getTimeSent()))+"_"+message.getUuid().substring(0,4);
 		message.setRelativeFilePath(filename + "." + extension);
 		copyFileToPrivateStorage(mXmppConnectionService.getFileBackend().getFile(message), uri);
 	}
