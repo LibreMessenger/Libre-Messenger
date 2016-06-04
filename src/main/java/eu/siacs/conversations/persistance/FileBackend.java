@@ -333,7 +333,7 @@ public class FileBackend {
 	}
 
 	public void copyImageToPrivateStorage(Message message, Uri image) throws FileCopyException {
-        String filename = fileDateFormat.format(new Date(message.getTimeSent()));
+        String filename = fileDateFormat.format(new Date(message.getTimeSent()))+"_"+message.getUuid().substring(0,4);
 		switch(Config.IMAGE_FORMAT) {
 			case JPEG:
 				message.setRelativeFilePath(filename+".jpg");
