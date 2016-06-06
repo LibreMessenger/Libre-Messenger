@@ -1,5 +1,6 @@
 package eu.siacs.conversations.ui;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -9,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -30,19 +32,24 @@ import eu.siacs.conversations.persistance.DatabaseBackend;
 
 public class WelcomeActivity extends Activity {
 
-    boolean dbExist = checkDatabase();
+    private static final int REQUEST_READ_EXTERNAL_STORAGE = 0XD737;
+    boolean dbExist = false;
     boolean backup_existing = false;
 
-	@Override
-	protected void onCreate(final Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.welcome);
-
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.welcome);
 
         //check if there is a backed up database --
+        if (hasStoragePermission(REQUEST_READ_EXTERNAL_STORAGE)) {
+            dbExist = checkDatabase();
+        }
+
         if (dbExist) {
             backup_existing = true;
         }
+
 
         final Button ImportDatabase = (Button) findViewById(R.id.import_database);
         final TextView ImportText = (TextView) findViewById(R.id.import_text);
@@ -63,24 +70,24 @@ public class WelcomeActivity extends Activity {
             }
         });
 
-		final Button createAccount = (Button) findViewById(R.id.create_account);
-		createAccount.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(WelcomeActivity.this, MagicCreateActivity.class);
-				intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-				startActivity(intent);
-			}
-		});
-		final Button useOwnProvider = (Button) findViewById(R.id.use_existing_account);
-		useOwnProvider.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				startActivity(new Intent(WelcomeActivity.this, EditAccountActivity.class));
-			}
-		});
+        final Button createAccount = (Button) findViewById(R.id.create_account);
+        createAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(WelcomeActivity.this, MagicCreateActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+            }
+        });
+        final Button useOwnProvider = (Button) findViewById(R.id.use_existing_account);
+        useOwnProvider.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(WelcomeActivity.this, EditAccountActivity.class));
+            }
+        });
 
-	}
+    }
 
     private boolean checkDatabase() {
 
@@ -182,6 +189,19 @@ public class WelcomeActivity extends Activity {
             if (packageInfo.packageName.equals(targetPackage)) return true;
         }
         return false;
+    }
+
+    public boolean hasStoragePermission(int requestCode) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, requestCode);
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
     }
 
 }
