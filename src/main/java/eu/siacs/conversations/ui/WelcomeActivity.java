@@ -88,10 +88,12 @@ public class WelcomeActivity extends Activity {
         String DB_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger/.Database/";
         String DB_NAME = "Database.bak";
         int DB_Version = DatabaseBackend.DATABASE_VERSION;
+        int Backup_DB_Version = 0;
 
         try {
             String dbPath = DB_PATH + DB_NAME;
             checkDB = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READONLY);
+            Backup_DB_Version = checkDB.getVersion();
             Log.d(Config.LOGTAG, "Backup found: " + checkDB + " Version: " + checkDB.getVersion());
 
         } catch (SQLiteException e) {
@@ -101,7 +103,7 @@ public class WelcomeActivity extends Activity {
         if (checkDB != null) {
             checkDB.close();
         }
-        if (checkDB != null && checkDB.getVersion() <= DB_Version) {
+        if (checkDB != null && Backup_DB_Version <= DB_Version) {
             return true;
         } else {
             return false;
