@@ -483,11 +483,11 @@ public class ConversationActivity extends XmppActivity
                                 absubtitle.setOnClickListener(this);
                             } else if (state == ChatState.PAUSED) {
                                 TextView absubtitle = (TextView) findViewById(android.R.id.text2);
-                                absubtitle.setText(UIHelper.lastseen(getApplicationContext(), conversation.getContact().lastseen.time));
+                                absubtitle.setText(UIHelper.lastseen(getApplicationContext(), conversation.getContact().isActive(), conversation.getContact().getLastseen()));
                                 absubtitle.setOnClickListener(this);
                             } else {
                                 TextView absubtitle = (TextView) findViewById(android.R.id.text2);
-                                absubtitle.setText(UIHelper.lastseen(getApplicationContext(), conversation.getContact().lastseen.time));
+                                absubtitle.setText(UIHelper.lastseen(getApplicationContext(), conversation.getContact().isActive(), conversation.getContact().getLastseen()));
                                 absubtitle.setOnClickListener(this);
                             }
                         }
