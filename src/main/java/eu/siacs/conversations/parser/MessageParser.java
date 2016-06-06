@@ -7,6 +7,7 @@ import android.util.Pair;
 import net.java.otr4j.session.Session;
 import net.java.otr4j.session.SessionStatus;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +32,7 @@ import eu.siacs.conversations.http.HttpConnectionManager;
 import eu.siacs.conversations.services.MessageArchiveService;
 import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.utils.CryptoHelper;
+import eu.siacs.conversations.utils.Xmlns;
 import eu.siacs.conversations.xml.Element;
 import eu.siacs.conversations.xmpp.OnMessagePacketReceived;
 import eu.siacs.conversations.xmpp.chatstate.ChatState;
@@ -327,7 +329,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
 		}
 
 		if (timestamp == null) {
-			timestamp = AbstractParser.getTimestamp(packet, System.currentTimeMillis());
+			timestamp = AbstractParser.parseTimestamp(packet);
 		}
 		final String body = packet.getBody();
 		final Element mucUserElement = packet.findChild("x", "http://jabber.org/protocol/muc#user");
@@ -434,14 +436,11 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
 			if (conversationMultiMode) {
 				Jid trueCounterpart = conversation.getMucOptions().getTrueCounterpart(counterpart);
 				message.setTrueCounterpart(trueCounterpart);
-				if (trueCounterpart != null) {
-					updateLastseen(timestamp, account, trueCounterpart, false);
-				}
 				if (!isTypeGroupChat) {
 					message.setType(Message.TYPE_PRIVATE);
 				}
 			} else {
-				updateLastseen(timestamp, account, packet.getFrom(), true);
+				updateLastseen(account, from);
 			}
 
 			if (replacementId != null && mXmppConnectionService.allowMessageCorrection()) {
@@ -538,9 +537,6 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
 				}
 			}
 		} else if (!packet.hasChild("body")){ //no body
-			if (Config.BACKGROUND_STANZA_LOGGING && mXmppConnectionService.checkListeners()) {
-				Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": " + packet+ " (carbon="+Boolean.toString(isCarbon)+")");
-			}
 			Conversation conversation = mXmppConnectionService.find(account, from.toBareJid());
 			if (isTypeGroupChat) {
 				if (packet.hasChild("subject")) {
@@ -603,7 +599,6 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
 					mXmppConnectionService.markRead(conversation);
 				}
 			} else {
-				updateLastseen(timestamp, account, packet.getFrom(), true);
 				final Message displayedMessage = mXmppConnectionService.markMessage(account, from.toBareJid(), displayed.getAttribute("id"), Message.STATUS_SEND_DISPLAYED);
 				Message message = displayedMessage == null ? null : displayedMessage.prev();
 				while (message != null

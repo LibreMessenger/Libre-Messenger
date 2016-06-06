@@ -31,7 +31,8 @@ public abstract class AbstractGenerator {
 			"http://jabber.org/protocol/nick+notify",
 			"urn:xmpp:ping",
 			"jabber:iq:version",
-			"http://jabber.org/protocol/chatstates"};
+			"http://jabber.org/protocol/chatstates"
+	};
 	private final String[] MESSAGE_CONFIRMATION_FEATURES = {
 			"urn:xmpp:chat-markers:0",
 			"urn:xmpp:receipts"
@@ -45,7 +46,7 @@ public abstract class AbstractGenerator {
 	protected final String IDENTITY_NAME = "Pix-Art Messenger";
 	protected final String IDENTITY_TYPE = "phone";
 
-	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
 
 	protected XmppConnectionService mXmppConnectionService;
 

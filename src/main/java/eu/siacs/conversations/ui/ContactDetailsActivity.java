@@ -106,10 +106,10 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 		}
 	};
 	private Jid accountJid;
+	private TextView lastseen;
 	private Jid contactJid;
 	private TextView contactJidTv;
 	private TextView accountJidTv;
-  private TextView lastseen;
 	private TextView statusMessage;
 	private CheckBox send;
 	private CheckBox receive;
@@ -117,7 +117,8 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 	private QuickContactBadge badge;
 	private LinearLayout keys;
 	private LinearLayout tags;
-	private boolean showDynamicTags;
+	private boolean showDynamicTags = false;
+	private boolean showLastSeen = false;
 	private String messageFingerprint;
 
 	private DialogInterface.OnClickListener addToPhonebook = new DialogInterface.OnClickListener() {
@@ -206,7 +207,7 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 
 		contactJidTv = (TextView) findViewById(R.id.details_contactjid);
 		accountJidTv = (TextView) findViewById(R.id.details_account);
-    lastseen = (TextView) findViewById(R.id.details_lastseen);
+		lastseen = (TextView) findViewById(R.id.details_lastseen);
 		statusMessage = (TextView) findViewById(R.id.status_message);
 		send = (CheckBox) findViewById(R.id.details_send_presence);
 		receive = (CheckBox) findViewById(R.id.details_receive_presence);
@@ -224,9 +225,14 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 			getActionBar().setHomeButtonEnabled(true);
 			getActionBar().setDisplayHomeAsUpEnabled(true);
 		}
+	}
 
+	@Override
+	public void onStart() {
+		super.onStart();
 		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 		this.showDynamicTags = preferences.getBoolean("show_dynamic_tags",false);
+		this.showLastSeen = preferences.getBoolean("last_activity", true);
 	}
 
 	private void share() {
@@ -390,11 +396,17 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 			statusMessage.setVisibility(View.GONE);
 		}
 
-        if (contact.isBlocked() && !this.showDynamicTags) {
-            lastseen.setText(R.string.contact_blocked);
-        } else {
-            lastseen.setText(UIHelper.lastseen(getApplicationContext(), contact.lastseen.time));
-        }
+		if (contact.isBlocked() && !this.showDynamicTags) {
+			lastseen.setVisibility(View.VISIBLE);
+			lastseen.setText(R.string.contact_blocked);
+		} else {
+			if (showLastSeen && contact.getLastseen() > 0) {
+				lastseen.setVisibility(View.VISIBLE);
+				lastseen.setText(UIHelper.lastseen(getApplicationContext(), contact.isActive(), contact.getLastseen()));
+			} else {
+				lastseen.setVisibility(View.GONE);
+			}
+		}
 
 		if (contact.getPresences().size() > 1) {
 			contactJidTv.setText(contact.getDisplayJid() + " ("
