@@ -105,6 +105,7 @@ public class WelcomeActivity extends Activity {
 
         } catch (SQLiteException e) {
             //database does't exist yet.
+            Log.d(Config.LOGTAG, "No backup found: " + checkDB);
         }
 
         if (checkDB != null) {
