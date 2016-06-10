@@ -660,4 +660,7 @@
 	<string name="pref_broadcast_last_activity_summary">Let all your contacts know when use Pix-Art Messenger</string>
 	<string name="pref_privacy">Privacy</string>
 	<string name="invite_user">Invite to Pix-Art Messenger</string>
+	<string name="request_permissions_title">Pix-Art Messenger permissions</string>
+	<string name="request_permissions_message">Pix-Art Messenger will ask you to allow a few permissions. It is important that you allow all these permissions to use all features of this messenger. If you deny any of these permissions the app will close itself.</string>
+	<string name="request_permissions_message_again">You have denied some or all permissions needed for Pix-Art Messenger. Would you like to jump to the settings and allow these permissions? If you denie any of these permissions, the app will close itself.</string>
 </resources>
