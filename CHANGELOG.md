@@ -1,5 +1,9 @@
 ###Changelog
 
+###Version 1.13.3
+* new permission check and request at startup
+* bug fixes
+
 ####Version 1.13.2
 * refactored lastseen info
 * bug fixes
