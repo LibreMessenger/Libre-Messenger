@@ -126,6 +126,8 @@ public class ConversationActivity extends XmppActivity
 	private AtomicBoolean mRedirected = new AtomicBoolean(false);
 	private Pair<Integer, Intent> mPostponedActivityResult;
 
+    long FirstStartTime = 0;
+
 	@SuppressLint("NewApi")
 	private static List<Uri> extractUriFromIntent(final Intent intent) {
 		List<Uri> uris = new ArrayList<>();
@@ -1313,11 +1315,16 @@ public class ConversationActivity extends XmppActivity
 		this.xmppConnectionService.getNotificationService().setIsInForeground(true);
 		updateConversationList();
 
-		long FirstStartTime = 0;
-		Bundle extras = getIntent().getExtras();
-			if(extras != null) {
-				FirstStartTime = extras.getLong("FirstStart");
-			}
+        Bundle extras = getIntent().getExtras();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (extras != null) {
+                FirstStartTime = extras.getLong("FirstStart");
+                Log.d(Config.LOGTAG, "Get first start time from StartUI: " + FirstStartTime);
+            }
+        } else {
+            FirstStartTime = System.currentTimeMillis();
+            Log.d(Config.LOGTAG, "Device is running Android < SDK 23, no restart required: " + FirstStartTime);
+        }
 
 		if (mPendingConferenceInvite != null) {
 			mPendingConferenceInvite.execute(this);

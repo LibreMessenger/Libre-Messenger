@@ -41,22 +41,21 @@ public class startUI extends AppCompatActivity
 
     @AfterPermissionGranted(NeededPermissions)
     private void requestNeededPermissions() {
+        String PREFS_NAME = "FirstStart";
+        SharedPreferences FirstStart = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        long FirstStartTime = FirstStart.getLong("FirstStart", 0);
         if (EasyPermissions.hasPermissions(this, perms)) {
             // Already have permission, start ConversationsActivity
-            String PREFS_NAME = "FirstStart";
-            SharedPreferences FirstStart = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-            long FirstStartTime = FirstStart.getLong("FirstStart", 0);
+            Log.d(Config.LOGTAG, "All permissions granted, starting "+getString(R.string.app_name) + "(" +FirstStartTime + ")");
             Intent intent = new Intent (this, ConversationActivity.class);
             intent.putExtra("FirstStart", FirstStartTime);
             startActivity(intent);
             finish();
         } else {
             // set first start to 0 if there are permissions to request
-            String PREFS_NAME = "FirstStart";
-            long FirstStartTime = 0;
-            SharedPreferences FirstStart = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+            Log.d(Config.LOGTAG, "Requesting required permissions");
             SharedPreferences.Editor editor = FirstStart.edit();
-            editor.putLong("FirstStart", FirstStartTime);
+            editor.putLong("FirstStart", 0);
             editor.commit();
             // Do not have permissions, request them now
             EasyPermissions.requestPermissions(this, getString(R.string.request_permissions_message),
