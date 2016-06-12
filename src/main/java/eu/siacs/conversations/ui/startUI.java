@@ -12,7 +12,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import java.util.Arrays;
 import java.util.List;
 
 import eu.siacs.conversations.Config;
@@ -20,9 +19,6 @@ import eu.siacs.conversations.R;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-/**
- * Created by Christian on 10.06.2016.
- */
 public class startUI extends AppCompatActivity
         implements EasyPermissions.PermissionCallbacks {
 
@@ -55,6 +51,13 @@ public class startUI extends AppCompatActivity
             startActivity(intent);
             finish();
         } else {
+            // set first start to 0 if there are permissions to request
+            String PREFS_NAME = "FirstStart";
+            long FirstStartTime = 0;
+            SharedPreferences FirstStart = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = FirstStart.edit();
+            editor.putLong("FirstStart", FirstStartTime);
+            editor.commit();
             // Do not have permissions, request them now
             EasyPermissions.requestPermissions(this, getString(R.string.request_permissions_message),
                     NeededPermissions, perms);

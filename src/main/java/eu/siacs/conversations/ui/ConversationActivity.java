@@ -1326,34 +1326,34 @@ public class ConversationActivity extends XmppActivity
 			mPendingConferenceInvite = null;
 		}
 
+        if (FirstStartTime == 0) {
+            Log.d(Config.LOGTAG, "First start time: " + FirstStartTime + ", restarting App");
+            //write first start timestamp to file
+            String PREFS_NAME = "FirstStart";
+            FirstStartTime = System.currentTimeMillis();
+            SharedPreferences FirstStart = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = FirstStart.edit();
+            editor.putLong("FirstStart", FirstStartTime);
+            editor.commit();
+            // restart
+            Intent intent = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            System.exit(0);
+        }
+
 		if (xmppConnectionService.getAccounts().size() == 0) {
 			if (mRedirected.compareAndSet(false, true)) {
 				if (Config.X509_VERIFICATION) {
-					startActivity(new Intent(this, ManageAccountActivity.class));
-				} else if (Config.MAGIC_CREATE_DOMAIN != null) {
-					if (FirstStartTime == 0) {
-						Log.d(Config.LOGTAG, "First start time: " + FirstStartTime + ", restarting App");
-						//write first start timestamp to file
-						String PREFS_NAME = "FirstStart";
-						FirstStartTime = System.currentTimeMillis();
-						SharedPreferences FirstStart = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-						SharedPreferences.Editor editor = FirstStart.edit();
-						editor.putLong("FirstStart", FirstStartTime);
-						editor.commit();
-						// restart
-						Intent intent = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
-						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-						startActivity(intent);
-						System.exit(0);
-					} else {
-						Log.d(Config.LOGTAG, "First start time: " + FirstStartTime);
-						startActivity(new Intent(this, WelcomeActivity.class));
-					}
-				} else {
-					startActivity(new Intent(this, EditAccountActivity.class));
-				}
-				finish();
+                    startActivity(new Intent(this, ManageAccountActivity.class));
+                } else if (Config.MAGIC_CREATE_DOMAIN != null) {
+                    Log.d(Config.LOGTAG, "First start time: " + FirstStartTime);
+                    startActivity(new Intent(this, WelcomeActivity.class));
+                } else {
+                    startActivity(new Intent(this, EditAccountActivity.class));
+                }
+                finish();
 			}
 		} else if (conversationList.size() <= 0) {
 			if (mRedirected.compareAndSet(false, true)) {
