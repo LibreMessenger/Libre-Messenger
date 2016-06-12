@@ -2816,7 +2816,7 @@ public class XmppConnectionService extends Service {
 	}
 
 	public boolean broadcastLastActivity() {
-		return getPreferences().getBoolean("last_activity", false);
+		return getPreferences().getBoolean("last_activity", true);
 	}
 
 	public int unreadCount() {
