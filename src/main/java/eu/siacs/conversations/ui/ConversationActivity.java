@@ -1313,6 +1313,12 @@ public class ConversationActivity extends XmppActivity
 		this.xmppConnectionService.getNotificationService().setIsInForeground(true);
 		updateConversationList();
 
+		long FirstStartTime = 0;
+		Bundle extras = getIntent().getExtras();
+			if(extras != null) {
+				FirstStartTime = extras.getLong("FirstStart");
+			}
+
 		if (mPendingConferenceInvite != null) {
 			mPendingConferenceInvite.execute(this);
 			mToast = Toast.makeText(this, R.string.creating_conference,Toast.LENGTH_LONG);
@@ -1325,7 +1331,25 @@ public class ConversationActivity extends XmppActivity
 				if (Config.X509_VERIFICATION) {
 					startActivity(new Intent(this, ManageAccountActivity.class));
 				} else if (Config.MAGIC_CREATE_DOMAIN != null) {
-					startActivity(new Intent(this, WelcomeActivity.class));
+					if (FirstStartTime == 0) {
+						Log.d(Config.LOGTAG, "First start time: " + FirstStartTime + ", restarting App");
+						//write first start timestamp to file
+						String PREFS_NAME = "FirstStart";
+						FirstStartTime = System.currentTimeMillis();
+						SharedPreferences FirstStart = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+						SharedPreferences.Editor editor = FirstStart.edit();
+						editor.putLong("FirstStart", FirstStartTime);
+						editor.commit();
+						// restart
+						Intent intent = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
+						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+						startActivity(intent);
+						System.exit(0);
+					} else {
+						Log.d(Config.LOGTAG, "First start time: " + FirstStartTime);
+						startActivity(new Intent(this, WelcomeActivity.class));
+					}
 				} else {
 					startActivity(new Intent(this, EditAccountActivity.class));
 				}

@@ -1,8 +1,10 @@
 package eu.siacs.conversations.ui;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -34,7 +36,6 @@ public class startUI extends AppCompatActivity
             Manifest.permission.ACCESS_FINE_LOCATION,
     };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +47,12 @@ public class startUI extends AppCompatActivity
     private void requestNeededPermissions() {
         if (EasyPermissions.hasPermissions(this, perms)) {
             // Already have permission, start ConversationsActivity
-            startActivity(new Intent(this, ConversationActivity.class));
+            String PREFS_NAME = "FirstStart";
+            SharedPreferences FirstStart = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+            long FirstStartTime = FirstStart.getLong("FirstStart", 0);
+            Intent intent = new Intent (this, ConversationActivity.class);
+            intent.putExtra("FirstStart", FirstStartTime);
+            startActivity(intent);
             finish();
         } else {
             // Do not have permissions, request them now
@@ -90,16 +96,6 @@ public class startUI extends AppCompatActivity
                 })
                 .create();
         dialog.show();
-    }
-
-    private void restart() {
-        //restart app
-        Log.d(Config.LOGTAG, "Restarting " + getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName()));
-        Intent intent = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        System.exit(0);
     }
 
     @Override
