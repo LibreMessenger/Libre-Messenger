@@ -113,7 +113,7 @@ public class JingleConnection implements Transferable {
 			if (message.getEncryption() != Message.ENCRYPTION_PGP) {
 				mXmppConnectionService.getFileBackend().updateMediaScanner(file);
 			} else {
-				account.getPgpDecryptionService().add(message);
+				account.getPgpDecryptionService().decrypt(message);
 			}
 		}
 

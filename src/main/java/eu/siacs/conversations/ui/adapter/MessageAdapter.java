@@ -698,8 +698,8 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                 } else displayOpenableMessage(viewHolder, message);
 			}
 		} else if (message.getEncryption() == Message.ENCRYPTION_PGP) {
-			if (activity.hasPgp()) {
-				if (account.getPgpDecryptionService().isRunning()) {
+			if (account.isPgpDecryptionServiceConnected()) {
+				if (!account.hasPendingPgpIntent(conversation)) {
 					displayInfoMessage(viewHolder, activity.getString(R.string.message_decrypting), darkBackground);
 				} else {
 					displayInfoMessage(viewHolder, activity.getString(R.string.pgp_message), darkBackground);
