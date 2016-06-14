@@ -126,7 +126,7 @@ public class ConversationActivity extends XmppActivity
 	private AtomicBoolean mRedirected = new AtomicBoolean(false);
 	private Pair<Integer, Intent> mPostponedActivityResult;
 
-    long FirstStartTime = 0;
+    long FirstStartTime = -1;
 
 	@SuppressLint("NewApi")
 	private static List<Uri> extractUriFromIntent(final Intent intent) {
