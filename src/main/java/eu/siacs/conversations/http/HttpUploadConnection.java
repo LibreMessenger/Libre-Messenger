@@ -114,6 +114,7 @@ public class HttpUploadConnection implements Transferable {
 		try {
 			pair = AbstractConnectionManager.createInputStream(file, true);
 		} catch (FileNotFoundException e) {
+			Log.d(Config.LOGTAG,account.getJid().toBareJid()+": could not find file to upload - "+e.getMessage());
 			fail();
 			return;
 		}
@@ -133,15 +134,14 @@ public class HttpUploadConnection implements Transferable {
 							if (!canceled) {
 								new Thread(new FileUploader()).start();
 							}
+							return;
 						} catch (MalformedURLException e) {
-							fail();
+							//fall through
 						}
-					} else {
-						fail();
 					}
-				} else {
-					fail();
 				}
+				Log.d(Config.LOGTAG,account.getJid().toString()+": invalid response to slot request "+packet);
+				fail();
 			}
 		});
 		message.setTransferable(this);
@@ -207,6 +207,7 @@ public class HttpUploadConnection implements Transferable {
 
 							@Override
 							public void error(int errorCode, Message object) {
+								Log.d(Config.LOGTAG,"pgp encryption failed");
 								fail();
 							}
 
