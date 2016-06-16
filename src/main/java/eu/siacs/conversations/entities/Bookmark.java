@@ -55,7 +55,9 @@ public class Bookmark extends Element implements ListItem {
 				&& !getBookmarkName().trim().isEmpty()) {
 			return getBookmarkName().trim();
 		} else {
-			return this.getJid().getLocalpart();
+			Jid jid = this.getJid();
+			String name = jid != null ? jid.getLocalpart() : getAttribute("jid");
+			return name != null ? name : "";
 		}
 	}
 
@@ -65,7 +67,7 @@ public class Bookmark extends Element implements ListItem {
 		if (jid != null) {
 			return jid.toString();
 		} else {
-			return null;
+			return getAttribute("jid"); //fallback if jid wasn't parsable
 		}
 	}
 
@@ -76,7 +78,7 @@ public class Bookmark extends Element implements ListItem {
 
 	@Override
 	public List<Tag> getTags(Context context) {
-		ArrayList<Tag> tags = new ArrayList<Tag>();
+		ArrayList<Tag> tags = new ArrayList<>();
 		for (Element element : getChildren()) {
 			if (element.getName().equals("group") && element.getContent() != null) {
 				String group = element.getContent();
