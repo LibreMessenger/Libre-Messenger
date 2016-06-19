@@ -98,12 +98,13 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
 
 
         if ((message.getTransferable() == null
-                || message.getTransferable().getStatus() != Transferable.STATUS_DELETED)) {
+                || message.getTransferable().getStatus() != Transferable.STATUS_DELETED)
+                && message.getFileParams().width > 0) {
             if (mimeType != null && message.getMimeType().startsWith("video/")) {
                 mLastMessage.setVisibility(View.GONE);
                 imagePreview.setVisibility(View.VISIBLE);
                 activity.loadVideoPreview(message, imagePreview);
-            } else if (message.getFileParams().width > 0) {
+            } else if (mimeType != null && message.getMimeType().startsWith("image/")) {
                 mLastMessage.setVisibility(View.GONE);
                 imagePreview.setVisibility(View.VISIBLE);
                 activity.loadBitmap(message, imagePreview);
