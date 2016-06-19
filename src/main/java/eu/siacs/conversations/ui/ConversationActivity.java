@@ -713,7 +713,7 @@ public class ConversationActivity extends XmppActivity
 
 								@Override
 								public void error(int error, Contact contact) {
-									displayErrorDialog(error);
+									replaceToast(getString(error));
 								}
 							});
 				} else if (mode == Conversation.MODE_MULTI && conversation.getMucOptions().pgpKeysInUse()) {
@@ -1673,8 +1673,7 @@ public class ConversationActivity extends XmppActivity
 
 			@Override
 			public void error(int errorCode, Message message) {
-				hidePrepareFileToast(prepareFileToast);
-				displayErrorDialog(errorCode);
+				replaceToast(getString(errorCode));
 			}
 
 			@Override
@@ -1706,8 +1705,7 @@ public class ConversationActivity extends XmppActivity
 
 					@Override
 					public void error(int error, Message message) {
-						hidePrepareFileToast(prepareFileToast);
-						displayErrorDialog(error);
+						replaceToast(getString(error));
 					}
 				});
 	}
