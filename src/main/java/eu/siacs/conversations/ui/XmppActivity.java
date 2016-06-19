@@ -55,6 +55,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.FileDescriptorBitmapDecoder;
 import com.bumptech.glide.load.resource.bitmap.VideoBitmapDecoder;
+import com.bumptech.glide.signature.StringSignature;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
@@ -1220,6 +1221,7 @@ public abstract class XmppActivity extends Activity {
                     .fitCenter()
                     //.centerCrop()
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
+					.signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
                     .into(imageView);
         } catch (Exception e) {
             e.printStackTrace();
@@ -1247,6 +1249,7 @@ public abstract class XmppActivity extends Activity {
                     //.centerCrop()
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .videoDecoder(fileDescriptorBitmapDecoder)
+					.signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
                     .into(imageView);
         } catch (Exception e) {
             e.printStackTrace();
