@@ -1221,7 +1221,7 @@ public abstract class XmppActivity extends Activity {
                     .fitCenter()
                     //.centerCrop()
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
-					.signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
+                    .signature(new StringSignature(String.valueOf(System.currentTimeMillis()/(1*60*60*1000))))
                     .into(imageView);
         } catch (Exception e) {
             e.printStackTrace();
@@ -1249,7 +1249,7 @@ public abstract class XmppActivity extends Activity {
                     //.centerCrop()
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .videoDecoder(fileDescriptorBitmapDecoder)
-					.signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
+                    .signature(new StringSignature(String.valueOf(System.currentTimeMillis()/(1*60*60*1000))))
                     .into(imageView);
         } catch (Exception e) {
             e.printStackTrace();

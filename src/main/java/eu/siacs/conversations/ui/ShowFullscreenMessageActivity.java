@@ -86,7 +86,6 @@ public class ShowFullscreenMessageActivity extends Activity {
             Glide.with(this)
                     .load(file)
                     .asBitmap()
-                    .signature(new StringSignature(String.valueOf(System.currentTimeMillis())))
                     .into(new BitmapImageViewTarget(mImage) {
                         @Override
                         public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
