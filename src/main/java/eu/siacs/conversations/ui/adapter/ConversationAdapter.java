@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,14 +16,17 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 
+import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
 import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.entities.Transferable;
+import eu.siacs.conversations.services.XmppConnectionService;
 import eu.siacs.conversations.ui.ConversationActivity;
 import eu.siacs.conversations.ui.XmppActivity;
 import eu.siacs.conversations.utils.UIHelper;
@@ -97,14 +101,13 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
         }
 
 
-        if ((message.getTransferable() == null
-                || message.getTransferable().getStatus() != Transferable.STATUS_DELETED)
-                && message.getFileParams().width > 0) {
+        /*if (message.getTransferable() == null
+                || message.getTransferable().getStatus() != Transferable.STATUS_DELETED) {
             if (mimeType != null && message.getMimeType().startsWith("video/")) {
                 mLastMessage.setVisibility(View.GONE);
                 imagePreview.setVisibility(View.VISIBLE);
                 activity.loadVideoPreview(message, imagePreview);
-            } else if (mimeType != null && message.getMimeType().startsWith("image/")) {
+            } else if (message.getFileParams().width > 0) {
                 mLastMessage.setVisibility(View.GONE);
                 imagePreview.setVisibility(View.VISIBLE);
                 activity.loadBitmap(message, imagePreview);
@@ -127,7 +130,7 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
                     }
                 }
             }
-        } else {
+        } else {*/
             Pair<String, Boolean> preview = UIHelper.getMessagePreview(activity, message);
             mLastMessage.setVisibility(View.VISIBLE);
             imagePreview.setVisibility(View.GONE);
@@ -145,7 +148,7 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
                     mLastMessage.setTypeface(null, Typeface.BOLD);
                 }
             }
-        }
+        //}
 
         long muted_till = conversation.getLongAttribute(Conversation.ATTRIBUTE_MUTED_TILL, 0);
         if (muted_till == Long.MAX_VALUE) {
