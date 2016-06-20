@@ -1,5 +1,9 @@
 ###Changelog
 
+###Version 1.13.4
+* new PGP decryption logic
+* bug fixes
+
 ###Version 1.13.3
 * new permission check and request at startup
 * bug fixes
