@@ -1,10 +1,13 @@
 package eu.siacs.conversations.ui;
 
+import android.Manifest;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -104,7 +107,12 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
 	@Override
 	public void onMapReady(GoogleMap googleMap) {
 		this.mGoogleMap = googleMap;
-		this.mGoogleMap.setMyLocationEnabled(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                    || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                this.mGoogleMap.setMyLocationEnabled(true);
+            }
+        }
 		if (this.mLocation != null) {
 			this.markAndCenterOnLocation(this.mLocation,this.mLocationName);
 		}

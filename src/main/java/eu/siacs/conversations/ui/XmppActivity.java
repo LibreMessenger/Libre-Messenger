@@ -881,6 +881,33 @@ public abstract class XmppActivity extends Activity {
 		}
 	}
 
+	public boolean hasMicPermission(int requestCode) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+				requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, requestCode);
+				return false;
+			} else {
+				return true;
+			}
+		} else {
+			return true;
+		}
+	}
+
+	public boolean hasLocationPermission(int requestCode) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+				requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, requestCode);
+				requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, requestCode);
+				return false;
+			} else {
+				return true;
+			}
+		} else {
+			return true;
+		}
+	}
+
 	public void selectPresence(final Conversation conversation,
 			final OnPresenceSelected listener) {
 		final Contact contact = conversation.getContact();

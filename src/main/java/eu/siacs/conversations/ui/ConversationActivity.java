@@ -677,7 +677,17 @@ public class ConversationActivity extends XmppActivity
 				return;
 			}
 		}
-		switch (attachmentChoice) {
+        if (attachmentChoice == ATTACHMENT_CHOICE_RECORD_VOICE) {
+            if (!hasMicPermission(attachmentChoice)) {
+                return;
+            }
+        }
+        if (attachmentChoice == ATTACHMENT_CHOICE_LOCATION) {
+            if (!hasLocationPermission(attachmentChoice)) {
+                return;
+            }
+        }
+        switch (attachmentChoice) {
 			case ATTACHMENT_CHOICE_LOCATION:
 				getPreferences().edit().putString("recently_used_quick_action", "location").apply();
 				break;
@@ -767,7 +777,7 @@ public class ConversationActivity extends XmppActivity
 					attachFile(requestCode);
 				}
 			} else {
-				Toast.makeText(this, R.string.no_storage_permission, Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, R.string.no_permission, Toast.LENGTH_SHORT).show();
 			}
 	}
 

@@ -20,17 +20,13 @@ import eu.siacs.conversations.R;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class startUI extends AppCompatActivity
+public class StartUI extends AppCompatActivity
         implements EasyPermissions.PermissionCallbacks {
 
     private static final int NeededPermissions = 1000;
 
     String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_CONTACTS,
-            Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION,
     };
 
     @Override
