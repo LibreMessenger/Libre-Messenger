@@ -72,8 +72,6 @@ public class JingleSocks5Transport extends JingleTransport {
 					SocksSocketFactory.createSocksConnection(socket,destination,0);
 					isEstablished = true;
 					callback.established();
-				} catch (UnknownHostException e) {
-					callback.failed();
 				} catch (IOException e) {
 					callback.failed();
 				}
@@ -114,13 +112,7 @@ public class JingleSocks5Transport extends JingleTransport {
 					if (callback != null) {
 						callback.onFileTransmitted(file);
 					}
-				} catch (FileNotFoundException e) {
-					Log.d(Config.LOGTAG, connection.getAccount().getJid().toBareJid() + ": "+e.getMessage());
-					callback.onFileTransferAborted();
-				} catch (IOException e) {
-					Log.d(Config.LOGTAG, connection.getAccount().getJid().toBareJid() + ": "+e.getMessage());
-					callback.onFileTransferAborted();
-				} catch (NoSuchAlgorithmException e) {
+				} catch (Exception e) {
 					Log.d(Config.LOGTAG, connection.getAccount().getJid().toBareJid() + ": "+e.getMessage());
 					callback.onFileTransferAborted();
 				} finally {
@@ -174,13 +166,7 @@ public class JingleSocks5Transport extends JingleTransport {
 					fileOutputStream.close();
 					file.setSha1Sum(CryptoHelper.bytesToHex(digest.digest()));
 					callback.onFileTransmitted(file);
-				} catch (FileNotFoundException e) {
-					Log.d(Config.LOGTAG, connection.getAccount().getJid().toBareJid() + ": "+e.getMessage());
-					callback.onFileTransferAborted();
-				} catch (IOException e) {
-					Log.d(Config.LOGTAG, connection.getAccount().getJid().toBareJid() + ": "+e.getMessage());
-					callback.onFileTransferAborted();
-				} catch (NoSuchAlgorithmException e) {
+				} catch (Exception e) {
 					Log.d(Config.LOGTAG, connection.getAccount().getJid().toBareJid() + ": "+e.getMessage());
 					callback.onFileTransferAborted();
 				} finally {
