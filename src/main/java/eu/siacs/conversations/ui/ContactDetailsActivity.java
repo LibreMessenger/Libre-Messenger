@@ -235,18 +235,6 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 		this.showLastSeen = preferences.getBoolean("last_activity", true);
 	}
 
-	private void share() {
-		Intent shareIntent = new Intent();
-		shareIntent.setAction(Intent.ACTION_SEND);
-		shareIntent.putExtra(Intent.EXTRA_TEXT, getShareableUri());
-		shareIntent.setType("text/plain");
-		try {
-			startActivity(Intent.createChooser(shareIntent, getText(R.string.share_uri_with)));
-		} catch (ActivityNotFoundException e) {
-			Toast.makeText(this, R.string.no_application_to_share_uri, Toast.LENGTH_SHORT).show();
-		}
-	}
-
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem menuItem) {
 		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -287,9 +275,6 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 					intent.putExtra("finishActivityOnSaveCompleted", true);
 					startActivity(intent);
 				}
-				break;
-			case R.id.action_share:
-				share();
 				break;
 			case R.id.action_block:
 				BlockContactDialog.show(this, xmppConnectionService, contact);
