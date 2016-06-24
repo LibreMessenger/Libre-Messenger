@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
@@ -1119,6 +1120,22 @@ public abstract class XmppActivity extends Activity {
 		intent.putExtra(Intent.EXTRA_SUBJECT, user + " " + getString(R.string.inviteUser_Subject) + " " + getString(R.string.app_name));
 		intent.putExtra(Intent.EXTRA_TEXT, inviteText + "\n\n" + inviteURL);
 		startActivity(Intent.createChooser(intent, getString(R.string.invite_contact)));
+	}
+
+	protected void shareUri() {
+		String uri = getShareableUri();
+		if (uri == null || uri.isEmpty()) {
+			return;
+		}
+		Intent shareIntent = new Intent();
+		shareIntent.setAction(Intent.ACTION_SEND);
+		shareIntent.putExtra(Intent.EXTRA_TEXT, getShareableUri());
+		shareIntent.setType("text/plain");
+		try {
+			startActivity(Intent.createChooser(shareIntent, getText(R.string.share_uri_with)));
+		} catch (ActivityNotFoundException e) {
+			Toast.makeText(this, R.string.no_application_to_share_uri, Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	@Override
