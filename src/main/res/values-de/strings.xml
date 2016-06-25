@@ -623,5 +623,9 @@
   <string name="request_permissions_message">Pix-Art Messenger wird dich nach ein paar Berechtigungen fragen. Es ist wichtig, dass du alle Berechtigungen erlaubst, um alle Funktionen nutzen zu können. Falls du eine dieser Berechtigungen ablehnst wird sich die App schließen.</string>
   <string name="request_permissions_message_again">Du hast eine oder alle Berechtigungen, welche für Pix-Art Messenger benötigt werden abgelehnt. Willst du zu den Einstellungen springen, um diese Berechtigungen zu erlauben? Falls du eine dieser Berechtigungen ablehnst wird sich die App schließen.</string>
   <string name="request_permissions_title">Pix-Art Messenger Berechtigungen</string>
+  <string name="no_permission">Pix-Art Messenger hat keine Berechtigungen</string>
+  <string name="openpgp_key_id">OpenPGP Schlüssel ID</string>
+  <string name="otr_fingerprint_selected_message">OTR Fingerabdruck der Nachricht</string>
+  <string name="unable_to_connect_to_keychain">Keine Verbindung zu OpenKeychain</string>
 
 </resources>
