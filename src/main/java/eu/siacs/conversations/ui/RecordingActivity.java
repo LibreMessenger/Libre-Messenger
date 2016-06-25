@@ -114,7 +114,7 @@ public class RecordingActivity extends Activity implements View.OnClickListener 
 	private File getOutputFile() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
 		return new File(Environment.getExternalStorageDirectory().getAbsolutePath().toString()
-				+ "/Pix-Art Messenger/Recording"
+				+ "/Pix-Art Messenger/audios/"
 				+ dateFormat.format(new Date())
 				+ ".m4a");
 	}
