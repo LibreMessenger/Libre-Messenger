@@ -1764,70 +1764,80 @@ public class ConversationActivity extends XmppActivity
         String imagePath = FileUtils.getPath(this, uri);
 
         Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-        int scaleSize = 400;
-        int originalWidth = bitmap.getWidth();
-        int originalHeight = bitmap.getHeight();
-        int newWidth = -1;
-        int newHeight = -1;
-        float multFactor = -1.0F;
-        if(originalHeight > originalWidth) {
-            newHeight = scaleSize ;
-            multFactor = (float) originalWidth/(float) originalHeight;
-            newWidth = (int) (newHeight*multFactor);
-        } else if(originalWidth > originalHeight) {
-            newWidth = scaleSize ;
-            multFactor = (float) originalHeight/ (float)originalWidth;
-            newHeight = (int) (newWidth*multFactor);
-        } else if(originalHeight == originalWidth) {
-            newHeight = scaleSize ;
-            newWidth = scaleSize ;
-        }
+		if (bitmap != null) {
+			int scaleSize = 400;
+			int originalWidth = bitmap.getWidth();
+			int originalHeight = bitmap.getHeight();
+			int newWidth = -1;
+			int newHeight = -1;
+			float multFactor = -1.0F;
+			if (originalHeight > originalWidth) {
+				newHeight = scaleSize;
+				multFactor = (float) originalWidth / (float) originalHeight;
+				newWidth = (int) (newHeight * multFactor);
+			} else if (originalWidth > originalHeight) {
+				newWidth = scaleSize;
+				multFactor = (float) originalHeight / (float) originalWidth;
+				newHeight = (int) (newWidth * multFactor);
+			} else if (originalHeight == originalWidth) {
+				newHeight = scaleSize;
+				newWidth = scaleSize;
+			}
 
-        Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, false);
-        ImageView ImagePreview = new ImageView(this);
-        LinearLayout.LayoutParams vp =
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-        ImagePreview.setLayoutParams(vp);
-        ImagePreview.setScaleType(ImageView.ScaleType.FIT_XY);
-        ImagePreview.setAdjustViewBounds(true);
-        ImagePreview.setImageBitmap(bitmap);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(ImagePreview);
-        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(final DialogInterface dialog, final int which) {
-                final Toast prepareFileToast = Toast.makeText(getApplicationContext(), getText(R.string.preparing_image), Toast.LENGTH_LONG);
-                prepareFileToast.show();
-                xmppConnectionService.attachImageToConversation(conversation_preview, uri_preview,
-                        new UiCallback<Message>() {
+			Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, false);
+			ImageView ImagePreview = new ImageView(this);
+			LinearLayout.LayoutParams vp =
+					new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+							LinearLayout.LayoutParams.WRAP_CONTENT);
+			ImagePreview.setLayoutParams(vp);
+			ImagePreview.setScaleType(ImageView.ScaleType.FIT_XY);
+			ImagePreview.setAdjustViewBounds(true);
+			ImagePreview.setImageBitmap(bitmap);
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setView(ImagePreview);
+			builder.setCancelable(false);
+			builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(final DialogInterface dialog, final int which) {
+					final Toast prepareFileToast = Toast.makeText(getApplicationContext(), getText(R.string.preparing_image), Toast.LENGTH_LONG);
+					prepareFileToast.show();
+					xmppConnectionService.attachImageToConversation(conversation_preview, uri_preview,
+							new UiCallback<Message>() {
 
-                            @Override
-                            public void userInputRequried(PendingIntent pi, Message object) {
-                                hidePrepareFileToast(prepareFileToast);
-                            }
+								@Override
+								public void userInputRequried(PendingIntent pi, Message object) {
+									hidePrepareFileToast(prepareFileToast);
+								}
 
-                            @Override
-                            public void success(Message message) {
-                                hidePrepareFileToast(prepareFileToast);
-                                xmppConnectionService.sendMessage(message);
-                            }
+								@Override
+								public void success(Message message) {
+									hidePrepareFileToast(prepareFileToast);
+									xmppConnectionService.sendMessage(message);
+								}
 
-                            @Override
-                            public void error(final int error, Message message) {
-                                hidePrepareFileToast(prepareFileToast);
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        replaceToast(getString(error));
-                                    }
-                                });
-                            }
-                        });
-            }
-        });
-        //builder.setNegativeButton(R.string.cancel, null);
-        builder.create().show();
+								@Override
+								public void error(final int error, Message message) {
+									hidePrepareFileToast(prepareFileToast);
+									runOnUiThread(new Runnable() {
+										@Override
+										public void run() {
+											replaceToast(getString(error));
+										}
+									});
+								}
+							});
+				}
+			});
+			builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(final DialogInterface dialog, final int which) {
+					mPendingImageUris.clear();
+				}
+			});
+			builder.create().show();
+		} else {
+			Toast.makeText(getApplicationContext(), getText(R.string.error_file_not_found), Toast.LENGTH_LONG).show();
+		}
     }
 
 	private void hidePrepareFileToast(final Toast prepareFileToast) {
