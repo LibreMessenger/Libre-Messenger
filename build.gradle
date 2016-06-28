@@ -54,8 +54,8 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.5.2'
     compile 'com.github.chrisbanes:PhotoView:1.2.6'
     compile 'com.github.rtoshiro.fullscreenvideoview:fullscreenvideoview:1.1.0'
-    compile 'com.google.android.gms:play-services-location:9.0.1'
-    compile 'com.google.android.gms:play-services-maps:9.0.1'
+    compile 'com.google.android.gms:play-services-location:9.0.2'
+    compile 'com.google.android.gms:play-services-maps:9.0.2'
     compile 'pub.devrel:easypermissions:0.1.7'
 }
 
@@ -74,7 +74,7 @@ android {
         targetSdkVersion 23
 
         versionCode 155
-        versionName "1.13.5 beta (2016-06-21)"
+        versionName "1.13.5 beta (2016-06-28)"
 
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"
