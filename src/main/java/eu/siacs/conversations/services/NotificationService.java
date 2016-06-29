@@ -197,6 +197,7 @@ public class NotificationService {
 			} else {
 				mBuilder = buildMultipleConversation();
 			}
+			mBuilder.setNumber(mXmppConnectionService.unreadCount());
 			if (notify && !isQuietHours()) {
 				if (vibrate) {
 					final int dat = 70;
