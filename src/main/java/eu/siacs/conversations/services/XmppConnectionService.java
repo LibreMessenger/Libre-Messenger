@@ -23,6 +23,7 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.SystemClock;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.security.KeyChain;
@@ -2857,6 +2858,12 @@ public class XmppConnectionService extends Service {
 			count += conversation.unreadCount();
 		}
 		return count;
+	}
+
+	public void vibrate() {
+        Log.d(Config.LOGTAG,"Notification: short vibrate");
+		Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+		vibrator.vibrate(100);
 	}
 
 
