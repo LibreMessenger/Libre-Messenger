@@ -1,5 +1,11 @@
 ###Changelog
 
+###Version 1.13.5
+* add image preview before sending single images directly
+* add vibrate notification when app is open
+* hide actionbar in fullscreen image/video view
+* bug fixes
+
 ###Version 1.13.4
 * new PGP decryption logic
 * bug fixes
