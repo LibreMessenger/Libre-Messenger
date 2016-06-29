@@ -1763,7 +1763,7 @@ public class ConversationActivity extends XmppActivity
         final Uri uri_preview = uri;
         Bitmap bitmap = BitmapFactory.decodeFile(FileUtils.getPath(this, uri));
         if (bitmap != null) {
-            int scaleSize = 500;
+            int scaleSize = 600;
             int originalWidth = bitmap.getWidth();
             int originalHeight = bitmap.getHeight();
             int newWidth = -1;
@@ -1787,8 +1787,8 @@ public class ConversationActivity extends XmppActivity
 
             LinearLayout.LayoutParams vp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
             ImagePreview.setLayoutParams(vp);
-            //ImagePreview.setMaxWidth(newWidth);
-            //ImagePreview.setMaxHeight(newHeight);
+            ImagePreview.setMaxWidth(newWidth);
+            ImagePreview.setMaxHeight(newHeight);
             //ImagePreview.setScaleType(ImageView.ScaleType.FIT_XY);
             //ImagePreview.setAdjustViewBounds(true);
             ImagePreview.setPadding(5, 5, 5, 5);
