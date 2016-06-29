@@ -627,5 +627,6 @@
   <string name="openpgp_key_id">OpenPGP Schlüssel ID</string>
   <string name="otr_fingerprint_selected_message">OTR Fingerabdruck der Nachricht</string>
   <string name="unable_to_connect_to_keychain">Keine Verbindung zu OpenKeychain</string>
+  <string name="send_image">Bild senden?</string>
 
 </resources>
