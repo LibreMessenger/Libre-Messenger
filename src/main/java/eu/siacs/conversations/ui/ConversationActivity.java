@@ -1761,16 +1761,14 @@ public class ConversationActivity extends XmppActivity
         }
         final Conversation conversation_preview = conversation;
         final Uri uri_preview = uri;
-        String imagePath = FileUtils.getPath(this, uri);
-
-        Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+        Bitmap bitmap = BitmapFactory.decodeFile(FileUtils.getPath(this, uri));
 		if (bitmap != null) {
 			int scaleSize = 400;
 			int originalWidth = bitmap.getWidth();
 			int originalHeight = bitmap.getHeight();
 			int newWidth = -1;
 			int newHeight = -1;
-			float multFactor = -1.0F;
+			float multFactor;
 			if (originalHeight > originalWidth) {
 				newHeight = scaleSize;
 				multFactor = (float) originalWidth / (float) originalHeight;
