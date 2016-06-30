@@ -64,12 +64,20 @@ public class FileBackend {
 	}
 
 	private void createNoMedia() {
-		final File nomedia = new File(getConversationsFileDirectory()+".nomedia");
-		if (!nomedia.exists()) {
+		final File nomedia_files = new File(getConversationsFileDirectory()+".nomedia");
+		final File nomedia_audios = new File(getConversationsAudioDirectory()+".nomedia");
+		if (!nomedia_files.exists()) {
 			try {
-				nomedia.createNewFile();
+				nomedia_files.createNewFile();
 			} catch (Exception e) {
-				Log.d(Config.LOGTAG, "could not create nomedia file");
+				Log.d(Config.LOGTAG, "could not create nomedia file for files directory");
+			}
+		}
+		if (!nomedia_audios.exists()) {
+			try {
+				nomedia_audios.createNewFile();
+			} catch (Exception e) {
+				Log.d(Config.LOGTAG, "could not create nomedia file for audio directory");
 			}
 		}
 	}
