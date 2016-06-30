@@ -834,17 +834,6 @@ public class ConversationActivity extends XmppActivity
                             });
                     builder.create().show();
                     break;
-/*				case R.id.action_contact_details:
-					switchToContactDetails(getSelectedConversation().getContact());
-					break;
-				case R.id.action_muc_details:
-					Intent intent = new Intent(this,
-							ConferenceDetailsActivity.class);
-					intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
-					intent.putExtra("uuid", getSelectedConversation().getUuid());
-					startActivity(intent);
-					break;
-*/
 				case R.id.action_invite:
 					inviteToConversation(getSelectedConversation());
 					break;
