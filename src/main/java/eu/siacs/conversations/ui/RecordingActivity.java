@@ -23,6 +23,7 @@ import java.util.Locale;
 
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
+import eu.siacs.conversations.persistance.FileBackend;
 
 public class RecordingActivity extends Activity implements View.OnClickListener {
 
@@ -114,7 +115,7 @@ public class RecordingActivity extends Activity implements View.OnClickListener 
 	private File getOutputFile() {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
 		return new File(Environment.getExternalStorageDirectory().getAbsolutePath().toString()
-				+ "/Pix-Art Messenger/audios/"
+				+ FileBackend.getConversationsAudioDirectory() + "/"
 				+ dateFormat.format(new Date())
 				+ ".m4a");
 	}
