@@ -1550,8 +1550,7 @@ public class ConversationActivity extends XmppActivity
 						mPendingFileUris.addAll(uris);
 						if (xmppConnectionServiceBound) {
 							for (Iterator<Uri> i = mPendingFileUris.iterator(); i.hasNext(); i.remove()) {
-								//attachFileToConversation(c, i.next());
-                                Toast.makeText(ConversationActivity.this, "File", Toast.LENGTH_SHORT).show();
+								attachFileToConversation(c, i.next());
 							}
 						}
 					}
