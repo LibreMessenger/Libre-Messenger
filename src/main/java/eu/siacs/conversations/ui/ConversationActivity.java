@@ -479,7 +479,7 @@ public class ConversationActivity extends XmppActivity
 					abtitle.setText(conversation.getName());
                     abtitle.setOnClickListener(this);
                     if (conversation.getMode() == Conversation.MODE_SINGLE && !this.getSelectedConversation().withSelf()) {
-                        if (conversation.getContact().getMostAvailableStatus() == Presence.Status.OFFLINE) {
+                        if (conversation.getContact().getShownStatus() == Presence.Status.OFFLINE) {
                             TextView absubtitle = (TextView) findViewById(android.R.id.text2);
                             absubtitle.setText(getString(R.string.account_status_offline));
                             absubtitle.setOnClickListener(this);
