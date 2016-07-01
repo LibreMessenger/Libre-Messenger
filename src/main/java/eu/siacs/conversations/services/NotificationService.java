@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -54,6 +55,7 @@ public class NotificationService {
 	private Conversation mOpenConversation;
 	private boolean mIsInForeground;
 	private long mLastNotification;
+	private Resources resources;
 
 	public NotificationService(final XmppConnectionService service) {
 		this.mXmppConnectionService = service;
@@ -523,10 +525,19 @@ public class NotificationService {
 
 	public Notification createForegroundNotification() {
 		final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mXmppConnectionService);
-
-		mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.conversations_foreground_service));
+		List<Account> accounts = mXmppConnectionService.getAccounts();
+		Account mAccount = accounts.get(0);
+		String status = "";
+		if (mAccount.getStatus() == Account.State.ONLINE) {
+			status = mXmppConnectionService.getString(R.string.account_status_online);
+		} else if (mAccount.getStatus() == Account.State.CONNECTING) {
+			status = mXmppConnectionService.getString(R.string.account_status_connecting);
+		} else {
+			status = mXmppConnectionService.getString(R.string.account_status_offline);
+		}
+		Log.d(Config.LOGTAG, "Status: " + status);
+		mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.conversations_foreground_service) + " (" + status + ")");
 		if (Config.SHOW_CONNECTED_ACCOUNTS) {
-			List<Account> accounts = mXmppConnectionService.getAccounts();
 			int enabled = 0;
 			int connected = 0;
 			for (Account account : accounts) {
