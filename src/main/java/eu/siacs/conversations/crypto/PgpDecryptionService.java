@@ -16,19 +16,12 @@ import java.net.URL;
 import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 import eu.siacs.conversations.entities.Conversation;
 import eu.siacs.conversations.entities.DownloadableFile;
 import eu.siacs.conversations.entities.Message;
 import eu.siacs.conversations.http.HttpConnectionManager;
 import eu.siacs.conversations.services.XmppConnectionService;
-import eu.siacs.conversations.entities.Message;
-import eu.siacs.conversations.services.XmppConnectionService;
-import eu.siacs.conversations.ui.UiCallback;
 
 public class PgpDecryptionService {
 

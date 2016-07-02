@@ -1,7 +1,6 @@
 package eu.siacs.conversations.entities;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 
