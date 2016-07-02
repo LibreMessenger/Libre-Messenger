@@ -68,13 +68,12 @@ ext {
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
-
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 23
 
-        versionCode 156
-        versionName "1.13.5"
+        versionCode 157
+        versionName "1.13.6"
 
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"
@@ -82,18 +81,15 @@ android {
         // Enabling multidex support.
         multiDexEnabled true
     }
-
     dexOptions {
         // Skip pre-dexing when running on Travis CI or when disabled via -Dpre-dex=false.
         preDexLibraries = preDexEnabled && !travisBuild
         javaMaxHeapSize "4g"
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
-
     productFlavors {
         playstore
         free
@@ -114,11 +110,9 @@ android {
     } else {
         buildTypes.release.signingConfig = null
     }
-
     lintOptions {
         disable 'ExtraTranslation', 'MissingTranslation', 'InvalidPackage', 'MissingQuantity', 'AppCompatResource'
     }
-
     subprojects {
 
         afterEvaluate {
@@ -132,7 +126,6 @@ android {
 
         }
     }
-
     packagingOptions {
         exclude 'META-INF/BCKEY.DSA'
         exclude 'META-INF/BCKEY.SF'

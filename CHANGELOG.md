@@ -1,5 +1,12 @@
 ###Changelog
 
+###Version 1.13.6
+* share image/video directly from fullscreen view
+* show online status in foreground service
+* support jingle ft:4
+* show contact as DND if one resource is
+* bug fixes
+
 ###Version 1.13.5
 * add image preview before sending single images directly
 * add vibrate notification when app is open
