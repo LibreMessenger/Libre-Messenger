@@ -29,8 +29,8 @@ public class UpdaterWebService extends IntentService {
     public static final String RESPONSE_MESSAGE = "";
 
     private String URL = null;
-    public static final int REGISTRATION_TIMEOUT = 3 * 1000;
-    public static final int WAIT_TIMEOUT = 30 * 1000;
+    public static final int REGISTRATION_TIMEOUT = Config.SOCKET_TIMEOUT;
+    public static final int WAIT_TIMEOUT = Config.CONNECT_TIMEOUT;
 
     public UpdaterWebService() {
         super("UpdaterWebService");
@@ -89,14 +89,11 @@ public class UpdaterWebService extends IntentService {
             responseMessage = "";
         }
 
-
         Intent broadcastIntent = new Intent();
         broadcastIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         broadcastIntent.setAction(UpdateReceiver.PROCESS_RESPONSE);
         broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
         broadcastIntent.putExtra(RESPONSE_MESSAGE, responseMessage);
         sendBroadcast(broadcastIntent);
-
     }
-
 }

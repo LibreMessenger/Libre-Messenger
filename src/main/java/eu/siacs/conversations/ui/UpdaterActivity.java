@@ -18,7 +18,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,7 +44,9 @@ public class UpdaterActivity extends Activity {
     private int versionCode = 0;
     private DownloadManager downloadManager;
     private long downloadReference;
+    private String FileName = "update.apk";
     //broadcast receiver to get notification about ongoing downloads
+
     BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
 
         @Override
@@ -53,9 +54,7 @@ public class UpdaterActivity extends Activity {
             //check if the broadcast message is for our Enqueued download
             long referenceId = intent.getExtras().getLong(DownloadManager.EXTRA_DOWNLOAD_ID);
             if (downloadReference == referenceId) {
-                File file = new File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "Conversations.apk");
-                Log.d(Config.LOGTAG, "AppUpdater: Downloading of the new app version complete. Starting installation from " + file);
-
+                File file = new File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), FileName);
                 //start the installation of the latest version
                 Intent installIntent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
                 installIntent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
@@ -157,9 +156,7 @@ public class UpdaterActivity extends Activity {
             NetworkInfo[] info = connectivity.getAllNetworkInfo();
             if (info != null) {
                 for (int i = 0; i < info.length; i++) {
-                    Log.d(Config.LOGTAG, "AppUpdater: " + String.valueOf(i));
                     if (info[i].getState() == NetworkInfo.State.CONNECTED) {
-                        Log.d(Config.LOGTAG, "AppUpdater: connected to update Server!");
                         return true;
                     }
                 }
@@ -172,16 +169,13 @@ public class UpdaterActivity extends Activity {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
-                Log.d(Config.LOGTAG, "AppUpdater: Permission is granted");
                 return true;
             } else {
 
-                Log.d(Config.LOGTAG, "AppUpdater: Permission is revoked");
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
         } else { //permission is automatically granted on sdk<23 upon installation
-            Log.d(Config.LOGTAG, "AppUpdater: Permission is granted");
             return true;
         }
     }
@@ -209,7 +203,7 @@ public class UpdaterActivity extends Activity {
     //broadcast receiver to get notification when the web request finishes
     public class UpdateReceiver extends BroadcastReceiver {
 
-        public static final String PROCESS_RESPONSE = "eu.siacs.conversations.intent.action.PROCESS_RESPONSE";
+        public static final String PROCESS_RESPONSE = "de.pixart.messenger.intent.action.PROCESS_RESPONSE";
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -219,16 +213,13 @@ public class UpdaterActivity extends Activity {
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
             String responseMessage = intent.getStringExtra(UpdaterWebService.RESPONSE_MESSAGE);
-            Log.d(Config.LOGTAG, "AppUpdater: Reponse: " + responseMessage);
 
             if (responseMessage == "" || responseMessage.isEmpty() || responseMessage == null) {
                 Toast.makeText(getApplicationContext(),
                         getText(R.string.failed),
                         Toast.LENGTH_LONG).show();
-                Log.e(Config.LOGTAG, "AppUpdater: error connecting to server");
                 UpdaterActivity.this.finish();
             } else {
-                Log.d(Config.LOGTAG, "AppUpdater: connecting to server");
                 //parse the JSON reponse
                 JSONObject reponseObj;
 
@@ -241,7 +232,6 @@ public class UpdaterActivity extends Activity {
                             //start backing up database
                             try {
                                 ExportDatabase();
-                                Log.d(Config.LOGTAG, "AppUpdater: Database successfully exported");
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -261,14 +251,13 @@ public class UpdaterActivity extends Activity {
                         int latestVersionCode = reponseObj.getInt("latestVersionCode");
                         String latestVersion = reponseObj.getString("latestVersion");
                         String filesize = reponseObj.getString("filesize");
+                        String changelog = reponseObj.getString("changelog");
                         //get the lastest application URI from the JSON string
                         appURI = reponseObj.getString("appURI");
                         //check if we need to upgrade?
                         if (latestVersionCode > versionCode) {
-                            Log.d(Config.LOGTAG, "AppUpdater: update available");
                             //delete old downloaded version files
                             File dir = new File(getExternalFilesDir(null), Environment.DIRECTORY_DOWNLOADS);
-                            Log.d(Config.LOGTAG, "AppUpdater: delete old update files in: " + dir);
                             if (dir.isDirectory()) {
                                 String[] children = dir.list();
                                 for (int i = 0; i < children.length; i++) {
@@ -283,7 +272,7 @@ public class UpdaterActivity extends Activity {
                             builder.setCancelable(false);
 
                             String UpdateMessageInfo = getResources().getString(R.string.update_available);
-                            builder.setMessage(String.format(UpdateMessageInfo, latestVersion, filesize, versionName))
+                            builder.setMessage(String.format(UpdateMessageInfo, latestVersion, filesize, versionName, changelog))
                                     .setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
                                         //if the user agrees to upgrade
                                         public void onClick(DialogInterface dialog, int id) {
@@ -299,7 +288,7 @@ public class UpdaterActivity extends Activity {
                                                 //request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
                                                 //request.setAllowedOverRoaming(false);
                                                 request.setTitle("Pix-Art Messenger Update");
-                                                request.setDestinationInExternalFilesDir(UpdaterActivity.this, Environment.DIRECTORY_DOWNLOADS, "Conversations.apk");
+                                                request.setDestinationInExternalFilesDir(UpdaterActivity.this, Environment.DIRECTORY_DOWNLOADS, FileName);
                                                 downloadReference = downloadManager.enqueue(request);
                                                 Toast.makeText(getApplicationContext(),
                                                         getText(R.string.download_started),
@@ -330,22 +319,18 @@ public class UpdaterActivity extends Activity {
                             Toast.makeText(getApplicationContext(),
                                     getText(R.string.no_update_available),
                                     Toast.LENGTH_SHORT).show();
-                            Log.d(Config.LOGTAG, "AppUpdater: no update available");
                             UpdaterActivity.this.finish();
                         }
                     } else {
                         Toast.makeText(getApplicationContext(),
                                 getText(R.string.failed),
                                 Toast.LENGTH_LONG).show();
-                        Log.e(Config.LOGTAG, "AppUpdater: contact to server not successfull");
                         UpdaterActivity.this.finish();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-
         }
-
     }
 }
