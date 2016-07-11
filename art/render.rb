@@ -11,8 +11,9 @@ resolutions = {
 	}
 
 images = {
-	'conversations_baloon.svg' => ['ic_launcher', 48],
-	'conversations_baloon.svg' => ['main_logo', 200],
+	'ic_launcher.svg' => ['ic_launcher', 48],
+	'main_logo.svg' => ['main_logo', 200],
+	'play_video.svg' => ['play_video', 96],
 	'conversations_mono.svg' => ['ic_notification', 24],
 	'ic_received_indicator.svg' => ['ic_received_indicator', 12],
 	'ic_read_indicator.svg' => ['ic_read_indicator', 12],
