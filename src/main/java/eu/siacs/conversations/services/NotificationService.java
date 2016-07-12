@@ -556,13 +556,15 @@ public class NotificationService {
 		mBuilder.setWhen(0);
 		mBuilder.setPriority(Config.SHOW_CONNECTED_ACCOUNTS ? NotificationCompat.PRIORITY_DEFAULT : NotificationCompat.PRIORITY_MIN);
 		final int cancelIcon;
+		cancelIcon = R.drawable.ic_cancel_white_24dp;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			mBuilder.setCategory(Notification.CATEGORY_SERVICE);
-			cancelIcon = R.drawable.ic_cancel_white_24dp;
-		} else {
-			cancelIcon = R.drawable.ic_action_cancel;
 		}
-		mBuilder.setSmallIcon(R.drawable.ic_link_white_24dp);
+		if (mAccount.getStatus() == Account.State.ONLINE) {
+			mBuilder.setSmallIcon(R.drawable.ic_link_white_24dp);
+		} else {
+			mBuilder.setSmallIcon(R.drawable.ic_unlink_white_24dp);
+		}
 		if (Config.SHOW_DISABLE_FOREGROUND && !Config.USE_ALWAYS_FOREGROUND) {
 			mBuilder.addAction(cancelIcon,
 					mXmppConnectionService.getString(R.string.disable_foreground_service),
