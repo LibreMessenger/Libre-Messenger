@@ -21,15 +21,19 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcEvent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -50,13 +54,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DecodeFormat;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.FileDescriptorBitmapDecoder;
-import com.bumptech.glide.load.resource.bitmap.VideoBitmapDecoder;
-import com.bumptech.glide.signature.StringSignature;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
@@ -66,10 +63,12 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 import net.java.otr4j.session.SessionID;
 
-import java.io.File;
+import java.io.FileNotFoundException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.concurrent.RejectedExecutionException;
 
 import eu.siacs.conversations.Config;
 import eu.siacs.conversations.R;
@@ -271,7 +270,7 @@ public abstract class XmppActivity extends Activity {
 							xmppConnectionServiceBound = false;
 						}
 						stopService(new Intent(XmppActivity.this,
-									XmppConnectionService.class));
+								XmppConnectionService.class));
 						finish();
 					}
 				});
@@ -281,13 +280,13 @@ public abstract class XmppActivity extends Activity {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						Uri uri = Uri
-							.parse("market://details?id=org.sufficientlysecure.keychain");
+								.parse("market://details?id=org.sufficientlysecure.keychain");
 						Intent marketIntent = new Intent(Intent.ACTION_VIEW,
 								uri);
 						PackageManager manager = getApplicationContext()
-							.getPackageManager();
+								.getPackageManager();
 						List<ResolveInfo> infos = manager
-							.queryIntentActivities(marketIntent, 0);
+								.queryIntentActivities(marketIntent, 0);
 						if (infos.size() > 0) {
 							startActivity(marketIntent);
 						} else {
@@ -426,7 +425,7 @@ public abstract class XmppActivity extends Activity {
 
 	protected SharedPreferences getPreferences() {
 		return PreferenceManager
-			.getDefaultSharedPreferences(getApplicationContext());
+				.getDefaultSharedPreferences(getApplicationContext());
 	}
 
 	public boolean useSubjectToIdentifyConference() {
@@ -438,7 +437,7 @@ public abstract class XmppActivity extends Activity {
 	}
 
 	public void switchToConversation(Conversation conversation, String text,
-			boolean newTask) {
+									 boolean newTask) {
 		switchToConversation(conversation,text,null,false,newTask);
 	}
 
@@ -672,7 +671,7 @@ public abstract class XmppActivity extends Activity {
 	}
 
 	private void warnMutalPresenceSubscription(final Conversation conversation,
-			final OnPresenceSelected listener) {
+											   final OnPresenceSelected listener) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(conversation.getContact().getJid().toString());
 		builder.setMessage(R.string.without_mutual_presence_updates);
@@ -765,13 +764,13 @@ public abstract class XmppActivity extends Activity {
 	}
 
 	protected boolean addFingerprintRowWithListeners(LinearLayout keys, final Account account,
-	                                                 final String fingerprint,
-	                                                 boolean highlight,
-	                                                 XmppAxolotlSession.Trust trust,
-	                                                 boolean showTag,
-	                                                 CompoundButton.OnCheckedChangeListener
-			                                                 onCheckedChangeListener,
-	                                                 View.OnClickListener onClickListener,
+													 final String fingerprint,
+													 boolean highlight,
+													 XmppAxolotlSession.Trust trust,
+													 boolean showTag,
+													 CompoundButton.OnCheckedChangeListener
+															 onCheckedChangeListener,
+													 View.OnClickListener onClickListener,
 													 View.OnClickListener onKeyClickedListener) {
 		if (trust == XmppAxolotlSession.Trust.COMPROMISED) {
 			return false;
@@ -910,7 +909,7 @@ public abstract class XmppActivity extends Activity {
 	}
 
 	public void selectPresence(final Conversation conversation,
-			final OnPresenceSelected listener) {
+							   final OnPresenceSelected listener) {
 		final Contact contact = conversation.getContact();
 		if (conversation.hasValidOtrSession()) {
 			SessionID id = conversation.getOtrSession().getSessionID();
@@ -965,7 +964,7 @@ public abstract class XmppActivity extends Activity {
 
 							@Override
 							public void onClick(DialogInterface dialog,
-									int which) {
+												int which) {
 								presence.delete(0, presence.length());
 								presence.append(presencesArray[which]);
 							}
@@ -989,7 +988,7 @@ public abstract class XmppActivity extends Activity {
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode,
-			final Intent data) {
+									final Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == REQUEST_INVITE_TO_CONVERSATION && resultCode == RESULT_OK) {
 			mPendingConferenceInvite = ConferenceInvite.parse(data);
@@ -1115,7 +1114,7 @@ public abstract class XmppActivity extends Activity {
 		String user =  mAccount.getJid().getLocalpart().toString();
 		String domain = mAccount.getJid().getDomainpart().toString();
 		String inviteURL = Config.inviteUserURL + user + "/" + domain;
-        String inviteText = getString(R.string.InviteText, user);
+		String inviteText = getString(R.string.InviteText, user);
 		Intent intent = new Intent(android.content.Intent.ACTION_SEND);
 		intent.setType("text/plain");
 		intent.putExtra(Intent.EXTRA_SUBJECT, user + " " + getString(R.string.inviteUser_Subject) + " " + getString(R.string.app_name));
@@ -1258,48 +1257,106 @@ public abstract class XmppActivity extends Activity {
 		return xmppConnectionService.getAvatarService();
 	}
 
-    public void loadBitmap(Message message, ImageView imageView) {
-        File bm;
-        bm = xmppConnectionService.getFileBackend().getFile(message, true);
-        try {
-            Glide.with(this)
-                    .load(bm)
-                    .override(400, 400)
-                    .fitCenter()
-                    //.centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                    .signature(new StringSignature(String.valueOf(System.currentTimeMillis()/(1*60*60*1000))))
-                    .into(imageView);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+	class BitmapWorkerTask extends AsyncTask<Message, Void, Bitmap> {
+		private final WeakReference<ImageView> imageViewReference;
+		private Message message = null;
 
-    }
+		public BitmapWorkerTask(ImageView imageView) {
+			imageViewReference = new WeakReference<>(imageView);
+		}
 
-    public void loadVideoPreview(Message message, ImageView imageView) {
-        File vp = xmppConnectionService.getFileBackend().getFile(message, true);
-        try {
-            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            //use one of overloaded setDataSource() functions to set your data source
-            retriever.setDataSource(this, Uri.fromFile(vp));
-            String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-            long microSecond = Long.parseLong(time);
-            int duration = (int) Math.ceil(microSecond / 2); //preview at half of video
-            BitmapPool bitmapPool = Glide.get(getApplicationContext()).getBitmapPool();
-            VideoBitmapDecoder videoBitmapDecoder = new VideoBitmapDecoder(duration);
-            FileDescriptorBitmapDecoder fileDescriptorBitmapDecoder = new FileDescriptorBitmapDecoder(videoBitmapDecoder, bitmapPool, DecodeFormat.PREFER_ARGB_8888);
-            Glide.with(getApplicationContext())
-                    .load(vp)
-                    .asBitmap()
-                    .override(400, 400)
-                    .fitCenter()
-                    //.centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                    .videoDecoder(fileDescriptorBitmapDecoder)
-                    .signature(new StringSignature(String.valueOf(System.currentTimeMillis()/(1*60*60*1000))))
-                    .into(imageView);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+		@Override
+		protected Bitmap doInBackground(Message... params) {
+			if (isCancelled()) {
+				return null;
+			}
+			message = params[0];
+			try {
+				return xmppConnectionService.getFileBackend().getThumbnail(
+						message, (int) (metrics.density * 288), false);
+			} catch (FileNotFoundException e) {
+				return null;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(Bitmap bitmap) {
+			if (bitmap != null && !isCancelled()) {
+				final ImageView imageView = imageViewReference.get();
+				if (imageView != null) {
+					imageView.setImageBitmap(bitmap);
+					imageView.setBackgroundColor(0x00000000);
+				}
+			}
+		}
+	}
+
+	public void loadBitmap(Message message, ImageView imageView) {
+		Bitmap bm;
+		try {
+			bm = xmppConnectionService.getFileBackend().getThumbnail(message,
+					(int) (metrics.density * 288), true);
+		} catch (FileNotFoundException e) {
+			bm = null;
+		}
+		if (bm != null) {
+			cancelPotentialWork(message, imageView);
+			imageView.setImageBitmap(bm);
+			imageView.setBackgroundColor(0x00000000);
+		} else {
+			if (cancelPotentialWork(message, imageView)) {
+				imageView.setBackgroundColor(0xff333333);
+				imageView.setImageDrawable(null);
+				final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+				final AsyncDrawable asyncDrawable = new AsyncDrawable(
+						getResources(), null, task);
+				imageView.setImageDrawable(asyncDrawable);
+				try {
+					task.execute(message);
+				} catch (final RejectedExecutionException ignored) {
+					ignored.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public static boolean cancelPotentialWork(Message message, ImageView imageView) {
+		final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
+
+		if (bitmapWorkerTask != null) {
+			final Message oldMessage = bitmapWorkerTask.message;
+			if (oldMessage == null || message != oldMessage) {
+				bitmapWorkerTask.cancel(true);
+			} else {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
+		if (imageView != null) {
+			final Drawable drawable = imageView.getDrawable();
+			if (drawable instanceof AsyncDrawable) {
+				final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
+				return asyncDrawable.getBitmapWorkerTask();
+			}
+		}
+		return null;
+	}
+
+	static class AsyncDrawable extends BitmapDrawable {
+		private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
+
+		public AsyncDrawable(Resources res, Bitmap bitmap,
+							 BitmapWorkerTask bitmapWorkerTask) {
+			super(res, bitmap);
+			bitmapWorkerTaskReference = new WeakReference<>(
+					bitmapWorkerTask);
+		}
+
+		public BitmapWorkerTask getBitmapWorkerTask() {
+			return bitmapWorkerTaskReference.get();
+		}
+	}
 }

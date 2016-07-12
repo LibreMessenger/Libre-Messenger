@@ -507,25 +507,6 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 		viewHolder.image.setOnLongClickListener(openContextMenu);
 	}
 
-	private void displayVideoMessage(ViewHolder viewHolder,
-									  final Message message) {
-		viewHolder.aw_player.setVisibility(View.GONE);
-		if (viewHolder.download_button != null) {
-			viewHolder.download_button.setVisibility(View.GONE);
-		}
-		viewHolder.messageBody.setVisibility(View.GONE);
-		viewHolder.image.setVisibility(View.VISIBLE);
-		activity.loadVideoPreview(message, viewHolder.image);
-		viewHolder.image.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				openDownloadable(message);
-			}
-		});
-		viewHolder.image.setOnLongClickListener(openContextMenu);
-	}
-
 	private void loadMoreMessages(Conversation conversation) {
 		conversation.setLastClearHistory(0);
 		conversation.setHasMessagesLeftOnServer(true);
@@ -690,11 +671,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 				if (mimeType != null) {
 					if (message.getMimeType().startsWith("audio/")) {
 						displayAudioMessage(viewHolder, message, position);
-					} else if (message.getMimeType().startsWith("video/")) {
-						displayVideoMessage(viewHolder, message);
-                        //ToDo add overlay e.g. play button
-					}
-                    else displayOpenableMessage(viewHolder, message);
+					} else displayOpenableMessage(viewHolder, message);
                 } else displayOpenableMessage(viewHolder, message);
 			}
 		} else if (message.getEncryption() == Message.ENCRYPTION_PGP) {
