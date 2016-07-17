@@ -1,5 +1,9 @@
 ###Changelog
 
+###Version 1.13.7
+* improved video thumbnails in chatlist
+* bug fixes
+
 ###Version 1.13.6
 * share image/video directly from fullscreen view
 * show online status in foreground service

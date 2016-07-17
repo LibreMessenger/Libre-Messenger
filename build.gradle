@@ -6,7 +6,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.0'
+        classpath 'com.android.tools.build:gradle:2.1.2'
     }
 }
 
@@ -30,7 +30,7 @@ configurations {
 dependencies {
     compile project(':libs:MemorizingTrustManager')
     compile project(':libs:audiowife')
-    playstoreCompile 'com.google.android.gms:play-services-gcm:9.0.1'
+    playstoreCompile 'com.google.android.gms:play-services-gcm:9.0.2'
     compile 'org.sufficientlysecure:openpgp-api:10.0'
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
     compile 'com.android.support:support-v13:24.0.0-beta1'
@@ -57,6 +57,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:9.0.2'
     compile 'com.google.android.gms:play-services-maps:9.0.2'
     compile 'pub.devrel:easypermissions:0.1.7'
+    compile 'com.google.android.gms:play-services-gcm:9.0.2'
 }
 
 ext {
@@ -72,8 +73,8 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
 
-        versionCode 157
-        versionName "1.13.6"
+        versionCode 158
+        versionName "1.13.7"
 
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"
