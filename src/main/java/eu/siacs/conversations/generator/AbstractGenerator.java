@@ -45,6 +45,9 @@ public abstract class AbstractGenerator {
 	private final String[] PRIVACY_SENSITIVE = {
 			"urn:xmpp:time" //XEP-0202: Entity Time leaks time zone
 	};
+	private final String[] OTR = {
+			"urn:xmpp:otr:0"
+	};
 	private String mVersion = null;
 
 	private String mVersionOs = null;
@@ -114,6 +117,9 @@ public abstract class AbstractGenerator {
 		}
 		if (!mXmppConnectionService.useTorToConnect()) {
 			features.addAll(Arrays.asList(PRIVACY_SENSITIVE));
+		}
+		if (Config.supportOtr()) {
+			features.addAll(Arrays.asList(OTR));
 		}
 		Collections.sort(features);
 		return features;
