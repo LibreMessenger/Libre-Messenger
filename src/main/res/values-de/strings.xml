@@ -628,5 +628,7 @@
   <string name="otr_fingerprint_selected_message">OTR Fingerabdruck der Nachricht</string>
   <string name="unable_to_connect_to_keychain">Keine Verbindung zu OpenKeychain</string>
   <string name="send_image">Bild senden?</string>
+  <string name="account_status_policy_violation">Richtlinienverstoß</string>
+  <string name="account_status_stream_error">Strem-Fehler</string>
 
 </resources>
