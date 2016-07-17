@@ -84,6 +84,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 	private TextView mSessionEst;
 	private TextView mOtrFingerprint;
 	private TextView mAxolotlFingerprint;
+	private TextView mOwnFingerprintDesc;
 	private TextView mAccountJidLabel;
 	private ImageView mAvatar;
 	private RelativeLayout mOtrFingerprintBox;
@@ -466,6 +467,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		this.mAxolotlFingerprintBox = (RelativeLayout) findViewById(R.id.axolotl_fingerprint_box);
 		this.mAxolotlFingerprintToClipboardButton = (ImageButton) findViewById(R.id.action_copy_axolotl_to_clipboard);
 		this.mRegenerateAxolotlKeyButton = (ImageButton) findViewById(R.id.action_regenerate_omemo_key);
+		this.mOwnFingerprintDesc = (TextView) findViewById(R.id.own_fingerprint_desc);
 		this.keysCard = (LinearLayout) findViewById(R.id.other_device_keys_card);
 		this.keys = (LinearLayout) findViewById(R.id.other_device_keys);
 		this.mNamePort = (LinearLayout) findViewById(R.id.name_port);
@@ -808,6 +810,11 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 			final String ownAxolotlFingerprint = this.mAccount.getAxolotlService().getOwnFingerprint();
 			if (ownAxolotlFingerprint != null && Config.supportOmemo()) {
 				this.mAxolotlFingerprintBox.setVisibility(View.VISIBLE);
+				if (ownAxolotlFingerprint.equals(messageFingerprint)) {
+					this.mOwnFingerprintDesc.setTextColor(getResources().getColor(R.color.accent));
+				} else {
+					this.mOwnFingerprintDesc.setTextColor(getSecondaryTextColor());
+				}
 				this.mAxolotlFingerprint.setText(CryptoHelper.prettifyFingerprint(ownAxolotlFingerprint.substring(2)));
 				this.mAxolotlFingerprintToClipboardButton
 						.setVisibility(View.VISIBLE);
