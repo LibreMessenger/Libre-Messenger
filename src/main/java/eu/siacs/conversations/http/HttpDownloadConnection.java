@@ -152,7 +152,6 @@ public class HttpDownloadConnection implements Transferable {
 	}
 
 	private void showToastForException(Exception e) {
-		e.printStackTrace();
 		if (e instanceof java.net.UnknownHostException) {
 			mXmppConnectionService.showErrorToastInUi(R.string.download_failed_server_not_found);
 		} else if (e instanceof java.net.ConnectException) {
@@ -177,15 +176,14 @@ public class HttpDownloadConnection implements Transferable {
 			long size;
 			try {
 				size = retrieveFileSize();
-			} catch (SSLHandshakeException e) {
+			} catch (Exception e) {
 				changeStatus(STATUS_OFFER_CHECK_FILESIZE);
-				HttpDownloadConnection.this.acceptedAutomatically = false;
-				HttpDownloadConnection.this.mXmppConnectionService.getNotificationService().push(message);
-				return;
-			} catch (IOException e) {
 				Log.d(Config.LOGTAG, "io exception in http file size checker: " + e.getMessage());
 				if (interactive) {
 					showToastForException(e);
+				} else {
+					HttpDownloadConnection.this.acceptedAutomatically = false;
+					HttpDownloadConnection.this.mXmppConnectionService.getNotificationService().push(message);
 				}
 				cancel();
 				return;
@@ -259,6 +257,9 @@ public class HttpDownloadConnection implements Transferable {
 			} catch (Exception e) {
 				if (interactive) {
 					showToastForException(e);
+				} else {
+					HttpDownloadConnection.this.acceptedAutomatically = false;
+					HttpDownloadConnection.this.mXmppConnectionService.getNotificationService().push(message);
 				}
 				cancel();
 			}
