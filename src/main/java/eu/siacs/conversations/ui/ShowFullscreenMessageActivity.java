@@ -92,8 +92,8 @@ public class ShowFullscreenMessageActivity extends Activity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         Intent intent = getIntent();
 
         if (intent != null) {
@@ -150,6 +150,20 @@ public class ShowFullscreenMessageActivity extends Activity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    protected void onResume() {
+        WindowManager.LayoutParams layout = getWindow().getAttributes();
+        layout.screenBrightness = 1;
+        mVideo.setShouldAutoplay(true);
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        mVideo.reset();
+        super.onPause();
     }
 
     public void onStop () {
