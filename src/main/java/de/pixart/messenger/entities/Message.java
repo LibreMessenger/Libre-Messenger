@@ -395,7 +395,7 @@ public class Message extends AbstractEntity {
 						&& this.counterpart.equals(message.getCounterpart())
 						&& (body.equals(otherBody)
 						||(message.getEncryption() == Message.ENCRYPTION_PGP
-						&&  message.getRemoteMsgId().matches("[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}"))) ;
+						&& CryptoHelper.UUID_PATTERN.matcher(message.getRemoteMsgId()).matches()));
 			} else {
 				return this.remoteMsgId == null
 						&& this.counterpart.equals(message.getCounterpart())
@@ -549,7 +549,7 @@ public class Message extends AbstractEntity {
 			try {
 				counterpart = Jid.fromParts(conversation.getJid().getLocalpart(),
 						conversation.getJid().getDomainpart(),
-						presences.asStringArray()[0]);
+						presences.toResourceArray()[0]);
 				return true;
 			} catch (InvalidJidException e) {
 				counterpart = null;

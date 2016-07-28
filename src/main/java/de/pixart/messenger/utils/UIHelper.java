@@ -19,6 +19,7 @@ import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.entities.Transferable;
 import de.pixart.messenger.xmpp.jid.Jid;
+import de.pixart.messenger.ui.XmppActivity;
 
 public class UIHelper {
 
@@ -284,6 +285,23 @@ public class UIHelper {
 				return new ListItem.Tag(context.getString(R.string.presence_dnd), 0xfff44336);
 			default:
 				return new ListItem.Tag(context.getString(R.string.presence_online), 0xff259b24);
+		}
+	}
+
+	public static String tranlasteType(Context context, String type) {
+		switch (type.toLowerCase()) {
+			case "pc":
+				return context.getString(R.string.type_pc);
+			case "phone":
+				return context.getString(R.string.type_phone);
+			case "tablet":
+				return context.getString(R.string.type_tablet);
+			case "web":
+				return context.getString(R.string.type_web);
+			case "console":
+				return context.getString(R.string.type_console);
+			default:
+				return type;
 		}
 	}
 }
