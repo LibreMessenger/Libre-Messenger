@@ -523,12 +523,18 @@ public class NotificationService {
 	public Notification createForegroundNotification() {
 		final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mXmppConnectionService);
 		List<Account> accounts = mXmppConnectionService.getAccounts();
-		Account mAccount = accounts.get(0);
-		String status = "";
-		if (mAccount.getStatus() == Account.State.ONLINE) {
-			status = mXmppConnectionService.getString(R.string.account_status_online);
-		} else if (mAccount.getStatus() == Account.State.CONNECTING) {
-			status = mXmppConnectionService.getString(R.string.account_status_connecting);
+		String status;
+        Account mAccount = null;
+        Log.d(Config.LOGTAG, "Accounts size " + accounts.size());
+		if (accounts.size() > 0) {
+			mAccount = accounts.get(0);
+			if (mAccount.getStatus() == Account.State.ONLINE) {
+				status = mXmppConnectionService.getString(R.string.account_status_online);
+			} else if (mAccount.getStatus() == Account.State.CONNECTING) {
+				status = mXmppConnectionService.getString(R.string.account_status_connecting);
+			} else {
+				status = mXmppConnectionService.getString(R.string.account_status_offline);
+			}
 		} else {
 			status = mXmppConnectionService.getString(R.string.account_status_offline);
 		}
@@ -557,7 +563,7 @@ public class NotificationService {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			mBuilder.setCategory(Notification.CATEGORY_SERVICE);
 		}
-		if (mAccount.getStatus() == Account.State.ONLINE) {
+		if (accounts.size() > 0 && mAccount.getStatus() == Account.State.ONLINE) {
 			mBuilder.setSmallIcon(R.drawable.ic_link_white_24dp);
 		} else {
 			mBuilder.setSmallIcon(R.drawable.ic_unlink_white_24dp);
