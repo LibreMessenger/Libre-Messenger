@@ -49,9 +49,7 @@
         </receiver>
 
         <activity
-            android:name=".ui.StartUI"
-            android:configChanges="orientation|screenSize"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:name=".ui.ConversationActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:windowSoftInputMode="stateHidden">
@@ -62,9 +60,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.ConversationActivity"
+            android:name=".ui.StartUI"
             android:label="@string/app_name"
             android:launchMode="singleTask"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
