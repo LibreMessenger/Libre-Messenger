@@ -49,13 +49,13 @@
                 android:key="enable_quiet_hours"
                 android:summary="@string/pref_quiet_hours_summary"
                 android:title="@string/title_pref_enable_quiet_hours" />
-            <eu.siacs.conversations.ui.TimePreference
+            <de.pixart.messenger.ui.TimePreference
                 android:dependency="enable_quiet_hours"
                 android:key="quiet_hours_start"
                 android:negativeButtonText="@string/cancel"
                 android:positiveButtonText="@string/set"
                 android:title="@string/title_pref_quiet_hours_start_time" />
-            <eu.siacs.conversations.ui.TimePreference
+            <de.pixart.messenger.ui.TimePreference
                 android:dependency="enable_quiet_hours"
                 android:key="quiet_hours_end"
                 android:negativeButtonText="@string/cancel"
@@ -229,14 +229,14 @@
                 android:key="autojoin"
                 android:summary="@string/pref_autojoin_summary"
                 android:title="@string/pref_autojoin" />
-            <eu.siacs.conversations.ui.ExportLogsPreference
+            <de.pixart.messenger.ui.ExportLogsPreference
                 android:key="export_logs"
                 android:summary="@string/pref_export_logs_summary"
                 android:title="@string/pref_export_logs" />
         </PreferenceCategory>
     </PreferenceScreen>
     <!--About-->
-    <eu.siacs.conversations.ui.AboutPreference
+    <de.pixart.messenger.ui.AboutPreference
         android:icon="@drawable/ic_help_black_24dp"
         android:summary="@string/pref_about_conversations_summary"
         android:title="@string/title_activity_about" />

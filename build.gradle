@@ -30,10 +30,10 @@ configurations {
 dependencies {
     compile project(':libs:MemorizingTrustManager')
     compile project(':libs:audiowife')
-    playstoreCompile 'com.google.android.gms:play-services-gcm:9.0.2'
+    playstoreCompile 'com.google.android.gms:play-services-gcm:9.2.1'
     compile 'org.sufficientlysecure:openpgp-api:10.0'
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
-    compile 'com.android.support:support-v13:24.0.0-beta1'
+    compile 'com.android.support:support-v13:24.1.1'
     compile 'org.bouncycastle:bcprov-jdk15on:1.52'
     compile 'org.bouncycastle:bcmail-jdk15on:1.52'
     compile 'org.jitsi:org.otr4j:0.22'
@@ -49,15 +49,15 @@ dependencies {
     compile 'jetty:javax.servlet:5.1.12'
     compile 'com.google.code.gson:gson:2.4'
     compile 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
-    compile 'com.android.support:appcompat-v7:24.0.0-beta1'
+    compile 'com.android.support:appcompat-v7:24.1.1'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.github.bumptech.glide:glide:3.5.2'
     compile 'com.github.chrisbanes:PhotoView:1.2.6'
     compile 'com.github.rtoshiro.fullscreenvideoview:fullscreenvideoview:1.1.0'
-    compile 'com.google.android.gms:play-services-location:9.0.2'
-    compile 'com.google.android.gms:play-services-maps:9.0.2'
+    compile 'com.google.android.gms:play-services-location:9.2.1'
+    compile 'com.google.android.gms:play-services-maps:9.2.1'
     compile 'pub.devrel:easypermissions:0.1.7'
-    compile 'com.google.android.gms:play-services-gcm:9.0.2'
+    compile 'com.google.android.gms:play-services-gcm:9.2.1'
 }
 
 ext {
@@ -73,8 +73,8 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
 
-        versionCode 158
-        versionName "1.13.7"
+        versionCode 159
+        versionName "1.13.8"
 
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"

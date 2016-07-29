@@ -34,7 +34,7 @@
         android:paddingLeft="2dp"
         android:paddingBottom="2dp">
 
-        <eu.siacs.conversations.ui.EditMessage
+        <de.pixart.messenger.ui.EditMessage
             android:id="@+id/textinput"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
             android:textColor="@color/black87">
 
             <requestFocus />
-        </eu.siacs.conversations.ui.EditMessage>
+        </de.pixart.messenger.ui.EditMessage>
 
         <ImageButton
             android:id="@+id/textSendButton"
