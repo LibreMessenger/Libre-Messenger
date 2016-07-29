@@ -1,5 +1,8 @@
 ###Changelog
 
+###Version 1.13.8
+* bug fixes
+
 ###Version 1.13.7
 * improved video thumbnails in chatlist
 * bug fixes
