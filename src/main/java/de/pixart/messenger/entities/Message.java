@@ -8,6 +8,7 @@ import java.net.URL;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.crypto.axolotl.XmppAxolotlSession;
+import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.GeoHelper;
 import de.pixart.messenger.utils.MimeUtils;
 import de.pixart.messenger.utils.UIHelper;

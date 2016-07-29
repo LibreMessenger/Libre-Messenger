@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 public class Presences {
 	private final Hashtable<String, Presence> presences = new Hashtable<>();
