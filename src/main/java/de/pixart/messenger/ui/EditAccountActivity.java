@@ -730,6 +730,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		if (!mInitMode) {
 			this.mAvatar.setVisibility(View.VISIBLE);
 			this.mAvatar.setImageBitmap(avatarService().get(this.mAccount, getPixel(Config.AVATAR_SIZE)));
+			this.mAccountJid.setEnabled(false);
 		} else {
 			this.mAvatar.setVisibility(View.GONE);
 		}
