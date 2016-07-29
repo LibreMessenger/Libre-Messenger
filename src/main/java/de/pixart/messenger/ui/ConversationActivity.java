@@ -1,6 +1,5 @@
 package de.pixart.messenger.ui;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.AlertDialog;
@@ -129,8 +128,6 @@ public class ConversationActivity extends XmppActivity
 	private boolean mActivityPaused = false;
 	private AtomicBoolean mRedirected = new AtomicBoolean(false);
 	private Pair<Integer, Intent> mPostponedActivityResult;
-
-	private boolean PermissionGranted = false;
 
     FileUtils mFileUtils;
 
@@ -1257,35 +1254,6 @@ public class ConversationActivity extends XmppActivity
 	public void onStart() {
 		super.onStart();
 		this.mRedirected.set(false);
-
-		//Permission check
-		Bundle extras = getIntent().getExtras();
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-			if (extras != null && extras.containsKey("FirstStart")) {
-				FirstStartTime = extras.getLong("FirstStart");
-				Log.d(Config.LOGTAG, "Get first start time from StartUI: " + FirstStartTime);
-			}
-		} else {
-			FirstStartTime = System.currentTimeMillis();
-			Log.d(Config.LOGTAG, "Device is running Android < SDK 23, no restart required: " + FirstStartTime);
-		}
-		if (FirstStartTime == 0) {
-			Log.d(Config.LOGTAG, "First start time: " + FirstStartTime + ", restarting App");
-			//write first start timestamp to file
-			String PREFS_NAME = "FirstStart";
-			FirstStartTime = System.currentTimeMillis();
-			SharedPreferences FirstStart = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-			SharedPreferences.Editor editor = FirstStart.edit();
-			editor.putLong("FirstStart", FirstStartTime);
-			editor.commit();
-			// restart
-			Intent intent = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
-			System.exit(0);
-		}
-		// end
 		if (this.xmppConnectionServiceBound) {
 			this.onBackendConnected();
 		}
@@ -1351,6 +1319,16 @@ public class ConversationActivity extends XmppActivity
 		this.xmppConnectionService.getNotificationService().setIsInForeground(true);
 		updateConversationList();
 
+        Bundle extras = getIntent().getExtras();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (extras != null && extras.containsKey("FirstStart")) {
+                FirstStartTime = extras.getLong("FirstStart");
+                Log.d(Config.LOGTAG, "Get first start time from StartUI: " + FirstStartTime);
+            }
+        } else {
+            FirstStartTime = System.currentTimeMillis();
+            Log.d(Config.LOGTAG, "Device is running Android < SDK 23, no restart required: " + FirstStartTime);
+        }
 
 		if (mPendingConferenceInvite != null) {
 			if (mPendingConferenceInvite.execute(this)) {
@@ -1360,69 +1338,71 @@ public class ConversationActivity extends XmppActivity
 			mPendingConferenceInvite = null;
 		}
 
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-			if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-					|| checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-				Intent intent = new Intent (this, StartUI.class);
-				startActivity(intent);
-			} else {
-				PermissionGranted = true;
-			}
-		} else {
-			PermissionGranted = true;
-		}
-
+        if (FirstStartTime == 0) {
+            Log.d(Config.LOGTAG, "First start time: " + FirstStartTime + ", restarting App");
+            //write first start timestamp to file
+            String PREFS_NAME = "FirstStart";
+            FirstStartTime = System.currentTimeMillis();
+            SharedPreferences FirstStart = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = FirstStart.edit();
+            editor.putLong("FirstStart", FirstStartTime);
+            editor.commit();
+            // restart
+            Intent intent = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            System.exit(0);
+        }
 		final Intent intent = getIntent();
-		if (PermissionGranted) {
-			if (xmppConnectionService.getAccounts().size() == 0) {
-				if (mRedirected.compareAndSet(false, true)) {
-					if (Config.X509_VERIFICATION) {
-						startActivity(new Intent(this, ManageAccountActivity.class));
-					} else if (Config.MAGIC_CREATE_DOMAIN != null) {
-						Log.d(Config.LOGTAG, "First start time: " + FirstStartTime);
-						startActivity(new Intent(this, WelcomeActivity.class));
-					} else {
-						startActivity(new Intent(this, EditAccountActivity.class));
-					}
-					finish();
-				}
-			} else if (conversationList.size() <= 0) {
-				if (mRedirected.compareAndSet(false, true)) {
-					Account pendingAccount = xmppConnectionService.getPendingAccount();
-					if (pendingAccount == null) {
-						Intent startConversationActivity = new Intent(this, StartConversationActivity.class);
-						intent.putExtra("init", true);
-						startActivity(startConversationActivity);
-					} else {
-						switchToAccount(pendingAccount, true);
-					}
-					finish();
-				}
-			} else if (selectConversationByUuid(mOpenConverstaion)) {
-				if (mPanelOpen) {
-					showConversationsOverview();
-				} else {
-					if (isConversationsOverviewHideable()) {
-						openConversation();
-						updateActionBarTitle(true);
-					}
-				}
-				this.mConversationFragment.reInit(getSelectedConversation());
-				mOpenConverstaion = null;
-			} else if (intent != null && ACTION_VIEW_CONVERSATION.equals(intent.getAction())) {
-				clearPending();
-				handleViewConversationIntent(intent);
-				intent.setAction(Intent.ACTION_MAIN);
-			} else if (getSelectedConversation() == null) {
-				showConversationsOverview();
-				clearPending();
-				setSelectedConversation(conversationList.get(0));
-				this.mConversationFragment.reInit(getSelectedConversation());
-			} else {
-				this.mConversationFragment.messageListAdapter.updatePreferences();
-				this.mConversationFragment.messagesView.invalidateViews();
-				this.mConversationFragment.setupIme();
+		if (xmppConnectionService.getAccounts().size() == 0) {
+			if (mRedirected.compareAndSet(false, true)) {
+				if (Config.X509_VERIFICATION) {
+                    startActivity(new Intent(this, ManageAccountActivity.class));
+                } else if (Config.MAGIC_CREATE_DOMAIN != null) {
+                    Log.d(Config.LOGTAG, "First start time: " + FirstStartTime);
+                    startActivity(new Intent(this, WelcomeActivity.class));
+                } else {
+                    startActivity(new Intent(this, EditAccountActivity.class));
+                }
+                finish();
 			}
+		} else if (conversationList.size() <= 0) {
+			if (mRedirected.compareAndSet(false, true)) {
+				Account pendingAccount = xmppConnectionService.getPendingAccount();
+				if (pendingAccount == null) {
+					Intent startConversationActivity = new Intent(this, StartConversationActivity.class);
+					intent.putExtra("init", true);
+					startActivity(startConversationActivity);
+				} else {
+					switchToAccount(pendingAccount, true);
+				}
+				finish();
+			}
+		} else if (selectConversationByUuid(mOpenConverstaion)) {
+			if (mPanelOpen) {
+				showConversationsOverview();
+			} else {
+				if (isConversationsOverviewHideable()) {
+					openConversation();
+					updateActionBarTitle(true);
+				}
+			}
+			this.mConversationFragment.reInit(getSelectedConversation());
+			mOpenConverstaion = null;
+		} else if (intent != null && ACTION_VIEW_CONVERSATION.equals(intent.getAction())) {
+			clearPending();
+			handleViewConversationIntent(intent);
+			intent.setAction(Intent.ACTION_MAIN);
+		} else if (getSelectedConversation() == null) {
+			showConversationsOverview();
+			clearPending();
+			setSelectedConversation(conversationList.get(0));
+			this.mConversationFragment.reInit(getSelectedConversation());
+		} else {
+			this.mConversationFragment.messageListAdapter.updatePreferences();
+			this.mConversationFragment.messagesView.invalidateViews();
+			this.mConversationFragment.setupIme();
 		}
 
         if (xmppConnectionService.getAccounts().size() != 0) {
