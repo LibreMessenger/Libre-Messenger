@@ -158,7 +158,6 @@ public class ShareLocationActivity extends Activity implements OnMapReadyCallbac
 			this.mShareButton.setEnabled(true);
 			this.mShareButton.setTextColor(0xde000000);
 			this.mShareButton.setText(R.string.share);
-            this.mLocationInfo.setVisibility(View.VISIBLE);
 		}
 		this.mLastLocation = location;
         if (latitude != 0 && longitude != 0) {
@@ -233,6 +232,7 @@ public class ShareLocationActivity extends Activity implements OnMapReadyCallbac
         @Override
         protected void onPostExecute(String address) {
             // Setting address of the touched Position
+            mLocationInfo.setVisibility(View.VISIBLE);
             mSnackbarLocation.setText(address);
             Log.d(Config.LOGTAG,"Location: Address = "+ address);
         }
