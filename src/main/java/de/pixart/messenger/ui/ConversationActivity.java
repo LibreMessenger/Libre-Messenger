@@ -83,9 +83,9 @@ import de.pixart.messenger.xmpp.jid.Jid;
 public class ConversationActivity extends XmppActivity
 	implements OnAccountUpdate, OnConversationUpdate, OnRosterUpdate, OnUpdateBlocklist, XmppConnectionService.OnShowErrorToast, View.OnClickListener {
 
-	public static final String ACTION_VIEW_CONVERSATION = "eu.siacs.conversations.action.VIEW";
+	public static final String ACTION_VIEW_CONVERSATION = "de.pixart.messenger.VIEW";
 	public static final String CONVERSATION = "conversationUuid";
-	public static final String EXTRA_DOWNLOAD_UUID = "eu.siacs.conversations.download_uuid";
+	public static final String EXTRA_DOWNLOAD_UUID = "de.pixart.messenger.download_uuid";
 	public static final String TEXT = "text";
 	public static final String NICK = "nick";
 	public static final String PRIVATE_MESSAGE = "pm";
@@ -932,7 +932,7 @@ public class ConversationActivity extends XmppActivity
 		if (new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION).resolveActivity(getPackageManager()) == null) {
 			attachFilePopup.getMenu().findItem(R.id.attach_record_voice).setVisible(false);
 		}
-		if (new Intent("eu.siacs.conversations.location.request").resolveActivity(getPackageManager()) == null) {
+		if (new Intent("de.pixart.messenger.location.request").resolveActivity(getPackageManager()) == null) {
 			attachFilePopup.getMenu().findItem(R.id.attach_location).setVisible(false);
 		}
 		attachFilePopup.setOnMenuItemClickListener(new OnMenuItemClickListener() {

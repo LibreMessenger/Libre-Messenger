@@ -5,7 +5,7 @@
 
     <permission android:name="de.pixart.messenger.permission.C2D_MESSAGE"
                 android:protectionLevel="signature"/>
-    <uses-permission android:name="eu.siacs.conversations.permission.C2D_MESSAGE"/>
+    <uses-permission android:name="de.pixart.messenger.permission.C2D_MESSAGE"/>
 
     <application>
 
