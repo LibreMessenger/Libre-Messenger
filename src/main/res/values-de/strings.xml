@@ -630,5 +630,7 @@
   <string name="send_image">Bild senden?</string>
   <string name="account_status_policy_violation">Richtlinienverstoß</string>
   <string name="account_status_stream_error">Strem-Fehler</string>
+  <string name="registration_password_too_weak">Registrierung fehlgeschlagen: Passwort zu schwach</string>
+  <string name="this_device_is_no_longer_in_use">Dieses Gerät wird nicht länger verwendet</string>
 
 </resources>
