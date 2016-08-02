@@ -841,9 +841,6 @@ public class XmppConnectionService extends Service {
 	@Override
 	public void onTaskRemoved(final Intent rootIntent) {
 		super.onTaskRemoved(rootIntent);
-//		if (!getPreferences().getBoolean("keep_foreground_service", false)) {
-//			this.logoutAndSave(false);
-//		}
 	}
 
 	private void logoutAndSave(boolean stop) {
