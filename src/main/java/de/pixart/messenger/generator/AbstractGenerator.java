@@ -66,14 +66,6 @@ public abstract class AbstractGenerator {
 		return this.mVersion;
 	}
 
-	protected String getIdentityVersionOs() {
-		if (mVersionOs == null) {
-			this.mVersionOs = "Android/" + android.os.Build.MODEL
-					+ "/" + android.os.Build.VERSION.RELEASE;
-		}
-		return this.mVersionOs;
-	}
-
 	public String getIdentityName() {
 		return mXmppConnectionService.getString(R.string.app_name) + " " + getIdentityVersion();
 	}
