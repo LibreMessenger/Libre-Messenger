@@ -28,7 +28,6 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -265,11 +264,8 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 
 	private void displayInfoMessage(ViewHolder viewHolder, String text, boolean darkBackground) {
 		viewHolder.aw_player.setVisibility(View.GONE);
-		if (viewHolder.download_button != null) {
-			viewHolder.download_button.setVisibility(View.GONE);
-		}
-        if (viewHolder.image_button != null) {
-            viewHolder.image_button.setVisibility(View.GONE);
+        if (viewHolder.download_button != null) {
+            viewHolder.download_button.setVisibility(View.GONE);
         }
 		viewHolder.image.setVisibility(View.GONE);
 		viewHolder.messageBody.setVisibility(View.VISIBLE);
@@ -281,11 +277,8 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 
 	private void displayDecryptionFailed(ViewHolder viewHolder, boolean darkBackground) {
 		viewHolder.aw_player.setVisibility(View.GONE);
-		if (viewHolder.download_button != null) {
-			viewHolder.download_button.setVisibility(View.GONE);
-		}
-        if (viewHolder.image_button != null) {
-            viewHolder.image_button.setVisibility(View.GONE);
+        if (viewHolder.download_button != null) {
+            viewHolder.download_button.setVisibility(View.GONE);
         }
 		viewHolder.image.setVisibility(View.GONE);
 		viewHolder.messageBody.setVisibility(View.VISIBLE);
@@ -298,11 +291,8 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 
 	private void displayHeartMessage(final ViewHolder viewHolder, final String body) {
 		viewHolder.aw_player.setVisibility(View.GONE);
-		if (viewHolder.download_button != null) {
-			viewHolder.download_button.setVisibility(View.GONE);
-		}
-        if (viewHolder.image_button != null) {
-            viewHolder.image_button.setVisibility(View.GONE);
+        if (viewHolder.download_button != null) {
+            viewHolder.download_button.setVisibility(View.GONE);
         }
 		viewHolder.image.setVisibility(View.GONE);
 		viewHolder.messageBody.setVisibility(View.VISIBLE);
@@ -314,11 +304,8 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 	}
 
 	private void displayTextMessage(final ViewHolder viewHolder, final Message message, boolean darkBackground) {
-		if (viewHolder.download_button != null) {
-			viewHolder.download_button.setVisibility(View.GONE);
-		}
-        if (viewHolder.image_button != null) {
-            viewHolder.image_button.setVisibility(View.GONE);
+        if (viewHolder.download_button != null) {
+            viewHolder.download_button.setVisibility(View.GONE);
         }
 		viewHolder.image.setVisibility(View.GONE);
 		viewHolder.messageBody.setVisibility(View.VISIBLE);
@@ -421,7 +408,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 		viewHolder.messageBody.setVisibility(View.GONE);
 		viewHolder.download_button.setVisibility(View.VISIBLE);
 		viewHolder.download_button.setText(text);
-        viewHolder.image_button.setVisibility(View.GONE);
+		viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_download_grey600_48dp,0,0,0);
 		viewHolder.download_button.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -438,9 +425,6 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         viewHolder.messageBody.setVisibility(View.GONE);
         if (viewHolder.download_button != null) {
             viewHolder.download_button.setVisibility(View.GONE);
-        }
-        if (viewHolder.image_button != null) {
-            viewHolder.image_button.setVisibility(View.GONE);
         }
         viewHolder.aw_player.setVisibility(View.VISIBLE);
         Uri audioFile = Uri.fromFile(activity.xmppConnectionService.getFileBackend().getFile(message));
@@ -464,47 +448,37 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 		viewHolder.aw_player.setVisibility(View.GONE);
 		viewHolder.image.setVisibility(View.GONE);
 		viewHolder.messageBody.setVisibility(View.GONE);
-		viewHolder.download_button.setVisibility(View.GONE);
 		viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message)));
-        viewHolder.image_button.setVisibility(View.VISIBLE);
+        viewHolder.download_button.setVisibility(View.VISIBLE);
         String mimeType = message.getMimeType();
         if (mimeType != null) {
             if (message.getMimeType().contains("pdf")) {
-                viewHolder.image_button.setImageResource(R.drawable.ic_file_pdf_grey600_48dp);
+                viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_file_pdf_grey600_48dp,0,0,0);
             } else if (message.getMimeType().contains("vcard")) {
-                viewHolder.image_button.setImageResource(R.drawable.ic_account_card_details_grey600_48dp);
+                viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_account_card_details_grey600_48dp,0,0,0);
             } else if (message.getMimeType().contains("calendar")) {
-                viewHolder.image_button.setImageResource(R.drawable.ic_calendar_grey600_48dp);
+                viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_calendar_grey600_48dp,0,0,0);
             } else {
-                viewHolder.image_button.setImageResource(R.drawable.ic_file_grey600_48dp);
+                viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_file_grey600_48dp,0,0,0);
             }
         }
-		viewHolder.download_button.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				openDownloadable(message);
-			}
-		});
-        viewHolder.image_button.setOnClickListener(new OnClickListener() {
+        viewHolder.download_button.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 openDownloadable(message);
             }
         });
-        viewHolder.download_button.setOnLongClickListener(openContextMenu);
-		viewHolder.image_button.setOnLongClickListener(openContextMenu);
+		viewHolder.download_button.setOnLongClickListener(openContextMenu);
 	}
 
 	private void displayLocationMessage(ViewHolder viewHolder, final Message message) {
 		viewHolder.aw_player.setVisibility(View.GONE);
 		viewHolder.image.setVisibility(View.GONE);
 		viewHolder.messageBody.setVisibility(View.GONE);
-		viewHolder.download_button.setVisibility(View.GONE);
 		viewHolder.download_button.setText(R.string.show_location);
-        viewHolder.image_button.setVisibility(View.VISIBLE);
-		viewHolder.image_button.setImageResource(R.drawable.ic_map_marker_grey600_48dp);
+        viewHolder.download_button.setVisibility(View.VISIBLE);
+		viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_map_marker_grey600_48dp,0,0,0);
 		viewHolder.download_button.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -512,26 +486,21 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 				showLocation(message);
 			}
 		});
-        viewHolder.image_button.setOnClickListener(new OnClickListener() {
+        viewHolder.download_button.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 showLocation(message);
             }
         });
-        viewHolder.download_button.setOnLongClickListener(openContextMenu);
-		viewHolder.image_button.setOnLongClickListener(openContextMenu);
+		viewHolder.download_button.setOnLongClickListener(openContextMenu);
 	}
 
 	private void displayImageMessage(ViewHolder viewHolder,
 			final Message message) {
 		viewHolder.aw_player.setVisibility(View.GONE);
-		if (viewHolder.download_button != null) {
-			viewHolder.download_button.setVisibility(View.GONE);
-
-        }
-        if (viewHolder.image_button != null) {
-            viewHolder.image_button.setVisibility(View.GONE);
+        if (viewHolder.download_button != null) {
+            viewHolder.download_button.setVisibility(View.GONE);
         }
 		viewHolder.messageBody.setVisibility(View.GONE);
 		viewHolder.image.setVisibility(View.VISIBLE);
@@ -592,10 +561,8 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                 viewHolder.contact_picture = (ImageView) view
                         .findViewById(R.id.message_photo);
                 viewHolder.aw_player = (ViewGroup) view.findViewById(R.id.aw_player);
-                viewHolder.download_button = (Button) view
-                        .findViewById(R.id.download_button);
-				viewHolder.image_button = (ImageButton) view
-						.findViewById(R.id.image_button);
+				viewHolder.download_button = (Button) view
+						.findViewById(R.id.download_button);
                 viewHolder.indicator = (ImageView) view
                         .findViewById(R.id.security_indicator);
                 viewHolder.edit_indicator = (ImageView) view.findViewById(R.id.edit_indicator);
@@ -618,10 +585,8 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                 viewHolder.contact_picture = (ImageView) view
                         .findViewById(R.id.message_photo);
                 viewHolder.aw_player = (ViewGroup) view.findViewById(R.id.aw_player);
-                viewHolder.download_button = (Button) view
-                        .findViewById(R.id.download_button);
-				viewHolder.image_button = (ImageButton) view
-						.findViewById(R.id.image_button);
+				viewHolder.download_button = (Button) view
+						.findViewById(R.id.download_button);
                 viewHolder.indicator = (ImageView) view
                         .findViewById(R.id.security_indicator);
                 viewHolder.edit_indicator = (ImageView) view.findViewById(R.id.edit_indicator);
@@ -875,8 +840,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 	private static class ViewHolder {
 
 		protected LinearLayout message_box;
-		protected ImageButton image_button;
-        protected Button download_button;
+		protected Button download_button;
 		protected ViewGroup aw_player;
 		protected ImageView image;
 		protected ImageView indicator;
