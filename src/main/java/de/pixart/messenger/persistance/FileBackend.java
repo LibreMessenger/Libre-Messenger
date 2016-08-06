@@ -461,7 +461,7 @@ public class FileBackend {
 		pathBuilder.append('/');
 		pathBuilder.append("Camera");
 		pathBuilder.append('/');
-		pathBuilder.append("IMG_" + this.fileDateFormat.format(new Date()) + ".jpg");
+		pathBuilder.append(this.fileDateFormat.format(new Date()) + ".jpg");
 		Uri uri = Uri.parse("file://" + pathBuilder.toString());
 		File file = new File(uri.toString());
 		file.getParentFile().mkdirs();
