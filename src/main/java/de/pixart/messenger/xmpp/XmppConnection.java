@@ -56,6 +56,7 @@ import javax.net.ssl.X509TrustManager;
 import de.duenndns.ssl.MemorizingTrustManager;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.crypto.XmppDomainVerifier;
+import de.pixart.messenger.crypto.sasl.Anonymous;
 import de.pixart.messenger.crypto.sasl.DigestMd5;
 import de.pixart.messenger.crypto.sasl.External;
 import de.pixart.messenger.crypto.sasl.Plain;
@@ -854,6 +855,8 @@ public class XmppConnection implements Runnable {
 			saslMechanism = new Plain(tagWriter, account);
 		} else if (mechanisms.contains("DIGEST-MD5")) {
 			saslMechanism = new DigestMd5(tagWriter, account, mXmppConnectionService.getRNG());
+		} else if (mechanisms.contains("ANONYMOUS")) {
+			saslMechanism = new Anonymous(tagWriter, account, mXmppConnectionService.getRNG());
 		}
 		if (saslMechanism != null) {
 			final JSONObject keys = account.getKeys();
