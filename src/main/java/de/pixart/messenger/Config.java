@@ -42,7 +42,7 @@ public final class Config {
 
 	public static final String BUG_REPORTS = "bugs@pix-art.de";
 
-	public static String inviteUserURL = "https://jabber.pix-art.de/i/";
+	public static final String inviteUserURL = "https://jabber.pix-art.de/i/";
 
 	public static final String DOMAIN_LOCK = "pix-art.de"; //only allow account creation for this domain
 	public static final String MAGIC_CREATE_DOMAIN = "pix-art.de";
@@ -91,6 +91,10 @@ public final class Config {
 	public static final int REFRESH_UI_INTERVAL = 500;
 
 	public static final int MAX_DISPLAY_MESSAGE_CHARS = 4096;
+
+	public static final boolean ExportLogs = true; // automatically export logs
+	public static final int ExportLogs_Hour = 4; //valid values from 0 to 23
+	public static final int ExportLogs_Minute = 0; //valid values from 0 to 59
 
 	public static final boolean DISABLE_PROXY_LOOKUP = false; //useful to debug ibb
 	public static final boolean DISABLE_HTTP_UPLOAD = false;

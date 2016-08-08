@@ -632,5 +632,11 @@
   <string name="account_status_stream_error">Strem-Fehler</string>
   <string name="registration_password_too_weak">Registrierung fehlgeschlagen: Passwort zu schwach</string>
   <string name="this_device_is_no_longer_in_use">Dieses Gerät wird nicht länger verwendet</string>
+  <string name="Import_failed">Datenbankimport ist fehlgeschlagen und nicht möglich.</string>
+  <string name="Password_wrong">Falsches Passwort, erneut versuchen</string>
+  <string name="enter_account_password">Bitte gib das Passwort deines Profils ein, um das Backup zu importieren.</string>
+  <string name="import_canceled">Import abgebrochen</string>
+  <string name="databaseimport_started">Backup wird importiert, dies wird eine Weile dauern.</string>
+  <string name="please_wait">Bitte warten…</string>
 
 </resources>

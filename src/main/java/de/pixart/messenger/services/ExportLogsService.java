@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -13,19 +14,23 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.crypto.NoSuchPaddingException;
+
+import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.persistance.DatabaseBackend;
 import de.pixart.messenger.persistance.FileBackend;
+import de.pixart.messenger.utils.EncryptDecryptFile;
 import de.pixart.messenger.xmpp.jid.Jid;
 
 public class ExportLogsService extends Service {
@@ -50,10 +55,12 @@ public class ExportLogsService extends Service {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					try {
-						ExportDatabase();
-					} catch (IOException e) {
-						e.printStackTrace();
+					if (mAccounts.size() == 1) {
+						try {
+							ExportDatabase();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 					}
 					export();
 					stopForeground(true);
@@ -150,32 +157,43 @@ public class ExportLogsService extends Service {
 	}
 
 	public void ExportDatabase() throws IOException {
-
+		Account mAccount = mAccounts.get(0);
 		// Get hold of the db:
-		InputStream myInput = new FileInputStream(this.getDatabasePath(DatabaseBackend.DATABASE_NAME));
-
+		FileInputStream InputFile = new FileInputStream(this.getDatabasePath(DatabaseBackend.DATABASE_NAME));
 		// Set the output folder on the SDcard
-		File directory = new File(FileBackend.getConversationsDirectory() + "/.Database/");
-
+		File directory = new File(FileBackend.getConversationsDirectory() + "/database/");
 		// Create the folder if it doesn't exist:
 		if (!directory.exists()) {
 			directory.mkdirs();
 		}
-
-		// Set the output file stream up:
-		OutputStream myOutput = new FileOutputStream(directory.getPath() + "/Database.bak");
-
-		// Transfer bytes from the input file to the output file
-		byte[] buffer = new byte[1024];
-		int length;
-		while ((length = myInput.read(buffer)) > 0) {
-			myOutput.write(buffer, 0, length);
+		//Delete old database export file
+		File temp_db_file = new File(directory + "/database.bak");
+		if (temp_db_file.exists()) {
+            Log.d(Config.LOGTAG, "Delete temp database backup file from " + temp_db_file.toString());
+			temp_db_file.delete();
 		}
+		// Set the output file stream up:
+		FileOutputStream OutputFile = new FileOutputStream(directory.getPath() + "/database.db.crypt");
 
-		// Close and clear the streams
-		myOutput.flush();
-		myOutput.close();
-		myInput.close();
+		String EncryptionKey = mAccount.getPassword(); //get account password
+
+		Log.d(Config.LOGTAG,"Password for " + mAccount.getJid().toString() + " is " + EncryptionKey);
+		// encrypt database from the input file to the output file
+		try {
+			EncryptDecryptFile.encrypt(InputFile, OutputFile, EncryptionKey);
+		} catch (NoSuchAlgorithmException e) {
+			Log.d(Config.LOGTAG,"Database exporter: encryption failed with " + e);
+			e.printStackTrace();
+		} catch (NoSuchPaddingException e) {
+			Log.d(Config.LOGTAG,"Database exporter: encryption failed with " + e);
+			e.printStackTrace();
+		} catch (InvalidKeyException e) {
+			Log.d(Config.LOGTAG,"Database exporter: encryption failed (invalid key) with " + e);
+			e.printStackTrace();
+		} catch (IOException e) {
+			Log.d(Config.LOGTAG,"Database exporter: encryption failed (IO) with " + e);
+			e.printStackTrace();
+		}
 	}
 
 	@Override

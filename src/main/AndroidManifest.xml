@@ -18,7 +18,7 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
     <uses-permission
         android:name="android.permission.READ_PHONE_STATE"
         tools:node="remove"/>
@@ -47,6 +47,11 @@
                 <data android:scheme="package" android:path="de.pixart.messenger" />
             </intent-filter>
         </receiver>
+
+        <receiver
+            android:name="de.pixart.messenger.services.AlarmReceiver">
+        </receiver>
+
 
         <activity
             android:name="de.pixart.messenger.ui.StartUI"

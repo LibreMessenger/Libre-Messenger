@@ -677,4 +677,10 @@
 	<string name="type_tablet">Tablet</string>
 	<string name="type_web">Web browser</string>
 	<string name="type_console">Console</string>
+	<string name="import_canceled">Import canceled</string>
+	<string name="Import_failed">Database import failed, an import is not possible</string>
+	<string name="Password_wrong">Wrong password, try again</string>
+	<string name="enter_account_password">Please enter your account password to import your backup.</string>
+	<string name="please_wait">Please wait…</string>
+	<string name="databaseimport_started">Backup will be imported, this may take awhile.</string>
 </resources>

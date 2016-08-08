@@ -26,15 +26,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
-import de.pixart.messenger.persistance.DatabaseBackend;
+import de.pixart.messenger.services.ExportLogsService;
 import de.pixart.messenger.services.UpdaterWebService;
 
 public class UpdaterActivity extends Activity {
@@ -62,7 +57,6 @@ public class UpdaterActivity extends Activity {
                 installIntent.putExtra(Intent.EXTRA_RETURN_RESULT, true);
                 installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(installIntent);
-
                 UpdaterActivity.this.finish();
             }
         }
@@ -98,36 +92,6 @@ public class UpdaterActivity extends Activity {
             startService(msgIntent);
         }
     }
-
-    private void ExportDatabase() throws IOException {
-
-        // Get hold of the db:
-        InputStream myInput = new FileInputStream(this.getDatabasePath(DatabaseBackend.DATABASE_NAME));
-
-        // Set the output folder on the SDcard
-        File directory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger/.Database/");
-
-        // Create the folder if it doesn't exist:
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
-
-        // Set the output file stream up:
-        OutputStream myOutput = new FileOutputStream(directory.getPath() + "/Database.bak");
-
-        // Transfer bytes from the input file to the output file
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = myInput.read(buffer)) > 0) {
-            myOutput.write(buffer, 0, length);
-        }
-
-        // Close and clear the streams
-        myOutput.flush();
-        myOutput.close();
-        myInput.close();
-    }
-
 
     @Override
     public void onDestroy() {
@@ -230,11 +194,8 @@ public class UpdaterActivity extends Activity {
                     if (success) {
                         if (isStoragePermissionGranted()) {
                             //start backing up database
-                            try {
-                                ExportDatabase();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                            final Intent startIntent = new Intent(getBaseContext(), ExportLogsService.class);
+                            getBaseContext().startService(startIntent);
                         }
                         //Overall information about the contents of a package
                         //This corresponds to all of the information collected from AndroidManifest.xml.

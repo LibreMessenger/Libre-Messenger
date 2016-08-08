@@ -48,6 +48,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -794,6 +795,9 @@ public class XmppConnectionService extends Service {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 			scheduleNextIdlePing();
 		}
+
+		//start export log service every day at given time
+		ScheduleAutomaticExport();
 	}
 
 	@Override
@@ -814,6 +818,8 @@ public class XmppConnectionService extends Service {
 		}
 		fileObserver.stopWatching();
 		super.onDestroy();
+		// cancel scheduled exporter
+		CancelAutomaticExport();
 	}
 
 	public void toggleScreenEventReceiver() {
@@ -3505,6 +3511,32 @@ public class XmppConnectionService extends Service {
 	public class XmppConnectionBinder extends Binder {
 		public XmppConnectionService getService() {
 			return XmppConnectionService.this;
+		}
+	}
+
+	public void ScheduleAutomaticExport() {
+		//start export log service every day at given time
+		if (Config.ExportLogs) {
+			if (Config.ExportLogs_Hour >= 0 && Config.ExportLogs_Hour <= 23 && Config.ExportLogs_Minute >= 0 && Config.ExportLogs_Minute <= 59) {
+				Log.d(Config.LOGTAG, "Schedule automatic export logs at " + Config.ExportLogs_Hour + ":" + Config.ExportLogs_Minute);
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTimeInMillis(System.currentTimeMillis());
+				calendar.set(Calendar.HOUR_OF_DAY, Config.ExportLogs_Hour);
+				calendar.set(Calendar.MINUTE, Config.ExportLogs_Minute);
+				Intent intent = new Intent(this, AlarmReceiver.class);
+				intent.setAction("exportlogs");
+				final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, AlarmReceiver.SCHEDULE_ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+				((AlarmManager) getSystemService(ALARM_SERVICE)).setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+			}
+		}
+	}
+
+	public void CancelAutomaticExport() {
+		if (Config.ExportLogs) {
+			Log.d(Config.LOGTAG, "Cancel scheduled automatic export");
+			Intent intent = new Intent(this, AlarmReceiver.class);
+			final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, AlarmReceiver.SCHEDULE_ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+			((AlarmManager) this.getSystemService(ALARM_SERVICE)).cancel(pendingIntent);
 		}
 	}
 }

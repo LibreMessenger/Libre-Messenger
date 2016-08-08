@@ -3,6 +3,7 @@ package de.pixart.messenger.ui;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -12,29 +13,33 @@ import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
+
+import javax.crypto.NoSuchPaddingException;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.persistance.DatabaseBackend;
+import de.pixart.messenger.persistance.FileBackend;
+import de.pixart.messenger.utils.EncryptDecryptFile;
 
 public class WelcomeActivity extends Activity {
 
     private static final int REQUEST_READ_EXTERNAL_STORAGE = 0XD737;
-    boolean dbExist = false;
-    boolean backup_existing = false;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -43,18 +48,14 @@ public class WelcomeActivity extends Activity {
 
         //check if there is a backed up database --
         if (hasStoragePermission(REQUEST_READ_EXTERNAL_STORAGE)) {
-            dbExist = checkDatabase();
-        }
-
-        if (dbExist) {
-            backup_existing = true;
+            BackupAvailable();
         }
 
 
         final Button ImportDatabase = (Button) findViewById(R.id.import_database);
         final TextView ImportText = (TextView) findViewById(R.id.import_text);
 
-        if (backup_existing) {
+        if (BackupAvailable()) {
             ImportDatabase.setVisibility(View.VISIBLE);
             ImportText.setVisibility(View.VISIBLE);
         }
@@ -62,11 +63,7 @@ public class WelcomeActivity extends Activity {
         ImportDatabase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    ImportDatabase();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                enterPasswordDialog();
             }
         });
 
@@ -89,16 +86,109 @@ public class WelcomeActivity extends Activity {
 
     }
 
-    private boolean checkDatabase() {
+    public void enterPasswordDialog() {
+        LayoutInflater li = LayoutInflater.from(WelcomeActivity.this);
+        View promptsView = li.inflate(R.layout.password, null);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(WelcomeActivity.this);
+        alertDialogBuilder.setView(promptsView);
+        final EditText userInput = (EditText) promptsView
+                .findViewById(R.id.password);
+        alertDialogBuilder.setTitle(R.string.enter_password);
+        alertDialogBuilder.setMessage(R.string.enter_account_password);
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton(R.string.ok,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                final String password = userInput.getText().toString();
+                                final ProgressDialog pd = ProgressDialog.show(WelcomeActivity.this, getString(R.string.please_wait), getString(R.string.databaseimport_started), true);
+                                if (!password.isEmpty()) {
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try {
+                                                checkDatabase(password);
+                                            } catch (IOException e) {
+                                                e.printStackTrace();
+                                            }
+                                            pd.dismiss();
+                                        }
+                                    }).start();
+                                } else {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(WelcomeActivity.this);
+                                    builder.setTitle(R.string.error);
+                                    builder.setMessage(R.string.password_should_not_be_empty);
+                                    builder.setNegativeButton(R.string.cancel, null);
+                                    builder.setPositiveButton(R.string.try_again, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            enterPasswordDialog();
+                                        }
+                                    });
+                                    builder.create().show();
+                                }
+                            }
+                        })
+                .setNegativeButton(R.string.cancel,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                Toast.makeText(WelcomeActivity.this, R.string.import_canceled, Toast.LENGTH_LONG).show();
+                                dialog.dismiss();
+                            }
+                        }
+                );
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+    }
+
+    private boolean BackupAvailable() {
+        // Set the folder on the SDcard
+        File filePath = new File(FileBackend.getConversationsDirectory() + "/database/database.db.crypt");
+        Log.d(Config.LOGTAG,"DB Path: " + filePath.toString());
+        if(filePath.exists()) {
+            Log.d(Config.LOGTAG,"DB Path existing");
+            return true;
+        } else {
+            Log.d(Config.LOGTAG,"DB Path not existing");
+            return false;
+        }
+    }
+
+    private void checkDatabase(String DecryptionKey) throws IOException {
+        // Set the folder on the SDcard
+        File directory = new File(FileBackend.getConversationsDirectory() + "/database/");
+        // Set the input file stream up:
+        FileInputStream InputFile = new FileInputStream(directory.getPath() + "/database.db.crypt");
+        // Temp output for DB checks
+        File TempFile = new File(directory.getPath() + "/database.bak");
+        FileOutputStream OutputTemp = new FileOutputStream(TempFile);
+
+        try {
+            Log.d(Config.LOGTAG,"Try decryption to temp with password: " + DecryptionKey);
+            EncryptDecryptFile.decrypt(InputFile, OutputTemp, DecryptionKey);
+        } catch (NoSuchAlgorithmException e) {
+            Log.d(Config.LOGTAG,"Database importer: decryption failed with " + e);
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            Log.d(Config.LOGTAG,"Database importer: decryption failed with " + e);
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            Log.d(Config.LOGTAG,"Database importer: decryption failed (invalid key) with " + e);
+            e.printStackTrace();
+        } catch (IOException e) {
+            Log.d(Config.LOGTAG,"Database importer: decryption failed (IO) with " + e);
+            e.printStackTrace();
+        }
 
         SQLiteDatabase checkDB = null;
-        String DB_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger/.Database/";
-        String DB_NAME = "Database.bak";
         int DB_Version = DatabaseBackend.DATABASE_VERSION;
         int Backup_DB_Version = 0;
 
         try {
-            String dbPath = DB_PATH + DB_NAME;
+            String dbPath = TempFile.toString();
             checkDB = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READONLY);
             Backup_DB_Version = checkDB.getVersion();
             Log.d(Config.LOGTAG, "Backup found: " + checkDB + " Version: " + checkDB.getVersion());
@@ -111,36 +201,45 @@ public class WelcomeActivity extends Activity {
         if (checkDB != null) {
             checkDB.close();
         }
-        if (checkDB != null && Backup_DB_Version <= DB_Version) {
-            return true;
+        Log.d(Config.LOGTAG, "checkDB = " + checkDB.toString() + ", Backup DB = " + Backup_DB_Version + ", DB = " + DB_Version);
+        if (checkDB != null && Backup_DB_Version != 0 && Backup_DB_Version <= DB_Version) {
+            Log.d(Config.LOGTAG,"Try decryption with password: " + DecryptionKey);
+            if (TempFile.exists()) {
+                Log.d(Config.LOGTAG, "Delete temp file from " + TempFile.toString());
+                TempFile.delete();
+            }
+            ImportDatabase(DecryptionKey);
+        } else if (checkDB != null && Backup_DB_Version == 0) {
+            Toast.makeText(WelcomeActivity.this, R.string.Password_wrong, Toast.LENGTH_LONG).show();
+            enterPasswordDialog();
         } else {
-            return false;
+            Toast.makeText(WelcomeActivity.this, R.string.Import_failed, Toast.LENGTH_LONG).show();
         }
     }
 
-    private void ImportDatabase() throws IOException {
-
+    private void ImportDatabase(final String DecryptionKey) throws IOException {
         // Set location for the db:
-        OutputStream myOutput = new FileOutputStream(this.getDatabasePath(DatabaseBackend.DATABASE_NAME));
-
+        final FileOutputStream OutputFile = new FileOutputStream(this.getDatabasePath(DatabaseBackend.DATABASE_NAME));
         // Set the folder on the SDcard
-        File directory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger/.Database/");
-
+        File directory = new File(FileBackend.getConversationsDirectory() + "/database/");
         // Set the input file stream up:
-        InputStream myInput = new FileInputStream(directory.getPath() + "/Database.bak");
-
-        // Transfer bytes from the input file to the output file
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = myInput.read(buffer)) > 0) {
-            myOutput.write(buffer, 0, length);
+        final FileInputStream InputFile = new FileInputStream(directory.getPath() + "/database.db.crypt");
+        Log.d(Config.LOGTAG,"Starting decryption and import of backup with password: " + DecryptionKey);
+        try {
+            EncryptDecryptFile.decrypt(InputFile, OutputFile, DecryptionKey);
+        } catch (NoSuchAlgorithmException e) {
+            Log.d(Config.LOGTAG, "Database importer: decryption failed with " + e);
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            Log.d(Config.LOGTAG, "Database importer: decryption failed with " + e);
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            Log.d(Config.LOGTAG, "Database importer: decryption failed (invalid key) with " + e);
+            e.printStackTrace();
+        } catch (IOException e) {
+            Log.d(Config.LOGTAG, "Database importer: decryption failed (IO) with " + e);
+            e.printStackTrace();
         }
-        Log.d(Config.LOGTAG,"Starting import of backup");
-
-        // Close and clear the streams
-        myOutput.flush();
-        myOutput.close();
-        myInput.close();
 
         Log.d(Config.LOGTAG, "New Features - Uninstall old version of Pix-Art Messenger");
         if (isPackageInstalled("eu.siacs.conversations")) {
@@ -168,7 +267,6 @@ public class WelcomeActivity extends Activity {
         } else {
             restart();
         }
-
     }
 
     private void restart() {
