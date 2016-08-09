@@ -579,7 +579,8 @@ public class XmppConnectionService extends Service {
 					refreshAllGcmTokens();
 					break;
 				case ACTION_IDLE_PING:
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+							&& !Config.CLOSE_TCP_WHEN_SWITCHING_TO_BACKGROUND) {
 						scheduleNextIdlePing();
 					}
 					break;
@@ -797,7 +798,8 @@ public class XmppConnectionService extends Service {
 		toggleForegroundService();
 		updateUnreadCountBadge();
 		toggleScreenEventReceiver();
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+				&& !Config.CLOSE_TCP_WHEN_SWITCHING_TO_BACKGROUND) {
 			scheduleNextIdlePing();
 		}
 
