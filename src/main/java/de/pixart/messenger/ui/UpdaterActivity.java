@@ -29,7 +29,6 @@ import java.io.File;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
-import de.pixart.messenger.services.ExportLogsService;
 import de.pixart.messenger.services.UpdaterWebService;
 
 public class UpdaterActivity extends Activity {
@@ -40,7 +39,6 @@ public class UpdaterActivity extends Activity {
     private DownloadManager downloadManager;
     private long downloadReference;
     private String FileName = "update.apk";
-    //broadcast receiver to get notification about ongoing downloads
 
     BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
 
@@ -192,11 +190,6 @@ public class UpdaterActivity extends Activity {
                     reponseObj = new JSONObject(responseMessage);
                     boolean success = reponseObj.getBoolean("success");
                     if (success) {
-                        if (isStoragePermissionGranted()) {
-                            //start backing up database
-                            final Intent startIntent = new Intent(getBaseContext(), ExportLogsService.class);
-                            getBaseContext().startService(startIntent);
-                        }
                         //Overall information about the contents of a package
                         //This corresponds to all of the information collected from AndroidManifest.xml.
                         PackageInfo pInfo = null;
