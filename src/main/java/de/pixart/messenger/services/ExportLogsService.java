@@ -55,13 +55,6 @@ public class ExportLogsService extends Service {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					if (mAccounts.size() == 1) {
-						try {
-							ExportDatabase();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
 					export();
 					stopForeground(true);
 					running.set(false);
@@ -77,17 +70,22 @@ public class ExportLogsService extends Service {
 		conversations.addAll(mDatabaseBackend.getConversations(Conversation.STATUS_ARCHIVED));
 		NotificationManager mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getBaseContext());
-		mBuilder.setContentTitle(getString(R.string.notification_export_logs_title))
+		mBuilder.setContentTitle(getString(R.string.app_name))
+				.setContentText(getString(R.string.notification_export_logs_title))
 				.setSmallIcon(R.drawable.ic_import_export_white_24dp)
-				.setProgress(conversations.size(), 0, false);
+				.setProgress(0, 0, true);
 		startForeground(NOTIFICATION_ID, mBuilder.build());
+        mNotifyManager.notify(NOTIFICATION_ID, mBuilder.build());
 
-		int progress = 0;
 		for (Conversation conversation : conversations) {
 			writeToFile(conversation);
-			progress++;
-			mBuilder.setProgress(conversations.size(), progress, false);
-			mNotifyManager.notify(NOTIFICATION_ID, mBuilder.build());
+		}
+		if (mAccounts.size() == 1) {
+			try {
+				ExportDatabase();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

@@ -317,7 +317,7 @@
   <string name="conversations_foreground_service">Pix-Art Messenger</string>
   <string name="pref_export_logs">Chats exportieren</string>
   <string name="pref_export_logs_summary">Chats auf SD-Karte schreiben</string>
-  <string name="notification_export_logs_title">Chats werden auf SD-Karte geschrieben</string>
+  <string name="notification_export_logs_title">Backup wird auf SD-Karte geschrieben</string>
   <string name="choose_file">Datei auswählen</string>
   <string name="receiving_x_file">Empfange %1$s (%2$d%% abgeschlossen)</string>
   <string name="download_x_file">%s herunterladen</string>
