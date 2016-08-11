@@ -175,7 +175,6 @@ public class ExportLogsService extends Service {
 
 		String EncryptionKey = mAccount.getPassword(); //get account password
 
-		Log.d(Config.LOGTAG,"Password for " + mAccount.getJid().toString() + " is " + EncryptionKey);
 		// encrypt database from the input file to the output file
 		try {
 			EncryptDecryptFile.encrypt(InputFile, OutputFile, EncryptionKey);

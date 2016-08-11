@@ -167,7 +167,6 @@ public class WelcomeActivity extends Activity {
         FileOutputStream OutputTemp = new FileOutputStream(TempFile);
 
         try {
-            Log.d(Config.LOGTAG,"Try decryption to temp with password: " + DecryptionKey);
             EncryptDecryptFile.decrypt(InputFile, OutputTemp, DecryptionKey);
         } catch (NoSuchAlgorithmException e) {
             Log.d(Config.LOGTAG,"Database importer: decryption failed with " + e);
