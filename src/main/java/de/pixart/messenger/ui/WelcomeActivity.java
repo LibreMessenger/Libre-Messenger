@@ -25,6 +25,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -137,11 +139,14 @@ public class WelcomeActivity extends Activity {
                             }
                         }
                 );
-        // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
-
-        // show it
-        alertDialog.show();
+        WelcomeActivity.this.runOnUiThread(new Runnable() {
+            public void run() {
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                // show it
+                alertDialog.show();
+            }
+        });
     }
 
     private boolean BackupAvailable() {
@@ -202,42 +207,42 @@ public class WelcomeActivity extends Activity {
         }
         Log.d(Config.LOGTAG, "checkDB = " + checkDB.toString() + ", Backup DB = " + Backup_DB_Version + ", DB = " + DB_Version);
         if (checkDB != null && Backup_DB_Version != 0 && Backup_DB_Version <= DB_Version) {
-            Log.d(Config.LOGTAG,"Try decryption with password: " + DecryptionKey);
-            if (TempFile.exists()) {
-                Log.d(Config.LOGTAG, "Delete temp file from " + TempFile.toString());
-                TempFile.delete();
-            }
-            ImportDatabase(DecryptionKey);
+            ImportDatabase();
         } else if (checkDB != null && Backup_DB_Version == 0) {
-            Toast.makeText(WelcomeActivity.this, R.string.Password_wrong, Toast.LENGTH_LONG).show();
+            WelcomeActivity.this.runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(WelcomeActivity.this, R.string.Password_wrong, Toast.LENGTH_LONG).show();
+                }
+            });
             enterPasswordDialog();
         } else {
-            Toast.makeText(WelcomeActivity.this, R.string.Import_failed, Toast.LENGTH_LONG).show();
+            WelcomeActivity.this.runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(WelcomeActivity.this, R.string.Import_failed, Toast.LENGTH_LONG).show();
+                }
+            });
         }
     }
 
-    private void ImportDatabase(final String DecryptionKey) throws IOException {
+    private void ImportDatabase() throws IOException {
         // Set location for the db:
-        final FileOutputStream OutputFile = new FileOutputStream(this.getDatabasePath(DatabaseBackend.DATABASE_NAME));
+        final OutputStream OutputFile = new FileOutputStream(this.getDatabasePath(DatabaseBackend.DATABASE_NAME));
         // Set the folder on the SDcard
         File directory = new File(FileBackend.getConversationsDirectory() + "/database/");
         // Set the input file stream up:
-        final FileInputStream InputFile = new FileInputStream(directory.getPath() + "/database.db.crypt");
-        Log.d(Config.LOGTAG,"Starting decryption and import of backup with password: " + DecryptionKey);
-        try {
-            EncryptDecryptFile.decrypt(InputFile, OutputFile, DecryptionKey);
-        } catch (NoSuchAlgorithmException e) {
-            Log.d(Config.LOGTAG, "Database importer: decryption failed with " + e);
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            Log.d(Config.LOGTAG, "Database importer: decryption failed with " + e);
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            Log.d(Config.LOGTAG, "Database importer: decryption failed (invalid key) with " + e);
-            e.printStackTrace();
-        } catch (IOException e) {
-            Log.d(Config.LOGTAG, "Database importer: decryption failed (IO) with " + e);
-            e.printStackTrace();
+        final InputStream InputFile = new FileInputStream(directory.getPath() + "/database.bak");
+        //set temp file
+        File TempFile = new File(directory.getPath() + "/database.bak");
+
+        // Transfer bytes from the input file to the output file
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = InputFile.read(buffer)) > 0) {
+            OutputFile.write(buffer, 0, length);
+        }
+        if (TempFile.exists()) {
+            Log.d(Config.LOGTAG, "Delete temp file from " + TempFile.toString());
+            TempFile.delete();
         }
 
         Log.d(Config.LOGTAG, "New Features - Uninstall old version of Pix-Art Messenger");
