@@ -638,5 +638,7 @@
   <string name="import_canceled">Import abgebrochen</string>
   <string name="databaseimport_started">Backup wird importiert, dies wird eine Weile dauern.</string>
   <string name="please_wait">Bitte warten…</string>
+  <string name="pref_export_plain_text_logs">Exportiere Chats als lesbare Text-Dateien</string>
+  <string name="pref_export_plain_text_logs_summary">Aktiviere den Export von Chats als lesbare Text-Dateien</string>
 
 </resources>

@@ -172,7 +172,17 @@
             android:key="crashreport"
             android:summary="@string/pref_send_crash_summary"
             android:title="@string/pref_send_crash" />
-
+        <PreferenceCategory android:title="@string/pref_export_logs">
+            <de.pixart.messenger.ui.ExportLogsPreference
+                android:key="export_logs"
+                android:summary="@string/pref_export_logs_summary"
+                android:title="@string/pref_export_logs" />
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="export_plain_text_logs"
+                android:summary="@string/pref_export_plain_text_logs_summary"
+                android:title="@string/pref_export_plain_text_logs" />
+        </PreferenceCategory>
     </PreferenceScreen>
     <!--Expert-->
     <PreferenceScreen
@@ -229,10 +239,6 @@
                 android:key="autojoin"
                 android:summary="@string/pref_autojoin_summary"
                 android:title="@string/pref_autojoin" />
-            <de.pixart.messenger.ui.ExportLogsPreference
-                android:key="export_logs"
-                android:summary="@string/pref_export_logs_summary"
-                android:title="@string/pref_export_logs" />
         </PreferenceCategory>
     </PreferenceScreen>
     <!--About-->

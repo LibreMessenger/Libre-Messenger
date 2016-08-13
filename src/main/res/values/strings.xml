@@ -683,4 +683,6 @@
 	<string name="enter_account_password">Please enter your account password to import your backup.</string>
 	<string name="please_wait">Please wait…</string>
 	<string name="databaseimport_started">Backup will be imported, this may take awhile.</string>
+	<string name="pref_export_plain_text_logs_summary">Enable an export of chat logs as human readable text files</string>
+	<string name="pref_export_plain_text_logs">Export human readable chat logs</string>
 </resources>

@@ -4,7 +4,9 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -42,11 +44,14 @@ public class ExportLogsService extends Service {
 	private static AtomicBoolean running = new AtomicBoolean(false);
 	private DatabaseBackend mDatabaseBackend;
 	private List<Account> mAccounts;
+	boolean ReadableLogsEnabled = false;
 
 	@Override
 	public void onCreate() {
 		mDatabaseBackend = DatabaseBackend.getInstance(getBaseContext());
 		mAccounts = mDatabaseBackend.getAccounts();
+		final SharedPreferences ReadableLogs = PreferenceManager.getDefaultSharedPreferences(this);
+		ReadableLogsEnabled = ReadableLogs.getBoolean("export_plain_text_logs", false);
 	}
 
 	@Override
@@ -76,9 +81,10 @@ public class ExportLogsService extends Service {
 				.setProgress(0, 0, true);
 		startForeground(NOTIFICATION_ID, mBuilder.build());
         mNotifyManager.notify(NOTIFICATION_ID, mBuilder.build());
-
-		for (Conversation conversation : conversations) {
-			writeToFile(conversation);
+		if (ReadableLogsEnabled) {
+			for (Conversation conversation : conversations) {
+				writeToFile(conversation);
+			}
 		}
 		if (mAccounts.size() == 1) {
 			try {
