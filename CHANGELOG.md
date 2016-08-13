@@ -1,5 +1,11 @@
 ###Changelog
 
+###Version 1.13.9
+* add icons for files in chat view
+* reworked backup service to automatically backup database encrypted to local storage at 4 am each day
+* make human readable log export optional
+* bug fixes
+
 ###Version 1.13.8
 * bug fixes
 
