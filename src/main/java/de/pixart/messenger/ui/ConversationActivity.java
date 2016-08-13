@@ -19,6 +19,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -49,12 +50,13 @@ import net.java.otr4j.session.SessionStatus;
 
 import org.openintents.openpgp.util.OpenPgpApi;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import de.timroes.android.listview.EnhancedListView;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
@@ -79,6 +81,7 @@ import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
+import de.timroes.android.listview.EnhancedListView;
 
 public class ConversationActivity extends XmppActivity
 	implements OnAccountUpdate, OnConversationUpdate, OnRosterUpdate, OnUpdateBlocklist, XmppConnectionService.OnShowErrorToast, View.OnClickListener {
@@ -130,6 +133,7 @@ public class ConversationActivity extends XmppActivity
 	private Pair<Integer, Intent> mPostponedActivityResult;
 
     FileUtils mFileUtils;
+	FileBackend mFileBackend;
 
     long FirstStartTime = -1;
 
@@ -1742,99 +1746,110 @@ public class ConversationActivity extends XmppActivity
 				});
 	}
 
-    private void attachImageToConversation(Conversation conversation, Uri uri) {
-        if (conversation == null) {
-            return;
-        }
-        final Conversation conversation_preview = conversation;
-        final Uri uri_preview = uri;
-        Bitmap bitmap = BitmapFactory.decodeFile(FileUtils.getPath(this, uri));
-        if (bitmap != null) {
-            int scaleSize = 600;
-            int originalWidth = bitmap.getWidth();
-            int originalHeight = bitmap.getHeight();
-            int newWidth = -1;
-            int newHeight = -1;
-            float multFactor;
-            if (originalHeight > originalWidth) {
-                newHeight = scaleSize;
-                multFactor = (float) originalWidth / (float) originalHeight;
-                newWidth = (int) (newHeight * multFactor);
-            } else if (originalWidth > originalHeight) {
-                newWidth = scaleSize;
-                multFactor = (float) originalHeight / (float) originalWidth;
-                newHeight = (int) (newWidth * multFactor);
-            } else if (originalHeight == originalWidth) {
-                newHeight = scaleSize;
-                newWidth = scaleSize;
-            }
-            Log.d(Config.LOGTAG, "Scaling preview image from " + originalHeight + "px x " + originalWidth + "px to " + newHeight + "px x " + newWidth + "px");
-            Bitmap preview = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, false);
-            ImageView ImagePreview = new ImageView(this);
+	private void attachImageToConversation(Conversation conversation, Uri uri) {
+		if (conversation == null) {
+			return;
+		}
+		final Conversation conversation_preview = conversation;
+		final Uri uri_preview = uri;
+		Bitmap bitmap = BitmapFactory.decodeFile(FileUtils.getPath(this, uri));
+		File file = new File(FileUtils.getPath(this, uri));
+		ExifInterface exif = null;
+		try {
+			exif = new ExifInterface(file.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+		Log.d(Config.LOGTAG, "EXIF: " + orientation);
+		Bitmap rotated_image = null;
+		Log.d(Config.LOGTAG, "Rotate image");
+		rotated_image = FileBackend.rotateBitmap(file, bitmap, orientation);
+		if (rotated_image != null) {
+			int scaleSize = 600;
+			int originalWidth = rotated_image.getWidth();
+			int originalHeight = rotated_image.getHeight();
+			int newWidth = -1;
+			int newHeight = -1;
+			float multFactor;
+			if (originalHeight > originalWidth) {
+				newHeight = scaleSize;
+				multFactor = (float) originalWidth / (float) originalHeight;
+				newWidth = (int) (newHeight * multFactor);
+			} else if (originalWidth > originalHeight) {
+				newWidth = scaleSize;
+				multFactor = (float) originalHeight / (float) originalWidth;
+				newHeight = (int) (newWidth * multFactor);
+			} else if (originalHeight == originalWidth) {
+				newHeight = scaleSize;
+				newWidth = scaleSize;
+			}
+			Log.d(Config.LOGTAG, "Scaling preview image from " + originalHeight + "px x " + originalWidth + "px to " + newHeight + "px x " + newWidth + "px");
+			Bitmap preview = Bitmap.createScaledBitmap(rotated_image, newWidth, newHeight, false);
+			ImageView ImagePreview = new ImageView(this);
+			LinearLayout.LayoutParams vp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+			ImagePreview.setLayoutParams(vp);
+			ImagePreview.setMaxWidth(newWidth);
+			ImagePreview.setMaxHeight(newHeight);
+			//ImagePreview.setScaleType(ImageView.ScaleType.FIT_XY);
+			//ImagePreview.setAdjustViewBounds(true);
+			ImagePreview.setPadding(5, 5, 5, 5);
+			ImagePreview.setImageBitmap(preview);
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setView(ImagePreview);
+			builder.setTitle(R.string.send_image);
+			builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(final DialogInterface dialog, final int which) {
+					final Toast prepareFileToast = Toast.makeText(getApplicationContext(), getText(R.string.preparing_image), Toast.LENGTH_LONG);
+					prepareFileToast.show();
+					xmppConnectionService.attachImageToConversation(conversation_preview, uri_preview,
+							new UiCallback<Message>() {
 
-            LinearLayout.LayoutParams vp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            ImagePreview.setLayoutParams(vp);
-            ImagePreview.setMaxWidth(newWidth);
-            ImagePreview.setMaxHeight(newHeight);
-            //ImagePreview.setScaleType(ImageView.ScaleType.FIT_XY);
-            //ImagePreview.setAdjustViewBounds(true);
-            ImagePreview.setPadding(5, 5, 5, 5);
-            ImagePreview.setImageBitmap(preview);
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setView(ImagePreview);
-            builder.setTitle(R.string.send_image);
-            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(final DialogInterface dialog, final int which) {
-                    final Toast prepareFileToast = Toast.makeText(getApplicationContext(), getText(R.string.preparing_image), Toast.LENGTH_LONG);
-                    prepareFileToast.show();
-                    xmppConnectionService.attachImageToConversation(conversation_preview, uri_preview,
-                            new UiCallback<Message>() {
+								@Override
+								public void userInputRequried(PendingIntent pi, Message object) {
+									hidePrepareFileToast(prepareFileToast);
+								}
 
-                                @Override
-                                public void userInputRequried(PendingIntent pi, Message object) {
-                                    hidePrepareFileToast(prepareFileToast);
-                                }
+								@Override
+								public void success(Message message) {
+									hidePrepareFileToast(prepareFileToast);
+									xmppConnectionService.sendMessage(message);
+								}
 
-                                @Override
-                                public void success(Message message) {
-                                    hidePrepareFileToast(prepareFileToast);
-                                    xmppConnectionService.sendMessage(message);
-                                }
-
-                                @Override
-                                public void error(final int error, Message message) {
-                                    hidePrepareFileToast(prepareFileToast);
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            replaceToast(getString(error));
-                                        }
-                                    });
-                                }
-                            });
-                }
-            });
-            builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    mPendingImageUris.clear();
-                }
-            });
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        mPendingImageUris.clear();
-                    }
-                });
-            }
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
-        } else {
-            Toast.makeText(getApplicationContext(), getText(R.string.error_file_not_found), Toast.LENGTH_LONG).show();
-        }
-    }
+								@Override
+								public void error(final int error, Message message) {
+									hidePrepareFileToast(prepareFileToast);
+									runOnUiThread(new Runnable() {
+										@Override
+										public void run() {
+											replaceToast(getString(error));
+										}
+									});
+								}
+							});
+				}
+			});
+			builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					mPendingImageUris.clear();
+				}
+			});
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+				builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+					@Override
+					public void onDismiss(DialogInterface dialog) {
+						mPendingImageUris.clear();
+					}
+				});
+			}
+			AlertDialog alertDialog = builder.create();
+			alertDialog.show();
+		} else {
+			Toast.makeText(getApplicationContext(), getText(R.string.error_file_not_found), Toast.LENGTH_LONG).show();
+		}
+	}
 
 	private void hidePrepareFileToast(final Toast prepareFileToast) {
 		if (prepareFileToast != null) {
