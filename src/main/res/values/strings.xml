@@ -685,4 +685,5 @@
 	<string name="databaseimport_started">Backup will be imported, this may take awhile.</string>
 	<string name="pref_export_plain_text_logs_summary">Enable an export of chat logs as human readable text files</string>
 	<string name="pref_export_plain_text_logs">Export human readable chat logs</string>
+	<string name="payment_required">Payment required</string>
 </resources>
