@@ -111,7 +111,8 @@ public class Account extends AbstractEntity {
 		STREAM_ERROR(true),
 		POLICY_VIOLATION(true),
 		REGISTRATION_PASSWORD_TOO_WEAK(true),
-		PAYMENT_REQUIRED(true);
+		PAYMENT_REQUIRED(true),
+		MISSING_INTERNET_PERMISSION(true);
 
 		private final boolean isError;
 
@@ -171,6 +172,8 @@ public class Account extends AbstractEntity {
 					return R.string.account_status_stream_error;
 				case PAYMENT_REQUIRED:
 					return R.string.payment_required;
+				case MISSING_INTERNET_PERMISSION:
+					return R.string.missing_internet_permission;
 				default:
 					return R.string.account_status_unknown;
 			}
