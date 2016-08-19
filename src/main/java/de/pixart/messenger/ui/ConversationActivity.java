@@ -1501,6 +1501,26 @@ public class ConversationActivity extends XmppActivity
 		xmppConnectionService.getNotificationService().setOpenConversation(null);
 	}
 
+	@SuppressLint("NewApi")
+	private static List<Uri> extractUriFromIntent(final Intent intent) {
+		List<Uri> uris = new ArrayList<>();
+		if (intent == null) {
+			return uris;
+		}
+		Uri uri = intent.getData();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2 && uri == null) {
+			final ClipData clipData = intent.getClipData();
+			if (clipData != null) {
+				for (int i = 0; i < clipData.getItemCount(); ++i) {
+					uris.add(clipData.getItemAt(i).getUri());
+				}
+			}
+		} else {
+			uris.add(uri);
+		}
+		return uris;
+	}
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
