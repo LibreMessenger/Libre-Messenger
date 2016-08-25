@@ -12,6 +12,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v4.content.FileProvider;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -804,7 +805,9 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         if (mime == null) {
             mime = "*/*";
         }
-        openIntent.setDataAndType(Uri.fromFile(file), mime);
+        Uri uri = FileProvider.getUriForFile(activity,"de.pixart.messenger.files",file);
+        openIntent.setDataAndType(uri, mime);
+        openIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         PackageManager manager = activity.getPackageManager();
         List<ResolveInfo> infos = manager.queryIntentActivities(openIntent, 0);
         if (infos.size() == 0) {
