@@ -11,7 +11,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.ListItem;
@@ -19,7 +21,6 @@ import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.entities.Transferable;
 import de.pixart.messenger.xmpp.jid.Jid;
-import de.pixart.messenger.ui.XmppActivity;
 
 public class UIHelper {
 
@@ -74,8 +75,7 @@ public class UIHelper {
 		} else if (difference < 60 * 2) {
 			return context.getString(R.string.minute_ago);
 		} else if (difference < 60 * 15) {
-			return context.getString(R.string.minutes_ago,
-					Math.round(difference / 60.0));
+			return context.getString(R.string.minutes_ago,Math.round(difference / 60.0));
 		} else if (today(date)) {
 			java.text.DateFormat df = DateFormat.getTimeFormat(context);
 			return df.format(date);
@@ -249,6 +249,30 @@ public class UIHelper {
 				final Jid jid = conversation.getAccount().getJid();
 				return jid.hasLocalpart() ? jid.getLocalpart() : jid.toDomainJid().toString();
 			}
+		}
+	}
+
+	public static String getMessageHint(Context context, Conversation conversation) {
+		switch (conversation.getNextEncryption()) {
+			case Message.ENCRYPTION_NONE:
+				if (Config.multipleEncryptionChoices()) {
+					return context.getString(R.string.send_unencrypted_message);
+				} else {
+					return context.getString(R.string.send_message_to_x,conversation.getName());
+				}
+			case Message.ENCRYPTION_OTR:
+				return context.getString(R.string.send_otr_message);
+			case Message.ENCRYPTION_AXOLOTL:
+				AxolotlService axolotlService = conversation.getAccount().getAxolotlService();
+				if (axolotlService != null && axolotlService.trustedSessionVerified(conversation)) {
+					return context.getString(R.string.send_omemo_x509_message);
+				} else {
+					return context.getString(R.string.send_omemo_message);
+				}
+			case Message.ENCRYPTION_PGP:
+				return context.getString(R.string.send_pgp_message);
+			default:
+				return "";
 		}
 	}
 
