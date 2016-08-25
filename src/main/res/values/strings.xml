@@ -687,4 +687,5 @@
 	<string name="pref_export_plain_text_logs">Export human readable chat logs</string>
 	<string name="payment_required">Payment required</string>
 	<string name="missing_internet_permission">Missing internet permission</string>
+	<string name="me">Me</string>
 </resources>
