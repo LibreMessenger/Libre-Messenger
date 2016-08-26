@@ -18,6 +18,10 @@
         android:title="@string/attach_choose_picture"/>
 
     <item
+        android:id="@+id/attach_choose_video"
+        android:title="@string/attach_choose_video"/>
+
+    <item
         android:id="@+id/attach_choose_file"
         android:title="@string/choose_file"/>
 

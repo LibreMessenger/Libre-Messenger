@@ -15,6 +15,7 @@ import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
@@ -43,15 +44,18 @@ import org.openintents.openpgp.IOpenPgpService2;
 import org.openintents.openpgp.util.OpenPgpApi;
 import org.openintents.openpgp.util.OpenPgpServiceConnection;
 
+import java.io.File;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -60,6 +64,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutionException;
 
 import de.duenndns.ssl.MemorizingTrustManager;
 import de.pixart.messenger.Config;
@@ -98,12 +103,14 @@ import de.pixart.messenger.ui.UiCallback;
 import de.pixart.messenger.utils.ConversationsFileObserver;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.ExceptionHelper;
+import de.pixart.messenger.utils.FileUtils;
 import de.pixart.messenger.utils.OnPhoneContactsLoadedListener;
 import de.pixart.messenger.utils.PRNGFixes;
 import de.pixart.messenger.utils.PhoneHelper;
 import de.pixart.messenger.utils.ReplacingSerialSingleThreadExecutor;
 import de.pixart.messenger.utils.SerialSingleThreadExecutor;
 import de.pixart.messenger.utils.Xmlns;
+import de.pixart.messenger.utils.video.MediaController;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.OnBindListener;
 import de.pixart.messenger.xmpp.OnContactStatusChanged;
@@ -440,6 +447,7 @@ public class XmppConnectionService extends Service {
 		message.setCounterpart(conversation.getNextCounterpart());
 		message.setType(Message.TYPE_FILE);
 		final String path = getFileBackend().getOriginalPath(uri);
+        Log.d(Config.LOGTAG,"File path = " + path);
 		mFileAddingExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -516,6 +524,75 @@ public class XmppConnectionService extends Service {
 			}
 		});
 	}
+
+    public void attachVideoToConversation(final Conversation conversation, final Uri uri, final UiCallback<Message> callback) {
+        if (FileBackend.weOwnFile(this, uri)) {
+            Log.d(Config.LOGTAG,"trying to attach video that belonged to us");
+            callback.error(R.string.security_error_invalid_file_access, null);
+            return;
+        }
+        File f = new File(FileUtils.getPath(this, uri));
+        long filesize = f.length();
+        String path = f.toString();
+        Log.d(Config.LOGTAG,"Video file (size) :" + f.toString() + "("+filesize/1024/1024+"MB)");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
+        File compressed_file = new File(FileBackend.getConversationsVideoDirectory() + "/"
+                + dateFormat.format(new Date())
+                + "_komp.mp4");
+        final String compressed_path = compressed_file.toString();
+        final Uri compressed_uri = Uri.fromFile(compressed_file);
+        if (filesize > 0 && filesize <= Config.VIDEO_MAX_SIZE) {
+            Log.d(Config.LOGTAG,conversation.getAccount().getJid().toBareJid()+ ": not compressing video. sending as file");
+            attachFileToConversation(conversation, uri, callback);
+        } else {
+            VideoCompressor CompressVideo = new VideoCompressor(path, compressed_path,  new Interface() {
+                @Override
+                public void videocompressed(boolean result) {
+                    if (result) {
+                        Log.d(Config.LOGTAG, conversation.getAccount().getJid().toBareJid() + ": sending compressed video.");
+                        attachFileToConversation(conversation, compressed_uri, callback);
+                    }
+                }
+            });
+            CompressVideo.execute();
+        }
+    }
+
+    public interface Interface {
+        void videocompressed(boolean result);
+    }
+
+    class VideoCompressor extends AsyncTask<String, Void, Boolean> {
+        private String originalpath;
+        private String compressedpath;
+        private Interface mListener;
+
+        public VideoCompressor(String path, String compressed_path, Interface mListener) {
+            originalpath = path;
+            compressedpath = compressed_path;
+            this.mListener  = mListener;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Log.d(Config.LOGTAG,"Start video compression");
+        }
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            return MediaController.getInstance().convertVideo(originalpath, compressedpath);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean compressed) {
+            super.onPostExecute(compressed);
+            if (mListener != null) {
+                mListener.videocompressed(compressed);
+                Log.d(Config.LOGTAG, "Compression successfully!");
+            }
+        }
+    }
 
 	public Conversation find(Bookmark bookmark) {
 		return find(bookmark.getAccount(), bookmark.getJid());
