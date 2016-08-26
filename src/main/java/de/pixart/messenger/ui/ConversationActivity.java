@@ -137,24 +137,6 @@ public class ConversationActivity extends XmppActivity
 
     long FirstStartTime = -1;
 
-	@SuppressLint("NewApi")
-	private static List<Uri> extractUriFromIntent(final Intent intent) {
-		List<Uri> uris = new ArrayList<>();
-		if (intent == null) {
-			return uris;
-		}
-		Uri uri = intent.getData();
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2 && uri == null) {
-			ClipData clipData = intent.getClipData();
-			for (int i = 0; i < clipData.getItemCount(); ++i) {
-				uris.add(clipData.getItemAt(i).getUri());
-			}
-		} else {
-			uris.add(uri);
-		}
-		return uris;
-	}
-
 	public Conversation getSelectedConversation() {
 		return this.mSelectedConversation;
 	}
@@ -1367,7 +1349,9 @@ public class ConversationActivity extends XmppActivity
                     Log.d(Config.LOGTAG, "First start time: " + FirstStartTime);
                     startActivity(new Intent(this, WelcomeActivity.class));
                 } else {
-                    startActivity(new Intent(this, EditAccountActivity.class));
+                    Intent editAccount = new Intent(this, EditAccountActivity.class);
+                    editAccount.putExtra("init",true);
+                    startActivity(editAccount);
                 }
                 finish();
 			}
