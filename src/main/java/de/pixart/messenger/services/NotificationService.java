@@ -36,6 +36,7 @@ import java.util.regex.Pattern;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
+import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.ui.ConversationActivity;
@@ -327,6 +328,13 @@ public class NotificationService {
 					mBuilder.addAction(R.drawable.ic_room_white_24dp,
 							mXmppConnectionService.getString(R.string.show_location),
 							createShowLocationIntent(message));
+				}
+			}
+			if (conversation.getMode() == Conversation.MODE_SINGLE) {
+				Contact contact = conversation.getContact();
+				Uri systemAccount = contact.getSystemAccount();
+				if (systemAccount != null) {
+					mBuilder.addPerson(systemAccount.toString());
 				}
 			}
 			mBuilder.setWhen(conversation.getLatestMessage().getTimeSent());
