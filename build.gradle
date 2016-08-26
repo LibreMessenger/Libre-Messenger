@@ -56,6 +56,7 @@ dependencies {
 	compile 'com.google.android.gms:play-services-location:9.4.0'
 	compile 'com.google.android.gms:play-services-maps:9.4.0'
 	compile 'pub.devrel:easypermissions:0.1.9'
+    compile "com.wefika:flowlayout:0.4.1"
 	playstoreCompile 'com.google.android.gms:play-services-gcm:9.4.0'
 }
 
