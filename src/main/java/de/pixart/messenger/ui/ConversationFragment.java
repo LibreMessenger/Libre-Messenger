@@ -276,6 +276,9 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 					case CHOOSE_PICTURE:
 						activity.attachFile(ConversationActivity.ATTACHMENT_CHOICE_CHOOSE_IMAGE);
 						break;
+                    case CHOOSE_VIDEO:
+                        activity.attachFile(ConversationActivity.ATTACHMENT_CHOICE_CHOOSE_VIDEO);
+                        break;
 					case CANCEL:
 						if (conversation != null) {
 							if (conversation.getCorrectingMessage() != null) {
@@ -949,7 +952,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 		mEditMessage.requestFocus();
 	}
 
-	enum SendButtonAction {TEXT, TAKE_PHOTO, SEND_LOCATION, RECORD_VOICE, CANCEL, CHOOSE_PICTURE}
+	enum SendButtonAction {TEXT, TAKE_PHOTO, SEND_LOCATION, RECORD_VOICE, CANCEL, CHOOSE_PICTURE, CHOOSE_VIDEO}
 
 	private int getSendButtonImageResource(SendButtonAction action, Presence.Status status) {
 		switch (action) {
@@ -1031,6 +1034,19 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 					default:
 						return R.drawable.ic_send_picture_offline;
 				}
+            case CHOOSE_VIDEO:
+                switch (status) {
+                    case CHAT:
+                    case ONLINE:
+                        return R.drawable.ic_send_video_online;
+                    case AWAY:
+                        return R.drawable.ic_send_video_away;
+                    case XA:
+                    case DND:
+                        return R.drawable.ic_send_video_dnd;
+                    default:
+                        return R.drawable.ic_send_video_offline;
+                }
 		}
 		return R.drawable.ic_send_text_offline;
 	}
@@ -1074,6 +1090,9 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 						case "picture":
 							action = SendButtonAction.CHOOSE_PICTURE;
 							break;
+                        case "video":
+                            action = SendButtonAction.CHOOSE_VIDEO;
+                            break;
 						default:
 							action = SendButtonAction.TEXT;
 							break;

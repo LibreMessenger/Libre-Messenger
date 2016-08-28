@@ -274,17 +274,16 @@ public class FileBackend {
 		Log.d(Config.LOGTAG, "output file name " + file.getAbsolutePath());
 	}
 
-	public void copyFileToPrivateStorage(Message message, Uri uri) throws FileCopyException {
-		String mime = mXmppConnectionService.getContentResolver().getType(uri);
-		Log.d(Config.LOGTAG, "copy " + uri.toString() + " to private storage (mime="+mime+")");
-		String extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mime);
-		if (extension == null) {
-			extension = getExtensionFromUri(uri);
-		}
-		String filename = fileDateFormat.format(new Date(message.getTimeSent()))+"_"+message.getUuid().substring(0,4);
-		message.setRelativeFilePath(filename + "." + extension);
-		copyFileToPrivateStorage(mXmppConnectionService.getFileBackend().getFile(message), uri);
-	}
+    public void copyFileToPrivateStorage(Message message, Uri uri) throws FileCopyException {
+        String mime = mXmppConnectionService.getContentResolver().getType(uri);
+        Log.d(Config.LOGTAG, "copy " + uri.toString() + " to private storage (mime="+mime+")");
+        String extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mime);
+        if (extension == null) {
+            extension = getExtensionFromUri(uri);
+        }
+        message.setRelativeFilePath(message.getUuid() + "." + extension);
+        copyFileToPrivateStorage(mXmppConnectionService.getFileBackend().getFile(message), uri);
+    }
 
 	private String getExtensionFromUri(Uri uri) {
 		String[] projection = {MediaStore.MediaColumns.DATA};

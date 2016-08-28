@@ -690,4 +690,6 @@
 	<string name="me">Me</string>
 	<string name="contact_asks_for_presence_subscription">Contact asks for presence subscription</string>
 	<string name="allow">Allow</string>
+    <string name="attach_choose_video">Choose video</string>
+    <string name="preparing_video">Prepare video for transmission</string>
 </resources>
