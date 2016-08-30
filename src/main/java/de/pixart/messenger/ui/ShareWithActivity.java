@@ -1,6 +1,7 @@
 package de.pixart.messenger.ui;
 
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -43,6 +44,7 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
 	private class Share {
 		public List<Uri> uris = new ArrayList<>();
 		public boolean image;
+        public boolean video;
 		public String account;
 		public String contact;
 		public String text;
@@ -79,6 +81,8 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
 							resId = R.string.shared_images_with_x;
 						} else if (share.image) {
 							resId = R.string.shared_image_with_x;
+                        } else if (share.video) {
+                            resId = R.string.shared_video_with_x;
 						} else {
 							resId = R.string.shared_file_with_x;
 						}
@@ -86,6 +90,7 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
 						if (mReturnToPrevious) {
 							finish();
 						} else {
+                            closeProgress();
 							switchToConversation(message.getConversation());
 						}
 					}
@@ -196,6 +201,7 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
 				this.share.uris.clear();
 				this.share.uris.add(uri);
 				this.share.image = type.startsWith("image/") || isImage(uri);
+                this.share.video = type.startsWith("video/") || isVideo(uri);
 			} else {
 				this.share.text = text;
 			}
@@ -224,6 +230,15 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
 			return false;
 		}
 	}
+
+    protected boolean isVideo(Uri uri) {
+        try {
+            String guess = URLConnection.guessContentTypeFromName(uri.toString());
+            return (guess != null && guess.startsWith("video/"));
+        } catch (final StringIndexOutOfBoundsException ignored) {
+            return false;
+        }
+    }
 
 	@Override
 	void onBackendConnected() {
@@ -283,13 +298,19 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
 				public void onPresenceSelected() {
 					attachmentCounter.set(share.uris.size());
 					if (share.image) {
-						share.multiple = share.uris.size() > 1;
-						replaceToast(getString(share.multiple ? R.string.preparing_images : R.string.preparing_image));
-						for (Iterator<Uri> i = share.uris.iterator(); i.hasNext(); i.remove()) {
-							ShareWithActivity.this.xmppConnectionService
-									.attachImageToConversation(conversation, i.next(),
-											attachFileCallback);
-						}
+                        share.multiple = share.uris.size() > 1;
+                        replaceToast(getString(share.multiple ? R.string.preparing_images : R.string.preparing_image));
+                        for (Iterator<Uri> i = share.uris.iterator(); i.hasNext(); i.remove()) {
+                            ShareWithActivity.this.xmppConnectionService
+                                    .attachImageToConversation(conversation, i.next(),
+                                            attachFileCallback);
+                        }
+                    } else if (share.video) {
+                        showProgress();
+                        replaceToast(getString(R.string.preparing_video));
+                        ShareWithActivity.this.xmppConnectionService
+                                .attachVideoToConversation(conversation, share.uris.get(0),
+                                        attachFileCallback);
 					} else {
 						replaceToast(getString(R.string.preparing_file));
 						ShareWithActivity.this.xmppConnectionService

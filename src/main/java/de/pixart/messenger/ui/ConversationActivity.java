@@ -1756,9 +1756,16 @@ public class ConversationActivity extends XmppActivity
         }
         final Toast prepareFileToast = Toast.makeText(getApplicationContext(),getText(R.string.preparing_video), Toast.LENGTH_LONG);
         prepareFileToast.show();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showProgress();
+            }
+        });
         xmppConnectionService.attachVideoToConversation(conversation, uri, new UiCallback<Message>() {
             @Override
             public void success(Message message) {
+                closeProgress();
                 hidePrepareFileToast(prepareFileToast);
                 xmppConnectionService.sendMessage(message);
             }

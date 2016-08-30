@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -127,8 +128,9 @@ public abstract class XmppActivity extends Activity {
 	protected boolean mUsingEnterKey = false;
 
 	protected Toast mToast;
+    protected ProgressDialog mProgress;
 
-	protected void hideToast() {
+    protected void hideToast() {
 		if (mToast != null) {
 			mToast.cancel();
 		}
@@ -143,6 +145,19 @@ public abstract class XmppActivity extends Activity {
 		mToast = Toast.makeText(this, msg ,showlong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT);
 		mToast.show();
 	}
+
+    protected void showProgress() {
+        mProgress = new ProgressDialog(this);
+        mProgress.setMessage(getString(R.string.compressing_video));
+        mProgress.setCancelable(false);
+        mProgress.show();
+    }
+
+    protected void closeProgress() {
+        if (mProgress.isShowing()) {
+            mProgress.dismiss();
+        }
+    }
 
 	protected Runnable onOpenPGPKeyPublished = new Runnable() {
 		@Override
