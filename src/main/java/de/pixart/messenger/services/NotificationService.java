@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -327,26 +326,26 @@ public class NotificationService {
 				} else {
 					modifyForTextOnly(mBuilder, messages);
 				}
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-					RemoteInput remoteInput = new RemoteInput.Builder("text_reply").setLabel(UIHelper.getMessageHint(mXmppConnectionService, conversation)).build();
-					NotificationCompat.Action action = new NotificationCompat.Action.Builder(R.drawable.ic_send_text_offline, "Reply", createReplyIntent(conversation)).addRemoteInput(remoteInput).build();
-					mBuilder.addAction(action);
-					if ((message = getFirstDownloadableMessage(messages)) != null) {
-						mBuilder.addAction(
-								Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ?
-										R.drawable.ic_file_download_white_24dp : R.drawable.ic_action_download,
-								mXmppConnectionService.getResources().getString(R.string.download_x_file,
-										UIHelper.getFileDescriptionString(mXmppConnectionService, message)),
-								createDownloadIntent(message)
-						);
-					}
-				}
-				if ((message = getFirstLocationMessage(messages)) != null) {
-					mBuilder.addAction(R.drawable.ic_room_white_24dp,
-							mXmppConnectionService.getString(R.string.show_location),
-							createShowLocationIntent(message));
-				}
-			}
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    RemoteInput remoteInput = new RemoteInput.Builder("text_reply").setLabel(UIHelper.getMessageHint(mXmppConnectionService, conversation)).build();
+                    NotificationCompat.Action action = new NotificationCompat.Action.Builder(R.drawable.ic_send_text_offline, "Reply", createReplyIntent(conversation)).addRemoteInput(remoteInput).build();
+                    mBuilder.addAction(action);
+                }
+                if ((message = getFirstDownloadableMessage(messages)) != null) {
+                    mBuilder.addAction(
+                            Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ?
+                                    R.drawable.ic_file_download_white_24dp : R.drawable.ic_action_download,
+                            mXmppConnectionService.getResources().getString(R.string.download_x_file,
+                                    UIHelper.getFileDescriptionString(mXmppConnectionService, message)),
+                            createDownloadIntent(message)
+                    );
+                }
+                if ((message = getFirstLocationMessage(messages)) != null) {
+                    mBuilder.addAction(R.drawable.ic_room_white_24dp,
+                            mXmppConnectionService.getString(R.string.show_location),
+                            createShowLocationIntent(message));
+                }
+            }
 			if (conversation.getMode() == Conversation.MODE_SINGLE) {
 				Contact contact = conversation.getContact();
 				Uri systemAccount = contact.getSystemAccount();
