@@ -281,7 +281,8 @@ public class FileBackend {
         if (extension == null) {
             extension = getExtensionFromUri(uri);
         }
-        message.setRelativeFilePath(message.getUuid() + "." + extension);
+        String filename = fileDateFormat.format(new Date(message.getTimeSent()))+"_"+message.getUuid().substring(0,4);
+        message.setRelativeFilePath(filename + "." + extension);
         copyFileToPrivateStorage(mXmppConnectionService.getFileBackend().getFile(message), uri);
     }
 
