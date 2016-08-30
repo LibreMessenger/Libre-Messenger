@@ -204,7 +204,7 @@ public class MediaController {
         int originalHeight = Integer.valueOf(height);
         double ratio = video_width/video_height;
 
-        int bitrate = 50000; //450000
+        int bitrate = Config.VIDEO_BITRATE;
         int rotateRender = 0;
 
         File cacheFile = new File(compressed_path);
