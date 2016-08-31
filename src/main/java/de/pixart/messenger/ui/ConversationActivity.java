@@ -134,9 +134,6 @@ public class ConversationActivity extends XmppActivity
 	private AtomicBoolean mRedirected = new AtomicBoolean(false);
 	private Pair<Integer, Intent> mPostponedActivityResult;
 
-    FileUtils mFileUtils;
-	FileBackend mFileBackend;
-
     long FirstStartTime = -1;
 
 	public Conversation getSelectedConversation() {

@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
@@ -129,6 +130,7 @@ public abstract class XmppActivity extends Activity {
 
 	protected Toast mToast;
     protected ProgressDialog mProgress;
+    Integer oldOrientation = getRequestedOrientation();
 
     protected void hideToast() {
 		if (mToast != null) {
@@ -147,7 +149,7 @@ public abstract class XmppActivity extends Activity {
 	}
 
     protected void showProgress() {
-        mProgress = new ProgressDialog(this);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
         mProgress.setMessage(getString(R.string.compressing_video));
         mProgress.setCancelable(false);
         mProgress.show();
@@ -156,6 +158,7 @@ public abstract class XmppActivity extends Activity {
     protected void closeProgress() {
         if (mProgress.isShowing()) {
             mProgress.dismiss();
+            setRequestedOrientation(oldOrientation);
         }
     }
 
@@ -434,6 +437,7 @@ public abstract class XmppActivity extends Activity {
 		if (ab!=null) {
 			ab.setDisplayHomeAsUpEnabled(true);
 		}
+        mProgress = new ProgressDialog(this);
 	}
 
 	protected boolean isOptimizingBattery() {
