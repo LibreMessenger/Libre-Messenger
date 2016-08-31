@@ -1,9 +1,7 @@
 package de.pixart.messenger.services;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -13,6 +11,7 @@ import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.BigPictureStyle;
 import android.support.v4.app.NotificationCompat.Builder;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.RemoteInput;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.Html;
@@ -188,8 +187,8 @@ public class NotificationService {
 		synchronized (notifications) {
 			markAsReadIfHasDirectReply(conversation);
 			notifications.remove(conversation.getUuid());
-			final NotificationManager nm = (NotificationManager) mXmppConnectionService.getSystemService(Context.NOTIFICATION_SERVICE);
-			nm.cancel(conversation.getUuid(), NOTIFICATION_ID);
+			final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mXmppConnectionService);
+			notificationManager.cancel(conversation.getUuid(), NOTIFICATION_ID);
 			updateNotification(false);
 		}
 	}
@@ -212,8 +211,7 @@ public class NotificationService {
 	}
 
 	public void updateNotification(final boolean notify) {
-		final NotificationManager notificationManager = (NotificationManager) mXmppConnectionService
-				.getSystemService(Context.NOTIFICATION_SERVICE);
+		final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mXmppConnectionService);
 		final SharedPreferences preferences = mXmppConnectionService.getPreferences();
 
 		if (notifications.size() == 0) {
@@ -233,14 +231,12 @@ public class NotificationService {
 				mBuilder = buildMultipleConversation();
 				modifyForSoundVibrationAndLight(mBuilder, notify, preferences);
 				notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    for (Map.Entry<String, ArrayList<Message>> entry : notifications.entrySet()) {
-                        Log.d(Config.LOGTAG, "Notification: Received notification for Android N");
-                        Builder singleBuilder = buildSingleConversations(entry.getValue());
-                        singleBuilder.setGroup(CONVERSATIONS_GROUP);
-                        modifyForSoundVibrationAndLight(singleBuilder, notify, preferences);
-                        notificationManager.notify(entry.getKey(), NOTIFICATION_ID, singleBuilder.build());
-                    }
+                for (Map.Entry<String, ArrayList<Message>> entry : notifications.entrySet()) {
+                    Log.d(Config.LOGTAG, "Notification: Received notification for Android N");
+                    Builder singleBuilder = buildSingleConversations(entry.getValue());
+                    singleBuilder.setGroup(CONVERSATIONS_GROUP);
+                    modifyForSoundVibrationAndLight(singleBuilder, notify, preferences);
+                    notificationManager.notify(entry.getKey(), NOTIFICATION_ID, singleBuilder.build());
                 }
 			}
             mBuilder.setNumber(mXmppConnectionService.unreadCount());
@@ -336,26 +332,26 @@ public class NotificationService {
 				} else {
 					modifyForTextOnly(mBuilder, messages);
 				}
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    RemoteInput remoteInput = new RemoteInput.Builder("text_reply").setLabel(UIHelper.getMessageHint(mXmppConnectionService, conversation)).build();
-                    NotificationCompat.Action action = new NotificationCompat.Action.Builder(R.drawable.ic_send_text_offline, "Reply", createReplyIntent(conversation)).addRemoteInput(remoteInput).build();
-                    mBuilder.addAction(action);
-                }
-                if ((message = getFirstDownloadableMessage(messages)) != null) {
-                    mBuilder.addAction(
-                            Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ?
-                                    R.drawable.ic_file_download_white_24dp : R.drawable.ic_action_download,
-                            mXmppConnectionService.getResources().getString(R.string.download_x_file,
-                                    UIHelper.getFileDescriptionString(mXmppConnectionService, message)),
-                            createDownloadIntent(message)
-                    );
-                }
-                if ((message = getFirstLocationMessage(messages)) != null) {
-                    mBuilder.addAction(R.drawable.ic_room_white_24dp,
-                            mXmppConnectionService.getString(R.string.show_location),
-                            createShowLocationIntent(message));
-                }
-            }
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+					RemoteInput remoteInput = new RemoteInput.Builder("text_reply").setLabel(UIHelper.getMessageHint(mXmppConnectionService, conversation)).build();
+					NotificationCompat.Action action = new NotificationCompat.Action.Builder(R.drawable.ic_send_text_offline, "Reply", createReplyIntent(conversation)).addRemoteInput(remoteInput).build();
+					mBuilder.addAction(action);
+				}
+				if ((message = getFirstDownloadableMessage(messages)) != null) {
+					mBuilder.addAction(
+							Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ?
+									R.drawable.ic_file_download_white_24dp : R.drawable.ic_action_download,
+							mXmppConnectionService.getResources().getString(R.string.download_x_file,
+									UIHelper.getFileDescriptionString(mXmppConnectionService, message)),
+							createDownloadIntent(message)
+					);
+				}
+				if ((message = getFirstLocationMessage(messages)) != null) {
+					mBuilder.addAction(R.drawable.ic_room_white_24dp,
+							mXmppConnectionService.getString(R.string.show_location),
+							createShowLocationIntent(message));
+				}
+			}
 			if (conversation.getMode() == Conversation.MODE_SINGLE) {
 				Contact contact = conversation.getContact();
 				Uri systemAccount = contact.getSystemAccount();
@@ -646,7 +642,7 @@ public class NotificationService {
 	}
 
 	public void updateErrorNotification() {
-		final NotificationManager notificationManager = (NotificationManager) mXmppConnectionService.getSystemService(Context.NOTIFICATION_SERVICE);
+		final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mXmppConnectionService);
 		final List<Account> errors = new ArrayList<>();
 		for (final Account account : mXmppConnectionService.getAccounts()) {
 			if (account.hasErrorStatus()) {
