@@ -694,4 +694,5 @@
     <string name="preparing_video">Prepare video for transmission</string>
     <string name="compressing_video">Compressing video, please wait...</string>
     <string name="shared_video_with_x">Shared video with %s</string>
+    <string name="unread_messages">Unread messages:</string>
 </resources>
