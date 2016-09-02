@@ -1034,19 +1034,6 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 					default:
 						return R.drawable.ic_send_picture_offline;
 				}
-            case CHOOSE_VIDEO:
-                switch (status) {
-                    case CHAT:
-                    case ONLINE:
-                        return R.drawable.ic_send_video_online;
-                    case AWAY:
-                        return R.drawable.ic_send_video_away;
-                    case XA:
-                    case DND:
-                        return R.drawable.ic_send_video_dnd;
-                    default:
-                        return R.drawable.ic_send_video_offline;
-                }
 		}
 		return R.drawable.ic_send_text_offline;
 	}
@@ -1071,11 +1058,11 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 				if (conference && c.getNextCounterpart() != null) {
 					action = SendButtonAction.CANCEL;
 				} else {
-					String setting = activity.getPreferences().getString("quick_action", "recent");
+					String setting = activity.getPreferences().getString("quick_action", "voice");
 					if (!setting.equals("none") && UIHelper.receivedLocationQuestion(conversation.getLatestMessage())) {
 						setting = "location";
-					} else if (setting.equals("recent")) {
-						setting = activity.getPreferences().getString("recently_used_quick_action", "text");
+					} else if (setting.equals("voice")) {
+						setting = activity.getPreferences().getString("recently_used_quick_action", "voice");
 					}
 					switch (setting) {
 						case "photo":
@@ -1090,9 +1077,6 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 						case "picture":
 							action = SendButtonAction.CHOOSE_PICTURE;
 							break;
-                        case "video":
-                            action = SendButtonAction.CHOOSE_VIDEO;
-                            break;
 						default:
 							action = SendButtonAction.TEXT;
 							break;
