@@ -2,8 +2,11 @@ package de.pixart.messenger.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,14 +32,15 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class ShowFullscreenMessageActivity extends Activity {
 
-    private ConversationActivity activity;
+    Integer oldOrientation = getRequestedOrientation();
     PhotoView mImage;
     FullscreenVideoLayout mVideo;
     ImageView mFullscreenbutton;
     Uri mFileUri;
     File mFile;
     ImageButton mFAB;
-
+    int height = 0;
+    int width = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,7 +49,7 @@ public class ShowFullscreenMessageActivity extends Activity {
         layout.screenBrightness = 1;
         getWindow().setAttributes(layout);
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-        getWindow().addFlags(layout.FLAG_KEEP_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getActionBar().hide();
         if (Build.VERSION.SDK_INT < 16) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -59,7 +63,6 @@ public class ShowFullscreenMessageActivity extends Activity {
         mImage = (PhotoView) findViewById(R.id.message_image_view);
         mVideo = (FullscreenVideoLayout) findViewById(R.id.message_video_view);
         mFullscreenbutton = (ImageView) findViewById(R.id.vcv_img_fullscreen);
-
         mFAB = (ImageButton) findViewById(R.id.imageButton);
         mFAB.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +98,6 @@ public class ShowFullscreenMessageActivity extends Activity {
     protected void onStart() {
         super.onStart();
         Intent intent = getIntent();
-
         if (intent != null) {
             if (intent.hasExtra("image")) {
                 mFileUri = intent.getParcelableExtra("image");
@@ -117,6 +119,24 @@ public class ShowFullscreenMessageActivity extends Activity {
     }
 
     private void DisplayImage(File file) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(new File(file.getPath()).getAbsolutePath(), options);
+        height = options.outHeight;
+        width = options.outWidth;
+        if (width >= height) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE);
+            } else {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT);
+            } else {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
+        }
         final PhotoViewAttacher mAttacher = new PhotoViewAttacher(mImage);
         mImage.setVisibility(View.VISIBLE);
         try {
@@ -136,6 +156,23 @@ public class ShowFullscreenMessageActivity extends Activity {
     }
 
     private void DisplayVideo(Uri uri) {
+        MediaMetadataRetriever retriever = new  MediaMetadataRetriever();
+        retriever.setDataSource(uri.getPath());
+        height = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
+        width = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+        if (width >= height) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE);
+            } else {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            }
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT);
+            } else {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
+        }
         try {
             mVideo.setVisibility(View.VISIBLE);
             mVideo.setVideoURI(uri);
@@ -163,14 +200,22 @@ public class ShowFullscreenMessageActivity extends Activity {
     @Override
     protected void onPause() {
         mVideo.reset();
-        super.onPause();
-    }
-
-    public void onStop () {
         WindowManager.LayoutParams layout = getWindow().getAttributes();
         layout.screenBrightness = -1;
         getWindow().setAttributes(layout);
-        getWindow().clearFlags(layout.FLAG_KEEP_SCREEN_ON);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        setRequestedOrientation(oldOrientation);
+        super.onPause();
+    }
+
+    @Override
+    public void onStop () {
+        mVideo.reset();
+        WindowManager.LayoutParams layout = getWindow().getAttributes();
+        layout.screenBrightness = -1;
+        getWindow().setAttributes(layout);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        setRequestedOrientation(oldOrientation);
         super.onStop();
     }
 }
