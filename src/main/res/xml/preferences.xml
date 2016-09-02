@@ -21,7 +21,7 @@
             android:summary="@string/pref_use_send_button_to_indicate_status_summary"
             android:title="@string/pref_use_send_button_to_indicate_status" />
         <ListPreference
-            android:defaultValue="recent"
+            android:defaultValue="voice"
             android:dialogTitle="@string/choose_quick_action"
             android:entries="@array/quick_actions"
             android:entryValues="@array/quick_action_values"
