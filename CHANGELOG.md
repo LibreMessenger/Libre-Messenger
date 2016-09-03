@@ -1,5 +1,8 @@
 ###Changelog
 
+###Version 1.14.1
+* fix crash on taking photos directly within the app
+
 ###Version 1.14.0
 * compress videos > 5 MB before sending
 * improvments for Android N
