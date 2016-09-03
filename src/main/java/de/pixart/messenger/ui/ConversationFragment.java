@@ -276,9 +276,6 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 					case CHOOSE_PICTURE:
 						activity.attachFile(ConversationActivity.ATTACHMENT_CHOICE_CHOOSE_IMAGE);
 						break;
-                    case CHOOSE_VIDEO:
-                        activity.attachFile(ConversationActivity.ATTACHMENT_CHOICE_CHOOSE_VIDEO);
-                        break;
 					case CANCEL:
 						if (conversation != null) {
 							if (conversation.getCorrectingMessage() != null) {
@@ -952,7 +949,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 		mEditMessage.requestFocus();
 	}
 
-	enum SendButtonAction {TEXT, TAKE_PHOTO, SEND_LOCATION, RECORD_VOICE, CANCEL, CHOOSE_PICTURE, CHOOSE_VIDEO}
+	enum SendButtonAction {TEXT, TAKE_PHOTO, SEND_LOCATION, RECORD_VOICE, CANCEL, CHOOSE_PICTURE}
 
 	private int getSendButtonImageResource(SendButtonAction action, Presence.Status status) {
 		switch (action) {
@@ -1058,11 +1055,11 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 				if (conference && c.getNextCounterpart() != null) {
 					action = SendButtonAction.CANCEL;
 				} else {
-					String setting = activity.getPreferences().getString("quick_action", "voice");
+					String setting = activity.getPreferences().getString("quick_action", "recent");
 					if (!setting.equals("none") && UIHelper.receivedLocationQuestion(conversation.getLatestMessage())) {
 						setting = "location";
-					} else if (setting.equals("voice")) {
-						setting = activity.getPreferences().getString("recently_used_quick_action", "voice");
+					} else if (setting.equals("recent")) {
+						setting = activity.getPreferences().getString("recently_used_quick_action", "text");
 					}
 					switch (setting) {
 						case "photo":
