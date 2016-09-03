@@ -1,5 +1,12 @@
 ###Changelog
 
+###Version 1.14.0
+* compress videos > 5 MB before sending
+* improvments for Android N
+* quick reply to notifications on Android N
+* don't download avatars and files when data saver is on
+* bug fixes
+
 ###Version 1.13.9
 * add icons for files in chat view
 * reworked backup service to automatically backup database encrypted to local storage at 4 am each day
