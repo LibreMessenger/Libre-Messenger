@@ -590,9 +590,15 @@ public class XmppConnectionService extends Service {
         protected void onPostExecute(Boolean compressed) {
             super.onPostExecute(compressed);
             wakeLock.release();
+            File video = new File(compressedpath);
             if (mListener != null) {
-                mListener.videocompressed(compressed);
-                Log.d(Config.LOGTAG, "Compression successfully!");
+                if (video.exists() && video.length() > 0) {
+                    mListener.videocompressed(compressed);
+                    Log.d(Config.LOGTAG, "Compression successfully!");
+                } else {
+                    mListener.videocompressed(false);
+                    Log.d(Config.LOGTAG, "Compression failed!");
+                }
             }
         }
     }
