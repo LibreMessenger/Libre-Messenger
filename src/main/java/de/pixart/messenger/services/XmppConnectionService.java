@@ -154,7 +154,7 @@ public class XmppConnectionService extends Service {
 	private final List<Conversation> conversations = new CopyOnWriteArrayList<>();
 	private final IqGenerator mIqGenerator = new IqGenerator(this);
 	private final List<String> mInProgressAvatarFetches = new ArrayList<>();
-
+    private WakeLock wakeLock;
 	private long mLastActivity = 0;
 
 	public DatabaseBackend databaseBackend;
@@ -363,7 +363,6 @@ public class XmppConnectionService extends Service {
 	};
 	private OpenPgpServiceConnection pgpServiceConnection;
 	private PgpEngine mPgpEngine = null;
-	private WakeLock wakeLock;
 	private PowerManager pm;
 	private LruCache<String, Bitmap> mBitmapCache;
 	private EventReceiver mEventReceiver = new EventReceiver();
@@ -581,12 +580,16 @@ public class XmppConnectionService extends Service {
 
         @Override
         protected Boolean doInBackground(String... params) {
+            PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
+            wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"CompressPixArtMessengerVideo");
+            wakeLock.acquire();
             return MediaController.getInstance().convertVideo(originalpath, compressedpath);
         }
 
         @Override
         protected void onPostExecute(Boolean compressed) {
             super.onPostExecute(compressed);
+            wakeLock.release();
             if (mListener != null) {
                 mListener.videocompressed(compressed);
                 Log.d(Config.LOGTAG, "Compression successfully!");
