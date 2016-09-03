@@ -110,6 +110,7 @@ public class ConversationActivity extends XmppActivity
 	private static final String STATE_PANEL_OPEN = "state_panel_open";
 	private static final String STATE_PENDING_URI = "state_pending_uri";
 	final private List<Uri> mPendingImageUris = new ArrayList<>();
+    final private List<Uri> mPendingPhotoUris = new ArrayList<>();
 	final private List<Uri> mPendingFileUris = new ArrayList<>();
     final private List<Uri> mPendingVideoUris = new ArrayList<>();
 	private String mOpenConverstaion = null;
@@ -619,8 +620,8 @@ public class ConversationActivity extends XmppActivity
 						intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 						intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
 						intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-						mPendingImageUris.clear();
-						mPendingImageUris.add(uri);
+						mPendingPhotoUris.clear();
+						mPendingPhotoUris.add(uri);
 						break;
 					case ATTACHMENT_CHOICE_CHOOSE_FILE:
 						chooser = true;
@@ -1298,6 +1299,8 @@ public class ConversationActivity extends XmppActivity
 	private void clearPending() {
 		mPendingImageUris.clear();
 		mPendingFileUris.clear();
+        mPendingVideoUris.clear();
+        mPendingPhotoUris.clear();
 		mPendingGeoUri = null;
 		mPostponedActivityResult = null;
 	}
@@ -1413,6 +1416,10 @@ public class ConversationActivity extends XmppActivity
                     Uri foo = i.next();
                     attachImagesToConversation(getSelectedConversation(), foo);
                 }
+            }
+
+            for (Iterator<Uri> i = mPendingPhotoUris.iterator(); i.hasNext(); i.remove()) {
+                attachPhotoToConversation(getSelectedConversation(), i.next());
             }
 
             for (Iterator<Uri> i = mPendingVideoUris.iterator(); i.hasNext(); i.remove()) {
@@ -1782,6 +1789,39 @@ public class ConversationActivity extends XmppActivity
                 hidePrepareFileToast(prepareFileToast);
             }
         });
+    }
+
+    private void attachPhotoToConversation(Conversation conversation, Uri uri) {
+        if (conversation == null) {
+            return;
+        }
+        final Toast prepareFileToast = Toast.makeText(getApplicationContext(),getText(R.string.preparing_image), Toast.LENGTH_LONG);
+        prepareFileToast.show();
+        xmppConnectionService.attachImageToConversation(conversation, uri,
+                new UiCallback<Message>() {
+
+                    @Override
+                    public void userInputRequried(PendingIntent pi, Message object) {
+                        hidePrepareFileToast(prepareFileToast);
+                    }
+
+                    @Override
+                    public void success(Message message) {
+                        hidePrepareFileToast(prepareFileToast);
+                        xmppConnectionService.sendMessage(message);
+                    }
+
+                    @Override
+                    public void error(final int error, Message message) {
+                        hidePrepareFileToast(prepareFileToast);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                replaceToast(getString(error));
+                            }
+                        });
+                    }
+                });
     }
 
 	private void attachImagesToConversation(Conversation conversation, Uri uri) {
