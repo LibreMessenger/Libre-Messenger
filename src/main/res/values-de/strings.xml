@@ -640,5 +640,11 @@
   <string name="please_wait">Bitte warten…</string>
   <string name="pref_export_plain_text_logs">Exportiere Chats als lesbare Text-Dateien</string>
   <string name="pref_export_plain_text_logs_summary">Aktiviere den Export von Chats als lesbare Text-Dateien</string>
+    <string name="allow">Erlauben</string>
+    <string name="attach_choose_video">Video auswählen</string>
+    <string name="compressing_video">Video wird komprimiert, bitte warten…</string>
+    <string name="preparing_video">Video wird für die Übertragung vorbereitet</string>
+    <string name="shared_video_with_x">Video mit %s geteilt</string>
+    <string name="unread_messages">Ungelesene Nachrichten:</string>
 
 </resources>
