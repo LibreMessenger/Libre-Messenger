@@ -10,6 +10,7 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -26,6 +27,7 @@ import com.github.rtoshiro.view.video.FullscreenVideoLayout;
 import java.io.File;
 import java.io.IOException;
 
+import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -102,15 +104,28 @@ public class ShowFullscreenMessageActivity extends Activity {
             if (intent.hasExtra("image")) {
                 mFileUri = intent.getParcelableExtra("image");
                 mFile = new File(mFileUri.getPath());
-                if (mFileUri != null) {
-                    DisplayImage(mFile);
+                if (mFileUri != null && mFile.exists() && mFile.length() > 0) {
+                    try {
+                        DisplayImage(mFile);
+                    } catch (Exception e) {
+                        Log.d(Config.LOGTAG, "Illegal exeption :" + e);
+                        Toast.makeText(ShowFullscreenMessageActivity.this, getString(R.string.error_file_corrupt), Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
                 } else {
                     Toast.makeText(ShowFullscreenMessageActivity.this, getString(R.string.file_deleted), Toast.LENGTH_SHORT).show();
                 }
             } else if (intent.hasExtra("video")) {
                 mFileUri = intent.getParcelableExtra("video");
-                if (mFileUri != null) {
-                    DisplayVideo(mFileUri);
+                mFile = new File(mFileUri.getPath());
+                if (mFileUri != null && mFile.exists() && mFile.length() > 0) {
+                    try {
+                        DisplayVideo(mFileUri);
+                    } catch (Exception e) {
+                        Log.d(Config.LOGTAG, "Illegal exeption :" + e);
+                        Toast.makeText(ShowFullscreenMessageActivity.this, getString(R.string.error_file_corrupt), Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
                 } else {
                     Toast.makeText(ShowFullscreenMessageActivity.this, getString(R.string.file_deleted), Toast.LENGTH_SHORT).show();
                 }
