@@ -78,9 +78,10 @@ public final class Config {
 	public static final Bitmap.CompressFormat AVATAR_FORMAT = Bitmap.CompressFormat.JPEG;
 
 	public static final int IMAGE_SIZE = 1920;
+    public static final int VIDEO_SIZE = 640;
 	public static final Bitmap.CompressFormat IMAGE_FORMAT = Bitmap.CompressFormat.JPEG;
 	public static final int IMAGE_QUALITY = 75;
-    public static final int VIDEO_BITRATE = 250000;
+    public static final int VIDEO_BITRATE = 500000;
 	public static final int IMAGE_MAX_SIZE = 524288; //512 KiB
     public static final int VIDEO_MAX_SIZE = 5242880; //5 MiB
 	public static final int FILE_MAX_SIZE = 1048576; //1 MiB
