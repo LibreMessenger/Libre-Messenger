@@ -125,7 +125,9 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 			}
 			if (mAccount != null && mAccount.getStatus() == Account.State.DISABLED && !accountInfoEdited()) {
 				mAccount.setOption(Account.OPTION_DISABLED, false);
-				xmppConnectionService.updateAccount(mAccount);
+				if (!xmppConnectionService.updateAccount(mAccount)) {
+					Toast.makeText(EditAccountActivity.this,R.string.unable_to_update_account,Toast.LENGTH_SHORT).show();
+				}
 				return;
 			}
 			final boolean registerNewAccount = mRegisterNew.isChecked() && !Config.DISALLOW_REGISTRATION_IN_UI;
@@ -202,7 +204,10 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				mPasswordConfirm.setError(null);
 				mAccount.setPassword(password);
 				mAccount.setOption(Account.OPTION_REGISTER, registerNewAccount);
-				xmppConnectionService.updateAccount(mAccount);
+				if (!xmppConnectionService.updateAccount(mAccount)) {
+					Toast.makeText(EditAccountActivity.this,R.string.unable_to_update_account,Toast.LENGTH_SHORT).show();
+					return;
+				}
 			} else {
 				if (xmppConnectionService.findAccountByJid(jid) != null) {
 					mAccountJid.setError(getString(R.string.account_already_exists));
