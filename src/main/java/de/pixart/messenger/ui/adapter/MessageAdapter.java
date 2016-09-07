@@ -830,7 +830,6 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         Toast.makeText(activity,R.string.no_application_found_to_open_file,Toast.LENGTH_SHORT).show();
       }
     }
-  }
 
 	public void showLocation(Message message) {
 		for(Intent intent : GeoHelper.createGeoIntentsFromMessage(message)) {
