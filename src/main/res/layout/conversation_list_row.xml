@@ -41,7 +41,7 @@
                 android:layout_toRightOf="@+id/conversation_image"
                 android:paddingLeft="8dp">
 
-                <TextView
+                <io.github.rockerhieu.emojicon.EmojiconTextView
                     android:id="@+id/conversation_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
                                   android:layout_centerVertical="true"
                                   android:layout_toLeftOf="@+id/notification_status"
                                   android:orientation="vertical">
-                        <TextView
+                        <io.github.rockerhieu.emojicon.EmojiconTextView
                             android:id="@+id/conversation_lastmsg"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

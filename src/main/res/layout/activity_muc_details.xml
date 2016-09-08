@@ -128,7 +128,8 @@
                     android:background="@drawable/message_border"
                     android:padding="1dp"
                     android:src="@drawable/ic_profile"
-                    app:riv_corner_radius="5dp" />
+                    app:riv_corner_radius="5dp"
+                    android:layout_alignParentRight="false"/>
 
                 <LinearLayout
                     android:layout_width="fill_parent"
@@ -138,7 +139,7 @@
                     android:orientation="vertical"
                     android:paddingLeft="8dp">
 
-                    <TextView
+                    <io.github.rockerhieu.emojicon.EmojiconTextView
                         android:id="@+id/muc_your_nick"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

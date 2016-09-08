@@ -31,7 +31,7 @@
         android:textColor="@color/black87"
         android:textSize="?attr/TextSizeBody" />
 
-    <EditText
+    <io.github.rockerhieu.emojicon.EmojiconEditText
         android:id="@+id/subject"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

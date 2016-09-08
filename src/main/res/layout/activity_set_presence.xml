@@ -20,7 +20,7 @@
             android:background="@drawable/infocard_border"
             android:padding="@dimen/infocard_padding"
             android:orientation="vertical">
-            <EditText
+            <io.github.rockerhieu.emojicon.EmojiconEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
