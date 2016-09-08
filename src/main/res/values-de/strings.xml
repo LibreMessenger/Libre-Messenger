@@ -646,5 +646,11 @@
     <string name="preparing_video">Video wird für die Übertragung vorbereitet</string>
     <string name="shared_video_with_x">Video mit %s geteilt</string>
     <string name="unread_messages">Ungelesene Nachrichten:</string>
+    <string name="error_file_corrupt">Die Datei scheint defekt zu sein.</string>
+    <string name="me">Ich</string>
+    <string name="missing_internet_permission">Fehlende Berechtigung für den Zugriff auf das Internet</string>
+    <string name="no_permission_to_access_x">Keine Berechtigung, um auf %s zuzugreifen</string>
+    <string name="remote_server_not_found">Entfernter Server konnte nicht gefunden werden</string>
+    <string name="contact_asks_for_presence_subscription">Kontakt möchte deinen Online-Status sehen</string>
 
 </resources>
