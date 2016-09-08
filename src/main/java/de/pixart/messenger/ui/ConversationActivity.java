@@ -84,7 +84,7 @@ import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
 import de.timroes.android.listview.EnhancedListView;
 
-import static eu.siacs.conversations.crypto.axolotl.AxolotlService.AxolotlCapability.MISSING_PRESENCE;
+import static de.pixart.messenger.crypto.axolotl.AxolotlService.AxolotlCapability.MISSING_PRESENCE;
 
 public class ConversationActivity extends XmppActivity
 	implements OnAccountUpdate, OnConversationUpdate, OnRosterUpdate, OnUpdateBlocklist, XmppConnectionService.OnShowErrorToast, View.OnClickListener {
