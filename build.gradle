@@ -30,6 +30,9 @@ configurations {
 dependencies {
     compile project(':libs:MemorizingTrustManager')
     compile project(':libs:audiowife')
+    compile files('libs/aspectjrt-1.7.3.jar')
+    compile files('libs/isoparser-1.0.6.jar')
+    playstoreCompile 'com.google.android.gms:play-services-gcm:9.4.0'
     compile 'org.sufficientlysecure:openpgp-api:10.0'
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
     compile 'com.android.support:support-v13:24.2.0'
@@ -56,10 +59,9 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:9.4.0'
     compile 'com.google.android.gms:play-services-maps:9.4.0'
     compile 'pub.devrel:easypermissions:0.1.9'
-    compile "com.wefika:flowlayout:0.4.1"
-    compile files('libs/aspectjrt-1.7.3.jar')
-    compile files('libs/isoparser-1.0.6.jar')
-    playstoreCompile 'com.google.android.gms:play-services-gcm:9.4.0'
+    compile 'com.wefika:flowlayout:0.4.1'
+    compile 'io.github.rockerhieu:emojicon:1.4.1'
+    compile 'com.google.android.gms:play-services-gcm:9.4.0'
 }
 
 ext {
@@ -113,9 +115,22 @@ android {
                 keyPassword mKeyPassword
             }
         }
-        buildTypes.release.signingConfig = signingConfigs.release
-    } else {
-        buildTypes.release.signingConfig = null
+        buildTypes {
+            debug {
+                debuggable true
+                jniDebuggable true
+                buildTypes.release.signingConfig = null
+                //applicationIdSuffix ".debug"
+            }
+
+            release {
+                debuggable false
+                jniDebuggable false
+                signingConfig = signingConfigs.release
+                minifyEnabled true
+                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            }
+        }
     }
 
     sourceSets.main {
