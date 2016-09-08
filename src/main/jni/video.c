@@ -66,7 +66,7 @@ int isSemiPlanarYUV(int colorFormat) {
     }
 }
 
-JNIEXPORT int de_pixart_messenger_utils_video_MediaController_convertVideoFrame(JNIEnv *env, jclass class, jobject src, jobject dest, int destFormat, int width, int height, int padding, int swap) {
+JNIEXPORT int Java_de_pixart_messenger_utils_video_convertVideoFrame(JNIEnv *env, jclass class, jobject src, jobject dest, int destFormat, int width, int height, int padding, int swap) {
     if (!src || !dest || !destFormat) {
         return 0;
     }
