@@ -357,7 +357,6 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 			}
 			menu.setHeaderTitle(name);
 			if (user.getRealJid() != null) {
-				MenuItem showContactDetails = menu.findItem(R.id.action_contact_details);
 				MenuItem startConversation = menu.findItem(R.id.start_conversation);
 				MenuItem giveMembership = menu.findItem(R.id.give_membership);
 				MenuItem removeMembership = menu.findItem(R.id.remove_membership);
@@ -367,9 +366,6 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 				MenuItem banFromConference = menu.findItem(R.id.ban_from_conference);
 				MenuItem invite = menu.findItem(R.id.invite);
 				startConversation.setVisible(true);
-				if (contact != null) {
-					showContactDetails.setVisible(true);
-				}
 				if (user.getRole() == MucOptions.Role.NONE) {
 					invite.setVisible(true);
 				}
@@ -404,12 +400,6 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 	public boolean onContextItemSelected(MenuItem item) {
 		Jid jid = mSelectedUser.getRealJid();
 		switch (item.getItemId()) {
-			case R.id.action_contact_details:
-				Contact contact = mSelectedUser.getContact();
-				if (contact != null) {
-					switchToContactDetails(contact);
-				}
-				return true;
 			case R.id.start_conversation:
 				startConversation(mSelectedUser);
 				return true;
@@ -566,16 +556,19 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		membersView.removeAllViews();
 		final ArrayList<User> users = mucOptions.getUsers();
-		Collections.sort(users);
+        Collections.sort(users);
 		for (final User user : users) {
+            final Contact contact = user.getContact();
 			View view = inflater.inflate(R.layout.contact, membersView,false);
 			this.setListItemBackgroundOnView(view);
-			view.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					highlightInMuc(mConversation, user.getName());
-				}
-			});
+            if (contact != null) {
+                view.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        switchToContactDetails(contact);
+                    }
+                });
+            }
 			registerForContextMenu(view);
 			view.setTag(user);
 			TextView tvDisplayName = (TextView) view.findViewById(R.id.contact_display_name);
@@ -592,7 +585,6 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 				});
 				tvKey.setText(OpenPgpUtils.convertKeyIdToHex(user.getPgpKeyId()));
 			}
-			Contact contact = user.getContact();
 			String name = user.getName();
 			if (contact != null) {
 				tvDisplayName.setText(contact.getDisplayName());
