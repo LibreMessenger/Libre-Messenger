@@ -17,13 +17,13 @@
         android:layout_toLeftOf="@+id/delete_button"
         android:layout_toStartOf="@+id/delete_button"
         android:layout_marginRight="8dp">
-    <io.github.rockerhieu.emojicon.EmojiconTextView
+    <github.ankushsachdeva.emojicon.EmojiconTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/presence_status_message"
         android:textColor="@color/black87"
         android:textSize="?attr/TextSizeBody"/>
-    <io.github.rockerhieu.emojicon.EmojiconTextView
+    <github.ankushsachdeva.emojicon.EmojiconTextView
         android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

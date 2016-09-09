@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <io.github.rockerhieu.emojicon.EmojiconTextView
+        <github.ankushsachdeva.emojicon.EmojiconTextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

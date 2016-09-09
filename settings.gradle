@@ -1,4 +1,4 @@
 include ':libs:MemorizingTrustManager'
 include ':libs:audiowife'
+include ':libs:emojicon'
 rootProject.name = 'Pix-Art Messenger'
-

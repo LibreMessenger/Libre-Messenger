@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:emojicon="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
@@ -55,8 +56,9 @@
                 android:maxHeight="400dp"
                 android:maxWidth="400dp" />
 
-            <io.github.rockerhieu.emojicon.EmojiconTextView
+            <github.ankushsachdeva.emojicon.EmojiconTextView
                 android:id="@+id/message_body"
+                emojicon:emojiconSize="28sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:autoLink="web"
