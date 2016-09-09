@@ -16,13 +16,13 @@
 
 package github.ankushsachdeva.emojicon;
 
-import github.ankushsachdeva.emojicon.emoji.Emojicon;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import github.ankushsachdeva.emojicon.emoji.Emojicon;
 
 
 /**

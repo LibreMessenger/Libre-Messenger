@@ -16,17 +16,6 @@
 
 package github.ankushsachdeva.emojicon;
 
-import github.ankushsachdeva.emojicon.EmojiconGridView.OnEmojiconClickedListener;
-import github.ankushsachdeva.emojicon.emoji.Emojicon;
-import github.ankushsachdeva.emojicon.emoji.Nature;
-import github.ankushsachdeva.emojicon.emoji.Objects;
-import github.ankushsachdeva.emojicon.emoji.People;
-import github.ankushsachdeva.emojicon.emoji.Places;
-import github.ankushsachdeva.emojicon.emoji.Symbols;
-
-import java.util.Arrays;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
@@ -46,6 +35,17 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.PopupWindow;
+
+import java.util.Arrays;
+import java.util.List;
+
+import github.ankushsachdeva.emojicon.EmojiconGridView.OnEmojiconClickedListener;
+import github.ankushsachdeva.emojicon.emoji.Emojicon;
+import github.ankushsachdeva.emojicon.emoji.Nature;
+import github.ankushsachdeva.emojicon.emoji.Objects;
+import github.ankushsachdeva.emojicon.emoji.People;
+import github.ankushsachdeva.emojicon.emoji.Places;
+import github.ankushsachdeva.emojicon.emoji.Symbols;
 
 
 /**

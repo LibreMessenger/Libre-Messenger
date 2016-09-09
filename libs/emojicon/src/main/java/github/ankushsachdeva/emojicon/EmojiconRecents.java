@@ -16,9 +16,9 @@
 
 package github.ankushsachdeva.emojicon;
 
-import github.ankushsachdeva.emojicon.emoji.Emojicon;
-
 import android.content.Context;
+
+import github.ankushsachdeva.emojicon.emoji.Emojicon;
 
 /**
 * @author Daniele Ricci

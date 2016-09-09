@@ -16,18 +16,17 @@
 
 package github.ankushsachdeva.emojicon;
 
-import github.ankushsachdeva.emojicon.emoji.Emojicon;
-import github.ankushsachdeva.emojicon.emoji.People;
-
-import java.util.Arrays;
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.GridView;
 
+import java.util.Arrays;
+
 import github.ankushsachdeva.emojicon.R;
+import github.ankushsachdeva.emojicon.emoji.Emojicon;
+import github.ankushsachdeva.emojicon.emoji.People;
 
 /**
  * @author Hieu Rocker (rockerhieu@gmail.com)

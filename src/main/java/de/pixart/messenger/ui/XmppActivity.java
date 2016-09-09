@@ -69,7 +69,6 @@ import java.io.FileNotFoundException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -91,13 +90,11 @@ import de.pixart.messenger.services.XmppConnectionService.XmppConnectionBinder;
 import de.pixart.messenger.ui.widget.Switch;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.ExceptionHelper;
+import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.OnKeyStatusUpdated;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
-import de.pixart.messenger.entities.Presence;
-import de.pixart.messenger.entities.ServiceDiscoveryResult;
-import de.pixart.messenger.utils.UIHelper;
 
 public abstract class XmppActivity extends Activity {
 

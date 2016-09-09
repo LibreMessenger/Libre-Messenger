@@ -16,13 +16,13 @@
 
 package github.ankushsachdeva.emojicon;
 
-import github.ankushsachdeva.emojicon.R;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.text.SpannableStringBuilder;
 import android.util.AttributeSet;
 import android.widget.TextView;
+
+import github.ankushsachdeva.emojicon.R;
 
 /**
  * @author Hieu Rocker (rockerhieu@gmail.com).

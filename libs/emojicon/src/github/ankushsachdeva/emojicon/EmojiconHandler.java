@@ -15,11 +15,11 @@
  */
 package github.ankushsachdeva.emojicon;
 
-import github.ankushsachdeva.emojicon.R;
-
 import android.content.Context;
 import android.text.Spannable;
 import android.util.SparseIntArray;
+
+import github.ankushsachdeva.emojicon.R;
 
 /**
  * @author Hieu Rocker (rockerhieu@gmail.com)
