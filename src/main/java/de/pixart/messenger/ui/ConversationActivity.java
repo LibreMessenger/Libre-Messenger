@@ -110,12 +110,15 @@ public class ConversationActivity extends XmppActivity
 	private static final String STATE_OPEN_CONVERSATION = "state_open_conversation";
 	private static final String STATE_PANEL_OPEN = "state_panel_open";
 	private static final String STATE_PENDING_URI = "state_pending_uri";
+    private static final String STATE_FIRST_VISIBLE = "first_visible";
+    private static final String STATE_OFFSET_FROM_TOP = "offset_from_top";
 	final private List<Uri> mPendingImageUris = new ArrayList<>();
     final private List<Uri> mPendingPhotoUris = new ArrayList<>();
 	final private List<Uri> mPendingFileUris = new ArrayList<>();
     final private List<Uri> mPendingVideoUris = new ArrayList<>();
-	private String mOpenConverstaion = null;
+	private String mOpenConversation = null;
 	private boolean mPanelOpen = true;
+    private Pair<Integer,Integer> mScrollPosition = null;
 	private Uri mPendingGeoUri = null;
 	private boolean forbidProcessingPendings = false;
 	private Message mPendingDownloadableMessage = null;
@@ -191,9 +194,17 @@ public class ConversationActivity extends XmppActivity
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (savedInstanceState != null) {
-			mOpenConverstaion = savedInstanceState.getString(STATE_OPEN_CONVERSATION, null);
+			mOpenConversation = savedInstanceState.getString(STATE_OPEN_CONVERSATION, null);
 			mPanelOpen = savedInstanceState.getBoolean(STATE_PANEL_OPEN, true);
-			String pending = savedInstanceState.getString(STATE_PENDING_URI, null);
+            int pos = savedInstanceState.getInt(STATE_FIRST_VISIBLE, -1);
+            int offset = savedInstanceState.getInt(STATE_OFFSET_FROM_TOP, 1);
+            if (pos >= 0 && offset <= 0) {
+                Log.d(Config.LOGTAG, "retrieved scroll position from instanceState " + pos + ":" + offset);
+                mScrollPosition = new Pair<>(pos, offset);
+            } else {
+                mScrollPosition = null;
+            }
+            String pending = savedInstanceState.getString(STATE_PENDING_URI, null);
 			if (pending != null) {
 				mPendingImageUris.clear();
 				mPendingImageUris.add(Uri.parse(pending));
@@ -1274,7 +1285,7 @@ public class ConversationActivity extends XmppActivity
 	@Override
 	protected void onNewIntent(final Intent intent) {
 		if (intent != null && ACTION_VIEW_CONVERSATION.equals(intent.getAction())) {
-			mOpenConverstaion = null;
+			mOpenConversation = null;
 			if (xmppConnectionServiceBound) {
 				handleViewConversationIntent(intent);
 				intent.setAction(Intent.ACTION_MAIN);
@@ -1323,7 +1334,12 @@ public class ConversationActivity extends XmppActivity
 		Conversation conversation = getSelectedConversation();
 		if (conversation != null) {
 			savedInstanceState.putString(STATE_OPEN_CONVERSATION, conversation.getUuid());
-		} else {
+            Pair<Integer, Integer> scrollPosition = mConversationFragment.getScrollPosition();
+            if (scrollPosition != null) {
+                savedInstanceState.putInt(STATE_FIRST_VISIBLE, scrollPosition.first);
+                savedInstanceState.putInt(STATE_OFFSET_FROM_TOP, scrollPosition.second);
+            }
+        } else {
 			savedInstanceState.remove(STATE_OPEN_CONVERSATION);
 		}
 		savedInstanceState.putBoolean(STATE_PANEL_OPEN, isConversationsOverviewVisable());
@@ -1411,7 +1427,7 @@ public class ConversationActivity extends XmppActivity
 				}
 				finish();
 			}
-		} else if (selectConversationByUuid(mOpenConverstaion)) {
+		} else if (selectConversationByUuid(mOpenConversation)) {
 			if (mPanelOpen) {
 				showConversationsOverview();
 			} else {
@@ -1420,9 +1436,12 @@ public class ConversationActivity extends XmppActivity
 					updateActionBarTitle(true);
 				}
 			}
-			this.mConversationFragment.reInit(getSelectedConversation());
-			mOpenConverstaion = null;
-		} else if (intent != null && ACTION_VIEW_CONVERSATION.equals(intent.getAction())) {
+            if (this.mConversationFragment.reInit(getSelectedConversation())) {
+                Log.d(Config.LOGTAG, "setting scroll position on fragment");
+                this.mConversationFragment.setScrollPosition(mScrollPosition);
+            }
+            mOpenConversation = null;
+        } else if (intent != null && ACTION_VIEW_CONVERSATION.equals(intent.getAction())) {
 			clearPending();
 			handleViewConversationIntent(intent);
 			intent.setAction(Intent.ACTION_MAIN);

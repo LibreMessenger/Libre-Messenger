@@ -12,6 +12,8 @@ import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.InputType;
+import android.util.Log;
+import android.util.Pair;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Gravity;
@@ -153,8 +155,12 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 									View v = messagesView.getChildAt(0);
 									final int pxOffset = (v == null) ? 0 : v.getTop();
 									ConversationFragment.this.conversation.populateWithMessages(ConversationFragment.this.messageList);
-									updateStatusMessages();
-									messageListAdapter.notifyDataSetChanged();
+                                    try {
+                                        updateStatusMessages();
+                                    } catch (IllegalStateException e) {
+                                        Log.d(Config.LOGTAG, "caught illegal state exception while updating status messages");
+                                    }
+                                    messageListAdapter.notifyDataSetChanged();
 									int pos = Math.max(getIndexOf(uuid,messageList),0);
 									messagesView.setSelectionFromTop(pos, pxOffset);
 									messagesLoaded = true;
@@ -210,7 +216,29 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 		}
 		return -1;
 	}
-	protected OnClickListener clickToDecryptListener = new OnClickListener() {
+
+    public Pair<Integer, Integer> getScrollPosition() {
+        if (this.messagesView.getCount() == 0 ||
+                this.messagesView.getLastVisiblePosition() == this.messagesView.getCount() - 1) {
+            return null;
+        } else {
+            final int pos = messagesView.getFirstVisiblePosition();
+            final View view = messagesView.getChildAt(0);
+            if (view == null) {
+                return null;
+            } else {
+                return new Pair<>(pos, view.getTop());
+            }
+        }
+    }
+
+    public void setScrollPosition(Pair<Integer, Integer> scrollPosition) {
+        if (scrollPosition != null) {
+            this.messagesView.setSelectionFromTop(scrollPosition.first, scrollPosition.second);
+        }
+    }
+
+    protected OnClickListener clickToDecryptListener = new OnClickListener() {
 
 		@Override
 		public void onClick(View v) {
@@ -747,9 +775,9 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 		}
 	}
 
-	public void reInit(Conversation conversation) {
+	public boolean reInit(Conversation conversation) {
 		if (conversation == null) {
-			return;
+			return false;
 		}
 		this.activity = (ConversationActivity) getActivity();
 		setupIme();
@@ -785,6 +813,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 				pos = i < 0 ? bottom : i;
 			}
 			messagesView.setSelection(pos);
+            return pos == bottom;
 		}
 	}
 
