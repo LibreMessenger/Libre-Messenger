@@ -4,11 +4,11 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
-import android.widget.EditText;
 
 import de.pixart.messenger.Config;
+import github.ankushsachdeva.emojicon.EmojiconEditText;
 
-public class EditMessage extends EditText {
+public class EditMessage extends EmojiconEditText {
 
 	public EditMessage(Context context, AttributeSet attrs) {
 		super(context, attrs);
