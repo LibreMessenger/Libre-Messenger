@@ -51,8 +51,8 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 
 	private static DatabaseBackend instance = null;
 
-	private static final String DATABASE_NAME = "history";
-	private static final int DATABASE_VERSION = 28;
+	public static final String DATABASE_NAME = "history";
+	public static final int DATABASE_VERSION = 28;
 
 	private static String CREATE_CONTATCS_STATEMENT = "create table "
 			+ Contact.TABLENAME + "(" + Contact.ACCOUNT + " TEXT, "
