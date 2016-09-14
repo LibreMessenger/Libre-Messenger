@@ -470,48 +470,49 @@ public class ConversationActivity extends XmppActivity
 				ab.setDisplayShowTitleEnabled(false);
 				ab.setDisplayShowCustomEnabled(true);
 				ab.setCustomView(R.layout.ab_title);
+                TextView abtitle = (TextView) findViewById(android.R.id.text1);
+                TextView absubtitle = (TextView) findViewById(android.R.id.text2);
                 if (conversation.getMode() == Conversation.MODE_SINGLE || useSubjectToIdentifyConference()) {
-					TextView abtitle = (TextView) findViewById(android.R.id.text1);
 					abtitle.setText(conversation.getName());
                     abtitle.setOnClickListener(this);
+                    abtitle.setSelected(true);
                     if (conversation.getMode() == Conversation.MODE_SINGLE && !this.getSelectedConversation().withSelf()) {
                         if (conversation.getContact().getShownStatus() == Presence.Status.OFFLINE) {
-                            TextView absubtitle = (TextView) findViewById(android.R.id.text2);
                             absubtitle.setText(getString(R.string.account_status_offline));
+                            absubtitle.setSelected(true);
                             absubtitle.setOnClickListener(this);
                         } else {
                             ChatState state = conversation.getIncomingChatState();
                             if (state == ChatState.COMPOSING) {
-                                TextView absubtitle = (TextView) findViewById(android.R.id.text2);
                                 absubtitle.setText(getString(R.string.is_typing));
                                 absubtitle.setTypeface(null, Typeface.BOLD_ITALIC);
+                                absubtitle.setSelected(true);
                                 absubtitle.setOnClickListener(this);
                             } else if (state == ChatState.PAUSED) {
-                                TextView absubtitle = (TextView) findViewById(android.R.id.text2);
                                 absubtitle.setText(UIHelper.lastseen(getApplicationContext(), conversation.getContact().isActive(), conversation.getContact().getLastseen()));
+                                absubtitle.setSelected(true);
                                 absubtitle.setOnClickListener(this);
                             } else {
-                                TextView absubtitle = (TextView) findViewById(android.R.id.text2);
                                 absubtitle.setText(UIHelper.lastseen(getApplicationContext(), conversation.getContact().isActive(), conversation.getContact().getLastseen()));
+                                absubtitle.setSelected(true);
                                 absubtitle.setOnClickListener(this);
                             }
                         }
                     } else if (useSubjectToIdentifyConference()) {
                         if (conversation.getParticipants() != null) {
-							TextView absubtitle = (TextView) findViewById(android.R.id.text2);
 							absubtitle.setText(conversation.getParticipants());
+                            absubtitle.setSelected(true);
 							absubtitle.setOnClickListener(this);
 						} else {
-                            TextView absubtitle = (TextView) findViewById(android.R.id.text2);
                             absubtitle.setText(R.string.no_participants);
+                            abtitle.setSelected(true);
                             absubtitle.setOnClickListener(this);
 						}
                     }
                 } else {
-                    TextView abtitle = (TextView) findViewById(android.R.id.text1);
                     abtitle.setText(conversation.getJid().toBareJid().toString());
                     abtitle.setOnClickListener(this);
-					TextView absubtitle = (TextView) findViewById(android.R.id.text2);
+                    abtitle.setSelected(true);
                     absubtitle.setText(null);
                     absubtitle.setOnClickListener(this);
                 }
