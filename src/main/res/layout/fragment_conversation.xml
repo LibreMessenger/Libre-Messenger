@@ -36,7 +36,6 @@
         android:paddingBottom="2dp">
 
         <de.pixart.messenger.ui.EditMessage
-            emojicon:emojiconSize="28sp"
             android:id="@+id/textinput"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
