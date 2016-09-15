@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="left|center_vertical">
+    android:gravity="start|center_vertical">
 
     <github.ankushsachdeva.emojicon.EmojiconTextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@android:id/text1"
@@ -13,7 +13,7 @@
         android:ellipsize="marquee"
         android:marqueeRepeatLimit="marquee_forever"
         android:scrollHorizontally="true"
-        android:gravity="center_vertical"
+        android:gravity="start|center_vertical"
         android:textColor="@color/grey200"
         android:clickable="true"
         android:onClick="onClick"
@@ -30,7 +30,7 @@
         android:layout_below="@android:id/text1"
         android:textSize="12sp"
         android:textColor="@color/grey50"
-        android:gravity="center_vertical"
+        android:gravity="start|center_vertical"
         android:onClick="onClick"
         android:clickable="true"
         android:paddingBottom="1dp" />

@@ -1,5 +1,6 @@
 package de.pixart.messenger.ui;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -53,6 +54,7 @@ import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.XmppConnection;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
+import github.ankushsachdeva.emojicon.EmojiconTextView;
 
 public class ContactDetailsActivity extends XmppActivity implements OnAccountUpdate, OnRosterUpdate, OnUpdateBlocklist, OnKeyStatusUpdated {
 	public static final String ACTION_VIEW_CONTACT = "view_contact";
@@ -314,6 +316,19 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 		if (contact == null) {
 			return;
 		}
+        if (getActionBar() != null) {
+            final ActionBar ab = getActionBar();
+            ab.setCustomView(R.layout.ab_title);
+            ab.setDisplayShowCustomEnabled(true);
+            TextView abtitle = (TextView) findViewById(android.R.id.text1);
+            TextView absubtitle = (TextView) findViewById(android.R.id.text2);
+            abtitle.setText(contact.getDisplayName());
+            abtitle.setSelected(true);
+            abtitle.setClickable(false);
+            absubtitle.setVisibility(View.GONE);
+            absubtitle.setClickable(false);
+        }
+
 		invalidateOptionsMenu();
 		setTitle(contact.getDisplayName());
 		if (contact.showInRoster()) {

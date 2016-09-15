@@ -1,5 +1,6 @@
 package de.pixart.messenger.ui;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -506,6 +507,18 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 		} else {
 			account = mConversation.getAccount().getJid().toBareJid().toString();
 		}
+        if (getActionBar() != null) {
+            final ActionBar ab = getActionBar();
+            ab.setCustomView(R.layout.ab_title);
+            ab.setDisplayShowCustomEnabled(true);
+            TextView abtitle = (TextView) findViewById(android.R.id.text1);
+            TextView absubtitle = (TextView) findViewById(android.R.id.text2);
+            abtitle.setText(mConversation.getName());
+            abtitle.setSelected(true);
+            abtitle.setClickable(false);
+            absubtitle.setVisibility(View.GONE);
+            absubtitle.setClickable(false);
+        }
 		mAccountJid.setText(getString(R.string.using_account, account));
 		mYourPhoto.setImageBitmap(avatarService().get(mConversation.getAccount(), getPixel(48)));
 		setTitle(mConversation.getName());
