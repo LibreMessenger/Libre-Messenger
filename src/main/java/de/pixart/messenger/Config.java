@@ -84,7 +84,7 @@ public final class Config {
 
     public static final int VIDEO_SIZE = 640;
     public static final int VIDEO_BITRATE = 500000;
-    public static final int VIDEO_MAX_SIZE = 5242880; //5 MiB
+    public static final int VIDEO_MAX_SIZE = 10485760; //10 MiB
 
     public static final int FILE_MAX_SIZE = 1048576; //1 MiB
 
