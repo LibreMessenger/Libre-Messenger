@@ -1,5 +1,13 @@
 ###Changelog
 
+###Version 1.14.2
+* support ANONYMOUS SASL
+* add custom Emojis
+* scroll long actionbar titles
+* some performance improvements
+* some video compression improvements
+* bug fixes
+
 ###Version 1.14.1
 * fix crash on taking photos directly within the app
 

@@ -78,8 +78,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 24
-        versionCode 165
-        versionName "1.14.2-beta1"
+        versionCode 167
+        versionName "1.14.2"
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"
         multiDexEnabled true
