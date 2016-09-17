@@ -47,12 +47,13 @@
             android:inputType="textShortMessage|textMultiLine|textCapSentences"
             android:minHeight="48dp"
             android:minLines="1"
+            android:maxLines="4"
             android:paddingBottom="12dp"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingTop="12dp"
-            android:textColor="@color/black87">
-
+            android:textColor="@color/black87"
+            android:singleLine="false">
             <requestFocus />
         </de.pixart.messenger.ui.EditMessage>
 
