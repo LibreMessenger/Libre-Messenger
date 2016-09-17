@@ -94,10 +94,6 @@ public class UIHelper {
 		return sameDay(date,new Date(System.currentTimeMillis()));
 	}
 
-	public static boolean sameDay(long timestamp1, long timestamp2) {
-		return sameDay(new Date(timestamp1),new Date(timestamp2));
-	}
-
 	private static boolean sameDay(Date a, Date b) {
 		Calendar cal1 = Calendar.getInstance();
 		Calendar cal2 = Calendar.getInstance();
@@ -184,10 +180,12 @@ public class UIHelper {
 			}
 		} else {
 			String body = message.getBody();
-			if (body.length() > 256) {
-				body = body.substring(0,256);
-			}
-			if (body.startsWith(Message.ME_COMMAND)) {
+            if (body == null) {
+                body = "";
+            } else if (body.length() > 256) {
+                body = body.substring(0, 256);
+            }
+            if (body.startsWith(Message.ME_COMMAND)) {
 				return new Pair<>(body.replaceAll("^" + Message.ME_COMMAND,
 						UIHelper.getMessageDisplayName(message) + " "), false);
 			} else if (GeoHelper.isGeoUri(message.getBody())) {
