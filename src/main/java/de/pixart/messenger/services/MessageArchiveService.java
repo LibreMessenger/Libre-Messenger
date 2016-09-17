@@ -45,9 +45,18 @@ public class MessageArchiveService implements OnAdvancedStreamFeaturesLoaded {
 				}
 			}
 		}
-		Pair<Long,String> pair = mXmppConnectionService.databaseBackend.getLastMessageReceived(account);
-		long startCatchup = pair == null ? 0 : pair.first;
-		long endCatchup = account.getXmppConnection().getLastSessionEstablished();
+        final Pair<Long, String> lastMessageReceived = mXmppConnectionService.databaseBackend.getLastMessageReceived(account);
+        final Pair<Long, String> lastClearDate = mXmppConnectionService.databaseBackend.getLastClearDate(account);
+        long startCatchup;
+        final String reference;
+        if (lastMessageReceived != null && lastMessageReceived.first >= lastClearDate.first) {
+            startCatchup = lastMessageReceived.first;
+            reference = lastMessageReceived.second;
+        } else {
+            startCatchup = lastClearDate.first;
+            reference = null;
+        }
+        long endCatchup = account.getXmppConnection().getLastSessionEstablished();
 		final Query query;
 		if (startCatchup == 0) {
 			return;
@@ -62,7 +71,7 @@ public class MessageArchiveService implements OnAdvancedStreamFeaturesLoaded {
 			query = new Query(account, startCatchup, endCatchup);
 		} else {
 			query = new Query(account, startCatchup, endCatchup);
-			query.reference = pair.second;
+			query.reference = reference;
 		}
 		this.queries.add(query);
 		this.execute(query);
