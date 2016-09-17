@@ -247,13 +247,10 @@ public class NotificationService {
         final Builder mBuilder = new NotificationCompat.Builder(
                 mXmppConnectionService);
         final NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();
-        Integer unread = mXmppConnectionService.unreadCount();
-        String SummaryText = mXmppConnectionService.getString(R.string.unread_messages);
         style.setBigContentTitle(notifications.size()
                 + " "
                 + mXmppConnectionService
                 .getString(R.string.unread_conversations));
-        style.setSummaryText(SummaryText);
         final StringBuilder names = new StringBuilder();
         Conversation conversation = null;
         for (final ArrayList<Message> messages : notifications.values()) {
@@ -285,7 +282,6 @@ public class NotificationService {
         }
         mBuilder.setGroupSummary(true);
         mBuilder.setGroup(CONVERSATIONS_GROUP);
-        mBuilder.setNumber(unread);
         mBuilder.setDeleteIntent(createDeleteIntent(null));
         mBuilder.setSmallIcon(R.drawable.ic_notification);
         return mBuilder;
