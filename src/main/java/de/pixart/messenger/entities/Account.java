@@ -276,9 +276,12 @@ public class Account extends AbstractEntity {
 		return jid.getLocalpart();
 	}
 
-	public void setJid(final Jid jid) {
-		this.jid = jid;
-	}
+    public boolean setJid(final Jid next) {
+        final Jid prev = this.jid != null ? this.jid.toBareJid() : null;
+        this.jid = next;
+        return prev == null || (next != null && !prev.equals(next.toBareJid())
+        );
+    }
 
 	public Jid getServer() {
 		return jid.toDomainJid();
