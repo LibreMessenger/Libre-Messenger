@@ -202,8 +202,8 @@ public class ShareLocationActivity extends Activity implements OnMapReadyCallbac
         protected String doInBackground(Double... params) {
             Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
 
-            double latitude = params[0].doubleValue();
-            double longitude = params[1].doubleValue();
+            double latitude = params[0];
+            double longitude = params[1];
 
             List<Address> addresses = null;
             String address="";

@@ -3,12 +3,15 @@ package de.pixart.messenger.ui;
 import android.Manifest;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -32,6 +35,7 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
 	private GoogleMap mGoogleMap;
 	private LatLng mLocation;
 	private String mLocationName;
+    private MarkerOptions options;
 
     class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
@@ -118,38 +122,60 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
 		}
 	}
 
-	private void markAndCenterOnLocation(LatLng location, String name) {
-		this.mGoogleMap.clear();
-        MarkerOptions options = new MarkerOptions();
-        options.position(location);
-        double longitude = mLocation.longitude;
-        double latitude = mLocation.latitude;
+    private static String getAddress(Context context, LatLng location) {
+        double longitude = location.longitude;
+        double latitude = location.latitude;
+        String address = "";
         if (latitude != 0 && longitude != 0) {
-            Geocoder geoCoder = new Geocoder(getBaseContext(), Locale.getDefault());
+            Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
             try {
                 List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
-
-                String address = "";
                 if (addresses != null) {
                     Address Address = addresses.get(0);
                     StringBuilder strAddress = new StringBuilder("");
-
                     for (int i = 0; i < Address.getMaxAddressLineIndex(); i++) {
                         strAddress.append(Address.getAddressLine(i)).append("\n");
                     }
                     address = strAddress.toString();
                     address = address.substring(0, address.length()-1); //trim last \n
-                    options.snippet(address);
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        return address;
+    }
+
+	private void markAndCenterOnLocation(final LatLng location, String name) {
+		this.mGoogleMap.clear();
+        options = new MarkerOptions();
+        options.position(location);
+        double longitude = mLocation.longitude;
+        double latitude = mLocation.latitude;
+        this.mGoogleMap.setInfoWindowAdapter(new InfoWindowAdapter());
+
+        if (latitude != 0 && longitude != 0) {
+            new AsyncTask<Void, Void, Void>() {
+                String address = null;
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    address = getAddress(ShowLocationActivity.this, location);
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void result) {
+                    super.onPostExecute(result);
+                    options.snippet(String.valueOf(address));
+                    mGoogleMap.addMarker(options).showInfoWindow();
+                }
+            }.execute();
+        }
         if (name != null) {
 			options.title(name);
 		}
-        this.mGoogleMap.setInfoWindowAdapter(new InfoWindowAdapter());
-        this.mGoogleMap.addMarker(options).showInfoWindow();
 		this.mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, Config.DEFAULT_ZOOM));
 	}
 
