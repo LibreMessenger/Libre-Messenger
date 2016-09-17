@@ -142,7 +142,7 @@ public class PublishProfilePictureActivity extends XmppActivity {
 
 			}
 		});
-		this.defaultUri = PhoneHelper.getSefliUri(getApplicationContext());
+		this.defaultUri = PhoneHelper.getSelfiUri(getApplicationContext());
 	}
 
 	private void chooseAvatar(boolean crop) {
