@@ -1,9 +1,11 @@
 package de.pixart.messenger.ui;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -11,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -37,106 +40,126 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 
 public class ShareLocationActivity extends Activity implements OnMapReadyCallback,
-		GoogleApiClient.ConnectionCallbacks,
-		GoogleApiClient.OnConnectionFailedListener,
-		LocationListener{
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
 
-	private GoogleMap mGoogleMap;
-	private GoogleApiClient mGoogleApiClient;
-	private LocationRequest mLocationRequest;
-	private Location mLastLocation;
-	private Button mCancelButton;
-	private Button mShareButton;
-	private RelativeLayout mSnackbar;
+    private GoogleMap mGoogleMap;
+    private GoogleApiClient mGoogleApiClient;
+    private LocationRequest mLocationRequest;
+    private Location mLastLocation;
+    private Button mCancelButton;
+    private Button mShareButton;
+    private RelativeLayout mSnackbar;
     private RelativeLayout mLocationInfo;
     private TextView mSnackbarLocation;
     private TextView mSnackbarAction;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_share_locaction);
-		MapFragment fragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map_fragment);
-		fragment.getMapAsync(this);
-		mGoogleApiClient = new GoogleApiClient.Builder(this)
-				.addApi(LocationServices.API)
-				.addConnectionCallbacks(this)
-				.addOnConnectionFailedListener(this)
-				.build();
-		mCancelButton = (Button) findViewById(R.id.cancel_button);
-		mCancelButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				setResult(RESULT_CANCELED);
-				finish();
-			}
-		});
-		mShareButton = (Button) findViewById(R.id.share_button);
-		mShareButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if (mLastLocation != null) {
-					Intent result = new Intent();
-					result.putExtra("latitude",mLastLocation.getLatitude());
-					result.putExtra("longitude",mLastLocation.getLongitude());
-					result.putExtra("altitude",mLastLocation.getAltitude());
-					result.putExtra("accuracy",(int) mLastLocation.getAccuracy());
-					setResult(RESULT_OK, result);
-					finish();
-				}
-			}
-		});
-		mSnackbar = (RelativeLayout) findViewById(R.id.snackbar);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getActionBar() != null) {
+            getActionBar().setHomeButtonEnabled(true);
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        setContentView(R.layout.activity_share_locaction);
+        MapFragment fragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map_fragment);
+        fragment.getMapAsync(this);
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        mCancelButton = (Button) findViewById(R.id.cancel_button);
+        mCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setResult(RESULT_CANCELED);
+                finish();
+            }
+        });
+        mShareButton = (Button) findViewById(R.id.share_button);
+        mShareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mLastLocation != null) {
+                    Intent result = new Intent();
+                    result.putExtra("latitude", mLastLocation.getLatitude());
+                    result.putExtra("longitude", mLastLocation.getLongitude());
+                    result.putExtra("altitude", mLastLocation.getAltitude());
+                    result.putExtra("accuracy", (int) mLastLocation.getAccuracy());
+                    setResult(RESULT_OK, result);
+                    finish();
+                }
+            }
+        });
+        mSnackbar = (RelativeLayout) findViewById(R.id.snackbar);
         mLocationInfo = (RelativeLayout) findViewById(R.id.snackbar_location);
         mSnackbarLocation = (TextView) findViewById(R.id.snackbar_location_message);
-		mSnackbarAction = (TextView) findViewById(R.id.snackbar_action);
-		mSnackbarAction.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-			}
-		});
-	}
+        mSnackbarAction = (TextView) findViewById(R.id.snackbar_action);
+        mSnackbarAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+            }
+        });
+    }
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		this.mLastLocation = null;
-		if (isLocationEnabled()) {
-			this.mSnackbar.setVisibility(View.GONE);
-		} else {
-			this.mSnackbar.setVisibility(View.VISIBLE);
-		}
-		mShareButton.setEnabled(false);
-		mShareButton.setTextColor(0x8a000000);
-		mShareButton.setText(R.string.locating);
-		mGoogleApiClient.connect();
-	}
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.mLastLocation = null;
+        if (isLocationEnabled()) {
+            this.mSnackbar.setVisibility(View.GONE);
+        } else {
+            this.mSnackbar.setVisibility(View.VISIBLE);
+        }
+        mShareButton.setEnabled(false);
+        mShareButton.setTextColor(0x8a000000);
+        mShareButton.setText(R.string.locating);
+        mGoogleApiClient.connect();
+    }
 
-	@Override
-	protected void onPause() {
-		mGoogleApiClient.disconnect();
-		super.onPause();
-	}
+    @Override
+    protected void onPause() {
+        mGoogleApiClient.disconnect();
+        super.onPause();
+    }
 
-	@Override
-	public void onMapReady(GoogleMap googleMap) {
-		this.mGoogleMap = googleMap;
-		this.mGoogleMap.setMyLocationEnabled(true);
-	}
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        this.mGoogleMap = googleMap;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                    || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                this.mGoogleMap.setBuildingsEnabled(true);
+                this.mGoogleMap.setMyLocationEnabled(true);
+            }
+        } else {
+            this.mGoogleMap.setBuildingsEnabled(true);
+            this.mGoogleMap.setMyLocationEnabled(true);
+        }
+    }
 
-	private void centerOnLocation(LatLng location) {
-		this.mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, Config.DEFAULT_ZOOM));
-	}
+    private void centerOnLocation(LatLng location) {
+        this.mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, Config.DEFAULT_ZOOM));
+    }
 
-	@Override
-	public void onConnected(Bundle bundle) {
-		mLocationRequest = LocationRequest.create();
+    @Override
+    public void onConnected(Bundle bundle) {
+        mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setInterval(1000);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                    || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+            }
+        } else {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        }
 
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-	}
+    }
 
 	@Override
 	public void onConnectionSuspended(int i) {

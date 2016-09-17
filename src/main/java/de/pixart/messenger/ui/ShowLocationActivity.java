@@ -11,7 +11,6 @@ import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -66,10 +65,10 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		ActionBar actionBar = getActionBar();
-		if (actionBar != null) {
-			actionBar.setDisplayHomeAsUpEnabled(true);
-		}
+        if (getActionBar() != null) {
+            getActionBar().setHomeButtonEnabled(true);
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
 		setContentView(R.layout.activity_show_locaction);
 		MapFragment fragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map_fragment);
@@ -114,8 +113,12 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                     || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                this.mGoogleMap.setBuildingsEnabled(true);
                 this.mGoogleMap.setMyLocationEnabled(true);
             }
+        } else {
+            this.mGoogleMap.setBuildingsEnabled(true);
+            this.mGoogleMap.setMyLocationEnabled(true);
         }
 		if (this.mLocation != null) {
 			this.markAndCenterOnLocation(this.mLocation,this.mLocationName);

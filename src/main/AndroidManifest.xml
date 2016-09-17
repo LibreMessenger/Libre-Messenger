@@ -204,6 +204,7 @@
         <activity
             android:name="de.pixart.messenger.ui.ShareLocationActivity"
             android:label="@string/share_location"
+            android:parentActivityName="de.pixart.messenger.ui.ConversationActivity"
             android:hardwareAccelerated="true">
             <intent-filter>
                 <action android:name="de.pixart.messenger.location.request"/>
