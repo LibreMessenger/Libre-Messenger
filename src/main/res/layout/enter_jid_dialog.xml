@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:paddingBottom="8dp"
-              android:paddingLeft="24dp"
-              android:paddingRight="24dp"
-              android:paddingTop="16dp">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="?attr/dialog_vertical_padding"
+    android:paddingLeft="?attr/dialog_horizontal_padding"
+    android:paddingRight="?attr/dialog_horizontal_padding"
+    android:paddingTop="?attr/dialog_vertical_padding">
 
     <TextView
         android:id="@+id/your_account"
@@ -15,13 +15,13 @@
         android:text="@string/your_account"
         android:textColor="@color/black87"
         android:textSize="?attr/TextSizeBody"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <Spinner
         android:id="@+id/account"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/jabber_id"
@@ -30,7 +30,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/account_settings_jabber_id"
         android:textColor="@color/black87"
-        android:textSize="?attr/TextSizeBody"/>
+        android:textSize="?attr/TextSizeBody" />
 
     <AutoCompleteTextView
         android:id="@+id/jid"
