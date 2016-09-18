@@ -268,6 +268,15 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 		this.mNotifyStatusText = (TextView) findViewById(R.id.notification_status_text);
 	}
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        final int theme = findTheme();
+        if (this.mTheme != theme) {
+            recreate();
+        }
+    }
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem menuItem) {
 		switch (menuItem.getItemId()) {

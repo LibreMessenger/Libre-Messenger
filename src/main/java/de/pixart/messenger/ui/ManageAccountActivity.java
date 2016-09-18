@@ -102,6 +102,15 @@ public class ManageAccountActivity extends XmppActivity implements OnAccountUpda
 		registerForContextMenu(accountListView);
 	}
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        final int theme = findTheme();
+        if (this.mTheme != theme) {
+            recreate();
+        }
+    }
+
 	@Override
 	public void onSaveInstanceState(final Bundle savedInstanceState) {
 		if (selectedAccount != null) {

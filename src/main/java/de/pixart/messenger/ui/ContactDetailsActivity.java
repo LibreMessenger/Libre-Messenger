@@ -54,7 +54,6 @@ import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.XmppConnection;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
-import github.ankushsachdeva.emojicon.EmojiconTextView;
 
 public class ContactDetailsActivity extends XmppActivity implements OnAccountUpdate, OnRosterUpdate, OnUpdateBlocklist, OnKeyStatusUpdated {
 	public static final String ACTION_VIEW_CONTACT = "view_contact";
@@ -227,13 +226,18 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 		}
 	}
 
-	@Override
-	public void onStart() {
-		super.onStart();
-		final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-		this.showDynamicTags = preferences.getBoolean("show_dynamic_tags",false);
-		this.showLastSeen = preferences.getBoolean("last_activity", true);
-	}
+    @Override
+    public void onStart() {
+        super.onStart();
+        final int theme = findTheme();
+        if (this.mTheme != theme) {
+            recreate();
+        } else {
+            final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            this.showDynamicTags = preferences.getBoolean("show_dynamic_tags", false);
+            this.showLastSeen = preferences.getBoolean("last_activity", false);
+        }
+    }
 
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem menuItem) {
