@@ -124,7 +124,7 @@ public class Message extends AbstractEntity {
 		this.conversationUuid = conversationUUid;
 		this.counterpart = counterpart;
 		this.trueCounterpart = trueCounterpart;
-		this.body = body;
+        this.body = body == null ? "" : body;
 		this.timeSent = timeSent;
 		this.encryption = encryption;
 		this.status = status;
@@ -266,7 +266,9 @@ public class Message extends AbstractEntity {
 	}
 
 	public void setBody(String body) {
-		this.body = body;
+        if (body == null) {
+            throw new Error("You should not set the message body to null");
+        }
 	}
 
 	public long getTimeSent() {
