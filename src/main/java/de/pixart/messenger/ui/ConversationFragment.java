@@ -55,6 +55,7 @@ import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.entities.Transferable;
 import de.pixart.messenger.entities.TransferablePlaceholder;
 import de.pixart.messenger.http.HttpDownloadConnection;
+import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.services.MessageArchiveService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.XmppActivity.OnPresenceSelected;
@@ -591,7 +592,8 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 			}
 			if (treatAsFile) {
                 String path = m.getRelativeFilePath();
-                if (path == null || !path.startsWith("/")) {
+                Log.d(Config.LOGTAG, "Path = " + path);
+                if (path == null || !path.startsWith("/") || path.contains(FileBackend.getConversationsDirectory())) {
                     deleteFile.setVisible(true);
                     deleteFile.setTitle(activity.getString(R.string.delete_x_file, UIHelper.getFileDescriptionString(activity, m)));
                 }
