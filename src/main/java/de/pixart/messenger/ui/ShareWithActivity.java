@@ -320,6 +320,7 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
 			};
 			if (account.httpUploadAvailable()
 					&& ((share.image && !neverCompressPictures())
+					|| share.video
 					|| conversation.getMode() == Conversation.MODE_MULTI
 					|| FileBackend.allFilesUnderSize(this, share.uris, max))
 					&& conversation.getNextEncryption() != Message.ENCRYPTION_OTR) {
