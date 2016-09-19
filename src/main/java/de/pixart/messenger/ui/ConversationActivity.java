@@ -208,6 +208,8 @@ public class ConversationActivity extends XmppActivity
 			if (pending != null) {
 				mPendingImageUris.clear();
 				mPendingImageUris.add(Uri.parse(pending));
+                mPendingPhotoUris.clear();
+                mPendingPhotoUris.add(Uri.parse(pending));
 			}
 		}
 
@@ -1345,8 +1347,10 @@ public class ConversationActivity extends XmppActivity
 		}
 		savedInstanceState.putBoolean(STATE_PANEL_OPEN, isConversationsOverviewVisable());
 		if (this.mPendingImageUris.size() >= 1) {
-			savedInstanceState.putString(STATE_PENDING_URI, this.mPendingImageUris.get(0).toString());
-		} else {
+            savedInstanceState.putString(STATE_PENDING_URI, this.mPendingImageUris.get(0).toString());
+        } else if (this.mPendingPhotoUris.size() >= 1) {
+            savedInstanceState.putString(STATE_PENDING_URI, this.mPendingPhotoUris.get(0).toString());
+        } else {
 			savedInstanceState.remove(STATE_PENDING_URI);
 		}
 		super.onSaveInstanceState(savedInstanceState);
@@ -1664,17 +1668,17 @@ public class ConversationActivity extends XmppActivity
                     selectPresence(c, callback);
                 }
 			} else if (requestCode == ATTACHMENT_CHOICE_TAKE_PHOTO) {
-				if (mPendingImageUris.size() == 1) {
-					Uri uri = mPendingImageUris.get(0);
+				if (mPendingPhotoUris.size() == 1) {
+					Uri uri = mPendingPhotoUris.get(0);
 					if (xmppConnectionServiceBound) {
-						attachImagesToConversation(getSelectedConversation(), uri);
-						mPendingImageUris.clear();
+						attachPhotoToConversation(getSelectedConversation(), uri);
+						mPendingPhotoUris.clear();
 					}
 					Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
 					intent.setData(uri);
 					sendBroadcast(intent);
 				} else {
-					mPendingImageUris.clear();
+					mPendingPhotoUris.clear();
 				}
             } else if (requestCode == ATTACHMENT_CHOICE_LOCATION) {
 				double latitude = data.getDoubleExtra("latitude", 0);
@@ -1697,6 +1701,7 @@ public class ConversationActivity extends XmppActivity
 		} else {
 			mPendingImageUris.clear();
 			mPendingFileUris.clear();
+            mPendingPhotoUris.clear();
 			if (requestCode == ConversationActivity.REQUEST_DECRYPT_PGP) {
 				mConversationFragment.onActivityResult(requestCode, resultCode, data);
 			}
