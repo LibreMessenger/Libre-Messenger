@@ -199,6 +199,8 @@
         android:orientation="vertical"
         android:padding="@dimen/infocard_padding"
         android:id="@+id/muc_info_more"
+        android:shrinkColumns="0"
+  			android:stretchColumns="1"
         android:visibility="gone">
 
 
@@ -216,13 +218,16 @@
                                android:layout_height="wrap_content"
                                android:text="@string/server_info_mam"
                                android:textColor="@color/black87"
-                               android:textSize="?attr/TextSizeBody" />
+                               android:textSize="?attr/TextSizeBody"
+                               android:singleLine="true"
+                               android:ellipsize="end" />
 
                        <TextView
                                android:id="@+id/muc_info_mam"
                                android:layout_width="wrap_content"
                                android:layout_height="wrap_content"
                                android:layout_gravity="right"
+                               android:paddingLeft="4dp"
                                android:textColor="@color/black87"
                                android:textSize="?attr/TextSizeBody" />
                </TableRow>

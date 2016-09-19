@@ -517,6 +517,9 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		this.mSaveButton.setOnClickListener(this.mSaveButtonClickListener);
 		this.mCancelButton.setOnClickListener(this.mCancelButtonClickListener);
 		this.mMoreTable = (TableLayout) findViewById(R.id.server_info_more);
+        if (savedInstanceState != null && savedInstanceState.getBoolean("showMoreTable")) {
+           	changeMoreTableVisibility(true);
+        }
 		final OnCheckedChangeListener OnCheckedShowConfirmPassword = new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(final CompoundButton buttonView,
@@ -581,6 +584,15 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		}
 		return super.onCreateOptionsMenu(menu);
 	}
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        final MenuItem showMoreInfo = menu.findItem(R.id.action_server_info_show_more);
+        if (showMoreInfo.isVisible()) {
+       		showMoreInfo.setChecked(mMoreTable.getVisibility() == View.VISIBLE);
+       	}
+       	return super.onPrepareOptionsMenu(menu);
+    }
 
 	@Override
 	protected void onStart() {
