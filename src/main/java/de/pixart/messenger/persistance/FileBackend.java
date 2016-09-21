@@ -462,10 +462,14 @@ public class FileBackend {
 		pathBuilder.append('/');
 		pathBuilder.append("Camera");
 		pathBuilder.append('/');
-		pathBuilder.append(this.fileDateFormat.format(new Date()) + ".jpg");
+        pathBuilder.append("IMG_" + this.fileDateFormat.format(new Date()) + ".jpg");
 		File file = new File(pathBuilder.toString());
 		file.getParentFile().mkdirs();
-		return FileProvider.getUriForFile(mXmppConnectionService,"de.pixart.messenger.files",file);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+		    return FileProvider.getUriForFile(mXmppConnectionService,"de.pixart.messenger.files",file);
+        } else {
+            return Uri.fromFile(file);
+        }
 	}
 
 	public Avatar getPepAvatar(Uri image, int size, Bitmap.CompressFormat format) {
