@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="?attr/color_text_primary"
+        android:textColor="@color/black87"
         android:paddingBottom="8dp"
         android:text="@string/clear_histor_msg"
         android:textSize="?attr/TextSizeBody" />
@@ -19,7 +19,7 @@
     <CheckBox
         android:id="@+id/end_conversation_checkbox"
         android:layout_width="wrap_content"
-        android:textColor="?attr/color_text_primary"
+        android:textColor="@color/black87"
         android:layout_height="wrap_content"
         android:text="@string/also_end_conversation"
         android:visibility="gone" />
