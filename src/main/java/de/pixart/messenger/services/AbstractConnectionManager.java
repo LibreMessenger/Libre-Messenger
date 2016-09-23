@@ -3,6 +3,7 @@ package de.pixart.messenger.services;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.PowerManager;
 import android.util.Log;
@@ -45,9 +46,18 @@ public class AbstractConnectionManager {
 	}
 
 	public long getAutoAcceptFileSize() {
-		String config = this.mXmppConnectionService.getPreferences().getString(
-				"auto_accept_file_size", "1048576");
-		try {
+        String config = "0";
+        if (mXmppConnectionService.isWIFI()) {
+            config = this.mXmppConnectionService.getPreferences().getString(
+                    "auto_accept_file_size_wifi", "10485760");
+        } else if (mXmppConnectionService.isMobile()) {
+            config = this.mXmppConnectionService.getPreferences().getString(
+                    "auto_accept_file_size_mobile", "262144");
+        } else if (mXmppConnectionService.isMobileRoaming()) {
+            config = this.mXmppConnectionService.getPreferences().getString(
+                    "auto_accept_file_size_roaming", "1");
+        }
+        try {
 			return Long.parseLong(config);
 		} catch (NumberFormatException e) {
 			return 1048576;

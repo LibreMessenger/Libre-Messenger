@@ -896,6 +896,46 @@ public class XmppConnectionService extends Service {
 		return activeNetwork != null && activeNetwork.isConnected();
 	}
 
+    public boolean isWIFI() {
+        ConnectivityManager cm = (ConnectivityManager) getApplicationContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (activeNetwork != null) { // connected to the internet
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isMobile() {
+        ConnectivityManager cm = (ConnectivityManager) getApplicationContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (activeNetwork != null) { // connected to the internet
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                if (!activeNetwork.isRoaming()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isMobileRoaming() {
+        ConnectivityManager cm = (ConnectivityManager) getApplicationContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (activeNetwork != null) { // connected to the internet
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                if (activeNetwork.isRoaming()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 	@SuppressLint("TrulyRandom")
 	@Override
 	public void onCreate() {

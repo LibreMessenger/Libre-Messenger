@@ -100,7 +100,9 @@
 	<string name="pref_general">General</string>
 	<string name="pref_xmpp_resource">XMPP resource</string>
 	<string name="pref_xmpp_resource_summary">The name this client identifies itself with</string>
-	<string name="pref_accept_files">Accept files</string>
+	<string name="pref_accept_files_wifi">Accept files in WiFi connections</string>
+    <string name="pref_accept_files_mobile">Accept files in mobile connections</string>
+    <string name="pref_accept_files_mobileroaming">Accept files in mobile roaming connections</string>
 	<string name="pref_accept_files_summary">Automatically accept files smaller than…</string>
 	<string name="pref_attachments">Attachments</string>
 	<string name="pref_return_to_previous">Quick Sharing</string>
