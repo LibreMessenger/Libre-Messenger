@@ -638,6 +638,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		if (mAccount != null) {
 			savedInstanceState.putString("account", mAccount.getJid().toBareJid().toString());
 			savedInstanceState.putBoolean("initMode", mInitMode);
+            savedInstanceState.putBoolean("showMoreTable", mMoreTable.getVisibility() == View.VISIBLE);
 		}
 		super.onSaveInstanceState(savedInstanceState);
 	}
@@ -714,8 +715,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				startActivity(showBlocklistIntent);
 				break;
 			case R.id.action_server_info_show_more:
-				mMoreTable.setVisibility(item.isChecked() ? View.GONE : View.VISIBLE);
-				item.setChecked(!item.isChecked());
+                changeMoreTableVisibility(!item.isChecked());
 				break;
 			case R.id.action_change_password_on_server:
 				gotoChangePassword(null);
@@ -738,6 +738,10 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
+    private void changeMoreTableVisibility(boolean visible) {
+        mMoreTable.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
 
 	private void gotoChangePassword(String newPassword) {
 		final Intent changePasswordIntent = new Intent(this, ChangePasswordActivity.class);
