@@ -664,5 +664,6 @@
     <string name="this_conference_has_no_members">Diese Konferenz enthält keine Teilnehmer.</string>
     <string name="unable_to_update_account">Profil kann nicht aktualisiert werden.</string>
     <string name="wrong_conference_configuration">Dies ist keine private, nicht-anonyme Konferenz.</string>
+    <string name="create_issue">Einen Fehler melden</string>
 
 </resources>

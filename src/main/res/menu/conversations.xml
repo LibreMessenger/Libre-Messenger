@@ -79,6 +79,11 @@
         android:showAsAction="never"
         android:title="@string/invite_user" />
     <item
+        android:id="@+id/action_create_issue"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/create_issue" />
+    <item
         android:id="@+id/action_check_updates"
         android:orderInCategory="100"
         android:showAsAction="never"

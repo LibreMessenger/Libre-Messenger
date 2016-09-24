@@ -1,7 +1,6 @@
 package de.pixart.messenger;
 
 import android.graphics.Bitmap;
-
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 
 public final class Config {
@@ -131,6 +130,8 @@ public final class Config {
 
 	public static final String UPDATE_URL = "http://xmpp.pix-art.de/Pix-Art_Messenger/update/";
 	public static final long UPDATE_CHECK_TIMER = 24 * 60 * 60; // in seconds
+
+    public static final String ISSUE_URL = "xmpp://support@room.pix-art.de?join";
 
 	public static final String ENABLED_CIPHERS[] = {
 		"TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",

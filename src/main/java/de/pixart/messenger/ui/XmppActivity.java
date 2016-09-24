@@ -389,6 +389,9 @@ public abstract class XmppActivity extends Activity {
 			case R.id.action_invite_user:
 				inviteUser();
 				break;
+            case R.id.action_create_issue:
+                createIssue();
+                break;
 			case R.id.action_settings:
 				startActivity(new Intent(this, SettingsActivity.class));
 				break;
@@ -1195,6 +1198,13 @@ public abstract class XmppActivity extends Activity {
 		intent.putExtra(Intent.EXTRA_TEXT, inviteText + "\n\n" + inviteURL);
 		startActivity(Intent.createChooser(intent, getString(R.string.invite_contact)));
 	}
+
+    private void createIssue() {
+        String IssueURL = Config.ISSUE_URL;
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(IssueURL));
+        startActivity(intent);
+    }
 
 	protected void shareUri() {
 		String uri = getShareableUri();
