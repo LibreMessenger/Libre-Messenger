@@ -67,6 +67,7 @@ import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.ServiceDiscoveryResult;
 import de.pixart.messenger.generator.IqGenerator;
 import de.pixart.messenger.services.XmppConnectionService;
+import de.pixart.messenger.ui.EditAccountActivity;
 import de.pixart.messenger.utils.DNSHelper;
 import de.pixart.messenger.utils.SSLSocketHelper;
 import de.pixart.messenger.utils.SocksSocketFactory;
@@ -124,6 +125,7 @@ public class XmppConnection implements Runnable {
 	private AtomicBoolean mWaitForDisco = new AtomicBoolean(true);
 	private boolean mInteractive = false;
 	private int attempt = 0;
+    public static String errorMessage = null;
 	private final Hashtable<String, Pair<IqPacket, OnIqPacketReceived>> packetCallbacks = new Hashtable<>();
 	private OnPresencePacketReceived presenceListener = null;
 	private OnJinglePacketReceived jingleListener = null;
@@ -134,6 +136,7 @@ public class XmppConnection implements Runnable {
 	private final ArrayList<OnAdvancedStreamFeaturesLoaded> advancedStreamFeaturesLoadedListeners = new ArrayList<>();
 	private OnMessageAcknowledged acknowledgedListener = null;
 	private XmppConnectionService mXmppConnectionService = null;
+    private EditAccountActivity mEditAccountActivity = null;
 
 	private SaslMechanism saslMechanism;
 
@@ -189,9 +192,14 @@ public class XmppConnection implements Runnable {
 				final List<String> PASSWORD_TOO_WEAK_MSGS = Arrays.asList(
 						"The password is too weak",
 						"Please use a longer password.");
-				Element error = packet.findChild("error");
+				final Element error = packet.findChild("error");
 				Account.State state = Account.State.REGISTRATION_FAILED;
+                mXmppConnectionService.deleteAccount(account);
 				if (error != null) {
+                    if (error.hasChild("text")) {
+                        errorMessage = error.findChildContent("text");
+                        Log.d(Config.LOGTAG, "Error creating account : " + error.findChildContent("text"));
+                    }
 					if (error.hasChild("conflict")) {
 						state = Account.State.REGISTRATION_CONFLICT;
 					} else if (error.hasChild("resource-constraint")
@@ -202,6 +210,7 @@ public class XmppConnection implements Runnable {
 						state = Account.State.REGISTRATION_PASSWORD_TOO_WEAK;
 					}
 				}
+                Log.d(Config.LOGTAG, "Delete account because of error " + error);
 				changeStatus(state);
 				forceCloseSocket();
 			}
