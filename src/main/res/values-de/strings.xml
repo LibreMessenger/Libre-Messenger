@@ -96,7 +96,7 @@
   <string name="pref_xmpp_resource">XMPP-Ressource</string>
   <string name="pref_xmpp_resource_summary">Der Name, mit dem sich der Client selbst identifiziert</string>
   <string name="pref_accept_files">Dateien annehmen</string>
-  <string name="pref_accept_files_summary">Dateien automatisch annehmen, die kleiner sind als …</string>
+  <string name="pref_accept_files_summary_wifi">Im WLAN-Netz Dateien automatisch annehmen, die kleiner sind als …</string>
   <string name="pref_attachments">Anhänge</string>
   <string name="pref_return_to_previous">Schnell-Teilen</string>
   <string name="pref_return_to_previous_summary">Nach dem Teilen sofort wieder zur vorherigen App zurückkehren anstatt die Unterhaltung zu öffnen</string>
@@ -652,5 +652,17 @@
     <string name="no_permission_to_access_x">Keine Berechtigung, um auf %s zuzugreifen</string>
     <string name="remote_server_not_found">Entfernter Server konnte nicht gefunden werden</string>
     <string name="contact_asks_for_presence_subscription">Kontakt möchte deinen Online-Status sehen</string>
+    <string name="pref_accept_files_mobile">Dateien im Mobilen Netz annehmen</string>
+    <string name="pref_accept_files_mobileroaming">Dateien im Roaming annehmen</string>
+    <string name="pref_accept_files_wifi">Dateien im WLAN annehmen</string>
+    <string name="missing_keys_from_x">Keine OMEMO Schlüssel von %s</string>
+    <string name="missing_presence_subscription_with_x">Fehlender Online-Status von %s.</string>
+    <string name="payment_required">Bezahlung erforderlich</string>
+    <string name="pref_accept_files_summary_mobile">Im mobilen Datennetz Dateien automatisch annehmen, die kleiner sind als …</string>
+    <string name="pref_accept_files_summary_mobileroaming">Im mobilen Datennetz während des Roamings Dateien automatisch annehmen, die kleiner sind als …</string>
+    <string name="report_jid_as_spammer">Diese JID wegen des Senden von unerwünschten Nachrichten melden.</string>
+    <string name="this_conference_has_no_members">Diese Konferenz enthält keine Teilnehmer.</string>
+    <string name="unable_to_update_account">Profil kann nicht aktualisiert werden.</string>
+    <string name="wrong_conference_configuration">Dies ist keine private, nicht-anonyme Konferenz.</string>
 
 </resources>
