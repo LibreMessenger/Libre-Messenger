@@ -396,7 +396,11 @@ public abstract class XmppActivity extends Activity {
 				startActivity(new Intent(this, SettingsActivity.class));
 				break;
 			case R.id.action_check_updates:
-				startActivity(new Intent(this, UpdaterActivity.class));
+				if (xmppConnectionService.hasInternetConnection()) {
+                    startActivity(new Intent(this, UpdaterActivity.class));
+                } else {
+                    Toast.makeText(this, R.string.account_status_no_internet, Toast.LENGTH_LONG).show();
+                }
 				break;
 			case R.id.action_accounts:
 				final Intent intent = new Intent(getApplicationContext(), EditAccountActivity.class);

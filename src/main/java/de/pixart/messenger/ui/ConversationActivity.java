@@ -1462,7 +1462,10 @@ public class ConversationActivity extends XmppActivity
 		}
 
         if (xmppConnectionService.getAccounts().size() != 0) {
-            AppUpdate();
+            if (xmppConnectionService.hasInternetConnection()) {
+                if (xmppConnectionService.isWIFI() || (xmppConnectionService.isMobile() && !xmppConnectionService.isMobileRoaming()))
+                AppUpdate();
+            }
         }
 
 		if (this.mPostponedActivityResult != null) {
