@@ -1,5 +1,12 @@
 ###Changelog
 
+###Version 1.14.3
+* set different auto-download-sizes for mobile, roaming and WiFi connections
+* add ability to report errors and bugs directly from menu
+* XEP-0377: Spam Reporting
+* fix rare start up crashes
+* bug fixes
+
 ###Version 1.14.2
 * support ANONYMOUS SASL
 * add custom Emojis
