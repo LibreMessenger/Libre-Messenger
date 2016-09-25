@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,7 +30,6 @@ import java.io.File;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.services.UpdaterWebService;
-import de.pixart.messenger.services.XmppConnectionService;
 
 public class UpdaterActivity extends Activity {
 
@@ -38,7 +39,6 @@ public class UpdaterActivity extends Activity {
     private DownloadManager downloadManager;
     private long downloadReference;
     private String FileName = "update.apk";
-    private XmppConnectionService mXmppConnectionService;
 
     BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
 
@@ -79,7 +79,7 @@ public class UpdaterActivity extends Activity {
         registerReceiver(downloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
         //check of internet is available before making a web service request
-        if (isNetworkAvailable()) {
+        if (isNetworkAvailable(this)) {
             Intent msgIntent = new Intent(this, UpdaterWebService.class);
             msgIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             msgIntent.putExtra(UpdaterWebService.REQUEST_STRING, Config.UPDATE_URL);
@@ -112,10 +112,16 @@ public class UpdaterActivity extends Activity {
     }
 
     //check for internet connection
-    private boolean isNetworkAvailable() {
-        if (mXmppConnectionService.hasInternetConnection()) {
-            if (mXmppConnectionService.isWIFI() || mXmppConnectionService.isMobile()) {
-                return true;
+    private boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo[] info = connectivity.getAllNetworkInfo();
+            if (info != null) {
+                for (int i = 0; i < info.length; i++) {
+                    if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+                        return true;
+                    }
+                }
             }
         }
         return false;
