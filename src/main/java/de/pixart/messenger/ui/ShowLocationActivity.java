@@ -35,6 +35,7 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
 	private LatLng mLocation;
 	private String mLocationName;
     private MarkerOptions options;
+    private Marker marker;
 
     class InfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
@@ -150,17 +151,25 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
         return address;
     }
 
-	private void markAndCenterOnLocation(final LatLng location, String name) {
-		this.mGoogleMap.clear();
+    private void markAndCenterOnLocation(final LatLng location, String name) {
+        mGoogleMap.clear();
         options = new MarkerOptions();
         options.position(location);
         double longitude = mLocation.longitude;
         double latitude = mLocation.latitude;
-        this.mGoogleMap.setInfoWindowAdapter(new InfoWindowAdapter());
-
+        mGoogleMap.setInfoWindowAdapter(new InfoWindowAdapter());
+        if (name != null) {
+            options.title(name);
+        }
         if (latitude != 0 && longitude != 0) {
             new AsyncTask<Void, Void, Void>() {
                 String address = null;
+
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, Config.DEFAULT_ZOOM));
+                }
 
                 @Override
                 protected Void doInBackground(Void... params) {
@@ -172,14 +181,17 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
                 protected void onPostExecute(Void result) {
                     super.onPostExecute(result);
                     options.snippet(String.valueOf(address));
-                    mGoogleMap.addMarker(options).showInfoWindow();
+                    marker = mGoogleMap.addMarker(options);
+                    marker.showInfoWindow();
                 }
             }.execute();
         }
-        if (name != null) {
-			options.title(name);
-		}
-		this.mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, Config.DEFAULT_ZOOM));
-	}
 
+        mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                marker.showInfoWindow();
+            }
+        });
+    }
 }
