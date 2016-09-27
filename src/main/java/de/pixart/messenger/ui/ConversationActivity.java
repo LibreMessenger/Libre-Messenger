@@ -322,7 +322,7 @@ public class ConversationActivity extends XmppActivity
 			SlidingPaneLayout mSlidingPaneLayout = (SlidingPaneLayout) mContentView;
 			mSlidingPaneLayout.setParallaxDistance(150);
 			mSlidingPaneLayout
-					.setShadowResource(R.drawable.es_slidingpane_shadow);
+					.setShadowResourceLeft(R.drawable.es_slidingpane_shadow);
 			mSlidingPaneLayout.setSliderFadeColor(0);
 			mSlidingPaneLayout.setPanelSlideListener(new PanelSlideListener() {
 
