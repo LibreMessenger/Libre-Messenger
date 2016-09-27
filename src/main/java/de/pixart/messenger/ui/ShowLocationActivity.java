@@ -168,6 +168,8 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
+                    marker = mGoogleMap.addMarker(options);
+                    marker.showInfoWindow();
                     mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, Config.DEFAULT_ZOOM));
                 }
 
@@ -180,6 +182,7 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
                 @Override
                 protected void onPostExecute(Void result) {
                     super.onPostExecute(result);
+                    marker.remove();
                     options.snippet(String.valueOf(address));
                     marker = mGoogleMap.addMarker(options);
                     marker.showInfoWindow();
@@ -190,7 +193,9 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
         mGoogleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                marker.showInfoWindow();
+                if (marker != null) {
+                    marker.showInfoWindow();
+                }
             }
         });
     }
