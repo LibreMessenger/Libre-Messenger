@@ -42,8 +42,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
-import java.util.regex.MatchResult;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.pixart.messenger.Config;
@@ -77,6 +75,8 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 	private ConversationActivity activity;
 
 	private DisplayMetrics metrics;
+
+    private AudioWife audioWife;
 
 	private OnContactPictureClicked mOnContactPictureClickedListener;
 	private OnContactPictureLongClicked mOnContactPictureLongClickedListener;
@@ -408,7 +408,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         viewHolder.aw_player.setVisibility(View.VISIBLE);
         Uri audioFile = Uri.fromFile(activity.xmppConnectionService.getFileBackend().getFile(message));
 
-        AudioWife audioWife = audioPlayer.get(position);
+        audioWife = audioPlayer.get(position);
         if (audioWife == null) {
             audioWife = new AudioWife();
             audioWife.init(getContext(), audioFile);
