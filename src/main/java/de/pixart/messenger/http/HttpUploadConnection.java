@@ -89,12 +89,8 @@ public class HttpUploadConnection implements Transferable {
 	private void fail() {
 		mHttpConnectionManager.finishUploadConnection(this);
 		message.setTransferable(null);
-        if (!canceled && file.getExpectedSize()<=Config.FILE_MAX_SIZE){
-            mXmppConnectionService.resendMessage(message, delayed);
-		} else {
-            mXmppConnectionService.markMessage(message, Message.STATUS_SEND_FAILED);
-            FileBackend.close(mFileInputStream);
-        }
+        mXmppConnectionService.markMessage(message, Message.STATUS_SEND_FAILED);
+        FileBackend.close(mFileInputStream);
 	}
 
 	public void init(Message message, boolean delay) {
@@ -178,7 +174,7 @@ public class HttpUploadConnection implements Transferable {
 				connection.setRequestProperty("User-Agent",mXmppConnectionService.getIqGenerator().getIdentityName());
 				connection.setDoOutput(true);
                 connection.setConnectTimeout(Config.SOCKET_TIMEOUT * 1000);
-                connection.setReadTimeout(Config.SOCKET_TIMEOUT * 1000);
+                connection.setReadTimeout(Config.CONNECT_TIMEOUT * 1000);
 				connection.connect();
 				os = connection.getOutputStream();
 				transmitted = 0;

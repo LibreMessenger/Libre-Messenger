@@ -221,7 +221,7 @@ public class HttpDownloadConnection implements Transferable {
 					mHttpConnectionManager.setupTrustManager((HttpsURLConnection) connection, interactive);
 				}
                 connection.setConnectTimeout(Config.SOCKET_TIMEOUT * 1000);
-                connection.setReadTimeout(Config.SOCKET_TIMEOUT * 1000);
+                connection.setReadTimeout(Config.CONNECT_TIMEOUT * 1000);
 				connection.connect();
 				String contentLength = connection.getHeaderField("Content-Length");
 				connection.disconnect();
@@ -291,7 +291,7 @@ public class HttpDownloadConnection implements Transferable {
 					connection.setRequestProperty("Range", "bytes="+size+"-");
 				}
                 connection.setConnectTimeout(Config.SOCKET_TIMEOUT * 1000);
-                connection.setReadTimeout(Config.SOCKET_TIMEOUT * 1000);
+                connection.setReadTimeout(Config.CONNECT_TIMEOUT * 1000);
 				connection.connect();
 				is = new BufferedInputStream(connection.getInputStream());
 				boolean serverResumed = "bytes".equals(connection.getHeaderField("Accept-Ranges"));
