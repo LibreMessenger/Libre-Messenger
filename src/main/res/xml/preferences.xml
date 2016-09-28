@@ -187,7 +187,7 @@
             android:summary="@string/pref_send_crash_summary"
             android:title="@string/pref_send_crash" />
         <PreferenceCategory android:title="@string/pref_export_logs">
-            <de.pixart.messenger.ui.ExportLogsPreference
+            <Preference
                 android:key="export_logs"
                 android:summary="@string/pref_export_logs_summary"
                 android:title="@string/pref_export_logs" />
