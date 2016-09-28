@@ -225,6 +225,10 @@
                 android:key="dont_save_encrypted"
                 android:summary="@string/pref_dont_save_encrypted_summary"
                 android:title="@string/pref_dont_save_encrypted" />
+            <Preference
+                android:key="delete_omemo_identities"
+                android:title="@string/pref_delete_omemo_identities"
+                android:summary="@string/pref_delete_omemo_identities_summary"/>
             <CheckBoxPreference
                 android:defaultValue="false"
                 android:key="dont_trust_system_cas"
