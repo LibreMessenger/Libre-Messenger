@@ -658,10 +658,13 @@
     <string name="payment_required">Bezahlung erforderlich</string>
     <string name="pref_accept_files_summary_mobile">Im mobilen Datennetz Dateien automatisch annehmen, die kleiner sind als …</string>
     <string name="pref_accept_files_summary_mobileroaming">Im mobilen Datennetz während des Roamings Dateien automatisch annehmen, die kleiner sind als …</string>
-    <string name="report_jid_as_spammer">Diese JID wegen des Senden von unerwünschten Nachrichten melden.</string>
+    <string name="report_jid_as_spammer">Melde die JID als Sender unerwünschter Nachrichten.</string>
     <string name="this_conference_has_no_members">Diese Konferenz enthält keine Teilnehmer.</string>
     <string name="unable_to_update_account">Profil kann nicht aktualisiert werden.</string>
     <string name="wrong_conference_configuration">Dies ist keine private, nicht-anonyme Konferenz.</string>
     <string name="create_issue">Einen Fehler melden</string>
+    <string name="pref_delete_omemo_identities_summary">Regeneriere deine OMEMO-Schlüssel. Alle deine Kontakte müssen dich neu verifizieren. Nutze dies als letzten Ausweg.</string>
+    <string name="delete_selected_keys">Ausgewählte Schlüssel löschen</string>
+    <string name="pref_delete_omemo_identities">OMEMO Identitäten zurücksetzen</string>
 
 </resources>
