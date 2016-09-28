@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:padding="16dp" >
 
-    <EditText
+    <github.ankushsachdeva.emojicon.EmojiconEditText
         android:id="@+id/editor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,6 +14,6 @@
         android:textColor="@color/black87" >
 
         <requestFocus />
-    </EditText>
+    </github.ankushsachdeva.emojicon.EmojiconEditText>
 
 </LinearLayout>
