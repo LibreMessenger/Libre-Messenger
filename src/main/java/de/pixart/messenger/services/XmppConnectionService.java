@@ -658,7 +658,7 @@ public class XmppConnectionService extends Service {
 					if (remoteInput != null && c != null) {
                         final CharSequence body = remoteInput.getCharSequence("text_reply");
                         if (body != null && body.length() > 0) {
-                            directReply(c, body.toString());
+                            directReply(c, body.toString(),intent.getBooleanExtra("dismiss_notification",false));
                         }
 					}
 					break;
@@ -791,7 +791,7 @@ public class XmppConnectionService extends Service {
 		}
 	}
 
-	private void directReply(Conversation conversation, String body) {
+    private void directReply(Conversation conversation, String body, final boolean dismissAfterReply) {
 		Message message = new Message(conversation,body,conversation.getNextEncryption());
 		message.markUnread();
 		if (message.getEncryption() == Message.ENCRYPTION_PGP) {
@@ -800,7 +800,11 @@ public class XmppConnectionService extends Service {
 				public void success(Message message) {
 					message.setEncryption(Message.ENCRYPTION_DECRYPTED);
 					sendMessage(message);
-					mNotificationService.pushFromDirectReply(message);
+                    if (dismissAfterReply) {
+                        markRead(message.getConversation(),true);
+                    } else {
+                        mNotificationService.pushFromDirectReply(message);
+                    }
 				}
 
 				@Override
@@ -815,7 +819,11 @@ public class XmppConnectionService extends Service {
 			});
 		} else {
 			sendMessage(message);
-			mNotificationService.pushFromDirectReply(message);
+            if (dismissAfterReply) {
+                markRead(conversation,true);
+            } else {
+                mNotificationService.pushFromDirectReply(message);
+            }
 		}
 	}
 
