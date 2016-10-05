@@ -457,14 +457,12 @@ public class FileBackend {
 		return frame;
 	}
 
-	public Uri getTakePhotoUri() {
-		StringBuilder pathBuilder = new StringBuilder();
-		pathBuilder.append(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM));
-		pathBuilder.append('/');
-		pathBuilder.append("Camera");
-		pathBuilder.append('/');
-        pathBuilder.append("IMG_" + this.fileDateFormat.format(new Date()) + ".jpg");
-		File file = new File(pathBuilder.toString());
+    private static String getTakePhotoPath() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)+"/Camera/";
+    }
+
+    public Uri getTakePhotoUri() {
+        File file = new File(getTakePhotoPath()+"IMG_" + this.fileDateFormat.format(new Date()) + ".jpg");
 		file.getParentFile().mkdirs();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 		    return FileProvider.getUriForFile(mXmppConnectionService,"de.pixart.messenger.files",file);
@@ -472,6 +470,15 @@ public class FileBackend {
             return Uri.fromFile(file);
         }
 	}
+
+    public static Uri getIndexableTakePhotoUri(Uri original) {
+        if ("file".equals(original.getScheme())) {
+            return original;
+        } else {
+            List<String> segments = original.getPathSegments();
+            return Uri.parse("file://"+getTakePhotoPath()+segments.get(segments.size() - 1));
+        }
+    }
 
 	public Avatar getPepAvatar(Uri image, int size, Bitmap.CompressFormat format) {
 		try {
