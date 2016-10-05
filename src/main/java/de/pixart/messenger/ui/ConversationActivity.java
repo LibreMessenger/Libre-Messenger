@@ -109,7 +109,8 @@ public class ConversationActivity extends XmppActivity
     public static final int ATTACHMENT_CHOICE_INVALID = 0x0399;
 	private static final String STATE_OPEN_CONVERSATION = "state_open_conversation";
 	private static final String STATE_PANEL_OPEN = "state_panel_open";
-	private static final String STATE_PENDING_URI = "state_pending_uri";
+	private static final String STATE_PENDING_IMAGE_URI = "state_pending_image_uri";
+    private static final String STATE_PENDING_PHOTO_URI = "state_pending_photo_uri";
     private static final String STATE_FIRST_VISIBLE = "first_visible";
     private static final String STATE_OFFSET_FROM_TOP = "offset_from_top";
 	final private List<Uri> mPendingImageUris = new ArrayList<>();
@@ -204,12 +205,18 @@ public class ConversationActivity extends XmppActivity
             } else {
                 mScrollPosition = null;
             }
-            String pending = savedInstanceState.getString(STATE_PENDING_URI, null);
-			if (pending != null) {
+            String pending_image = savedInstanceState.getString(STATE_PENDING_IMAGE_URI, null);
+			if (pending_image != null) {
                 Log.d(Config.LOGTAG,"ConversationsActivity.onCreate() - restoring pending image uri");
 				mPendingImageUris.clear();
-				mPendingImageUris.add(Uri.parse(pending));
+				mPendingImageUris.add(Uri.parse(pending_image));
 			}
+            String pending_photo = savedInstanceState.getString(STATE_PENDING_PHOTO_URI, null);
+            if (pending_photo != null) {
+                Log.d(Config.LOGTAG,"ConversationsActivity.onCreate() - restoring pending photo uri");
+                mPendingPhotoUris.clear();
+                mPendingPhotoUris.add(Uri.parse(pending_photo));
+            }
 		}
 
 		setContentView(R.layout.fragment_conversations_overview);
@@ -1348,11 +1355,12 @@ public class ConversationActivity extends XmppActivity
 		savedInstanceState.putBoolean(STATE_PANEL_OPEN, isConversationsOverviewVisable());
 		if (this.mPendingImageUris.size() >= 1) {
             Log.d(Config.LOGTAG,"ConversationsActivity.onSaveInstanceState() - saving pending image uri");
-            savedInstanceState.putString(STATE_PENDING_URI, this.mPendingImageUris.get(0).toString());
+            savedInstanceState.putString(STATE_PENDING_IMAGE_URI, this.mPendingImageUris.get(0).toString());
         } else if (this.mPendingPhotoUris.size() >= 1) {
-            savedInstanceState.putString(STATE_PENDING_URI, this.mPendingPhotoUris.get(0).toString());
+            savedInstanceState.putString(STATE_PENDING_PHOTO_URI, this.mPendingPhotoUris.get(0).toString());
         } else {
-			savedInstanceState.remove(STATE_PENDING_URI);
+			savedInstanceState.remove(STATE_PENDING_IMAGE_URI);
+            savedInstanceState.remove(STATE_PENDING_PHOTO_URI);
 		}
 		super.onSaveInstanceState(savedInstanceState);
 	}
