@@ -1688,14 +1688,15 @@ public class ConversationActivity extends XmppActivity
                 }
 			} else if (requestCode == ATTACHMENT_CHOICE_TAKE_PHOTO) {
 				if (mPendingPhotoUris.size() == 1) {
-					Uri uri = mPendingPhotoUris.get(0);
-					if (xmppConnectionServiceBound) {
+                    Uri uri = FileBackend.getIndexableTakePhotoUri(mPendingPhotoUris.get(0));
+					mPendingPhotoUris.set(0, uri);
+                    if (xmppConnectionServiceBound) {
                         Log.d(Config.LOGTAG,"ConversationsActivity.onActivityResult() - attaching photo to conversations. TAKE_PHOTO");
                         attachPhotoToConversation(getSelectedConversation(), uri);
 						mPendingPhotoUris.clear();
 					}
 					Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                    intent.setData(FileBackend.getIndexableTakePhotoUri(uri));
+                    intent.setData(uri);
 					sendBroadcast(intent);
 				} else {
 					mPendingPhotoUris.clear();
