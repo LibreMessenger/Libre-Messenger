@@ -141,7 +141,7 @@ public class XmppConnectionService extends Service {
 	public static final String ACTION_CLEAR_NOTIFICATION = "clear_notification";
 	public static final String ACTION_DISABLE_FOREGROUND = "disable_foreground";
 	public static final String ACTION_TRY_AGAIN = "try_again";
-	public static final String ACTION_DISABLE_ACCOUNT = "disable_account";
+    public static final String ACTION_DISMISS_ERROR_NOTIFICATIONS = "dismiss_error";
 	public static final String ACTION_IDLE_PING = "idle_ping";
 	private static final String ACTION_MERGE_PHONE_CONTACTS = "merge_phone_contacts";
 	public static final String ACTION_GCM_TOKEN_REFRESH = "gcm_token_refresh";
@@ -302,6 +302,9 @@ public class XmppConnectionService extends Service {
 				mOnAccountUpdate.onAccountUpdate();
 			}
 			if (account.getStatus() == Account.State.ONLINE) {
+                if (account.setShowErrorNotification(true)) {
+                    databaseBackend.updateAccount(account);
+                }
 				mMessageArchiveService.executePendingQueries(account);
 				if (connection != null && connection.getFeatures().csi()) {
 					if (checkListeners()) {
@@ -637,21 +640,12 @@ public class XmppConnectionService extends Service {
 						mNotificationService.clear();
 					}
 					break;
+                case ACTION_DISMISS_ERROR_NOTIFICATIONS:
+                    dismissErrorNotifications();
+                    break;
 				case ACTION_TRY_AGAIN:
 					resetAllAttemptCounts(false);
 					interactive = true;
-					break;
-				case ACTION_DISABLE_ACCOUNT:
-					try {
-						String jid = intent.getStringExtra("account");
-						Account account = jid == null ? null : findAccountByJid(Jid.fromString(jid));
-						if (account != null) {
-							account.setOption(Account.OPTION_DISABLED, true);
-							updateAccount(account);
-						}
-					} catch (final InvalidJidException ignored) {
-						break;
-					}
 					break;
 				case ACTION_REPLY_TO_CONVERSATION:
 					Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
@@ -894,8 +888,22 @@ public class XmppConnectionService extends Service {
 					connection.resetAttemptCount();
 				}
 			}
+            if (account.setShowErrorNotification(true)) {
+                databaseBackend.updateAccount(account);
+            }
 		}
 	}
+
+    private void dismissErrorNotifications() {
+        for (final Account account : this.accounts) {
+            if (account.hasErrorStatus()) {
+                Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": dismissing error notification");
+                if (account.setShowErrorNotification(false)) {
+                    databaseBackend.updateAccount(account);
+                }
+            }
+        }
+    }
 
 	public boolean hasInternetConnection() {
 		ConnectivityManager cm = (ConnectivityManager) getApplicationContext()
@@ -1148,7 +1156,11 @@ public class XmppConnectionService extends Service {
 
 	private void sendMessage(final Message message, final boolean resend, final boolean delay) {
 		final Account account = message.getConversation().getAccount();
-		final Conversation conversation = message.getConversation();
+        if (account.setShowErrorNotification(true)) {
+            databaseBackend.updateAccount(account);
+            mNotificationService.updateErrorNotification();
+        }
+        final Conversation conversation = message.getConversation();
 		account.deactivateGracePeriod();
 		MessagePacket packet = null;
 		final boolean addToConversation = (conversation.getMode() != Conversation.MODE_MULTI
@@ -1772,6 +1784,7 @@ public class XmppConnectionService extends Service {
 
 	public boolean updateAccount(final Account account) {
 		if (databaseBackend.updateAccount(account)) {
+            account.setShowErrorNotification(true);
 			this.statusListener.onStatusChanged(account);
 			databaseBackend.updateAccount(account);
 			reconnectAccountInBackground(account);
