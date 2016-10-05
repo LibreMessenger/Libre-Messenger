@@ -53,6 +53,7 @@ import de.pixart.messenger.entities.DownloadableFile;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.Message.FileParams;
 import de.pixart.messenger.entities.Transferable;
+import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.ui.ConversationActivity;
 import de.pixart.messenger.ui.ShowFullscreenMessageActivity;
 import de.pixart.messenger.ui.widget.ClickableMovementMethod;
@@ -786,7 +787,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
       Uri uri;
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
         try {
-          uri = FileProvider.getUriForFile(activity, "de.pixart.messenger.files", file);
+          uri = FileProvider.getUriForFile(activity, FileBackend.CONVERSATIONS_FILE_PROVIDER, file);
         } catch (IllegalArgumentException e) {
           Toast.makeText(activity,activity.getString(R.string.no_permission_to_access_x,file.getAbsolutePath()), Toast.LENGTH_SHORT).show();
           return;
