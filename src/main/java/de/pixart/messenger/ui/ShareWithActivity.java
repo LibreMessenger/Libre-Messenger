@@ -31,6 +31,8 @@ import de.pixart.messenger.xmpp.XmppConnection;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
 
+import static java.lang.String.format;
+
 public class ShareWithActivity extends XmppActivity implements XmppConnectionService.OnConversationUpdate {
 
 	private boolean mReturnToPrevious = false;
@@ -194,6 +196,7 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
 		Log.d(Config.LOGTAG, "action: "+action+ ", type:"+type);
 		share.uuid = intent.getStringExtra("uuid");
 		if (Intent.ACTION_SEND.equals(action)) {
+            final String subject = intent.getStringExtra(Intent.EXTRA_SUBJECT);
 			final String text = intent.getStringExtra(Intent.EXTRA_TEXT);
 			final Uri uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
 			if (type != null && uri != null && (text == null || !type.equals("text/plain"))) {
@@ -202,7 +205,11 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
 				this.share.image = type.startsWith("image/") || isImage(uri);
                 this.share.video = type.startsWith("video/") || isVideo(uri);
 			} else {
-				this.share.text = text;
+                if (subject != null) {
+                    this.share.text = format("[%s]%n%s", subject, text);
+                } else {
+                    this.share.text = text;
+                }
 			}
 		} else if (Intent.ACTION_SEND_MULTIPLE.equals(action)) {
 			this.share.image = type != null && type.startsWith("image/");
