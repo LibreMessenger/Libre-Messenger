@@ -155,6 +155,7 @@ public class XmppConnectionService extends Service {
 	private final List<String> mInProgressAvatarFetches = new ArrayList<>();
     private WakeLock wakeLock;
 	private long mLastActivity = 0;
+    public static VideoCompressor CompressVideo;
 
 	public DatabaseBackend databaseBackend;
 	private ContentObserver contactObserver = new ContentObserver(null) {
@@ -547,7 +548,7 @@ public class XmppConnectionService extends Service {
             Log.d(Config.LOGTAG,conversation.getAccount().getJid().toBareJid()+ ": not compressing video. sending as file");
             attachFileToConversation(conversation, uri, callback);
         } else {
-            VideoCompressor CompressVideo = new VideoCompressor(path, compressed_path,  new Interface() {
+            CompressVideo = new VideoCompressor(path, compressed_path,  new Interface() {
                 @Override
                 public void videocompressed(boolean result) {
                     if (result) {
@@ -592,7 +593,6 @@ public class XmppConnectionService extends Service {
         @Override
         protected void onPostExecute(Boolean compressed) {
             super.onPostExecute(compressed);
-            wakeLock.release();
             File video = new File(compressedpath);
             if (mListener != null) {
                 if (video.exists() && video.length() > 0) {
@@ -603,6 +603,7 @@ public class XmppConnectionService extends Service {
                     Log.d(Config.LOGTAG, "Compression failed!");
                 }
             }
+            wakeLock.release();
         }
     }
 

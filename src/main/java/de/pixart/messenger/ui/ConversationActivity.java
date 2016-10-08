@@ -1846,7 +1846,7 @@ public class ConversationActivity extends XmppActivity
 		});
 	}
 
-    private void attachVideoToConversation(Conversation conversation, Uri uri) {
+    private void attachVideoToConversation(Conversation conversation, final Uri uri) {
         if (conversation == null) {
             return;
         }
