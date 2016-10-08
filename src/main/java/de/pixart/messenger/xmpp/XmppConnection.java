@@ -1088,7 +1088,8 @@ public class XmppConnection implements Runnable {
 				mStanzaQueue.clear();
 			}
 		}
-		features.carbonsEnabled = false;
+        mXmppConnectionService.resetSendingToWaiting(account);
+        features.carbonsEnabled = false;
 		features.blockListRequested = false;
 		synchronized (this.disco) {
 			this.disco.clear();
