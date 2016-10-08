@@ -205,7 +205,7 @@
         android:title="@string/pref_expert_options">
         <PreferenceCategory android:title="@string/pref_general">
             <ListPreference
-                android:defaultValue="Mobile"
+                android:defaultValue="@string/default_resource"
                 android:entries="@array/resources"
                 android:entryValues="@array/resources"
                 android:key="resource"
