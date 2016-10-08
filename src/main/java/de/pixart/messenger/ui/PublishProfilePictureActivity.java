@@ -251,8 +251,11 @@ public class PublishProfilePictureActivity extends XmppActivity {
 					if (!support) {
 						this.hintOrWarning
 								.setTextColor(getWarningTextColor());
-						this.hintOrWarning
-								.setText(R.string.error_publish_avatar_no_server_support);
+                        if (account.getStatus() == Account.State.ONLINE) {
+                            this.hintOrWarning.setText(R.string.error_publish_avatar_no_server_support);
+                        } else {
+                            this.hintOrWarning.setText(R.string.error_publish_avatar_offline);
+                        }
 					}
 				} else {
 					this.avatarUri = this.defaultUri;
@@ -307,8 +310,11 @@ public class PublishProfilePictureActivity extends XmppActivity {
 		} else {
 			disablePublishButton();
 			this.hintOrWarning.setTextColor(getWarningTextColor());
-			this.hintOrWarning
-					.setText(R.string.error_publish_avatar_no_server_support);
+            if (account.getStatus() == Account.State.ONLINE) {
+                this.hintOrWarning.setText(R.string.error_publish_avatar_no_server_support);
+            } else {
+                this.hintOrWarning.setText(R.string.error_publish_avatar_offline);
+            }
 		}
 		if (this.defaultUri != null && uri.equals(this.defaultUri)) {
 			this.secondaryHint.setVisibility(View.INVISIBLE);
