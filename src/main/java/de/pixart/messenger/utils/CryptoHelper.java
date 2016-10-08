@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
@@ -203,6 +204,15 @@ public final class CryptoHelper {
 		byte[] fingerprint = md.digest(input);
 		return prettifyFingerprintCert(bytesToHex(fingerprint));
 	}
+
+    public static String getAccountFingerprint(Account account) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            return bytesToHex(md.digest(account.getJid().toBareJid().toString().getBytes("UTF-8")));
+        } catch (Exception e) {
+            return "";
+        }
+    }
 
 	public static int encryptionTypeToText(int encryption) {
 		switch (encryption) {
