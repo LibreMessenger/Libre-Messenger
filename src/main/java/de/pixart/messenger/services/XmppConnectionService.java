@@ -894,6 +894,7 @@ public class XmppConnectionService extends Service {
                 databaseBackend.updateAccount(account);
             }
 		}
+        mNotificationService.updateErrorNotification();
 	}
 
     private void dismissErrorNotifications() {
