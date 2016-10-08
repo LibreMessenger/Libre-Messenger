@@ -92,7 +92,7 @@ public final class Config {
     public static final int PAGE_SIZE = 50;
     public static final int MAX_NUM_PAGES = 3;
 
-    public static final int REFRESH_UI_INTERVAL = 500;
+    public static final int REFRESH_UI_INTERVAL = 1000;
 
     public static final int MAX_DISPLAY_MESSAGE_CHARS = 4096;
 
