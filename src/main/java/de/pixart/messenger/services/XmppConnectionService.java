@@ -1257,7 +1257,7 @@ public class XmppConnectionService extends Service {
 
 			}
 			if (packet != null) {
-				if (account.getXmppConnection().getFeatures().sm() || conversation.getMode() == Conversation.MODE_MULTI) {
+                if (account.getXmppConnection().getFeatures().sm() || (conversation.getMode() == Conversation.MODE_MULTI && message.getCounterpart().isBareJid())) {
 					message.setStatus(Message.STATUS_UNSEND);
 				} else {
 					message.setStatus(Message.STATUS_SEND);
@@ -1299,7 +1299,7 @@ public class XmppConnectionService extends Service {
 
 		if (resend) {
 			if (packet != null && addToConversation) {
-				if (account.getXmppConnection().getFeatures().sm() || conversation.getMode() == Conversation.MODE_MULTI) {
+                if (account.getXmppConnection().getFeatures().sm() || (conversation.getMode() == Conversation.MODE_MULTI && message.getCounterpart().isBareJid())) {
 					markMessage(message, Message.STATUS_UNSEND);
 				} else {
 					markMessage(message, Message.STATUS_SEND);
