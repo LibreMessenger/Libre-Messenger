@@ -7,6 +7,8 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -42,6 +44,7 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -96,12 +99,16 @@ import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
 
+import static de.pixart.messenger.services.NotificationService.NOTIFICATION_ID;
+
 public abstract class XmppActivity extends Activity {
 
 	protected static final int REQUEST_ANNOUNCE_PGP = 0x0101;
 	protected static final int REQUEST_INVITE_TO_CONVERSATION = 0x0102;
 	protected static final int REQUEST_CHOOSE_PGP_ID = 0x0103;
 	protected static final int REQUEST_BATTERY_OP = 0x13849ff;
+    private static final int NOTIFICATION_ID = 1230;
+    private NotificationManager mNotifyManager;
 
 	public static final String EXTRA_ACCOUNT = "account";
 
@@ -126,8 +133,6 @@ public abstract class XmppActivity extends Activity {
 	protected boolean mUsingEnterKey = false;
 
 	protected Toast mToast;
-    protected ProgressDialog mProgress = null;
-    Integer oldOrientation = getRequestedOrientation();
 
     protected void hideToast() {
 		if (mToast != null) {
@@ -146,22 +151,17 @@ public abstract class XmppActivity extends Activity {
 	}
 
     protected void showProgress() {
-        if (mProgress == null) {
-            mProgress = new ProgressDialog(XmppActivity.this);
-        }
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
-        mProgress.setMessage(getString(R.string.compressing_video));
-        mProgress.setCancelable(false);
-        mProgress.show();
+        mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getBaseContext());
+        mBuilder.setContentTitle(getString(R.string.app_name))
+                .setContentText(getString(R.string.compressing_video))
+                .setSmallIcon(R.drawable.ic_play_box_outline_white_24dp)
+                .setProgress(0, 0, true);
+        mNotifyManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
-    protected void closeProgress() {
-        if (mProgress != null && mProgress.isShowing()) {
-            mProgress.dismiss();
-            setRequestedOrientation(oldOrientation);
-        } else {
-            mProgress = null;
-        }
+    public void closeProgress() {
+        mNotifyManager.cancel(NOTIFICATION_ID);
     }
 
 	protected Runnable onOpenPGPKeyPublished = new Runnable() {

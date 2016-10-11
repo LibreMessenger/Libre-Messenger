@@ -87,11 +87,11 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
 						} else {
 							resId = R.string.shared_file_with_x;
 						}
+                        closeProgress();
 						replaceToast(getString(resId, message.getConversation().getName()));
 						if (mReturnToPrevious) {
 							finish();
 						} else {
-                            closeProgress();
 							switchToConversation(message.getConversation());
 						}
 					}
