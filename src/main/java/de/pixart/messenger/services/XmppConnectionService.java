@@ -580,19 +580,18 @@ public class XmppConnectionService extends Service {
         protected void onPreExecute() {
             super.onPreExecute();
             Log.d(Config.LOGTAG,"Start video compression");
+            wakeLock.acquire();
         }
 
         @Override
         protected Boolean doInBackground(String... params) {
-            PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
-            wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"CompressPixArtMessengerVideo");
-            wakeLock.acquire();
             return MediaController.getInstance().convertVideo(originalpath, compressedpath);
         }
 
         @Override
         protected void onPostExecute(Boolean compressed) {
             super.onPostExecute(compressed);
+            wakeLock.release();
             File video = new File(compressedpath);
             if (mListener != null) {
                 if (video.exists() && video.length() > 0) {
@@ -603,7 +602,6 @@ public class XmppConnectionService extends Service {
                     Log.d(Config.LOGTAG, "Compression failed!");
                 }
             }
-            wakeLock.release();
         }
     }
 
