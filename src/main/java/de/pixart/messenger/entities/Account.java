@@ -202,7 +202,7 @@ public class Account extends AbstractEntity {
 	protected int options = 0;
 	protected String rosterVersion;
 	protected State status = State.OFFLINE;
-	protected JSONObject keys = new JSONObject();
+	protected final JSONObject keys;
 	protected String avatar;
 	protected String displayName = null;
 	protected String hostname = null;
@@ -237,11 +237,13 @@ public class Account extends AbstractEntity {
 		this.password = password;
 		this.options = options;
 		this.rosterVersion = rosterVersion;
+        JSONObject tmp;
 		try {
-			this.keys = new JSONObject(keys);
-		} catch (final JSONException ignored) {
-			this.keys = new JSONObject();
+            tmp = new JSONObject(keys);
+		} catch (JSONException e) {
+            tmp = new JSONObject();
 		}
+        this.keys = tmp;
 		this.avatar = avatar;
 		this.displayName = displayName;
 		this.hostname = hostname;
@@ -391,19 +393,32 @@ public class Account extends AbstractEntity {
 	}
 
 	public String getKey(final String name) {
-		return this.keys.optString(name, null);
+        synchronized (this.keys) {
+            return this.keys.optString(name, null);
+        }
 	}
 
-	public boolean setKey(final String keyName, final String keyValue) {
-		try {
-			this.keys.put(keyName, keyValue);
-			return true;
-		} catch (final JSONException e) {
-			return false;
+    public int getKeyAsInt(final String name, int defaultValue) {
+        String key = getKey(name);
+        try {
+            return key == null ? defaultValue : Integer.parseInt(key);
+        } catch (NumberFormatException e) {
+            return defaultValue;
 		}
 	}
 
-	public boolean setPrivateKeyAlias(String alias) {
+    public boolean setKey(final String keyName, final String keyValue) {
+        synchronized (this.keys) {
+            try {
+                this.keys.put(keyName, keyValue);
+                return true;
+            } catch (final JSONException e) {
+                return false;
+            }
+        }
+    }
+
+    public boolean setPrivateKeyAlias(String alias) {
 		return setKey("private_key_alias", alias);
 	}
 
@@ -419,7 +434,9 @@ public class Account extends AbstractEntity {
 		values.put(SERVER, jid.getDomainpart());
 		values.put(PASSWORD, password);
 		values.put(OPTIONS, options);
-		values.put(KEYS, this.keys.toString());
+        synchronized (this.keys) {
+            values.put(KEYS, this.keys.toString());
+        }
 		values.put(ROSTERVERSION, rosterVersion);
 		values.put(AVATAR, avatar);
 		values.put(DISPLAY_NAME, displayName);
@@ -496,54 +513,42 @@ public class Account extends AbstractEntity {
 	}
 
 	public String getPgpSignature() {
-		try {
-			if (keys.has(KEY_PGP_SIGNATURE) && !"null".equals(keys.getString(KEY_PGP_SIGNATURE))) {
-				return keys.getString(KEY_PGP_SIGNATURE);
-			} else {
-				return null;
-			}
-		} catch (final JSONException e) {
-			return null;
-		}
+        return getKey(KEY_PGP_SIGNATURE);
 	}
 
 	public boolean setPgpSignature(String signature) {
-		try {
-			keys.put(KEY_PGP_SIGNATURE, signature);
-		} catch (JSONException e) {
-			return false;
-		}
-		return true;
+        return setKey(KEY_PGP_SIGNATURE, signature);
 	}
 
 	public boolean unsetPgpSignature() {
-		try {
-			keys.put(KEY_PGP_SIGNATURE, JSONObject.NULL);
-		} catch (JSONException e) {
-			return false;
-		}
-		return true;
+        synchronized (this.keys) {
+            return keys.remove(KEY_PGP_SIGNATURE) != null;
+        }
 	}
 
 	public long getPgpId() {
-		if (keys.has(KEY_PGP_ID)) {
-			try {
-				return keys.getLong(KEY_PGP_ID);
-			} catch (JSONException e) {
+        synchronized (this.keys) {
+            if (keys.has(KEY_PGP_ID)) {
+                try {
+                    return keys.getLong(KEY_PGP_ID);
+                } catch (JSONException e) {
+                    return 0;
+                }
+            } else {
 				return 0;
 			}
-		} else {
-			return 0;
 		}
 	}
 
 	public boolean setPgpSignId(long pgpID) {
-		try {
-			keys.put(KEY_PGP_ID, pgpID);
-		} catch (JSONException e) {
-			return false;
+        synchronized (this.keys) {
+            try {
+                keys.put(KEY_PGP_ID, pgpID);
+            } catch (JSONException e) {
+                return false;
+            }
+            return true;
 		}
-		return true;
 	}
 
 	public Roster getRoster() {
