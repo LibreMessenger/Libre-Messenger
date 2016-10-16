@@ -641,7 +641,7 @@
     <string name="allow">Erlauben</string>
     <string name="attach_choose_video">Video auswählen</string>
     <string name="compressing_video">Video wird komprimiert, bitte warten…</string>
-    <string name="preparing_video">Video wird für die Übertragung vorbereitet</string>
+    <string name="preparing_video">Video wird für die Übertragung vorbereitet. Bitte warten…</string>
     <string name="shared_video_with_x">Video mit %s geteilt</string>
     <string name="unread_messages">Ungelesene Nachrichten:</string>
     <string name="error_file_corrupt">Die Datei scheint defekt zu sein.</string>

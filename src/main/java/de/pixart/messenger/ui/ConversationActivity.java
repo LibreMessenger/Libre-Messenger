@@ -1852,18 +1852,15 @@ public class ConversationActivity extends XmppActivity
         }
         final Toast prepareFileToast = Toast.makeText(getApplicationContext(),getText(R.string.preparing_video), Toast.LENGTH_LONG);
         prepareFileToast.show();
-        showProgress();
         xmppConnectionService.attachVideoToConversation(conversation, uri, new UiCallback<Message>() {
             @Override
             public void success(Message message) {
-                closeProgress();
                 hidePrepareFileToast(prepareFileToast);
                 xmppConnectionService.sendMessage(message);
             }
 
             @Override
             public void error(final int errorCode, Message message) {
-                closeProgress();
                 hidePrepareFileToast(prepareFileToast);
                 runOnUiThread(new Runnable() {
                     @Override
@@ -1876,7 +1873,6 @@ public class ConversationActivity extends XmppActivity
 
             @Override
             public void userInputRequried(PendingIntent pi, Message message) {
-                closeProgress();
                 hidePrepareFileToast(prepareFileToast);
             }
         });

@@ -83,7 +83,6 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
 						} else if (share.image) {
 							resId = R.string.shared_image_with_x;
                         } else if (share.video) {
-                            closeProgress();
                             resId = R.string.shared_video_with_x;
 						} else {
 							resId = R.string.shared_file_with_x;
@@ -313,7 +312,6 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
                         }
                     } else if (share.video) {
                         replaceToast(getString(R.string.preparing_video));
-                        showProgress();
                         ShareWithActivity.this.xmppConnectionService
                                 .attachVideoToConversation(conversation, share.uris.get(0),
                                         attachFileCallback);

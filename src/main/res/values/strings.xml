@@ -695,7 +695,7 @@
 	<string name="contact_asks_for_presence_subscription">Contact asks for presence subscription</string>
 	<string name="allow">Allow</string>
 	<string name="attach_choose_video">Choose video</string>
-	<string name="preparing_video">Prepare video for transmission</string>
+	<string name="preparing_video">Prepare video for transmission. Please wait…</string>
 	<string name="compressing_video">Compressing video, please wait…</string>
 	<string name="shared_video_with_x">Shared video with %s</string>
 	<string name="unread_messages">Unread messages:</string>

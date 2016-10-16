@@ -3,6 +3,7 @@ package de.pixart.messenger.services;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -28,6 +29,7 @@ import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.security.KeyChain;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.RemoteInput;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -99,6 +101,7 @@ import de.pixart.messenger.parser.PresenceParser;
 import de.pixart.messenger.persistance.DatabaseBackend;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.ui.UiCallback;
+import de.pixart.messenger.ui.XmppActivity;
 import de.pixart.messenger.utils.ConversationsFileObserver;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.ExceptionHelper;
@@ -135,6 +138,8 @@ import de.pixart.messenger.xmpp.stanzas.MessagePacket;
 import de.pixart.messenger.xmpp.stanzas.PresencePacket;
 import me.leolin.shortcutbadger.ShortcutBadger;
 
+import static de.pixart.messenger.services.NotificationService.NOTIFICATION_ID;
+
 public class XmppConnectionService extends Service {
 
 	public static final String ACTION_REPLY_TO_CONVERSATION = "reply_to_conversations";
@@ -156,6 +161,7 @@ public class XmppConnectionService extends Service {
     private WakeLock wakeLock;
 	private long mLastActivity = 0;
     public static VideoCompressor CompressVideo;
+    private NotificationManager mNotifyManager;
 
 	public DatabaseBackend databaseBackend;
 	private ContentObserver contactObserver = new ContentObserver(null) {
@@ -529,6 +535,14 @@ public class XmppConnectionService extends Service {
 	}
 
     public void attachVideoToConversation(final Conversation conversation, final Uri uri, final UiCallback<Message> callback) {
+        final Integer NOTIFICATION_ID = (int) (new Date().getTime()/1000);
+        mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getBaseContext());
+        mBuilder.setContentTitle(getString(R.string.app_name))
+                .setContentText(getString(R.string.compressing_video))
+                .setSmallIcon(R.drawable.ic_play_box_outline_white_24dp)
+                .setProgress(0, 0, true);
+        mNotifyManager.notify(NOTIFICATION_ID, mBuilder.build());
         if (FileBackend.weOwnFile(this, uri)) {
             Log.d(Config.LOGTAG,"trying to attach video that belonged to us");
             callback.error(R.string.security_error_invalid_file_access, null);
@@ -546,6 +560,7 @@ public class XmppConnectionService extends Service {
         final Uri compressed_uri = Uri.fromFile(compressed_file);
         if (filesize > 0 && filesize <= Config.VIDEO_MAX_SIZE) {
             Log.d(Config.LOGTAG,conversation.getAccount().getJid().toBareJid()+ ": not compressing video. sending as file");
+            mNotifyManager.cancel(NOTIFICATION_ID);
             attachFileToConversation(conversation, uri, callback);
         } else {
             CompressVideo = new VideoCompressor(path, compressed_path,  new Interface() {
@@ -553,6 +568,7 @@ public class XmppConnectionService extends Service {
                 public void videocompressed(boolean result) {
                     if (result) {
                         Log.d(Config.LOGTAG, conversation.getAccount().getJid().toBareJid() + ": sending compressed video.");
+                        mNotifyManager.cancel(NOTIFICATION_ID);
                         attachFileToConversation(conversation, compressed_uri, callback);
                     }
                 }
