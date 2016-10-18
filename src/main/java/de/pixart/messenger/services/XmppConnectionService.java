@@ -1131,7 +1131,16 @@ public class XmppConnectionService extends Service {
 
 	public XmppConnection createConnection(final Account account) {
 		final SharedPreferences sharedPref = getPreferences();
-		account.setResource(sharedPref.getString("resource", "mobile").toLowerCase(Locale.getDefault()));
+        String resource;
+        try {
+            resource = sharedPref.getString("resource", getString(R.string.default_resource)).toLowerCase(Locale.ENGLISH);
+            if (resource.trim().isEmpty()) {
+                throw new Exception();
+            }
+        } catch (Exception e) {
+            resource = "Pix-Art Messenger";
+        }
+        account.setResource(resource);
 		final XmppConnection connection = new XmppConnection(account, this);
 		connection.setOnMessagePacketReceivedListener(this.mMessageParser);
 		connection.setOnStatusChangedListener(this.statusListener);
