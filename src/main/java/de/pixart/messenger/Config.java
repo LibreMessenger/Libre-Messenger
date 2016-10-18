@@ -37,14 +37,13 @@ public final class Config {
 
     public static final String LOGTAG = "Pix-Art Messenger";
 
-    public static final String XMPP_IP = "185.26.156.37"; // set to null means disable
-    public static final Integer[] XMPP_Ports = {61000, 65000}; // set to null means disable
-
     public static final String BUG_REPORTS = "bugs@pix-art.de";
 
     public static final String inviteUserURL = "https://jabber.pix-art.de/i/";
 
-    public static final String DOMAIN_LOCK = "pix-art.de"; //only allow account creation for this domain
+    public static final String XMPP_IP = BuildConfig.XMPP_IP; // set to null means disable
+    public static final Integer[] XMPP_Ports = BuildConfig.XMPP_Ports; // set to null means disable
+    public static final String DOMAIN_LOCK = BuildConfig.DOMAIN_LOCK; //only allow account creation for this domain
     public static final String MAGIC_CREATE_DOMAIN = "pix-art.de";
     public static final boolean SINGLE_ACCOUNT = true; //set to true to allow only one account
     public static final boolean DISALLOW_REGISTRATION_IN_UI = false; //hide the register checkbox
