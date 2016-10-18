@@ -82,14 +82,6 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 	private OnContactPictureClicked mOnContactPictureClickedListener;
 	private OnContactPictureLongClicked mOnContactPictureLongClickedListener;
 
-	private OnLongClickListener openContextMenu = new OnLongClickListener() {
-
-		@Override
-		public boolean onLongClick(View v) {
-			v.showContextMenu();
-			return true;
-		}
-	};
 	private boolean mIndicateReceived = false;
     private HashMap<Integer, AudioWife> audioPlayer;
 	private boolean mUseWhiteBackground = false;
@@ -381,7 +373,6 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 		viewHolder.messageBody.setLinkTextColor(this.getMessageTextColor(darkBackground, true));
 		viewHolder.messageBody.setHighlightColor(activity.getResources().getColor(darkBackground ? R.color.grey800 : R.color.grey500));
 		viewHolder.messageBody.setTypeface(null, Typeface.NORMAL);
-		viewHolder.messageBody.setOnLongClickListener(openContextMenu);
 	}
 
 	private void displayDownloadableMessage(ViewHolder viewHolder, final Message message, String text) {
@@ -398,7 +389,6 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 				activity.startDownloadable(message);
 			}
 		});
-        viewHolder.download_button.setOnLongClickListener(openContextMenu);
 	}
 
     private void displayAudioMessage(ViewHolder viewHolder, final Message message, int position) {
@@ -451,7 +441,6 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                 openDownloadable(message);
             }
         });
-		viewHolder.download_button.setOnLongClickListener(openContextMenu);
 	}
 
 	private void displayLocationMessage(ViewHolder viewHolder, final Message message) {
@@ -475,7 +464,6 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                 showLocation(message);
             }
         });
-		viewHolder.download_button.setOnLongClickListener(openContextMenu);
 	}
 
 	private void displayImageMessage(ViewHolder viewHolder,
@@ -514,7 +502,6 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 				openDownloadable(message);
 			}
 		});
-		viewHolder.image.setOnLongClickListener(openContextMenu);
 	}
 
 	private void loadMoreMessages(Conversation conversation) {

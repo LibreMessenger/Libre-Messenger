@@ -52,6 +52,7 @@
                 app:riv_border_color="@color/black12"
                 app:riv_corner_radius="5dp"
                 android:scaleType="centerCrop"
+                android:longClickable="true"
                 android:maxHeight="400dp"
                 android:maxWidth="400dp" />
 
@@ -61,6 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:autoLink="web"
+                android:longClickable="true"
                 android:textColorLink="@color/dark"
                 android:textColor="@color/dark"
                 android:textColorHighlight="@color/grey800"
@@ -70,6 +72,7 @@
                 android:id="@+id/download_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:longClickable="true"
                 android:visibility="gone" />
 
             <RelativeLayout
