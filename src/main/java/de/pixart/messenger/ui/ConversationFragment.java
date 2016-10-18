@@ -1252,8 +1252,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 												int which) {
 								conversation
 										.setNextEncryption(Message.ENCRYPTION_NONE);
-								xmppService.databaseBackend
-										.updateConversation(conversation);
+                                xmppService.updateConversation(conversation);
 								message.setEncryption(Message.ENCRYPTION_NONE);
 								xmppService.sendMessage(message);
 								messageSent();
@@ -1281,8 +1280,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 								conversation
 										.setNextEncryption(Message.ENCRYPTION_NONE);
 								message.setEncryption(Message.ENCRYPTION_NONE);
-								xmppService.databaseBackend
-										.updateConversation(conversation);
+                                xmppService.updateConversation(conversation);
 								xmppService.sendMessage(message);
 								messageSent();
 							}
