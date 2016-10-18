@@ -158,10 +158,12 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 			&& message.getMergedStatus() <= Message.STATUS_RECEIVED;
 		if (message.getType() == Message.TYPE_IMAGE || message.getType() == Message.TYPE_FILE || message.getTransferable() != null) {
 			FileParams params = message.getFileParams();
-			if (params.size > (1.5 * 1024 * 1024)) {
+			if (params.size > (1 * 1024 * 1024)) {
 				filesize = params.size / (1024 * 1024)+ " MiB";
-			} else if (params.size > 0) {
+			} else if (params.size > (1 * 1024)) {
 				filesize = params.size / 1024 + " KiB";
+			} else if (params.size > 0) {
+				filesize = "1 KiB";
 			}
 			if (message.getTransferable() != null && message.getTransferable().getStatus() == Transferable.STATUS_FAILED) {
 				error = true;
