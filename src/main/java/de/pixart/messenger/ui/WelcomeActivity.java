@@ -7,11 +7,9 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,7 +28,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 import javax.crypto.NoSuchPaddingException;
 
@@ -248,33 +245,7 @@ public class WelcomeActivity extends Activity {
             Log.d(Config.LOGTAG, "Delete temp file from " + TempFile.toString());
             TempFile.delete();
         }
-
-        Log.d(Config.LOGTAG, "New Features - Uninstall old version of Pix-Art Messenger");
-        if (isPackageInstalled("eu.siacs.conversations")) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.uninstall_app_text)
-                    .setPositiveButton(R.string.uninstall, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            //start the deinstallation of old version
-                            if (isPackageInstalled("eu.siacs.conversations")) {
-                                Uri packageURI_VR = Uri.parse("package:eu.siacs.conversations");
-                                Intent uninstallIntent_VR = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageURI_VR);
-                                if (uninstallIntent_VR.resolveActivity(getPackageManager()) != null) {
-                                    startActivity(uninstallIntent_VR);
-                                }
-                            }
-                        }
-                    })
-                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Log.d(Config.LOGTAG, "New Features - Uninstall cancled");
-                            restart();
-                        }
-                    });
-            builder.create().show();
-        } else {
-            restart();
-        }
+        restart();
     }
 
     private void restart() {
@@ -285,17 +256,6 @@ public class WelcomeActivity extends Activity {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         System.exit(0);
-    }
-
-    private boolean isPackageInstalled(String targetPackage) {
-        List<ApplicationInfo> packages;
-        PackageManager pm;
-        pm = getPackageManager();
-        packages = pm.getInstalledApplications(0);
-        for (ApplicationInfo packageInfo : packages) {
-            if (packageInfo.packageName.equals(targetPackage)) return true;
-        }
-        return false;
     }
 
     public boolean hasStoragePermission(int requestCode) {

@@ -101,7 +101,6 @@ import de.pixart.messenger.parser.PresenceParser;
 import de.pixart.messenger.persistance.DatabaseBackend;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.ui.UiCallback;
-import de.pixart.messenger.ui.XmppActivity;
 import de.pixart.messenger.utils.ConversationsFileObserver;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.ExceptionHelper;
@@ -137,8 +136,6 @@ import de.pixart.messenger.xmpp.stanzas.IqPacket;
 import de.pixart.messenger.xmpp.stanzas.MessagePacket;
 import de.pixart.messenger.xmpp.stanzas.PresencePacket;
 import me.leolin.shortcutbadger.ShortcutBadger;
-
-import static de.pixart.messenger.services.NotificationService.NOTIFICATION_ID;
 
 public class XmppConnectionService extends Service {
 
