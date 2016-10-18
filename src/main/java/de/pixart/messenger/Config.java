@@ -125,7 +125,7 @@ public final class Config {
     public static final ChatState DEFAULT_CHATSTATE = ChatState.ACTIVE;
     public static final int TYPING_TIMEOUT = 5;
 
-    public static final String UPDATE_URL = "http://xmpp.pix-art.de/Pix-Art_Messenger/update/";
+    public static final String UPDATE_URL = BuildConfig.UPDATE_URL;
     public static final long UPDATE_CHECK_TIMER = 24 * 60 * 60; // in seconds
 
     public static final String ISSUE_URL = "xmpp://support@room.pix-art.de?join";
