@@ -715,4 +715,5 @@
     <string name="missing_presence_subscription">Missing presence subscription</string>
     <string name="missing_omemo_keys">Missing OMEMO keys</string>
     <string name="error_publish_avatar_offline">You need to be connected to publish your avatar.</string>
+    <string name="select_text">Select text</string>
 </resources>

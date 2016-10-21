@@ -57,6 +57,7 @@ import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.ui.ConversationActivity;
 import de.pixart.messenger.ui.ShowFullscreenMessageActivity;
 import de.pixart.messenger.ui.widget.ClickableMovementMethod;
+import de.pixart.messenger.ui.widget.ListSelectionManager;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.GeoHelper;
 import de.pixart.messenger.utils.UIHelper;
@@ -83,6 +84,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 	private OnContactPictureLongClicked mOnContactPictureLongClickedListener;
 
 	private boolean mIndicateReceived = false;
+    private final ListSelectionManager listSelectionManager = new ListSelectionManager();
     private HashMap<Integer, AudioWife> audioPlayer;
 	private boolean mUseWhiteBackground = false;
 
@@ -365,7 +367,9 @@ public class MessageAdapter extends ArrayAdapter<Message> {
             viewHolder.messageBody.setText(formattedBody);
             viewHolder.messageBody.setTextIsSelectable(true);
             viewHolder.messageBody.setMovementMethod(ClickableMovementMethod.getInstance());
-		} else {
+            listSelectionManager.onUpdate(viewHolder.messageBody, message);
+
+        } else {
 			viewHolder.messageBody.setText("");
 			viewHolder.messageBody.setTextIsSelectable(false);
 		}
@@ -587,6 +591,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                 viewHolder = null;
                 break;
         }
+        if (viewHolder.messageBody != null) listSelectionManager.onCreate(viewHolder.messageBody);
         view.setTag(viewHolder);
         if (viewHolder == null) {
             return view;
@@ -743,6 +748,13 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 		return view;
 	}
 
+    @Override
+    public void notifyDataSetChanged() {
+        listSelectionManager.onBeforeNotifyDataSetChanged();
+        super.notifyDataSetChanged();
+        listSelectionManager.onAfterNotifyDataSetChanged();
+    }
+
   public void openDownloadable(Message message) {
       DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
       if (!file.exists()) {
@@ -813,6 +825,15 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 		this.mIndicateReceived = activity.indicateReceived();
 		this.mUseWhiteBackground = activity.useWhiteBackground();
 	}
+
+    public TextView getMessageBody(View view) {
+        final Object tag = view.getTag();
+        if (tag instanceof ViewHolder) {
+            final ViewHolder viewHolder = (ViewHolder) tag;
+            return viewHolder.messageBody;
+        }
+        return null;
+    }
 
 	public interface OnContactPictureClicked {
 		void onContactPictureClicked(Message message);

@@ -63,6 +63,7 @@ import de.pixart.messenger.ui.XmppActivity.OnValueEdited;
 import de.pixart.messenger.ui.adapter.MessageAdapter;
 import de.pixart.messenger.ui.adapter.MessageAdapter.OnContactPictureClicked;
 import de.pixart.messenger.ui.adapter.MessageAdapter.OnContactPictureLongClicked;
+import de.pixart.messenger.ui.widget.ListSelectionManager;
 import de.pixart.messenger.utils.GeoHelper;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.XmppConnection;
@@ -548,6 +549,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 			activity.getMenuInflater().inflate(R.menu.message_context, menu);
 			menu.setHeaderTitle(R.string.message_options);
 			MenuItem copyText = menu.findItem(R.id.copy_text);
+			MenuItem selectText = menu.findItem(R.id.select_text);
 			MenuItem retryDecryption = menu.findItem(R.id.retry_decryption);
 			MenuItem correctMessage = menu.findItem(R.id.correct_message);
 			MenuItem shareWith = menu.findItem(R.id.share_with);
@@ -560,6 +562,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 					&& !GeoHelper.isGeoUri(m.getBody())
 					&& m.treatAsDownloadable() != Message.Decision.MUST) {
 				copyText.setVisible(true);
+                selectText.setVisible(ListSelectionManager.isSupported());
 			}
 			if (m.getEncryption() == Message.ENCRYPTION_DECRYPTION_FAILED) {
 				retryDecryption.setVisible(true);
@@ -611,6 +614,9 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 			case R.id.copy_text:
 				copyText(selectedMessage);
 				return true;
+            case R.id.select_text:
+                selectText(selectedMessage);
+                return true;
 			case R.id.correct_message:
 				correctMessage(selectedMessage);
 				return true;
@@ -670,7 +676,25 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 		}
 	}
 
-	private void deleteFile(Message message) {
+    private void selectText(Message message) {
+        final int index;
+        synchronized (this.messageList) {
+            index = this.messageList.indexOf(message);
+        }
+        if (index >= 0) {
+            final int first = this.messagesView.getFirstVisiblePosition();
+            final int last = first + this.messagesView.getChildCount();
+            if (index >= first && index < last) {
+                final View view = this.messagesView.getChildAt(index - first);
+                final TextView messageBody = this.messageListAdapter.getMessageBody(view);
+                if (messageBody != null) {
+                    ListSelectionManager.startSelection(messageBody);
+                }
+            }
+        }
+    }
+
+    private void deleteFile(Message message) {
 		if (activity.xmppConnectionService.getFileBackend().deleteFile(message)) {
 			message.setTransferable(new TransferablePlaceholder(Transferable.STATUS_DELETED));
 			activity.updateConversationList();
