@@ -2,6 +2,7 @@ package de.pixart.messenger.ui;
 
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -143,6 +144,8 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+
 		if (getActionBar() != null) {
 			getActionBar().setDisplayHomeAsUpEnabled(false);
 			getActionBar().setHomeButtonEnabled(false);
@@ -162,7 +165,7 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
 			}
 		});
 
-		this.share = new Share();
+        this.share = new Share();
 	}
 
 	@Override
@@ -372,4 +375,11 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
 			super.onBackPressed();
 		}
 	}
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+    }
+
 }
