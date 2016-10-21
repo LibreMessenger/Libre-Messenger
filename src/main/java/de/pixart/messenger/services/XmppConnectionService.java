@@ -538,6 +538,7 @@ public class XmppConnectionService extends Service {
         mBuilder.setContentTitle(getString(R.string.app_name))
                 .setContentText(getString(R.string.compressing_video))
                 .setSmallIcon(R.drawable.ic_play_box_outline_white_24dp)
+                .setOngoing(true)
                 .setProgress(0, 0, true);
         mNotifyManager.notify(NOTIFICATION_ID, mBuilder.build());
         if (FileBackend.weOwnFile(this, uri)) {
