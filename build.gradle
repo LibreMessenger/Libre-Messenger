@@ -6,7 +6,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.0'
+        classpath 'com.android.tools.build:gradle:2.2.1'
     }
 }
 
@@ -75,16 +75,19 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 18
         targetSdkVersion 24
-        versionCode 170
-        versionName "1.14.4"
+        versionCode 172
+
+        versionName "1.14.5"
+
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"
         multiDexEnabled true
-        ndk {
-            moduleName = "Android"
-        }
+        buildConfigField("String", "XMPP_IP", '"185.26.156.37"')
+        buildConfigField("Integer[]", "XMPP_Ports", "{61000, 65000}")
+        buildConfigField("String", "DOMAIN_LOCK", '"pix-art.de"')
+        buildConfigField("String", "UPDATE_URL", '"http://xmpp.pix-art.de/Pix-Art_Messenger/update/"')
     }
 
     dexOptions {
@@ -101,6 +104,13 @@ android {
     productFlavors {
         playstore
         free
+        open {
+            buildConfigField("String", "XMPP_IP", "null")
+            buildConfigField("Integer[]", "XMPP_Ports", "null")
+            buildConfigField("String", "DOMAIN_LOCK", "null")
+            buildConfigField("String", "UPDATE_URL", '"http://xmpp.pix-art.de/Pix-Art_Messenger/update/open/"')
+            applicationId "de.pixart.openmessenger"
+        }
     }
     if (project.hasProperty('mStoreFile') &&
             project.hasProperty('mStorePassword') &&
@@ -117,24 +127,17 @@ android {
         buildTypes {
             debug {
                 debuggable true
-                jniDebuggable true
                 buildTypes.release.signingConfig = null
                 //applicationIdSuffix ".debug"
             }
 
             release {
                 debuggable false
-                jniDebuggable false
                 signingConfig = signingConfigs.release
                 minifyEnabled true
                 proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             }
         }
-    }
-
-    sourceSets.main {
-        jniLibs.srcDir 'libs'
-        jni.srcDirs = [] //disable automatic ndk-build call
     }
 
     lintOptions {
