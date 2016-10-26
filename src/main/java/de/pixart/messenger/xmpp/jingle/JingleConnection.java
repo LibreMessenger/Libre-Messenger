@@ -27,6 +27,7 @@ import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.entities.ServiceDiscoveryResult;
 import de.pixart.messenger.entities.Transferable;
 import de.pixart.messenger.entities.TransferablePlaceholder;
+import de.pixart.messenger.parser.IqParser;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.services.AbstractConnectionManager;
 import de.pixart.messenger.services.XmppConnectionService;
@@ -90,7 +91,7 @@ public class JingleConnection implements Transferable {
 		@Override
 		public void onIqPacketReceived(Account account, IqPacket packet) {
 			if (packet.getType() != IqPacket.TYPE.RESULT) {
-				fail();
+                fail(IqParser.extractErrorMessage(packet));
 			}
 		}
 	};
@@ -492,7 +493,7 @@ public class JingleConnection implements Transferable {
 						mJingleStatus = JINGLE_STATUS_INITIATED;
 						mXmppConnectionService.markMessage(message, Message.STATUS_OFFERED);
 					} else {
-						fail();
+						fail(IqParser.extractErrorMessage(packet));
 					}
 				}
 			});
@@ -850,6 +851,10 @@ public class JingleConnection implements Transferable {
 	}
 
 	private void fail() {
+        fail(null);
+    }
+
+    private void fail(String errorMessage) {
 		this.mJingleStatus = JINGLE_STATUS_FAILED;
 		this.disconnectSocks5Connections();
 		if (this.transport != null && this.transport instanceof JingleInbandTransport) {
@@ -866,7 +871,8 @@ public class JingleConnection implements Transferable {
 				this.mXmppConnectionService.updateConversationUi();
 			} else {
 				this.mXmppConnectionService.markMessage(this.message,
-						Message.STATUS_SEND_FAILED);
+						Message.STATUS_SEND_FAILED,
+                        errorMessage);
 				this.message.setTransferable(null);
 			}
 		}

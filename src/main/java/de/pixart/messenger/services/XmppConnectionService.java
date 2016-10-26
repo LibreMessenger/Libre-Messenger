@@ -3085,14 +3085,18 @@ public class XmppConnectionService extends Service {
 	}
 
 	public Message markMessage(final Account account, final Jid recipient, final String uuid, final int status) {
-		if (uuid == null) {
+        return markMessage(account, recipient, uuid, status, null);
+    }
+
+    public Message markMessage(final Account account, final Jid recipient, final String uuid, final int status, String errorMessage) {
+        if (uuid == null) {
 			return null;
 		}
 		for (Conversation conversation : getConversations()) {
 			if (conversation.getJid().toBareJid().equals(recipient) && conversation.getAccount() == account) {
 				final Message message = conversation.findSentMessageWithUuidOrRemoteId(uuid);
 				if (message != null) {
-					markMessage(message, status);
+					markMessage(message, status, errorMessage);
 				}
 				return message;
 			}
@@ -3115,11 +3119,17 @@ public class XmppConnectionService extends Service {
 	}
 
 	public void markMessage(Message message, int status) {
+        markMessage(message, status, null);
+    }
+
+    public void markMessage(Message message, int status, String errorMessage) {
 		if (status == Message.STATUS_SEND_FAILED
 				&& (message.getStatus() == Message.STATUS_SEND_RECEIVED || message
-				.getStatus() == Message.STATUS_SEND_DISPLAYED)) {
+                .getStatus() == Message.STATUS_SEND_DISPLAYED)
+                && errorMessage == null) {
 			return;
 		}
+        message.setErrorMessage(errorMessage);
 		message.setStatus(status);
 		databaseBackend.updateMessage(message);
 		updateConversationUi();
