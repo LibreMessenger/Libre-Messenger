@@ -532,6 +532,9 @@ public class XmppConnectionService extends Service {
 	}
 
     public void attachVideoToConversation(final Conversation conversation, final Uri uri, final UiCallback<Message> callback) {
+        File f = new File(FileUtils.getPath(this, uri));
+        long filesize = f.length();
+        String path = f.toString();
         final Integer NOTIFICATION_ID = (int) (new Date().getTime()/1000);
         mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getBaseContext());
@@ -546,21 +549,19 @@ public class XmppConnectionService extends Service {
             callback.error(R.string.security_error_invalid_file_access, null);
             return;
         }
-        File f = new File(FileUtils.getPath(this, uri));
-        long filesize = f.length();
-        String path = f.toString();
         Log.d(Config.LOGTAG,"Video file (size) :" + f.toString() + "("+filesize/1024/1024+"MB)");
+        if (filesize == 0) {
+            Log.d(Config.LOGTAG,"Error with file, size = 0");
+            callback.error(R.string.error_file_corrupt, null);
+            return;
+        }
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
         File compressed_file = new File(FileBackend.getConversationsVideoDirectory() + "/"
                 + dateFormat.format(new Date())
                 + "_komp.mp4");
         final String compressed_path = compressed_file.toString();
         final Uri compressed_uri = Uri.fromFile(compressed_file);
-        if (filesize > 0 && filesize <= Config.VIDEO_MAX_SIZE) {
-            Log.d(Config.LOGTAG,conversation.getAccount().getJid().toBareJid()+ ": not compressing video. sending as file");
-            mNotifyManager.cancel(NOTIFICATION_ID);
-            attachFileToConversation(conversation, uri, callback);
-        } else {
+        if (filesize > Config.VIDEO_MAX_SIZE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             CompressVideo = new VideoCompressor(path, compressed_path,  new Interface() {
                 @Override
                 public void videocompressed(boolean result) {
@@ -572,6 +573,10 @@ public class XmppConnectionService extends Service {
                 }
             });
             CompressVideo.execute();
+        } else {
+            Log.d(Config.LOGTAG, conversation.getAccount().getJid().toBareJid() + ": not compressing video. sending as file");
+            mNotifyManager.cancel(NOTIFICATION_ID);
+            attachFileToConversation(conversation, uri, callback);
         }
     }
 
@@ -584,7 +589,7 @@ public class XmppConnectionService extends Service {
         private String compressedpath;
         private Interface mListener;
 
-        public VideoCompressor(String path, String compressed_path, Interface mListener) {
+        VideoCompressor(String path, String compressed_path, Interface mListener) {
             originalpath = path;
             compressedpath = compressed_path;
             this.mListener  = mListener;
