@@ -57,13 +57,14 @@ import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.ui.ConversationActivity;
 import de.pixart.messenger.ui.ShowFullscreenMessageActivity;
 import de.pixart.messenger.ui.widget.ClickableMovementMethod;
+import de.pixart.messenger.ui.widget.CopyTextView;
 import de.pixart.messenger.ui.widget.ListSelectionManager;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.GeoHelper;
 import de.pixart.messenger.utils.UIHelper;
 import nl.changer.audiowife.AudioWife;
 
-public class MessageAdapter extends ArrayAdapter<Message> {
+public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextView.CopyHandler {
 
 	private static final int SENT = 0;
 	private static final int RECEIVED = 1;
@@ -548,7 +549,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                 viewHolder.edit_indicator = (ImageView) view.findViewById(R.id.edit_indicator);
                 viewHolder.image = (ImageView) view
                         .findViewById(R.id.message_image);
-                viewHolder.messageBody = (TextView) view
+                viewHolder.messageBody = (CopyTextView) view
                         .findViewById(R.id.message_body);
                 viewHolder.time = (TextView) view
                         .findViewById(R.id.message_time);
@@ -572,7 +573,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                 viewHolder.edit_indicator = (ImageView) view.findViewById(R.id.edit_indicator);
                 viewHolder.image = (ImageView) view
                         .findViewById(R.id.message_image);
-                viewHolder.messageBody = (TextView) view
+                viewHolder.messageBody = (CopyTextView) view
                         .findViewById(R.id.message_body);
                 viewHolder.time = (TextView) view
                         .findViewById(R.id.message_time);
@@ -591,7 +592,10 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                 viewHolder = null;
                 break;
         }
-        if (viewHolder.messageBody != null) listSelectionManager.onCreate(viewHolder.messageBody);
+        if (viewHolder.messageBody != null) {
+            listSelectionManager.onCreate(viewHolder.messageBody);
+            viewHolder.messageBody.setCopyHandler(this);
+        }
         view.setTag(viewHolder);
         if (viewHolder == null) {
             return view;
@@ -755,6 +759,11 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         listSelectionManager.onAfterNotifyDataSetChanged();
     }
 
+    @Override
+    public String transformTextForCopy(CharSequence text, int start, int end) {
+        return text.toString().substring(start, end);
+    }
+
   public void openDownloadable(Message message) {
       DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
       if (!file.exists()) {
@@ -853,7 +862,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 		protected ImageView indicatorReceived;
 		protected ImageView indicatorRead;
 		protected TextView time;
-		protected TextView messageBody;
+		protected CopyTextView messageBody;
 		protected ImageView contact_picture;
 		protected TextView status_message;
 		protected TextView encryption;
