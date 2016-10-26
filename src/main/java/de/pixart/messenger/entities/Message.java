@@ -2,6 +2,7 @@ package de.pixart.messenger.entities;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.text.SpannableStringBuilder;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -18,8 +19,6 @@ import de.pixart.messenger.xmpp.jid.Jid;
 public class Message extends AbstractEntity {
 
     public static final String TABLENAME = "messages";
-
-    public static final String MERGE_SEPARATOR = "\n\u200B\n";
 
     public static final int STATUS_RECEIVED = 0;
     public static final int STATUS_UNSEND = 1;
@@ -491,22 +490,25 @@ public class Message extends AbstractEntity {
         );
     }
 
-    public String getMergedBody() {
-        StringBuilder body = new StringBuilder(this.body.trim());
+    public static class MergeSeparator {}
+
+    public SpannableStringBuilder getMergedBody() {
+        SpannableStringBuilder body = new SpannableStringBuilder(this.body.trim());
         Message current = this;
         while (current.mergeable(current.next())) {
             current = current.next();
             if (current == null) {
                 break;
             }
-            body.append(MERGE_SEPARATOR);
+            body.append("\n\n");
+            body.setSpan(new MergeSeparator(), body.length() - 2, body.length(), SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE);
             body.append(current.getBody().trim());
         }
-        return body.toString();
+        return body;
     }
 
     public boolean hasMeCommand() {
-        return getMergedBody().startsWith(ME_COMMAND);
+        return this.body.trim().startsWith(ME_COMMAND);
     }
 
     public int getMergedStatus() {
