@@ -3,9 +3,7 @@ package de.pixart.messenger.services;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
 
-import de.pixart.messenger.Config;
 import de.pixart.messenger.persistance.DatabaseBackend;
 
 public class EventReceiver extends BroadcastReceiver {
@@ -19,9 +17,6 @@ public class EventReceiver extends BroadcastReceiver {
 			mIntentForService.setAction("other");
 		}
 		final String action = intent.getAction();
-		if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION) && Config.PUSH_MODE) {
-			return;
-		}
 		if (action.equals("ui") || DatabaseBackend.getInstance(context).hasEnabledAccounts()) {
 			context.startService(mIntentForService);
 		}
