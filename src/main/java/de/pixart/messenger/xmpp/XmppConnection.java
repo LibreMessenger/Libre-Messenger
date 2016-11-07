@@ -1705,6 +1705,10 @@ public class XmppConnection implements Runnable {
 					return -1;
 				}
 		}
+
+        public boolean stanzaIds() {
+            return hasDiscoFeature(account.getJid().toBareJid(),Xmlns.STANZA_IDS);
+        }
 	}
 
 	private IqGenerator getIqGenerator() {

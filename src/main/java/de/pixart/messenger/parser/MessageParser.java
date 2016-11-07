@@ -31,6 +31,7 @@ import de.pixart.messenger.http.HttpConnectionManager;
 import de.pixart.messenger.services.MessageArchiveService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.utils.CryptoHelper;
+import de.pixart.messenger.utils.Xmlns;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.OnMessagePacketReceived;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
@@ -208,7 +209,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
 	private static String extractStanzaId(Element packet, Jid by) {
 		for(Element child : packet.getChildren()) {
 			if (child.getName().equals("stanza-id")
-					&& "urn:xmpp:sid:0".equals(child.getNamespace())
+					&& Xmlns.STANZA_IDS.equals(child.getNamespace())
 					&& by.equals(child.getAttributeAsJid("by"))) {
 				return child.getAttribute("id");
 			}
@@ -430,7 +431,18 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
 			}
 
 			if (serverMsgId == null) {
-				serverMsgId = extractStanzaId(packet, isTypeGroupChat ? conversation.getJid().toBareJid() : account.getServer());
+                final Jid by;
+                final boolean safeToExtract;
+                if (isTypeGroupChat) {
+                    by = conversation.getJid().toBareJid();
+                    safeToExtract = true; //conversation.getMucOptions().hasFeature(Xmlns.STANZA_IDS);
+                } else {
+                    by = account.getJid().toBareJid();
+                    safeToExtract = true; //account.getXmppConnection().getFeatures().stanzaIds();
+                }
+                if (safeToExtract) {
+                    serverMsgId = extractStanzaId(packet, by);
+                }
 			}
 
 			message.setCounterpart(counterpart);
