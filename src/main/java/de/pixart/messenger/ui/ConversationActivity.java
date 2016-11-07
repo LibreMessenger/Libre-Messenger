@@ -79,6 +79,7 @@ import de.pixart.messenger.utils.ExceptionHelper;
 import de.pixart.messenger.utils.FileUtils;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
+import de.pixart.messenger.xmpp.XmppConnection;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
@@ -1739,7 +1740,8 @@ public class ConversationActivity extends XmppActivity
 	}
 
 	private long getMaxHttpUploadSize(Conversation conversation) {
-		return conversation.getAccount().getXmppConnection().getFeatures().getMaxHttpUploadSize();
+        final XmppConnection connection = conversation.getAccount().getXmppConnection();
+        return connection == null ? -1 : connection.getFeatures().getMaxHttpUploadSize();
 	}
 
 	private void setNeverAskForBatteryOptimizationsAgain() {
