@@ -6,7 +6,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.1'
+        classpath 'com.android.tools.build:gradle:2.2.2'
     }
 }
 
@@ -61,6 +61,9 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:9.6.1'
     compile 'pub.devrel:easypermissions:0.1.9'
     compile 'com.wefika:flowlayout:0.4.1'
+    //compile 'com.jakewharton:disklrucache:2.0.2'
+    //compile group: 'commons-io', name: 'commons-io', version: '2.5'
+
 }
 
 ext {
@@ -79,7 +82,7 @@ android {
         targetSdkVersion 24
         versionCode 172
 
-        versionName "1.14.5"
+        versionName "1.14.6 beta (2016-11-07)"
 
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"
