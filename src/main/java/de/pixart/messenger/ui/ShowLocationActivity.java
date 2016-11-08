@@ -7,9 +7,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -81,9 +84,22 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
 			case android.R.id.home:
 				finish();
 				return true;
+            case R.id.action_navigate:
+                double longitude = mLocation.longitude;
+                double latitude = mLocation.latitude;
+                Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("geo:" + String.valueOf(latitude) + "," + String.valueOf(longitude)));
+                startActivity(intent);
+                return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.showlocation, menu);
+        return true;
+    }
 
 	@Override
 	protected void onResume() {
