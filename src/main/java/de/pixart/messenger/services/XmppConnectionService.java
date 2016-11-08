@@ -1005,6 +1005,10 @@ public class XmppConnectionService extends Service {
 		this.databaseBackend = DatabaseBackend.getInstance(getApplicationContext());
 		this.accounts = databaseBackend.getAccounts();
 
+        if (databaseBackend.startTimeCountExceedsThreshold()) {
+            Log.d(Config.LOGTAG,"number of restarts exceeds threshold.");
+        }
+
 		restoreFromDatabase();
 
 		getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, contactObserver);

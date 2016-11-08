@@ -53,7 +53,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 	private static DatabaseBackend instance = null;
 
 	public static final String DATABASE_NAME = "history";
-	public static final int DATABASE_VERSION = 29;
+	public static final int DATABASE_VERSION = 30;
 
 	private static String CREATE_CONTATCS_STATEMENT = "create table "
 			+ Contact.TABLENAME + "(" + Contact.ACCOUNT + " TEXT, "
@@ -138,7 +138,9 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 			+ ") ON CONFLICT IGNORE"
 			+ ");";
 
-	private DatabaseBackend(Context context) {
+    private static String CREATE_START_TIMES_TABLE = "create table start_times (timestamp NUMBER);";
+
+    private DatabaseBackend(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
@@ -193,6 +195,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 		db.execSQL(CREATE_SIGNED_PREKEYS_STATEMENT);
 		db.execSQL(CREATE_IDENTITIES_STATEMENT);
 		db.execSQL(CREATE_PRESENCE_TEMPLATES_STATEMENT);
+        db.execSQL(CREATE_START_TIMES_TABLE);
 	}
 
 	@Override
@@ -336,6 +339,10 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 
         if (oldVersion < 29 && newVersion >= 29) {
             db.execSQL("ALTER TABLE " + Message.TABLENAME + " ADD COLUMN " + Message.ERROR_MESSAGE + " TEXT");
+        }
+
+        if (oldVersion < 30 && newVersion >= 30) {
+            db.execSQL(CREATE_START_TIMES_TABLE);
         }
 	}
 
@@ -1220,4 +1227,20 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 				SQLiteAxolotlStore.ACCOUNT + " = ?",
 				deleteArgs);
 	}
+
+    public boolean startTimeCountExceedsThreshold() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long cleanBeforeTimestamp = System.currentTimeMillis() - Config.FREQUENT_RESTARTS_DETECTION_WINDOW;
+        db.execSQL("delete from start_times where timestamp < "+cleanBeforeTimestamp);
+        ContentValues values = new ContentValues();
+        values.put("timestamp",System.currentTimeMillis());
+        db.insert("start_times",null,values);
+        String[] columns = new String[]{"count(timestamp)"};
+        Cursor cursor = db.query("start_times",columns,null,null,null,null,null);
+        if (cursor.moveToFirst()) {
+            return cursor.getInt(0) >= Config.FREQUENT_RESTARTS_THRESHOLD;
+        } else {
+            return false;
+        }
+    }
 }
