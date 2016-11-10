@@ -20,6 +20,28 @@ public class GeoHelper {
 		return body != null && GEO_URI.matcher(body).matches();
 	}
 
+    public static String MapPreviewUri (Message message) {
+        Matcher matcher = GEO_URI.matcher(message.getBody());
+        if (!matcher.matches()) {
+            return null;
+        }
+        double latitude;
+        double longitude;
+        try {
+            latitude = Double.parseDouble(matcher.group(1));
+            if (latitude > 90.0 || latitude < -90.0) {
+                return null;
+            }
+            longitude = Double.parseDouble(matcher.group(2));
+            if (longitude > 180.0 || longitude < -180.0) {
+                return null;
+            }
+        } catch (NumberFormatException nfe) {
+            return null;
+        }
+        return "https://maps.google.com/maps/api/staticmap?center=" + latitude + "," + longitude + "&size=400x400&scale=2&format=jpg&markers=" + latitude + "," + longitude + "&sensor=false";
+    }
+
 	public static ArrayList<Intent> createGeoIntentsFromMessage(Message message) {
 		final ArrayList<Intent> intents = new ArrayList<>();
 		Matcher matcher = GEO_URI.matcher(message.getBody());

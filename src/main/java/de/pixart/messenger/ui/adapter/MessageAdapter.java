@@ -23,6 +23,7 @@ import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.text.util.Linkify;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.lang.ref.WeakReference;
 import java.net.URL;
@@ -54,6 +58,7 @@ import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.Message.FileParams;
 import de.pixart.messenger.entities.Transferable;
 import de.pixart.messenger.persistance.FileBackend;
+import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.ConversationActivity;
 import de.pixart.messenger.ui.ShowFullscreenMessageActivity;
 import de.pixart.messenger.ui.widget.ClickableMovementMethod;
@@ -65,6 +70,7 @@ import de.pixart.messenger.utils.UIHelper;
 import nl.changer.audiowife.AudioWife;
 
 public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextView.CopyHandler {
+    private XmppConnectionService mXmppConnectionService;
 
 	private static final int SENT = 0;
 	private static final int RECEIVED = 1;
@@ -443,20 +449,33 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         });
 	}
 
-	private void displayLocationMessage(ViewHolder viewHolder, final Message message) {
-		viewHolder.aw_player.setVisibility(View.GONE);
-		viewHolder.image.setVisibility(View.GONE);
-		viewHolder.messageBody.setVisibility(View.GONE);
-		viewHolder.download_button.setText(R.string.show_location);
-        viewHolder.download_button.setVisibility(View.VISIBLE);
-		viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_map_marker_grey600_48dp,0,0,0);
-		viewHolder.download_button.setOnClickListener(new OnClickListener() {
+    private void displayLocationMessage(ViewHolder viewHolder, final Message message) {
+        viewHolder.aw_player.setVisibility(View.GONE);
+        viewHolder.messageBody.setVisibility(View.GONE);
+        String url = GeoHelper.MapPreviewUri(message);
+        Log.d(Config.LOGTAG, "Map preview = " + url);
+        viewHolder.image.setVisibility(View.VISIBLE);
+        viewHolder.image.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				showLocation(message);
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                showLocation(message);
+            }
+        });
+        Glide
+                .with(activity)
+                .load(Uri.parse(url))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .fitCenter()
+                .placeholder(R.drawable.ic_map_marker_grey600_48dp)
+                .error(R.drawable.ic_map_marker_grey600_48dp)
+                .into(viewHolder.image);
+        viewHolder.image.getLayoutParams().width = 400;
+        viewHolder.image.getLayoutParams().height = 400;
+        viewHolder.image.setAdjustViewBounds(true);
+        viewHolder.download_button.setVisibility(View.GONE);
+        viewHolder.download_button.setText(R.string.show_location);
+        viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_map_marker_grey600_48dp, 0, 0, 0);
         viewHolder.download_button.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -464,7 +483,8 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 showLocation(message);
             }
         });
-	}
+
+    }
 
 	private void displayImageMessage(ViewHolder viewHolder,
 			final Message message) {
@@ -700,7 +720,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 			displayDecryptionFailed(viewHolder,darkBackground);
 		} else {
 			if (GeoHelper.isGeoUri(message.getBody())) {
-				displayLocationMessage(viewHolder,message);
+                displayLocationMessage(viewHolder,message);
 			} else if (message.bodyIsHeart()) {
 				displayHeartMessage(viewHolder, message.getBody().trim());
 			} else if (message.treatAsDownloadable() == Message.Decision.MUST ||
