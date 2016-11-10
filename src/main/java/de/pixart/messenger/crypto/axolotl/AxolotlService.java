@@ -51,7 +51,7 @@ import de.pixart.messenger.xmpp.stanzas.IqPacket;
 
 public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
 
-	public static final String PEP_PREFIX = "de.pixart.messenger.axolotl";
+	public static final String PEP_PREFIX = "eu.siacs.conversations.axolotl";
 	public static final String PEP_DEVICE_LIST = PEP_PREFIX + ".devicelist";
 	public static final String PEP_DEVICE_LIST_NOTIFY = PEP_DEVICE_LIST + "+notify";
 	public static final String PEP_BUNDLES = PEP_PREFIX + ".bundles";
