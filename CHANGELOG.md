@@ -1,5 +1,14 @@
 ###Changelog
 
+###Version 1.15.0
+* make OMEMO working with other clients
+* make OMEMO encryption standard for 1:1 chats as default
+* start navigation app directly from show location activity
+* show map preview on shared locations
+* show contacts name on shared VCARDs
+* send text directly via ShareWithActivity
+* bug fixes 
+
 ###Version 1.14.5
 * error message accessible via context menu for failed messages
 * don't include pgp signature in anonymous mucs

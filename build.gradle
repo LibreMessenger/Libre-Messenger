@@ -61,6 +61,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:9.6.1'
     compile 'pub.devrel:easypermissions:0.1.9'
     compile 'com.wefika:flowlayout:0.4.1'
+    compile 'com.googlecode.ez-vcard:ez-vcard:0.10.0'
     //compile 'com.jakewharton:disklrucache:2.0.2'
     //compile group: 'commons-io', name: 'commons-io', version: '2.5'
 
@@ -80,9 +81,9 @@ android {
     defaultConfig {
         minSdkVersion 18
         targetSdkVersion 24
-        versionCode 172
+        versionCode 174
 
-        versionName "1.14.6 beta (2016-11-07)"
+        versionName "1.15.0"
 
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"
