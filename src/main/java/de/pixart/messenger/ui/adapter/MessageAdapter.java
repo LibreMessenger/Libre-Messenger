@@ -41,6 +41,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.HashMap;
@@ -58,7 +60,6 @@ import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.Message.FileParams;
 import de.pixart.messenger.entities.Transferable;
 import de.pixart.messenger.persistance.FileBackend;
-import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.ConversationActivity;
 import de.pixart.messenger.ui.ShowFullscreenMessageActivity;
 import de.pixart.messenger.ui.widget.ClickableMovementMethod;
@@ -67,10 +68,11 @@ import de.pixart.messenger.ui.widget.ListSelectionManager;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.GeoHelper;
 import de.pixart.messenger.utils.UIHelper;
+import ezvcard.Ezvcard;
+import ezvcard.VCard;
 import nl.changer.audiowife.AudioWife;
 
 public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextView.CopyHandler {
-    private XmppConnectionService mXmppConnectionService;
 
 	private static final int SENT = 0;
 	private static final int RECEIVED = 1;
@@ -426,13 +428,28 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 		viewHolder.aw_player.setVisibility(View.GONE);
 		viewHolder.image.setVisibility(View.GONE);
 		viewHolder.messageBody.setVisibility(View.GONE);
-		viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message)));
         viewHolder.download_button.setVisibility(View.VISIBLE);
         String mimeType = message.getMimeType();
+        String fullName = "";
         if (mimeType != null) {
             if (message.getMimeType().contains("pdf")) {
                 viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_file_pdf_grey600_48dp,0,0,0);
             } else if (message.getMimeType().contains("vcard")) {
+                File file = new File(activity.xmppConnectionService.getFileBackend().getFile(message).toString());
+                VCard vcard = null;
+                String name = null;
+                String version = null;
+                try {
+                    vcard = Ezvcard.parse(file).first();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (vcard != null) {
+                    version = vcard.getVersion().toString();
+                    Log.d(Config.LOGTAG, "VCard version: " + version);
+                    name = vcard.getFormattedName().getValue();
+                    fullName = " (" + name + ")";
+                }
                 viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_account_card_details_grey600_48dp,0,0,0);
             } else if (message.getMimeType().contains("calendar")) {
                 viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_calendar_grey600_48dp,0,0,0);
@@ -440,6 +457,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_file_grey600_48dp,0,0,0);
             }
         }
+        viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message) + fullName));
         viewHolder.download_button.setOnClickListener(new OnClickListener() {
 
             @Override
