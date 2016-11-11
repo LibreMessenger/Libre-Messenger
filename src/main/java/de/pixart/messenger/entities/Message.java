@@ -13,6 +13,7 @@ import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.GeoHelper;
 import de.pixart.messenger.utils.MimeUtils;
 import de.pixart.messenger.utils.UIHelper;
+import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
 
@@ -492,6 +493,8 @@ public class Message extends AbstractEntity {
                         !this.getBody().startsWith(ME_COMMAND) &&
                         !this.bodyIsHeart() &&
                         !message.bodyIsHeart() &&
+                        !this.bodyIsXmpp() &&
+                        !message.bodyIsXmpp() &&
                         this.isTrusted() == message.isTrusted()
                 );
     }
@@ -678,6 +681,10 @@ public class Message extends AbstractEntity {
 
     public boolean bodyIsHeart() {
         return body != null && UIHelper.HEARTS.contains(body.trim());
+    }
+
+    public boolean bodyIsXmpp() {
+        return body != null && XmppUri.isXmppUri(body.trim());
     }
 
     public FileParams getFileParams() {

@@ -31,6 +31,11 @@ public class XmppUri {
 		parse(uri);
 	}
 
+    public static boolean isXmppUri(String uri) {
+        String scheme = Uri.parse(uri).getScheme();
+        return "xmpp".equalsIgnoreCase(scheme);
+    }
+
 	protected void parse(Uri uri) {
 		String scheme = uri.getScheme();
 		String host = uri.getHost();

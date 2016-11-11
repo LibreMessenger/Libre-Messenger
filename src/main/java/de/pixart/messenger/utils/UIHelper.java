@@ -192,6 +192,12 @@ public class UIHelper {
 				} else {
 					return new Pair<>(context.getString(R.string.location), true);
 				}
+            } else if (message.bodyIsXmpp()) {
+                if (message.getStatus() == Message.STATUS_RECEIVED) {
+                    return new Pair<>(context.getString(R.string.received_contact), true);
+                } else {
+                    return new Pair<>(context.getString(R.string.contact), true);
+                }
 			} else if (message.treatAsDownloadable() == Message.Decision.MUST) {
 				return new Pair<>(context.getString(R.string.x_file_offered_for_download,
 						getFileDescriptionString(context,message)),true);

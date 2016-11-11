@@ -313,6 +313,28 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 		viewHolder.messageBody.setText(span);
 	}
 
+    private void displayXmppMessage(final ViewHolder viewHolder, final String body) {
+        String contact = body.toLowerCase();
+        contact = contact.split(":")[1];
+        contact = contact.split("\\?")[0];
+        String add_contact = activity.getString(R.string.add_to_contact_list) + " (" + contact + ")";
+        viewHolder.aw_player.setVisibility(View.GONE);
+        viewHolder.download_button.setVisibility(View.VISIBLE);
+        viewHolder.download_button.setText(add_contact);
+        viewHolder.download_button.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(body));
+                activity.startActivity(intent);
+            }
+        });
+        viewHolder.image.setVisibility(View.GONE);
+        viewHolder.messageBody.setVisibility(View.GONE);
+
+    }
+
 	private void displayTextMessage(final ViewHolder viewHolder, final Message message, boolean darkBackground) {
         if (viewHolder.download_button != null) {
             viewHolder.download_button.setVisibility(View.GONE);
@@ -740,6 +762,8 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 displayLocationMessage(viewHolder,message);
 			} else if (message.bodyIsHeart()) {
 				displayHeartMessage(viewHolder, message.getBody().trim());
+            } else if (message.bodyIsXmpp()) {
+                displayXmppMessage(viewHolder, message.getBody().trim());
 			} else if (message.treatAsDownloadable() == Message.Decision.MUST ||
 					message.treatAsDownloadable() == Message.Decision.SHOULD) {
 				try {
