@@ -672,5 +672,11 @@
     <string name="show_error_message">Zeige Fehlermeldung</string>
     <string name="select_text">Text auswählen</string>
     <string name="error_message">Fehlermeldung</string>
+    <string name="add_to_contact_list">Zur Kontaktliste hinzufügen</string>
+    <string name="contact">Kontakt</string>
+    <string name="data_saver_enabled">Datensparmodus aktiviert</string>
+    <string name="data_saver_enabled_explained">Dein Betriebssystem verbietet Pix-Art Messenger im Hintergrund den Zugang zum Internet. Um Benachrichtigungen erhalten zu können, solltest du Pix-Art Messenger den Zugang erlauben, wenn der Datensparmodus aktiv ist. Pix-Art Messenger wird dennoch versuchen, so viel Daten wie möglich einzusparen.</string>
+    <string name="navigate">Zum Standort navigieren</string>
+    <string name="received_contact">Kontakt empfangen</string>
 
 </resources>
