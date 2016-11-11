@@ -253,7 +253,7 @@ public class UpdaterActivity extends Activity {
                                     .setNeutralButton(R.string.changelog, new DialogInterface.OnClickListener() {
                                         //open link to changelog
                                         public void onClick(DialogInterface dialog, int id) {
-                                            Uri uri = Uri.parse("https://github.com/kriztan/Conversations/blob/development/CHANGELOG.md"); // missing 'http://' will cause crashed
+                                            Uri uri = Uri.parse("https://github.com/kriztan/Conversations/blob/master/CHANGELOG.md"); // missing 'http://' will cause crashed
                                             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                             startActivity(intent);
