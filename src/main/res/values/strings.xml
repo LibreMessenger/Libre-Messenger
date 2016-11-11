@@ -321,6 +321,10 @@
 			\n\nhttps://github.com/bumptech/glide\n(BSD, The MIT License (MIT) and Apache License, Version 2.0)
 			\n\nhttps://github.com/chrisbanes/PhotoView\n(Apache License, Version 2.0)
 			\n\nhttps://github.com/rtoshiro/FullscreenVideoView\n(Apache License, Version 2.0)
+            \n\nhttps://github.com/mangstadt/ez-vcard\n(FreeBSD)
+            \n\nhttps://github.com/googlesamples/easypermissions\n(Apache License, Version 2.0)
+            \n\nhttps://github.com/blazsolar/FlowLayout\n(Apache License, Version 2.0)
+            \n\nhttps://github.com/ankushsachdeva/emojicon\n(Apache License, Version 2.0)
 	</string>
 	<string name="title_pref_quiet_hours">Quiet Hours</string>
 	<string name="title_pref_quiet_hours_start_time">Start time</string>
