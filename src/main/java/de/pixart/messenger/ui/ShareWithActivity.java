@@ -386,7 +386,23 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
 					callback.onPresenceSelected();
 				}
 			} else {
-				switchToConversation(conversation, this.share.text, true);
+                final OnPresenceSelected callback = new OnPresenceSelected() {
+                    @Override
+                    public void onPresenceSelected() {
+                        Message message = new Message(conversation,share.text, conversation.getNextEncryption());
+                        if (conversation.getNextEncryption() == Message.ENCRYPTION_OTR) {
+                            message.setCounterpart(conversation.getNextCounterpart());
+                        }
+                        xmppConnectionService.sendMessage(message);
+                        replaceToast(getString(R.string.shared_text_with_x, conversation.getName()));
+                        switchToConversation(message.getConversation());
+                    }
+                };
+                if (conversation.getNextEncryption() == Message.ENCRYPTION_OTR) {
+                    selectPresence(conversation, callback);
+                } else {
+                    callback.onPresenceSelected();
+                }
 			}
 		}
 
