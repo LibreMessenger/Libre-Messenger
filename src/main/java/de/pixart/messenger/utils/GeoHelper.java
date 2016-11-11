@@ -39,7 +39,7 @@ public class GeoHelper {
         } catch (NumberFormatException nfe) {
             return null;
         }
-        return "https://maps.google.com/maps/api/staticmap?center=" + latitude + "," + longitude + "&size=400x400&scale=2&format=jpg&markers=" + latitude + "," + longitude + "&sensor=false";
+        return "https://maps.google.com/maps/api/staticmap?center=" + latitude + "," + longitude + "&size=500x500&scale=2&format=jpg&markers=" + latitude + "," + longitude + "&sensor=false";
     }
 
 	public static ArrayList<Intent> createGeoIntentsFromMessage(Message message) {

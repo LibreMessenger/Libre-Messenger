@@ -471,7 +471,6 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.aw_player.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.GONE);
         String url = GeoHelper.MapPreviewUri(message);
-        Log.d(Config.LOGTAG, "Map preview = " + url);
         viewHolder.image.setVisibility(View.VISIBLE);
         viewHolder.image.setOnClickListener(new OnClickListener() {
 
@@ -483,13 +482,13 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         Glide
                 .with(activity)
                 .load(Uri.parse(url))
+                .asBitmap()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .fitCenter()
                 .placeholder(R.drawable.ic_map_marker_grey600_48dp)
                 .error(R.drawable.ic_map_marker_grey600_48dp)
                 .into(viewHolder.image);
-        viewHolder.image.getLayoutParams().width = 400;
-        viewHolder.image.getLayoutParams().height = 400;
+        viewHolder.image.setMaxWidth(500);
         viewHolder.image.setAdjustViewBounds(true);
         viewHolder.download_button.setVisibility(View.GONE);
         viewHolder.download_button.setText(R.string.show_location);
