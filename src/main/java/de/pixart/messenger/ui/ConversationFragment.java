@@ -568,9 +568,13 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 			if (m.getEncryption() == Message.ENCRYPTION_DECRYPTION_FAILED) {
 				retryDecryption.setVisible(true);
 			}
-			if (relevantForCorrection.getType() == Message.TYPE_TEXT
+			if ((relevantForCorrection.getType() == Message.TYPE_TEXT
                     && relevantForCorrection.isLastCorrectableMessage()
-                    && m.getConversation().getMucOptions().nonanonymous()) {
+                    && conversation.getMode() == Conversation.MODE_SINGLE)
+                    || (relevantForCorrection.getType() == Message.TYPE_TEXT
+                    && relevantForCorrection.isLastCorrectableMessage()
+                    && conversation.getMode() == Conversation.MODE_MULTI
+                    && m.getConversation().getMucOptions().nonanonymous())) {
 				correctMessage.setVisible(true);
 			}
 			if (treatAsFile || (GeoHelper.isGeoUri(m.getBody()))) {
