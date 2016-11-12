@@ -95,11 +95,8 @@
     <string name="pref_general">Allgemeines</string>
     <string name="pref_xmpp_resource">XMPP-Ressource</string>
     <string name="pref_xmpp_resource_summary">Der Name, mit dem sich der Client selbst identifiziert</string>
-    <string name="pref_accept_files">Dateien annehmen</string>
     <string name="pref_accept_files_summary_wifi">Im WLAN-Netz Dateien automatisch annehmen, die kleiner sind als …</string>
     <string name="pref_attachments">Anhänge</string>
-    <string name="pref_return_to_previous">Schnell-Teilen</string>
-    <string name="pref_return_to_previous_summary">Nach dem Teilen sofort wieder zur vorherigen App zurückkehren anstatt die Unterhaltung zu öffnen</string>
     <string name="pref_notification_settings">Benachrichtigung</string>
     <string name="pref_notifications">Benachrichtigungen</string>
     <string name="pref_notifications_summary">Benachrichtigen bei Erhalt einer neuen Nachricht</string>
@@ -109,14 +106,12 @@
     <string name="pref_led_summary">Blinke bei Erhalt einer neuen Nachricht</string>
     <string name="pref_sound">Benachrichtigungston</string>
     <string name="pref_sound_summary">Benachrichtigungston wiedergeben</string>
-    <string name="pref_advanced_options">Erweitert</string>
     <string name="pref_send_crash">Absturzberichte senden</string>
     <string name="pref_send_crash_summary">Wenn du Absturzberichte einschickst, hilfst du Pix-Art Messenger stetig zu verbessern</string>
     <string name="pref_confirm_messages">Lese- und Empfangsbestätigung senden</string>
     <string name="pref_confirm_messages_summary">Informiere deine Kontakte, wenn du eine Nachricht empfangen und gelesen hast</string>
     <string name="pref_ui_options">Benutzeroberfläche</string>
     <string name="openpgp_error">Fehler mit OpenKeychain</string>
-    <string name="error_decrypting_file">Fehler beim Entschlüsseln der Datei</string>
     <string name="accept">Annehmen</string>
     <string name="error">Ein Fehler ist aufgetreten</string>
     <string name="pref_grant_presence_updates">Online-Status</string>
@@ -190,7 +185,6 @@
     <string name="last_seen_hours">zul. online vor %d Std.</string>
     <string name="last_seen_day">zul. online vor 1 Tag</string>
     <string name="last_seen_days">zul. online vor %d Tagen</string>
-    <string name="never_seen">noch nie gesehen</string>
     <string name="install_openkeychain">Verschlüsselte Nachricht. Bitte installiere OpenKeychain zur Entschlüsselung.</string>
     <string name="unknown_otr_fingerprint">Unbekannter OTR-Fingerabdruck</string>
     <string name="openpgp_messages_found">Verschlüsselte OpenPGP-Nachricht gefunden</string>
@@ -224,7 +218,6 @@
     <string name="delete_bookmark">Von Kontaktliste entfernen</string>
     <string name="bookmark_already_exists">Die Konferenz befindet sich bereits auf deiner Kontaktliste</string>
     <string name="action_edit_subject">Titel dieser Konferenz bearbeiten</string>
-    <string name="you">Du</string>
     <string name="leave">Verlassen</string>
     <string name="contact_added_you">Der Kontakt hat dich zur Kontaktliste hinzugefügt</string>
     <string name="add_back">Auch hinzufügen</string>
@@ -262,7 +255,6 @@
     <string name="pref_dont_save_encrypted">Verschlüsselte Nachrichten nicht speichern</string>
     <string name="pref_dont_save_encrypted_summary">Achtung: kann zu Nachrichtenverlust führen</string>
     <string name="pref_expert_options">Experteneinstellungen</string>
-    <string name="pref_expert_options_summary">Hier bitte vorsichtig sein</string>
     <string name="title_activity_about">Über Pix-Art Messenger</string>
     <string name="pref_about_conversations_summary">Versions- und Lizenzinformationen</string>
     <string name="title_pref_quiet_hours">Ruhige Stunden</string>
@@ -277,8 +269,6 @@
     <string name="pref_use_indicate_received_summary">Empfangene Nachrichten werden mit einem grünen Häkchen markiert. Bitte beachte, dass dies nicht in allen Fällen funktioniert.</string>
     <string name="pref_use_send_button_to_indicate_status_summary">\"Senden\"-Schaltfläche einfärben, um den Online-Status des Kontakts anzuzeigen</string>
     <string name="pref_expert_options_other">Sonstiges</string>
-    <string name="pref_conference_name">Konferenz-Name</string>
-    <string name="pref_conference_name_summary">Titel von Konferenzen anstatt JID als Namen verwenden</string>
     <string name="toast_message_otr_fingerprint">OTR-Fingerabdruck in die Zwischenablage kopiert!</string>
     <string name="toast_message_omemo_fingerprint">OMEMO-Fingerabdruck in die Zwischenablage kopiert!</string>
     <string name="conference_banned">Du wurdest von der Konferenz ausgeschlossen</string>
@@ -339,8 +329,6 @@
     <string name="no_conference_server_found">Kein Konferenz-Server gefunden</string>
     <string name="conference_creation_failed">Erstellen der Konferenz fehlgeschlagen!</string>
     <string name="account_image_description">Profilbild</string>
-    <string name="secret_accepted">Schlüssel akzeptiert!</string>
-    <string name="reset">Zurücksetzen</string>
     <string name="copy_otr_clipboard_description">OTR-Fingerabdruck in Zwischenablage kopieren</string>
     <string name="copy_omemo_clipboard_description">OMEMO-Fingerabdruck in Zwischenablage kopieren</string>
     <string name="regenerate_omemo_key">OMEMO-Schlüssel erneuern</string>
@@ -417,7 +405,6 @@
     <string name="sending_x_file">%s wird gesendet</string>
     <string name="offering_x_file">%s wird angeboten</string>
     <string name="hide_offline">Offline verstecken</string>
-    <string name="disable_account">Profil abschalten</string>
     <string name="is_typing">schreibt…</string>
     <string name="pref_chat_states">Tipp-Benachrichtigung</string>
     <string name="pref_chat_states_summary">Informiere deine Kontakte, wenn du eine Nachricht eintippst.</string>
@@ -506,9 +493,6 @@
     <string name="send_omemo_x509_message">v\\OMEMO-verschlüsselte Nachricht senden</string>
     <string name="verified_omemo_key_with_certificate">OMEMO Schlüssel mit Zertifikat bestätigt!</string>
     <string name="device_does_not_support_certificates">Dein Gerät unterstützt das Auswählen von Client-Zertifikaten nicht!</string>
-    <string name="pref_connection_options">Verbindung</string>
-    <string name="pref_use_tor">Über TOR verbinden</string>
-    <string name="pref_use_tor_summary">Alle Verbindungen über das Tor-Netzwerk tunneln. Benötigt Orbot</string>
     <string name="account_settings_hostname">Hostname</string>
     <string name="account_settings_port">Port</string>
     <string name="hostname_or_onion">Server- oder .onion-Adresse</string>
@@ -549,7 +533,6 @@
     <string name="no">Nein</string>
     <string name="yes">Ja</string>
     <string name="selection_too_large">Der ausgewählte Bereich ist zu groß</string>
-    <string name="conference_unknown_error">Unbekannter Fehler</string>
     <string name="load_more_messages">weitere Nachrichten laden</string>
     <string name="no_participants">Keine Mitglieder</string>
     <string name="pref_autojoin">Konferenzen automatisch beitreten</string>
@@ -610,7 +593,6 @@
     <string name="joining_conference">Konferenz beitreten…</string>
     <string name="import_database">Backup importieren</string>
     <string name="import_text">Es wurde ein Backup gefunden, welches importiert werden kann.\nMöglicherweise wirst du gefragt, ob du eine ältere Version oder Conversations deinstallieren möchtest und dein Messenger startet während des Importvorgangs neu. Soll das Backup importiert werden?</string>
-    <string name="uninstall_app_text">Es ist eine alte Version von Pix-Art Messenger oder Conversations installiert. Falls du einen alten Pix-Art Messenger installiert hast, solltest du diesen deinstallieren. Nach der Deinstallation, solltest du erneut auf \'Backup importieren\' klicken, damit deine Daten in die neue Version importiert werden.</string>
     <string name="InviteText">Hallo,\n\n%s hat dich zu einem Gespräch mit Pix-Art Messenger eingeladen. Falls du Android Nutzer bist, probiere es aus und klicke folgenden Link…</string>
     <string name="inviteUser_Subject">hat dich eingeladen über</string>
     <string name="invite_again">Erneut einladen</string>
@@ -620,7 +602,6 @@
     <string name="invite_user">In Pix-Art Messenger einladen</string>
     <string name="request_permissions_message">Pix-Art Messenger wird dich nach ein paar Berechtigungen fragen. Es ist wichtig, dass du alle Berechtigungen erlaubst, um alle Funktionen nutzen zu können. Falls du eine dieser Berechtigungen ablehnst wird sich die App schließen.</string>
     <string name="request_permissions_message_again">Du hast eine oder alle Berechtigungen, welche für Pix-Art Messenger benötigt werden abgelehnt. Willst du zu den Einstellungen springen, um diese Berechtigungen zu erlauben? Falls du eine dieser Berechtigungen ablehnst wird sich die App schließen.</string>
-    <string name="request_permissions_title">Pix-Art Messenger Berechtigungen</string>
     <string name="no_permission">Pix-Art Messenger hat keine Berechtigungen</string>
     <string name="openpgp_key_id">OpenPGP Schlüssel ID</string>
     <string name="otr_fingerprint_selected_message">OTR Fingerabdruck der Nachricht</string>
@@ -643,7 +624,6 @@
     <string name="compressing_video">Video wird komprimiert, bitte warten…</string>
     <string name="preparing_video">Video wird für die Übertragung vorbereitet. Bitte warten…</string>
     <string name="shared_video_with_x">Video mit %s geteilt</string>
-    <string name="unread_messages">Ungelesene Nachrichten:</string>
     <string name="error_file_corrupt">Die Datei scheint defekt zu sein.</string>
     <string name="me">Ich</string>
     <string name="missing_internet_permission">Fehlende Berechtigung für den Zugriff auf das Internet</string>
