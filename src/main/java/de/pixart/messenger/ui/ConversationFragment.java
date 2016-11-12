@@ -66,6 +66,7 @@ import de.pixart.messenger.ui.adapter.MessageAdapter.OnContactPictureLongClicked
 import de.pixart.messenger.ui.widget.ListSelectionManager;
 import de.pixart.messenger.utils.GeoHelper;
 import de.pixart.messenger.utils.UIHelper;
+import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xmpp.XmppConnection;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 import de.pixart.messenger.xmpp.jid.Jid;
@@ -561,6 +562,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
             MenuItem showErrorMessage = menu.findItem(R.id.show_error_message);
 			if (!treatAsFile
 					&& !GeoHelper.isGeoUri(m.getBody())
+                    && !XmppUri.isXmppUri(m.getBody())
 					&& m.treatAsDownloadable() != Message.Decision.MUST) {
 				copyText.setVisible(true);
                 selectText.setVisible(ListSelectionManager.isSupported());
@@ -577,7 +579,9 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                     && m.getConversation().getMucOptions().nonanonymous())) {
 				correctMessage.setVisible(true);
 			}
-			if (treatAsFile || (GeoHelper.isGeoUri(m.getBody()))) {
+			if (treatAsFile
+                    || GeoHelper.isGeoUri(m.getBody())
+                    || XmppUri.isXmppUri(m.getBody())) {
 				shareWith.setVisible(true);
 			}
 			if (m.getStatus() == Message.STATUS_SEND_FAILED) {
@@ -585,6 +589,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 			}
 			if (m.hasFileOnRemoteHost()
 					|| GeoHelper.isGeoUri(m.getBody())
+                    || XmppUri.isXmppUri(m.getBody())
 					|| m.treatAsDownloadable() == Message.Decision.MUST
 					|| (t != null && t instanceof HttpDownloadConnection)) {
 				copyUrl.setVisible(true);
@@ -740,8 +745,11 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 		final String url;
 		final int resId;
 		if (GeoHelper.isGeoUri(message.getBody())) {
-			resId = R.string.location;
-			url = message.getBody();
+            resId = R.string.location;
+            url = message.getBody();
+        } else if (XmppUri.isXmppUri(message.getBody())) {
+            resId = R.string.contact;
+            url = message.getBody();
 		} else if (message.hasFileOnRemoteHost()) {
 			resId = R.string.file_url;
 			url = message.getFileParams().url.toString();
