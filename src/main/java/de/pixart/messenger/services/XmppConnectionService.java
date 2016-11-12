@@ -2260,9 +2260,6 @@ public class XmppConnectionService extends Service {
 							MucOptions.User user = AbstractParser.parseItem(conversation,child);
 							if (!user.realJidMatchesAccount()) {
 								conversation.getMucOptions().addUser(user);
-								getAvatarService().clear(conversation);
-								updateMucRosterUi();
-								updateConversationUi();
 							}
 						}
 					}
@@ -2272,6 +2269,9 @@ public class XmppConnectionService extends Service {
 				++i;
 				if (i >= affiliations.length) {
 					Log.d(Config.LOGTAG,account.getJid().toBareJid()+": retrieved members for "+conversation.getJid().toBareJid()+": "+conversation.getMucOptions().getMembers());
+                    getAvatarService().clear(conversation);
+                    updateMucRosterUi();
+                    updateConversationUi();
 				}
 			}
 		};
