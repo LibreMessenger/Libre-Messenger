@@ -729,4 +729,5 @@
     <string name="add_to_contact_list">Add to contact list</string>
     <string name="received_contact">Received contact</string>
     <string name="contact">Contact</string>
+    <string name="unable_to_start_recording">Unable to start recording</string>
 </resources>

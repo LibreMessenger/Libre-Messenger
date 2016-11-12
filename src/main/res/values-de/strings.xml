@@ -678,5 +678,6 @@
     <string name="data_saver_enabled_explained">Dein Betriebssystem verbietet Pix-Art Messenger im Hintergrund den Zugang zum Internet. Um Benachrichtigungen erhalten zu können, solltest du Pix-Art Messenger den Zugang erlauben, wenn der Datensparmodus aktiv ist. Pix-Art Messenger wird dennoch versuchen, so viel Daten wie möglich einzusparen.</string>
     <string name="navigate">Zum Standort navigieren</string>
     <string name="received_contact">Kontakt empfangen</string>
+    <string name="unable_to_start_recording">Aufnahme kann nicht gestartet werden</string>
 
 </resources>
