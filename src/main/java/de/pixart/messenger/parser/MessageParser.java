@@ -606,7 +606,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                         MucOptions.User user = AbstractParser.parseItem(conversation,child);
                         Log.d(Config.LOGTAG,account.getJid()+": changing affiliation for " + user.getRealJid()+" to " + user.getAffiliation() + " in " + conversation.getJid().toBareJid());
                         if (!user.realJidMatchesAccount()) {
-                            conversation.getMucOptions().addUser(user);
+                            conversation.getMucOptions().updateUser(user);
                             mXmppConnectionService.getAvatarService().clear(conversation);
                             mXmppConnectionService.updateMucRosterUi();
                             mXmppConnectionService.updateConversationUi();
