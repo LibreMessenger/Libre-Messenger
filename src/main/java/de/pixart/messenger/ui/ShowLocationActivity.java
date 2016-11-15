@@ -2,6 +2,7 @@ package de.pixart.messenger.ui;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -87,8 +89,12 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
             case R.id.action_navigate:
                 double longitude = mLocation.longitude;
                 double latitude = mLocation.latitude;
-                Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("geo:" + String.valueOf(latitude) + "," + String.valueOf(longitude)));
-                startActivity(intent);
+                try {
+                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("geo:" + String.valueOf(latitude) + "," + String.valueOf(longitude)));
+                    startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    Toast.makeText(this, R.string.no_application_found_to_display_location, Toast.LENGTH_SHORT).show();
+                }
                 return true;
 		}
 		return super.onOptionsItemSelected(item);
