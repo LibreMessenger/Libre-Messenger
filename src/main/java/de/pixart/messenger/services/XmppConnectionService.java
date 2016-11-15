@@ -553,12 +553,14 @@ public class XmppConnectionService extends Service {
         mNotifyManager.notify(NOTIFICATION_ID, mBuilder.build());
         if (FileBackend.weOwnFile(this, uri)) {
             Log.d(Config.LOGTAG,"trying to attach video that belonged to us");
+            mNotifyManager.cancel(NOTIFICATION_ID);
             callback.error(R.string.security_error_invalid_file_access, null);
             return;
         }
         Log.d(Config.LOGTAG,"Video file (size) :" + f.toString() + "("+filesize/1024/1024+"MB)");
         if (filesize == 0) {
             Log.d(Config.LOGTAG,"Error with file, size = 0");
+            mNotifyManager.cancel(NOTIFICATION_ID);
             callback.error(R.string.error_file_corrupt, null);
             return;
         }
