@@ -22,16 +22,15 @@
 
             <QuickContactBadge
                 android:id="@+id/details_contact_badge"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:maxHeight="384dp"
                 android:maxWidth="384dp"
-                android:scaleType="centerCrop"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/message_border"
                 android:padding="1dp"
-                android:adjustViewBounds="true"/>
+                android:adjustViewBounds="true" />
 
             <LinearLayout
                 android:id="@+id/details_jidbox"
@@ -84,7 +83,8 @@
                     android:textColor="@color/black54"
                     android:textStyle="italic"
                     android:textSize="?attr/TextSizeBody"
-                    android:layout_gravity="center_horizontal" />
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal" />
 
             </LinearLayout>
 
