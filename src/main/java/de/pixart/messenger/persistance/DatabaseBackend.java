@@ -28,16 +28,18 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
+import de.pixart.messenger.crypto.axolotl.FingerprintStatus;
 import de.pixart.messenger.crypto.axolotl.SQLiteAxolotlStore;
-import de.pixart.messenger.crypto.axolotl.XmppAxolotlSession;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
@@ -53,7 +55,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 	private static DatabaseBackend instance = null;
 
 	public static final String DATABASE_NAME = "history";
-	public static final int DATABASE_VERSION = 30;
+	public static final int DATABASE_VERSION = 31;
 
 	private static String CREATE_CONTATCS_STATEMENT = "create table "
 			+ Contact.TABLENAME + "(" + Contact.ACCOUNT + " TEXT, "
@@ -128,7 +130,8 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 			+ SQLiteAxolotlStore.OWN + " INTEGER, "
 			+ SQLiteAxolotlStore.FINGERPRINT + " TEXT, "
 			+ SQLiteAxolotlStore.CERTIFICATE + " BLOB, "
-			+ SQLiteAxolotlStore.TRUSTED + " INTEGER, "
+			+ SQLiteAxolotlStore.TRUST + " TEXT, "
+			+ SQLiteAxolotlStore.ACTIVE + " NUMBER, "
 			+ SQLiteAxolotlStore.KEY + " TEXT, FOREIGN KEY("
 			+ SQLiteAxolotlStore.ACCOUNT
 			+ ") REFERENCES " + Account.TABLENAME + "(" + Account.UUID + ") ON DELETE CASCADE, "
@@ -138,10 +141,10 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 			+ ") ON CONFLICT IGNORE"
 			+ ");";
 
-    private static String START_TIMES_TABLE = "start_times";
-    private static String CREATE_START_TIMES_TABLE = "create table "+START_TIMES_TABLE+" (timestamp NUMBER);";
+	private static String START_TIMES_TABLE = "start_times";
+	private static String CREATE_START_TIMES_TABLE = "create table "+START_TIMES_TABLE+" (timestamp NUMBER);";
 
-    private DatabaseBackend(Context context) {
+	private DatabaseBackend(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
@@ -183,7 +186,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 				+ Message.EDITED + " TEXT, "
 				+ Message.READ + " NUMBER DEFAULT 1, "
 				+ Message.OOB + " INTEGER, "
-                + Message.ERROR_MESSAGE + " TEXT,"
+				+ Message.ERROR_MESSAGE + " TEXT,"
 				+ Message.REMOTE_MSG_ID + " TEXT, FOREIGN KEY("
 				+ Message.CONVERSATION + ") REFERENCES "
 				+ Conversation.TABLENAME + "(" + Conversation.UUID
@@ -196,7 +199,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 		db.execSQL(CREATE_SIGNED_PREKEYS_STATEMENT);
 		db.execSQL(CREATE_IDENTITIES_STATEMENT);
 		db.execSQL(CREATE_PRESENCE_TEMPLATES_STATEMENT);
-        db.execSQL(CREATE_START_TIMES_TABLE);
+		db.execSQL(CREATE_START_TIMES_TABLE);
 	}
 
 	@Override
@@ -295,7 +298,16 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 				deleteSession(db, account, ownAddress);
 				IdentityKeyPair identityKeyPair = loadOwnIdentityKeyPair(db, account);
 				if (identityKeyPair != null) {
-					setIdentityKeyTrust(db, account, identityKeyPair.getPublicKey().getFingerprint().replaceAll("\\s", ""), XmppAxolotlSession.Trust.TRUSTED);
+					String[] selectionArgs = {
+							account.getUuid(),
+							identityKeyPair.getPublicKey().getFingerprint().replaceAll("\\s", "")
+					};
+					ContentValues values = new ContentValues();
+					values.put(SQLiteAxolotlStore.TRUSTED, 2);
+					db.update(SQLiteAxolotlStore.IDENTITIES_TABLENAME, values,
+							SQLiteAxolotlStore.ACCOUNT + " = ? AND "
+									+ SQLiteAxolotlStore.FINGERPRINT + " = ? ",
+							selectionArgs);
 				} else {
 					Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": could not load own identity key pair");
 				}
@@ -338,13 +350,39 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 			canonicalizeJids(db);
 		}
 
-        if (oldVersion < 29 && newVersion >= 29) {
-            db.execSQL("ALTER TABLE " + Message.TABLENAME + " ADD COLUMN " + Message.ERROR_MESSAGE + " TEXT");
-        }
+		if (oldVersion < 29 && newVersion >= 29) {
+			db.execSQL("ALTER TABLE " + Message.TABLENAME + " ADD COLUMN " + Message.ERROR_MESSAGE + " TEXT");
+		}
 
-        if (oldVersion < 30 && newVersion >= 30) {
-            db.execSQL(CREATE_START_TIMES_TABLE);
-        }
+		if (oldVersion < 30 && newVersion >= 30) {
+			db.execSQL(CREATE_START_TIMES_TABLE);
+		}
+		if (oldVersion < 31 && newVersion >= 31) {
+			db.execSQL("ALTER TABLE "+ SQLiteAxolotlStore.IDENTITIES_TABLENAME + " ADD COLUMN "+SQLiteAxolotlStore.TRUST + " TEXT");
+			db.execSQL("ALTER TABLE "+ SQLiteAxolotlStore.IDENTITIES_TABLENAME + " ADD COLUMN "+SQLiteAxolotlStore.ACTIVE + " NUMBER");
+			HashMap<Integer,ContentValues> migration = new HashMap<>();
+			migration.put(0,createFingerprintStatusContentValues(FingerprintStatus.Trust.UNDECIDED,true));
+			migration.put(1,createFingerprintStatusContentValues(FingerprintStatus.Trust.TRUSTED, true));
+			migration.put(2,createFingerprintStatusContentValues(FingerprintStatus.Trust.UNTRUSTED, true));
+			migration.put(3,createFingerprintStatusContentValues(FingerprintStatus.Trust.COMPROMISED, false));
+			migration.put(4,createFingerprintStatusContentValues(FingerprintStatus.Trust.TRUSTED, false));
+			migration.put(5,createFingerprintStatusContentValues(FingerprintStatus.Trust.UNDECIDED, false));
+			migration.put(6,createFingerprintStatusContentValues(FingerprintStatus.Trust.UNTRUSTED, false));
+			migration.put(7,createFingerprintStatusContentValues(FingerprintStatus.Trust.VERIFIED_X509, true));
+			migration.put(8,createFingerprintStatusContentValues(FingerprintStatus.Trust.VERIFIED_X509, false));
+			for(Map.Entry<Integer,ContentValues> entry : migration.entrySet()) {
+				String whereClause = SQLiteAxolotlStore.TRUSTED+"=?";
+				String[] where = {String.valueOf(entry.getKey())};
+				db.update(SQLiteAxolotlStore.IDENTITIES_TABLENAME,entry.getValue(),whereClause,where);
+			}
+		}
+	}
+
+	private static ContentValues createFingerprintStatusContentValues(FingerprintStatus.Trust trust, boolean active) {
+		ContentValues values = new ContentValues();
+		values.put(SQLiteAxolotlStore.TRUST,trust.toString());
+		values.put(SQLiteAxolotlStore.ACTIVE,active ? 1 : 0);
+		return values;
 	}
 
 	private void canonicalizeJids(SQLiteDatabase db) {
@@ -741,32 +779,32 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 		}
 	}
 
-    public Pair<Long, String> getLastClearDate(Account account) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String[] columns = {Conversation.ATTRIBUTES};
-        String selection = Conversation.ACCOUNT + "=?";
-        String[] args = {account.getUuid()};
-        Cursor cursor = db.query(Conversation.TABLENAME, columns, selection, args, null, null, null);
-        long maxClearDate = 0;
-        while (cursor.moveToNext()) {
-            try {
-                final JSONObject jsonObject = new JSONObject(cursor.getString(0));
-                maxClearDate = Math.max(maxClearDate, jsonObject.getLong(Conversation.ATTRIBUTE_LAST_CLEAR_HISTORY));
-            } catch (Exception e) {
-                //ignored
-            }
-        }
-        cursor.close();
-        return new Pair<>(maxClearDate, null);
-    }
+	public Pair<Long, String> getLastClearDate(Account account) {
+		SQLiteDatabase db = this.getReadableDatabase();
+		String[] columns = {Conversation.ATTRIBUTES};
+		String selection = Conversation.ACCOUNT + "=?";
+		String[] args = {account.getUuid()};
+		Cursor cursor = db.query(Conversation.TABLENAME, columns, selection, args, null, null, null);
+		long maxClearDate = 0;
+		while (cursor.moveToNext()) {
+			try {
+				final JSONObject jsonObject = new JSONObject(cursor.getString(0));
+				maxClearDate = Math.max(maxClearDate, jsonObject.getLong(Conversation.ATTRIBUTE_LAST_CLEAR_HISTORY));
+			} catch (Exception e) {
+				//ignored
+			}
+		}
+		cursor.close();
+		return new Pair<>(maxClearDate, null);
+	}
 
 	private Cursor getCursorForSession(Account account, AxolotlAddress contact) {
 		final SQLiteDatabase db = this.getReadableDatabase();
 		String[] selectionArgs = {account.getUuid(),
 				contact.getName(),
 				Integer.toString(contact.getDeviceId())};
-        return db.query(SQLiteAxolotlStore.SESSION_TABLENAME,
-                null,
+		return db.query(SQLiteAxolotlStore.SESSION_TABLENAME,
+				null,
 				SQLiteAxolotlStore.ACCOUNT + " = ? AND "
 						+ SQLiteAxolotlStore.NAME + " = ? AND "
 						+ SQLiteAxolotlStore.DEVICE_ID + " = ? ",
@@ -1005,7 +1043,8 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 	}
 
 	private Cursor getIdentityKeyCursor(SQLiteDatabase db, Account account, String name, Boolean own, String fingerprint) {
-		String[] columns = {SQLiteAxolotlStore.TRUSTED,
+		String[] columns = {SQLiteAxolotlStore.TRUST,
+				SQLiteAxolotlStore.ACTIVE,
 				SQLiteAxolotlStore.KEY};
 		ArrayList<String> selectionArgs = new ArrayList<>(4);
 		selectionArgs.add(account.getUuid());
@@ -1057,14 +1096,12 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 		return loadIdentityKeys(account, name, null);
 	}
 
-	public Set<IdentityKey> loadIdentityKeys(Account account, String name, XmppAxolotlSession.Trust trust) {
+	public Set<IdentityKey> loadIdentityKeys(Account account, String name, FingerprintStatus status) {
 		Set<IdentityKey> identityKeys = new HashSet<>();
 		Cursor cursor = getIdentityKeyCursor(account, name, false);
 
 		while (cursor.moveToNext()) {
-			if (trust != null &&
-					cursor.getInt(cursor.getColumnIndex(SQLiteAxolotlStore.TRUSTED))
-							!= trust.getCode()) {
+			if (status != null && !FingerprintStatus.fromCursor(cursor).equals(status)) {
 				continue;
 			}
 			try {
@@ -1083,22 +1120,24 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 		String[] args = {
 				account.getUuid(),
 				name,
-				String.valueOf(XmppAxolotlSession.Trust.TRUSTED.getCode()),
-				String.valueOf(XmppAxolotlSession.Trust.TRUSTED_X509.getCode())
+				FingerprintStatus.Trust.TRUSTED.toString(),
+				FingerprintStatus.Trust.VERIFIED.toString(),
+				FingerprintStatus.Trust.VERIFIED_X509.toString()
 		};
 		return DatabaseUtils.queryNumEntries(db, SQLiteAxolotlStore.IDENTITIES_TABLENAME,
 				SQLiteAxolotlStore.ACCOUNT + " = ?"
 						+ " AND " + SQLiteAxolotlStore.NAME + " = ?"
-						+ " AND (" + SQLiteAxolotlStore.TRUSTED + " = ? OR " + SQLiteAxolotlStore.TRUSTED + " = ?)",
+						+ " AND (" + SQLiteAxolotlStore.TRUST + " = ? OR " + SQLiteAxolotlStore.TRUST + " = ? OR " +SQLiteAxolotlStore.TRUST +" = ?)"
+						+ " AND " +SQLiteAxolotlStore.ACTIVE + " > 0",
 				args
 		);
 	}
 
 	private void storeIdentityKey(Account account, String name, boolean own, String fingerprint, String base64Serialized) {
-		storeIdentityKey(account, name, own, fingerprint, base64Serialized, XmppAxolotlSession.Trust.UNDECIDED);
+		storeIdentityKey(account, name, own, fingerprint, base64Serialized, FingerprintStatus.createActiveUndecided());
 	}
 
-	private void storeIdentityKey(Account account, String name, boolean own, String fingerprint, String base64Serialized, XmppAxolotlSession.Trust trusted) {
+	private void storeIdentityKey(Account account, String name, boolean own, String fingerprint, String base64Serialized, FingerprintStatus status) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put(SQLiteAxolotlStore.ACCOUNT, account.getUuid());
@@ -1106,35 +1145,34 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 		values.put(SQLiteAxolotlStore.OWN, own ? 1 : 0);
 		values.put(SQLiteAxolotlStore.FINGERPRINT, fingerprint);
 		values.put(SQLiteAxolotlStore.KEY, base64Serialized);
-		values.put(SQLiteAxolotlStore.TRUSTED, trusted.getCode());
+		values.putAll(status.toContentValues());
 		db.insert(SQLiteAxolotlStore.IDENTITIES_TABLENAME, null, values);
 	}
 
-	public XmppAxolotlSession.Trust isIdentityKeyTrusted(Account account, String fingerprint) {
+	public FingerprintStatus getFingerprintStatus(Account account, String fingerprint) {
 		Cursor cursor = getIdentityKeyCursor(account, fingerprint);
-		XmppAxolotlSession.Trust trust = null;
+		final FingerprintStatus status;
 		if (cursor.getCount() > 0) {
 			cursor.moveToFirst();
-			int trustValue = cursor.getInt(cursor.getColumnIndex(SQLiteAxolotlStore.TRUSTED));
-			trust = XmppAxolotlSession.Trust.fromCode(trustValue);
+			status = FingerprintStatus.fromCursor(cursor);
+		} else {
+			status = null;
 		}
 		cursor.close();
-		return trust;
+		return status;
 	}
 
-	public boolean setIdentityKeyTrust(Account account, String fingerprint, XmppAxolotlSession.Trust trust) {
+	public boolean setIdentityKeyTrust(Account account, String fingerprint, FingerprintStatus fingerprintStatus) {
 		SQLiteDatabase db = this.getWritableDatabase();
-		return setIdentityKeyTrust(db, account, fingerprint, trust);
+		return setIdentityKeyTrust(db, account, fingerprint, fingerprintStatus);
 	}
 
-	private boolean setIdentityKeyTrust(SQLiteDatabase db, Account account, String fingerprint, XmppAxolotlSession.Trust trust) {
+	private boolean setIdentityKeyTrust(SQLiteDatabase db, Account account, String fingerprint, FingerprintStatus status) {
 		String[] selectionArgs = {
 				account.getUuid(),
 				fingerprint
 		};
-		ContentValues values = new ContentValues();
-		values.put(SQLiteAxolotlStore.TRUSTED, trust.getCode());
-		int rows = db.update(SQLiteAxolotlStore.IDENTITIES_TABLENAME, values,
+		int rows = db.update(SQLiteAxolotlStore.IDENTITIES_TABLENAME, status.toContentValues(),
 				SQLiteAxolotlStore.ACCOUNT + " = ? AND "
 						+ SQLiteAxolotlStore.FINGERPRINT + " = ? ",
 				selectionArgs);
@@ -1193,7 +1231,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 	}
 
 	public void storeOwnIdentityKeyPair(Account account, IdentityKeyPair identityKeyPair) {
-		storeIdentityKey(account, account.getJid().toBareJid().toPreppedString(), true, identityKeyPair.getPublicKey().getFingerprint().replaceAll("\\s", ""), Base64.encodeToString(identityKeyPair.serialize(), Base64.DEFAULT), XmppAxolotlSession.Trust.TRUSTED);
+		storeIdentityKey(account, account.getJid().toBareJid().toPreppedString(), true, identityKeyPair.getPublicKey().getFingerprint().replaceAll("\\s", ""), Base64.encodeToString(identityKeyPair.serialize(), Base64.DEFAULT), FingerprintStatus.createActiveVerified(false));
 	}
 
 	public void recreateAxolotlDb(SQLiteDatabase db) {
@@ -1229,27 +1267,27 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 				deleteArgs);
 	}
 
-    public boolean startTimeCountExceedsThreshold() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        long cleanBeforeTimestamp = System.currentTimeMillis() - Config.FREQUENT_RESTARTS_DETECTION_WINDOW;
-        db.execSQL("delete from "+START_TIMES_TABLE+" where timestamp < "+cleanBeforeTimestamp);
-        ContentValues values = new ContentValues();
-        values.put("timestamp",System.currentTimeMillis());
-        db.insert(START_TIMES_TABLE,null,values);
-        String[] columns = new String[]{"count(timestamp)"};
-        Cursor cursor = db.query(START_TIMES_TABLE,columns,null,null,null,null,null);
-        int count;
-        if (cursor.moveToFirst()) {
-            count = cursor.getInt(0);
-        } else {
-            count = 0;
-        }
-        cursor.close();
-        return count >= Config.FREQUENT_RESTARTS_THRESHOLD;
-    }
+	public boolean startTimeCountExceedsThreshold() {
+		SQLiteDatabase db = this.getWritableDatabase();
+		long cleanBeforeTimestamp = System.currentTimeMillis() - Config.FREQUENT_RESTARTS_DETECTION_WINDOW;
+		db.execSQL("delete from "+START_TIMES_TABLE+" where timestamp < "+cleanBeforeTimestamp);
+		ContentValues values = new ContentValues();
+		values.put("timestamp",System.currentTimeMillis());
+		db.insert(START_TIMES_TABLE,null,values);
+		String[] columns = new String[]{"count(timestamp)"};
+		Cursor cursor = db.query(START_TIMES_TABLE,columns,null,null,null,null,null);
+		int count;
+		if (cursor.moveToFirst()) {
+			count = cursor.getInt(0);
+		} else {
+			count = 0;
+		}
+		cursor.close();
+		return count >= Config.FREQUENT_RESTARTS_THRESHOLD;
+	}
 
-    public void clearStartTimeCounter() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("delete from " + START_TIMES_TABLE);
-    }
+	public void clearStartTimeCounter() {
+		SQLiteDatabase db = this.getWritableDatabase();
+		db.execSQL("delete from " + START_TIMES_TABLE);
+	}
 }

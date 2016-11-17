@@ -52,7 +52,7 @@ import java.util.regex.Pattern;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
-import de.pixart.messenger.crypto.axolotl.XmppAxolotlSession;
+import de.pixart.messenger.crypto.axolotl.FingerprintStatus;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.DownloadableFile;
@@ -87,14 +87,14 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
 	private DisplayMetrics metrics;
 
-    private AudioWife audioWife;
+	private AudioWife audioWife;
 
 	private OnContactPictureClicked mOnContactPictureClickedListener;
 	private OnContactPictureLongClicked mOnContactPictureLongClickedListener;
 
 	private boolean mIndicateReceived = false;
-    private final ListSelectionManager listSelectionManager = new ListSelectionManager();
-    private HashMap<Integer, AudioWife> audioPlayer;
+	private final ListSelectionManager listSelectionManager = new ListSelectionManager();
+	private HashMap<Integer, AudioWife> audioPlayer;
 	private boolean mUseWhiteBackground = false;
 
 	public MessageAdapter(ConversationActivity activity, List<Message> messages) {
@@ -111,7 +111,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 	public void setOnContactPictureLongClicked(
 			OnContactPictureLongClicked listener) {
 		this.mOnContactPictureLongClickedListener = listener;
-			}
+	}
 
 	@Override
 	public int getViewTypeCount() {
@@ -158,7 +158,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 			}
 		}
 		boolean multiReceived = message.getConversation().getMode() == Conversation.MODE_MULTI
-			&& message.getMergedStatus() <= Message.STATUS_RECEIVED;
+				&& message.getMergedStatus() <= Message.STATUS_RECEIVED;
 		if (message.getType() == Message.TYPE_IMAGE || message.getType() == Message.TYPE_FILE || message.getTransferable() != null) {
 			FileParams params = message.getFileParams();
 			if (params.size > (1 * 1024 * 1024)) {
@@ -218,11 +218,11 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 		} else {
 			viewHolder.indicator.setVisibility(View.VISIBLE);
 			if (message.getEncryption() == Message.ENCRYPTION_AXOLOTL) {
-				XmppAxolotlSession.Trust trust = message.getConversation()
+				FingerprintStatus status = message.getConversation()
 						.getAccount().getAxolotlService().getFingerprintTrust(
 								message.getFingerprint());
 
-				if(trust == null || (!trust.trusted() && !trust.trustedInactive())) {
+				if(status == null || (!status.isTrustedAndActive())) {
 					viewHolder.indicator.setColorFilter(activity.getWarningTextColor());
 					viewHolder.indicator.setAlpha(1.0f);
 				} else {
@@ -274,9 +274,9 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
 	private void displayInfoMessage(ViewHolder viewHolder, String text, boolean darkBackground) {
 		viewHolder.aw_player.setVisibility(View.GONE);
-        if (viewHolder.download_button != null) {
-            viewHolder.download_button.setVisibility(View.GONE);
-        }
+		if (viewHolder.download_button != null) {
+			viewHolder.download_button.setVisibility(View.GONE);
+		}
 		viewHolder.image.setVisibility(View.GONE);
 		viewHolder.messageBody.setVisibility(View.VISIBLE);
 		viewHolder.messageBody.setText(text);
@@ -287,9 +287,9 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
 	private void displayDecryptionFailed(ViewHolder viewHolder, boolean darkBackground) {
 		viewHolder.aw_player.setVisibility(View.GONE);
-        if (viewHolder.download_button != null) {
-            viewHolder.download_button.setVisibility(View.GONE);
-        }
+		if (viewHolder.download_button != null) {
+			viewHolder.download_button.setVisibility(View.GONE);
+		}
 		viewHolder.image.setVisibility(View.GONE);
 		viewHolder.messageBody.setVisibility(View.VISIBLE);
 		viewHolder.messageBody.setText(getContext().getString(
@@ -301,9 +301,9 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
 	private void displayHeartMessage(final ViewHolder viewHolder, final String body) {
 		viewHolder.aw_player.setVisibility(View.GONE);
-        if (viewHolder.download_button != null) {
-            viewHolder.download_button.setVisibility(View.GONE);
-        }
+		if (viewHolder.download_button != null) {
+			viewHolder.download_button.setVisibility(View.GONE);
+		}
 		viewHolder.image.setVisibility(View.GONE);
 		viewHolder.messageBody.setVisibility(View.VISIBLE);
 		viewHolder.messageBody.setIncludeFontPadding(false);
@@ -313,61 +313,61 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 		viewHolder.messageBody.setText(span);
 	}
 
-    private void displayXmppMessage(final ViewHolder viewHolder, final String body) {
-        String contact = body.toLowerCase();
-        contact = contact.split(":")[1];
-        contact = contact.split("\\?")[0];
-        String add_contact = activity.getString(R.string.add_to_contact_list) + " (" + contact + ")";
-        viewHolder.aw_player.setVisibility(View.GONE);
-        viewHolder.download_button.setVisibility(View.VISIBLE);
-        viewHolder.download_button.setText(add_contact);
-        viewHolder.download_button.setOnClickListener(new OnClickListener() {
+	private void displayXmppMessage(final ViewHolder viewHolder, final String body) {
+		String contact = body.toLowerCase();
+		contact = contact.split(":")[1];
+		contact = contact.split("\\?")[0];
+		String add_contact = activity.getString(R.string.add_to_contact_list) + " (" + contact + ")";
+		viewHolder.aw_player.setVisibility(View.GONE);
+		viewHolder.download_button.setVisibility(View.VISIBLE);
+		viewHolder.download_button.setText(add_contact);
+		viewHolder.download_button.setOnClickListener(new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(body));
-                activity.startActivity(intent);
-            }
-        });
-        viewHolder.image.setVisibility(View.GONE);
-        viewHolder.messageBody.setVisibility(View.GONE);
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(Intent.ACTION_VIEW);
+				intent.setData(Uri.parse(body));
+				activity.startActivity(intent);
+			}
+		});
+		viewHolder.image.setVisibility(View.GONE);
+		viewHolder.messageBody.setVisibility(View.GONE);
 
-    }
+	}
 
 	private void displayTextMessage(final ViewHolder viewHolder, final Message message, boolean darkBackground) {
-        if (viewHolder.download_button != null) {
-            viewHolder.download_button.setVisibility(View.GONE);
-        }
+		if (viewHolder.download_button != null) {
+			viewHolder.download_button.setVisibility(View.GONE);
+		}
 		viewHolder.image.setVisibility(View.GONE);
 		viewHolder.messageBody.setVisibility(View.VISIBLE);
 		viewHolder.messageBody.setIncludeFontPadding(true);
 		if (message.getBody() != null) {
 			final String nick = UIHelper.getMessageDisplayName(message);
-            SpannableStringBuilder body = message.getMergedBody();
-            boolean hasMeCommand = message.hasMeCommand();
-            if (hasMeCommand) {
-                body = body.replace(0, Message.ME_COMMAND.length(), nick + " ");
+			SpannableStringBuilder body = message.getMergedBody();
+			boolean hasMeCommand = message.hasMeCommand();
+			if (hasMeCommand) {
+				body = body.replace(0, Message.ME_COMMAND.length(), nick + " ");
 			}
 			if (body.length() > Config.MAX_DISPLAY_MESSAGE_CHARS) {
-                body = new SpannableStringBuilder(body, 0, Config.MAX_DISPLAY_MESSAGE_CHARS);
-                body.append("\u2026");
+				body = new SpannableStringBuilder(body, 0, Config.MAX_DISPLAY_MESSAGE_CHARS);
+				body.append("\u2026");
 			}
-            Message.MergeSeparator[] mergeSeparators = body.getSpans(0, body.length(), Message.MergeSeparator.class);
-            for (Message.MergeSeparator mergeSeparator : mergeSeparators) {
-                int start = body.getSpanStart(mergeSeparator);
-                int end = body.getSpanEnd(mergeSeparator);
-                body.setSpan(new RelativeSizeSpan(0.3f), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			Message.MergeSeparator[] mergeSeparators = body.getSpans(0, body.length(), Message.MergeSeparator.class);
+			for (Message.MergeSeparator mergeSeparator : mergeSeparators) {
+				int start = body.getSpanStart(mergeSeparator);
+				int end = body.getSpanEnd(mergeSeparator);
+				body.setSpan(new RelativeSizeSpan(0.3f), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 			}
 			if (message.getType() != Message.TYPE_PRIVATE) {
 				if (hasMeCommand) {
-                    body.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), 0, nick.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+					body.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), 0, nick.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 				}
 			} else {
 				String privateMarker;
 				if (message.getStatus() <= Message.STATUS_RECEIVED) {
 					privateMarker = activity
-						.getString(R.string.private_message);
+							.getString(R.string.private_message);
 				} else {
 					final String to;
 					if (message.getCounterpart() != null) {
@@ -377,25 +377,25 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 					}
 					privateMarker = activity.getString(R.string.private_message_to, to);
 				}
-                body.insert(0, privateMarker);
-                int privateMarkerIndex = privateMarker.length();
-                body.insert(privateMarkerIndex, " ");
-                body.setSpan(new ForegroundColorSpan(getMessageTextColor(darkBackground, false)), 0, privateMarkerIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                body.setSpan(new StyleSpan(Typeface.BOLD), 0, privateMarkerIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                if (hasMeCommand) {
-                    body.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), privateMarkerIndex + 1, privateMarkerIndex + 1 + nick.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				body.insert(0, privateMarker);
+				int privateMarkerIndex = privateMarker.length();
+				body.insert(privateMarkerIndex, " ");
+				body.setSpan(new ForegroundColorSpan(getMessageTextColor(darkBackground, false)), 0, privateMarkerIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				body.setSpan(new StyleSpan(Typeface.BOLD), 0, privateMarkerIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				if (hasMeCommand) {
+					body.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), privateMarkerIndex + 1, privateMarkerIndex + 1 + nick.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 				}
 			}
-            Linkify.addLinks(body, Linkify.WEB_URLS);
-            Linkify.addLinks(body, XMPP_PATTERN, "xmpp");
-            Linkify.addLinks(body, GeoHelper.GEO_URI, "geo");
+			Linkify.addLinks(body, Linkify.WEB_URLS);
+			Linkify.addLinks(body, XMPP_PATTERN, "xmpp");
+			Linkify.addLinks(body, GeoHelper.GEO_URI, "geo");
 			viewHolder.messageBody.setAutoLinkMask(0);
-            viewHolder.messageBody.setText(body);
-            viewHolder.messageBody.setTextIsSelectable(true);
-            viewHolder.messageBody.setMovementMethod(ClickableMovementMethod.getInstance());
-            listSelectionManager.onUpdate(viewHolder.messageBody, message);
+			viewHolder.messageBody.setText(body);
+			viewHolder.messageBody.setTextIsSelectable(true);
+			viewHolder.messageBody.setMovementMethod(ClickableMovementMethod.getInstance());
+			listSelectionManager.onUpdate(viewHolder.messageBody, message);
 
-        } else {
+		} else {
 			viewHolder.messageBody.setText("");
 			viewHolder.messageBody.setTextIsSelectable(false);
 		}
@@ -421,116 +421,116 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 		});
 	}
 
-    private void displayAudioMessage(ViewHolder viewHolder, final Message message, int position) {
-        if (audioPlayer == null) audioPlayer = new HashMap<>();
-        viewHolder.image.setVisibility(View.GONE);
-        viewHolder.messageBody.setVisibility(View.GONE);
-        if (viewHolder.download_button != null) {
-            viewHolder.download_button.setVisibility(View.GONE);
-        }
-        viewHolder.aw_player.setVisibility(View.VISIBLE);
-        Uri audioFile = Uri.fromFile(activity.xmppConnectionService.getFileBackend().getFile(message));
+	private void displayAudioMessage(ViewHolder viewHolder, final Message message, int position) {
+		if (audioPlayer == null) audioPlayer = new HashMap<>();
+		viewHolder.image.setVisibility(View.GONE);
+		viewHolder.messageBody.setVisibility(View.GONE);
+		if (viewHolder.download_button != null) {
+			viewHolder.download_button.setVisibility(View.GONE);
+		}
+		viewHolder.aw_player.setVisibility(View.VISIBLE);
+		Uri audioFile = Uri.fromFile(activity.xmppConnectionService.getFileBackend().getFile(message));
 
-        audioWife = audioPlayer.get(position);
-        if (audioWife == null) {
-            audioWife = new AudioWife();
-            audioWife.init(getContext(), audioFile);
-            audioPlayer.put(position, audioWife);
-            RelativeLayout vg = new RelativeLayout(activity);
-            LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            audioWife.useDefaultUi(vg, layoutInflater);
-            viewHolder.aw_player.addView(audioWife.getPlayerUi());
-        } else {
-            audioWife.cleanPlayerUi();
-            viewHolder.aw_player.addView(audioWife.getPlayerUi());
-        }
-    }
+		audioWife = audioPlayer.get(position);
+		if (audioWife == null) {
+			audioWife = new AudioWife();
+			audioWife.init(getContext(), audioFile);
+			audioPlayer.put(position, audioWife);
+			RelativeLayout vg = new RelativeLayout(activity);
+			LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			audioWife.useDefaultUi(vg, layoutInflater);
+			viewHolder.aw_player.addView(audioWife.getPlayerUi());
+		} else {
+			audioWife.cleanPlayerUi();
+			viewHolder.aw_player.addView(audioWife.getPlayerUi());
+		}
+	}
 
 	private void displayOpenableMessage(ViewHolder viewHolder,final Message message) {
 		viewHolder.aw_player.setVisibility(View.GONE);
 		viewHolder.image.setVisibility(View.GONE);
 		viewHolder.messageBody.setVisibility(View.GONE);
-        viewHolder.download_button.setVisibility(View.VISIBLE);
-        String mimeType = message.getMimeType();
-        String fullName = "";
-        if (mimeType != null) {
-            if (message.getMimeType().contains("pdf")) {
-                viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_file_pdf_grey600_48dp,0,0,0);
-            } else if (message.getMimeType().contains("vcard")) {
-                File file = new File(activity.xmppConnectionService.getFileBackend().getFile(message).toString());
-                VCard vcard = null;
-                String name = null;
-                String version = null;
-                try {
-                    vcard = Ezvcard.parse(file).first();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (vcard != null) {
-                    version = vcard.getVersion().toString();
-                    Log.d(Config.LOGTAG, "VCard version: " + version);
-                    name = vcard.getFormattedName().getValue();
-                    fullName = " (" + name + ")";
-                }
-                viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_account_card_details_grey600_48dp,0,0,0);
-            } else if (message.getMimeType().contains("calendar")) {
-                viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_calendar_grey600_48dp,0,0,0);
-            } else {
-                viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_file_grey600_48dp,0,0,0);
-            }
-        }
-        viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message) + fullName));
-        viewHolder.download_button.setOnClickListener(new OnClickListener() {
+		viewHolder.download_button.setVisibility(View.VISIBLE);
+		String mimeType = message.getMimeType();
+		String fullName = "";
+		if (mimeType != null) {
+			if (message.getMimeType().contains("pdf")) {
+				viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_file_pdf_grey600_48dp,0,0,0);
+			} else if (message.getMimeType().contains("vcard")) {
+				File file = new File(activity.xmppConnectionService.getFileBackend().getFile(message).toString());
+				VCard vcard = null;
+				String name = null;
+				String version = null;
+				try {
+					vcard = Ezvcard.parse(file).first();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				if (vcard != null) {
+					version = vcard.getVersion().toString();
+					Log.d(Config.LOGTAG, "VCard version: " + version);
+					name = vcard.getFormattedName().getValue();
+					fullName = " (" + name + ")";
+				}
+				viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_account_card_details_grey600_48dp,0,0,0);
+			} else if (message.getMimeType().contains("calendar")) {
+				viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_calendar_grey600_48dp,0,0,0);
+			} else {
+				viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_file_grey600_48dp,0,0,0);
+			}
+		}
+		viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message) + fullName));
+		viewHolder.download_button.setOnClickListener(new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                openDownloadable(message);
-            }
-        });
+			@Override
+			public void onClick(View v) {
+				openDownloadable(message);
+			}
+		});
 	}
 
-    private void displayLocationMessage(ViewHolder viewHolder, final Message message) {
-        viewHolder.aw_player.setVisibility(View.GONE);
-        viewHolder.messageBody.setVisibility(View.GONE);
-        String url = GeoHelper.MapPreviewUri(message);
-        viewHolder.image.setVisibility(View.VISIBLE);
-        viewHolder.image.setOnClickListener(new OnClickListener() {
+	private void displayLocationMessage(ViewHolder viewHolder, final Message message) {
+		viewHolder.aw_player.setVisibility(View.GONE);
+		viewHolder.messageBody.setVisibility(View.GONE);
+		String url = GeoHelper.MapPreviewUri(message);
+		viewHolder.image.setVisibility(View.VISIBLE);
+		viewHolder.image.setOnClickListener(new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                showLocation(message);
-            }
-        });
-        Glide
-                .with(activity)
-                .load(Uri.parse(url))
-                .asBitmap()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .fitCenter()
-                .placeholder(R.drawable.ic_map_marker_grey600_48dp)
-                .error(R.drawable.ic_map_marker_grey600_48dp)
-                .into(viewHolder.image);
-        viewHolder.image.setMaxWidth(500);
-        viewHolder.image.setAdjustViewBounds(true);
-        viewHolder.download_button.setVisibility(View.GONE);
-        viewHolder.download_button.setText(R.string.show_location);
-        viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_map_marker_grey600_48dp, 0, 0, 0);
-        viewHolder.download_button.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showLocation(message);
+			}
+		});
+		Glide
+				.with(activity)
+				.load(Uri.parse(url))
+				.asBitmap()
+				.diskCacheStrategy(DiskCacheStrategy.ALL)
+				.fitCenter()
+				.placeholder(R.drawable.ic_map_marker_grey600_48dp)
+				.error(R.drawable.ic_map_marker_grey600_48dp)
+				.into(viewHolder.image);
+		viewHolder.image.setMaxWidth(500);
+		viewHolder.image.setAdjustViewBounds(true);
+		viewHolder.download_button.setVisibility(View.GONE);
+		viewHolder.download_button.setText(R.string.show_location);
+		viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_map_marker_grey600_48dp, 0, 0, 0);
+		viewHolder.download_button.setOnClickListener(new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                showLocation(message);
-            }
-        });
+			@Override
+			public void onClick(View v) {
+				showLocation(message);
+			}
+		});
 
-    }
+	}
 
 	private void displayImageMessage(ViewHolder viewHolder,
-			final Message message) {
+									 final Message message) {
 		viewHolder.aw_player.setVisibility(View.GONE);
-        if (viewHolder.download_button != null) {
-            viewHolder.download_button.setVisibility(View.GONE);
-        }
+		if (viewHolder.download_button != null) {
+			viewHolder.download_button.setVisibility(View.GONE);
+		}
 		viewHolder.messageBody.setVisibility(View.GONE);
 		viewHolder.image.setVisibility(View.VISIBLE);
 		FileParams params = message.getFileParams();
@@ -565,7 +565,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
 	private void loadMoreMessages(Conversation conversation) {
 		conversation.setLastClearHistory(0);
-        activity.xmppConnectionService.updateConversation(conversation);
+		activity.xmppConnectionService.updateConversation(conversation);
 		conversation.setHasMessagesLeftOnServer(true);
 		conversation.setFirstMamReference(null);
 		long timestamp = conversation.getLastMessageTransmitted();
@@ -584,79 +584,79 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 		final Conversation conversation = message.getConversation();
 		final Account account = conversation.getAccount();
 		final int type = getItemViewType(position);
-        ViewHolder viewHolder;
-        View view;
-        viewHolder = new ViewHolder();
-        switch (type) {
-            case SENT:
-                view = activity.getLayoutInflater().inflate(
-                        R.layout.message_sent, parent, false);
-                viewHolder.message_box = (LinearLayout) view
-                        .findViewById(R.id.message_box);
-                viewHolder.contact_picture = (ImageView) view
-                        .findViewById(R.id.message_photo);
-                viewHolder.aw_player = (ViewGroup) view.findViewById(R.id.aw_player);
+		ViewHolder viewHolder;
+		View view;
+		viewHolder = new ViewHolder();
+		switch (type) {
+			case SENT:
+				view = activity.getLayoutInflater().inflate(
+						R.layout.message_sent, parent, false);
+				viewHolder.message_box = (LinearLayout) view
+						.findViewById(R.id.message_box);
+				viewHolder.contact_picture = (ImageView) view
+						.findViewById(R.id.message_photo);
+				viewHolder.aw_player = (ViewGroup) view.findViewById(R.id.aw_player);
 				viewHolder.download_button = (Button) view
 						.findViewById(R.id.download_button);
-                viewHolder.indicator = (ImageView) view
-                        .findViewById(R.id.security_indicator);
-                viewHolder.edit_indicator = (ImageView) view.findViewById(R.id.edit_indicator);
-                viewHolder.image = (ImageView) view
-                        .findViewById(R.id.message_image);
-                viewHolder.messageBody = (CopyTextView) view
-                        .findViewById(R.id.message_body);
-                viewHolder.time = (TextView) view
-                        .findViewById(R.id.message_time);
-                viewHolder.indicatorReceived = (ImageView) view
-                        .findViewById(R.id.indicator_received);
-                viewHolder.indicatorRead = (ImageView) view
-                        .findViewById(R.id.indicator_read);
-                break;
-            case RECEIVED:
-                view = activity.getLayoutInflater().inflate(
-                        R.layout.message_received, parent, false);
-                viewHolder.message_box = (LinearLayout) view
-                        .findViewById(R.id.message_box);
-                viewHolder.contact_picture = (ImageView) view
-                        .findViewById(R.id.message_photo);
-                viewHolder.aw_player = (ViewGroup) view.findViewById(R.id.aw_player);
+				viewHolder.indicator = (ImageView) view
+						.findViewById(R.id.security_indicator);
+				viewHolder.edit_indicator = (ImageView) view.findViewById(R.id.edit_indicator);
+				viewHolder.image = (ImageView) view
+						.findViewById(R.id.message_image);
+				viewHolder.messageBody = (CopyTextView) view
+						.findViewById(R.id.message_body);
+				viewHolder.time = (TextView) view
+						.findViewById(R.id.message_time);
+				viewHolder.indicatorReceived = (ImageView) view
+						.findViewById(R.id.indicator_received);
+				viewHolder.indicatorRead = (ImageView) view
+						.findViewById(R.id.indicator_read);
+				break;
+			case RECEIVED:
+				view = activity.getLayoutInflater().inflate(
+						R.layout.message_received, parent, false);
+				viewHolder.message_box = (LinearLayout) view
+						.findViewById(R.id.message_box);
+				viewHolder.contact_picture = (ImageView) view
+						.findViewById(R.id.message_photo);
+				viewHolder.aw_player = (ViewGroup) view.findViewById(R.id.aw_player);
 				viewHolder.download_button = (Button) view
 						.findViewById(R.id.download_button);
-                viewHolder.indicator = (ImageView) view
-                        .findViewById(R.id.security_indicator);
-                viewHolder.edit_indicator = (ImageView) view.findViewById(R.id.edit_indicator);
-                viewHolder.image = (ImageView) view
-                        .findViewById(R.id.message_image);
-                viewHolder.messageBody = (CopyTextView) view
-                        .findViewById(R.id.message_body);
-                viewHolder.time = (TextView) view
-                        .findViewById(R.id.message_time);
-                viewHolder.indicatorReceived = (ImageView) view
-                        .findViewById(R.id.indicator_received);
-                viewHolder.encryption = (TextView) view.findViewById(R.id.message_encryption);
-                break;
-            case STATUS:
-                view = activity.getLayoutInflater().inflate(R.layout.message_status, parent, false);
-                viewHolder.contact_picture = (ImageView) view.findViewById(R.id.message_photo);
-                viewHolder.status_message = (TextView) view.findViewById(R.id.status_message);
-                viewHolder.load_more_messages = (Button) view.findViewById(R.id.load_more_messages);
-                break;
-            default:
-                view = new View(getContext());
-                viewHolder = null;
-                break;
-        }
-        if (viewHolder.messageBody != null) {
-            listSelectionManager.onCreate(viewHolder.messageBody);
-            viewHolder.messageBody.setCopyHandler(this);
-        }
-        view.setTag(viewHolder);
-        if (viewHolder == null) {
-            return view;
-        }
+				viewHolder.indicator = (ImageView) view
+						.findViewById(R.id.security_indicator);
+				viewHolder.edit_indicator = (ImageView) view.findViewById(R.id.edit_indicator);
+				viewHolder.image = (ImageView) view
+						.findViewById(R.id.message_image);
+				viewHolder.messageBody = (CopyTextView) view
+						.findViewById(R.id.message_body);
+				viewHolder.time = (TextView) view
+						.findViewById(R.id.message_time);
+				viewHolder.indicatorReceived = (ImageView) view
+						.findViewById(R.id.indicator_received);
+				viewHolder.encryption = (TextView) view.findViewById(R.id.message_encryption);
+				break;
+			case STATUS:
+				view = activity.getLayoutInflater().inflate(R.layout.message_status, parent, false);
+				viewHolder.contact_picture = (ImageView) view.findViewById(R.id.message_photo);
+				viewHolder.status_message = (TextView) view.findViewById(R.id.status_message);
+				viewHolder.load_more_messages = (Button) view.findViewById(R.id.load_more_messages);
+				break;
+			default:
+				view = new View(getContext());
+				viewHolder = null;
+				break;
+		}
+		if (viewHolder.messageBody != null) {
+			listSelectionManager.onCreate(viewHolder.messageBody);
+			viewHolder.messageBody.setCopyHandler(this);
+		}
+		view.setTag(viewHolder);
+		if (viewHolder == null) {
+			return view;
+		}
 
 
-        boolean darkBackground = (type == SENT && (!isInValidSession || !mUseWhiteBackground));
+		boolean darkBackground = (type == SENT && (!isInValidSession || !mUseWhiteBackground));
 
 		if (type == STATUS) {
 			if ("LOAD_MORE".equals(message.getBody())) {
@@ -687,31 +687,31 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 		}
 
 		viewHolder.contact_picture
-			.setOnClickListener(new OnClickListener() {
+				.setOnClickListener(new OnClickListener() {
 
-				@Override
-				public void onClick(View v) {
-					if (MessageAdapter.this.mOnContactPictureClickedListener != null) {
-						MessageAdapter.this.mOnContactPictureClickedListener
-								.onContactPictureClicked(message);
+					@Override
+					public void onClick(View v) {
+						if (MessageAdapter.this.mOnContactPictureClickedListener != null) {
+							MessageAdapter.this.mOnContactPictureClickedListener
+									.onContactPictureClicked(message);
+						}
+
 					}
-
-				}
-			});
+				});
 		viewHolder.contact_picture
-			.setOnLongClickListener(new OnLongClickListener() {
+				.setOnLongClickListener(new OnLongClickListener() {
 
-				@Override
-				public boolean onLongClick(View v) {
-					if (MessageAdapter.this.mOnContactPictureLongClickedListener != null) {
-						MessageAdapter.this.mOnContactPictureLongClickedListener
-								.onContactPictureLongClicked(message);
-						return true;
-					} else {
-						return false;
+					@Override
+					public boolean onLongClick(View v) {
+						if (MessageAdapter.this.mOnContactPictureLongClickedListener != null) {
+							MessageAdapter.this.mOnContactPictureLongClickedListener
+									.onContactPictureLongClicked(message);
+							return true;
+						} else {
+							return false;
+						}
 					}
-				}
-			});
+				});
 
 		final Transferable transferable = message.getTransferable();
 		String mimeType = message.getMimeType();
@@ -733,7 +733,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 					if (message.getMimeType().startsWith("audio/")) {
 						displayAudioMessage(viewHolder, message, position);
 					} else displayOpenableMessage(viewHolder, message);
-                } else displayOpenableMessage(viewHolder, message);
+				} else displayOpenableMessage(viewHolder, message);
 			}
 		} else if (message.getEncryption() == Message.ENCRYPTION_PGP) {
 			if (account.isPgpDecryptionServiceConnected()) {
@@ -746,24 +746,24 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 				displayInfoMessage(viewHolder,activity.getString(R.string.install_openkeychain),darkBackground);
 				if (viewHolder != null) {
 					viewHolder.message_box
-						.setOnClickListener(new OnClickListener() {
+							.setOnClickListener(new OnClickListener() {
 
-							@Override
-							public void onClick(View v) {
-								activity.showInstallPgpDialog();
-							}
-						});
+								@Override
+								public void onClick(View v) {
+									activity.showInstallPgpDialog();
+								}
+							});
 				}
 			}
 		} else if (message.getEncryption() == Message.ENCRYPTION_DECRYPTION_FAILED) {
 			displayDecryptionFailed(viewHolder,darkBackground);
 		} else {
 			if (GeoHelper.isGeoUri(message.getBody())) {
-                displayLocationMessage(viewHolder,message);
+				displayLocationMessage(viewHolder,message);
 			} else if (message.bodyIsHeart()) {
 				displayHeartMessage(viewHolder, message.getBody().trim());
-            } else if (message.bodyIsXmpp()) {
-                displayXmppMessage(viewHolder, message.getBody().trim());
+			} else if (message.bodyIsXmpp()) {
+				displayXmppMessage(viewHolder, message.getBody().trim());
 			} else if (message.treatAsDownloadable() == Message.Decision.MUST ||
 					message.treatAsDownloadable() == Message.Decision.SHOULD) {
 				try {
@@ -808,73 +808,73 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 		return view;
 	}
 
-    @Override
-    public void notifyDataSetChanged() {
-        listSelectionManager.onBeforeNotifyDataSetChanged();
-        super.notifyDataSetChanged();
-        listSelectionManager.onAfterNotifyDataSetChanged();
-    }
+	@Override
+	public void notifyDataSetChanged() {
+		listSelectionManager.onBeforeNotifyDataSetChanged();
+		super.notifyDataSetChanged();
+		listSelectionManager.onAfterNotifyDataSetChanged();
+	}
 
-    @Override
-    public String transformTextForCopy(CharSequence text, int start, int end) {
-        return text.toString().substring(start, end);
-    }
+	@Override
+	public String transformTextForCopy(CharSequence text, int start, int end) {
+		return text.toString().substring(start, end);
+	}
 
-  public void openDownloadable(Message message) {
-      DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
-      if (!file.exists()) {
-          Toast.makeText(activity, R.string.file_deleted, Toast.LENGTH_SHORT).show();
-          return;
-      }
-      String mime = file.getMimeType();
-      if (mime.startsWith("image/")) {
-          Intent intent = new Intent(getContext(), ShowFullscreenMessageActivity.class);
-          intent.putExtra("image", Uri.fromFile(file));
-          try {
-              activity.startActivity(intent);
-              return;
-          } catch (ActivityNotFoundException e) {
-              //ignored
-          }
-      } else if (mime.startsWith("video/")) {
-          Intent intent = new Intent(getContext(), ShowFullscreenMessageActivity.class);
-          intent.putExtra("video", Uri.fromFile(file));
-          try {
-              activity.startActivity(intent);
-              return;
-          } catch (ActivityNotFoundException e) {
-              //ignored
-          }
-      }
-      Intent openIntent = new Intent(Intent.ACTION_VIEW);
-      if (mime == null) {
-          mime = "*/*";
-      }
-      Uri uri;
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        try {
-          uri = FileProvider.getUriForFile(activity, FileBackend.CONVERSATIONS_FILE_PROVIDER, file);
-        } catch (IllegalArgumentException e) {
-          Toast.makeText(activity,activity.getString(R.string.no_permission_to_access_x,file.getAbsolutePath()), Toast.LENGTH_SHORT).show();
-          return;
-        }
-        openIntent.setDataAndType(uri, mime);
-        openIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-      } else {
-        uri = Uri.fromFile(file);
-      }
-      openIntent.setDataAndType(uri, mime);
-      PackageManager manager = activity.getPackageManager();
-      List<ResolveInfo> info = manager.queryIntentActivities(openIntent, 0);
-      if (info.size() == 0) {
-        openIntent.setDataAndType(Uri.fromFile(file),"*/*");
-      }
-      try {
-        getContext().startActivity(openIntent);
-      }  catch (ActivityNotFoundException e) {
-        Toast.makeText(activity,R.string.no_application_found_to_open_file,Toast.LENGTH_SHORT).show();
-      }
-    }
+	public void openDownloadable(Message message) {
+		DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
+		if (!file.exists()) {
+			Toast.makeText(activity, R.string.file_deleted, Toast.LENGTH_SHORT).show();
+			return;
+		}
+		String mime = file.getMimeType();
+		if (mime.startsWith("image/")) {
+			Intent intent = new Intent(getContext(), ShowFullscreenMessageActivity.class);
+			intent.putExtra("image", Uri.fromFile(file));
+			try {
+				activity.startActivity(intent);
+				return;
+			} catch (ActivityNotFoundException e) {
+				//ignored
+			}
+		} else if (mime.startsWith("video/")) {
+			Intent intent = new Intent(getContext(), ShowFullscreenMessageActivity.class);
+			intent.putExtra("video", Uri.fromFile(file));
+			try {
+				activity.startActivity(intent);
+				return;
+			} catch (ActivityNotFoundException e) {
+				//ignored
+			}
+		}
+		Intent openIntent = new Intent(Intent.ACTION_VIEW);
+		if (mime == null) {
+			mime = "*/*";
+		}
+		Uri uri;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+			try {
+				uri = FileProvider.getUriForFile(activity, FileBackend.CONVERSATIONS_FILE_PROVIDER, file);
+			} catch (IllegalArgumentException e) {
+				Toast.makeText(activity,activity.getString(R.string.no_permission_to_access_x,file.getAbsolutePath()), Toast.LENGTH_SHORT).show();
+				return;
+			}
+			openIntent.setDataAndType(uri, mime);
+			openIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+		} else {
+			uri = Uri.fromFile(file);
+		}
+		openIntent.setDataAndType(uri, mime);
+		PackageManager manager = activity.getPackageManager();
+		List<ResolveInfo> info = manager.queryIntentActivities(openIntent, 0);
+		if (info.size() == 0) {
+			openIntent.setDataAndType(Uri.fromFile(file),"*/*");
+		}
+		try {
+			getContext().startActivity(openIntent);
+		}  catch (ActivityNotFoundException e) {
+			Toast.makeText(activity,R.string.no_application_found_to_open_file,Toast.LENGTH_SHORT).show();
+		}
+	}
 
 	public void showLocation(Message message) {
 		for(Intent intent : GeoHelper.createGeoIntentsFromMessage(message)) {
@@ -891,14 +891,14 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 		this.mUseWhiteBackground = activity.useWhiteBackground();
 	}
 
-    public TextView getMessageBody(View view) {
-        final Object tag = view.getTag();
-        if (tag instanceof ViewHolder) {
-            final ViewHolder viewHolder = (ViewHolder) tag;
-            return viewHolder.messageBody;
-        }
-        return null;
-    }
+	public TextView getMessageBody(View view) {
+		final Object tag = view.getTag();
+		if (tag instanceof ViewHolder) {
+			final ViewHolder viewHolder = (ViewHolder) tag;
+			return viewHolder.messageBody;
+		}
+		return null;
+	}
 
 	public interface OnContactPictureClicked {
 		void onContactPictureClicked(Message message);

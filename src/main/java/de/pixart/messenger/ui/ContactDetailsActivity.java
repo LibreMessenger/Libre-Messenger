@@ -40,7 +40,7 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.PgpEngine;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
-import de.pixart.messenger.crypto.axolotl.XmppAxolotlSession;
+import de.pixart.messenger.crypto.axolotl.FingerprintStatus;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
@@ -71,14 +71,14 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 
 		@Override
 		public void onCheckedChanged(CompoundButton buttonView,
-				boolean isChecked) {
+									 boolean isChecked) {
 			if (isChecked) {
 				if (contact
 						.getOption(Contact.Options.PENDING_SUBSCRIPTION_REQUEST)) {
 					xmppConnectionService.sendPresencePacket(contact
-							.getAccount(),
+									.getAccount(),
 							xmppConnectionService.getPresenceGenerator()
-							.sendPresenceUpdatesTo(contact));
+									.sendPresenceUpdatesTo(contact));
 				} else {
 					contact.setOption(Contact.Options.PREEMPTIVE_GRANT);
 				}
@@ -86,7 +86,7 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 				contact.resetOption(Contact.Options.PREEMPTIVE_GRANT);
 				xmppConnectionService.sendPresencePacket(contact.getAccount(),
 						xmppConnectionService.getPresenceGenerator()
-						.stopPresenceUpdatesTo(contact));
+								.stopPresenceUpdatesTo(contact));
 			}
 		}
 	};
@@ -94,15 +94,15 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 
 		@Override
 		public void onCheckedChanged(CompoundButton buttonView,
-				boolean isChecked) {
+									 boolean isChecked) {
 			if (isChecked) {
 				xmppConnectionService.sendPresencePacket(contact.getAccount(),
 						xmppConnectionService.getPresenceGenerator()
-						.requestPresenceUpdatesFrom(contact));
+								.requestPresenceUpdatesFrom(contact));
 			} else {
 				xmppConnectionService.sendPresencePacket(contact.getAccount(),
 						xmppConnectionService.getPresenceGenerator()
-						.stopPresenceUpdatesFrom(contact));
+								.stopPresenceUpdatesFrom(contact));
 			}
 		}
 	};
@@ -226,18 +226,18 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 		}
 	}
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        final int theme = findTheme();
-        if (this.mTheme != theme) {
-            recreate();
-        } else {
-            final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            this.showDynamicTags = preferences.getBoolean("show_dynamic_tags", false);
-            this.showLastSeen = preferences.getBoolean("last_activity", false);
-        }
-    }
+	@Override
+	public void onStart() {
+		super.onStart();
+		final int theme = findTheme();
+		if (this.mTheme != theme) {
+			recreate();
+		} else {
+			final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+			this.showDynamicTags = preferences.getBoolean("show_dynamic_tags", false);
+			this.showLastSeen = preferences.getBoolean("last_activity", false);
+		}
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(final MenuItem menuItem) {
@@ -252,11 +252,11 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 				break;
 			case R.id.action_delete_contact:
 				builder.setTitle(getString(R.string.action_delete_contact))
-					.setMessage(
-							getString(R.string.remove_contact_text,
-								contact.getDisplayJid()))
-					.setPositiveButton(getString(R.string.delete),
-							removeFromRoster).create().show();
+						.setMessage(
+								getString(R.string.remove_contact_text,
+										contact.getDisplayJid()))
+						.setPositiveButton(getString(R.string.delete),
+								removeFromRoster).create().show();
 				break;
 			case R.id.action_edit_contact:
 				Uri systemAccount = contact.getSystemAccount();
@@ -267,7 +267,7 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 						public void onValueEdited(String value) {
 							contact.setServerName(value);
 							ContactDetailsActivity.this.xmppConnectionService
-								.pushContactToServer(contact);
+									.pushContactToServer(contact);
 							populateView();
 						}
 					});
@@ -320,18 +320,18 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 		if (contact == null) {
 			return;
 		}
-        if (getActionBar() != null) {
-            final ActionBar ab = getActionBar();
-            ab.setCustomView(R.layout.ab_title);
-            ab.setDisplayShowCustomEnabled(true);
-            TextView abtitle = (TextView) findViewById(android.R.id.text1);
-            TextView absubtitle = (TextView) findViewById(android.R.id.text2);
-            abtitle.setText(contact.getDisplayName());
-            abtitle.setSelected(true);
-            abtitle.setClickable(false);
-            absubtitle.setVisibility(View.GONE);
-            absubtitle.setClickable(false);
-        }
+		if (getActionBar() != null) {
+			final ActionBar ab = getActionBar();
+			ab.setCustomView(R.layout.ab_title);
+			ab.setDisplayShowCustomEnabled(true);
+			TextView abtitle = (TextView) findViewById(android.R.id.text1);
+			TextView absubtitle = (TextView) findViewById(android.R.id.text2);
+			abtitle.setText(contact.getDisplayName());
+			abtitle.setSelected(true);
+			abtitle.setClickable(false);
+			absubtitle.setVisibility(View.GONE);
+			absubtitle.setClickable(false);
+		}
 
 		invalidateOptionsMenu();
 		setTitle(contact.getDisplayName());
@@ -485,7 +485,7 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 				@Override
 				public void onClick(View v) {
 					PgpEngine pgp = ContactDetailsActivity.this.xmppConnectionService
-						.getPgpEngine();
+							.getPgpEngine();
 					if (pgp != null) {
 						PendingIntent intent = pgp.getIntentForKey(contact);
 						if (intent != null) {
@@ -524,8 +524,8 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 	}
 
 	private void onOmemoKeyClicked(Account account, String fingerprint) {
-		final XmppAxolotlSession.Trust trust = account.getAxolotlService().getFingerprintTrust(fingerprint);
-		if (Config.X509_VERIFICATION && trust != null && trust == XmppAxolotlSession.Trust.TRUSTED_X509) {
+		FingerprintStatus status = account.getAxolotlService().getFingerprintTrust(fingerprint);
+		if (Config.X509_VERIFICATION && status != null && status.getTrust() == FingerprintStatus.Trust.VERIFIED_X509) {
 			X509Certificate x509Certificate = account.getAxolotlService().getFingerprintCertificate(fingerprint);
 			if (x509Certificate != null) {
 				showCertificateInformationDialog(CryptoHelper.extractCertificateInformation(x509Certificate));
@@ -581,7 +581,7 @@ public class ContactDetailsActivity extends XmppActivity implements OnAccountUpd
 	public void onBackendConnected() {
 		if ((accountJid != null) && (contactJid != null)) {
 			Account account = xmppConnectionService
-				.findAccountByJid(accountJid);
+					.findAccountByJid(accountJid);
 			if (account == null) {
 				return;
 			}

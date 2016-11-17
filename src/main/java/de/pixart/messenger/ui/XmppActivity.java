@@ -76,7 +76,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
-import de.pixart.messenger.crypto.axolotl.XmppAxolotlSession;
+import de.pixart.messenger.crypto.axolotl.FingerprintStatus;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
@@ -126,7 +126,7 @@ public abstract class XmppActivity extends Activity {
 
 	protected Toast mToast;
 
-    protected void hideToast() {
+	protected void hideToast() {
 		if (mToast != null) {
 			mToast.cancel();
 		}
@@ -142,13 +142,13 @@ public abstract class XmppActivity extends Activity {
 		mToast.show();
 	}
 
-    public void showProgress() {
+	public void showProgress() {
 
-    }
+	}
 
-    public void closeProgress() {
+	public void closeProgress() {
 
-    }
+	}
 
 	protected Runnable onOpenPGPKeyPublished = new Runnable() {
 		@Override
@@ -380,18 +380,18 @@ public abstract class XmppActivity extends Activity {
 			case R.id.action_invite_user:
 				inviteUser();
 				break;
-            case R.id.action_create_issue:
-                createIssue();
-                break;
+			case R.id.action_create_issue:
+				createIssue();
+				break;
 			case R.id.action_settings:
 				startActivity(new Intent(this, SettingsActivity.class));
 				break;
 			case R.id.action_check_updates:
 				if (xmppConnectionService.hasInternetConnection()) {
-                    startActivity(new Intent(this, UpdaterActivity.class));
-                } else {
-                    Toast.makeText(this, R.string.account_status_no_internet, Toast.LENGTH_LONG).show();
-                }
+					startActivity(new Intent(this, UpdaterActivity.class));
+				} else {
+					Toast.makeText(this, R.string.account_status_no_internet, Toast.LENGTH_LONG).show();
+				}
 				break;
 			case R.id.action_accounts:
 				final Intent intent = new Intent(getApplicationContext(), EditAccountActivity.class);
@@ -443,15 +443,15 @@ public abstract class XmppActivity extends Activity {
 		}
 	}
 
-    protected boolean isAffectedByDataSaver() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-            return cm.isActiveNetworkMetered()
-                    && cm.getRestrictBackgroundStatus() == ConnectivityManager.RESTRICT_BACKGROUND_STATUS_ENABLED;
-        } else {
-            return false;
-        }
-    }
+	protected boolean isAffectedByDataSaver() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+			ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+			return cm.isActiveNetworkMetered()
+					&& cm.getRestrictBackgroundStatus() == ConnectivityManager.RESTRICT_BACKGROUND_STATUS_ENABLED;
+		} else {
+			return false;
+		}
+	}
 
 	protected boolean usingEnterKey() {
 		return getPreferences().getBoolean("display_enter_key", false);
@@ -581,7 +581,7 @@ public abstract class XmppActivity extends Activity {
 					xmppConnectionService.sendPresence(account);
 					if (conversation != null) {
 						conversation.setNextEncryption(Message.ENCRYPTION_PGP);
-                        xmppConnectionService.updateConversation(conversation);
+						xmppConnectionService.updateConversation(conversation);
 						refreshUi();
 					}
 					if (onSuccess != null) {
@@ -591,14 +591,14 @@ public abstract class XmppActivity extends Activity {
 
 				@Override
 				public void error(int error, Account account) {
-                    if (error == 0 && account != null) {
-                        account.setPgpSignId(0);
-                        account.unsetPgpSignature();
-                        xmppConnectionService.databaseBackend.updateAccount(account);
-                        choosePgpSignId(account);
-                    } else {
-                        displayErrorDialog(error);
-                    }
+					if (error == 0 && account != null) {
+						account.setPgpSignId(0);
+						account.unsetPgpSignature();
+						xmppConnectionService.databaseBackend.updateAccount(account);
+						choosePgpSignId(account);
+					} else {
+						displayErrorDialog(error);
+					}
 				}
 			});
 		}
@@ -776,25 +776,21 @@ public abstract class XmppActivity extends Activity {
 	}
 
 	protected boolean addFingerprintRow(LinearLayout keys, final Account account, final String fingerprint, boolean highlight, View.OnClickListener onKeyClickedListener) {
-		final XmppAxolotlSession.Trust trust = account.getAxolotlService()
-				.getFingerprintTrust(fingerprint);
-		if (trust == null) {
+		final FingerprintStatus status = account.getAxolotlService().getFingerprintTrust(fingerprint);
+		if (status == null) {
 			return false;
 		}
-		return addFingerprintRowWithListeners(keys, account, fingerprint, highlight, trust, true,
+		return addFingerprintRowWithListeners(keys, account, fingerprint, highlight, status, true,
 				new CompoundButton.OnCheckedChangeListener() {
 					@Override
 					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-						account.getAxolotlService().setFingerprintTrust(fingerprint,
-								(isChecked) ? XmppAxolotlSession.Trust.TRUSTED :
-										XmppAxolotlSession.Trust.UNTRUSTED);
+						account.getAxolotlService().setFingerprintTrust(fingerprint,FingerprintStatus.createActive(isChecked));
 					}
 				},
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						account.getAxolotlService().setFingerprintTrust(fingerprint,
-								XmppAxolotlSession.Trust.UNTRUSTED);
+						account.getAxolotlService().setFingerprintTrust(fingerprint,FingerprintStatus.createActive(true));
 						v.setEnabled(true);
 					}
 				},
@@ -806,13 +802,13 @@ public abstract class XmppActivity extends Activity {
 	protected boolean addFingerprintRowWithListeners(LinearLayout keys, final Account account,
 													 final String fingerprint,
 													 boolean highlight,
-													 XmppAxolotlSession.Trust trust,
+													 FingerprintStatus status,
 													 boolean showTag,
 													 CompoundButton.OnCheckedChangeListener
 															 onCheckedChangeListener,
 													 View.OnClickListener onClickListener,
 													 View.OnClickListener onKeyClickedListener) {
-		if (trust == XmppAxolotlSession.Trust.COMPROMISED) {
+		if (status.isCompromised()) {
 			return false;
 		}
 		View view = getLayoutInflater().inflate(R.layout.contact_key, keys, false);
@@ -822,8 +818,6 @@ public abstract class XmppActivity extends Activity {
 		keyType.setOnClickListener(onKeyClickedListener);
 		Switch trustToggle = (Switch) view.findViewById(R.id.tgl_trust);
 		trustToggle.setVisibility(View.VISIBLE);
-		trustToggle.setOnCheckedChangeListener(onCheckedChangeListener);
-		trustToggle.setOnClickListener(onClickListener);
 		final View.OnLongClickListener purge = new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
@@ -831,50 +825,46 @@ public abstract class XmppActivity extends Activity {
 				return true;
 			}
 		};
-		boolean active = true;
 		view.setOnLongClickListener(purge);
 		key.setOnLongClickListener(purge);
 		keyType.setOnLongClickListener(purge);
-		boolean x509 = Config.X509_VERIFICATION
-				&& (trust == XmppAxolotlSession.Trust.TRUSTED_X509 || trust == XmppAxolotlSession.Trust.INACTIVE_TRUSTED_X509);
-		switch (trust) {
-			case UNTRUSTED:
-			case TRUSTED:
-			case TRUSTED_X509:
-				trustToggle.setChecked(trust.trusted(), false);
-				trustToggle.setEnabled(!Config.X509_VERIFICATION || trust != XmppAxolotlSession.Trust.TRUSTED_X509);
-				if (Config.X509_VERIFICATION && trust == XmppAxolotlSession.Trust.TRUSTED_X509) {
-					trustToggle.setOnClickListener(null);
+		boolean x509 = Config.X509_VERIFICATION && status.getTrust() == FingerprintStatus.Trust.VERIFIED_X509;
+		final View.OnClickListener toast;
+		if (status.isActive()) {
+			key.setTextColor(getPrimaryTextColor());
+			keyType.setTextColor(getSecondaryTextColor());
+			trustToggle.setOnCheckedChangeListener(onCheckedChangeListener);
+			if (status.getTrust() == FingerprintStatus.Trust.UNDECIDED) {
+				trustToggle.setOnClickListener(onClickListener);
+				trustToggle.setEnabled(false);
+			} else {
+				trustToggle.setOnClickListener(null);
+				trustToggle.setChecked(status.isTrusted(), false);
+				trustToggle.setEnabled(true);
+			}
+			toast = new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					hideToast();
 				}
-				key.setTextColor(getPrimaryTextColor());
-				keyType.setTextColor(getSecondaryTextColor());
-				break;
-			case UNDECIDED:
-				trustToggle.setChecked(false, false);
-				trustToggle.setEnabled(false);
-				key.setTextColor(getPrimaryTextColor());
-				keyType.setTextColor(getSecondaryTextColor());
-				break;
-			case INACTIVE_UNTRUSTED:
-			case INACTIVE_UNDECIDED:
-				trustToggle.setOnClickListener(null);
-				trustToggle.setChecked(false, false);
-				trustToggle.setEnabled(false);
-				key.setTextColor(getTertiaryTextColor());
-				keyType.setTextColor(getTertiaryTextColor());
-				active = false;
-				break;
-			case INACTIVE_TRUSTED:
-			case INACTIVE_TRUSTED_X509:
-				trustToggle.setOnClickListener(null);
-				trustToggle.setChecked(true, false);
-				trustToggle.setEnabled(false);
-				key.setTextColor(getTertiaryTextColor());
-				keyType.setTextColor(getTertiaryTextColor());
-				active = false;
-				break;
+			};
+		} else {
+			key.setTextColor(getTertiaryTextColor());
+			keyType.setTextColor(getTertiaryTextColor());
+			trustToggle.setOnClickListener(null);
+			trustToggle.setEnabled(false);
+			trustToggle.setChecked(status.isTrusted(), false);
+			toast = new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					replaceToast(getString(R.string.this_device_is_no_longer_in_use), false);
+				}
+			};
+			trustToggle.setOnClickListener(toast);
 		}
-
+		view.setOnClickListener(toast);
+		key.setOnClickListener(toast);
+		keyType.setOnClickListener(toast);
 		if (showTag) {
 			keyType.setText(getString(x509 ? R.string.omemo_fingerprint_x509 : R.string.omemo_fingerprint));
 		} else {
@@ -888,28 +878,6 @@ public abstract class XmppActivity extends Activity {
 		}
 
 		key.setText(CryptoHelper.prettifyFingerprint(fingerprint.substring(2)));
-
-		final View.OnClickListener toast;
-		if (!active) {
-			toast = new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					replaceToast(getString(R.string.this_device_is_no_longer_in_use), false);
-				}
-			};
-			trustToggle.setOnClickListener(toast);
-		} else {
-			toast = new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					hideToast();
-				}
-			};
-		}
-		view.setOnClickListener(toast);
-		key.setOnClickListener(toast);
-		keyType.setOnClickListener(toast);
-
 		keys.addView(view);
 		return true;
 	}
@@ -1210,12 +1178,12 @@ public abstract class XmppActivity extends Activity {
 		startActivity(Intent.createChooser(intent, getString(R.string.invite_contact)));
 	}
 
-    private void createIssue() {
-        String IssueURL = Config.ISSUE_URL;
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(IssueURL));
-        startActivity(intent);
-    }
+	private void createIssue() {
+		String IssueURL = Config.ISSUE_URL;
+		Intent intent = new Intent(Intent.ACTION_VIEW);
+		intent.setData(Uri.parse(IssueURL));
+		startActivity(intent);
+	}
 
 	protected void shareUri() {
 		String uri = getShareableUri();

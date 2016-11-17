@@ -8,7 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import de.pixart.messenger.Config;
-import de.pixart.messenger.crypto.axolotl.XmppAxolotlSession;
+import de.pixart.messenger.crypto.axolotl.FingerprintStatus;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.GeoHelper;
 import de.pixart.messenger.utils.MimeUtils;
@@ -817,8 +817,8 @@ public class Message extends AbstractEntity {
     }
 
     public boolean isTrusted() {
-        XmppAxolotlSession.Trust t = conversation.getAccount().getAxolotlService().getFingerprintTrust(axolotlFingerprint);
-        return t != null && t.trusted();
+        FingerprintStatus s = conversation.getAccount().getAxolotlService().getFingerprintTrust(axolotlFingerprint);
+        return s != null && s.isTrustedAndActive();
     }
 
     private int getPreviousEncryption() {
