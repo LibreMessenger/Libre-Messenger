@@ -54,12 +54,13 @@ import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.ExifHelper;
 import de.pixart.messenger.utils.FileUtils;
+import de.pixart.messenger.utils.FileWriterException;
 import de.pixart.messenger.xmpp.pep.Avatar;
 
 public class FileBackend {
 	private static final SimpleDateFormat fileDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
 
-    public static final String CONVERSATIONS_FILE_PROVIDER = "de.pixart.messenger.files";
+	public static final String CONVERSATIONS_FILE_PROVIDER = "de.pixart.messenger.files";
 
 	private XmppConnectionService mXmppConnectionService;
 
@@ -118,24 +119,24 @@ public class FileBackend {
 		final DownloadableFile file;
 		String path = message.getRelativeFilePath();
 		if (path == null) {
-            String filename = fileDateFormat.format(new Date(message.getTimeSent()))+"_"+message.getUuid().substring(0,4);
+			String filename = fileDateFormat.format(new Date(message.getTimeSent()))+"_"+message.getUuid().substring(0,4);
 			path = filename;
 		}
-        if (path.startsWith("/")) {
-            file = new DownloadableFile(path);
-        } else {
-            String mime = message.getMimeType();
-            if (mime != null && mime.startsWith("image")) {
-                file = new DownloadableFile(getConversationsImageDirectory() + path);
-            } else if (mime != null && mime.startsWith("video")) {
-                file = new DownloadableFile(getConversationsVideoDirectory() + path);
-            } else if (mime != null && mime.startsWith("audio")) {
-                file = new DownloadableFile(getConversationsAudioDirectory() + path);
-            } else {
-                file = new DownloadableFile(getConversationsFileDirectory() + path);
-            }
-        }
-        if (encrypted) {
+		if (path.startsWith("/")) {
+			file = new DownloadableFile(path);
+		} else {
+			String mime = message.getMimeType();
+			if (mime != null && mime.startsWith("image")) {
+				file = new DownloadableFile(getConversationsImageDirectory() + path);
+			} else if (mime != null && mime.startsWith("video")) {
+				file = new DownloadableFile(getConversationsVideoDirectory() + path);
+			} else if (mime != null && mime.startsWith("audio")) {
+				file = new DownloadableFile(getConversationsAudioDirectory() + path);
+			} else {
+				file = new DownloadableFile(getConversationsFileDirectory() + path);
+			}
+		}
+		if (encrypted) {
 			return new DownloadableFile(getConversationsFileDirectory() + file.getName() + ".pgp");
 		} else {
 			return file;
@@ -251,8 +252,8 @@ public class FileBackend {
 	}
 
 	public void copyFileToPrivateStorage(File file, Uri uri) throws FileCopyException {
-        Log.d(Config.LOGTAG,"copy file ("+uri.toString()+") to private storage "+file.getAbsolutePath());
-        file.getParentFile().mkdirs();
+		Log.d(Config.LOGTAG,"copy file ("+uri.toString()+") to private storage "+file.getAbsolutePath());
+		file.getParentFile().mkdirs();
 		OutputStream os = null;
 		InputStream is = null;
 		try {
@@ -262,11 +263,21 @@ public class FileBackend {
 			byte[] buffer = new byte[1024];
 			int length;
 			while ((length = is.read(buffer)) > 0) {
-				os.write(buffer, 0, length);
+				try {
+					os.write(buffer, 0, length);
+				} catch (IOException e) {
+					throw new FileWriterException();
+				}
 			}
-			os.flush();
+			try {
+				os.flush();
+			} catch (IOException e) {
+				throw new FileWriterException();
+			}
 		} catch(FileNotFoundException e) {
 			throw new FileCopyException(R.string.error_file_not_found);
+		} catch(FileWriterException e) {
+			throw new FileCopyException(R.string.error_unable_to_create_temporary_file);
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new FileCopyException(R.string.error_io_exception);
@@ -276,17 +287,17 @@ public class FileBackend {
 		}
 	}
 
-    public void copyFileToPrivateStorage(Message message, Uri uri) throws FileCopyException {
-        String mime = mXmppConnectionService.getContentResolver().getType(uri);
-        Log.d(Config.LOGTAG, "copy " + uri.toString() + " to private storage (mime="+mime+")");
-        String extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mime);
-        if (extension == null) {
-            extension = getExtensionFromUri(uri);
-        }
-        String filename = fileDateFormat.format(new Date(message.getTimeSent()))+"_"+message.getUuid().substring(0,4);
-        message.setRelativeFilePath(filename + "." + extension);
-        copyFileToPrivateStorage(mXmppConnectionService.getFileBackend().getFile(message), uri);
-    }
+	public void copyFileToPrivateStorage(Message message, Uri uri) throws FileCopyException {
+		String mime = mXmppConnectionService.getContentResolver().getType(uri);
+		Log.d(Config.LOGTAG, "copy " + uri.toString() + " to private storage (mime="+mime+")");
+		String extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mime);
+		if (extension == null) {
+			extension = getExtensionFromUri(uri);
+		}
+		String filename = fileDateFormat.format(new Date(message.getTimeSent()))+"_"+message.getUuid().substring(0,4);
+		message.setRelativeFilePath(filename + "." + extension);
+		copyFileToPrivateStorage(mXmppConnectionService.getFileBackend().getFile(message), uri);
+	}
 
 	private String getExtensionFromUri(Uri uri) {
 		String[] projection = {MediaStore.MediaColumns.DATA};
@@ -312,8 +323,13 @@ public class FileBackend {
 		InputStream is = null;
 		OutputStream os = null;
 		try {
-			file.createNewFile();
+			if (!file.exists() && !file.createNewFile()) {
+				throw new FileCopyException(R.string.error_unable_to_create_temporary_file);
+			}
 			is = mXmppConnectionService.getContentResolver().openInputStream(image);
+			if (is == null) {
+				throw new FileCopyException(R.string.error_not_an_image_file);
+			}
 			Bitmap originalBitmap;
 			BitmapFactory.Options options = new BitmapFactory.Options();
 			int inSampleSize = (int) Math.pow(2, sampleSize);
@@ -340,7 +356,6 @@ public class FileBackend {
 				quality -= 5;
 			}
 			scaledBitmap.recycle();
-			return;
 		} catch (FileNotFoundException e) {
 			throw new FileCopyException(R.string.error_file_not_found);
 		} catch (IOException e) {
@@ -355,8 +370,6 @@ public class FileBackend {
 			} else {
 				throw new FileCopyException(R.string.error_out_of_memory);
 			}
-		} catch (NullPointerException e) {
-			throw new FileCopyException(R.string.error_io_exception);
 		} finally {
 			close(os);
 			close(is);
@@ -364,12 +377,12 @@ public class FileBackend {
 	}
 
 	public void copyImageToPrivateStorage(File file, Uri image) throws FileCopyException {
-        Log.d(Config.LOGTAG,"copy image ("+image.toString()+") to private storage "+file.getAbsolutePath());
-        copyImageToPrivateStorage(file, image, 0);
+		Log.d(Config.LOGTAG,"copy image ("+image.toString()+") to private storage "+file.getAbsolutePath());
+		copyImageToPrivateStorage(file, image, 0);
 	}
 
 	public void copyImageToPrivateStorage(Message message, Uri image) throws FileCopyException {
-        String filename = fileDateFormat.format(new Date(message.getTimeSent()))+"_"+message.getUuid().substring(0,4);
+		String filename = fileDateFormat.format(new Date(message.getTimeSent()))+"_"+message.getUuid().substring(0,4);
 		switch(Config.IMAGE_FORMAT) {
 			case JPEG:
 				message.setRelativeFilePath(filename+".jpg");
@@ -459,28 +472,28 @@ public class FileBackend {
 		return frame;
 	}
 
-    private static String getTakePhotoPath() {
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)+"/Camera/";
-    }
-
-    public Uri getTakePhotoUri() {
-        File file = new File(getTakePhotoPath()+"IMG_" + fileDateFormat.format(new Date()) + ".jpg");
-		file.getParentFile().mkdirs();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return FileProvider.getUriForFile(mXmppConnectionService, CONVERSATIONS_FILE_PROVIDER, file);
-        } else {
-            return Uri.fromFile(file);
-        }
+	private static String getTakePhotoPath() {
+		return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)+"/Camera/";
 	}
 
-    public static Uri getIndexableTakePhotoUri(Uri original) {
-        if ("file".equals(original.getScheme())) {
-            return original;
-        } else {
-            List<String> segments = original.getPathSegments();
-            return Uri.parse("file://"+getTakePhotoPath()+segments.get(segments.size() - 1));
-        }
-    }
+	public Uri getTakePhotoUri() {
+		File file = new File(getTakePhotoPath()+"IMG_" + fileDateFormat.format(new Date()) + ".jpg");
+		file.getParentFile().mkdirs();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+			return FileProvider.getUriForFile(mXmppConnectionService, CONVERSATIONS_FILE_PROVIDER, file);
+		} else {
+			return Uri.fromFile(file);
+		}
+	}
+
+	public static Uri getIndexableTakePhotoUri(Uri original) {
+		if ("file".equals(original.getScheme())) {
+			return original;
+		} else {
+			List<String> segments = original.getPathSegments();
+			return Uri.parse("file://"+getTakePhotoPath()+segments.get(segments.size() - 1));
+		}
+	}
 
 	public Avatar getPepAvatar(Uri image, int size, Bitmap.CompressFormat format) {
 		try {
@@ -917,46 +930,46 @@ public class FileBackend {
 	public static Bitmap rotateBitmap(File file, Bitmap bitmap, int orientation) {
 
 		if (orientation == 1) {
-            return bitmap;
-        }
+			return bitmap;
+		}
 
 		Matrix matrix = new Matrix();
 		switch (orientation) {
-            case 2:
-                matrix.setScale(-1, 1);
-                break;
-            case 3:
-                matrix.setRotate(180);
-                break;
-            case 4:
-                matrix.setRotate(180);
-                matrix.postScale(-1, 1);
-                break;
-            case 5:
-                matrix.setRotate(90);
-                matrix.postScale(-1, 1);
-                break;
-            case 6:
-                matrix.setRotate(90);
-                break;
-            case 7:
-                matrix.setRotate(-90);
-                matrix.postScale(-1, 1);
-                break;
-            case 8:
-                matrix.setRotate(-90);
-                break;
-            default:
-                return bitmap;
-        }
+			case 2:
+				matrix.setScale(-1, 1);
+				break;
+			case 3:
+				matrix.setRotate(180);
+				break;
+			case 4:
+				matrix.setRotate(180);
+				matrix.postScale(-1, 1);
+				break;
+			case 5:
+				matrix.setRotate(90);
+				matrix.postScale(-1, 1);
+				break;
+			case 6:
+				matrix.setRotate(90);
+				break;
+			case 7:
+				matrix.setRotate(-90);
+				matrix.postScale(-1, 1);
+				break;
+			case 8:
+				matrix.setRotate(-90);
+				break;
+			default:
+				return bitmap;
+		}
 
 		try {
-            Bitmap oriented = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-            bitmap.recycle();
-            return oriented;
-        } catch (OutOfMemoryError e) {
-            e.printStackTrace();
-            return bitmap;
-        }
+			Bitmap oriented = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+			bitmap.recycle();
+			return oriented;
+		} catch (OutOfMemoryError e) {
+			e.printStackTrace();
+			return bitmap;
+		}
 	}
 }
