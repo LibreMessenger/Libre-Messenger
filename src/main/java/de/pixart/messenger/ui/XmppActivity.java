@@ -790,7 +790,7 @@ public abstract class XmppActivity extends Activity {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						account.getAxolotlService().setFingerprintTrust(fingerprint,FingerprintStatus.createActive(true));
+						account.getAxolotlService().setFingerprintTrust(fingerprint,FingerprintStatus.createActive(false));
 						v.setEnabled(true);
 					}
 				},
@@ -830,6 +830,7 @@ public abstract class XmppActivity extends Activity {
 		keyType.setOnLongClickListener(purge);
 		boolean x509 = Config.X509_VERIFICATION && status.getTrust() == FingerprintStatus.Trust.VERIFIED_X509;
 		final View.OnClickListener toast;
+		trustToggle.setChecked(status.isTrusted(), false);
 		if (status.isActive()) {
 			key.setTextColor(getPrimaryTextColor());
 			keyType.setTextColor(getSecondaryTextColor());
@@ -839,7 +840,6 @@ public abstract class XmppActivity extends Activity {
 				trustToggle.setEnabled(false);
 			} else {
 				trustToggle.setOnClickListener(null);
-				trustToggle.setChecked(status.isTrusted(), false);
 				trustToggle.setEnabled(true);
 			}
 			toast = new View.OnClickListener() {
@@ -853,7 +853,6 @@ public abstract class XmppActivity extends Activity {
 			keyType.setTextColor(getTertiaryTextColor());
 			trustToggle.setOnClickListener(null);
 			trustToggle.setEnabled(false);
-			trustToggle.setChecked(status.isTrusted(), false);
 			toast = new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
