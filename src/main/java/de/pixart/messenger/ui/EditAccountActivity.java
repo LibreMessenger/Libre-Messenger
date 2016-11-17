@@ -41,6 +41,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.pixart.messenger.Config;
+import de.pixart.messenger.OmemoActivity;
 import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.entities.Account;
@@ -59,19 +60,19 @@ import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
 import de.pixart.messenger.xmpp.pep.Avatar;
 
-public class EditAccountActivity extends XmppActivity implements OnAccountUpdate,
+public class EditAccountActivity extends OmemoActivity implements OnAccountUpdate,
 		OnKeyStatusUpdated, OnCaptchaRequested, KeyChainAliasCallback, XmppConnectionService.OnShowErrorToast, XmppConnectionService.OnMamPreferencesFetched {
 
-    private static final int REQUEST_DATA_SAVER = 0x37af244;
-    private AutoCompleteTextView mAccountJid;
+	private static final int REQUEST_DATA_SAVER = 0x37af244;
+	private AutoCompleteTextView mAccountJid;
 	private EditText mPassword;
 	private EditText mPasswordConfirm;
 	private CheckBox mRegisterNew;
 	private Button mCancelButton;
 	private Button mSaveButton;
-    private Button mDisableOsOptimizationsButton;
-    private TextView mDisableOsOptimizationsHeadline;
-    private TextView getmDisableOsOptimizationsBody;
+	private Button mDisableOsOptimizationsButton;
+	private TextView mDisableOsOptimizationsHeadline;
+	private TextView getmDisableOsOptimizationsBody;
 	private TableLayout mMoreTable;
 
 	private LinearLayout mStats;
@@ -190,9 +191,9 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				return;
 			}
 			if (registerNewAccount) {
-                if (XmppConnection.errorMessage != null) {
-                    Toast.makeText(EditAccountActivity.this,XmppConnection.errorMessage,Toast.LENGTH_LONG).show();
-                }
+				if (XmppConnection.errorMessage != null) {
+					Toast.makeText(EditAccountActivity.this,XmppConnection.errorMessage,Toast.LENGTH_LONG).show();
+				}
 				if (!password.equals(passwordConfirm)) {
 					mPasswordConfirm.setError(getString(R.string.passwords_do_not_match));
 					mPasswordConfirm.requestFocus();
@@ -206,11 +207,11 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				mAccount.setJid(jid);
 				mAccount.setPort(numericPort);
 				mAccount.setHostname(hostname);
-                if (XmppConnection.errorMessage != null) {
-                    mAccountJid.setError(XmppConnection.errorMessage);
-                } else {
-                    mAccountJid.setError(null);
-                }
+				if (XmppConnection.errorMessage != null) {
+					mAccountJid.setError(XmppConnection.errorMessage);
+				} else {
+					mAccountJid.setError(null);
+				}
 				mPasswordConfirm.setError(null);
 				mAccount.setPassword(password);
 				mAccount.setOption(Account.OPTION_REGISTER, registerNewAccount);
@@ -480,10 +481,10 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		this.mAvatar.setOnClickListener(this.mAvatarClickListener);
 		this.mRegisterNew = (CheckBox) findViewById(R.id.account_register_new);
 		this.mStats = (LinearLayout) findViewById(R.id.stats);
-        this.mOsOptimizations = (RelativeLayout) findViewById(R.id.os_optimization);
-        this.mDisableOsOptimizationsButton = (Button) findViewById(R.id.os_optimization_disable);
-        this.mDisableOsOptimizationsHeadline = (TextView) findViewById(R.id.os_optimization_headline);
-        this.getmDisableOsOptimizationsBody = (TextView) findViewById(R.id.os_optimization_body);
+		this.mOsOptimizations = (RelativeLayout) findViewById(R.id.os_optimization);
+		this.mDisableOsOptimizationsButton = (Button) findViewById(R.id.os_optimization_disable);
+		this.mDisableOsOptimizationsHeadline = (TextView) findViewById(R.id.os_optimization_headline);
+		this.getmDisableOsOptimizationsBody = (TextView) findViewById(R.id.os_optimization_body);
 		this.mSessionEst = (TextView) findViewById(R.id.session_est);
 		this.mServerInfoRosterVersion = (TextView) findViewById(R.id.server_info_roster_version);
 		this.mServerInfoCarbons = (TextView) findViewById(R.id.server_info_carbons);
@@ -516,9 +517,9 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		this.mSaveButton.setOnClickListener(this.mSaveButtonClickListener);
 		this.mCancelButton.setOnClickListener(this.mCancelButtonClickListener);
 		this.mMoreTable = (TableLayout) findViewById(R.id.server_info_more);
-        if (savedInstanceState != null && savedInstanceState.getBoolean("showMoreTable")) {
-           	changeMoreTableVisibility(true);
-        }
+		if (savedInstanceState != null && savedInstanceState.getBoolean("showMoreTable")) {
+			changeMoreTableVisibility(true);
+		}
 		final OnCheckedChangeListener OnCheckedShowConfirmPassword = new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(final CompoundButton buttonView,
@@ -584,22 +585,22 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		return super.onCreateOptionsMenu(menu);
 	}
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        final MenuItem showMoreInfo = menu.findItem(R.id.action_server_info_show_more);
-        if (showMoreInfo.isVisible()) {
-       		showMoreInfo.setChecked(mMoreTable.getVisibility() == View.VISIBLE);
-       	}
-       	return super.onPrepareOptionsMenu(menu);
-    }
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		final MenuItem showMoreInfo = menu.findItem(R.id.action_server_info_show_more);
+		if (showMoreInfo.isVisible()) {
+			showMoreInfo.setChecked(mMoreTable.getVisibility() == View.VISIBLE);
+		}
+		return super.onPrepareOptionsMenu(menu);
+	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-        final int theme = findTheme();
-        if (this.mTheme != theme) {
-            recreate();
-        } else if (getIntent() != null) {
+		final int theme = findTheme();
+		if (this.mTheme != theme) {
+			recreate();
+		} else if (getIntent() != null) {
 			try {
 				this.jidToEdit = Jid.fromString(getIntent().getStringExtra("jid"));
 			} catch (final InvalidJidException | NullPointerException ignored) {
@@ -637,12 +638,11 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		if (mAccount != null) {
 			savedInstanceState.putString("account", mAccount.getJid().toBareJid().toString());
 			savedInstanceState.putBoolean("initMode", mInitMode);
-            savedInstanceState.putBoolean("showMoreTable", mMoreTable.getVisibility() == View.VISIBLE);
+			savedInstanceState.putBoolean("showMoreTable", mMoreTable.getVisibility() == View.VISIBLE);
 		}
 		super.onSaveInstanceState(savedInstanceState);
 	}
 
-	@Override
 	protected void onBackendConnected() {
 		boolean init = true;
 		if (mSavedInstanceAccount != null) {
@@ -714,7 +714,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 				startActivity(showBlocklistIntent);
 				break;
 			case R.id.action_server_info_show_more:
-                changeMoreTableVisibility(!item.isChecked());
+				changeMoreTableVisibility(!item.isChecked());
 				break;
 			case R.id.action_change_password_on_server:
 				gotoChangePassword(null);
@@ -738,9 +738,9 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		return super.onOptionsItemSelected(item);
 	}
 
-    private void changeMoreTableVisibility(boolean visible) {
-        mMoreTable.setVisibility(visible ? View.VISIBLE : View.GONE);
-    }
+	private void changeMoreTableVisibility(boolean visible) {
+		mMoreTable.setVisibility(visible ? View.VISIBLE : View.GONE);
+	}
 
 	private void gotoChangePassword(String newPassword) {
 		final Intent changePasswordIntent = new Intent(this, ChangePasswordActivity.class);
@@ -803,9 +803,9 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		if (this.mAccount.isOnlineAndConnected() && !this.mFetchingAvatar) {
 			Features features = this.mAccount.getXmppConnection().getFeatures();
 			this.mStats.setVisibility(View.VISIBLE);
-            boolean showBatteryWarning = !xmppConnectionService.getPushManagementService().available(mAccount) && isOptimizingBattery();
-            boolean showDataSaverWarning = isAffectedByDataSaver();
-            showOsOptimizationWarning(showBatteryWarning,showDataSaverWarning);
+			boolean showBatteryWarning = !xmppConnectionService.getPushManagementService().available(mAccount) && isOptimizingBattery();
+			boolean showDataSaverWarning = isAffectedByDataSaver();
+			showOsOptimizationWarning(showBatteryWarning,showDataSaverWarning);
 			this.mSessionEst.setText(UIHelper.readableTimeDifferenceFull(this, this.mAccount.getXmppConnection()
 					.getLastSessionEstablished()));
 			if (features.rosterVersioning()) {
@@ -901,13 +901,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 
 							@Override
 							public void onClick(final View v) {
-
-								if (copyTextToClipboard(ownAxolotlFingerprint.substring(2), R.string.omemo_fingerprint)) {
-									Toast.makeText(
-											EditAccountActivity.this,
-											R.string.toast_message_omemo_fingerprint,
-											Toast.LENGTH_SHORT).show();
-								}
+								copyOmemoFingerprint(ownAxolotlFingerprint);
 							}
 						});
 				if (Config.SHOW_REGENERATE_AXOLOTL_KEYS_BUTTON) {
@@ -932,7 +926,7 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 					continue;
 				}
 				boolean highlight = fingerprint.equals(messageFingerprint);
-				hasKeys |= addFingerprintRow(keys, mAccount, fingerprint, highlight, null);
+				hasKeys |= addFingerprintRow(keys, mAccount, fingerprint, highlight);
 			}
 			if (hasKeys && Config.supportOmemo()) {
 				keysCard.setVisibility(View.VISIBLE);
@@ -964,47 +958,47 @@ public class EditAccountActivity extends XmppActivity implements OnAccountUpdate
 		}
 	}
 
-    private void showOsOptimizationWarning(boolean showBatteryWarning, boolean showDataSaverWarning) {
-        this.mOsOptimizations.setVisibility(showBatteryWarning || showDataSaverWarning ? View.VISIBLE : View.GONE);
-        if (showDataSaverWarning) {
-            this.mDisableOsOptimizationsHeadline.setText(R.string.data_saver_enabled);
-            this.getmDisableOsOptimizationsBody.setText(R.string.data_saver_enabled_explained);
-            this.mDisableOsOptimizationsButton.setText(R.string.allow);
-            this.mDisableOsOptimizationsButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(Settings.ACTION_IGNORE_BACKGROUND_DATA_RESTRICTIONS_SETTINGS);
-                    Uri uri = Uri.parse("package:" + getPackageName());
-                    intent.setData(uri);
-                    try {
-                        startActivityForResult(intent, REQUEST_DATA_SAVER);
-                    } catch (ActivityNotFoundException e) {
-                        Toast.makeText(EditAccountActivity.this, R.string.device_does_not_support_data_saver, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-        } else if (showBatteryWarning) {
-            this.mDisableOsOptimizationsButton.setText(R.string.disable);
-            this.mDisableOsOptimizationsHeadline.setText(R.string.battery_optimizations_enabled);
-            this.getmDisableOsOptimizationsBody.setText(R.string.battery_optimizations_enabled_explained);
-            this.mDisableOsOptimizationsButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                    Uri uri = Uri.parse("package:" + getPackageName());
-                    intent.setData(uri);
-                    try {
-                        startActivityForResult(intent, REQUEST_BATTERY_OP);
-                    } catch (ActivityNotFoundException e) {
-                        Toast.makeText(EditAccountActivity.this, R.string.device_does_not_support_battery_op, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-        }
-    }
+	private void showOsOptimizationWarning(boolean showBatteryWarning, boolean showDataSaverWarning) {
+		this.mOsOptimizations.setVisibility(showBatteryWarning || showDataSaverWarning ? View.VISIBLE : View.GONE);
+		if (showDataSaverWarning) {
+			this.mDisableOsOptimizationsHeadline.setText(R.string.data_saver_enabled);
+			this.getmDisableOsOptimizationsBody.setText(R.string.data_saver_enabled_explained);
+			this.mDisableOsOptimizationsButton.setText(R.string.allow);
+			this.mDisableOsOptimizationsButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(Settings.ACTION_IGNORE_BACKGROUND_DATA_RESTRICTIONS_SETTINGS);
+					Uri uri = Uri.parse("package:" + getPackageName());
+					intent.setData(uri);
+					try {
+						startActivityForResult(intent, REQUEST_DATA_SAVER);
+					} catch (ActivityNotFoundException e) {
+						Toast.makeText(EditAccountActivity.this, R.string.device_does_not_support_data_saver, Toast.LENGTH_SHORT).show();
+					}
+				}
+			});
+		} else if (showBatteryWarning) {
+			this.mDisableOsOptimizationsButton.setText(R.string.disable);
+			this.mDisableOsOptimizationsHeadline.setText(R.string.battery_optimizations_enabled);
+			this.getmDisableOsOptimizationsBody.setText(R.string.battery_optimizations_enabled_explained);
+			this.mDisableOsOptimizationsButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+					Uri uri = Uri.parse("package:" + getPackageName());
+					intent.setData(uri);
+					try {
+						startActivityForResult(intent, REQUEST_BATTERY_OP);
+					} catch (ActivityNotFoundException e) {
+						Toast.makeText(EditAccountActivity.this, R.string.device_does_not_support_battery_op, Toast.LENGTH_SHORT).show();
+					}
+				}
+			});
+		}
+	}
 
 
-    public void showRegenerateAxolotlKeyDialog() {
+	public void showRegenerateAxolotlKeyDialog() {
 		Builder builder = new Builder(this);
 		builder.setTitle("Regenerate Key");
 		builder.setIconAttribute(android.R.attr.alertDialogIcon);

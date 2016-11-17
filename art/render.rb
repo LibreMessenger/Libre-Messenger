@@ -41,6 +41,7 @@ images = {
 	'ic_send_picture_offline.svg' => ['ic_send_picture_offline', 36],
 	'ic_send_picture_away.svg' => ['ic_send_picture_away', 36],
 	'ic_send_picture_dnd.svg' => ['ic_send_picture_dnd', 36],
+	'ic_verified_fingerprint.svg' => ['ic_verified_fingerprint', 36],
 	'md_switch_thumb_disable.svg' => ['switch_thumb_disable', 48],
 	'md_switch_thumb_off_normal.svg' => ['switch_thumb_off_normal', 48],
 	'md_switch_thumb_off_pressed.svg' => ['switch_thumb_off_pressed', 48],
