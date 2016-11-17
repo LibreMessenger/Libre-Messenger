@@ -52,7 +52,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
 	public static final String ATTRIBUTE_MUTED_TILL = "muted_till";
 	public static final String ATTRIBUTE_ALWAYS_NOTIFY = "always_notify";
 	public static final String ATTRIBUTE_CRYPTO_TARGETS = "crypto_targets";
-    public static final String ATTRIBUTE_LAST_CLEAR_HISTORY = "last_clear_history";
+	public static final String ATTRIBUTE_LAST_CLEAR_HISTORY = "last_clear_history";
 
 	private String name;
 	private String contactUuid;
@@ -150,7 +150,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
 				if ((message.getType() == Message.TYPE_IMAGE || message.getType() == Message.TYPE_FILE)
 						&& message.getEncryption() != Message.ENCRYPTION_PGP) {
 					onMessageFound.onMessageFound(message);
-						}
+				}
 			}
 		}
 	}
@@ -235,7 +235,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
 				if (message.getType() != Message.TYPE_IMAGE
 						&& message.getStatus() == Message.STATUS_UNSEND) {
 					onMessageFound.onMessageFound(message);
-						}
+				}
 			}
 		}
 	}
@@ -381,16 +381,16 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
 	}
 
 	public Conversation(final String name, final Account account, final Jid contactJid,
-			final int mode) {
+						final int mode) {
 		this(java.util.UUID.randomUUID().toString(), name, null, account
-				.getUuid(), contactJid, System.currentTimeMillis(),
+						.getUuid(), contactJid, System.currentTimeMillis(),
 				STATUS_AVAILABLE, mode, "");
 		this.account = account;
 	}
 
 	public Conversation(final String uuid, final String name, final String contactUuid,
-			final String accountUuid, final Jid contactJid, final long created, final int status,
-			final int mode, final String attributes) {
+						final String accountUuid, final Jid contactJid, final long created, final int status,
+						final int mode, final String attributes) {
 		this.uuid = uuid;
 		this.name = name;
 		this.contactUuid = contactUuid;
@@ -432,7 +432,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
 				} else {
 					return this.messages.get(i);
 				}
-					}
+			}
 		}
 		return null;
 	}
@@ -469,7 +469,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
 			return this.getContact().getDisplayName();
 		}
 	}
-	
+
 	public String getParticipants() {
 		if (getMode() == MODE_MULTI) {
 			String generatedName = getMucOptions().createNameFromParticipants();
@@ -709,7 +709,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
 	}
 
 	public int getNextEncryption() {
-        return this.getIntAttribute(ATTRIBUTE_NEXT_ENCRYPTION, Message.ENCRYPTION_NONE);
+		return Math.max(this.getIntAttribute(ATTRIBUTE_NEXT_ENCRYPTION, Message.ENCRYPTION_NONE), Message.ENCRYPTION_NONE);
 	}
 
 	public void setNextEncryption(int encryption) {
