@@ -91,11 +91,11 @@ public class XmppAxolotlMessage {
 	private XmppAxolotlMessage(final Element axolotlMessage, final Jid from) throws IllegalArgumentException {
 		this.from = from;
 		Element header = axolotlMessage.findChild(HEADER);
-        try {
-            this.sourceDeviceId = Integer.parseInt(header.getAttribute(SOURCEID));
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("invalid source id");
-        }
+		try {
+			this.sourceDeviceId = Integer.parseInt(header.getAttribute(SOURCEID));
+		} catch (NumberFormatException e) {
+			throw new IllegalArgumentException("invalid source id");
+		}
 		List<Element> keyElements = header.getChildren();
 		this.keys = new HashMap<>(keyElements.size());
 		for (Element keyElement : keyElements) {
@@ -204,13 +204,13 @@ public class XmppAxolotlMessage {
 		for (Map.Entry<Integer, byte[]> keyEntry : keys.entrySet()) {
 			Element keyElement = new Element(KEYTAG);
 			keyElement.setAttribute(REMOTEID, keyEntry.getKey());
-			keyElement.setContent(Base64.encodeToString(keyEntry.getValue(), Base64.DEFAULT));
+			keyElement.setContent(Base64.encodeToString(keyEntry.getValue(), Base64.NO_WRAP));
 			headerElement.addChild(keyElement);
 		}
-		headerElement.addChild(IVTAG).setContent(Base64.encodeToString(iv, Base64.DEFAULT));
+		headerElement.addChild(IVTAG).setContent(Base64.encodeToString(iv, Base64.NO_WRAP));
 		if (ciphertext != null) {
 			Element payload = encryptionElement.addChild(PAYLOAD);
-			payload.setContent(Base64.encodeToString(ciphertext, Base64.DEFAULT));
+			payload.setContent(Base64.encodeToString(ciphertext, Base64.NO_WRAP));
 		}
 		return encryptionElement;
 	}
