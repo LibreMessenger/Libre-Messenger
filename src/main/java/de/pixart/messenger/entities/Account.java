@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import java.security.PublicKey;
 import java.security.interfaces.DSAPublicKey;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -23,7 +24,9 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.OtrService;
 import de.pixart.messenger.crypto.PgpDecryptionService;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
+import de.pixart.messenger.crypto.axolotl.XmppAxolotlSession;
 import de.pixart.messenger.services.XmppConnectionService;
+import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xmpp.XmppConnection;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
@@ -90,16 +93,16 @@ public class Account extends AbstractEntity {
 		return pgpDecryptionService != null && pgpDecryptionService.isConnected();
 	}
 
-    public boolean setShowErrorNotification(boolean newValue) {
-        boolean oldValue = showErrorNotification();
-        setKey("show_error",Boolean.toString(newValue));
-        return newValue != oldValue;
-    }
+	public boolean setShowErrorNotification(boolean newValue) {
+		boolean oldValue = showErrorNotification();
+		setKey("show_error",Boolean.toString(newValue));
+		return newValue != oldValue;
+	}
 
-    public boolean showErrorNotification() {
-        String key = getKey("show_error");
-        return key == null || Boolean.parseBoolean(key);
-    }
+	public boolean showErrorNotification() {
+		String key = getKey("show_error");
+		return key == null || Boolean.parseBoolean(key);
+	}
 
 	public enum State {
 		DISABLED,
@@ -237,13 +240,13 @@ public class Account extends AbstractEntity {
 		this.password = password;
 		this.options = options;
 		this.rosterVersion = rosterVersion;
-        JSONObject tmp;
+		JSONObject tmp;
 		try {
-            tmp = new JSONObject(keys);
+			tmp = new JSONObject(keys);
 		} catch (JSONException e) {
-            tmp = new JSONObject();
+			tmp = new JSONObject();
 		}
-        this.keys = tmp;
+		this.keys = tmp;
 		this.avatar = avatar;
 		this.displayName = displayName;
 		this.hostname = hostname;
@@ -289,12 +292,12 @@ public class Account extends AbstractEntity {
 		return jid.getLocalpart();
 	}
 
-    public boolean setJid(final Jid next) {
-        final Jid prev = this.jid != null ? this.jid.toBareJid() : null;
-        this.jid = next;
-        return prev == null || (next != null && !prev.equals(next.toBareJid())
-        );
-    }
+	public boolean setJid(final Jid next) {
+		final Jid prev = this.jid != null ? this.jid.toBareJid() : null;
+		this.jid = next;
+		return prev == null || (next != null && !prev.equals(next.toBareJid())
+		);
+	}
 
 	public Jid getServer() {
 		return jid.toDomainJid();
@@ -393,32 +396,32 @@ public class Account extends AbstractEntity {
 	}
 
 	public String getKey(final String name) {
-        synchronized (this.keys) {
-            return this.keys.optString(name, null);
-        }
-	}
-
-    public int getKeyAsInt(final String name, int defaultValue) {
-        String key = getKey(name);
-        try {
-            return key == null ? defaultValue : Integer.parseInt(key);
-        } catch (NumberFormatException e) {
-            return defaultValue;
+		synchronized (this.keys) {
+			return this.keys.optString(name, null);
 		}
 	}
 
-    public boolean setKey(final String keyName, final String keyValue) {
-        synchronized (this.keys) {
-            try {
-                this.keys.put(keyName, keyValue);
-                return true;
-            } catch (final JSONException e) {
-                return false;
-            }
-        }
-    }
+	public int getKeyAsInt(final String name, int defaultValue) {
+		String key = getKey(name);
+		try {
+			return key == null ? defaultValue : Integer.parseInt(key);
+		} catch (NumberFormatException e) {
+			return defaultValue;
+		}
+	}
 
-    public boolean setPrivateKeyAlias(String alias) {
+	public boolean setKey(final String keyName, final String keyValue) {
+		synchronized (this.keys) {
+			try {
+				this.keys.put(keyName, keyValue);
+				return true;
+			} catch (final JSONException e) {
+				return false;
+			}
+		}
+	}
+
+	public boolean setPrivateKeyAlias(String alias) {
 		return setKey("private_key_alias", alias);
 	}
 
@@ -434,9 +437,9 @@ public class Account extends AbstractEntity {
 		values.put(SERVER, jid.getDomainpart());
 		values.put(PASSWORD, password);
 		values.put(OPTIONS, options);
-        synchronized (this.keys) {
-            values.put(KEYS, this.keys.toString());
-        }
+		synchronized (this.keys) {
+			values.put(KEYS, this.keys.toString());
+		}
 		values.put(ROSTERVERSION, rosterVersion);
 		values.put(AVATAR, avatar);
 		values.put(DISPLAY_NAME, displayName);
@@ -513,41 +516,41 @@ public class Account extends AbstractEntity {
 	}
 
 	public String getPgpSignature() {
-        return getKey(KEY_PGP_SIGNATURE);
+		return getKey(KEY_PGP_SIGNATURE);
 	}
 
 	public boolean setPgpSignature(String signature) {
-        return setKey(KEY_PGP_SIGNATURE, signature);
+		return setKey(KEY_PGP_SIGNATURE, signature);
 	}
 
 	public boolean unsetPgpSignature() {
-        synchronized (this.keys) {
-            return keys.remove(KEY_PGP_SIGNATURE) != null;
-        }
+		synchronized (this.keys) {
+			return keys.remove(KEY_PGP_SIGNATURE) != null;
+		}
 	}
 
 	public long getPgpId() {
-        synchronized (this.keys) {
-            if (keys.has(KEY_PGP_ID)) {
-                try {
-                    return keys.getLong(KEY_PGP_ID);
-                } catch (JSONException e) {
-                    return 0;
-                }
-            } else {
+		synchronized (this.keys) {
+			if (keys.has(KEY_PGP_ID)) {
+				try {
+					return keys.getLong(KEY_PGP_ID);
+				} catch (JSONException e) {
+					return 0;
+				}
+			} else {
 				return 0;
 			}
 		}
 	}
 
 	public boolean setPgpSignId(long pgpID) {
-        synchronized (this.keys) {
-            try {
-                keys.put(KEY_PGP_ID, pgpID);
-            } catch (JSONException e) {
-                return false;
-            }
-            return true;
+		synchronized (this.keys) {
+			try {
+				keys.put(KEY_PGP_ID, pgpID);
+			} catch (JSONException e) {
+				return false;
+			}
+			return true;
 		}
 	}
 
@@ -599,12 +602,44 @@ public class Account extends AbstractEntity {
 	}
 
 	public String getShareableUri() {
-		final String fingerprint = this.getOtrFingerprint();
-		if (fingerprint != null) {
-			return "xmpp:" + this.getJid().toBareJid().toString() + "?otr-fingerprint="+fingerprint;
+		List<XmppUri.Fingerprint> fingerprints = this.getFingerprints();
+		String uri = "xmpp:"+this.getJid().toBareJid().toString();
+		if (fingerprints.size() > 0) {
+			StringBuilder builder = new StringBuilder(uri);
+			builder.append('?');
+			for(int i = 0; i < fingerprints.size(); ++i) {
+				XmppUri.FingerprintType type = fingerprints.get(i).type;
+				if (type == XmppUri.FingerprintType.OMEMO) {
+					builder.append(XmppUri.OMEMO_URI_PARAM);
+					builder.append(fingerprints.get(i).deviceId);
+				} else if (type == XmppUri.FingerprintType.OTR) {
+					builder.append(XmppUri.OTR_URI_PARAM);
+				}
+				builder.append('=');
+				builder.append(fingerprints.get(i).fingerprint);
+				if (i != fingerprints.size() -1) {
+					builder.append(';');
+				}
+			}
+			return builder.toString();
 		} else {
-			return "xmpp:" + this.getJid().toBareJid().toString();
+			return uri;
 		}
+	}
+
+	private List<XmppUri.Fingerprint> getFingerprints() {
+		ArrayList<XmppUri.Fingerprint> fingerprints = new ArrayList<>();
+		final String otr = this.getOtrFingerprint();
+		if (otr != null) {
+			fingerprints.add(new XmppUri.Fingerprint(XmppUri.FingerprintType.OTR,otr));
+		}
+		fingerprints.add(new XmppUri.Fingerprint(XmppUri.FingerprintType.OMEMO,axolotlService.getOwnFingerprint().substring(2),axolotlService.getOwnDeviceId()));
+		for(XmppAxolotlSession session : axolotlService.findOwnSessions()) {
+			if (session.getTrust().isVerified() && session.getTrust().isActive()) {
+				fingerprints.add(new XmppUri.Fingerprint(XmppUri.FingerprintType.OMEMO,session.getFingerprint().substring(2).replaceAll("\\s",""),session.getRemoteAddress().getDeviceId()));
+			}
+		}
+		return fingerprints;
 	}
 
 	public boolean isBlocked(final ListItem contact) {

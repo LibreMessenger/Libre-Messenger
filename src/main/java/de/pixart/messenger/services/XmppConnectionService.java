@@ -3771,6 +3771,28 @@ public class XmppConnectionService extends Service {
 		}
 	}
 
+	public boolean verifyFingerprints(Account account, List<XmppUri.Fingerprint> fingerprints) {
+		final AxolotlService axolotlService = account.getAxolotlService();
+		boolean verifiedSomething = false;
+		for(XmppUri.Fingerprint fp : fingerprints) {
+			if (fp.type == XmppUri.FingerprintType.OMEMO) {
+				String fingerprint = "05"+fp.fingerprint.replaceAll("\\s","");
+				Log.d(Config.LOGTAG,"trying to verify own fp="+fingerprint);
+				FingerprintStatus fingerprintStatus = axolotlService.getFingerprintTrust(fingerprint);
+				if (fingerprintStatus != null) {
+					if (!fingerprintStatus.isVerified()) {
+						axolotlService.setFingerprintTrust(fingerprint,fingerprintStatus.toVerified());
+						verifiedSomething = true;
+					}
+				} else {
+					axolotlService.preVerifyFingerprint(account,fingerprint);
+					verifiedSomething = true;
+				}
+			}
+		}
+		return verifiedSomething;
+	}
+
 	public interface OnMamPreferencesFetched {
 		void onPreferencesFetched(Element prefs);
 		void onPreferencesFetchFailed();
