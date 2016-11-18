@@ -1,7 +1,7 @@
 package de.pixart.messenger.ui;
 
 import android.Manifest;
-import android.app.Activity;
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -28,16 +28,26 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 import javax.crypto.NoSuchPaddingException;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.persistance.DatabaseBackend;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.utils.EncryptDecryptFile;
 
-public class WelcomeActivity extends Activity {
+public class WelcomeActivity extends XmppActivity {
+
+    @Override
+    protected void refreshUiReal() {
+    }
+
+    @Override
+    void onBackendConnected() {
+    }
 
     private static final int REQUEST_READ_EXTERNAL_STORAGE = 0XD737;
 
@@ -48,6 +58,11 @@ public class WelcomeActivity extends Activity {
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome);
+        final ActionBar ab = getActionBar();
+        if (ab != null) {
+            ab.setDisplayShowHomeEnabled(false);
+            ab.setDisplayHomeAsUpEnabled(false);
+        }
 
         //check if there is a backed up database --
         if (hasStoragePermission(REQUEST_READ_EXTERNAL_STORAGE)) {
@@ -83,7 +98,15 @@ public class WelcomeActivity extends Activity {
         useOwnProvider.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(WelcomeActivity.this, EditAccountActivity.class));
+                List<Account> accounts = xmppConnectionService.getAccounts();
+                Intent intent = new Intent(WelcomeActivity.this, EditAccountActivity.class);
+                if (accounts.size() == 1) {
+                    intent.putExtra("jid",accounts.get(0).getJid().toBareJid().toString());
+                    intent.putExtra("init",true);
+                } else if (accounts.size() >= 1) {
+                    intent = new Intent(WelcomeActivity.this, ManageAccountActivity.class);
+                }
+                startActivity(intent);
             }
         });
 
