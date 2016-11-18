@@ -143,7 +143,7 @@ public class XmppConnectionService extends Service {
 	public static final String ACTION_CLEAR_NOTIFICATION = "clear_notification";
 	public static final String ACTION_DISABLE_FOREGROUND = "disable_foreground";
 	public static final String ACTION_TRY_AGAIN = "try_again";
-    public static final String ACTION_DISMISS_ERROR_NOTIFICATIONS = "dismiss_error";
+	public static final String ACTION_DISMISS_ERROR_NOTIFICATIONS = "dismiss_error";
 	public static final String ACTION_IDLE_PING = "idle_ping";
 	private static final String ACTION_MERGE_PHONE_CONTACTS = "merge_phone_contacts";
 	public static final String ACTION_GCM_TOKEN_REFRESH = "gcm_token_refresh";
@@ -155,11 +155,11 @@ public class XmppConnectionService extends Service {
 	private final List<Conversation> conversations = new CopyOnWriteArrayList<>();
 	private final IqGenerator mIqGenerator = new IqGenerator(this);
 	private final List<String> mInProgressAvatarFetches = new ArrayList<>();
-    private final HashSet<Jid> mLowPingTimeoutMode = new HashSet<>();
-    private WakeLock wakeLock;
+	private final HashSet<Jid> mLowPingTimeoutMode = new HashSet<>();
+	private WakeLock wakeLock;
 	private long mLastActivity = 0;
-    public static VideoCompressor CompressVideo;
-    private NotificationManager mNotifyManager;
+	public static VideoCompressor CompressVideo;
+	private NotificationManager mNotifyManager;
 
 	public DatabaseBackend databaseBackend;
 	private ContentObserver contactObserver = new ContentObserver(null) {
@@ -307,14 +307,14 @@ public class XmppConnectionService extends Service {
 				mOnAccountUpdate.onAccountUpdate();
 			}
 			if (account.getStatus() == Account.State.ONLINE) {
-                synchronized (mLowPingTimeoutMode) {
-                    if (mLowPingTimeoutMode.remove(account.getJid().toBareJid())) {
-                        Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": leaving low ping timeout mode");
-                    }
-                }
-                if (account.setShowErrorNotification(true)) {
-                    databaseBackend.updateAccount(account);
-                }
+				synchronized (mLowPingTimeoutMode) {
+					if (mLowPingTimeoutMode.remove(account.getJid().toBareJid())) {
+						Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": leaving low ping timeout mode");
+					}
+				}
+				if (account.setShowErrorNotification(true)) {
+					databaseBackend.updateAccount(account);
+				}
 				mMessageArchiveService.executePendingQueries(account);
 				if (connection != null && connection.getFeatures().csi()) {
 					if (checkListeners()) {
@@ -343,26 +343,26 @@ public class XmppConnectionService extends Service {
 					joinMuc(conversation);
 				}
 				account.pendingConferenceJoins.clear();
-                scheduleWakeUpCall(Config.PING_MAX_INTERVAL, account.getUuid().hashCode());
+				scheduleWakeUpCall(Config.PING_MAX_INTERVAL, account.getUuid().hashCode());
 			} else if (account.getStatus() == Account.State.OFFLINE || account.getStatus() == Account.State.DISABLED) {
 				resetSendingToWaiting(account);
-                if (!account.isOptionSet(Account.OPTION_DISABLED)) {
-                    synchronized (mLowPingTimeoutMode) {
-                        if (mLowPingTimeoutMode.contains(account.getJid().toBareJid())) {
-                            Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": went into offline state during low ping mode. reconnecting now");
-                            reconnectAccount(account, true, false);
-                        } else {
-                            int timeToReconnect = mRandom.nextInt(20) + 10;
-                            scheduleWakeUpCall(timeToReconnect, account.getUuid().hashCode());
-                        }
-                    }
+				if (!account.isOptionSet(Account.OPTION_DISABLED)) {
+					synchronized (mLowPingTimeoutMode) {
+						if (mLowPingTimeoutMode.contains(account.getJid().toBareJid())) {
+							Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": went into offline state during low ping mode. reconnecting now");
+							reconnectAccount(account, true, false);
+						} else {
+							int timeToReconnect = mRandom.nextInt(20) + 10;
+							scheduleWakeUpCall(timeToReconnect, account.getUuid().hashCode());
+						}
+					}
 				}
 			} else if (account.getStatus() == Account.State.REGISTRATION_SUCCESSFUL) {
 				databaseBackend.updateAccount(account);
 				reconnectAccount(account, true, false);
 			} else if ((account.getStatus() != Account.State.CONNECTING)
 					&& (account.getStatus() != Account.State.NO_INTERNET)) {
-                resetSendingToWaiting(account);
+				resetSendingToWaiting(account);
 				if (connection != null) {
 					int next = connection.getTimeToNextAttempt();
 					Log.d(Config.LOGTAG, account.getJid().toBareJid()
@@ -460,7 +460,7 @@ public class XmppConnectionService extends Service {
 		message.setCounterpart(conversation.getNextCounterpart());
 		message.setType(Message.TYPE_FILE);
 		final String path = getFileBackend().getOriginalPath(uri);
-        Log.d(Config.LOGTAG,"File path = " + path);
+		Log.d(Config.LOGTAG,"File path = " + path);
 		mFileAddingExecutor.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -538,100 +538,100 @@ public class XmppConnectionService extends Service {
 		});
 	}
 
-    public void attachVideoToConversation(final Conversation conversation, final Uri uri, final UiCallback<Message> callback) {
-        File f = new File(FileUtils.getPath(this, uri));
-        long filesize = f.length();
-        String path = f.toString();
-        final Integer NOTIFICATION_ID = (int) (new Date().getTime()/1000);
-        mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getBaseContext());
-        mBuilder.setContentTitle(getString(R.string.app_name))
-                .setContentText(getString(R.string.compressing_video))
-                .setSmallIcon(R.drawable.ic_play_box_outline_white_24dp)
-                .setOngoing(true)
-                .setProgress(0, 0, true);
-        mNotifyManager.notify(NOTIFICATION_ID, mBuilder.build());
-        if (FileBackend.weOwnFile(this, uri)) {
-            Log.d(Config.LOGTAG,"trying to attach video that belonged to us");
-            mNotifyManager.cancel(NOTIFICATION_ID);
-            callback.error(R.string.security_error_invalid_file_access, null);
-            return;
-        }
-        Log.d(Config.LOGTAG,"Video file (size) :" + f.toString() + "("+filesize/1024/1024+"MB)");
-        if (filesize == 0) {
-            Log.d(Config.LOGTAG,"Error with file, size = 0");
-            mNotifyManager.cancel(NOTIFICATION_ID);
-            callback.error(R.string.error_file_corrupt, null);
-            return;
-        }
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
-        File compressed_file = new File(FileBackend.getConversationsVideoDirectory() + "/"
-                + dateFormat.format(new Date())
-                + "_komp.mp4");
-        final String compressed_path = compressed_file.toString();
-        final Uri compressed_uri = Uri.fromFile(compressed_file);
-        if (filesize > Config.VIDEO_MAX_SIZE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            CompressVideo = new VideoCompressor(path, compressed_path,  new Interface() {
-                @Override
-                public void videocompressed(boolean result) {
-                    if (result) {
-                        Log.d(Config.LOGTAG, conversation.getAccount().getJid().toBareJid() + ": sending compressed video.");
-                        mNotifyManager.cancel(NOTIFICATION_ID);
-                        attachFileToConversation(conversation, compressed_uri, callback);
-                    }
-                }
-            });
-            CompressVideo.execute();
-        } else {
-            Log.d(Config.LOGTAG, conversation.getAccount().getJid().toBareJid() + ": not compressing video. sending as file");
-            mNotifyManager.cancel(NOTIFICATION_ID);
-            attachFileToConversation(conversation, uri, callback);
-        }
-    }
+	public void attachVideoToConversation(final Conversation conversation, final Uri uri, final UiCallback<Message> callback) {
+		File f = new File(FileUtils.getPath(this, uri));
+		long filesize = f.length();
+		String path = f.toString();
+		final Integer NOTIFICATION_ID = (int) (new Date().getTime()/1000);
+		mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getBaseContext());
+		mBuilder.setContentTitle(getString(R.string.app_name))
+				.setContentText(getString(R.string.compressing_video))
+				.setSmallIcon(R.drawable.ic_play_box_outline_white_24dp)
+				.setOngoing(true)
+				.setProgress(0, 0, true);
+		mNotifyManager.notify(NOTIFICATION_ID, mBuilder.build());
+		if (FileBackend.weOwnFile(this, uri)) {
+			Log.d(Config.LOGTAG,"trying to attach video that belonged to us");
+			mNotifyManager.cancel(NOTIFICATION_ID);
+			callback.error(R.string.security_error_invalid_file_access, null);
+			return;
+		}
+		Log.d(Config.LOGTAG,"Video file (size) :" + f.toString() + "("+filesize/1024/1024+"MB)");
+		if (filesize == 0) {
+			Log.d(Config.LOGTAG,"Error with file, size = 0");
+			mNotifyManager.cancel(NOTIFICATION_ID);
+			callback.error(R.string.error_file_corrupt, null);
+			return;
+		}
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
+		File compressed_file = new File(FileBackend.getConversationsVideoDirectory() + "/"
+				+ dateFormat.format(new Date())
+				+ "_komp.mp4");
+		final String compressed_path = compressed_file.toString();
+		final Uri compressed_uri = Uri.fromFile(compressed_file);
+		if (filesize > Config.VIDEO_MAX_SIZE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+			CompressVideo = new VideoCompressor(path, compressed_path,  new Interface() {
+				@Override
+				public void videocompressed(boolean result) {
+					if (result) {
+						Log.d(Config.LOGTAG, conversation.getAccount().getJid().toBareJid() + ": sending compressed video.");
+						mNotifyManager.cancel(NOTIFICATION_ID);
+						attachFileToConversation(conversation, compressed_uri, callback);
+					}
+				}
+			});
+			CompressVideo.execute();
+		} else {
+			Log.d(Config.LOGTAG, conversation.getAccount().getJid().toBareJid() + ": not compressing video. sending as file");
+			mNotifyManager.cancel(NOTIFICATION_ID);
+			attachFileToConversation(conversation, uri, callback);
+		}
+	}
 
-    public interface Interface {
-        void videocompressed(boolean result);
-    }
+	public interface Interface {
+		void videocompressed(boolean result);
+	}
 
-    class VideoCompressor extends AsyncTask<String, Void, Boolean> {
-        private String originalpath;
-        private String compressedpath;
-        private Interface mListener;
+	class VideoCompressor extends AsyncTask<String, Void, Boolean> {
+		private String originalpath;
+		private String compressedpath;
+		private Interface mListener;
 
-        VideoCompressor(String path, String compressed_path, Interface mListener) {
-            originalpath = path;
-            compressedpath = compressed_path;
-            this.mListener  = mListener;
-        }
+		VideoCompressor(String path, String compressed_path, Interface mListener) {
+			originalpath = path;
+			compressedpath = compressed_path;
+			this.mListener  = mListener;
+		}
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Log.d(Config.LOGTAG,"Start video compression");
-            wakeLock.acquire();
-        }
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			Log.d(Config.LOGTAG,"Start video compression");
+			wakeLock.acquire();
+		}
 
-        @Override
-        protected Boolean doInBackground(String... params) {
-            return MediaController.getInstance().convertVideo(originalpath, compressedpath);
-        }
+		@Override
+		protected Boolean doInBackground(String... params) {
+			return MediaController.getInstance().convertVideo(originalpath, compressedpath);
+		}
 
-        @Override
-        protected void onPostExecute(Boolean compressed) {
-            super.onPostExecute(compressed);
-            wakeLock.release();
-            File video = new File(compressedpath);
-            if (mListener != null) {
-                if (video.exists() && video.length() > 0) {
-                    mListener.videocompressed(compressed);
-                    Log.d(Config.LOGTAG, "Compression successfully!");
-                } else {
-                    mListener.videocompressed(false);
-                    Log.d(Config.LOGTAG, "Compression failed!");
-                }
-            }
-        }
-    }
+		@Override
+		protected void onPostExecute(Boolean compressed) {
+			super.onPostExecute(compressed);
+			wakeLock.release();
+			File video = new File(compressedpath);
+			if (mListener != null) {
+				if (video.exists() && video.length() > 0) {
+					mListener.videocompressed(compressed);
+					Log.d(Config.LOGTAG, "Compression successfully!");
+				} else {
+					mListener.videocompressed(false);
+					Log.d(Config.LOGTAG, "Compression failed!");
+				}
+			}
+		}
+	}
 
 	public Conversation find(Bookmark bookmark) {
 		return find(bookmark.getAccount(), bookmark.getJid());
@@ -644,7 +644,7 @@ public class XmppConnectionService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		final String action = intent == null ? null : intent.getAction();
-        String pushedAccountHash = null;
+		String pushedAccountHash = null;
 		boolean interactive = false;
 		if (action != null) {
 			final Conversation c = findConversationByUuid(intent.getStringExtra("uuid"));
@@ -669,9 +669,9 @@ public class XmppConnectionService extends Service {
 						mNotificationService.clear();
 					}
 					break;
-                case ACTION_DISMISS_ERROR_NOTIFICATIONS:
-                    dismissErrorNotifications();
-                    break;
+				case ACTION_DISMISS_ERROR_NOTIFICATIONS:
+					dismissErrorNotifications();
+					break;
 				case ACTION_TRY_AGAIN:
 					resetAllAttemptCounts(false);
 					interactive = true;
@@ -679,10 +679,10 @@ public class XmppConnectionService extends Service {
 				case ACTION_REPLY_TO_CONVERSATION:
 					Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
 					if (remoteInput != null && c != null) {
-                        final CharSequence body = remoteInput.getCharSequence("text_reply");
-                        if (body != null && body.length() > 0) {
-                            directReply(c, body.toString(),intent.getBooleanExtra("dismiss_notification",false));
-                        }
+						final CharSequence body = remoteInput.getCharSequence("text_reply");
+						if (body != null && body.length() > 0) {
+							directReply(c, body.toString(),intent.getBooleanExtra("dismiss_notification",false));
+						}
 					}
 					break;
 				case AudioManager.RINGER_MODE_CHANGED_ACTION:
@@ -701,13 +701,13 @@ public class XmppConnectionService extends Service {
 					refreshAllGcmTokens();
 					break;
 				case ACTION_IDLE_PING:
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 						scheduleNextIdlePing();
 					}
 					break;
 				case ACTION_GCM_MESSAGE_RECEIVED:
 					Log.d(Config.LOGTAG,"gcm push message arrived in service. extras="+intent.getExtras());
-                    pushedAccountHash = intent.getStringExtra("account");
+					pushedAccountHash = intent.getStringExtra("account");
 					break;
 			}
 		}
@@ -731,36 +731,36 @@ public class XmppConnectionService extends Service {
 						}
 					}
 					if (account.getStatus() == Account.State.ONLINE) {
-                        synchronized (mLowPingTimeoutMode) {
-                            long lastReceived = account.getXmppConnection().getLastPacketReceived();
-                            long lastSent = account.getXmppConnection().getLastPingSent();
-                            long pingInterval = "ui".equals(action) ? Config.PING_MIN_INTERVAL * 1000 : Config.PING_MAX_INTERVAL * 1000;
-                            long msToNextPing = (Math.max(lastReceived, lastSent) + pingInterval) - SystemClock.elapsedRealtime();
-                            int pingTimeout = mLowPingTimeoutMode.contains(account.getJid().toBareJid()) ? Config.LOW_PING_TIMEOUT * 1000 : Config.PING_TIMEOUT * 1000;
-                            long pingTimeoutIn = (lastSent + pingTimeout) - SystemClock.elapsedRealtime();
-                            if (lastSent > lastReceived) {
-                                if (pingTimeoutIn < 0) {
-                                    Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": ping timeout");
-                                    this.reconnectAccount(account, true, interactive);
-                                } else {
-                                    int secs = (int) (pingTimeoutIn / 1000);
-                                    this.scheduleWakeUpCall(secs, account.getUuid().hashCode());
-                                }
+						synchronized (mLowPingTimeoutMode) {
+							long lastReceived = account.getXmppConnection().getLastPacketReceived();
+							long lastSent = account.getXmppConnection().getLastPingSent();
+							long pingInterval = "ui".equals(action) ? Config.PING_MIN_INTERVAL * 1000 : Config.PING_MAX_INTERVAL * 1000;
+							long msToNextPing = (Math.max(lastReceived, lastSent) + pingInterval) - SystemClock.elapsedRealtime();
+							int pingTimeout = mLowPingTimeoutMode.contains(account.getJid().toBareJid()) ? Config.LOW_PING_TIMEOUT * 1000 : Config.PING_TIMEOUT * 1000;
+							long pingTimeoutIn = (lastSent + pingTimeout) - SystemClock.elapsedRealtime();
+							if (lastSent > lastReceived) {
+								if (pingTimeoutIn < 0) {
+									Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": ping timeout");
+									this.reconnectAccount(account, true, interactive);
+								} else {
+									int secs = (int) (pingTimeoutIn / 1000);
+									this.scheduleWakeUpCall(secs, account.getUuid().hashCode());
+								}
 							} else {
-                                pingCandidates.add(account);
-                                if (CryptoHelper.getAccountFingerprint(account).equals(pushedAccountHash)) {
-                                    pingNow = true;
-                                    if (mLowPingTimeoutMode.add(account.getJid().toBareJid())) {
-                                        Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": entering low ping timeout mode");
-                                    }
-                                } else if (msToNextPing <= 0) {
-                                    pingNow = true;
-                                } else {
-                                    this.scheduleWakeUpCall((int) (msToNextPing / 1000), account.getUuid().hashCode());
-                                    if (mLowPingTimeoutMode.remove(account.getJid().toBareJid())) {
-                                        Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": leaving low ping timeout mode");
-                                    }
-                                }
+								pingCandidates.add(account);
+								if (CryptoHelper.getAccountFingerprint(account).equals(pushedAccountHash)) {
+									pingNow = true;
+									if (mLowPingTimeoutMode.add(account.getJid().toBareJid())) {
+										Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": entering low ping timeout mode");
+									}
+								} else if (msToNextPing <= 0) {
+									pingNow = true;
+								} else {
+									this.scheduleWakeUpCall((int) (msToNextPing / 1000), account.getUuid().hashCode());
+									if (mLowPingTimeoutMode.remove(account.getJid().toBareJid())) {
+										Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": leaving low ping timeout mode");
+									}
+								}
 							}
 						}
 					} else if (account.getStatus() == Account.State.OFFLINE) {
@@ -793,12 +793,12 @@ public class XmppConnectionService extends Service {
 		}
 		if (pingNow) {
 			for (Account account : pingCandidates) {
-                synchronized (mLowPingTimeoutMode) {
-                    final boolean lowTimeout = mLowPingTimeoutMode.contains(account.getJid().toBareJid());
-                    account.getXmppConnection().sendPing();
-                    Log.d(Config.LOGTAG, account.getJid().toBareJid() + " send ping (action=" + action + ",lowTimeout=" + Boolean.toString(lowTimeout) + ")");
-                    scheduleWakeUpCall(lowTimeout ? Config.LOW_PING_TIMEOUT : Config.PING_TIMEOUT, account.getUuid().hashCode());
-                }
+				synchronized (mLowPingTimeoutMode) {
+					final boolean lowTimeout = mLowPingTimeoutMode.contains(account.getJid().toBareJid());
+					account.getXmppConnection().sendPing();
+					Log.d(Config.LOGTAG, account.getJid().toBareJid() + " send ping (action=" + action + ",lowTimeout=" + Boolean.toString(lowTimeout) + ")");
+					scheduleWakeUpCall(lowTimeout ? Config.LOW_PING_TIMEOUT : Config.PING_TIMEOUT, account.getUuid().hashCode());
+				}
 			}
 		}
 		if (wakeLock.isHeld()) {
@@ -820,7 +820,7 @@ public class XmppConnectionService extends Service {
 		}
 	}
 
-    private void directReply(Conversation conversation, String body, final boolean dismissAfterReply) {
+	private void directReply(Conversation conversation, String body, final boolean dismissAfterReply) {
 		Message message = new Message(conversation,body,conversation.getNextEncryption());
 		message.markUnread();
 		if (message.getEncryption() == Message.ENCRYPTION_PGP) {
@@ -829,11 +829,11 @@ public class XmppConnectionService extends Service {
 				public void success(Message message) {
 					message.setEncryption(Message.ENCRYPTION_DECRYPTED);
 					sendMessage(message);
-                    if (dismissAfterReply) {
-                        markRead(message.getConversation(),true);
-                    } else {
-                        mNotificationService.pushFromDirectReply(message);
-                    }
+					if (dismissAfterReply) {
+						markRead(message.getConversation(),true);
+					} else {
+						mNotificationService.pushFromDirectReply(message);
+					}
 				}
 
 				@Override
@@ -848,11 +848,11 @@ public class XmppConnectionService extends Service {
 			});
 		} else {
 			sendMessage(message);
-            if (dismissAfterReply) {
-                markRead(conversation,true);
-            } else {
-                mNotificationService.pushFromDirectReply(message);
-            }
+			if (dismissAfterReply) {
+				markRead(conversation,true);
+			} else {
+				mNotificationService.pushFromDirectReply(message);
+			}
 		}
 	}
 
@@ -923,23 +923,23 @@ public class XmppConnectionService extends Service {
 					connection.resetAttemptCount();
 				}
 			}
-            if (account.setShowErrorNotification(true)) {
-                databaseBackend.updateAccount(account);
-            }
+			if (account.setShowErrorNotification(true)) {
+				databaseBackend.updateAccount(account);
+			}
 		}
-        mNotificationService.updateErrorNotification();
+		mNotificationService.updateErrorNotification();
 	}
 
-    private void dismissErrorNotifications() {
-        for (final Account account : this.accounts) {
-            if (account.hasErrorStatus()) {
-                Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": dismissing error notification");
-                if (account.setShowErrorNotification(false)) {
-                    databaseBackend.updateAccount(account);
-                }
-            }
-        }
-    }
+	private void dismissErrorNotifications() {
+		for (final Account account : this.accounts) {
+			if (account.hasErrorStatus()) {
+				Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": dismissing error notification");
+				if (account.setShowErrorNotification(false)) {
+					databaseBackend.updateAccount(account);
+				}
+			}
+		}
+	}
 
 	public boolean hasInternetConnection() {
 		ConnectivityManager cm = (ConnectivityManager) getApplicationContext()
@@ -948,45 +948,45 @@ public class XmppConnectionService extends Service {
 		return activeNetwork != null && activeNetwork.isConnected();
 	}
 
-    public boolean isWIFI() {
-        ConnectivityManager cm = (ConnectivityManager) getApplicationContext()
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        if (activeNetwork != null) { // connected to the internet
-            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
-                return true;
-            }
-        }
-        return false;
-    }
+	public boolean isWIFI() {
+		ConnectivityManager cm = (ConnectivityManager) getApplicationContext()
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+		if (activeNetwork != null) { // connected to the internet
+			if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-    public boolean isMobile() {
-        ConnectivityManager cm = (ConnectivityManager) getApplicationContext()
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        if (activeNetwork != null) { // connected to the internet
-            if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
-                if (!activeNetwork.isRoaming()) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+	public boolean isMobile() {
+		ConnectivityManager cm = (ConnectivityManager) getApplicationContext()
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+		if (activeNetwork != null) { // connected to the internet
+			if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+				if (!activeNetwork.isRoaming()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
-    public boolean isMobileRoaming() {
-        ConnectivityManager cm = (ConnectivityManager) getApplicationContext()
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        if (activeNetwork != null) { // connected to the internet
-            if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
-                if (activeNetwork.isRoaming()) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+	public boolean isMobileRoaming() {
+		ConnectivityManager cm = (ConnectivityManager) getApplicationContext()
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+		if (activeNetwork != null) { // connected to the internet
+			if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+				if (activeNetwork.isRoaming()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	@SuppressLint("TrulyRandom")
 	@Override
@@ -1007,9 +1007,9 @@ public class XmppConnectionService extends Service {
 		this.databaseBackend = DatabaseBackend.getInstance(getApplicationContext());
 		this.accounts = databaseBackend.getAccounts();
 
-        if (databaseBackend.startTimeCountExceedsThreshold()) {
-            Log.d(Config.LOGTAG,"number of restarts exceeds threshold.");
-        }
+		if (databaseBackend.startTimeCountExceedsThreshold()) {
+			Log.d(Config.LOGTAG,"number of restarts exceeds threshold.");
+		}
 
 		restoreFromDatabase();
 
@@ -1044,7 +1044,7 @@ public class XmppConnectionService extends Service {
 		toggleForegroundService();
 		updateUnreadCountBadge();
 		toggleScreenEventReceiver();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 			scheduleNextIdlePing();
 		}
 		//start export log service every day at given time
@@ -1105,6 +1105,7 @@ public class XmppConnectionService extends Service {
 
 	private void logoutAndSave(boolean stop) {
 		int activeAccounts = 0;
+		databaseBackend.clearStartTimeCounter(); // regular swipes don't count towards restart counter
 		for (final Account account : accounts) {
 			if (account.getStatus() != Account.State.DISABLED) {
 				activeAccounts++;
@@ -1125,13 +1126,6 @@ public class XmppConnectionService extends Service {
 		}
 	}
 
-	private void cancelWakeUpCall(int requestCode) {
-		final AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		final Intent intent = new Intent(this, EventReceiver.class);
-		intent.setAction("ping");
-		alarmManager.cancel(PendingIntent.getBroadcast(this, requestCode, intent, 0));
-	}
-
 	public void scheduleWakeUpCall(int seconds, int requestCode) {
 		final long timeToWake = SystemClock.elapsedRealtime() + (seconds < 0 ? 1 : seconds + 1) * 1000;
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -1150,21 +1144,21 @@ public class XmppConnectionService extends Service {
 		alarmManager.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP,
 				SystemClock.elapsedRealtime()+(Config.IDLE_PING_INTERVAL * 1000),
 				PendingIntent.getBroadcast(this,0,intent,0)
-				);
+		);
 	}
 
 	public XmppConnection createConnection(final Account account) {
 		final SharedPreferences sharedPref = getPreferences();
-        String resource;
-        try {
-            resource = sharedPref.getString("resource", getString(R.string.default_resource)).toLowerCase(Locale.ENGLISH);
-            if (resource.trim().isEmpty()) {
-                throw new Exception();
-            }
-        } catch (Exception e) {
-            resource = "Pix-Art Messenger";
-        }
-        account.setResource(resource);
+		String resource;
+		try {
+			resource = sharedPref.getString("resource", getString(R.string.default_resource)).toLowerCase(Locale.ENGLISH);
+			if (resource.trim().isEmpty()) {
+				throw new Exception();
+			}
+		} catch (Exception e) {
+			resource = "Pix-Art Messenger";
+		}
+		account.setResource(resource);
 		final XmppConnection connection = new XmppConnection(account, this);
 		connection.setOnMessagePacketReceivedListener(this.mMessageParser);
 		connection.setOnStatusChangedListener(this.statusListener);
@@ -1205,11 +1199,11 @@ public class XmppConnectionService extends Service {
 
 	private void sendMessage(final Message message, final boolean resend, final boolean delay) {
 		final Account account = message.getConversation().getAccount();
-        if (account.setShowErrorNotification(true)) {
-            databaseBackend.updateAccount(account);
-            mNotificationService.updateErrorNotification();
-        }
-        final Conversation conversation = message.getConversation();
+		if (account.setShowErrorNotification(true)) {
+			databaseBackend.updateAccount(account);
+			mNotificationService.updateErrorNotification();
+		}
+		final Conversation conversation = message.getConversation();
 		account.deactivateGracePeriod();
 		MessagePacket packet = null;
 		final boolean addToConversation = (conversation.getMode() != Conversation.MODE_MULTI
@@ -1301,7 +1295,7 @@ public class XmppConnectionService extends Service {
 
 			}
 			if (packet != null) {
-                if (account.getXmppConnection().getFeatures().sm() || (conversation.getMode() == Conversation.MODE_MULTI && message.getCounterpart().isBareJid())) {
+				if (account.getXmppConnection().getFeatures().sm() || (conversation.getMode() == Conversation.MODE_MULTI && message.getCounterpart().isBareJid())) {
 					message.setStatus(Message.STATUS_UNSEND);
 				} else {
 					message.setStatus(Message.STATUS_SEND);
@@ -1343,7 +1337,7 @@ public class XmppConnectionService extends Service {
 
 		if (resend) {
 			if (packet != null && addToConversation) {
-                if (account.getXmppConnection().getFeatures().sm() || (conversation.getMode() == Conversation.MODE_MULTI && message.getCounterpart().isBareJid())) {
+				if (account.getXmppConnection().getFeatures().sm() || (conversation.getMode() == Conversation.MODE_MULTI && message.getCounterpart().isBareJid())) {
 					markMessage(message, Message.STATUS_UNSEND);
 				} else {
 					markMessage(message, Message.STATUS_SEND);
@@ -1479,13 +1473,13 @@ public class XmppConnectionService extends Service {
 					for (Conversation conversation : conversations) {
 						conversation.addAll(0, databaseBackend.getMessages(conversation, Config.PAGE_SIZE));
 						checkDeletedFiles(conversation);
-                        conversation.findUnsentTextMessages(new Conversation.OnMessageFound() {
+						conversation.findUnsentTextMessages(new Conversation.OnMessageFound() {
 
-                            @Override
-                            public void onMessageFound(Message message) {
-                                markMessage(message, Message.STATUS_WAITING);
-                            }
-                        });
+							@Override
+							public void onMessageFound(Message message) {
+								markMessage(message, Message.STATUS_WAITING);
+							}
+						});
 						conversation.findUnreadMessages(new Conversation.OnMessageFound() {
 							@Override
 							public void onMessageFound(Message message) {
@@ -1766,7 +1760,7 @@ public class XmppConnectionService extends Service {
 					);
 				}
 			}
-            updateConversation(conversation);
+			updateConversation(conversation);
 			this.conversations.remove(conversation);
 			updateConversationUi();
 		}
@@ -1840,7 +1834,7 @@ public class XmppConnectionService extends Service {
 
 	public boolean updateAccount(final Account account) {
 		if (databaseBackend.updateAccount(account)) {
-            account.setShowErrorNotification(true);
+			account.setShowErrorNotification(true);
 			this.statusListener.onStatusChanged(account);
 			databaseBackend.updateAccount(account);
 			reconnectAccountInBackground(account);
@@ -2189,11 +2183,11 @@ public class XmppConnectionService extends Service {
 					final MucOptions mucOptions = conversation.getMucOptions();
 					final Jid joinJid = mucOptions.getSelf().getFullJid();
 					Log.d(Config.LOGTAG, account.getJid().toBareJid().toString() + ": joining conversation " + joinJid.toString());
-                    PresencePacket packet = mPresenceGenerator.selfPresence(account, Presence.Status.ONLINE, mucOptions.nonanonymous());
+					PresencePacket packet = mPresenceGenerator.selfPresence(account, Presence.Status.ONLINE, mucOptions.nonanonymous());
 					packet.setTo(joinJid);
 					Element x = packet.addChild("x", "http://jabber.org/protocol/muc");
 					if (conversation.getMucOptions().getPassword() != null) {
-                        x.addChild("password").setContent(mucOptions.getPassword());
+						x.addChild("password").setContent(mucOptions.getPassword());
 					}
 
 					if (mucOptions.mamSupport()) {
@@ -2271,9 +2265,9 @@ public class XmppConnectionService extends Service {
 				++i;
 				if (i >= affiliations.length) {
 					Log.d(Config.LOGTAG,account.getJid().toBareJid()+": retrieved members for "+conversation.getJid().toBareJid()+": "+conversation.getMucOptions().getMembers());
-                    getAvatarService().clear(conversation);
-                    updateMucRosterUi();
-                    updateConversationUi();
+					getAvatarService().clear(conversation);
+					updateMucRosterUi();
+					updateConversationUi();
 				}
 			}
 		};
@@ -2292,7 +2286,7 @@ public class XmppConnectionService extends Service {
 				}
 				pushBookmarks(conversation.getAccount());
 			}
-            updateConversation(conversation);
+			updateConversation(conversation);
 			joinMuc(conversation);
 		}
 	}
@@ -2932,18 +2926,18 @@ public class XmppConnectionService extends Service {
 							Log.d(Config.LOGTAG, account.getJid().toBareJid()
 									+ ": successfully fetched vCard avatar for " + avatar.owner);
 							if (avatar.owner.isBareJid()) {
-                                if (account.getJid().toBareJid().equals(avatar.owner) && account.getAvatar() == null) {
-                                    Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": had no avatar. replacing with vcard");
-                                    account.setAvatar(avatar.getFilename());
-                                    databaseBackend.updateAccount(account);
-                                    getAvatarService().clear(account);
-                                    updateAccountUi();
-                                } else {
-                                    Contact contact = account.getRoster().getContact(avatar.owner);
-                                    contact.setAvatar(avatar);
-                                    getAvatarService().clear(contact);
-                                    updateRosterUi();
-                                }
+								if (account.getJid().toBareJid().equals(avatar.owner) && account.getAvatar() == null) {
+									Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": had no avatar. replacing with vcard");
+									account.setAvatar(avatar.getFilename());
+									databaseBackend.updateAccount(account);
+									getAvatarService().clear(account);
+									updateAccountUi();
+								} else {
+									Contact contact = account.getRoster().getContact(avatar.owner);
+									contact.setAvatar(avatar);
+									getAvatarService().clear(contact);
+									updateRosterUi();
+								}
 								updateConversationUi();
 							} else {
 								Conversation conversation = find(account, avatar.owner.toBareJid());
@@ -3012,13 +3006,13 @@ public class XmppConnectionService extends Service {
 		}
 	}
 
-    public void updateConversation(final Conversation conversation) {
-        mDatabaseExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                databaseBackend.updateConversation(conversation);
-            }
-        });
+	public void updateConversation(final Conversation conversation) {
+		mDatabaseExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				databaseBackend.updateConversation(conversation);
+			}
+		});
 	}
 
 	private void reconnectAccount(final Account account, final boolean force, final boolean interactive) {
@@ -3069,7 +3063,7 @@ public class XmppConnectionService extends Service {
 	}
 
 	public void resetSendingToWaiting(Account account) {
-        Log.d(Config.LOGTAG,account.getJid().toBareJid()+": reset 'sending' messages to 'waiting'");
+		Log.d(Config.LOGTAG,account.getJid().toBareJid()+": reset 'sending' messages to 'waiting'");
 		for (Conversation conversation : getConversations()) {
 			if (conversation.getAccount() == account) {
 				conversation.findUnsentTextMessages(new Conversation.OnMessageFound() {
@@ -3084,11 +3078,11 @@ public class XmppConnectionService extends Service {
 	}
 
 	public Message markMessage(final Account account, final Jid recipient, final String uuid, final int status) {
-        return markMessage(account, recipient, uuid, status, null);
-    }
+		return markMessage(account, recipient, uuid, status, null);
+	}
 
-    public Message markMessage(final Account account, final Jid recipient, final String uuid, final int status, String errorMessage) {
-        if (uuid == null) {
+	public Message markMessage(final Account account, final Jid recipient, final String uuid, final int status, String errorMessage) {
+		if (uuid == null) {
 			return null;
 		}
 		for (Conversation conversation : getConversations()) {
@@ -3118,16 +3112,16 @@ public class XmppConnectionService extends Service {
 	}
 
 	public void markMessage(Message message, int status) {
-        markMessage(message, status, null);
-    }
+		markMessage(message, status, null);
+	}
 
-    public void markMessage(Message message, int status, String errorMessage) {
+	public void markMessage(Message message, int status, String errorMessage) {
 		if (status == Message.STATUS_SEND_FAILED
 				&& (message.getStatus() == Message.STATUS_SEND_RECEIVED || message
-                .getStatus() == Message.STATUS_SEND_DISPLAYED)) {
+				.getStatus() == Message.STATUS_SEND_DISPLAYED)) {
 			return;
 		}
-        message.setErrorMessage(errorMessage);
+		message.setErrorMessage(errorMessage);
 		message.setStatus(status);
 		databaseBackend.updateMessage(message);
 		updateConversationUi();
@@ -3183,7 +3177,7 @@ public class XmppConnectionService extends Service {
 	}
 
 	public void vibrate() {
-        Log.d(Config.LOGTAG,"Notification: short vibrate");
+		Log.d(Config.LOGTAG,"Notification: short vibrate");
 		Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 		vibrator.vibrate(100);
 	}
@@ -3305,7 +3299,7 @@ public class XmppConnectionService extends Service {
 		if (this.markRead(conversation)) {
 			updateConversationUi();
 		}
-        if (confirmMessages() && markable != null && markable.trusted() && markable.getRemoteMsgId() != null) {
+		if (confirmMessages() && markable != null && markable.trusted() && markable.getRemoteMsgId() != null) {
 			Log.d(Config.LOGTAG, conversation.getAccount().getJid().toBareJid() + ": sending read marker to " + markable.getCounterpart().toString());
 			Account account = conversation.getAccount();
 			final Jid to = markable.getCounterpart();
@@ -3554,17 +3548,17 @@ public class XmppConnectionService extends Service {
 			@Override
 			public void run() {
 				databaseBackend.deleteMessagesInConversation(conversation);
-                databaseBackend.updateConversation(conversation);
+				databaseBackend.updateConversation(conversation);
 
-            }
+			}
 		};
 		mDatabaseExecutor.execute(runnable);
 	}
 
-    public void sendBlockRequest(final Blockable blockable, boolean reportSpam) {
+	public void sendBlockRequest(final Blockable blockable, boolean reportSpam) {
 		if (blockable != null && blockable.getBlockedJid() != null) {
 			final Jid jid = blockable.getBlockedJid();
-            this.sendIqPacket(blockable.getAccount(), getIqGenerator().generateSetBlockRequest(jid, reportSpam), new OnIqPacketReceived() {
+			this.sendIqPacket(blockable.getAccount(), getIqGenerator().generateSetBlockRequest(jid, reportSpam), new OnIqPacketReceived() {
 
 				@Override
 				public void onIqPacketReceived(final Account account, final IqPacket packet) {
@@ -3743,14 +3737,14 @@ public class XmppConnectionService extends Service {
 		conversation.setBookmark(bookmark);
 	}
 
-    public void clearStartTimeCounter() {
-        mDatabaseExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                databaseBackend.clearStartTimeCounter();
-            }
-        });
-    }
+	public void clearStartTimeCounter() {
+		mDatabaseExecutor.execute(new Runnable() {
+			@Override
+			public void run() {
+				databaseBackend.clearStartTimeCounter();
+			}
+		});
+	}
 
 	public interface OnMamPreferencesFetched {
 		void onPreferencesFetched(Element prefs);
