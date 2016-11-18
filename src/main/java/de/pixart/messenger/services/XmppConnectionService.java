@@ -73,6 +73,7 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.PgpDecryptionService;
 import de.pixart.messenger.crypto.PgpEngine;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
+import de.pixart.messenger.crypto.axolotl.FingerprintStatus;
 import de.pixart.messenger.crypto.axolotl.XmppAxolotlMessage;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Blockable;
@@ -111,6 +112,7 @@ import de.pixart.messenger.utils.PhoneHelper;
 import de.pixart.messenger.utils.ReplacingSerialSingleThreadExecutor;
 import de.pixart.messenger.utils.SerialSingleThreadExecutor;
 import de.pixart.messenger.utils.Xmlns;
+import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.utils.video.MediaController;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.OnBindListener;
@@ -3744,6 +3746,29 @@ public class XmppConnectionService extends Service {
 				databaseBackend.clearStartTimeCounter();
 			}
 		});
+	}
+
+	public void verifyFingerprints(Contact contact, List<XmppUri.Fingerprint> fingerprints) {
+		boolean needsRosterWrite = false;
+		final AxolotlService axolotlService = contact.getAccount().getAxolotlService();
+		for(XmppUri.Fingerprint fp : fingerprints) {
+			if (fp.type == XmppUri.FingerprintType.OTR) {
+				needsRosterWrite |= contact.addOtrFingerprint(fp.fingerprint);
+			} else if (fp.type == XmppUri.FingerprintType.OMEMO) {
+				String fingerprint = "05"+fp.fingerprint.replaceAll("\\s","");
+				FingerprintStatus fingerprintStatus = axolotlService.getFingerprintTrust(fingerprint);
+				if (fingerprintStatus != null) {
+					if (!fingerprintStatus.isVerified()) {
+						axolotlService.setFingerprintTrust(fingerprint,fingerprintStatus.toVerified());
+					}
+				} else {
+					axolotlService.preVerifyFingerprint(contact,fingerprint);
+				}
+			}
+		}
+		if (needsRosterWrite) {
+			syncRosterToDisk(contact.getAccount());
+		}
 	}
 
 	public interface OnMamPreferencesFetched {
