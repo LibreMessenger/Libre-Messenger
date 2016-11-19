@@ -33,8 +33,6 @@ public final class Config {
         return (ENCRYPTION_MASK & (ENCRYPTION_MASK - 1)) != 0;
     }
 
-    public static boolean AlwayUseOMEMO = true; //true makes OMEMO as default on every 1 to 1 chat
-
     public static final String LOGTAG = "Pix-Art Messenger";
 
     public static final String BUG_REPORTS = "bugs@pix-art.de";

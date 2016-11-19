@@ -6,7 +6,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 import github.ankushsachdeva.emojicon.EmojiconTextView;
 
