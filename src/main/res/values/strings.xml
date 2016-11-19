@@ -584,6 +584,8 @@
 	<string name="notify_paused">Notifications paused</string>
 	<string name="pref_picture_compression">Compress Pictures</string>
 	<string name="pref_picture_compression_summary">Resize and compress pictures</string>
+	<string name="pref_video_compression">Compress Videos</string>
+	<string name="pref_video_compression_summary">Resize and compress Videos</string>
 	<string name="always">Always</string>
 	<string name="automatically">Automatically</string>
 	<string name="battery_optimizations_enabled">Battery optimizations enabled</string>

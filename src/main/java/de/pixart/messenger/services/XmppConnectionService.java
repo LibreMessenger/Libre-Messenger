@@ -544,6 +544,8 @@ public class XmppConnectionService extends Service {
 		File f = new File(FileUtils.getPath(this, uri));
 		long filesize = f.length();
 		String path = f.toString();
+		final String compressVideos = getCompressVideoPreference();
+		boolean sendVideoAsIs = false;
 		final Integer NOTIFICATION_ID = (int) (new Date().getTime()/1000);
 		mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getBaseContext());
@@ -572,7 +574,16 @@ public class XmppConnectionService extends Service {
 				+ "_komp.mp4");
 		final String compressed_path = compressed_file.toString();
 		final Uri compressed_uri = Uri.fromFile(compressed_file);
-		if (filesize > Config.VIDEO_MAX_SIZE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+		if ("never".equals(compressVideos)) {
+			sendVideoAsIs = true;
+		} else if ("always".equals(compressVideos) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			sendVideoAsIs = false;
+		} else if ("auto".equals(compressVideos) && filesize > Config.VIDEO_MAX_SIZE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			sendVideoAsIs = false;
+		} else {
+			sendVideoAsIs = true;
+		}
+		if (!sendVideoAsIs){
 			CompressVideo = new VideoCompressor(path, compressed_path,  new Interface() {
 				@Override
 				public void videocompressed(boolean result) {
@@ -876,6 +887,10 @@ public class XmppConnectionService extends Service {
 
 	private String getCompressPicturesPreference() {
 		return getPreferences().getString("picture_compression", "auto");
+	}
+
+	private String getCompressVideoPreference() {
+		return getPreferences().getString("video_compression", "auto");
 	}
 
 	private Presence.Status getTargetPresence() {

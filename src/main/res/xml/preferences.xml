@@ -115,6 +115,13 @@
             android:key="picture_compression"
             android:summary="@string/pref_picture_compression_summary"
             android:title="@string/pref_picture_compression" />
+        <ListPreference
+            android:defaultValue="auto"
+            android:entries="@array/video_compression_entries"
+            android:entryValues="@array/video_compression_values"
+            android:key="video_compression"
+            android:summary="@string/pref_video_compression_summary"
+            android:title="@string/pref_video_compression" />
     </PreferenceScreen>
     <!--status-->
     <PreferenceScreen
@@ -264,5 +271,5 @@
         android:icon="@drawable/ic_help_black_24dp"
         android:summary="@string/pref_about_conversations_summary"
         android:title="@string/title_activity_about" />
-    
+
 </PreferenceScreen>
