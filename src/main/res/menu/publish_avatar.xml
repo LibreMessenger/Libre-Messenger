@@ -4,5 +4,5 @@
         android:id="@+id/action_crop_image"
         android:showAsAction="always"
         android:icon="@drawable/ic_crop_white_24dp"
-        android:title="@string/select_image_and_crop"/>
+        android:title="@string/select_image_and_crop" />
 </menu>

@@ -162,7 +162,7 @@ public class ShowFullscreenMessageActivity extends Activity {
     }
 
     private void DisplayVideo(Uri uri) {
-        MediaMetadataRetriever retriever = new  MediaMetadataRetriever();
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         retriever.setDataSource(uri.getPath());
         height = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
         width = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
@@ -217,7 +217,7 @@ public class ShowFullscreenMessageActivity extends Activity {
     }
 
     @Override
-    public void onStop () {
+    public void onStop() {
         mVideo.reset();
         WindowManager.LayoutParams layout = getWindow().getAttributes();
         layout.screenBrightness = -1;

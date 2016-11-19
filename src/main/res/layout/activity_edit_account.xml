@@ -189,6 +189,7 @@
                 android:orientation="vertical"
                 android:padding="@dimen/infocard_padding"
                 android:visibility="gone">
+
                 <TextView
                     android:id="@+id/os_optimization_headline"
                     android:layout_width="wrap_content"
@@ -196,7 +197,8 @@
                     android:text="@string/battery_optimizations_enabled"
                     android:textColor="@color/black87"
                     android:textSize="?attr/TextSizeHeadline"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
+
                 <TextView
                     android:id="@+id/os_optimization_body"
                     android:layout_width="wrap_content"
@@ -206,7 +208,8 @@
                     android:layout_marginTop="8dp"
                     android:text="@string/battery_optimizations_enabled_explained"
                     android:textColor="@color/black87"
-                    android:textSize="?attr/TextSizeBody"/>
+                    android:textSize="?attr/TextSizeBody" />
+
                 <Button
                     android:id="@+id/os_optimization_disable"
                     style="?android:attr/borderlessButtonStyle"
@@ -215,9 +218,10 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true" android:layout_below="@+id/os_optimization_body"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/os_optimization_body"
                     android:text="@string/disable"
-                    android:textColor="@color/accent"/>
+                    android:textColor="@color/accent" />
             </RelativeLayout>
 
             <LinearLayout
@@ -251,7 +255,7 @@
                             android:textColor="@color/black87"
                             android:textSize="?attr/TextSizeBody"
                             android:singleLine="true"
-                            android:ellipsize="end"/>
+                            android:ellipsize="end" />
 
                         <TextView
                             android:id="@+id/session_est"
@@ -285,7 +289,7 @@
                             android:textColor="@color/black87"
                             android:textSize="?attr/TextSizeBody"
                             android:singleLine="true"
-                            android:ellipsize="end"/>
+                            android:ellipsize="end" />
 
                         <TextView
                             android:id="@+id/server_info_pep"
@@ -309,7 +313,7 @@
                             android:textColor="@color/black87"
                             android:textSize="?attr/TextSizeBody"
                             android:singleLine="true"
-                            android:ellipsize="end"/>
+                            android:ellipsize="end" />
 
                         <TextView
                             android:id="@+id/server_info_blocking"
@@ -333,7 +337,7 @@
                             android:textColor="@color/black87"
                             android:textSize="?attr/TextSizeBody"
                             android:singleLine="true"
-                            android:ellipsize="end"/>
+                            android:ellipsize="end" />
 
                         <TextView
                             android:id="@+id/server_info_sm"
@@ -357,7 +361,7 @@
                             android:textColor="@color/black87"
                             android:textSize="?attr/TextSizeBody"
                             android:singleLine="true"
-                            android:ellipsize="end"/>
+                            android:ellipsize="end" />
 
                         <TextView
                             android:id="@+id/server_info_roster_version"
@@ -381,7 +385,7 @@
                             android:textColor="@color/black87"
                             android:textSize="?attr/TextSizeBody"
                             android:singleLine="true"
-                            android:ellipsize="end"/>
+                            android:ellipsize="end" />
 
                         <TextView
                             android:id="@+id/server_info_carbons"
@@ -405,7 +409,7 @@
                             android:textColor="@color/black87"
                             android:textSize="?attr/TextSizeBody"
                             android:singleLine="true"
-                            android:ellipsize="end"/>
+                            android:ellipsize="end" />
 
                         <TextView
                             android:id="@+id/server_info_mam"
@@ -429,7 +433,7 @@
                             android:textColor="@color/black87"
                             android:textSize="?attr/TextSizeBody"
                             android:singleLine="true"
-                            android:ellipsize="end"/>
+                            android:ellipsize="end" />
 
                         <TextView
                             android:id="@+id/server_info_csi"
@@ -454,7 +458,7 @@
                             android:textColor="@color/black87"
                             android:textSize="?attr/TextSizeBody"
                             android:singleLine="true"
-                            android:ellipsize="end"/>
+                            android:ellipsize="end" />
 
                         <TextView
                             android:id="@+id/server_info_push"
@@ -463,8 +467,9 @@
                             android:layout_gravity="right"
                             android:textColor="@color/black87"
                             android:paddingLeft="4dp"
-                            android:textSize="?attr/TextSizeBody"/>
+                            android:textSize="?attr/TextSizeBody" />
                     </TableRow>
+
                     <TableRow
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content">
@@ -476,7 +481,7 @@
                             android:textColor="@color/black87"
                             android:textSize="?attr/TextSizeBody"
                             android:singleLine="true"
-                            android:ellipsize="end"/>
+                            android:ellipsize="end" />
 
                         <TextView
                             android:id="@+id/server_info_http_upload"
@@ -485,7 +490,7 @@
                             android:layout_gravity="right"
                             android:textColor="@color/black87"
                             android:paddingLeft="4dp"
-                            android:textSize="?attr/TextSizeBody"/>
+                            android:textSize="?attr/TextSizeBody" />
 
                     </TableRow>
                 </TableLayout>
@@ -624,8 +629,7 @@
                     android:layout_height="wrap_content"
                     android:divider="?android:dividerHorizontal"
                     android:orientation="vertical"
-                    android:showDividers="middle">
-                </LinearLayout>
+                    android:showDividers="middle"></LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
@@ -647,14 +651,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/cancel"
-            android:textColor="@color/black87"/>
+            android:textColor="@color/black87" />
 
         <View
             android:layout_width="1dp"
             android:layout_height="fill_parent"
             android:layout_marginBottom="7dp"
             android:layout_marginTop="7dp"
-            android:background="@color/black12"/>
+            android:background="@color/black12" />
 
         <Button
             android:id="@+id/save_button"
@@ -664,7 +668,7 @@
             android:layout_weight="1"
             android:enabled="false"
             android:text="@string/save"
-            android:textColor="@color/black54"/>
+            android:textColor="@color/black54" />
     </LinearLayout>
 
 </RelativeLayout>

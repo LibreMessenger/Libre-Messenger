@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp" >
+    android:padding="16dp">
 
     <github.ankushsachdeva.emojicon.EmojiconEditText
         android:id="@+id/editor"
@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:textColor="@color/black87" >
+        android:textColor="@color/black87">
 
         <requestFocus />
     </github.ankushsachdeva.emojicon.EmojiconEditText>

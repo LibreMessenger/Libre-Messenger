@@ -7,7 +7,7 @@ import android.util.Log;
 
 import de.pixart.messenger.Config;
 
-public class AlarmReceiver extends BroadcastReceiver{
+public class AlarmReceiver extends BroadcastReceiver {
     public static final int SCHEDULE_ALARM_REQUEST_CODE = 523976483;
 
     @Override

@@ -23,7 +23,7 @@
             android:textSize="?attr/TextSizeBody"
             android:typeface="monospace"
             android:fontFamily="monospace"
-            android:longClickable="true"/>
+            android:longClickable="true" />
 
         <TextView
             android:id="@+id/key_type"
@@ -34,7 +34,7 @@
             android:layout_below="@+id/key"
             android:maxLines="1"
             android:textSize="?attr/TextSizeInfo"
-            android:longClickable="true"/>
+            android:longClickable="true" />
 
         <TextView
             android:id="@+id/key_trust"
@@ -45,7 +45,7 @@
             android:visibility="gone"
             android:textColor="@color/black54"
             android:textSize="?attr/TextSizeInfo"
-            android:longClickable="true"/>
+            android:longClickable="true" />
 
         <LinearLayout
             android:id="@+id/action_container"
@@ -55,6 +55,7 @@
             android:orientation="vertical"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true">
+
             <ImageButton
                 android:layout_gravity="center_horizontal"
                 android:id="@+id/button_remove"
@@ -82,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                style="@style/MD"/>
+                style="@style/MD" />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

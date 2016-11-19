@@ -28,7 +28,7 @@ public abstract class OmemoActivity extends XmppActivity {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu,v,menuInfo);
+        super.onCreateContextMenu(menu, v, menuInfo);
         Object account = v.getTag(R.id.TAG_ACCOUNT);
         Object fingerprint = v.getTag(R.id.TAG_FINGERPRINT);
         if (account != null && fingerprint != null && account instanceof Account && fingerprint instanceof String) {
@@ -42,7 +42,7 @@ public abstract class OmemoActivity extends XmppActivity {
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.purge_omemo_key:
-                showPurgeKeyDialog(mSelectedAccount,mSelectedFingerprint);
+                showPurgeKeyDialog(mSelectedAccount, mSelectedFingerprint);
                 break;
             case R.id.copy_omemo_key:
                 copyOmemoFingerprint(mSelectedFingerprint);
@@ -88,7 +88,7 @@ public abstract class OmemoActivity extends XmppActivity {
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showX509Certificate(account,fingerprint);
+                    showX509Certificate(account, fingerprint);
                 }
             };
             key.setOnClickListener(listener);
@@ -98,13 +98,13 @@ public abstract class OmemoActivity extends XmppActivity {
         ImageView verifiedFingerprintSymbol = (ImageView) view.findViewById(R.id.verified_fingerprint);
         trustToggle.setVisibility(View.VISIBLE);
         registerForContextMenu(view);
-        view.setTag(R.id.TAG_ACCOUNT,account);
-        view.setTag(R.id.TAG_FINGERPRINT,fingerprint);
+        view.setTag(R.id.TAG_ACCOUNT, account);
+        view.setTag(R.id.TAG_FINGERPRINT, fingerprint);
         boolean x509 = Config.X509_VERIFICATION && status.getTrust() == FingerprintStatus.Trust.VERIFIED_X509;
         final View.OnClickListener toast;
         trustToggle.setChecked(status.isTrusted(), false);
 
-        if (status.isActive()){
+        if (status.isActive()) {
             key.setTextColor(getPrimaryTextColor());
             keyType.setTextColor(getSecondaryTextColor());
             if (status.isVerified()) {
@@ -126,7 +126,7 @@ public abstract class OmemoActivity extends XmppActivity {
                     trustToggle.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            account.getAxolotlService().setFingerprintTrust(fingerprint,FingerprintStatus.createActive(false));
+                            account.getAxolotlService().setFingerprintTrust(fingerprint, FingerprintStatus.createActive(false));
                             v.setEnabled(true);
                             v.setOnClickListener(null);
                         }
@@ -211,7 +211,7 @@ public abstract class OmemoActivity extends XmppActivity {
         if (x509Certificate != null) {
             showCertificateInformationDialog(CryptoHelper.extractCertificateInformation(x509Certificate));
         } else {
-            Toast.makeText(this,R.string.certificate_not_found, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.certificate_not_found, Toast.LENGTH_SHORT).show();
         }
     }
 

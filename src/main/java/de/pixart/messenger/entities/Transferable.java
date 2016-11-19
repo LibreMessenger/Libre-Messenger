@@ -54,7 +54,7 @@ public interface Transferable {
             //compressed
             "zip",
             "rar"
-            );
+    );
 
     int STATUS_UNKNOWN = 0x200;
     int STATUS_CHECKING = 0x201;

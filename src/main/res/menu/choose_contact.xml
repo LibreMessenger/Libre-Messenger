@@ -6,12 +6,12 @@
         android:actionLayout="@layout/actionview_search"
         android:icon="?attr/icon_search"
         android:showAsAction="collapseActionView|always"
-        android:title="@string/search"/>
+        android:title="@string/search" />
 
     <item
         android:id="@+id/action_create_contact"
         android:icon="?attr/icon_add_person"
         android:showAsAction="always"
         android:title="@string/create_contact"
-        android:visible="false"/>
+        android:visible="false" />
 </menu>

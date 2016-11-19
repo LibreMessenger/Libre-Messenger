@@ -199,7 +199,7 @@ public class MediaController {
         int rotationValue = Integer.valueOf(rotation);
         int originalWidth = Integer.valueOf(width);
         int originalHeight = Integer.valueOf(height);
-        float ratio = (float)video_width / (float)video_height; // 16:9 = 1,7778, 4:3 = 1,3333
+        float ratio = (float) video_width / (float) video_height; // 16:9 = 1,7778, 4:3 = 1,3333
 
         if (video_height > video_width) {
             resultHeight = Config.VIDEO_SIZE;

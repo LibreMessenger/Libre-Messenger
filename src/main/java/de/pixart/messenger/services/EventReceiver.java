@@ -7,19 +7,19 @@ import android.content.Intent;
 import de.pixart.messenger.persistance.DatabaseBackend;
 
 public class EventReceiver extends BroadcastReceiver {
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		Intent mIntentForService = new Intent(context,
-				XmppConnectionService.class);
-		if (intent.getAction() != null) {
-			mIntentForService.setAction(intent.getAction());
-		} else {
-			mIntentForService.setAction("other");
-		}
-		final String action = intent.getAction();
-		if (action.equals("ui") || DatabaseBackend.getInstance(context).hasEnabledAccounts()) {
-			context.startService(mIntentForService);
-		}
-	}
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        Intent mIntentForService = new Intent(context,
+                XmppConnectionService.class);
+        if (intent.getAction() != null) {
+            mIntentForService.setAction(intent.getAction());
+        } else {
+            mIntentForService.setAction("other");
+        }
+        final String action = intent.getAction();
+        if (action.equals("ui") || DatabaseBackend.getInstance(context).hasEnabledAccounts()) {
+            context.startService(mIntentForService);
+        }
+    }
 
 }

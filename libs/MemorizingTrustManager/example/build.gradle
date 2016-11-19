@@ -1,23 +1,23 @@
 apply plugin: 'android'
 
 dependencies {
-	compile rootProject
+    compile rootProject
 }
 
 android {
-	compileSdkVersion 19
-	buildToolsVersion "19.1"
-	defaultConfig {
-        	minSdkVersion 7
-		targetSdkVersion 19
-	}
+    compileSdkVersion 19
+    buildToolsVersion "19.1"
+    defaultConfig {
+        minSdkVersion 7
+        targetSdkVersion 19
+    }
 
-	sourceSets {
-		main {
-			manifest.srcFile 'AndroidManifest.xml'
-			java.srcDirs = ['src']
-			res.srcDirs = ['res']
-		}
-	}
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            res.srcDirs = ['res']
+        }
+    }
 
 }

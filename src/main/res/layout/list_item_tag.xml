@@ -10,5 +10,4 @@
     android:textColor="@color/white"
     android:textAllCaps="true"
     android:maxLines="1"
-    android:layout_margin="2dp"
-/>
+    android:layout_margin="2dp" />

@@ -32,7 +32,7 @@
         <item name="attr/icon_settings">@drawable/ic_settings_grey600_24dp</item>
         <item name="attr/icon_import_export">@drawable/ic_import_export_white_24dp</item>
         <item name="attr/icon_share">@drawable/ic_share_white_24dp</item>
-        
+
         <item name="attr/dialog_horizontal_padding">16dp</item>
         <item name="attr/dialog_vertical_padding">16dp</item>
     </style>
@@ -52,12 +52,15 @@
 
     <style name="ConversationsActionBarWidget" parent="android:Theme.Holo.Light">
         <item name="android:popupMenuStyle">@android:style/Widget.Holo.Light.PopupMenu</item>
-        <item name="android:dropDownListViewStyle">@android:style/Widget.Holo.Light.ListView.DropDown</item>
+        <item name="android:dropDownListViewStyle">
+            @android:style/Widget.Holo.Light.ListView.DropDown
+        </item>
     </style>
 
     <style name="ConversationsActionBarTabs" parent="@android:style/Widget.Holo.ActionBar.TabView">
         <item name="android:background">@drawable/actionbar_tab_indicator</item>
     </style>
+
     <style name="ConversationsDialog" parent="@android:style/Theme.Holo.Light.Dialog">
         <item name="android:windowNoTitle">true</item>
         <item name="TextSizeInfo">10sp</item>

@@ -230,7 +230,7 @@ public class Message extends AbstractEntity {
         values.put(READ, read ? 1 : 0);
         values.put(EDITED, edited);
         values.put(OOB, oob ? 1 : 0);
-        values.put(ERROR_MESSAGE,errorMessage);
+        values.put(ERROR_MESSAGE, errorMessage);
         return values;
     }
 
@@ -510,7 +510,8 @@ public class Message extends AbstractEntity {
         );
     }
 
-    public static class MergeSeparator {}
+    public static class MergeSeparator {
+    }
 
     public SpannableStringBuilder getMergedBody() {
         SpannableStringBuilder body = new SpannableStringBuilder(this.body.trim());

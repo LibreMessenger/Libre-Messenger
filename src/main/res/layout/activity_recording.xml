@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/grey50">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/grey50">
 
     <LinearLayout
         android:id="@+id/button_bar"
@@ -48,5 +48,5 @@
         android:textStyle="bold"
         android:id="@+id/timer"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

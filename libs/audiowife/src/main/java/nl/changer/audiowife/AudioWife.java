@@ -685,6 +685,7 @@ public class AudioWife {
         mHasDefaultUi = true;
         return this;
     }
+
     public void release() {
 
         if (mMediaPlayer != null) {

@@ -18,5 +18,5 @@
         android:textColor="@color/black87"
         android:textSize="?attr/TextSizeBody"
         android:typeface="monospace"
-        android:fontFamily="monospace"/>
+        android:fontFamily="monospace" />
 </ScrollView>

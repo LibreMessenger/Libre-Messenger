@@ -14,12 +14,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="?attr/TextSizeBody"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/snippet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="?attr/TextSizeInfo"/>
+            android:textSize="?attr/TextSizeInfo" />
     </LinearLayout>
 
 </LinearLayout>

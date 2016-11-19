@@ -20,6 +20,7 @@
             android:background="@drawable/infocard_border"
             android:padding="@dimen/infocard_padding"
             android:orientation="vertical">
+
             <github.ankushsachdeva.emojicon.EmojiconEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -28,12 +29,14 @@
                 android:id="@+id/presence_status_message"
                 android:textColor="@color/black87"
                 android:layout_marginBottom="8dp"
-                android:textSize="?attr/TextSizeBody"/>
+                android:textSize="?attr/TextSizeBody" />
+
             <Spinner
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/presence_show"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_gravity="center_horizontal" />
+
             <CheckBox
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
@@ -43,7 +46,8 @@
                 android:id="@+id/all_accounts"
                 android:textColor="@color/black87"
                 android:textSize="?attr/TextSizeBody"
-                android:visibility="gone"/>
+                android:visibility="gone" />
+
             <Button
                 android:id="@+id/change_presence"
                 style="?android:attr/borderlessButtonStyle"
@@ -51,8 +55,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:text="@string/change_presence"
-                android:textColor="@color/accent"/>
+                android:textColor="@color/accent" />
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/templates"
             android:layout_width="match_parent"
@@ -65,7 +70,6 @@
             android:padding="@dimen/infocard_padding"
             android:orientation="vertical"
             android:divider="?android:dividerHorizontal"
-            android:showDividers="middle">
-        </LinearLayout>
+            android:showDividers="middle"></LinearLayout>
     </LinearLayout>
 </ScrollView>

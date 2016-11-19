@@ -4,116 +4,119 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey200">
+
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/button_bar"
-        android:layout_alignParentTop="true" >
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:layout_alignParentTop="true">
 
         <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/button_bar"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/secondary_hint"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:background="@drawable/infocard_border"
-            android:padding="@dimen/infocard_padding">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
 
             <LinearLayout
-                android:id="@+id/account_image_wrapper"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center_horizontal">
+                android:layout_above="@+id/button_bar"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/secondary_hint"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:background="@drawable/infocard_border"
+                android:padding="@dimen/infocard_padding">
 
-                <com.makeramen.roundedimageview.RoundedImageView
-                    android:id="@+id/account_image"
+                <LinearLayout
+                    android:id="@+id/account_image_wrapper"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="16dp"
-                    android:adjustViewBounds="true"
-                    android:background="@drawable/message_border"
-                    android:contentDescription="@string/account_image_description"
-                    android:maxHeight="384dp"
-                    android:maxWidth="384dp"
-                    android:padding="1dp"
-                    app:riv_corner_radius="5dp" />
+                    android:layout_gravity="center_horizontal">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/account_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="16dp"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/message_border"
+                        android:contentDescription="@string/account_image_description"
+                        android:maxHeight="384dp"
+                        android:maxWidth="384dp"
+                        android:padding="1dp"
+                        app:riv_corner_radius="5dp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/account_image_wrapper"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/touch_to_choose_picture"
+                    android:textColor="@color/black54"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:layout_gravity="center_horizontal"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/secondary_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/hint"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/or_long_press_for_default"
+                    android:textColor="@color/black54"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_gravity="center_horizontal"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:id="@+id/account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black87"
+                    android:textSize="?attr/TextSizeHeadline"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/hint_or_warning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:minLines="3"
+                    android:text="@string/publish_avatar_explanation"
+                    android:textColor="@color/black87"
+                    android:textSize="?attr/TextSizeBody"
+                    android:textAlignment="center"
+                    android:layout_gravity="center_horizontal" />
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/hint"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/account_image_wrapper"
-                android:layout_centerHorizontal="true"
-                android:text="@string/touch_to_choose_picture"
-                android:textColor="@color/black54"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:layout_gravity="center_horizontal"
-                android:textAlignment="center" />
-
-            <TextView
-                android:id="@+id/secondary_hint"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/hint"
-                android:layout_centerHorizontal="true"
-                android:text="@string/or_long_press_for_default"
-                android:textColor="@color/black54"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_gravity="center_horizontal"
-                android:textAlignment="center" />
-
-            <TextView
-            android:id="@+id/account"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeHeadline"
-                android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/hint_or_warning"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:minLines="3"
-            android:text="@string/publish_avatar_explanation"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody"
-            android:textAlignment="center"
-            android:layout_gravity="center_horizontal" />
-    </LinearLayout>
-</LinearLayout>
+        </LinearLayout>
     </ScrollView>
+
     <LinearLayout
         android:id="@+id/button_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true" >
+        android:layout_alignParentRight="true">
 
         <Button
             android:id="@+id/cancel_button"

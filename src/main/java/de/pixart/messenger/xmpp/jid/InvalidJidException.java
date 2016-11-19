@@ -8,7 +8,7 @@ public class InvalidJidException extends Exception {
     public final static String INVALID_PART_LENGTH = "JID part must be between 0 and 1023 characters";
     public final static String INVALID_CHARACTER = "JID contains an invalid character";
     public final static String STRINGPREP_FAIL = "The STRINGPREP operation has failed for the given JID";
-	public final static String IS_NULL = "JID can not be NULL";
+    public final static String IS_NULL = "JID can not be NULL";
 
     /**
      * Constructs a new {@code Exception} that includes the current stack trace.
@@ -31,7 +31,7 @@ public class InvalidJidException extends Exception {
      * specified detail message and the specified cause.
      *
      * @param detailMessage the detail message for this exception.
-     * @param throwable the cause of this exception.
+     * @param throwable     the cause of this exception.
      */
     public InvalidJidException(final String detailMessage, final Throwable throwable) {
         super(detailMessage, throwable);

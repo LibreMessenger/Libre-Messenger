@@ -33,7 +33,8 @@ import github.ankushsachdeva.emojicon.emoji.Emojicon;
  * @author Ankush Sachdeva (sankush@yahoo.co.in)
  */
 class EmojiAdapter extends ArrayAdapter<Emojicon> {
-	OnEmojiconClickedListener emojiClickListener;
+    OnEmojiconClickedListener emojiClickListener;
+
     public EmojiAdapter(Context context, List<Emojicon> data) {
         super(context, R.layout.emojicon_item, data);
     }
@@ -41,11 +42,11 @@ class EmojiAdapter extends ArrayAdapter<Emojicon> {
     public EmojiAdapter(Context context, Emojicon[] data) {
         super(context, R.layout.emojicon_item, data);
     }
-    
-    public void setEmojiClickListener(OnEmojiconClickedListener listener){
-    	this.emojiClickListener = listener;
+
+    public void setEmojiClickListener(OnEmojiconClickedListener listener) {
+        this.emojiClickListener = listener;
     }
-    
+
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         View v = convertView;
@@ -59,11 +60,11 @@ class EmojiAdapter extends ArrayAdapter<Emojicon> {
         ViewHolder holder = (ViewHolder) v.getTag();
         holder.icon.setText(emoji.getEmoji());
         holder.icon.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				emojiClickListener.onEmojiconClicked(getItem(position));
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                emojiClickListener.onEmojiconClicked(getItem(position));
+            }
+        });
         return v;
     }
 

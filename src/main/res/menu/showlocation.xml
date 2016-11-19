@@ -4,5 +4,5 @@
         android:id="@+id/action_navigate"
         android:showAsAction="always"
         android:title="@string/navigate"
-        android:icon="@drawable/ic_navigation_white_24dp"/>
+        android:icon="@drawable/ic_navigation_white_24dp" />
 </menu>

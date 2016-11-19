@@ -187,7 +187,7 @@
             android:defaultValue="true"
             android:key="last_activity"
             android:title="@string/pref_broadcast_last_activity"
-            android:summary="@string/pref_broadcast_last_activity_summary"/>
+            android:summary="@string/pref_broadcast_last_activity_summary" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="crashreport"
@@ -235,7 +235,7 @@
             <Preference
                 android:key="delete_omemo_identities"
                 android:title="@string/pref_delete_omemo_identities"
-                android:summary="@string/pref_delete_omemo_identities_summary"/>
+                android:summary="@string/pref_delete_omemo_identities_summary" />
             <CheckBoxPreference
                 android:defaultValue="false"
                 android:key="dont_trust_system_cas"

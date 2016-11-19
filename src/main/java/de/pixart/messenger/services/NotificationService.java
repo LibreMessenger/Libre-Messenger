@@ -383,7 +383,7 @@ public class NotificationService {
             builder.setStyle(messagingStyle);
         } else {
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(getMergedBodies(messages)));
-            builder.setContentText(UIHelper.getMessagePreview(mXmppConnectionService, messages.get((messages.size()-1))).first);
+            builder.setContentText(UIHelper.getMessagePreview(mXmppConnectionService, messages.get((messages.size() - 1))).first);
         }
     }
 
@@ -485,8 +485,8 @@ public class NotificationService {
         final Intent intent = new Intent(mXmppConnectionService, XmppConnectionService.class);
         intent.setAction(XmppConnectionService.ACTION_REPLY_TO_CONVERSATION);
         intent.putExtra("uuid", conversation.getUuid());
-        intent.putExtra("dismiss_notification",dismissAfterReply);
-        int id =  conversation.getUuid().hashCode() % (dismissAfterReply ? 402359 : 426583);
+        intent.putExtra("dismiss_notification", dismissAfterReply);
+        int id = conversation.getUuid().hashCode() % (dismissAfterReply ? 402359 : 426583);
         return PendingIntent.getService(mXmppConnectionService, id, intent, 0);
     }
 
@@ -635,7 +635,7 @@ public class NotificationService {
         mBuilder.setSmallIcon(R.drawable.ic_warning_white_24dp);
         mBuilder.setContentIntent(PendingIntent.getActivity(mXmppConnectionService,
                 145,
-                new Intent(mXmppConnectionService,ManageAccountActivity.class),
+                new Intent(mXmppConnectionService, ManageAccountActivity.class),
                 PendingIntent.FLAG_UPDATE_CURRENT));
         notificationManager.notify(ERROR_NOTIFICATION_ID, mBuilder.build());
     }

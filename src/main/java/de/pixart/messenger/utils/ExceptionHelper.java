@@ -31,107 +31,108 @@ import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
 
 public class ExceptionHelper {
-	private static SimpleDateFormat DATE_FORMATs = new SimpleDateFormat("yyyy-MM-dd");
-	public static void init(Context context) {
-		if (!(Thread.getDefaultUncaughtExceptionHandler() instanceof ExceptionHandler)) {
-			Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(
-					context));
-		}
-	}
+    private static SimpleDateFormat DATE_FORMATs = new SimpleDateFormat("yyyy-MM-dd");
 
-	public static boolean checkForCrash(ConversationActivity activity, final XmppConnectionService service) {
-		try {
-			final SharedPreferences preferences = PreferenceManager
-					.getDefaultSharedPreferences(activity);
-			boolean crashreport = preferences.getBoolean("crashreport", true);
-			if (!crashreport || Config.BUG_REPORTS == null) {
-				return false;
-			}
-			List<Account> accounts = service.getAccounts();
-			Account account = null;
-			for (int i = 0; i < accounts.size(); ++i) {
-				if (!accounts.get(i).isOptionSet(Account.OPTION_DISABLED)) {
-					account = accounts.get(i);
-					break;
-				}
-			}
-			if (account == null) {
-				return false;
-			}
-			final Account finalAccount = account;
-			FileInputStream file = activity.openFileInput("stacktrace.txt");
-			InputStreamReader inputStreamReader = new InputStreamReader(file);
-			BufferedReader stacktrace = new BufferedReader(inputStreamReader);
-			final StringBuilder report = new StringBuilder();
-			PackageManager pm = activity.getPackageManager();
-			PackageInfo packageInfo;
-			try {
-				packageInfo = pm.getPackageInfo(activity.getPackageName(), PackageManager.GET_SIGNATURES);
-				report.append("Version: " + packageInfo.versionName + '\n');
-				report.append("Last Update: " + DATE_FORMATs.format(new Date(packageInfo.lastUpdateTime)) + '\n');
-				Signature[] signatures = packageInfo.signatures;
-				if (signatures != null && signatures.length >= 1) {
-					report.append("SHA-1: " + CryptoHelper.getFingerprintCert(packageInfo.signatures[0].toByteArray()) + "\n");
-				}
-				report.append('\n');
-			} catch (Exception e) {
-				e.printStackTrace();
-				return false;
-			}
-			String line;
-			while ((line = stacktrace.readLine()) != null) {
-				report.append(line);
-				report.append('\n');
-			}
-			file.close();
-			activity.deleteFile("stacktrace.txt");
-			AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-			builder.setTitle(activity.getString(R.string.crash_report_title));
-			builder.setMessage(activity.getText(R.string.crash_report_message));
-			builder.setPositiveButton(activity.getText(R.string.send_now),
-					new OnClickListener() {
+    public static void init(Context context) {
+        if (!(Thread.getDefaultUncaughtExceptionHandler() instanceof ExceptionHandler)) {
+            Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler(
+                    context));
+        }
+    }
 
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
+    public static boolean checkForCrash(ConversationActivity activity, final XmppConnectionService service) {
+        try {
+            final SharedPreferences preferences = PreferenceManager
+                    .getDefaultSharedPreferences(activity);
+            boolean crashreport = preferences.getBoolean("crashreport", true);
+            if (!crashreport || Config.BUG_REPORTS == null) {
+                return false;
+            }
+            List<Account> accounts = service.getAccounts();
+            Account account = null;
+            for (int i = 0; i < accounts.size(); ++i) {
+                if (!accounts.get(i).isOptionSet(Account.OPTION_DISABLED)) {
+                    account = accounts.get(i);
+                    break;
+                }
+            }
+            if (account == null) {
+                return false;
+            }
+            final Account finalAccount = account;
+            FileInputStream file = activity.openFileInput("stacktrace.txt");
+            InputStreamReader inputStreamReader = new InputStreamReader(file);
+            BufferedReader stacktrace = new BufferedReader(inputStreamReader);
+            final StringBuilder report = new StringBuilder();
+            PackageManager pm = activity.getPackageManager();
+            PackageInfo packageInfo;
+            try {
+                packageInfo = pm.getPackageInfo(activity.getPackageName(), PackageManager.GET_SIGNATURES);
+                report.append("Version: " + packageInfo.versionName + '\n');
+                report.append("Last Update: " + DATE_FORMATs.format(new Date(packageInfo.lastUpdateTime)) + '\n');
+                Signature[] signatures = packageInfo.signatures;
+                if (signatures != null && signatures.length >= 1) {
+                    report.append("SHA-1: " + CryptoHelper.getFingerprintCert(packageInfo.signatures[0].toByteArray()) + "\n");
+                }
+                report.append('\n');
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+            String line;
+            while ((line = stacktrace.readLine()) != null) {
+                report.append(line);
+                report.append('\n');
+            }
+            file.close();
+            activity.deleteFile("stacktrace.txt");
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            builder.setTitle(activity.getString(R.string.crash_report_title));
+            builder.setMessage(activity.getText(R.string.crash_report_message));
+            builder.setPositiveButton(activity.getText(R.string.send_now),
+                    new OnClickListener() {
 
-							Log.d(Config.LOGTAG, "using account="
-									+ finalAccount.getJid().toBareJid()
-									+ " to send in stack trace");
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
-							Conversation conversation = null;
-							try {
-								conversation = service.findOrCreateConversation(finalAccount,
-										Jid.fromString(Config.BUG_REPORTS), false);
-							} catch (final InvalidJidException ignored) {
-							}
-							Message message = new Message(conversation, report
-									.toString(), Message.ENCRYPTION_NONE);
-							service.sendMessage(message);
-						}
-					});
-			builder.setNegativeButton(activity.getText(R.string.send_never),
-					new OnClickListener() {
+                            Log.d(Config.LOGTAG, "using account="
+                                    + finalAccount.getJid().toBareJid()
+                                    + " to send in stack trace");
 
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							preferences.edit().putBoolean("crash_report", false)
-									.apply();
-						}
-					});
-			builder.create().show();
-			return true;
-		} catch (final IOException ignored) {
-			return false;
-		}
-	}
+                            Conversation conversation = null;
+                            try {
+                                conversation = service.findOrCreateConversation(finalAccount,
+                                        Jid.fromString(Config.BUG_REPORTS), false);
+                            } catch (final InvalidJidException ignored) {
+                            }
+                            Message message = new Message(conversation, report
+                                    .toString(), Message.ENCRYPTION_NONE);
+                            service.sendMessage(message);
+                        }
+                    });
+            builder.setNegativeButton(activity.getText(R.string.send_never),
+                    new OnClickListener() {
 
-	public static void writeToStacktraceFile(Context context, String msg) {
-		try {
-			OutputStream os = context.openFileOutput("stacktrace.txt", Context.MODE_PRIVATE);
-			os.write(msg.getBytes());
-			os.flush();
-			os.close();
-		} catch (IOException ignored) {
-		}
-	}
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            preferences.edit().putBoolean("crash_report", false)
+                                    .apply();
+                        }
+                    });
+            builder.create().show();
+            return true;
+        } catch (final IOException ignored) {
+            return false;
+        }
+    }
+
+    public static void writeToStacktraceFile(Context context, String msg) {
+        try {
+            OutputStream os = context.openFileOutput("stacktrace.txt", Context.MODE_PRIVATE);
+            os.write(msg.getBytes());
+            os.flush();
+            os.close();
+        } catch (IOException ignored) {
+        }
+    }
 }

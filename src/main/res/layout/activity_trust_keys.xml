@@ -3,11 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey200">
+
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/button_bar"
-        android:layout_alignParentTop="true" >
+        android:layout_alignParentTop="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,7 +35,7 @@
                     android:textColor="@color/black87"
                     android:textSize="?attr/TextSizeHeadline"
                     android:textStyle="bold"
-                    android:text="@string/error_trustkeys_title"/>
+                    android:text="@string/error_trustkeys_title" />
 
                 <TextView
                     android:id="@+id/key_error_message"
@@ -42,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/black87"
                     android:textSize="?attr/TextSizeBody"
-                    android:padding="8dp"/>
+                    android:padding="8dp" />
 
             </LinearLayout>
 
@@ -65,7 +66,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/black87"
                     android:textSize="?attr/TextSizeHeadline"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:id="@+id/own_keys_details"
@@ -73,8 +74,7 @@
                     android:layout_height="wrap_content"
                     android:divider="?android:dividerHorizontal"
                     android:showDividers="middle"
-                    android:orientation="vertical">
-                </LinearLayout>
+                    android:orientation="vertical"></LinearLayout>
 
             </LinearLayout>
 
@@ -89,6 +89,7 @@
 
         </LinearLayout>
     </ScrollView>
+
     <LinearLayout
         android:id="@+id/button_bar"
         android:layout_width="wrap_content"
@@ -97,7 +98,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true" >
+        android:layout_alignParentRight="true">
 
         <Button
             android:id="@+id/cancel_button"
@@ -123,6 +124,6 @@
             android:layout_weight="1"
             android:enabled="true"
             android:textColor="@color/black54"
-            android:text="@string/done"/>
+            android:text="@string/done" />
     </LinearLayout>
 </RelativeLayout>

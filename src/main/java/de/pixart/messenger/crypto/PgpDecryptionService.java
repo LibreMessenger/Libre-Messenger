@@ -28,9 +28,9 @@ public class PgpDecryptionService {
     private final XmppConnectionService mXmppConnectionService;
     private OpenPgpApi openPgpApi = null;
 
-	protected final ArrayDeque<Message> messages = new ArrayDeque();
+    protected final ArrayDeque<Message> messages = new ArrayDeque();
     protected final HashSet<Message> pendingNotifications = new HashSet<>();
-	Message currentMessage;
+    Message currentMessage;
     private PendingIntent pendingIntent;
 
 
@@ -38,7 +38,7 @@ public class PgpDecryptionService {
         this.mXmppConnectionService = service;
     }
 
-	public synchronized boolean decrypt(final Message message, boolean notify) {
+    public synchronized boolean decrypt(final Message message, boolean notify) {
         messages.add(message);
         if (notify && pendingIntent == null) {
             pendingNotifications.add(message);
@@ -48,10 +48,10 @@ public class PgpDecryptionService {
             continueDecryption();
             return notify;
         }
-	}
+    }
 
     public synchronized void decrypt(final List<Message> list) {
-        for(Message message : list) {
+        for (Message message : list) {
             if (message.getEncryption() == Message.ENCRYPTION_PGP) {
                 messages.add(message);
             }
@@ -69,19 +69,19 @@ public class PgpDecryptionService {
         this.pendingNotifications.remove(message);
     }
 
-	protected synchronized void decryptNext() {
-		if (pendingIntent == null
+    protected synchronized void decryptNext() {
+        if (pendingIntent == null
                 && getOpenPgpApi() != null
-                && (currentMessage =  messages.poll()) != null) {
-			new Thread(new Runnable() {
+                && (currentMessage = messages.poll()) != null) {
+            new Thread(new Runnable() {
                 @Override
                 public void run() {
                     executeApi(currentMessage);
                     decryptNext();
                 }
             }).start();
-		}
-	}
+        }
+    }
 
     public synchronized void continueDecryption(boolean resetPending) {
         if (resetPending) {
@@ -200,7 +200,7 @@ public class PgpDecryptionService {
         if (pendingIntent == null) {
             return false;
         } else {
-            for(Message message : messages) {
+            for (Message message : messages) {
                 if (message.getConversation() == conversation) {
                     return true;
                 }

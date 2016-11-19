@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="5dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="5dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="5dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingTop="5dp">
 
     <Button
         android:id="@+id/load_more_messages"
@@ -15,8 +15,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/load_more_messages"
-        android:textColor="@color/accent" android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"/>
+        android:textColor="@color/accent"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/message_photo"
@@ -29,7 +30,7 @@
         android:scaleType="fitXY"
         android:src="@drawable/ic_profile"
         android:background="@drawable/message_border"
-        app:riv_corner_radius="5dp"/>
+        app:riv_corner_radius="5dp" />
 
     <TextView
         android:id="@+id/status_message"
@@ -42,6 +43,6 @@
         android:text="@string/contact_has_read_up_to_this_point"
         android:textColor="@color/black54"
         android:textSize="?attr/TextSizeInfo"
-        android:textStyle="italic"/>
+        android:textStyle="italic" />
 
 </RelativeLayout>

@@ -101,8 +101,8 @@ public class WelcomeActivity extends XmppActivity {
                 List<Account> accounts = xmppConnectionService.getAccounts();
                 Intent intent = new Intent(WelcomeActivity.this, EditAccountActivity.class);
                 if (accounts.size() == 1) {
-                    intent.putExtra("jid",accounts.get(0).getJid().toBareJid().toString());
-                    intent.putExtra("init",true);
+                    intent.putExtra("jid", accounts.get(0).getJid().toBareJid().toString());
+                    intent.putExtra("init", true);
                 } else if (accounts.size() >= 1) {
                     intent = new Intent(WelcomeActivity.this, ManageAccountActivity.class);
                 }
@@ -125,7 +125,7 @@ public class WelcomeActivity extends XmppActivity {
                 .setCancelable(false)
                 .setPositiveButton(R.string.ok,
                         new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
                                 final String password = userInput.getText().toString();
                                 final ProgressDialog pd = ProgressDialog.show(WelcomeActivity.this, getString(R.string.please_wait), getString(R.string.databaseimport_started), true);
                                 if (!password.isEmpty()) {
@@ -157,7 +157,7 @@ public class WelcomeActivity extends XmppActivity {
                         })
                 .setNegativeButton(R.string.cancel,
                         new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
                                 Toast.makeText(WelcomeActivity.this, R.string.import_canceled, Toast.LENGTH_LONG).show();
                                 dialog.dismiss();
                             }
@@ -176,12 +176,12 @@ public class WelcomeActivity extends XmppActivity {
     private boolean BackupAvailable() {
         // Set the folder on the SDcard
         File filePath = new File(FileBackend.getConversationsDirectory() + "/database/database.db.crypt");
-        Log.d(Config.LOGTAG,"DB Path: " + filePath.toString());
-        if(filePath.exists()) {
-            Log.d(Config.LOGTAG,"DB Path existing");
+        Log.d(Config.LOGTAG, "DB Path: " + filePath.toString());
+        if (filePath.exists()) {
+            Log.d(Config.LOGTAG, "DB Path existing");
             return true;
         } else {
-            Log.d(Config.LOGTAG,"DB Path not existing");
+            Log.d(Config.LOGTAG, "DB Path not existing");
             return false;
         }
     }
@@ -198,16 +198,16 @@ public class WelcomeActivity extends XmppActivity {
         try {
             EncryptDecryptFile.decrypt(InputFile, OutputTemp, DecryptionKey);
         } catch (NoSuchAlgorithmException e) {
-            Log.d(Config.LOGTAG,"Database importer: decryption failed with " + e);
+            Log.d(Config.LOGTAG, "Database importer: decryption failed with " + e);
             e.printStackTrace();
         } catch (NoSuchPaddingException e) {
-            Log.d(Config.LOGTAG,"Database importer: decryption failed with " + e);
+            Log.d(Config.LOGTAG, "Database importer: decryption failed with " + e);
             e.printStackTrace();
         } catch (InvalidKeyException e) {
-            Log.d(Config.LOGTAG,"Database importer: decryption failed (invalid key) with " + e);
+            Log.d(Config.LOGTAG, "Database importer: decryption failed (invalid key) with " + e);
             e.printStackTrace();
         } catch (IOException e) {
-            Log.d(Config.LOGTAG,"Database importer: decryption failed (IO) with " + e);
+            Log.d(Config.LOGTAG, "Database importer: decryption failed (IO) with " + e);
             e.printStackTrace();
         }
 

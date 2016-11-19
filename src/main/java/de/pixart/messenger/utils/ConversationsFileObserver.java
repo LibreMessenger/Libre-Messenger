@@ -35,7 +35,7 @@ public abstract class ConversationsFileObserver {
             if (files == null) {
                 continue;
             }
-            for(File file : files) {
+            for (File file : files) {
                 if (file.isDirectory() && !file.getName().equals(".") && !file.getName().equals("..")) {
                     final String currentPath = file.getAbsolutePath();
                     if (depth(file) <= 8 && !stack.contains(currentPath) && !observing(currentPath)) {
@@ -44,22 +44,22 @@ public abstract class ConversationsFileObserver {
                 }
             }
         }
-        for(FileObserver observer : mObservers) {
+        for (FileObserver observer : mObservers) {
             observer.startWatching();
         }
     }
 
     private static int depth(File file) {
         int depth = 0;
-        while((file = file.getParentFile()) != null) {
+        while ((file = file.getParentFile()) != null) {
             depth++;
         }
         return depth;
     }
 
     private boolean observing(String path) {
-        for(SingleFileObserver observer : mObservers) {
-            if(path.equals(observer.path)) {
+        for (SingleFileObserver observer : mObservers) {
+            if (path.equals(observer.path)) {
                 return true;
             }
         }
@@ -67,7 +67,7 @@ public abstract class ConversationsFileObserver {
     }
 
     public synchronized void stopWatching() {
-        for(FileObserver observer : mObservers) {
+        for (FileObserver observer : mObservers) {
             observer.stopWatching();
         }
         mObservers.clear();
@@ -85,7 +85,7 @@ public abstract class ConversationsFileObserver {
 
         @Override
         public void onEvent(int event, String filename) {
-            ConversationsFileObserver.this.onEvent(event, path+'/'+filename);
+            ConversationsFileObserver.this.onEvent(event, path + '/' + filename);
         }
 
     }

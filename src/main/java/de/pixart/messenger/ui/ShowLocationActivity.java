@@ -35,9 +35,9 @@ import de.pixart.messenger.R;
 
 public class ShowLocationActivity extends Activity implements OnMapReadyCallback {
 
-	private GoogleMap mGoogleMap;
-	private LatLng mLocation;
-	private String mLocationName;
+    private GoogleMap mGoogleMap;
+    private LatLng mLocation;
+    private String mLocationName;
     private MarkerOptions options;
     private Marker marker;
 
@@ -66,26 +66,26 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
         }
     }
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
         if (getActionBar() != null) {
             getActionBar().setHomeButtonEnabled(true);
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-		setContentView(R.layout.activity_show_locaction);
-		MapFragment fragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map_fragment);
-		fragment.getMapAsync(this);
-	}
+        setContentView(R.layout.activity_show_locaction);
+        MapFragment fragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map_fragment);
+        fragment.getMapAsync(this);
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				finish();
-				return true;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
             case R.id.action_navigate:
                 double longitude = mLocation.longitude;
                 double latitude = mLocation.latitude;
@@ -96,9 +96,9 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
                     Toast.makeText(this, R.string.no_application_found_to_display_location, Toast.LENGTH_SHORT).show();
                 }
                 return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -107,31 +107,31 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
         return true;
     }
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		Intent intent = getIntent();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent = getIntent();
 
-		this.mLocationName = intent != null ? intent.getStringExtra("name") : null;
+        this.mLocationName = intent != null ? intent.getStringExtra("name") : null;
 
-		if (intent != null && intent.hasExtra("longitude") && intent.hasExtra("latitude")) {
-			double longitude = intent.getDoubleExtra("longitude",0);
-			double latitude = intent.getDoubleExtra("latitude",0);
-			this.mLocation = new LatLng(latitude,longitude);
-			if (this.mGoogleMap != null) {
-				markAndCenterOnLocation(this.mLocation, this.mLocationName);
-			}
-		}
-	}
+        if (intent != null && intent.hasExtra("longitude") && intent.hasExtra("latitude")) {
+            double longitude = intent.getDoubleExtra("longitude", 0);
+            double latitude = intent.getDoubleExtra("latitude", 0);
+            this.mLocation = new LatLng(latitude, longitude);
+            if (this.mGoogleMap != null) {
+                markAndCenterOnLocation(this.mLocation, this.mLocationName);
+            }
+        }
+    }
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-	}
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 
-	@Override
-	public void onMapReady(GoogleMap googleMap) {
-		this.mGoogleMap = googleMap;
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        this.mGoogleMap = googleMap;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                     || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -142,10 +142,10 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
             this.mGoogleMap.setBuildingsEnabled(true);
             this.mGoogleMap.setMyLocationEnabled(true);
         }
-		if (this.mLocation != null) {
-			this.markAndCenterOnLocation(this.mLocation,this.mLocationName);
-		}
-	}
+        if (this.mLocation != null) {
+            this.markAndCenterOnLocation(this.mLocation, this.mLocationName);
+        }
+    }
 
     private static String getAddress(Context context, LatLng location) {
         double longitude = location.longitude;
@@ -162,7 +162,7 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
                         strAddress.append(Address.getAddressLine(i)).append("\n");
                     }
                     address = strAddress.toString();
-                    address = address.substring(0, address.length()-1); //trim last \n
+                    address = address.substring(0, address.length() - 1); //trim last \n
 
                 }
             } catch (Exception e) {

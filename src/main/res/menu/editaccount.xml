@@ -4,59 +4,59 @@
         android:id="@+id/action_change_presence"
         android:showAsAction="always"
         android:title="@string/change_presence"
-        android:icon="@drawable/ic_new_releases_white_24dp"/>
+        android:icon="@drawable/ic_new_releases_white_24dp" />
 
     <item
         android:id="@+id/action_show_qr_code"
         android:showAsAction="never"
-        android:title="@string/show_qr_code"/>
+        android:title="@string/show_qr_code" />
 
     <item
         android:id="@+id/action_show_block_list"
         android:showAsAction="always"
         android:icon="@drawable/ic_speaker_notes_off_white_24dp"
-        android:title="@string/show_block_list"/>
+        android:title="@string/show_block_list" />
 
     <item
         android:id="@+id/action_renew_certificate"
         android:showAsAction="never"
         android:title="@string/action_renew_certificate"
-        android:visible="false"/>
+        android:visible="false" />
 
     <item
         android:id="@+id/action_server_info_show_more"
         android:checkable="true"
         android:checked="false"
         android:showAsAction="never"
-        android:title="@string/server_info_show_more"/>
+        android:title="@string/server_info_show_more" />
 
     <item
         android:id="@+id/action_mam_prefs"
         android:icon="@drawable/ic_cloud_white_24dp"
         android:showAsAction="always"
-        android:title="@string/mam_prefs"/>
+        android:title="@string/mam_prefs" />
 
     <item
         android:id="@+id/action_show_password"
         android:showAsAction="never"
-        android:title="@string/show_password"/>
+        android:title="@string/show_password" />
 
     <item
         android:id="@+id/action_change_password_on_server"
         android:showAsAction="always"
         android:icon="@drawable/ic_vpn_key_white_24dp"
-        android:title="@string/change_password"/>
+        android:title="@string/change_password" />
     <item
         android:id="@+id/mgmt_account_reconnect"
         android:showAsAction="never"
-        android:title="@string/mgmt_account_reconnect"/>
+        android:title="@string/mgmt_account_reconnect" />
     <item
         android:id="@+id/action_clear_devices"
         android:showAsAction="never"
-        android:title="@string/clear_other_devices"/>
+        android:title="@string/clear_other_devices" />
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_settings"/>
+        android:title="@string/action_settings" />
 </menu>

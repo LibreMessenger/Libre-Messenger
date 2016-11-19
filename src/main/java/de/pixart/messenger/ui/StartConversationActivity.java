@@ -843,7 +843,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
     private boolean handleJid(Invite invite) {
         Account account = xmppConnectionService.findAccountByJid(invite.getJid());
         if (account != null && invite.hasFingerprints()) {
-            if (xmppConnectionService.verifyFingerprints(account,invite.getFingerprints())) {
+            if (xmppConnectionService.verifyFingerprints(account, invite.getFingerprints())) {
                 switchToAccount(account);
                 finish();
                 return true;
@@ -865,7 +865,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
         } else if (contacts.size() == 1) {
             Contact contact = contacts.get(0);
             if (invite.hasFingerprints()) {
-                xmppConnectionService.verifyFingerprints(contact,invite.getFingerprints());
+                xmppConnectionService.verifyFingerprints(contact, invite.getFingerprints());
             }
             switchToConversation(contact);
             return true;

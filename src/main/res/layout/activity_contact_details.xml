@@ -2,13 +2,13 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/grey200" >
+    android:background="@color/grey200">
 
     <LinearLayout
         android:id="@+id/details_main_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -18,7 +18,7 @@
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:background="@drawable/infocard_border"
-            android:padding="@dimen/infocard_padding" >
+            android:padding="@dimen/infocard_padding">
 
             <QuickContactBadge
                 android:id="@+id/details_contact_badge"
@@ -64,8 +64,7 @@
                     android:layout_marginLeft="-2dp"
                     android:layout_marginBottom="4dp"
                     android:orientation="horizontal"
-                    android:layout_gravity="center_horizontal">
-                </com.wefika.flowlayout.FlowLayout>
+                    android:layout_gravity="center_horizontal"></com.wefika.flowlayout.FlowLayout>
 
                 <TextView
                     android:id="@+id/details_lastseen"
@@ -109,7 +108,7 @@
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:background="@drawable/infocard_border"
-            android:padding="@dimen/infocard_padding" >
+            android:padding="@dimen/infocard_padding">
 
             <Button
                 android:id="@+id/add_contact_button"
@@ -156,8 +155,7 @@
             android:divider="?android:dividerHorizontal"
             android:orientation="vertical"
             android:padding="@dimen/infocard_padding"
-            android:showDividers="middle" >
-        </LinearLayout>
+            android:showDividers="middle"></LinearLayout>
     </LinearLayout>
 
 </ScrollView>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/activatedBackgroundIndicator"
-                android:padding="8dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/activatedBackgroundIndicator"
+    android:padding="8dp">
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/contact_photo"
@@ -22,7 +22,7 @@
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/contact_photo"
         android:orientation="vertical"
-        android:paddingLeft="8dp" >
+        android:paddingLeft="8dp">
 
         <github.ankushsachdeva.emojicon.EmojiconTextView
             android:id="@+id/contact_display_name"
@@ -39,13 +39,14 @@
             android:singleLine="true"
             android:textColor="@color/black87"
             android:textSize="?attr/TextSizeBody" />
+
         <com.wefika.flowlayout.FlowLayout
             android:id="@+id/tags"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="-2dp"
-            android:orientation="horizontal">
-        </com.wefika.flowlayout.FlowLayout>
+            android:orientation="horizontal"></com.wefika.flowlayout.FlowLayout>
+
         <TextView
             android:id="@+id/key"
             android:layout_width="wrap_content"

@@ -70,7 +70,7 @@ public class Track {
     public Track(int id, MediaFormat format, boolean isAudio) throws Exception {
         trackId = id;
         if (!isAudio) {
-            sampleDurations.add((long)3015);
+            sampleDurations.add((long) 3015);
             duration = 3015;
             width = format.getInteger(MediaFormat.KEY_WIDTH);
             height = format.getInteger(MediaFormat.KEY_HEIGHT);
@@ -136,7 +136,7 @@ public class Track {
                 sampleDescriptionBox.addBox(visualSampleEntry);
             }
         } else {
-            sampleDurations.add((long)1024);
+            sampleDurations.add((long) 1024);
             duration = 1024;
             isAudio = true;
             volume = 1;
@@ -167,7 +167,7 @@ public class Track {
 
             AudioSpecificConfig audioSpecificConfig = new AudioSpecificConfig();
             audioSpecificConfig.setAudioObjectType(2);
-            audioSpecificConfig.setSamplingFrequencyIndex(samplingFrequencyIndexMap.get((int)audioSampleEntry.getSampleRate()));
+            audioSpecificConfig.setSamplingFrequencyIndex(samplingFrequencyIndexMap.get((int) audioSampleEntry.getSampleRate()));
             audioSpecificConfig.setChannelConfiguration(audioSampleEntry.getChannelCount());
             decoderConfigDescriptor.setAudioSpecificInfo(audioSpecificConfig);
 

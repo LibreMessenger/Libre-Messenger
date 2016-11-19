@@ -29,13 +29,13 @@ import de.pixart.messenger.xmpp.chatstate.ChatState;
 
 public class ConversationAdapter extends ArrayAdapter<Conversation> {
 
-	private XmppActivity activity;
+    private XmppActivity activity;
 
-	public ConversationAdapter(XmppActivity activity,
-			List<Conversation> conversations) {
-		super(activity, 0, conversations);
-		this.activity = activity;
-	}
+    public ConversationAdapter(XmppActivity activity,
+                               List<Conversation> conversations) {
+        super(activity, 0, conversations);
+        this.activity = activity;
+    }
 
     public static boolean cancelPotentialWork(Conversation conversation, ImageView imageView) {
         final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
@@ -62,8 +62,8 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
         return null;
     }
 
-	@Override
-	public View getView(int position, View view, ViewGroup parent) {
+    @Override
+    public View getView(int position, View view, ViewGroup parent) {
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.conversation_list_row, parent, false);
@@ -126,23 +126,23 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
                 }
             }
         } else {*/
-            Pair<String, Boolean> preview = UIHelper.getMessagePreview(activity, message);
-            mLastMessage.setVisibility(View.VISIBLE);
-            imagePreview.setVisibility(View.GONE);
-            mLastMessage.setText(preview.first);
-            if (preview.second) {
-                if (conversation.isRead()) {
-                    mLastMessage.setTypeface(null, Typeface.ITALIC);
-                } else {
-                    mLastMessage.setTypeface(null, Typeface.BOLD_ITALIC);
-                }
+        Pair<String, Boolean> preview = UIHelper.getMessagePreview(activity, message);
+        mLastMessage.setVisibility(View.VISIBLE);
+        imagePreview.setVisibility(View.GONE);
+        mLastMessage.setText(preview.first);
+        if (preview.second) {
+            if (conversation.isRead()) {
+                mLastMessage.setTypeface(null, Typeface.ITALIC);
             } else {
-                if (conversation.isRead()) {
-                    mLastMessage.setTypeface(null, Typeface.NORMAL);
-                } else {
-                    mLastMessage.setTypeface(null, Typeface.BOLD);
-                }
+                mLastMessage.setTypeface(null, Typeface.BOLD_ITALIC);
             }
+        } else {
+            if (conversation.isRead()) {
+                mLastMessage.setTypeface(null, Typeface.NORMAL);
+            } else {
+                mLastMessage.setTypeface(null, Typeface.BOLD);
+            }
+        }
         //}
 
         long muted_till = conversation.getLongAttribute(Conversation.ATTRIBUTE_MUTED_TILL, 0);
@@ -168,41 +168,41 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
             mLastMessage.setTypeface(null, Typeface.BOLD_ITALIC);
         }
         return view;
-	}
+    }
 
-	public void loadAvatar(Conversation conversation, ImageView imageView) {
-		if (cancelPotentialWork(conversation, imageView)) {
-			final Bitmap bm = activity.avatarService().get(conversation, activity.getPixel(56), true);
-			if (bm != null) {
-				cancelPotentialWork(conversation, imageView);
-				imageView.setImageBitmap(bm);
-				imageView.setBackgroundColor(0x00000000);
-			} else {
-				imageView.setBackgroundColor(UIHelper.getColorForName(conversation.getName()));
-				imageView.setImageDrawable(null);
-				final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
-				final AsyncDrawable asyncDrawable = new AsyncDrawable(activity.getResources(), null, task);
-				imageView.setImageDrawable(asyncDrawable);
-				try {
-					task.execute(conversation);
-				} catch (final RejectedExecutionException ignored) {
-				}
-			}
-		}
-	}
+    public void loadAvatar(Conversation conversation, ImageView imageView) {
+        if (cancelPotentialWork(conversation, imageView)) {
+            final Bitmap bm = activity.avatarService().get(conversation, activity.getPixel(56), true);
+            if (bm != null) {
+                cancelPotentialWork(conversation, imageView);
+                imageView.setImageBitmap(bm);
+                imageView.setBackgroundColor(0x00000000);
+            } else {
+                imageView.setBackgroundColor(UIHelper.getColorForName(conversation.getName()));
+                imageView.setImageDrawable(null);
+                final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+                final AsyncDrawable asyncDrawable = new AsyncDrawable(activity.getResources(), null, task);
+                imageView.setImageDrawable(asyncDrawable);
+                try {
+                    task.execute(conversation);
+                } catch (final RejectedExecutionException ignored) {
+                }
+            }
+        }
+    }
 
-	static class AsyncDrawable extends BitmapDrawable {
-		private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
+    static class AsyncDrawable extends BitmapDrawable {
+        private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
 
-		public AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
-			super(res, bitmap);
-			bitmapWorkerTaskReference = new WeakReference<>(bitmapWorkerTask);
-		}
+        public AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
+            super(res, bitmap);
+            bitmapWorkerTaskReference = new WeakReference<>(bitmapWorkerTask);
+        }
 
-		public BitmapWorkerTask getBitmapWorkerTask() {
-			return bitmapWorkerTaskReference.get();
-		}
-	}
+        public BitmapWorkerTask getBitmapWorkerTask() {
+            return bitmapWorkerTaskReference.get();
+        }
+    }
 
     class BitmapWorkerTask extends AsyncTask<Conversation, Void, Bitmap> {
         private final WeakReference<ImageView> imageViewReference;

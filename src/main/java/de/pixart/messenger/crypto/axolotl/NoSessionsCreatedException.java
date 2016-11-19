@@ -1,4 +1,4 @@
 package de.pixart.messenger.crypto.axolotl;
 
-public class NoSessionsCreatedException extends Throwable{
+public class NoSessionsCreatedException extends Throwable {
 }

@@ -21,8 +21,8 @@ import android.content.Context;
 import github.ankushsachdeva.emojicon.emoji.Emojicon;
 
 /**
-* @author Daniele Ricci
-*/
+ * @author Daniele Ricci
+ */
 public interface EmojiconRecents {
     public void addRecentEmoji(Context context, Emojicon emojicon);
 }

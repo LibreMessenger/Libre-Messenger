@@ -1,15 +1,14 @@
 <android.support.v4.widget.SlidingPaneLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/content_view_spl"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_weight="1"
         android:layout_height="match_parent"
         android:background="@color/grey50"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <de.timroes.android.listview.EnhancedListView
             android:id="@+id/list"
@@ -25,7 +24,6 @@
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:orientation="vertical" >
-    </LinearLayout>
+        android:orientation="vertical"></LinearLayout>
 
 </android.support.v4.widget.SlidingPaneLayout>

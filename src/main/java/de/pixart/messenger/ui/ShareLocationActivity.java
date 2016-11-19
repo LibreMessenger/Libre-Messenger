@@ -160,62 +160,62 @@ public class ShareLocationActivity extends Activity implements OnMapReadyCallbac
 
     }
 
-	@Override
-	public void onConnectionSuspended(int i) {
+    @Override
+    public void onConnectionSuspended(int i) {
 
-	}
+    }
 
-	@Override
-	public void onConnectionFailed(ConnectionResult connectionResult) {
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
 
-	}
+    }
 
-	@Override
-	public void onLocationChanged(Location location) {
+    @Override
+    public void onLocationChanged(Location location) {
         double longitude = location.getLongitude();
         double latitude = location.getLatitude();
 
-		if (this.mLastLocation == null) {
-			centerOnLocation(new LatLng(location.getLatitude(), location.getLongitude()));
-			this.mShareButton.setEnabled(true);
-			this.mShareButton.setTextColor(0xde000000);
-			this.mShareButton.setText(R.string.share);
-		}
-		this.mLastLocation = location;
+        if (this.mLastLocation == null) {
+            centerOnLocation(new LatLng(location.getLatitude(), location.getLongitude()));
+            this.mShareButton.setEnabled(true);
+            this.mShareButton.setTextColor(0xde000000);
+            this.mShareButton.setText(R.string.share);
+        }
+        this.mLastLocation = location;
         if (latitude != 0 && longitude != 0) {
             Double[] lat_long = new Double[]{latitude, longitude};
             new ReverseGeocodingTask(getBaseContext()).execute(lat_long);
         }
-	}
+    }
 
-	@TargetApi(Build.VERSION_CODES.KITKAT)
-	private boolean isLocationEnabledKitkat() {
-		try {
-			int locationMode = Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE);
-			return locationMode != Settings.Secure.LOCATION_MODE_OFF;
-		} catch (Settings.SettingNotFoundException e) {
-			return false;
-		}
-	}
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    private boolean isLocationEnabledKitkat() {
+        try {
+            int locationMode = Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE);
+            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+        } catch (Settings.SettingNotFoundException e) {
+            return false;
+        }
+    }
 
-	@SuppressWarnings("deprecation")
-	private boolean isLocationEnabledLegacy() {
-		String locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-		return !TextUtils.isEmpty(locationProviders);
-	}
+    @SuppressWarnings("deprecation")
+    private boolean isLocationEnabledLegacy() {
+        String locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+        return !TextUtils.isEmpty(locationProviders);
+    }
 
-	private boolean isLocationEnabled() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
-			return isLocationEnabledKitkat();
-		}else{
-			return isLocationEnabledLegacy();
-		}
-	}
+    private boolean isLocationEnabled() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            return isLocationEnabledKitkat();
+        } else {
+            return isLocationEnabledLegacy();
+        }
+    }
 
     private class ReverseGeocodingTask extends AsyncTask<Double, Void, String> {
         Context mContext;
 
-        public ReverseGeocodingTask(Context context){
+        public ReverseGeocodingTask(Context context) {
             super();
             mContext = context;
         }
@@ -228,10 +228,10 @@ public class ShareLocationActivity extends Activity implements OnMapReadyCallbac
             double longitude = params[1];
 
             List<Address> addresses = null;
-            String address="";
+            String address = "";
 
             try {
-                addresses = geocoder.getFromLocation(latitude, longitude,1);
+                addresses = geocoder.getFromLocation(latitude, longitude, 1);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -244,7 +244,7 @@ public class ShareLocationActivity extends Activity implements OnMapReadyCallbac
                     strAddress.append(Address.getAddressLine(i)).append("\n");
                 }
                 address = strAddress.toString();
-                address = address.substring(0, address.length()-1); //trim last \n
+                address = address.substring(0, address.length() - 1); //trim last \n
             }
 
             return address;
@@ -256,7 +256,7 @@ public class ShareLocationActivity extends Activity implements OnMapReadyCallbac
             // Setting address of the touched Position
             mLocationInfo.setVisibility(View.VISIBLE);
             mSnackbarLocation.setText(address);
-            Log.d(Config.LOGTAG,"Location: Address = "+ address);
+            Log.d(Config.LOGTAG, "Location: Address = " + address);
         }
     }
 }

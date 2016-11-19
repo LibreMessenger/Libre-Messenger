@@ -26,8 +26,8 @@ import github.ankushsachdeva.emojicon.emoji.Emojicon;
 
 
 /**
-* @author Daniele Ricci
-*/
+ * @author Daniele Ricci
+ */
 public class EmojiconRecentsManager extends ArrayList<Emojicon> {
 
     private static final String PREFERENCE_NAME = "emojicon";
@@ -88,7 +88,7 @@ public class EmojiconRecentsManager extends ArrayList<Emojicon> {
         boolean ret = super.remove(object);
         return ret;
     }
-    
+
     private SharedPreferences getPreferences() {
         return mContext.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
     }
@@ -99,14 +99,13 @@ public class EmojiconRecentsManager extends ArrayList<Emojicon> {
         StringTokenizer tokenizer = new StringTokenizer(str, "~");
         while (tokenizer.hasMoreTokens()) {
             try {
-            	add(new Emojicon(tokenizer.nextToken()));
-            }
-            catch (NumberFormatException e) {
+                add(new Emojicon(tokenizer.nextToken()));
+            } catch (NumberFormatException e) {
                 // ignored
             }
         }
     }
-    
+
     public void saveRecents() {
         StringBuilder str = new StringBuilder();
         int c = size();
