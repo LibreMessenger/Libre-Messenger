@@ -62,9 +62,6 @@ dependencies {
     compile 'pub.devrel:easypermissions:0.1.9'
     compile 'com.wefika:flowlayout:0.4.1'
     compile 'com.googlecode.ez-vcard:ez-vcard:0.10.0'
-    //compile 'com.jakewharton:disklrucache:2.0.2'
-    //compile group: 'commons-io', name: 'commons-io', version: '2.5'
-
 }
 
 ext {
@@ -81,9 +78,9 @@ android {
     defaultConfig {
         minSdkVersion 18
         targetSdkVersion 24
-        versionCode 174
 
-        versionName "1.15.0"
+        versionCode 176
+        versionName "1.15.1"
 
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"
@@ -130,6 +127,7 @@ android {
         }
         buildTypes {
             debug {
+                minSdkVersion 21
                 debuggable true
                 buildTypes.release.signingConfig = null
                 //applicationIdSuffix ".debug"
@@ -139,7 +137,8 @@ android {
                 debuggable false
                 signingConfig = signingConfigs.release
                 minifyEnabled true
-                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+                runProguard true
+                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),'proguard-rules.pro'
             }
         }
     }

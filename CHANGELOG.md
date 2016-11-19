@@ -1,5 +1,8 @@
 ###Changelog
 
+###Version 1.15.1
+* bug fixes
+
 ###Version 1.15.0
 * make OMEMO working with other clients
 * make OMEMO encryption standard for 1:1 chats as default
