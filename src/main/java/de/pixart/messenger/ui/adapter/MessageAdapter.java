@@ -162,7 +162,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 		if (message.getType() == Message.TYPE_IMAGE || message.getType() == Message.TYPE_FILE || message.getTransferable() != null) {
 			FileParams params = message.getFileParams();
 			if (params.size > (1 * 1024 * 1024)) {
-				filesize = params.size / (1024 * 1024)+ " MiB";
+				filesize = params.size / (1024 * 1024) + " MiB";
 			} else if (params.size > (1 * 1024)) {
 				filesize = params.size / 1024 + " KiB";
 			} else if (params.size > 0) {
@@ -178,8 +178,8 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 				break;
 			case Message.STATUS_UNSEND:
 				Transferable d = message.getTransferable();
-				if (d!=null) {
-					info = getContext().getString(R.string.sending_file,d.getProgress());
+				if (d != null) {
+					info = getContext().getString(R.string.sending_file, d.getProgress());
 				} else {
 					info = getContext().getString(R.string.sending);
 				}
@@ -210,6 +210,8 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 		}
 		if (error && type == SENT) {
 			viewHolder.time.setTextColor(activity.getWarningTextColor());
+		} else if (!message.isValidInSession() && type == RECEIVED) {
+			viewHolder.time.setTextColor(activity.getUnencryptedTextColor());
 		} else {
 			viewHolder.time.setTextColor(this.getMessageTextColor(darkBackground,false));
 		}
