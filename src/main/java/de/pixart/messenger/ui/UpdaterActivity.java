@@ -38,7 +38,7 @@ public class UpdaterActivity extends Activity {
     private int versionCode = 0;
     private DownloadManager downloadManager;
     private long downloadReference;
-    private String FileName = "update.apk";
+    static final private String FileName = "update.apk";
 
     BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
 
