@@ -1546,9 +1546,11 @@ public class XmppConnection implements Runnable {
         this.sendPacket(new InactivePacket());
     }
 
-    public void resetAttemptCount() {
+    public void resetAttemptCount(boolean resetConnectTime) {
         this.attempt = 0;
-        this.lastConnect = 0;
+        if (resetConnectTime) {
+            this.lastConnect = 0;
+        }
     }
 
     public void setInteractive(boolean interactive) {
