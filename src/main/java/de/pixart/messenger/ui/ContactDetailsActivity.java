@@ -39,6 +39,7 @@ import de.pixart.messenger.OmemoActivity;
 import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.PgpEngine;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
+import de.pixart.messenger.crypto.axolotl.XmppAxolotlSession;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
@@ -458,9 +459,12 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             }
         }
         if (Config.supportOmemo()) {
-            for (final String fingerprint : contact.getAccount().getAxolotlService().getFingerprintsForContact(contact)) {
-                boolean highlight = fingerprint.equals(messageFingerprint);
-                hasKeys |= addFingerprintRow(keys, contact.getAccount(), fingerprint, highlight);
+            for (final XmppAxolotlSession session : contact.getAccount().getAxolotlService().findSessionsForContact(contact)) {
+                if (!session.getTrust().isCompromised()) {
+                    boolean highlight = session.getFingerprint().equals(messageFingerprint);
+                    hasKeys = true;
+                    addFingerprintRow(keys, session, highlight);
+                }
             }
         }
         if (Config.supportOpenPgp() && contact.getPgpKeyId() != 0) {

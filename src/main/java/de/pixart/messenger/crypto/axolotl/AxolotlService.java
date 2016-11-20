@@ -301,7 +301,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
         return new HashSet<>(this.sessions.getAll(ownAddress).values());
     }
 
-    private Set<XmppAxolotlSession> findSessionsForContact(Contact contact) {
+    public Set<XmppAxolotlSession> findSessionsForContact(Contact contact) {
         AxolotlAddress contactAddress = getAddressForJid(contact.getJid());
         return new HashSet<>(this.sessions.getAll(contactAddress).values());
     }
@@ -312,22 +312,6 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
             sessions.addAll(this.sessions.getAll(getAddressForJid(jid)).values());
         }
         return sessions;
-    }
-
-    public Set<String> getFingerprintsForOwnSessions() {
-        Set<String> fingerprints = new HashSet<>();
-        for (XmppAxolotlSession session : findOwnSessions()) {
-            fingerprints.add(session.getFingerprint());
-        }
-        return fingerprints;
-    }
-
-    public Set<String> getFingerprintsForContact(final Contact contact) {
-        Set<String> fingerprints = new HashSet<>();
-        for (XmppAxolotlSession session : findSessionsForContact(contact)) {
-            fingerprints.add(session.getFingerprint());
-        }
-        return fingerprints;
     }
 
     private boolean hasAny(Jid jid) {
@@ -415,12 +399,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
         deviceIds.add(getOwnDeviceId());
         IqPacket publish = mXmppConnectionService.getIqGenerator().publishDeviceIds(deviceIds);
         Log.d(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Wiping all other devices from Pep:" + publish);
-        mXmppConnectionService.sendIqPacket(account, publish, new OnIqPacketReceived() {
-            @Override
-            public void onIqPacketReceived(Account account, IqPacket packet) {
-                // TODO: implement this!
-            }
-        });
+        mXmppConnectionService.sendIqPacket(account, publish, null);
     }
 
     public void purgeKey(final String fingerprint) {
