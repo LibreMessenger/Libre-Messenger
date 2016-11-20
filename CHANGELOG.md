@@ -1,6 +1,11 @@
 ###Changelog
 
+###Version 1.15.2
+* automatically remove old OMEMO devices after 7 days
+* bug fixes
+
 ###Version 1.15.1
+* introduces preference option to choose if videos should be compressed (always, automatically, never)
 * bug fixes
 
 ###Version 1.15.0
