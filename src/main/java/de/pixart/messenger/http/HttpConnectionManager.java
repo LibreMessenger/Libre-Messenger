@@ -13,15 +13,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.X509TrustManager;
 
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.services.AbstractConnectionManager;
 import de.pixart.messenger.services.XmppConnectionService;
-import de.pixart.messenger.utils.CryptoHelper;
-import de.pixart.messenger.utils.SSLSocketHelper;
+import de.pixart.messenger.utils.TLSSocketFactory;
 
 public class HttpConnectionManager extends AbstractConnectionManager {
 
@@ -75,18 +73,7 @@ public class HttpConnectionManager extends AbstractConnectionManager {
                             new StrictHostnameVerifier());
         }
         try {
-            final SSLContext sc = SSLSocketHelper.getSSLContext();
-            sc.init(null, new X509TrustManager[]{trustManager},
-                    mXmppConnectionService.getRNG());
-
-            final SSLSocketFactory sf = sc.getSocketFactory();
-            final String[] cipherSuites = CryptoHelper.getOrderedCipherSuites(
-                    sf.getSupportedCipherSuites());
-            if (cipherSuites.length > 0) {
-                sc.getDefaultSSLParameters().setCipherSuites(cipherSuites);
-
-            }
-
+            final SSLSocketFactory sf = new TLSSocketFactory(new X509TrustManager[]{trustManager}, mXmppConnectionService.getRNG());
             connection.setSSLSocketFactory(sf);
             connection.setHostnameVerifier(hostnameVerifier);
         } catch (final KeyManagementException | NoSuchAlgorithmException ignored) {
