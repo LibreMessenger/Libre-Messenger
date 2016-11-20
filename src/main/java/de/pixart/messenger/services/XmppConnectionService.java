@@ -309,7 +309,7 @@ public class XmppConnectionService extends Service {
                 mOnAccountUpdate.onAccountUpdate();
             }
             if (account.getStatus() == Account.State.ONLINE) {
-                synchronized (XmppConnectionService.this) {
+                synchronized (mLowPingTimeoutMode) {
                     if (mLowPingTimeoutMode.remove(account.getJid().toBareJid())) {
                         Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": leaving low ping timeout mode");
                     }
@@ -347,10 +347,10 @@ public class XmppConnectionService extends Service {
                 account.pendingConferenceJoins.clear();
                 scheduleWakeUpCall(Config.PING_MAX_INTERVAL, account.getUuid().hashCode());
             } else {
-                synchronized (XmppConnectionService.this) {
-                    if (account.getStatus() == Account.State.OFFLINE || account.getStatus() == Account.State.DISABLED) {
-                        resetSendingToWaiting(account);
-                        if (!account.isOptionSet(Account.OPTION_DISABLED)) {
+                if (account.getStatus() == Account.State.OFFLINE || account.getStatus() == Account.State.DISABLED) {
+                    resetSendingToWaiting(account);
+                    if (!account.isOptionSet(Account.OPTION_DISABLED)) {
+                        synchronized (mLowPingTimeoutMode) {
                             if (mLowPingTimeoutMode.contains(account.getJid().toBareJid())) {
                                 Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": went into offline state during low ping mode. reconnecting now");
                                 reconnectAccount(account, true, false);
@@ -359,20 +359,20 @@ public class XmppConnectionService extends Service {
                                 scheduleWakeUpCall(timeToReconnect, account.getUuid().hashCode());
                             }
                         }
-                    } else if (account.getStatus() == Account.State.REGISTRATION_SUCCESSFUL) {
-                        databaseBackend.updateAccount(account);
-                        reconnectAccount(account, true, false);
-                    } else if ((account.getStatus() != Account.State.CONNECTING)
-                            && (account.getStatus() != Account.State.NO_INTERNET)) {
-                        resetSendingToWaiting(account);
-                        if (connection != null) {
-                            int next = connection.getTimeToNextAttempt();
-                            Log.d(Config.LOGTAG, account.getJid().toBareJid()
-                                    + ": error connecting account. try again in "
-                                    + next + "s for the "
-                                    + (connection.getAttempt() + 1) + " time");
-                            scheduleWakeUpCall(next, account.getUuid().hashCode());
-                        }
+                    }
+                } else if (account.getStatus() == Account.State.REGISTRATION_SUCCESSFUL) {
+                    databaseBackend.updateAccount(account);
+                    reconnectAccount(account, true, false);
+                } else if ((account.getStatus() != Account.State.CONNECTING)
+                        && (account.getStatus() != Account.State.NO_INTERNET)) {
+                    resetSendingToWaiting(account);
+                    if (connection != null) {
+                        int next = connection.getTimeToNextAttempt();
+                        Log.d(Config.LOGTAG, account.getJid().toBareJid()
+                                + ": error connecting account. try again in "
+                                + next + "s for the "
+                                + (connection.getAttempt() + 1) + " time");
+                        scheduleWakeUpCall(next, account.getUuid().hashCode());
                     }
                 }
             }
