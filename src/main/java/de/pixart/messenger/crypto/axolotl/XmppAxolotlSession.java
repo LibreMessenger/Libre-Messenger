@@ -22,7 +22,7 @@ import org.whispersystems.libaxolotl.protocol.WhisperMessage;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.entities.Account;
 
-public class XmppAxolotlSession {
+public class XmppAxolotlSession implements Comparable<XmppAxolotlSession> {
     private final SessionCipher cipher;
     private final SQLiteAxolotlStore sqLiteAxolotlStore;
     private final AxolotlAddress remoteAddress;
@@ -135,5 +135,10 @@ public class XmppAxolotlSession {
 
     public Account getAccount() {
         return account;
+    }
+
+    @Override
+    public int compareTo(XmppAxolotlSession o) {
+        return getTrust().compareTo(o.getTrust());
     }
 }
