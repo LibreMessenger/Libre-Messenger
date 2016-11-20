@@ -659,5 +659,12 @@
     <string name="navigate">Zum Standort navigieren</string>
     <string name="received_contact">Kontakt empfangen</string>
     <string name="unable_to_start_recording">Aufnahme kann nicht gestartet werden</string>
+    <string name="all_omemo_keys_have_been_verified">Alle OMEMO Fingerabdrücke wurden bestätigt</string>
+    <string name="copy_fingerprint">Fingerabdruck kopieren</string>
+    <string name="device_does_not_support_data_saver">Dein Gerät unterstützt das Deaktivieren des Datensparmodus für Pix-Art Messenger nicht.</string>
+    <string name="error_unable_to_create_temporary_file">Kann temporäre Datei nicht erstellen</string>
+    <string name="pref_video_compression">Videos komprimieren</string>
+    <string name="pref_video_compression_summary">Videogröße anpassen und komprimieren</string>
+    <string name="this_device_has_been_verified">Dieses Gerät wurde bestätigt</string>
 
 </resources>

@@ -658,11 +658,11 @@
     <string name="no_permission">Pix-Art Messenger has no permissions</string>
     <string name="send_image">Send image?</string>
     <string name="this_device_is_no_longer_in_use">This device is no longer in use</string>
-    <string name="type_pc">Computer</string>
-    <string name="type_phone">Mobile phone</string>
-    <string name="type_tablet">Tablet</string>
-    <string name="type_web">Web browser</string>
-    <string name="type_console">Console</string>
+    <string name="type_pc" translatable="false">Computer</string>
+    <string name="type_phone" translatable="false">Mobile phone</string>
+    <string name="type_tablet" translatable="false">Tablet</string>
+    <string name="type_web" translatable="false">Web browser</string>
+    <string name="type_console" translatable="false">Console</string>
     <string name="import_canceled">Import canceled</string>
     <string name="Import_failed">Database import failed, an import is not possible</string>
     <string name="Password_wrong">Wrong password, try again</string>
@@ -701,7 +701,7 @@
     <string name="error_message">Error Message</string>
     <string name="data_saver_enabled">Data saver enabled</string>
     <string name="data_saver_enabled_explained">Your operating system is restricting Pix-Art Messenger from accessing the Internet when in background. To receive notifications of new messages you should allow Pix-Art Messenger unrestricted access when Data saver is on.\\nPix-Art Messenger will still make an effort to save data when possible.</string>
-    <string name="device_does_not_support_data_saver">Your device does not supporting disabling Data saver for Pix-Art Messenger.</string>
+    <string name="device_does_not_support_data_saver">Your device does not supporting disabling data saver for Pix-Art Messenger.</string>
     <string name="navigate">Navigate to location</string>
     <string name="add_to_contact_list">Add to contact list</string>
     <string name="received_contact">Received contact</string>
@@ -710,5 +710,5 @@
     <string name="error_unable_to_create_temporary_file">Unable to create temporary file</string>
     <string name="this_device_has_been_verified">This device has been verified</string>
     <string name="copy_fingerprint">Copy fingerprint</string>
-    <string name="all_omemo_keys_have_been_verified"><![CDATA[>All OMEMO keys have been verified]]></string>
+    <string name="all_omemo_keys_have_been_verified">All OMEMO keys have been verified</string>
 </resources>
