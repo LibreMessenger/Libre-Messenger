@@ -6,6 +6,8 @@ import de.pixart.messenger.xmpp.chatstate.ChatState;
 
 public final class Config {
 
+    public static final long MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000;
+
     private static final int UNENCRYPTED = 1;
     private static final int OPENPGP = 2;
     private static final int OTR = 4;
@@ -79,8 +81,6 @@ public final class Config {
     public static final int VIDEO_BITRATE = 500000;
     public static final int VIDEO_MAX_SIZE = 10485760; //10 MiB
 
-    public static final int FILE_MAX_SIZE = 1048576; //1 MiB
-
     public static final int DEFAULT_ZOOM = 15; //for locations
 
     public static final int MESSAGE_MERGE_WINDOW = 20;
@@ -89,6 +89,8 @@ public final class Config {
     public static final int MAX_NUM_PAGES = 3;
 
     public static final int REFRESH_UI_INTERVAL = 1000;
+
+    public static final long OMEMO_AUTO_EXPIRY = 7 * MILLISECONDS_IN_DAY; // delete old OMEMO devices after 7 days od inactivity
 
     public static final int MAX_DISPLAY_MESSAGE_CHARS = 4096;
 
@@ -115,7 +117,6 @@ public final class Config {
 
     public static final boolean PARSE_REAL_JID_FROM_MUC_MAM = false; //dangerous if server doesn’t filter
 
-    public static final long MILLISECONDS_IN_DAY = 24 * 60 * 60 * 1000;
     public static final long MAM_MAX_CATCHUP = MILLISECONDS_IN_DAY / 2;
     public static final int MAM_MAX_MESSAGES = 500;
 
