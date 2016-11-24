@@ -102,7 +102,6 @@ public class XmppUri {
                         //ignoring invalid device id
                     }
                 }
-                return null;
             }
         }
         return fingerprints;
