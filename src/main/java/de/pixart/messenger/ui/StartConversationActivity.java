@@ -64,7 +64,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
-import de.pixart.messenger.entities.Blockable;
 import de.pixart.messenger.entities.Bookmark;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
@@ -1055,10 +1054,14 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
                 activity.conference_context_id = acmi.position;
             } else if (mResContextMenu == R.menu.contact_context) {
                 activity.contact_context_id = acmi.position;
-                final Blockable contact = (Contact) activity.contacts.get(acmi.position);
+                final Contact contact = (Contact) activity.contacts.get(acmi.position);
                 final MenuItem blockUnblockItem = menu.findItem(R.id.context_contact_block_unblock);
+                final MenuItem showContactDetailsItem = menu.findItem(R.id.context_contact_details);
+                if (contact.isSelf()) {
+                    showContactDetailsItem.setVisible(false);
+                }
                 XmppConnection xmpp = contact.getAccount().getXmppConnection();
-                if (xmpp != null && xmpp.getFeatures().blocking()) {
+                if (xmpp != null && xmpp.getFeatures().blocking() && !contact.isSelf()) {
                     if (contact.isBlocked()) {
                         blockUnblockItem.setTitle(R.string.unblock_contact);
                     } else {
