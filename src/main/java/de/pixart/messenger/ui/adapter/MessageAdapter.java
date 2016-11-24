@@ -141,7 +141,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
     }
 
-    private void displayStatus(ViewHolder viewHolder, Message message, int type, boolean darkBackground) {
+    private void displayStatus(ViewHolder viewHolder, Message message, int type, boolean darkBackground, boolean inValidSession) {
         String filesize = null;
         String info = null;
         boolean error = false;
@@ -224,8 +224,8 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                         .getAccount().getAxolotlService().getFingerprintTrust(
                                 message.getFingerprint());
 
-                if (status == null || (!status.isTrustedAndActive())) {
-                    viewHolder.indicator.setColorFilter(activity.getWarningTextColor());
+                if(status == null || (!status.isVerified() && inValidSession)) {
+                    viewHolder.indicator.setColorFilter(0xffc64545);
                     viewHolder.indicator.setAlpha(1.0f);
                 } else {
                     viewHolder.indicator.clearColorFilter();
@@ -582,7 +582,8 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     @Override
     public View getView(int position, View unused, ViewGroup parent) {
         final Message message = getItem(position);
-        final boolean isInValidSession = message.isValidInSession();
+        final boolean omemoEncryption = message.getEncryption() == Message.ENCRYPTION_AXOLOTL;
+        final boolean isInValidSession = message.isValidInSession() && (!omemoEncryption || message.isTrusted());
         final Conversation conversation = message.getConversation();
         final Account account = conversation.getAccount();
         final int type = getItemViewType(position);
@@ -793,7 +794,11 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             } else {
                 viewHolder.message_box.setBackgroundResource(R.drawable.message_bubble_received_warning);
                 viewHolder.encryption.setVisibility(View.VISIBLE);
-                viewHolder.encryption.setText(CryptoHelper.encryptionTypeToText(message.getEncryption()));
+                if (omemoEncryption && !message.isTrusted()) {
+                    viewHolder.encryption.setText(R.string.not_trusted);
+                } else {
+                    viewHolder.encryption.setText(CryptoHelper.encryptionTypeToText(message.getEncryption()));
+                }
             }
         }
 
@@ -805,7 +810,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             }
         }
 
-        displayStatus(viewHolder, message, type, darkBackground);
+        displayStatus(viewHolder, message, type, darkBackground, isInValidSession);
 
         return view;
     }
