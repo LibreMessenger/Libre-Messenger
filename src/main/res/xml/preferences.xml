@@ -228,6 +228,11 @@
         </PreferenceCategory>
         <PreferenceCategory android:title="@string/pref_security_settings">
             <CheckBoxPreference
+                android:defaultValue="true"
+                android:key="btbv"
+                android:title="@string/pref_blind_trust_before_verification"
+                android:summary="@string/pref_blind_trust_before_verification_summary"/>
+            <CheckBoxPreference
                 android:defaultValue="false"
                 android:key="dont_save_encrypted"
                 android:summary="@string/pref_dont_save_encrypted_summary"

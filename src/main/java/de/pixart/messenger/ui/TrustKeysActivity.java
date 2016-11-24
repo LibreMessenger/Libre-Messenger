@@ -75,6 +75,7 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
     };
 
     private XmppUri mPendingFingerprintVerificationUri = null;
+    private Toast mUseCameraHintToast = null;
 
     @Override
     protected void refreshUiReal() {
@@ -116,10 +117,10 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.trust_keys, menu);
-        Toast toast = Toast.makeText(this,R.string.use_camera_icon_to_scan_barcode,Toast.LENGTH_LONG);
+        mUseCameraHintToast = Toast.makeText(this,R.string.use_camera_icon_to_scan_barcode,Toast.LENGTH_LONG);
         ActionBar actionBar = getActionBar();
-        toast.setGravity(Gravity.TOP | Gravity.END, 0 ,actionBar == null ? 0 : actionBar.getHeight());
-        toast.show();
+        mUseCameraHintToast.setGravity(Gravity.TOP | Gravity.END, 0 ,actionBar == null ? 0 : actionBar.getHeight());
+        mUseCameraHintToast.show();
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -309,14 +310,21 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
 
     @Override
     public void onKeyStatusUpdated(final AxolotlService.FetchStatus report) {
+        final boolean keysToTrust = reloadFingerprints();
         if (report != null) {
             lastFetchReport = report;
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    if (mUseCameraHintToast != null && !keysToTrust) {
+                        mUseCameraHintToast.cancel();
+                    }
                     switch (report) {
                         case ERROR:
                             Toast.makeText(TrustKeysActivity.this, R.string.error_fetching_omemo_key, Toast.LENGTH_SHORT).show();
+                            break;
+                        case SUCCESS_TRUSTED:
+                            Toast.makeText(TrustKeysActivity.this,R.string.blindly_trusted_omemo_keys,Toast.LENGTH_LONG).show();
                             break;
                         case SUCCESS_VERIFIED:
                             Toast.makeText(TrustKeysActivity.this,
@@ -328,7 +336,6 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
             });
 
         }
-        boolean keysToTrust = reloadFingerprints();
         if (keysToTrust || hasPendingKeyFetches() || hasNoOtherTrustedKeys()) {
             refreshUi();
         } else {
