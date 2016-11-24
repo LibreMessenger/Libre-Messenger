@@ -43,7 +43,6 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.text.InputType;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,10 +53,8 @@ import android.widget.Toast;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
-import com.google.zxing.WriterException;
 import com.google.zxing.aztec.AztecWriter;
 import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 import net.java.otr4j.session.SessionID;
 
@@ -80,6 +77,7 @@ import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.Presences;
 import de.pixart.messenger.services.AvatarService;
+import de.pixart.messenger.services.BarcodeProvider;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.services.XmppConnectionService.XmppConnectionBinder;
 import de.pixart.messenger.utils.CryptoHelper;
@@ -1104,35 +1102,12 @@ public abstract class XmppActivity extends Activity {
             Point size = new Point();
             getWindowManager().getDefaultDisplay().getSize(size);
             final int width = (size.x < size.y ? size.x : size.y);
-            Bitmap bitmap = createQrCodeBitmap(uri, width);
+            Bitmap bitmap = BarcodeProvider.createAztecBitmap(uri, width);
             ImageView view = new ImageView(this);
             view.setImageBitmap(bitmap);
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setView(view);
             builder.create().show();
-        }
-    }
-
-    protected Bitmap createQrCodeBitmap(String input, int size) {
-        try {
-            final AztecWriter AZTEC_WRITER = new AztecWriter();
-            final Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
-            hints.put(EncodeHintType.ERROR_CORRECTION, 10);
-            final BitMatrix result = AZTEC_WRITER.encode(input, BarcodeFormat.AZTEC, size, size, hints);
-            final int width = result.getWidth();
-            final int height = result.getHeight();
-            final int[] pixels = new int[width * height];
-            for (int y = 0; y < height; y++) {
-                final int offset = y * width;
-                for (int x = 0; x < width; x++) {
-                    pixels[offset + x] = result.get(x, y) ? Color.BLACK : Color.TRANSPARENT;
-                }
-            }
-            final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
-            return bitmap;
-        } catch (final Exception e) {
-            return null;
         }
     }
 
