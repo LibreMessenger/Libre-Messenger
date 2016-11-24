@@ -101,6 +101,7 @@ import de.pixart.messenger.parser.MessageParser;
 import de.pixart.messenger.parser.PresenceParser;
 import de.pixart.messenger.persistance.DatabaseBackend;
 import de.pixart.messenger.persistance.FileBackend;
+import de.pixart.messenger.ui.SettingsActivity;
 import de.pixart.messenger.ui.UiCallback;
 import de.pixart.messenger.utils.ConversationsFileObserver;
 import de.pixart.messenger.utils.CryptoHelper;
@@ -882,15 +883,15 @@ public class XmppConnectionService extends Service {
     }
 
     private boolean manuallyChangePresence() {
-        return getPreferences().getBoolean("manually_change_presence", false);
+        return getPreferences().getBoolean(SettingsActivity.MANUALLY_CHANGE_PRESENCE, false);
     }
 
     private boolean treatVibrateAsSilent() {
-        return getPreferences().getBoolean("treat_vibrate_as_silent", false);
+        return getPreferences().getBoolean(SettingsActivity.TREAT_VIBRATE_AS_SILENT, false);
     }
 
     private boolean awayWhenScreenOff() {
-        return getPreferences().getBoolean("away_when_screen_off", false);
+        return getPreferences().getBoolean(SettingsActivity.AWAY_WHEN_SCREEN_IS_OFF, false);
     }
 
     private String getCompressPicturesPreference() {
