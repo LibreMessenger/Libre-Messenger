@@ -24,8 +24,6 @@ import com.google.zxing.common.BitMatrix;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Hashtable;
 
@@ -181,7 +179,7 @@ public class BarcodeProvider extends ContentProvider implements ServiceConnectio
             for (int y = 0; y < height; y++) {
                 final int offset = y * width;
                 for (int x = 0; x < width; x++) {
-                    pixels[offset + x] = result.get(x, y) ? Color.BLACK : Color.TRANSPARENT;
+                    pixels[offset + x] = result.get(x, y) ? Color.BLACK : Color.WHITE;
                 }
             }
             final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -189,34 +187,6 @@ public class BarcodeProvider extends ContentProvider implements ServiceConnectio
             return bitmap;
         } catch (final Exception e) {
             return null;
-        }
-    }
-
-    static class TransferThread extends Thread {
-        InputStream in;
-        OutputStream out;
-
-        TransferThread(InputStream in, OutputStream out) {
-            this.in = in;
-            this.out = out;
-        }
-
-        @Override
-        public void run() {
-            byte[] buf = new byte[1024];
-            int len;
-
-            try {
-                while ((len = in.read(buf)) >= 0) {
-                    out.write(buf, 0, len);
-                }
-
-                in.close();
-                out.flush();
-                out.close();
-            } catch (IOException e) {
-                Log.e(Config.LOGTAG, "Exception transferring file", e);
-            }
         }
     }
 }
