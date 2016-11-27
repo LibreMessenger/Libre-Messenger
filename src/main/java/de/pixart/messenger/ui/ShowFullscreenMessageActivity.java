@@ -130,13 +130,14 @@ public class ShowFullscreenMessageActivity extends Activity {
         BitmapFactory.decodeFile(new File(file.getPath()).getAbsolutePath(), options);
         height = options.outHeight;
         width = options.outWidth;
+        Log.d(Config.LOGTAG, "Image height: " + height + ", width: " + width);
         if (width > height) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE);
             } else {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             }
-        } else if (width < height) {
+        } else if (width <= height) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT);
             } else {
@@ -166,13 +167,14 @@ public class ShowFullscreenMessageActivity extends Activity {
         retriever.setDataSource(uri.getPath());
         height = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
         width = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+        Log.d(Config.LOGTAG, "Video height: " + height + ", width: " + width);
         if (width > height) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE);
             } else {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             }
-        } else if (width < height) {
+        } else if (width <= height) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT);
             } else {
