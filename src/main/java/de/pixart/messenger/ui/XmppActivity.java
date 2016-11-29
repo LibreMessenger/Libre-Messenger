@@ -136,14 +136,6 @@ public abstract class XmppActivity extends Activity {
         mToast.show();
     }
 
-    public void showProgress() {
-
-    }
-
-    public void closeProgress() {
-
-    }
-
     protected Runnable onOpenPGPKeyPublished = new Runnable() {
         @Override
         public void run() {
