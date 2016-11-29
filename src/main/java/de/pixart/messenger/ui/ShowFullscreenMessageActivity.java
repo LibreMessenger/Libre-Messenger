@@ -24,12 +24,19 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.github.rtoshiro.view.video.FullscreenVideoLayout;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.persistance.FileBackend;
+import de.pixart.messenger.services.XmppConnectionService;
+import de.pixart.messenger.utils.ExifHelper;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
+
+import static de.pixart.messenger.persistance.FileBackend.close;
 
 public class ShowFullscreenMessageActivity extends Activity {
 
@@ -42,6 +49,9 @@ public class ShowFullscreenMessageActivity extends Activity {
     ImageButton mFAB;
     int height = 0;
     int width = 0;
+    int rotation = 0;
+    FileBackend mFileBackend;
+    XmppConnectionService mXmppConnectionService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -130,18 +140,35 @@ public class ShowFullscreenMessageActivity extends Activity {
         BitmapFactory.decodeFile(new File(file.getPath()).getAbsolutePath(), options);
         height = options.outHeight;
         width = options.outWidth;
-        Log.d(Config.LOGTAG, "Image height: " + height + ", width: " + width);
+        rotation = getRotation(Uri.parse("file://" + file.getAbsolutePath()));
+        Log.d(Config.LOGTAG, "Image height: " + height + ", width: " + width + ", rotation: " + rotation);
         if (width > height) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE);
+            if (rotation == 0 || rotation == 180) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_LANDSCAPE);
+                } else {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                }
             } else {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT);
+                } else {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                }
             }
         } else if (width <= height) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT);
+            if (rotation == 90 || rotation == 270) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT);
+                } else {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                }
             } else {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT);
+                } else {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                }
             }
         }
         final PhotoViewAttacher mAttacher = new PhotoViewAttacher(mImage);
@@ -189,6 +216,18 @@ public class ShowFullscreenMessageActivity extends Activity {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private int getRotation(Uri image) {
+        InputStream is = null;
+        try {
+            is = this.getContentResolver().openInputStream(image);
+            return ExifHelper.getOrientation(is);
+        } catch (FileNotFoundException e) {
+            return 0;
+        } finally {
+            close(is);
         }
     }
 
