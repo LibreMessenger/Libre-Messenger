@@ -16,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import org.whispersystems.libaxolotl.IdentityKey;
 
@@ -139,21 +138,15 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        if (scanResult != null && scanResult.getFormatName() != null) {
-            String data = scanResult.getContents();
-            XmppUri uri = new XmppUri(data);
-            if (xmppConnectionServiceBound) {
-                processFingerprintVerification(uri);
-                populateView();
-            } else {
-                this.mPendingFingerprintVerificationUri =uri;
-            }
+    protected void onStop() {
+        super.onStop();
+        if (mUseCameraHintToast != null) {
+            mUseCameraHintToast.cancel();
         }
     }
 
-    private void processFingerprintVerification(XmppUri uri) {
+    @Override
+    protected void processFingerprintVerification(XmppUri uri) {
         if (mConversation != null
                 && mAccount != null
                 && uri.hasFingerprints()
@@ -163,13 +156,16 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
             if (performedVerification && !keys && !hasNoOtherTrustedKeys() && !hasPendingKeyFetches()) {
                 Toast.makeText(this,R.string.all_omemo_keys_have_been_verified, Toast.LENGTH_SHORT).show();
                 finishOk();
+                return;
             } else if (performedVerification) {
                 Toast.makeText(this,R.string.verified_fingerprints,Toast.LENGTH_SHORT).show();
             }
         } else {
+            reloadFingerprints();
             Log.d(Config.LOGTAG,"xmpp uri was: "+uri.getJid()+" has Fingerprints: "+Boolean.toString(uri.hasFingerprints()));
             Toast.makeText(this,R.string.barcode_does_not_contain_fingerprints_for_this_conversation,Toast.LENGTH_SHORT).show();
         }
+        populateView();
     }
 
     private void populateView() {
@@ -289,9 +285,10 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
             if (this.mPendingFingerprintVerificationUri != null) {
                 processFingerprintVerification(this.mPendingFingerprintVerificationUri);
                 this.mPendingFingerprintVerificationUri = null;
+            } else {
+                reloadFingerprints();
+                populateView();
             }
-            reloadFingerprints();
-            populateView();
         }
     }
 

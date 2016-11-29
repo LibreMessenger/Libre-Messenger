@@ -27,6 +27,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.QuickContactBadge;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wefika.flowlayout.FlowLayout;
 
@@ -42,12 +43,12 @@ import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.crypto.axolotl.XmppAxolotlSession;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Contact;
-import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.ListItem;
 import de.pixart.messenger.services.XmppConnectionService.OnAccountUpdate;
 import de.pixart.messenger.services.XmppConnectionService.OnRosterUpdate;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.UIHelper;
+import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xmpp.OnKeyStatusUpdated;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.XmppConnection;
@@ -57,7 +58,6 @@ import de.pixart.messenger.xmpp.jid.Jid;
 public class ContactDetailsActivity extends OmemoActivity implements OnAccountUpdate, OnRosterUpdate, OnUpdateBlocklist, OnKeyStatusUpdated {
     public static final String ACTION_VIEW_CONTACT = "view_contact";
 
-    private Conversation mConversation;
     private Contact contact;
     private DialogInterface.OnClickListener removeFromRoster = new DialogInterface.OnClickListener() {
 
@@ -541,13 +541,16 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
     }
 
     public void onBackendConnected() {
-        if ((accountJid != null) && (contactJid != null)) {
-            Account account = xmppConnectionService
-                    .findAccountByJid(accountJid);
+        if (accountJid != null && contactJid != null) {
+            Account account = xmppConnectionService.findAccountByJid(accountJid);
             if (account == null) {
                 return;
             }
             this.contact = account.getRoster().getContact(contactJid);
+            if (mPendingFingerprintVerificationUri != null) {
+                processFingerprintVerification(mPendingFingerprintVerificationUri);
+                mPendingFingerprintVerificationUri = null;
+            }
             populateView();
         }
     }
@@ -555,5 +558,16 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
     @Override
     public void onKeyStatusUpdated(AxolotlService.FetchStatus report) {
         refreshUi();
+    }
+
+    @Override
+    protected void processFingerprintVerification(XmppUri uri) {
+        if (contact != null && contact.getJid().toBareJid().equals(uri.getJid()) && uri.hasFingerprints()) {
+            if (xmppConnectionService.verifyFingerprints(contact,uri.getFingerprints())) {
+                Toast.makeText(this,R.string.verified_fingerprints,Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this,R.string.invalid_barcode,Toast.LENGTH_SHORT).show();
+        }
     }
 }

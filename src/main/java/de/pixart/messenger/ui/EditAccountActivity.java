@@ -53,6 +53,7 @@ import de.pixart.messenger.services.XmppConnectionService.OnCaptchaRequested;
 import de.pixart.messenger.ui.adapter.KnownHostsAdapter;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.UIHelper;
+import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.OnKeyStatusUpdated;
 import de.pixart.messenger.xmpp.XmppConnection;
@@ -383,10 +384,21 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_BATTERY_OP || requestCode == REQUEST_DATA_SAVER) {
             updateAccountInformation(mAccount == null);
+        }
+    }
+
+    @Override
+    protected void processFingerprintVerification(XmppUri uri) {
+        if (mAccount != null && mAccount.getJid().toBareJid().equals(uri.getJid()) && uri.hasFingerprints()) {
+            if (xmppConnectionService.verifyFingerprints(mAccount,uri.getFingerprints())) {
+                Toast.makeText(this,R.string.verified_fingerprints,Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this,R.string.invalid_barcode,Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -670,6 +682,10 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 if (this.mInitMode) {
                     this.mPassword.requestFocus();
                 }
+            }
+            if (mPendingFingerprintVerificationUri != null) {
+                processFingerprintVerification(mPendingFingerprintVerificationUri);
+                mPendingFingerprintVerificationUri = null;
             }
             updateAccountInformation(init);
         }
