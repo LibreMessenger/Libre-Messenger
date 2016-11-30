@@ -45,7 +45,7 @@ dependencies {
     compile 'com.google.zxing:android-integration:3.2.1'
     compile 'de.measite.minidns:minidns:0.1.7'
     compile 'de.timroes.android:EnhancedListView:0.3.4'
-    compile 'me.leolin:ShortcutBadger:1.1.4@aar'
+    compile 'me.leolin:ShortcutBadger:1.1.11@aar'
     compile 'com.kyleduo.switchbutton:library:1.2.8'
     compile 'org.whispersystems:axolotl-android:1.4.3'
     compile 'com.makeramen:roundedimageview:2.2.1'
@@ -76,11 +76,12 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        minSdkVersion 18
+        minSdkVersion 14
         targetSdkVersion 24
 
-        versionCode 177
-        versionName "1.15.2"
+        versionCode 179
+        versionName "1.15.3"
+        //versionName "1.15.4 beta (2016-11-30)"
 
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"
@@ -127,7 +128,7 @@ android {
         }
         buildTypes {
             debug {
-                minSdkVersion 21
+                minSdkVersion 14
                 debuggable true
                 buildTypes.release.signingConfig = null
                 //applicationIdSuffix ".debug"

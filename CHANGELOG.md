@@ -1,5 +1,10 @@
 ###Changelog
 
+###Version 1.15.3
+* new [Blind Trust Before Verification](https://gultsch.de/trust.html) mode
+* easily share Barcode and XMPP uri from Account details
+* bug fixes
+
 ###Version 1.15.2
 * automatically remove old OMEMO devices after 7 days
 * bug fixes
