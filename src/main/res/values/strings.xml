@@ -723,5 +723,5 @@
     <string name="pref_blind_trust_before_verification_summary">Automatically trust all new devices from contacts that haven\'t been verified before.</string>
     <string name="not_trusted">Untrusted</string>
     <string name="invalid_barcode">Invalid barcode</string>
-    <string name="verify_with_qr_code">verify fingerprint with barcode</string>
+    <string name="verify_with_qr_code">verify with barcode</string>
 </resources>

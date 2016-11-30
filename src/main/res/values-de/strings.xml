@@ -678,6 +678,6 @@
     <string name="use_camera_icon_to_scan_barcode">Nutze Kamera, um Barcodes deiner Kontakte zu scannen</string>
     <string name="verified_fingerprints">Überprüfte Fingerabdrücke</string>
     <string name="invalid_barcode">Barcode ungültig</string>
-    <string name="verify_with_qr_code">Fingerabdruck mit Barcode verifizieren</string>
+    <string name="verify_with_qr_code">mit Barcode verifizieren</string>
 
 </resources>
