@@ -21,6 +21,7 @@ import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.OtrService;
 import de.pixart.messenger.crypto.PgpDecryptionService;
@@ -610,23 +611,16 @@ public class Account extends AbstractEntity {
         List<XmppUri.Fingerprint> fingerprints = this.getFingerprints();
         String uri = "xmpp:" + this.getJid().toBareJid().toString();
         if (fingerprints.size() > 0) {
-            StringBuilder builder = new StringBuilder(uri);
-            builder.append('?');
-            for (int i = 0; i < fingerprints.size(); ++i) {
-                XmppUri.FingerprintType type = fingerprints.get(i).type;
-                if (type == XmppUri.FingerprintType.OMEMO) {
-                    builder.append(XmppUri.OMEMO_URI_PARAM);
-                    builder.append(fingerprints.get(i).deviceId);
-                } else if (type == XmppUri.FingerprintType.OTR) {
-                    builder.append(XmppUri.OTR_URI_PARAM);
-                }
-                builder.append('=');
-                builder.append(fingerprints.get(i).fingerprint);
-                if (i != fingerprints.size() - 1) {
-                    builder.append(';');
-                }
-            }
-            return builder.toString();
+            return XmppUri.getFingerprintUri(uri,fingerprints,';');
+        } else {
+            return uri;
+        }
+    }
+    public String getShareableLink() {
+        List<XmppUri.Fingerprint> fingerprints = this.getFingerprints();
+        String uri = Config.inviteUserURL+this.getJid().toBareJid().toString();
+        if (fingerprints.size() > 0) {
+            return XmppUri.getFingerprintUri(uri,fingerprints,'&');
         } else {
             return uri;
         }

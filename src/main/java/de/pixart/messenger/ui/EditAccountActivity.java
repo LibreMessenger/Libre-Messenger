@@ -769,7 +769,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         intent.setType("text/plain");
         String text;
         if (http) {
-            text = Config.inviteUserURL+mAccount.getJid().toBareJid().toString();
+            text = mAccount.getShareableLink();
         } else {
             text = mAccount.getShareableUri();
         }
