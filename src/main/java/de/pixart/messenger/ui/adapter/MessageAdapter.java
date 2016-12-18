@@ -223,7 +223,6 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 final FingerprintStatus status = message.getConversation()
                         .getAccount().getAxolotlService().getFingerprintTrust(
                                 message.getFingerprint());
-
                 if (status != null && status.isVerified()) {
                     verified = true;
                 }
@@ -233,6 +232,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             } else {
                 viewHolder.indicator.setImageResource(R.drawable.ic_lock_blue_18dp);
             }
+            viewHolder.indicator.setAlpha(0.7f);
             viewHolder.indicator.setVisibility(View.VISIBLE);
         }
 
