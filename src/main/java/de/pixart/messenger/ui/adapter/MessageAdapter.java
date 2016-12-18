@@ -233,6 +233,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             } else {
                 viewHolder.indicator.setImageResource(R.drawable.ic_lock_blue_18dp);
             }
+            viewHolder.indicator.setVisibility(View.VISIBLE);
         }
 
         String formatedTime = UIHelper.readableTimeDifferenceFull(getContext(),
