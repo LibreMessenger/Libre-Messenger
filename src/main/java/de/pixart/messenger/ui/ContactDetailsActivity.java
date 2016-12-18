@@ -36,7 +36,6 @@ import org.openintents.openpgp.util.OpenPgpUtils;
 import java.util.List;
 
 import de.pixart.messenger.Config;
-import de.pixart.messenger.OmemoActivity;
 import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.PgpEngine;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;

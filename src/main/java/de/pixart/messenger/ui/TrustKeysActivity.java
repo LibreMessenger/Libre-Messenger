@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.Set;
 
 import de.pixart.messenger.Config;
-import de.pixart.messenger.OmemoActivity;
 import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.crypto.axolotl.FingerprintStatus;

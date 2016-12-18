@@ -1,4 +1,4 @@
-package de.pixart.messenger;
+package de.pixart.messenger.ui;
 
 
 import android.app.AlertDialog;
@@ -20,11 +20,11 @@ import com.google.zxing.integration.android.IntentResult;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
 
+import de.pixart.messenger.Config;
+import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.axolotl.FingerprintStatus;
 import de.pixart.messenger.crypto.axolotl.XmppAxolotlSession;
 import de.pixart.messenger.entities.Account;
-import de.pixart.messenger.ui.TrustKeysActivity;
-import de.pixart.messenger.ui.XmppActivity;
 import de.pixart.messenger.ui.widget.Switch;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.XmppUri;
