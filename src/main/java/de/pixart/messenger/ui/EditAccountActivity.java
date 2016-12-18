@@ -56,6 +56,7 @@ import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.OnKeyStatusUpdated;
+import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.XmppConnection;
 import de.pixart.messenger.xmpp.XmppConnection.Features;
 import de.pixart.messenger.xmpp.forms.Data;
@@ -63,7 +64,7 @@ import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
 import de.pixart.messenger.xmpp.pep.Avatar;
 
-public class EditAccountActivity extends OmemoActivity implements OnAccountUpdate,
+public class EditAccountActivity extends OmemoActivity implements OnAccountUpdate, OnUpdateBlocklist,
         OnKeyStatusUpdated, OnCaptchaRequested, KeyChainAliasCallback, XmppConnectionService.OnShowErrorToast, XmppConnectionService.OnMamPreferencesFetched {
 
     private static final int REQUEST_DATA_SAVER = 0x37af244;
@@ -577,6 +578,8 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         if (mAccount != null && mAccount.isOnlineAndConnected()) {
             if (!mAccount.getXmppConnection().getFeatures().blocking()) {
                 showBlocklist.setVisible(false);
+            } else {
+                showBlocklist.setEnabled(mAccount.getBlocklist().size() > 0);
             }
             if (!mAccount.getXmppConnection().getFeatures().register()) {
                 changePassword.setVisible(false);
@@ -1213,5 +1216,10 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 Toast.makeText(EditAccountActivity.this, R.string.unable_to_fetch_mam_prefs, Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @Override
+    public void OnUpdateBlocklist(Status status) {
+        refreshUi();
     }
 }
