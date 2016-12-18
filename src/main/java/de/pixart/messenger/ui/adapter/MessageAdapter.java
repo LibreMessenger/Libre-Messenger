@@ -218,30 +218,20 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         if (message.getEncryption() == Message.ENCRYPTION_NONE) {
             viewHolder.indicator.setVisibility(View.GONE);
         } else {
-            viewHolder.indicator.setVisibility(View.VISIBLE);
+            boolean verified = false;
             if (message.getEncryption() == Message.ENCRYPTION_AXOLOTL) {
-                FingerprintStatus status = message.getConversation()
+                final FingerprintStatus status = message.getConversation()
                         .getAccount().getAxolotlService().getFingerprintTrust(
                                 message.getFingerprint());
 
-                if(status == null || (type == SENT ? !status.isTrusted() : (!status.isVerified() && inValidSession))) {
-                    viewHolder.indicator.setColorFilter(0xffc64545);
-                    viewHolder.indicator.setAlpha(1.0f);
-                } else {
-                    viewHolder.indicator.clearColorFilter();
-                    if (darkBackground) {
-                        viewHolder.indicator.setAlpha(0.7f);
-                    } else {
-                        viewHolder.indicator.setAlpha(0.57f);
-                    }
+                if (status != null && status.isVerified()) {
+                    verified = true;
                 }
+            }
+            if (verified) {
+                viewHolder.indicator.setImageResource(R.drawable.ic_verified_user_blue_18dp);
             } else {
-                viewHolder.indicator.clearColorFilter();
-                if (darkBackground) {
-                    viewHolder.indicator.setAlpha(0.7f);
-                } else {
-                    viewHolder.indicator.setAlpha(0.57f);
-                }
+                viewHolder.indicator.setImageResource(R.drawable.ic_lock_blue_18dp);
             }
         }
 
