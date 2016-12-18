@@ -60,7 +60,7 @@ public class HttpConnectionManager extends AbstractConnectionManager {
         final X509TrustManager trustManager;
         final HostnameVerifier hostnameVerifier;
         if (interactive) {
-            trustManager = mXmppConnectionService.getMemorizingTrustManager();
+            trustManager = mXmppConnectionService.getMemorizingTrustManager().getInteractive();
             hostnameVerifier = mXmppConnectionService
                     .getMemorizingTrustManager().wrapHostnameVerifier(
                             new StrictHostnameVerifier());
