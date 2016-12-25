@@ -1,6 +1,7 @@
 package de.pixart.messenger.utils;
 
 import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
@@ -9,8 +10,12 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.util.Log;
+import android.webkit.MimeTypeMap;
 
 import java.io.File;
+
+import de.pixart.messenger.Config;
 
 public class FileUtils {
 
@@ -33,8 +38,10 @@ public class FileUtils {
 
         // DocumentProvider
         if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+            Log.d(Config.LOGTAG, "FileUtils is KitKat");
             // ExternalStorageProvider
             if (isExternalStorageDocument(uri)) {
+                Log.d(Config.LOGTAG, "FileUtils is external storage document");
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
@@ -47,7 +54,7 @@ public class FileUtils {
             }
             // DownloadsProvider
             else if (isDownloadsDocument(uri)) {
-
+                Log.d(Config.LOGTAG, "FileUtils is downloads document");
                 final String id = DocumentsContract.getDocumentId(uri);
                 final Uri contentUri = ContentUris.withAppendedId(
                         Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
@@ -56,6 +63,7 @@ public class FileUtils {
             }
             // MediaProvider
             else if (isMediaDocument(uri)) {
+                Log.d(Config.LOGTAG, "FileUtils is media provider");
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
@@ -79,6 +87,7 @@ public class FileUtils {
         }
         // MediaStore (and general)
         else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            Log.d(Config.LOGTAG, "FileUtils is media store");
             String path = getDataColumn(context, uri, null, null);
             if (path != null) {
                 File file = new File(path);
@@ -90,6 +99,7 @@ public class FileUtils {
         }
         // File
         else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            Log.d(Config.LOGTAG, "FileUtils is file");
             return uri.getPath();
         }
 
@@ -154,5 +164,20 @@ public class FileUtils {
      */
     public static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    public static String getExtension(Context context, Uri uri) {
+        String extension;
+        //Check uri format to avoid null
+        if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
+            //If scheme is a content
+            final MimeTypeMap mime = MimeTypeMap.getSingleton();
+            extension = mime.getExtensionFromMimeType(context.getContentResolver().getType(uri));
+        } else {
+            //If scheme is a File
+            //This will replace white spaces with %20 and also other special characters. This will avoid returning null values on file name with spaces and special characters.
+            extension = MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(new File(uri.getPath())).toString());
+        }
+        return extension;
     }
 }
