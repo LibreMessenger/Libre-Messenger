@@ -608,7 +608,8 @@ public class XmppConnectionService extends Service {
         }).start();
 
         while (success[0] == -1) {
-            Log.d(Config.LOGTAG, "Wait while copying video");
+            //ignored
+            //Log.d(Config.LOGTAG, "Wait while copying video");
         }
         if (success[0] == 2) {
             mNotifyManager.cancel(NOTIFICATION_ID);
