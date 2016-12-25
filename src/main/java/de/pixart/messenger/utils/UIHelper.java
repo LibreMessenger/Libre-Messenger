@@ -202,7 +202,31 @@ public class UIHelper {
                 return new Pair<>(context.getString(R.string.x_file_offered_for_download,
                         getFileDescriptionString(context, message)), true);
             } else {
-                return new Pair<>(body.trim(), false);
+                String[] lines = body.split("\n");
+                StringBuilder builder = new StringBuilder();
+                for(String l : lines) {
+                    if (l.length() > 0) {
+                        char first = l.charAt(0);
+                        if (first != '>' && first != '\u00bb') {
+                            String line = l.trim();
+                            if (line.isEmpty()) {
+                                continue;
+                            }
+                            char last = line.charAt(line.length()-1);
+                            if (builder.length() != 0) {
+                                builder.append(' ');
+                            }
+                            builder.append(line);
+                            if (last != '.' && last != '!' && last != '?' && last != ',') {
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (builder.length() == 0) {
+                    builder.append(body.trim());
+                }
+                return new Pair<>(builder.length() > 256 ? builder.substring(0,256) : builder.toString(), false);
             }
         }
     }
