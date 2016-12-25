@@ -22,6 +22,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
@@ -412,6 +413,16 @@ public abstract class XmppActivity extends Activity {
         if (ab != null) {
             ab.setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    public int getThemeResource(int r_attr_name, int r_drawable_def) {
+        int[] attrs = {	r_attr_name };
+        TypedArray ta = this.getTheme().obtainStyledAttributes(attrs);
+
+        int res = ta.getResourceId(0, r_drawable_def);
+        ta.recycle();
+
+        return res;
     }
 
     protected boolean isOptimizingBattery() {
