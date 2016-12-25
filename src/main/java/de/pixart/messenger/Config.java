@@ -91,6 +91,7 @@ public final class Config {
     public static final int REFRESH_UI_INTERVAL = 1000;
 
     public static final long OMEMO_AUTO_EXPIRY = 7 * MILLISECONDS_IN_DAY; // delete old OMEMO devices after 7 days od inactivity
+    public static final boolean REMOVE_BROKEN_DEVICES = false;
 
     public static final int MAX_DISPLAY_MESSAGE_CHARS = 4096;
 
