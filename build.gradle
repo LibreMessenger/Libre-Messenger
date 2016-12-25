@@ -6,7 +6,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:2.2.3'
     }
 }
 
@@ -79,9 +79,9 @@ android {
         minSdkVersion 14
         targetSdkVersion 24
 
-        versionCode 179
-        versionName "1.15.3"
-        //versionName "1.15.4 beta (2016-11-30)"
+        versionCode 181
+        versionName "1.15.4"
+        //versionName "1.15.4 beta (2016-12-24)"
 
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"

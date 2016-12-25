@@ -1,5 +1,12 @@
 ###Changelog
 
+###Version 1.15.4
+* improve video compression quality
+* support for POSH (RFC7711)
+* support for quoting messages (via select text)
+* verified messages show shield icon; unverified messages show lock
+* bug fixes
+
 ###Version 1.15.3
 * new [Blind Trust Before Verification](https://gultsch.de/trust.html) mode
 * easily share Barcode and XMPP uri from Account details
