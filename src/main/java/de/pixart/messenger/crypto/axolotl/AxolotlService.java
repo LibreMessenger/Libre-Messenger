@@ -361,6 +361,10 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
         return axolotlStore.getLocalRegistrationId();
     }
 
+    public AxolotlAddress getOwnAxolotlAddress() {
+        return new AxolotlAddress(account.getJid().toBareJid().toPreppedString(),getOwnDeviceId());
+    }
+
     public Set<Integer> getOwnDeviceIds() {
         return this.deviceIds.get(account.getJid().toBareJid());
     }
@@ -450,6 +454,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
                 } else {
                     Element item = mXmppConnectionService.getIqParser().getItem(packet);
                     Set<Integer> deviceIds = mXmppConnectionService.getIqParser().deviceIds(item);
+                    Log.d(Config.LOGTAG,account.getJid().toBareJid()+": retrieved own device list: "+deviceIds);
                     registerDevices(account.getJid().toBareJid(),deviceIds);
                 }
             }
@@ -818,7 +823,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
 
     private void buildSessionFromPEP(final AxolotlAddress address) {
         Log.i(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Building new session for " + address.toString());
-        if (address.getDeviceId() == getOwnDeviceId()) {
+        if (address.equals(getOwnAxolotlAddress())) {
             throw new AssertionError("We should NEVER build a session with ourselves. What happened here?!");
         }
 
