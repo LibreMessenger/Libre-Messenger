@@ -72,7 +72,7 @@ public final class Config {
     public static final int AVATAR_SIZE = 720;
     public static final Bitmap.CompressFormat AVATAR_FORMAT = Bitmap.CompressFormat.JPEG;
 
-    public static final int IMAGE_SIZE = 1920;
+    public static final int IMAGE_SIZE = 3840;
     public static final Bitmap.CompressFormat IMAGE_FORMAT = Bitmap.CompressFormat.JPEG;
     public static final int IMAGE_QUALITY = 75;
     public static final int IMAGE_MAX_SIZE = 524288; //512 KiB
