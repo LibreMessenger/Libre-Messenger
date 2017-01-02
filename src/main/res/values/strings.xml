@@ -730,4 +730,5 @@
     <string name="verify_omemo_keys">Verify OMEMO fingerprints</string>
     <string name="show_inactive_devices">Show inactive devices</string>
     <string name="hide_inactive_devices">Hide inactive devices</string>
+    <string name="reply">Reply</string>
 </resources>
