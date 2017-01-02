@@ -683,5 +683,8 @@
     <string name="verify_omemo_keys">Verifiziere OMEMO Fingerabdrücke</string>
     <string name="verifying_omemo_keys_trusted_source">Du bestätigst den OMEMO Fingerabdruck von %1$s nachdem du diesen Link angeklickt hast. Dies ist nur dann sicher, wenn du den Link von einer vertrauenswürdigen Quelle hast, auf die %2$s den Link veröffentlichen konnte.</string>
     <string name="quote">Zitieren</string>
+    <string name="hide_inactive_devices">Verstecke inaktive Geräte</string>
+    <string name="reply">Antworten</string>
+    <string name="show_inactive_devices">Zeige inaktive Geräte</string>
 
 </resources>
