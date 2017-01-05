@@ -55,6 +55,7 @@ import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.ExifHelper;
 import de.pixart.messenger.utils.FileUtils;
 import de.pixart.messenger.utils.FileWriterException;
+import de.pixart.messenger.utils.MimeUtils;
 import de.pixart.messenger.xmpp.pep.Avatar;
 
 public class FileBackend {
@@ -288,7 +289,7 @@ public class FileBackend {
     }
 
     public void copyFileToPrivateStorage(Message message, Uri uri) throws FileCopyException {
-        String mime = mXmppConnectionService.getContentResolver().getType(uri);
+        String mime = MimeUtils.guessMimeTypeFromUri(mXmppConnectionService, uri);
         Log.d(Config.LOGTAG, "copy " + uri.toString() + " to private storage (mime=" + mime + ")");
         String extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mime);
         if (extension == null) {

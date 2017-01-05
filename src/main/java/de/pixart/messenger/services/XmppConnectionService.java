@@ -112,6 +112,7 @@ import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.ExceptionHelper;
 import de.pixart.messenger.utils.FileUtils;
 import de.pixart.messenger.utils.FileWriterException;
+import de.pixart.messenger.utils.MimeUtils;
 import de.pixart.messenger.utils.OnPhoneContactsLoadedListener;
 import de.pixart.messenger.utils.PRNGFixes;
 import de.pixart.messenger.utils.PhoneHelper;
@@ -146,7 +147,6 @@ import de.pixart.messenger.xmpp.stanzas.PresencePacket;
 import me.leolin.shortcutbadger.ShortcutBadger;
 
 import static de.pixart.messenger.persistance.FileBackend.close;
-import static de.pixart.messenger.services.NotificationService.NOTIFICATION_ID;
 
 public class XmppConnectionService extends Service {
 
@@ -513,9 +513,11 @@ public class XmppConnectionService extends Service {
             callback.error(R.string.security_error_invalid_file_access, null);
             return;
         }
+        final String mimeType = MimeUtils.guessMimeTypeFromUri(this, uri);
         final String compressPictures = getCompressPicturesPreference();
         if ("never".equals(compressPictures)
-                || ("auto".equals(compressPictures) && getFileBackend().useImageAsIs(uri))) {
+                || ("auto".equals(compressPictures) && getFileBackend().useImageAsIs(uri))
+                || (mimeType != null && mimeType.endsWith("/gif"))) {
             Log.d(Config.LOGTAG, conversation.getAccount().getJid().toBareJid() + ": not compressing picture. sending as file");
             attachFileToConversation(conversation, uri, callback);
             return;

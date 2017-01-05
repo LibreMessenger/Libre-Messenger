@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v13.view.inputmethod.InputConnectionCompat;
+import android.support.v13.view.inputmethod.InputContentInfoCompat;
 import android.text.Editable;
 import android.text.InputType;
 import android.util.Log;
@@ -287,6 +289,40 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
             }
         }
     };
+
+    private EditMessage.OnCommitContentListener mEditorContentListener = new EditMessage.OnCommitContentListener() {
+
+        @Override
+        public boolean onCommitContent(InputContentInfoCompat inputContentInfo, int flags, Bundle opts, String[] contentMimeTypes) {
+            // try to get permission to read the image, if applicable
+            if ((flags & InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION) != 0) {
+                try {
+                    inputContentInfo.requestPermission();
+                } catch (Exception e) {
+                    Log.e(Config.LOGTAG, "InputContentInfoCompat#requestPermission() failed.", e);
+                    Toast.makeText(
+                            activity,
+                            activity.getString(R.string.no_permission_to_access_x, inputContentInfo.getDescription()),
+                            Toast.LENGTH_LONG
+                    ).show();
+                    return false;
+                }
+            }
+
+            // send the image
+            activity.attachImageToConversation(inputContentInfo.getContentUri());
+
+            // TODO: revoke permissions?
+            // since uploading an image is async its tough to wire a callback to when
+            // the image has finished uploading.
+            // According to the docs: "calling IC#releasePermission() is just to be a
+            // good citizen. Even if we failed to call that method, the system would eventually revoke
+            // the permission sometime after inputContentInfo object gets garbage-collected."
+            // See: https://developer.android.com/samples/CommitContentSampleApp/src/com.example.android.commitcontent.app/MainActivity.html#l164
+            return true;
+        }
+    };
+
     private OnClickListener mSendButtonListener = new OnClickListener() {
 
         @Override
@@ -428,6 +464,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_conversation, container, false);
         view.setOnClickListener(null);
+        String[] allImagesMimeType = {"image/*"};
         mEditMessage = (EditMessage) view.findViewById(R.id.textinput);
         mEditMessage.setOnClickListener(new OnClickListener() {
 
@@ -439,6 +476,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
             }
         });
         mEditMessage.setOnEditorActionListener(mEditorActionListener);
+        mEditMessage.setRichContentListener(allImagesMimeType, mEditorContentListener);
 
         mSendButton = (ImageButton) view.findViewById(R.id.textSendButton);
         mSendButton.setOnClickListener(this.mSendButtonListener);
@@ -522,32 +560,32 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                 });
         messageListAdapter.setOnQuoteListener(new MessageAdapter.OnQuoteListener() {
 
-                    			@Override
-            			public void onQuote(String text) {
-                				if (mEditMessage.isEnabled()) {
-                    					text = text.replaceAll("(\n *){2,}", "\n").replaceAll("(^|\n)", "$1> ").replaceAll("\n$", "");
-                    					Editable editable = mEditMessage.getEditableText();
-                    					int position = mEditMessage.getSelectionEnd();
-                    					if (position == -1) position = editable.length();
-                    					if (position > 0 && editable.charAt(position - 1) != '\n') {
-                        						editable.insert(position++, "\n");
-                        					}
-                    					editable.insert(position, text);
-                    					position += text.length();
-                    					editable.insert(position++, "\n");
-                    					if (position < editable.length() && editable.charAt(position) != '\n') {
-                        						editable.insert(position, "\n");
-                       					}
-                    					mEditMessage.setSelection(position);
-                    					mEditMessage.requestFocus();
-                    					InputMethodManager inputMethodManager = (InputMethodManager) getActivity()
-                            							.getSystemService(Context.INPUT_METHOD_SERVICE);
-                    					if (inputMethodManager != null) {
-                        						inputMethodManager.showSoftInput(mEditMessage, InputMethodManager.SHOW_IMPLICIT);
-                        					}
-                    				}
-                			}
-            		});
+            @Override
+            public void onQuote(String text) {
+                if (mEditMessage.isEnabled()) {
+                    text = text.replaceAll("(\n *){2,}", "\n").replaceAll("(^|\n)", "$1> ").replaceAll("\n$", "");
+                    Editable editable = mEditMessage.getEditableText();
+                    int position = mEditMessage.getSelectionEnd();
+                    if (position == -1) position = editable.length();
+                    if (position > 0 && editable.charAt(position - 1) != '\n') {
+                        editable.insert(position++, "\n");
+                    }
+                    editable.insert(position, text);
+                    position += text.length();
+                    editable.insert(position++, "\n");
+                    if (position < editable.length() && editable.charAt(position) != '\n') {
+                        editable.insert(position, "\n");
+                    }
+                    mEditMessage.setSelection(position);
+                    mEditMessage.requestFocus();
+                    InputMethodManager inputMethodManager = (InputMethodManager) getActivity()
+                            .getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if (inputMethodManager != null) {
+                        inputMethodManager.showSoftInput(mEditMessage, InputMethodManager.SHOW_IMPLICIT);
+                    }
+                }
+            }
+        });
         messagesView.setAdapter(messageListAdapter);
 
         registerForContextMenu(messagesView);

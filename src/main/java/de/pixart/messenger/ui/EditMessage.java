@@ -2,17 +2,30 @@ package de.pixart.messenger.ui;
 
 import android.content.Context;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
+import android.support.v13.view.inputmethod.EditorInfoCompat;
+import android.support.v13.view.inputmethod.InputConnectionCompat;
+import android.support.v13.view.inputmethod.InputContentInfoCompat;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
 
 import de.pixart.messenger.Config;
 import github.ankushsachdeva.emojicon.EmojiconEditText;
 
 public class EditMessage extends EmojiconEditText {
+
+    private OnCommitContentListener mCommitContentListener = null;
+    private String[] mimeTypes = null;
+
+    public interface OnCommitContentListener {
+        boolean onCommitContent(InputContentInfoCompat inputContentInfo, int flags, Bundle opts, String[] mimeTypes);
+    }
 
     public EditMessage(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -128,6 +141,29 @@ public class EditMessage extends EmojiconEditText {
             }
         } else {
             return super.onTextContextMenuItem(id);
+        }
+    }
+
+    public void setRichContentListener(String[] mimeTypes, OnCommitContentListener listener) {
+        this.mimeTypes = mimeTypes;
+        this.mCommitContentListener = listener;
+    }
+
+    @Override
+    public InputConnection onCreateInputConnection(EditorInfo editorInfo) {
+        final InputConnection ic = super.onCreateInputConnection(editorInfo);
+
+        if (mimeTypes != null && mCommitContentListener != null) {
+            EditorInfoCompat.setContentMimeTypes(editorInfo, mimeTypes);
+            return InputConnectionCompat.createWrapper(ic, editorInfo, new InputConnectionCompat.OnCommitContentListener() {
+
+                @Override
+                public boolean onCommitContent(InputContentInfoCompat inputContentInfo, int flags, Bundle opts) {
+                    return EditMessage.this.mCommitContentListener.onCommitContent(inputContentInfo, flags, opts, mimeTypes);
+                }
+            });
+        } else {
+            return ic;
         }
     }
 }
