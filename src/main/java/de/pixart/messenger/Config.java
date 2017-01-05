@@ -111,8 +111,6 @@ public final class Config {
 
     public static final boolean REPORT_WRONG_FILESIZE_IN_OTR_JINGLE = true;
 
-    public static final boolean SHOW_REGENERATE_AXOLOTL_KEYS_BUTTON = false;
-
     public static final boolean X509_VERIFICATION = false; //use x509 certificates to verify OMEMO keys
 
     public static final boolean IGNORE_ID_REWRITE_IN_MUC = true;
