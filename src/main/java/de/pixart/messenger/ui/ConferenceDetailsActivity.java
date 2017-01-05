@@ -42,6 +42,7 @@ import de.pixart.messenger.xmpp.jid.Jid;
 
 public class ConferenceDetailsActivity extends XmppActivity implements OnConversationUpdate, OnMucRosterUpdate, XmppConnectionService.OnAffiliationChanged, XmppConnectionService.OnRoleChanged, XmppConnectionService.OnConferenceOptionsPushed {
     public static final String ACTION_VIEW_MUC = "view_muc";
+    private static final float INACTIVE_ALPHA = 0.4684f; //compromise between dark and light theme
     private Conversation mConversation;
     private OnClickListener inviteListener = new OnClickListener() {
 
@@ -618,6 +619,12 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             }
             ImageView iv = (ImageView) view.findViewById(R.id.contact_photo);
             iv.setImageBitmap(avatarService().get(user, getPixel(48), false));
+            if (user.getRole() == MucOptions.Role.NONE) {
+                tvDisplayName.setAlpha(INACTIVE_ALPHA);
+                tvKey.setAlpha(INACTIVE_ALPHA);
+                tvStatus.setAlpha(INACTIVE_ALPHA);
+                iv.setAlpha(INACTIVE_ALPHA);
+            }
             membersView.addView(view);
             if (mConversation.getMucOptions().canInvite()) {
                 mInviteButton.setVisibility(View.VISIBLE);
