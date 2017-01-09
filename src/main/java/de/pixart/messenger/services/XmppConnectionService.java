@@ -2230,10 +2230,18 @@ public class XmppConnectionService extends Service {
     }
 
     public void joinMuc(Conversation conversation) {
-        joinMuc(conversation, null);
+        joinMuc(conversation, null, false);
+    }
+
+    public void joinMuc(Conversation conversation, boolean followedInvite) {
+        joinMuc(conversation, null, followedInvite);
     }
 
     private void joinMuc(Conversation conversation, final OnConferenceJoined onConferenceJoined) {
+        joinMuc(conversation, onConferenceJoined, false);
+    }
+
+    private void joinMuc(Conversation conversation, final OnConferenceJoined onConferenceJoined, final boolean followedInvite) {
         Account account = conversation.getAccount();
         account.pendingConferenceJoins.remove(conversation);
         account.pendingConferenceLeaves.remove(conversation);
@@ -2278,6 +2286,9 @@ public class XmppConnectionService extends Service {
                     }
                     if (mucOptions.membersOnly() && mucOptions.nonanonymous()) {
                         fetchConferenceMembers(conversation);
+                        if (followedInvite && conversation.getBookmark() == null) {
+                            saveConversationAsBookmark(conversation, null);
+                        }
                     }
                     sendUnsentMessages(conversation);
                 }
