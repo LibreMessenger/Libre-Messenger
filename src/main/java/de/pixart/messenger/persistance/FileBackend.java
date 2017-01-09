@@ -62,7 +62,7 @@ import de.pixart.messenger.xmpp.pep.Avatar;
 public class FileBackend {
     private static final SimpleDateFormat fileDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
 
-    public static final String CONVERSATIONS_FILE_PROVIDER = "de.pixart.messenger.files";
+    private static final String FILE_PROVIDER = ".files";
 
     private XmppConnectionService mXmppConnectionService;
 
@@ -499,8 +499,21 @@ public class FileBackend {
     public Uri getTakePhotoUri() {
         File file = new File(getTakePhotoPath() + "IMG_" + fileDateFormat.format(new Date()) + ".jpg");
         file.getParentFile().mkdirs();
+        return getUriForFile(mXmppConnectionService, file);
+    }
+
+    public static Uri getUriForFile(Context context, File file) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return FileProvider.getUriForFile(mXmppConnectionService, CONVERSATIONS_FILE_PROVIDER, file);
+            try {
+                String packageId = context.getPackageName();
+                return FileProvider.getUriForFile(context, packageId + FILE_PROVIDER, file);
+            } catch (IllegalArgumentException e) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    throw new SecurityException();
+                } else {
+                    return Uri.fromFile(file);
+                }
+            }
         } else {
             return Uri.fromFile(file);
         }
@@ -750,11 +763,6 @@ public class FileBackend {
             }
         }
         return inSampleSize;
-    }
-
-    public Uri getJingleFileUri(Message message) {
-        File file = getFile(message);
-        return Uri.parse("file://" + file.getAbsolutePath());
     }
 
     public void updateFileParams(Message message) {

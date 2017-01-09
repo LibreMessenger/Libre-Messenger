@@ -12,8 +12,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.support.v4.content.FileProvider;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -942,15 +940,15 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
 
         @Override
-        		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            			if (onQuoteListener != null) {
-                				int quoteResId = activity.getThemeResource(R.attr.icon_quote, R.drawable.ic_action_reply);
-                				// 3rd item is placed after "copy" item
-                        				menu.add(0, android.R.id.button1, 3, R.string.quote).setIcon(quoteResId)
-                        						.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-                			}
-            			return false;
-            		}
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            if (onQuoteListener != null) {
+                int quoteResId = activity.getThemeResource(R.attr.icon_quote, R.drawable.ic_action_reply);
+                // 3rd item is placed after "copy" item
+                menu.add(0, android.R.id.button1, 3, R.string.quote).setIcon(quoteResId)
+                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            }
+            return false;
+        }
 
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
@@ -1009,23 +1007,18 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             mime = "*/*";
         }
         Uri uri;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            try {
-                uri = FileProvider.getUriForFile(activity, FileBackend.CONVERSATIONS_FILE_PROVIDER, file);
-            } catch (IllegalArgumentException e) {
-                Toast.makeText(activity, activity.getString(R.string.no_permission_to_access_x, file.getAbsolutePath()), Toast.LENGTH_SHORT).show();
-                return;
-            }
-            openIntent.setDataAndType(uri, mime);
-            openIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        } else {
-            uri = Uri.fromFile(file);
+        try {
+            uri = FileBackend.getUriForFile(activity, file);
+        } catch (SecurityException e) {
+            Toast.makeText(activity, activity.getString(R.string.no_permission_to_access_x, file.getAbsolutePath()), Toast.LENGTH_SHORT).show();
+            return;
         }
         openIntent.setDataAndType(uri, mime);
+        openIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         PackageManager manager = activity.getPackageManager();
         List<ResolveInfo> info = manager.queryIntentActivities(openIntent, 0);
         if (info.size() == 0) {
-            openIntent.setDataAndType(Uri.fromFile(file), "*/*");
+            openIntent.setDataAndType(uri,"*/*");
         }
         try {
             getContext().startActivity(openIntent);

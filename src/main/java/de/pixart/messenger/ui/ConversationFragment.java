@@ -743,9 +743,13 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
             shareIntent.putExtra(Intent.EXTRA_TEXT, message.getBody());
             shareIntent.setType("text/plain");
         } else {
-            shareIntent.putExtra(Intent.EXTRA_STREAM,
-                    activity.xmppConnectionService.getFileBackend()
-                            .getJingleFileUri(message));
+            final DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
+            try {
+                shareIntent.putExtra(Intent.EXTRA_STREAM, FileBackend.getUriForFile(activity, file));
+            } catch (SecurityException e) {
+                Toast.makeText(activity, activity.getString(R.string.no_permission_to_access_x, file.getAbsolutePath()), Toast.LENGTH_SHORT).show();
+                return;
+            }
             shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             String mime = message.getMimeType();
             if (mime == null) {

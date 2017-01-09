@@ -34,7 +34,7 @@ import de.pixart.messenger.xmpp.jid.Jid;
 
 public class BarcodeProvider extends ContentProvider implements ServiceConnection {
 
-    private static final String AUTHORITY = "de.pixart.messenger.barcodes";
+    private static final String AUTHORITY = ".barcodes";
 
     private final Object lock = new Object();
 
@@ -163,8 +163,9 @@ public class BarcodeProvider extends ContentProvider implements ServiceConnectio
         }
     }
 
-    public static Uri getUriForAccount(Account account) {
-        return Uri.parse("content://" + AUTHORITY + "/" + account.getJid().toBareJid() + ".png");
+    public static Uri getUriForAccount(Context context, Account account) {
+        final String packageId = context.getPackageName();
+        return Uri.parse("content://" + packageId + AUTHORITY + "/" + account.getJid().toBareJid() + ".png");
     }
 
     public static Bitmap createAztecBitmap(String input, int size) {
