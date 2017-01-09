@@ -22,7 +22,6 @@ import android.text.style.StyleSpan;
 import android.text.util.Linkify;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -48,7 +47,9 @@ import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.pixart.messenger.Config;
@@ -70,6 +71,7 @@ import de.pixart.messenger.ui.widget.CopyTextView;
 import de.pixart.messenger.ui.widget.ListSelectionManager;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.GeoHelper;
+import de.pixart.messenger.utils.Patterns;
 import de.pixart.messenger.utils.UIHelper;
 import ezvcard.Ezvcard;
 import ezvcard.VCard;
@@ -85,6 +87,21 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                     + Patterns.GOOD_IRI_CHAR
                     + "\\;\\/\\?\\@\\&\\=\\#\\~\\-\\.\\+\\!\\*\\'\\(\\)\\,\\_])"
                     + "|(?:\\%[a-fA-F0-9]{2}))+");
+
+    private static final Linkify.TransformFilter WEBURL_TRANSFORM_FILTER = new Linkify.TransformFilter() {
+        @Override
+        public String transformUrl(Matcher matcher, String url) {
+            if (url == null) {
+                return null;
+            }
+            final String lcUrl = url.toLowerCase(Locale.US);
+            if (lcUrl.startsWith("http://") || lcUrl.startsWith("https://")) {
+                return url;
+            } else {
+                return "http://" + url;
+            }
+        }
+    };
 
     private ConversationActivity activity;
 
@@ -462,7 +479,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                     body.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), privateMarkerIndex + 1, privateMarkerIndex + 1 + nick.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }
-            Linkify.addLinks(body, Linkify.WEB_URLS);
+            Linkify.addLinks(body, Patterns.AUTOLINK_WEB_URL, "http", null, WEBURL_TRANSFORM_FILTER);
             Linkify.addLinks(body, XMPP_PATTERN, "xmpp");
             Linkify.addLinks(body, GeoHelper.GEO_URI, "geo");
             viewHolder.messageBody.setAutoLinkMask(0);
