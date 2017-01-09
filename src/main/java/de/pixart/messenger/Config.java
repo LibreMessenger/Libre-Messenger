@@ -60,7 +60,7 @@ public final class Config {
     public static final boolean ALWAYS_NOTIFY_BY_DEFAULT = false;
 
     public static final int PING_MAX_INTERVAL = 300;
-    public static final int IDLE_PING_INTERVAL = 1800; //540 is minimum according to docs;
+    public static final int IDLE_PING_INTERVAL = 600; //540 is minimum according to docs;
     public static final int PING_MIN_INTERVAL = 30;
     public static final int LOW_PING_TIMEOUT = 1; // used after push received
     public static final int PING_TIMEOUT = 15;
@@ -75,11 +75,11 @@ public final class Config {
     public static final int IMAGE_SIZE = 3840;
     public static final Bitmap.CompressFormat IMAGE_FORMAT = Bitmap.CompressFormat.JPEG;
     public static final int IMAGE_QUALITY = 75;
-    public static final int IMAGE_MAX_SIZE = 524288; //512 KiB
+    public static final int IMAGE_MAX_SIZE = 1 * 1024 * 1024; // 1 MiB
 
     public static final int VIDEO_SIZE = 640;
     public static final int VIDEO_BITRATE = 2 * 1000 * 1000; // 2 Mbps
-    public static final int VIDEO_MAX_SIZE = 10485760; //10 MiB
+    public static final int VIDEO_MAX_SIZE = 10 * 1024 * 1024; // 10 MiB
 
     public static final int DEFAULT_ZOOM = 15; //for locations
 
