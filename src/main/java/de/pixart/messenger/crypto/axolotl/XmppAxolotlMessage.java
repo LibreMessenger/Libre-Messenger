@@ -40,6 +40,7 @@ public class XmppAxolotlMessage {
 
     private byte[] innerKey;
     private byte[] ciphertext = null;
+    private byte[] authtagPlusInnerKey = null;
     private byte[] iv = null;
     private final Map<Integer, XmppAxolotlSession.AxolotlKey> keys;
     private final Jid from;
@@ -164,6 +165,14 @@ public class XmppAxolotlMessage {
             Cipher cipher = Cipher.getInstance(CIPHERMODE, PROVIDER);
             cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec);
             this.ciphertext = cipher.doFinal(Config.OMEMO_PADDING ? getPaddedBytes(plaintext) : plaintext.getBytes());
+            if (Config.PUT_AUTH_TAG_INTO_KEY && this.ciphertext != null) {
+                this.authtagPlusInnerKey = new byte[16 + 16];
+                byte[] ciphertext = new byte[this.ciphertext.length - 16];
+                System.arraycopy(this.ciphertext, 0, ciphertext, 0, ciphertext.length);
+                System.arraycopy(this.ciphertext, ciphertext.length, authtagPlusInnerKey, 16, 16);
+                System.arraycopy(this.innerKey, 0, authtagPlusInnerKey, 0, this.innerKey.length);
+                this.ciphertext = ciphertext;
+            }
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
                 | IllegalBlockSizeException | BadPaddingException | NoSuchProviderException
                 | InvalidAlgorithmParameterException e) {
@@ -200,7 +209,12 @@ public class XmppAxolotlMessage {
     }
 
     public void addDevice(XmppAxolotlSession session) {
-        XmppAxolotlSession.AxolotlKey key = session.processSending(innerKey);
+        XmppAxolotlSession.AxolotlKey key;
+        if (authtagPlusInnerKey != null) {
+            key = session.processSending(authtagPlusInnerKey);
+        } else {
+            key = session.processSending(innerKey);
+        }
         if (key != null) {
             keys.put(session.getRemoteAddress().getDeviceId(), key);
         }
@@ -252,6 +266,18 @@ public class XmppAxolotlMessage {
         byte[] key = unpackKey(session, sourceDeviceId);
         if (key != null) {
             try {
+                if (key.length >= 32) {
+                    int authtaglength = key.length - 16;
+                    Log.d(Config.LOGTAG, "found auth tag as part of omemo key");
+                    byte[] newCipherText = new byte[key.length - 16 + ciphertext.length];
+                    byte[] newKey = new byte[16];
+                    System.arraycopy(ciphertext, 0, newCipherText, 0, ciphertext.length);
+                    System.arraycopy(key, 16, newCipherText, ciphertext.length, authtaglength);
+                    System.arraycopy(key, 0, newKey, 0, newKey.length);
+                    ciphertext = newCipherText;
+                    key = newKey;
+                }
+
                 Cipher cipher = Cipher.getInstance(CIPHERMODE, PROVIDER);
                 SecretKeySpec keySpec = new SecretKeySpec(key, KEYTYPE);
                 IvParameterSpec ivSpec = new IvParameterSpec(iv);
