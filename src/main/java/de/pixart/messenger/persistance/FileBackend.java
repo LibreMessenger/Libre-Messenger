@@ -564,6 +564,7 @@ public class FileBackend {
         File file = new File(getAvatarPath(hash));
         FileInputStream is = null;
         try {
+            avatar.size = file.length();
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
             BitmapFactory.decodeFile(file.getAbsolutePath(), options);
@@ -583,6 +584,7 @@ public class FileBackend {
             avatar.image = new String(mByteArrayOutputStream.toByteArray());
             avatar.height = options.outHeight;
             avatar.width = options.outWidth;
+            avatar.type = options.outMimeType;
             return avatar;
         } catch (IOException e) {
             return null;
@@ -602,6 +604,7 @@ public class FileBackend {
         File file;
         if (isAvatarCached(avatar)) {
             file = new File(getAvatarPath(avatar.getFilename()));
+            avatar.size = file.length();
         } else {
             String filename = getAvatarPath(avatar.getFilename());
             file = new File(filename + ".tmp");
@@ -613,7 +616,8 @@ public class FileBackend {
                 MessageDigest digest = MessageDigest.getInstance("SHA-1");
                 digest.reset();
                 DigestOutputStream mDigestOutputStream = new DigestOutputStream(os, digest);
-                mDigestOutputStream.write(avatar.getImageAsBytes());
+                final byte[] bytes = avatar.getImageAsBytes();
+                mDigestOutputStream.write(bytes);
                 mDigestOutputStream.flush();
                 mDigestOutputStream.close();
                 String sha1sum = CryptoHelper.bytesToHex(digest.digest());
@@ -624,13 +628,13 @@ public class FileBackend {
                     file.delete();
                     return false;
                 }
+                avatar.size = bytes.length;
             } catch (IllegalArgumentException | IOException | NoSuchAlgorithmException e) {
                 return false;
             } finally {
                 close(os);
             }
         }
-        avatar.size = file.length();
         return true;
     }
 
@@ -700,7 +704,7 @@ public class FileBackend {
             Bitmap dest = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(dest);
             canvas.drawBitmap(source, null, targetRect, null);
-            if (source != null && !source.isRecycled()) {
+            if (source.isRecycled()) {
                 source.recycle();
             }
             return dest;
