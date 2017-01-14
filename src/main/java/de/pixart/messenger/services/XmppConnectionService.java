@@ -171,6 +171,7 @@ public class XmppConnectionService extends Service {
     public DatabaseBackend databaseBackend;
     private ReplacingSerialSingleThreadExecutor mContactMergerExecutor = new ReplacingSerialSingleThreadExecutor(true);
     private WakeLock wakeLock;
+    private WakeLock VideoCompressionWakeLock;
     private long mLastActivity = 0;
     private NotificationManager mNotifyManager;
     private ContentObserver contactObserver = new ContentObserver(null) {
@@ -783,7 +784,7 @@ public class XmppConnectionService extends Service {
                 for (Account account : pingCandidates) {
                     final boolean lowTimeout = mLowPingTimeoutMode.contains(account.getJid().toBareJid());
                     account.getXmppConnection().sendPing();
-                    Log.d(Config.LOGTAG, account.getJid().toBareJid() + " send ping (action=" + action + ",lowTimeout=" + Boolean.toString(lowTimeout) + ")");
+                    Log.d(Config.LOGTAG, account.getJid().toBareJid() + " send ping (action=" + action + ", lowTimeout=" + Boolean.toString(lowTimeout) + ")");
                     scheduleWakeUpCall(lowTimeout ? Config.LOW_PING_TIMEOUT : Config.PING_TIMEOUT, account.getUuid().hashCode());
                 }
             }
@@ -1108,6 +1109,7 @@ public class XmppConnectionService extends Service {
 
         this.pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         this.wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "XmppConnectionService");
+        this.VideoCompressionWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "VideoCompression");
         toggleForegroundService();
         updateUnreadCountBadge();
         toggleScreenEventReceiver();
@@ -4009,7 +4011,7 @@ public class XmppConnectionService extends Service {
         protected void onPreExecute() {
             super.onPreExecute();
             Log.d(Config.LOGTAG, "Start video compression");
-            wakeLock.acquire();
+            VideoCompressionWakeLock.acquire();
         }
 
         @Override
@@ -4020,7 +4022,6 @@ public class XmppConnectionService extends Service {
         @Override
         protected void onPostExecute(Boolean compressed) {
             super.onPostExecute(compressed);
-            wakeLock.release();
             File video = new File(compressedpath);
             if (mListener != null) {
                 if (video.exists() && video.length() > 0) {
@@ -4031,6 +4032,7 @@ public class XmppConnectionService extends Service {
                     Log.d(Config.LOGTAG, "Compression failed!");
                 }
             }
+            VideoCompressionWakeLock.release();
         }
     }
 
