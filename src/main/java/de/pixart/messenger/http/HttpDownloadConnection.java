@@ -199,7 +199,7 @@ public class HttpDownloadConnection implements Transferable {
         }
 
         private long retrieveFileSize() throws IOException {
-            PowerManager.WakeLock wakeLock = mHttpConnectionManager.createWakeLock("http_download_" + message.getUuid());
+            PowerManager.WakeLock wakeLock = mHttpConnectionManager.createWakeLock("http_download_filesize" + message.getUuid());
             try {
                 wakeLock.acquire();
                 Log.d(Config.LOGTAG, "retrieve file size. interactive:" + String.valueOf(interactive));
@@ -225,12 +225,13 @@ public class HttpDownloadConnection implements Transferable {
                 if (contentLength == null) {
                     throw new IOException("no content-length found in HEAD response");
                 }
-                wakeLock.release();
                 return Long.parseLong(contentLength, 10);
             } catch (IOException e) {
                 throw e;
             } catch (NumberFormatException e) {
                 throw new IOException();
+            } finally {
+                wakeLock.release();
             }
         }
 
