@@ -686,5 +686,7 @@
     <string name="hide_inactive_devices">Verstecke inaktive Geräte</string>
     <string name="reply">Antworten</string>
     <string name="show_inactive_devices">Zeige inaktive Geräte</string>
+    <string name="distrust_omemo_key">Gerät misstrauen</string>
+    <string name="distrust_omemo_key_text">Bist du sicher, dass du die Verifizierung dieses Gerätes misstrauen möchtest? Dieses Gerät und Nachrichten von dem Gerät werden als unverifiziert markiert.</string>
 
 </resources>
