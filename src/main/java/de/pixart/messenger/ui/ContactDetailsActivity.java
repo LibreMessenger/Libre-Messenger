@@ -117,6 +117,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
     private Button mShowInactiveDevicesButton;
     private QuickContactBadge badge;
     private LinearLayout keys;
+    private LinearLayout keysWrapper;
     private FlowLayout tags;
     private boolean showDynamicTags = false;
     private boolean showLastSeen = false;
@@ -221,6 +222,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             }
         });
         keys = (LinearLayout) findViewById(R.id.details_contact_keys);
+        keysWrapper = (LinearLayout) findViewById(R.id.keys_wrapper);
         tags = (FlowLayout) findViewById(R.id.tags);
         mShowInactiveDevicesButton = (Button) findViewById(R.id.show_inactive_devices);
         if (getActionBar() != null) {
@@ -535,11 +537,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             });
             keys.addView(view);
         }
-        if (hasKeys) {
-            keys.setVisibility(View.VISIBLE);
-        } else {
-            keys.setVisibility(View.GONE);
-        }
+        keysWrapper.setVisibility(hasKeys ? View.VISIBLE : View.GONE);
 
         List<ListItem.Tag> tagList = contact.getTags(this);
         if (tagList.size() == 0 || !this.showDynamicTags) {
