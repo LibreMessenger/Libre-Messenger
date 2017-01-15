@@ -1118,6 +1118,8 @@ public class XmppConnectionService extends Service {
         }
         //start export log service every day at given time
         ScheduleAutomaticExport();
+        // cancel scheduled exporter
+        CancelAutomaticExport(false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             registerReceiver(this.mEventReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         }
@@ -1142,7 +1144,7 @@ public class XmppConnectionService extends Service {
         fileObserver.stopWatching();
         super.onDestroy();
         // cancel scheduled exporter
-        CancelAutomaticExport();
+        CancelAutomaticExport(true);
     }
 
     public void toggleScreenEventReceiver() {
@@ -3884,6 +3886,13 @@ public class XmppConnectionService extends Service {
     }
 
     public void ScheduleAutomaticExport() {
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        final PendingIntent ScheduleExportIntent = PendingIntent.getBroadcast(this, AlarmReceiver.SCHEDULE_ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        // don't start export when app is restarted and an intent is already created
+        if (ScheduleExportIntent != null) {
+            Log.d(Config.LOGTAG, "Schedule automatic export logs. There is a pending intent " + ScheduleExportIntent.toString());
+            return;
+        }
         //start export log service every day at given time
         if (Config.ExportLogs) {
             if (Config.ExportLogs_Hour >= 0 && Config.ExportLogs_Hour <= 23 && Config.ExportLogs_Minute >= 0 && Config.ExportLogs_Minute <= 59) {
@@ -3892,20 +3901,18 @@ public class XmppConnectionService extends Service {
                 calendar.setTimeInMillis(System.currentTimeMillis());
                 calendar.set(Calendar.HOUR_OF_DAY, Config.ExportLogs_Hour);
                 calendar.set(Calendar.MINUTE, Config.ExportLogs_Minute);
-                Intent intent = new Intent(this, AlarmReceiver.class);
                 intent.setAction("exportlogs");
-                final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, AlarmReceiver.SCHEDULE_ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                ((AlarmManager) getSystemService(ALARM_SERVICE)).setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+                ((AlarmManager) getSystemService(ALARM_SERVICE)).setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, ScheduleExportIntent);
             }
         }
     }
 
-    public void CancelAutomaticExport() {
-        if (Config.ExportLogs) {
+    public void CancelAutomaticExport(boolean force) {
+        if (!Config.ExportLogs || force) {
             Log.d(Config.LOGTAG, "Cancel scheduled automatic export");
             Intent intent = new Intent(this, AlarmReceiver.class);
-            final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, AlarmReceiver.SCHEDULE_ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            ((AlarmManager) this.getSystemService(ALARM_SERVICE)).cancel(pendingIntent);
+            final PendingIntent ScheduleExportIntent = PendingIntent.getBroadcast(this, AlarmReceiver.SCHEDULE_ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            ((AlarmManager) this.getSystemService(ALARM_SERVICE)).cancel(ScheduleExportIntent);
         }
     }
 
