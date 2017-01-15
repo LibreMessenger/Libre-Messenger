@@ -392,7 +392,7 @@ public class JingleConnection implements Transferable {
                 long size = Long.parseLong(fileSize.getContent());
                 message.setBody(Long.toString(size));
                 conversation.add(message);
-                mXmppConnectionService.updateConversationUi();
+                mJingleConnectionManager.updateConversationUi(true);
                 if (mJingleConnectionManager.hasStoragePermission()
                         && size < this.mJingleConnectionManager.getAutoAcceptFileSize()
                         && mXmppConnectionService.isDataSaverDisabled()) {
@@ -514,7 +514,7 @@ public class JingleConnection implements Transferable {
     private void sendAccept() {
         mJingleStatus = JINGLE_STATUS_ACCEPTED;
         this.mStatus = Transferable.STATUS_DOWNLOADING;
-        mXmppConnectionService.updateConversationUi();
+        this.mJingleConnectionManager.updateConversationUi(true);
         this.mJingleConnectionManager.getPrimaryCandidate(this.account, new OnPrimaryCandidateFound() {
             @Override
             public void onPrimaryCandidateFound(boolean success, final JingleCandidate candidate) {
@@ -846,7 +846,7 @@ public class JingleConnection implements Transferable {
             if (this.file != null) {
                 file.delete();
             }
-            this.mXmppConnectionService.updateConversationUi();
+            this.mJingleConnectionManager.updateConversationUi(true);
         } else {
             this.mXmppConnectionService.markMessage(this.message,
                     Message.STATUS_SEND_FAILED);
@@ -872,7 +872,7 @@ public class JingleConnection implements Transferable {
                 if (this.file != null) {
                     file.delete();
                 }
-                this.mXmppConnectionService.updateConversationUi();
+                this.mJingleConnectionManager.updateConversationUi(true);
             } else {
                 this.mXmppConnectionService.markMessage(this.message,
                         Message.STATUS_SEND_FAILED,
@@ -1020,7 +1020,7 @@ public class JingleConnection implements Transferable {
 
     public void updateProgress(int i) {
         this.mProgress = i;
-        mXmppConnectionService.updateConversationUi();
+        mJingleConnectionManager.updateConversationUi(false);
     }
 
     public String getTransportId() {

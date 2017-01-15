@@ -126,7 +126,7 @@ public class HttpDownloadConnection implements Transferable {
         } else {
             message.setTransferable(null);
         }
-        mXmppConnectionService.updateConversationUi();
+        mHttpConnectionManager.updateConversationUi(true);
     }
 
     private void finish() {
@@ -137,7 +137,7 @@ public class HttpDownloadConnection implements Transferable {
         if (message.getEncryption() == Message.ENCRYPTION_PGP) {
             notify = message.getConversation().getAccount().getPgpDecryptionService().decrypt(message, notify);
         }
-        mXmppConnectionService.updateConversationUi();
+        mHttpConnectionManager.updateConversationUi(true);
         if (notify) {
             mXmppConnectionService.getNotificationService().push(message);
         }
@@ -145,7 +145,7 @@ public class HttpDownloadConnection implements Transferable {
 
     private void changeStatus(int status) {
         this.mStatus = status;
-        mXmppConnectionService.updateConversationUi();
+        mHttpConnectionManager.updateConversationUi(true);
     }
 
     private void showToastForException(Exception e) {
@@ -350,7 +350,7 @@ public class HttpDownloadConnection implements Transferable {
 
     public void updateProgress(int i) {
         this.mProgress = i;
-        mXmppConnectionService.updateConversationUi();
+        mHttpConnectionManager.updateConversationUi(false);
     }
 
     @Override
