@@ -1786,7 +1786,7 @@ public class ConversationActivity extends XmppActivity
     private boolean hasAccountWithoutPush() {
         for (Account account : xmppConnectionService.getAccounts()) {
             if (account.getStatus() != Account.State.DISABLED
-                    && !xmppConnectionService.getPushManagementService().available(account)) {
+                    && !xmppConnectionService.getPushManagementService().availableAndUseful(account)) {
                 return true;
             }
         }
