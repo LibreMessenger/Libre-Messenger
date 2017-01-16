@@ -102,6 +102,12 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             }
         }
     };
+    private static final Linkify.MatchFilter WEBURL_MATCH_FILTER = new Linkify.MatchFilter() {
+        @Override
+        public boolean acceptMatch(CharSequence charSequence, int start, int end) {
+            return start < 1 || charSequence.charAt(start - 1) != '@';
+        }
+    };
 
     private ConversationActivity activity;
 
@@ -479,8 +485,8 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                     body.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), privateMarkerIndex + 1, privateMarkerIndex + 1 + nick.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }
-            Linkify.addLinks(body, Patterns.AUTOLINK_WEB_URL, "http", null, WEBURL_TRANSFORM_FILTER);
             Linkify.addLinks(body, XMPP_PATTERN, "xmpp");
+            Linkify.addLinks(body, Patterns.AUTOLINK_WEB_URL, "http", WEBURL_MATCH_FILTER, WEBURL_TRANSFORM_FILTER);
             Linkify.addLinks(body, GeoHelper.GEO_URI, "geo");
             viewHolder.messageBody.setAutoLinkMask(0);
             viewHolder.messageBody.setText(body);
