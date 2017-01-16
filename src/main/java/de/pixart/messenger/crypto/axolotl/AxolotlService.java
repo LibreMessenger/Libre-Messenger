@@ -1119,7 +1119,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
                 session.resetPreKeyId();
             }
         } catch (CryptoFailedException e) {
-            Log.w(Config.LOGTAG, getLogprefix(account) + "Failed to decrypt message: " + e.getMessage());
+            Log.w(Config.LOGTAG, getLogprefix(account) + "Failed to decrypt message from "+message.getFrom()+": " + e.getMessage());
         }
 
         if (session.isFresh() && plaintextMessage != null) {
