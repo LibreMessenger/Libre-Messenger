@@ -3887,10 +3887,11 @@ public class XmppConnectionService extends Service {
 
     public void ScheduleAutomaticExport() {
         Intent intent = new Intent(this, AlarmReceiver.class);
-        final PendingIntent ScheduleExportIntent = PendingIntent.getBroadcast(this, AlarmReceiver.SCHEDULE_ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        intent.setAction("exportlogs");
         // don't start export when app is restarted and an intent is already created
-        if (ScheduleExportIntent != null) {
-            Log.d(Config.LOGTAG, "Schedule automatic export logs. There is a pending intent " + ScheduleExportIntent.toString());
+        boolean ExportScheduled = (PendingIntent.getBroadcast(this, AlarmReceiver.SCHEDULE_ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_NO_CREATE) != null);
+        if (ExportScheduled) {
+            Log.d(Config.LOGTAG, "Schedule automatic export logs. There is a pending intent scheduled.");
             return;
         }
         //start export log service every day at given time
@@ -3901,7 +3902,7 @@ public class XmppConnectionService extends Service {
                 calendar.setTimeInMillis(System.currentTimeMillis());
                 calendar.set(Calendar.HOUR_OF_DAY, Config.ExportLogs_Hour);
                 calendar.set(Calendar.MINUTE, Config.ExportLogs_Minute);
-                intent.setAction("exportlogs");
+                final PendingIntent ScheduleExportIntent = PendingIntent.getBroadcast(this, AlarmReceiver.SCHEDULE_ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 ((AlarmManager) getSystemService(ALARM_SERVICE)).setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, ScheduleExportIntent);
             }
         }
