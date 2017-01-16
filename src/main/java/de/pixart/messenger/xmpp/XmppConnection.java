@@ -60,6 +60,7 @@ import de.pixart.messenger.crypto.sasl.External;
 import de.pixart.messenger.crypto.sasl.Plain;
 import de.pixart.messenger.crypto.sasl.SaslMechanism;
 import de.pixart.messenger.crypto.sasl.ScramSha1;
+import de.pixart.messenger.crypto.sasl.ScramSha256;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.ServiceDiscoveryResult;
@@ -883,6 +884,8 @@ public class XmppConnection implements Runnable {
         auth.setAttribute("xmlns", "urn:ietf:params:xml:ns:xmpp-sasl");
         if (mechanisms.contains("EXTERNAL") && account.getPrivateKeyAlias() != null) {
             saslMechanism = new External(tagWriter, account, mXmppConnectionService.getRNG());
+        } else if (mechanisms.contains("SCRAM-SHA-256")) {
+            saslMechanism = new ScramSha256(tagWriter, account, mXmppConnectionService.getRNG());
         } else if (mechanisms.contains("SCRAM-SHA-1")) {
             saslMechanism = new ScramSha1(tagWriter, account, mXmppConnectionService.getRNG());
         } else if (mechanisms.contains("PLAIN")) {
