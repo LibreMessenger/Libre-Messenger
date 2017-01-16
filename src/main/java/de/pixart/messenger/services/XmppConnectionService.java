@@ -1172,6 +1172,11 @@ public class XmppConnectionService extends Service {
     @Override
     public void onTaskRemoved(final Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
+        if (!Config.USE_ALWAYS_FOREGROUND) {
+            this.logoutAndSave(false);
+        } else {
+            Log.d(Config.LOGTAG,"ignoring onTaskRemoved because foreground service is activated");
+        }
     }
 
     private void logoutAndSave(boolean stop) {
