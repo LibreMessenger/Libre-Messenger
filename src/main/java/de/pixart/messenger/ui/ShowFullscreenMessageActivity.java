@@ -33,7 +33,6 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.utils.ExifHelper;
-import pl.droidsonroids.gif.GifDrawable;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -143,7 +142,6 @@ public class ShowFullscreenMessageActivity extends Activity {
         width = options.outWidth;
         rotation = getRotation(Uri.parse("file://" + file.getAbsolutePath()));
         Log.d(Config.LOGTAG, "Image height: " + height + ", width: " + width + ", rotation: " + rotation);
-        mImage.setVisibility(View.VISIBLE);
         if (width > height) {
             if (rotation == 0 || rotation == 180) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
@@ -173,29 +171,21 @@ public class ShowFullscreenMessageActivity extends Activity {
                 }
             }
         }
-        if (getMimeType(file.toString()) != null && getMimeType(file.toString()).endsWith("/gif")) {
-            try {
-                GifDrawable gifDrawable = new GifDrawable(file);
-                mImage.setImageDrawable(gifDrawable);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            final PhotoViewAttacher mAttacher = new PhotoViewAttacher(mImage);
-            try {
-                Glide.with(this)
-                        .load(file)
-                        .asBitmap()
-                        .into(new BitmapImageViewTarget(mImage) {
-                            @Override
-                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                                super.onResourceReady(resource, glideAnimation);
-                                mAttacher.update();
-                            }
-                        });
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        final PhotoViewAttacher mAttacher = new PhotoViewAttacher(mImage);
+        mImage.setVisibility(View.VISIBLE);
+        try {
+            Glide.with(this)
+                    .load(file)
+                    .asBitmap()
+                    .into(new BitmapImageViewTarget(mImage) {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            super.onResourceReady(resource, glideAnimation);
+                            mAttacher.update();
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
