@@ -28,7 +28,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:largeHeap="false"
+        android:largeHeap="true"
         android:theme="@style/ConversationsTheme"
         tools:replace="android:label">
         <service android:name="de.pixart.messenger.services.XmppConnectionService" />
@@ -66,7 +66,7 @@
             android:name="de.pixart.messenger.ui.ConversationActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:hardwareAccelerated="true"
+
             android:minWidth="300dp"
             android:minHeight="300dp"
             android:windowSoftInputMode="stateHidden"></activity>
@@ -202,7 +202,7 @@
             android:name="de.pixart.messenger.ui.ShareLocationActivity"
             android:label="@string/share_location"
             android:parentActivityName="de.pixart.messenger.ui.ConversationActivity"
-            android:hardwareAccelerated="true">
+            >
             <intent-filter>
                 <action android:name="de.pixart.messenger.location.request" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -210,8 +210,7 @@
         </activity>
         <activity
             android:name="de.pixart.messenger.ui.ShowLocationActivity"
-            android:label="@string/show_location"
-            android:hardwareAccelerated="true">
+            android:label="@string/show_location">
             <intent-filter>
                 <action android:name="de.pixart.messenger.location.show" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -220,8 +219,8 @@
         <activity
             android:name="de.pixart.messenger.ui.ShowFullscreenMessageActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            android:configChanges="orientation|screenSize"
-            android:hardwareAccelerated="true"></activity>
+            android:configChanges="orientation|screenSize">
+        </activity>
         <activity
             android:name="de.pixart.messenger.ui.TrustKeysActivity"
             android:label="@string/trust_omemo_fingerprints"
@@ -243,10 +242,11 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_updater"
             android:launchMode="singleTask"
-            android:theme="@style/ConversationsTheme"></activity>
+            android:theme="@style/ConversationsTheme">
+        </activity>
         <activity
-            android:name="com.soundcloud.android.crop.CropImageActivity"
-            android:hardwareAccelerated="true"></activity>
+            android:name="com.soundcloud.android.crop.CropImageActivity">
+        </activity>
 
         <service android:name="de.pixart.messenger.services.UpdaterWebService" />
         <service android:name="de.pixart.messenger.services.CheckAppVersionService" />
