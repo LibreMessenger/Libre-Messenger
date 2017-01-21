@@ -673,8 +673,8 @@
     <string name="pref_blind_trust_before_verification">Blind vertraute OMEMO-Fingerabdrücke</string>
     <string name="pref_blind_trust_before_verification_summary">Vertraue automatisch allen neuen Geräten von Kontakten, die vorher bereits überprüft wurden.</string>
     <string name="share_as_barcode">Als Barcode teilen</string>
-    <string name="share_as_http">Als XMPP URI teilen</string>
-    <string name="share_as_uri">Als HTTP Link teilen</string>
+    <string name="share_as_uri">Als XMPP URI teilen</string>
+    <string name="share_as_http">Als HTTP Link teilen</string>
     <string name="use_camera_icon_to_scan_barcode">Nutze Kamera, um Barcodes deiner Kontakte zu scannen</string>
     <string name="verified_fingerprints">Überprüfte Fingerabdrücke</string>
     <string name="invalid_barcode">Barcode ungültig</string>
