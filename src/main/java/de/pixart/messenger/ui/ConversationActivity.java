@@ -120,6 +120,7 @@ public class ConversationActivity extends XmppActivity
     final private List<Uri> mPendingVideoUris = new ArrayList<>();
     private String mOpenConversation = null;
     private boolean mPanelOpen = true;
+    private AtomicBoolean mShouldPanelBeOpen = new AtomicBoolean(false);
     private Pair<Integer, Integer> mScrollPosition = null;
     private Uri mPendingGeoUri = null;
     private boolean forbidProcessingPendings = false;
@@ -155,6 +156,7 @@ public class ConversationActivity extends XmppActivity
     public void showConversationsOverview() {
         if (mContentView instanceof SlidingPaneLayout) {
             SlidingPaneLayout mSlidingPaneLayout = (SlidingPaneLayout) mContentView;
+            mShouldPanelBeOpen.set(true);
             mSlidingPaneLayout.openPane();
         }
     }
@@ -172,6 +174,7 @@ public class ConversationActivity extends XmppActivity
     public void hideConversationsOverview() {
         if (mContentView instanceof SlidingPaneLayout) {
             SlidingPaneLayout mSlidingPaneLayout = (SlidingPaneLayout) mContentView;
+            mShouldPanelBeOpen.set(false);
             mSlidingPaneLayout.closePane();
         }
     }
@@ -186,8 +189,7 @@ public class ConversationActivity extends XmppActivity
 
     public boolean isConversationsOverviewVisable() {
         if (mContentView instanceof SlidingPaneLayout) {
-            SlidingPaneLayout mSlidingPaneLayout = (SlidingPaneLayout) mContentView;
-            return mSlidingPaneLayout.isOpen();
+            return mShouldPanelBeOpen.get();
         } else {
             return true;
         }
@@ -334,18 +336,19 @@ public class ConversationActivity extends XmppActivity
 
                 @Override
                 public void onPanelOpened(View arg0) {
+                    mShouldPanelBeOpen.set(true);
                     updateActionBarTitle();
                     invalidateOptionsMenu();
                     hideKeyboard();
                     if (xmppConnectionServiceBound) {
-                        xmppConnectionService.getNotificationService()
-                                .setOpenConversation(null);
+                        xmppConnectionService.getNotificationService().setOpenConversation(null);
                     }
                     closeContextMenu();
                 }
 
                 @Override
                 public void onPanelClosed(View arg0) {
+                    mShouldPanelBeOpen.set(false);
                     listView.discardUndo();
                     openConversation();
                 }
@@ -1524,6 +1527,9 @@ public class ConversationActivity extends XmppActivity
 
         if (!ExceptionHelper.checkForCrash(this, this.xmppConnectionService)) {
             openBatteryOptimizationDialogIfNeeded();
+        }
+        if (isConversationsOverviewVisable() && isConversationsOverviewHideable()) {
+            xmppConnectionService.getNotificationService().setOpenConversation(null);
         }
     }
 
