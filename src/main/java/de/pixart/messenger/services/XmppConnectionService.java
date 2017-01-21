@@ -3891,24 +3891,25 @@ public class XmppConnectionService extends Service {
     }
 
     public void ScheduleAutomaticExport() {
-        Intent intent = new Intent(this, AlarmReceiver.class);
-        intent.setAction("exportlogs");
-        // don't start export when app is restarted and an intent is already created
-        boolean ExportScheduled = (PendingIntent.getBroadcast(this, AlarmReceiver.SCHEDULE_ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_NO_CREATE) != null);
-        if (ExportScheduled) {
-            Log.d(Config.LOGTAG, "Schedule automatic export logs. There is a pending intent scheduled.");
-            return;
-        }
-        //start export log service every day at given time
+    //start export log service every day at given time
         if (Config.ExportLogs) {
             if (Config.ExportLogs_Hour >= 0 && Config.ExportLogs_Hour <= 23 && Config.ExportLogs_Minute >= 0 && Config.ExportLogs_Minute <= 59) {
+                Calendar now = Calendar.getInstance();
+                now.setTimeInMillis(System.currentTimeMillis());
+                Calendar timetoexport = Calendar.getInstance();
+                timetoexport.setTimeInMillis(System.currentTimeMillis());
+                Intent intent = new Intent(this, AlarmReceiver.class);
+                intent.setAction("exportlogs");
                 Log.d(Config.LOGTAG, "Schedule automatic export logs at " + Config.ExportLogs_Hour + ":" + Config.ExportLogs_Minute);
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(System.currentTimeMillis());
-                calendar.set(Calendar.HOUR_OF_DAY, Config.ExportLogs_Hour);
-                calendar.set(Calendar.MINUTE, Config.ExportLogs_Minute);
+                timetoexport.set(Calendar.HOUR_OF_DAY, Config.ExportLogs_Hour);
+                timetoexport.set(Calendar.MINUTE, Config.ExportLogs_Minute);
+                if (timetoexport.before(now)) {
+                    SimpleDateFormat newDate = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
+                    timetoexport.add(Calendar.DAY_OF_YEAR, 1); //DATE or DAY_OF_MONTH
+                    Log.d(Config.LOGTAG, "Schedule automatic export logs, for today, the export time is in the past, scheduling first export run for the next day ("+ newDate.format(timetoexport.getTimeInMillis()) +").");
+                }
                 final PendingIntent ScheduleExportIntent = PendingIntent.getBroadcast(this, AlarmReceiver.SCHEDULE_ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                ((AlarmManager) getSystemService(ALARM_SERVICE)).setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, ScheduleExportIntent);
+                ((AlarmManager) getSystemService(ALARM_SERVICE)).setInexactRepeating(AlarmManager.RTC_WAKEUP, timetoexport.getTimeInMillis(), AlarmManager.INTERVAL_DAY, ScheduleExportIntent);
             }
         }
     }

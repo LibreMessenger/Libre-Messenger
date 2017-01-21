@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -45,6 +47,8 @@ public class ExportLogsService extends Service {
     private DatabaseBackend mDatabaseBackend;
     private List<Account> mAccounts;
     boolean ReadableLogsEnabled = false;
+    private WakeLock wakeLock;
+    private PowerManager pm;
 
     @Override
     public void onCreate() {
@@ -52,6 +56,8 @@ public class ExportLogsService extends Service {
         mAccounts = mDatabaseBackend.getAccounts();
         final SharedPreferences ReadableLogs = PreferenceManager.getDefaultSharedPreferences(this);
         ReadableLogsEnabled = ReadableLogs.getBoolean("export_plain_text_logs", false);
+        pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "ExportLogsService");
     }
 
     @Override
@@ -62,6 +68,13 @@ public class ExportLogsService extends Service {
                 public void run() {
                     export();
                     stopForeground(true);
+                    if (wakeLock.isHeld()) {
+                        try {
+                            wakeLock.release();
+                        } catch (final RuntimeException ignored) {
+                            //ignored
+                        }
+                    }
                     running.set(false);
                     stopSelf();
                 }
@@ -71,6 +84,7 @@ public class ExportLogsService extends Service {
     }
 
     private void export() {
+        wakeLock.acquire();
         List<Conversation> conversations = mDatabaseBackend.getConversations(Conversation.STATUS_AVAILABLE);
         conversations.addAll(mDatabaseBackend.getConversations(Conversation.STATUS_ARCHIVED));
         NotificationManager mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -184,10 +198,7 @@ public class ExportLogsService extends Service {
         // encrypt database from the input file to the output file
         try {
             EncryptDecryptFile.encrypt(InputFile, OutputFile, EncryptionKey);
-        } catch (NoSuchAlgorithmException e) {
-            Log.d(Config.LOGTAG, "Database exporter: encryption failed with " + e);
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
             Log.d(Config.LOGTAG, "Database exporter: encryption failed with " + e);
             e.printStackTrace();
         } catch (InvalidKeyException e) {
