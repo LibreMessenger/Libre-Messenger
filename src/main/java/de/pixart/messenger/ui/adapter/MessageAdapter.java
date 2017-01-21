@@ -62,6 +62,7 @@ import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.Message.FileParams;
 import de.pixart.messenger.entities.Transferable;
 import de.pixart.messenger.persistance.FileBackend;
+import de.pixart.messenger.services.NotificationService;
 import de.pixart.messenger.ui.ConversationActivity;
 import de.pixart.messenger.ui.ShowFullscreenMessageActivity;
 import de.pixart.messenger.ui.text.DividerSpan;
@@ -483,6 +484,13 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 body.setSpan(new StyleSpan(Typeface.BOLD), 0, privateMarkerIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 if (hasMeCommand) {
                     body.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), privateMarkerIndex + 1, privateMarkerIndex + 1 + nick.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+            }
+            if (message.getConversation().getMode() == Conversation.MODE_MULTI && message.getStatus() == Message.STATUS_RECEIVED) {
+                Pattern pattern = NotificationService.generateNickHighlightPattern(message.getConversation().getMucOptions().getActualNick());
+                Matcher matcher = pattern.matcher(body);
+                while (matcher.find()) {
+                    body.setSpan(new StyleSpan(Typeface.BOLD), matcher.start(), matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }
             Linkify.addLinks(body, XMPP_PATTERN, "xmpp");
