@@ -13,12 +13,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="?attr/TextSizeBody"
-        android:textColor="?attr/colorAccent"/>
+        android:textColor="@color/accent"/>
     <CheckBox
         android:layout_marginTop="8dp"
         android:id="@+id/trusted_source"
         android:layout_width="wrap_content"
-        android:textColor="?attr/colorAccent"
+        android:textColor="@color/accent"
         android:layout_height="wrap_content"
         android:text="@string/i_followed_this_link_from_a_trusted_source" />
 
