@@ -358,7 +358,7 @@ public class IqParser extends AbstractParser implements OnIqPacketReceived {
             final IqPacket response = packet.generateResponse(IqPacket.TYPE.RESULT);
             mXmppConnectionService.sendIqPacket(account, response, null);
         } else if (packet.hasChild("open", "http://jabber.org/protocol/ibb")
-                || packet.hasChild("data", "http://jabber.org/protocol/ibb"))
+                || packet.hasChild("data", "http://jabber.org/protocol/ibb")
                 || packet.hasChild("close","http://jabber.org/protocol/ibb")) {
             mXmppConnectionService.getJingleConnectionManager()
                     .deliverIbbPacket(account, packet);
