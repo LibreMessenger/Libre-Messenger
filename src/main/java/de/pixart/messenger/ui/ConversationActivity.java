@@ -1530,6 +1530,8 @@ public class ConversationActivity extends XmppActivity
         }
         if (isConversationsOverviewVisable() && isConversationsOverviewHideable()) {
             xmppConnectionService.getNotificationService().setOpenConversation(null);
+        } else {
+            xmppConnectionService.getNotificationService().setOpenConversation(getSelectedConversation());
         }
     }
 
