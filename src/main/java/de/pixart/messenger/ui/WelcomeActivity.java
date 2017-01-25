@@ -175,7 +175,7 @@ public class WelcomeActivity extends XmppActivity {
 
     private boolean BackupAvailable() {
         // Set the folder on the SDcard
-        File filePath = new File(FileBackend.getConversationsDirectory() + "/database/database.db.crypt");
+        File filePath = new File(FileBackend.getConversationsDirectory("Database") + "database.db.crypt");
         Log.d(Config.LOGTAG, "DB Path: " + filePath.toString());
         if (filePath.exists()) {
             Log.d(Config.LOGTAG, "DB Path existing");
@@ -188,7 +188,7 @@ public class WelcomeActivity extends XmppActivity {
 
     private void checkDatabase(String DecryptionKey) throws IOException {
         // Set the folder on the SDcard
-        File directory = new File(FileBackend.getConversationsDirectory() + "/database/");
+        File directory = new File(FileBackend.getConversationsDirectory("Database"));
         // Set the input file stream up:
         FileInputStream InputFile = new FileInputStream(directory.getPath() + "/database.db.crypt");
         // Temp output for DB checks
@@ -252,7 +252,7 @@ public class WelcomeActivity extends XmppActivity {
         // Set location for the db:
         final OutputStream OutputFile = new FileOutputStream(this.getDatabasePath(DatabaseBackend.DATABASE_NAME));
         // Set the folder on the SDcard
-        File directory = new File(FileBackend.getConversationsDirectory() + "/database/");
+        File directory = new File(FileBackend.getConversationsDirectory("Database"));
         // Set the input file stream up:
         final InputStream InputFile = new FileInputStream(directory.getPath() + "/database.bak");
         //set temp file

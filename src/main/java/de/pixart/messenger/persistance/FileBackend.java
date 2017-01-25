@@ -71,8 +71,8 @@ public class FileBackend {
     }
 
     private void createNoMedia() {
-        final File nomedia_files = new File(getConversationsFileDirectory() + ".nomedia");
-        final File nomedia_audios = new File(getConversationsAudioDirectory() + ".nomedia");
+        final File nomedia_files = new File(getConversationsDirectory("Files") + ".nomedia");
+        final File nomedia_audios = new File(getConversationsDirectory("Audios") + ".nomedia");
         if (!nomedia_files.exists()) {
             try {
                 nomedia_files.createNewFile();
@@ -90,8 +90,8 @@ public class FileBackend {
     }
 
     public void updateMediaScanner(File file) {
-        if (file.getAbsolutePath().startsWith(getConversationsImageDirectory())
-                || file.getAbsolutePath().startsWith(getConversationsVideoDirectory())) {
+        if (file.getAbsolutePath().startsWith(getConversationsDirectory("Images"))
+                || file.getAbsolutePath().startsWith(getConversationsDirectory("Videos"))) {
             Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             intent.setData(Uri.fromFile(file));
             mXmppConnectionService.sendBroadcast(intent);
@@ -129,17 +129,17 @@ public class FileBackend {
         } else {
             String mime = message.getMimeType();
             if (mime != null && mime.startsWith("image")) {
-                file = new DownloadableFile(getConversationsImageDirectory() + path);
+                file = new DownloadableFile(getConversationsDirectory("Images") + path);
             } else if (mime != null && mime.startsWith("video")) {
-                file = new DownloadableFile(getConversationsVideoDirectory() + path);
+                file = new DownloadableFile(getConversationsDirectory("Videos") + path);
             } else if (mime != null && mime.startsWith("audio")) {
-                file = new DownloadableFile(getConversationsAudioDirectory() + path);
+                file = new DownloadableFile(getConversationsDirectory("Audios") + path);
             } else {
-                file = new DownloadableFile(getConversationsFileDirectory() + path);
+                file = new DownloadableFile(getConversationsDirectory("Files") + path);
             }
         }
         if (encrypted) {
-            return new DownloadableFile(getConversationsFileDirectory() + file.getName() + ".pgp");
+            return new DownloadableFile(getConversationsDirectory("Files") + file.getName() + ".pgp");
         } else {
             return file;
         }
@@ -168,24 +168,12 @@ public class FileBackend {
         return true;
     }
 
-    public static String getConversationsFileDirectory() {
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger/files/";
-    }
-
-    public static String getConversationsImageDirectory() {
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger/images/";
-    }
-
-    public static String getConversationsVideoDirectory() {
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger/videos/";
-    }
-
-    public static String getConversationsAudioDirectory() {
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger/audios/";
-    }
-
-    public static String getConversationsDirectory() {
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger/";
+    public static String getConversationsDirectory(final String type) {
+        if (type == "null") {
+            return Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger/";
+        } else {
+            return Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger" + "/" + type + "/";
+        }
     }
 
     public Bitmap resize(Bitmap originalBitmap, int size) {

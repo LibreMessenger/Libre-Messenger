@@ -40,7 +40,7 @@ import de.pixart.messenger.xmpp.jid.Jid;
 public class ExportLogsService extends Service {
 
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-    private static final String DIRECTORY_STRING_FORMAT = FileBackend.getConversationsDirectory() + "/chats/%s";
+    private static final String DIRECTORY_STRING_FORMAT = FileBackend.getConversationsDirectory("Chats") + "%s";
     private static final String MESSAGE_STRING_FORMAT = "(%s) %s: %s\n";
     private static final int NOTIFICATION_ID = 1;
     private static AtomicBoolean running = new AtomicBoolean(false);
@@ -179,7 +179,7 @@ public class ExportLogsService extends Service {
         // Get hold of the db:
         FileInputStream InputFile = new FileInputStream(this.getDatabasePath(DatabaseBackend.DATABASE_NAME));
         // Set the output folder on the SDcard
-        File directory = new File(FileBackend.getConversationsDirectory() + "/database/");
+        File directory = new File(FileBackend.getConversationsDirectory("Database"));
         // Create the folder if it doesn't exist:
         if (!directory.exists()) {
             directory.mkdirs();

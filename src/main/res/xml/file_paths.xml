@@ -3,4 +3,8 @@
     <external-path
         name="external"
         path="/" />
+    <files-path path="Images/" name="pictures" />
+    <files-path path="Videos" name="videos"/>
+    <files-path path="Files/" name="files" />
+    <files-path path="Audios/" name="audios" />
 </paths>

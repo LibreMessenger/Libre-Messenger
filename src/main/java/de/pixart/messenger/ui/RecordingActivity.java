@@ -120,7 +120,7 @@ public class RecordingActivity extends Activity implements View.OnClickListener 
 
     private File getOutputFile() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
-        return new File(FileBackend.getConversationsAudioDirectory() + "/"
+        return new File(FileBackend.getConversationsDirectory("Audios") + "/"
                 + dateFormat.format(new Date())
                 + ".m4a");
     }
