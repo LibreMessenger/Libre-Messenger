@@ -77,10 +77,6 @@ public final class Config {
     public static final int IMAGE_QUALITY = 75;
     public static final int IMAGE_MAX_SIZE = 1 * 1024 * 1024; // 1 MiB
 
-    public static final int VIDEO_SIZE = 640;
-    public static final int VIDEO_BITRATE = 2 * 1000 * 1000; // 2 Mbps
-    public static final int VIDEO_MAX_SIZE = 10 * 1024 * 1024; // 10 MiB
-
     public static final int DEFAULT_ZOOM = 15; //for locations
 
     public static final int MESSAGE_MERGE_WINDOW = 20;

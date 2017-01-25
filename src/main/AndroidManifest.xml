@@ -23,6 +23,8 @@
         android:name="android.permission.READ_PHONE_STATE"
         tools:node="remove" />
 
+    <uses-sdk tools:overrideLibrary="net.ypresto.androidtranscoder" />
+
     <application
         android:name="android.support.multidex.MultiDexApplication"
         android:allowBackup="true"

@@ -49,7 +49,6 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
     private class Share {
         public List<Uri> uris = new ArrayList<>();
         public boolean image;
-        public boolean video;
         public String account;
         public String contact;
         public String text;
@@ -66,7 +65,17 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
     private Toast mToast;
     private AtomicInteger attachmentCounter = new AtomicInteger(0);
 
-    private UiCallback<Message> attachFileCallback = new UiCallback<Message>() {
+    private UiInformableCallback<Message> attachFileCallback = new UiInformableCallback<Message>() {
+
+        @Override
+        public void inform(final String text) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    replaceToast(text);
+                }
+            });
+        }
 
         @Override
         public void userInputRequried(PendingIntent pi, Message object) {
@@ -86,8 +95,6 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
                             resId = R.string.shared_images_with_x;
                         } else if (share.image) {
                             resId = R.string.shared_image_with_x;
-                        } else if (share.video) {
-                            resId = R.string.shared_video_with_x;
                         } else {
                             resId = R.string.shared_file_with_x;
                         }
@@ -219,7 +226,6 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
                 this.share.uris.clear();
                 this.share.uris.add(uri);
                 this.share.image = type.startsWith("image/") || isImage(uri);
-                this.share.video = type.startsWith("video/") || isVideo(uri);
             } else {
                 if (subject != null) {
                     this.share.text = format("[%s]%n%s", subject, text);
@@ -260,15 +266,6 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
         try {
             String guess = URLConnection.guessContentTypeFromName(uri.toString());
             return (guess != null && guess.startsWith("image/"));
-        } catch (final StringIndexOutOfBoundsException ignored) {
-            return false;
-        }
-    }
-
-    protected boolean isVideo(Uri uri) {
-        try {
-            String guess = URLConnection.guessContentTypeFromName(uri.toString());
-            return (guess != null && guess.startsWith("video/"));
         } catch (final StringIndexOutOfBoundsException ignored) {
             return false;
         }
@@ -341,24 +338,16 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
                                     .attachImageToConversation(conversation, i.next(),
                                             attachFileCallback);
                         }
-                    } else if (share.video) {
-                        Log.d(Config.LOGTAG, "ShareWithActivity share() video " + share.uris.size() + " uri(s) " + share.uris.toString());
-                        replaceToast(getString(R.string.preparing_video));
-                        ShareWithActivity.this.xmppConnectionService
-                                .attachVideoToConversation(conversation, share.uris.get(0),
-                                        attachFileCallback);
                     } else {
                         Log.d(Config.LOGTAG, "ShareWithActivity share() file " + share.uris.size() + " uri(s) " + share.uris.toString());
                         replaceToast(getString(R.string.preparing_file));
                         ShareWithActivity.this.xmppConnectionService
-                                .attachFileToConversation(conversation, share.uris.get(0),
-                                        attachFileCallback);
+                                .attachFileToConversation(conversation, share.uris.get(0), attachFileCallback);
                     }
                 }
             };
             if (account.httpUploadAvailable()
                     && ((share.image && !neverCompressPictures())
-                    || share.video
                     || conversation.getMode() == Conversation.MODE_MULTI
                     || FileBackend.allFilesUnderSize(this, share.uris, max))
                     && conversation.getNextEncryption() != Message.ENCRYPTION_OTR) {

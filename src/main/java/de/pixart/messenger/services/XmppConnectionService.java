@@ -16,12 +16,12 @@ import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
+import android.os.ParcelFileDescriptor;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.SystemClock;
@@ -29,7 +29,6 @@ import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.security.KeyChain;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.RemoteInput;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -41,16 +40,15 @@ import net.java.otr4j.session.Session;
 import net.java.otr4j.session.SessionID;
 import net.java.otr4j.session.SessionImpl;
 import net.java.otr4j.session.SessionStatus;
+import net.ypresto.androidtranscoder.MediaTranscoder;
+import net.ypresto.androidtranscoder.format.MediaFormatStrategyPresets;
 
 import org.openintents.openpgp.IOpenPgpService2;
 import org.openintents.openpgp.util.OpenPgpApi;
 import org.openintents.openpgp.util.OpenPgpServiceConnection;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
@@ -61,7 +59,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -108,11 +105,10 @@ import de.pixart.messenger.persistance.DatabaseBackend;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.ui.SettingsActivity;
 import de.pixart.messenger.ui.UiCallback;
+import de.pixart.messenger.ui.UiInformableCallback;
 import de.pixart.messenger.utils.ConversationsFileObserver;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.ExceptionHelper;
-import de.pixart.messenger.utils.FileUtils;
-import de.pixart.messenger.utils.FileWriterException;
 import de.pixart.messenger.utils.MimeUtils;
 import de.pixart.messenger.utils.OnPhoneContactsLoadedListener;
 import de.pixart.messenger.utils.PRNGFixes;
@@ -121,7 +117,6 @@ import de.pixart.messenger.utils.ReplacingSerialSingleThreadExecutor;
 import de.pixart.messenger.utils.SerialSingleThreadExecutor;
 import de.pixart.messenger.utils.Xmlns;
 import de.pixart.messenger.utils.XmppUri;
-import de.pixart.messenger.utils.video.MediaController;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.OnBindListener;
 import de.pixart.messenger.xmpp.OnContactStatusChanged;
@@ -147,8 +142,6 @@ import de.pixart.messenger.xmpp.stanzas.MessagePacket;
 import de.pixart.messenger.xmpp.stanzas.PresencePacket;
 import me.leolin.shortcutbadger.ShortcutBadger;
 
-import static de.pixart.messenger.persistance.FileBackend.close;
-
 public class XmppConnectionService extends Service {
 
     public static final String ACTION_REPLY_TO_CONVERSATION = "reply_to_conversations";
@@ -160,10 +153,8 @@ public class XmppConnectionService extends Service {
     public static final String ACTION_GCM_TOKEN_REFRESH = "gcm_token_refresh";
     public static final String ACTION_GCM_MESSAGE_RECEIVED = "gcm_message_received";
     private static final String ACTION_MERGE_PHONE_CONTACTS = "merge_phone_contacts";
-    public static VideoCompressor CompressVideo;
     private final SerialSingleThreadExecutor mFileAddingExecutor = new SerialSingleThreadExecutor();
     private final SerialSingleThreadExecutor mDatabaseExecutor = new SerialSingleThreadExecutor();
-    private final SerialSingleThreadExecutor mCopyVideoExecutor = new SerialSingleThreadExecutor();
     private final IBinder mBinder = new XmppConnectionBinder();
     private final List<Conversation> conversations = new CopyOnWriteArrayList<>();
     private final IqGenerator mIqGenerator = new IqGenerator(this);
@@ -172,7 +163,6 @@ public class XmppConnectionService extends Service {
     public DatabaseBackend databaseBackend;
     private ReplacingSerialSingleThreadExecutor mContactMergerExecutor = new ReplacingSerialSingleThreadExecutor(true);
     private WakeLock wakeLock;
-    private WakeLock VideoCompressionWakeLock;
     private long mLastActivity = 0;
     private NotificationManager mNotifyManager;
     private ContentObserver contactObserver = new ContentObserver(null) {
@@ -474,11 +464,9 @@ public class XmppConnectionService extends Service {
         }
         message.setCounterpart(conversation.getNextCounterpart());
         message.setType(Message.TYPE_FILE);
-        final String path = getFileBackend().getOriginalPath(uri);
-        Log.d(Config.LOGTAG, "File path = " + path);
         mFileAddingExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
+            private void processAsFile() {
+                final String path = getFileBackend().getOriginalPath(uri);
                 if (path != null) {
                     message.setRelativeFilePath(path);
                     getFileBackend().updateFileParams(message);
@@ -505,6 +493,72 @@ public class XmppConnectionService extends Service {
                         callback.error(e.getResId(), message);
                     }
                 }
+            }
+
+            private void processAsVideo() throws FileNotFoundException {
+                Log.d(Config.LOGTAG, "processing file as video");
+                message.setRelativeFilePath(message.getUuid() + ".mp4");
+                final DownloadableFile file = getFileBackend().getFile(message);
+                file.getParentFile().mkdirs();
+                ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(uri, "r");
+                FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+                final ArrayList<Integer> progressTracker = new ArrayList<>();
+                final UiInformableCallback<Message> informableCallback;
+                if (callback instanceof UiInformableCallback) {
+                    informableCallback = (UiInformableCallback<Message>) callback;
+                } else {
+                    informableCallback = null;
+                }
+                MediaTranscoder.Listener listener = new MediaTranscoder.Listener() {
+                    @Override
+                    public void onTranscodeProgress(double progress) {
+                        int p = ((int) Math.round(progress * 100) / 5) * 5;
+                        if (!progressTracker.contains(p) && p != 100 && p != 0) {
+                            progressTracker.add(p);
+                            if (informableCallback != null) {
+
+                                informableCallback.inform(getString(R.string.transcoding_video_progress, p));
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onTranscodeCompleted() {
+                        if (message.getEncryption() == Message.ENCRYPTION_DECRYPTED) {
+                            getPgpEngine().encrypt(message, callback);
+                        } else {
+                            callback.success(message);
+                        }
+                    }
+
+                    @Override
+                    public void onTranscodeCanceled() {
+                        processAsFile();
+                    }
+
+                    @Override
+                    public void onTranscodeFailed(Exception e) {
+                        Log.d(Config.LOGTAG, "video transcoding failed " + e.getMessage());
+                        processAsFile();
+                    }
+                };
+                MediaTranscoder.getInstance().transcodeVideo(fileDescriptor, file.getAbsolutePath(),
+                        MediaFormatStrategyPresets.createAndroid720pStrategy(), listener);
+            }
+
+            @Override
+            public void run() {
+                final String mimeType = MimeUtils.guessMimeTypeFromUri(XmppConnectionService.this, uri);
+                if (mimeType != null && mimeType.startsWith("video/") && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                    try {
+                        processAsVideo();
+                    } catch (Throwable e) {
+                        processAsFile();
+                    }
+                } else {
+                    processAsFile();
+                }
+
             }
         });
     }
@@ -553,143 +607,6 @@ public class XmppConnectionService extends Service {
                 }
             }
         });
-    }
-
-    public void attachVideoToConversation(final Conversation conversation, final Uri uri, final UiCallback<Message> callback) {
-        final Integer NOTIFICATION_ID = (int) (new Date().getTime() / 1000);
-        final int[] success = {-1};
-        File outputDir = this.getCacheDir();
-        File file = null;
-        try {
-            file = File.createTempFile("temp-", "." + FileUtils.getExtension(this, uri), outputDir);
-        } catch (IOException e) {
-            Log.d(Config.LOGTAG, "error creating temp file");
-        }
-        long filesize = 0;
-        String path = null;
-        Boolean error = false;
-
-        final File finalFile = file;
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    finalFile.getParentFile().mkdirs();
-                    Log.d(Config.LOGTAG, "copy video (" + uri.toString() + ") to temporarly storage " + finalFile.getAbsolutePath());
-                    OutputStream os = null;
-                    InputStream is = null;
-                    try {
-                        finalFile.createNewFile();
-                        os = new FileOutputStream(finalFile);
-                        is = XmppConnectionService.this.getContentResolver().openInputStream(uri);
-                        byte[] buffer = new byte[1024];
-                        int length;
-                        while ((length = is.read(buffer)) > 0) {
-                            try {
-                                os.write(buffer, 0, length);
-                            } catch (IOException e) {
-                                throw new FileWriterException();
-                            }
-                        }
-                        try {
-                            os.flush();
-                        } catch (IOException e) {
-                            throw new FileWriterException();
-                        }
-                    } catch (Exception e) {
-                        Log.d(Config.LOGTAG, "cannot copy video " + e);
-                        success[0] = 2;
-                    } finally {
-                        success[0] = 1;
-                        close(os);
-                        close(is);
-                    }
-                } catch (Exception e) {
-                    Log.d(Config.LOGTAG, "cannot copy video " + e);
-                }
-            }
-        }).start();
-
-        while (success[0] == -1) {
-            //ignored
-            //Log.d(Config.LOGTAG, "Wait while copying video");
-        }
-        if (success[0] == 2) {
-            mNotifyManager.cancel(NOTIFICATION_ID);
-            callback.error(R.string.error_file_corrupt, null);
-            return;
-        }
-        if (success[0] == 1) {
-            try {
-                filesize = file.length();
-                path = file.toString();
-            } catch (Exception e) {
-                error = true;
-                Log.d(Config.LOGTAG, "Error retrieving file path " + e);
-            }
-            final String compressVideos = getCompressVideoPreference();
-            boolean sendVideoAsIs = false;
-            mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getBaseContext());
-            mBuilder.setContentTitle(getString(R.string.app_name))
-                    .setContentText(getString(R.string.compressing_video))
-                    .setSmallIcon(R.drawable.ic_play_box_outline_white_24dp)
-                    .setOngoing(true)
-                    .setProgress(0, 0, true);
-            mNotifyManager.notify(NOTIFICATION_ID, mBuilder.build());
-            if (FileBackend.weOwnFile(this, uri)) {
-                Log.d(Config.LOGTAG, "trying to attach video that belonged to us");
-                mNotifyManager.cancel(NOTIFICATION_ID);
-                callback.error(R.string.security_error_invalid_file_access, null);
-                return;
-            }
-            if (file == null) {
-                error = true;
-            }
-            if (filesize == 0) {
-                error = true;
-            }
-            if (error) {
-                Log.d(Config.LOGTAG, "Error with file, size = 0");
-                mNotifyManager.cancel(NOTIFICATION_ID);
-                callback.error(R.string.error_file_corrupt, null);
-                return;
-            }
-            Log.d(Config.LOGTAG, "Video file (size) :" + file.toString() + "(" + filesize / 1024 / 1024 + "MB)");
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
-            File compressed_file = new File(FileBackend.getConversationsVideoDirectory() + "/"
-                    + dateFormat.format(new Date())
-                    + "_komp.mp4");
-            final String compressed_path = compressed_file.toString();
-            final Uri compressed_uri = Uri.fromFile(compressed_file);
-            if ("never".equals(compressVideos)) {
-                sendVideoAsIs = true;
-            } else if ("always".equals(compressVideos) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                sendVideoAsIs = false;
-            } else if ("auto".equals(compressVideos) && filesize > Config.VIDEO_MAX_SIZE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                sendVideoAsIs = false;
-            } else {
-                sendVideoAsIs = true;
-            }
-            if (!sendVideoAsIs) {
-                CompressVideo = new VideoCompressor(path, compressed_path, new Interface() {
-                    @Override
-                    public void videocompressed(boolean result) {
-                        if (result) {
-                            Log.d(Config.LOGTAG, conversation.getAccount().getJid().toBareJid() + ": sending compressed video.");
-                            mNotifyManager.cancel(NOTIFICATION_ID);
-                            attachFileToConversation(conversation, compressed_uri, callback);
-                        }
-                    }
-                });
-                CompressVideo.execute();
-            } else {
-                Log.d(Config.LOGTAG, conversation.getAccount().getJid().toBareJid() + ": not compressing video. sending as file");
-                mNotifyManager.cancel(NOTIFICATION_ID);
-                attachFileToConversation(conversation, uri, callback);
-            }
-        }
     }
 
     public Conversation find(Bookmark bookmark) {
@@ -941,10 +858,6 @@ public class XmppConnectionService extends Service {
         return getPreferences().getString("picture_compression", "auto");
     }
 
-    private String getCompressVideoPreference() {
-        return getPreferences().getString("video_compression", "auto");
-    }
-
     private Presence.Status getTargetPresence() {
         if (xaOnSilentMode() && isPhoneSilenced()) {
             return Presence.Status.XA;
@@ -1110,7 +1023,6 @@ public class XmppConnectionService extends Service {
 
         this.pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         this.wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "XmppConnectionService");
-        this.VideoCompressionWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "VideoCompression");
         toggleForegroundService();
         updateUnreadCountBadge();
         toggleScreenEventReceiver();
@@ -3943,10 +3855,6 @@ public class XmppConnectionService extends Service {
         }
     }
 
-    public interface Interface {
-        void videocompressed(boolean result);
-    }
-
     public interface OnMamPreferencesFetched {
         void onPreferencesFetched(Element prefs);
 
@@ -4024,46 +3932,6 @@ public class XmppConnectionService extends Service {
 
     public interface OnShowErrorToast {
         void onShowErrorToast(int resId);
-    }
-
-    class VideoCompressor extends AsyncTask<String, Void, Boolean> {
-        private String originalpath;
-        private String compressedpath;
-        private Interface mListener;
-
-        VideoCompressor(String path, String compressed_path, Interface mListener) {
-            originalpath = path;
-            compressedpath = compressed_path;
-            this.mListener = mListener;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Log.d(Config.LOGTAG, "Start video compression");
-            VideoCompressionWakeLock.acquire();
-        }
-
-        @Override
-        protected Boolean doInBackground(String... params) {
-            return MediaController.getInstance().convertVideo(originalpath, compressedpath);
-        }
-
-        @Override
-        protected void onPostExecute(Boolean compressed) {
-            super.onPostExecute(compressed);
-            File video = new File(compressedpath);
-            if (mListener != null) {
-                if (video.exists() && video.length() > 0) {
-                    mListener.videocompressed(compressed);
-                    Log.d(Config.LOGTAG, "Compression successfully!");
-                } else {
-                    mListener.videocompressed(false);
-                    Log.d(Config.LOGTAG, "Compression failed!");
-                }
-            }
-            VideoCompressionWakeLock.release();
-        }
     }
 
     public class XmppConnectionBinder extends Binder {

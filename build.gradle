@@ -62,6 +62,7 @@ dependencies {
     compile 'pub.devrel:easypermissions:0.1.9'
     compile 'com.wefika:flowlayout:0.4.1'
     compile 'com.googlecode.ez-vcard:ez-vcard:0.10.0'
+    compile 'net.ypresto.androidtranscoder:android-transcoder:0.2.0'
 }
 
 ext {
@@ -79,9 +80,8 @@ android {
         minSdkVersion 14
         targetSdkVersion 25
 
-        versionCode 182
-        //versionName "1.15.4"
-        versionName "1.15.5 beta (2017-01-09)"
+        versionCode 183
+        versionName "1.16.0 beta (2017-01-25)"
 
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"

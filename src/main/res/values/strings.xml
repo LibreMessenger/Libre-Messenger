@@ -731,4 +731,5 @@
     <string name="hide_inactive_devices">Hide inactive devices</string>
     <string name="reply">Reply</string>
     <string name="encrypting_message">Encrypting message</string>
+    <string name="transcoding_video_progress">Compressing video (%s%% completed)</string>
 </resources>
