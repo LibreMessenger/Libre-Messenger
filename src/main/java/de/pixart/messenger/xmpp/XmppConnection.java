@@ -1386,6 +1386,9 @@ public class XmppConnection implements Runnable {
     }
 
     private void forceCloseSocket() {
+        if (tagWriter != null) {
+            tagWriter.forceClose();
+        }
         if (socket != null) {
             try {
                 socket.close();
@@ -1405,7 +1408,6 @@ public class XmppConnection implements Runnable {
         interrupt();
         Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": disconnecting force=" + Boolean.valueOf(force));
         if (force) {
-            tagWriter.forceClose();
             forceCloseSocket();
         } else {
             if (tagWriter.isActive()) {
