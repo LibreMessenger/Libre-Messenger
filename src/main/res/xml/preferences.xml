@@ -115,13 +115,6 @@
             android:key="picture_compression"
             android:summary="@string/pref_picture_compression_summary"
             android:title="@string/pref_picture_compression" />
-        <ListPreference
-            android:defaultValue="auto"
-            android:entries="@array/video_compression_entries"
-            android:entryValues="@array/video_compression_values"
-            android:key="video_compression"
-            android:summary="@string/pref_video_compression_summary"
-            android:title="@string/pref_video_compression" />
     </PreferenceScreen>
     <!--status-->
     <PreferenceScreen
@@ -231,7 +224,7 @@
                 android:defaultValue="true"
                 android:key="btbv"
                 android:title="@string/pref_blind_trust_before_verification"
-                android:summary="@string/pref_blind_trust_before_verification_summary"/>
+                android:summary="@string/pref_blind_trust_before_verification_summary" />
             <CheckBoxPreference
                 android:defaultValue="false"
                 android:key="dont_save_encrypted"

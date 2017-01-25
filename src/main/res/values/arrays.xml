@@ -70,18 +70,6 @@
         <item>@string/always</item>
     </string-array>
 
-    <string-array name="video_compression_values">
-        <item>never</item>
-        <item>auto</item>
-        <item>always</item>
-    </string-array>
-
-    <string-array name="video_compression_entries">
-        <item>@string/never</item>
-        <item>@string/automatically</item>
-        <item>@string/always</item>
-    </string-array>
-
     <string-array name="mam_prefs">
         <item>@string/never</item>
         <item>@string/contacts</item>

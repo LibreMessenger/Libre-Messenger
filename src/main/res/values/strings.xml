@@ -583,8 +583,6 @@
     <string name="notify_paused">Notifications paused</string>
     <string name="pref_picture_compression">Compress Pictures</string>
     <string name="pref_picture_compression_summary">Resize and compress pictures</string>
-    <string name="pref_video_compression">Compress Videos</string>
-    <string name="pref_video_compression_summary">Resize and compress Videos</string>
     <string name="always">Always</string>
     <string name="automatically">Automatically</string>
     <string name="battery_optimizations_enabled">Battery optimizations enabled</string>
@@ -676,9 +674,6 @@
     <string name="contact_asks_for_presence_subscription">Contact asks for presence subscription</string>
     <string name="allow">Allow</string>
     <string name="attach_choose_video">Choose video</string>
-    <string name="preparing_video">Prepare video for transmission. Please wait…</string>
-    <string name="compressing_video">Compressing video, please wait…</string>
-    <string name="shared_video_with_x">Shared video with %s</string>
     <string name="no_permission_to_access_x">No permission to access %s</string>
     <string name="remote_server_not_found">Remote server not found</string>
     <string name="error_file_corrupt">This file seems to be corrupt.</string>

@@ -31,8 +31,6 @@ dependencies {
     compile project(':libs:MemorizingTrustManager')
     compile project(':libs:audiowife')
     compile project(':libs:emojicon')
-    compile files('libs/aspectjrt-1.7.3.jar')
-    compile files('libs/isoparser-1.0.6.jar')
     playstoreCompile 'com.google.android.gms:play-services-gcm:10.0.1'
     compile 'org.sufficientlysecure:openpgp-api:10.0'
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
@@ -139,7 +137,7 @@ android {
                 signingConfig = signingConfigs.release
                 minifyEnabled true
                 runProguard true
-                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),'proguard-rules.pro'
+                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             }
         }
     }

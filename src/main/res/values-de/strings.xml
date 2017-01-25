@@ -334,9 +334,6 @@
     <string name="regenerate_omemo_key">OMEMO-Fingerabdruck erneuern</string>
     <string name="clear_other_devices">Geräte entfernen</string>
     <string name="clear_other_devices_desc">Alle anderen Geräte aus der OMEMO-Bekanntmachung entfernen? Die Bekanntmachung wird bei der nächsten Verbindung erneuert, möglicherweise werden aber nicht alle Nachrichten empfangen, die in der Zwischenzeit versendet wurden.</string>
-    <string name="purge_key">Fingerabdruck löschen</string>
-    <string name="purge_key_desc_part1">Soll dieser Fingerabdruck gelöscht werden?</string>
-    <string name="purge_key_desc_part2">Dieser Vorgang kann nicht rückgängig gemacht werden und es kann nie wieder eine Verbindung mit diesem Fingerabdruck hergestellt werden.</string>
     <string name="error_no_keys_to_trust_server_error">Für diesen Kontakt sind keine benutzbaren Fingerabdrücke verfügbar.\nNeuen Fingerabdruck vom Server herunterzuladen war nicht erfolgreich. Vielleicht stimmt etwas mit dem Server deines Kontakts nicht.</string>
     <string name="error_no_keys_to_trust">Es sind keine Fingerabdrücke für diesen Kontakt verfügbar. Falls sie gelöscht wurden, müssen diese neu erstellt werden.</string>
     <string name="error_trustkeys_title">Fehler</string>
@@ -621,9 +618,6 @@
     <string name="pref_export_plain_text_logs_summary">Aktiviere den Export von Chats als lesbare Text-Dateien</string>
     <string name="allow">Erlauben</string>
     <string name="attach_choose_video">Video auswählen</string>
-    <string name="compressing_video">Video wird komprimiert, bitte warten…</string>
-    <string name="preparing_video">Video wird für die Übertragung vorbereitet. Bitte warten…</string>
-    <string name="shared_video_with_x">Video mit %s geteilt</string>
     <string name="error_file_corrupt">Die Datei scheint defekt zu sein.</string>
     <string name="me">Ich</string>
     <string name="missing_internet_permission">Fehlende Berechtigung für den Zugriff auf das Internet</string>
@@ -663,8 +657,6 @@
     <string name="copy_fingerprint">Fingerabdruck kopieren</string>
     <string name="device_does_not_support_data_saver">Dein Gerät unterstützt den Datensparmodus für Pix-Art Messenger nicht.</string>
     <string name="error_unable_to_create_temporary_file">Temporäre Datei kann nicht erstellt werden</string>
-    <string name="pref_video_compression">Videos komprimieren</string>
-    <string name="pref_video_compression_summary">Videogröße anpassen und komprimieren</string>
     <string name="this_device_has_been_verified">Dieses Gerät wurde verifiziert</string>
     <string name="barcode_does_not_contain_fingerprints_for_this_conversation">Barcode enthält keine Fingerabdrücke für diese Unterhaltung.</string>
     <string name="blindly_trusted_omemo_keys">Blind vertraute OMEMO-Fingerabdrücke</string>
