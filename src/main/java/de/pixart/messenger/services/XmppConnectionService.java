@@ -59,6 +59,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -497,7 +498,8 @@ public class XmppConnectionService extends Service {
 
             private void processAsVideo() throws FileNotFoundException {
                 Log.d(Config.LOGTAG, "processing file as video");
-                message.setRelativeFilePath(message.getUuid() + ".mp4");
+                SimpleDateFormat fileDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
+                message.setRelativeFilePath(fileDateFormat.format(new Date(message.getTimeSent())) + "_" + message.getUuid().substring(0, 4) + "_komp.mp4");
                 final DownloadableFile file = getFileBackend().getFile(message);
                 file.getParentFile().mkdirs();
                 ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(uri, "r");
@@ -543,7 +545,7 @@ public class XmppConnectionService extends Service {
                     }
                 };
                 MediaTranscoder.getInstance().transcodeVideo(fileDescriptor, file.getAbsolutePath(),
-                        MediaFormatStrategyPresets.createAndroid720pStrategy(), listener);
+                        MediaFormatStrategyPresets.createAndroid720pStrategy(Config.VIDEO_BITRATE), listener);
             }
 
             @Override
