@@ -69,6 +69,7 @@ import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicLong;
 
 import de.duenndns.ssl.MemorizingTrustManager;
 import de.pixart.messenger.Config;
@@ -300,6 +301,7 @@ public class XmppConnectionService extends Service {
         }
     };
     private int keyStatusUpdatedListenerCount = 0;
+    private AtomicLong mLastExpiryRun = new AtomicLong(0);
     private SecureRandom mRandom;
     private LruCache<Pair<String, String>, ServiceDiscoveryResult> discoCache = new LruCache<>(20);
     private OnStatusChanged statusListener = new OnStatusChanged() {
@@ -518,7 +520,6 @@ public class XmppConnectionService extends Service {
                         if (!progressTracker.contains(p) && p != 100 && p != 0) {
                             progressTracker.add(p);
                             if (informableCallback != null) {
-
                                 informableCallback.inform(getString(R.string.transcoding_video_progress, p));
                             }
                         }
@@ -560,7 +561,6 @@ public class XmppConnectionService extends Service {
                 } else {
                     processAsFile();
                 }
-
             }
         });
     }
@@ -714,6 +714,9 @@ public class XmppConnectionService extends Service {
                 } catch (final RuntimeException ignored) {
                 }
             }
+        }
+        if (SystemClock.elapsedRealtime() - mLastExpiryRun.get() >= Config.EXPIRY_INTERVAL) {
+            expireOldMessages();
         }
         return START_STICKY;
     }
@@ -923,6 +926,33 @@ public class XmppConnectionService extends Service {
                 }
             }
         }
+    }
+
+    private void expireOldMessages() {
+        expireOldMessages(false);
+    }
+
+    public void expireOldMessages(final boolean resetHasMessagesLeftOnServer) {
+        mLastExpiryRun.set(SystemClock.elapsedRealtime());
+        mDatabaseExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                long timestamp = getAutomaticMessageDeletionDate();
+                if (timestamp > 0) {
+                    databaseBackend.expireOldMessages(timestamp);
+                    synchronized (XmppConnectionService.this.conversations) {
+                        for (Conversation conversation : XmppConnectionService.this.conversations) {
+                            conversation.expireOldMessages(timestamp);
+                            if (resetHasMessagesLeftOnServer) {
+                                conversation.messagesLoaded.set(true);
+                                conversation.setHasMessagesLeftOnServer(true);
+                            }
+                        }
+                    }
+                    updateConversationUi();
+                }
+            }
+        });
     }
 
     public boolean hasInternetConnection() {
@@ -1338,12 +1368,10 @@ public class XmppConnectionService extends Service {
             if (addToConversation) {
                 conversation.add(message);
             }
-            if (message.getEncryption() == Message.ENCRYPTION_NONE || saveEncryptedMessages()) {
-                if (saveInDb) {
-                    databaseBackend.createMessage(message);
-                } else if (message.edited()) {
-                    databaseBackend.updateMessage(message, message.getEditedId());
-                }
+            if (saveInDb) {
+                databaseBackend.createMessage(message);
+            } else if (message.edited()) {
+                databaseBackend.updateMessage(message, message.getEditedId());
             }
             updateConversationUi();
         }
@@ -1453,6 +1481,12 @@ public class XmppConnectionService extends Service {
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
+                    long deletionDate = getAutomaticMessageDeletionDate();
+                    mLastExpiryRun.set(SystemClock.elapsedRealtime());
+                    if (deletionDate > 0) {
+                        Log.d(Config.LOGTAG, "deleting messages that are older than " + AbstractGenerator.getTimestamp(deletionDate));
+                        databaseBackend.expireOldMessages(deletionDate);
+                    }
                     Log.d(Config.LOGTAG, "restoring roster");
                     for (Account account : accounts) {
                         databaseBackend.readRoster(account.getRoster());
@@ -1624,8 +1658,10 @@ public class XmppConnectionService extends Service {
                         MessageArchiveService.Query query = getMessageArchiveService().query(conversation, 0, timestamp);
                         if (query != null) {
                             query.setCallback(callback);
+                            callback.informUser(R.string.fetching_history_from_server);
+                        } else {
+                            callback.informUser(R.string.not_fetching_history_retention_period);
                         }
-                        callback.informUser(R.string.fetching_history_from_server);
                     }
                 }
             }
@@ -3152,6 +3188,15 @@ public class XmppConnectionService extends Service {
                 .getDefaultSharedPreferences(getApplicationContext());
     }
 
+    public long getAutomaticMessageDeletionDate() {
+        try {
+            final long timeout = Long.parseLong(getPreferences().getString(SettingsActivity.AUTOMATIC_MESSAGE_DELETION, "0")) * 1000;
+            return timeout == 0 ? timeout : System.currentTimeMillis() - timeout;
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
     public boolean confirmMessages() {
         return getPreferences().getBoolean("confirm_messages", true);
     }
@@ -3162,10 +3207,6 @@ public class XmppConnectionService extends Service {
 
     public boolean sendChatStates() {
         return getPreferences().getBoolean("chat_states", true);
-    }
-
-    public boolean saveEncryptedMessages() {
-        return !getPreferences().getBoolean("dont_save_encrypted", false);
     }
 
     private boolean respectAutojoin() {

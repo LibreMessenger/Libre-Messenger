@@ -20,7 +20,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.crypto.PgpDecryptionService;
@@ -90,6 +92,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
     private String mLastReceivedOtrMessageId = null;
     private String mFirstMamReference = null;
     private Message correctingMessage;
+    public AtomicBoolean messagesLoaded = new AtomicBoolean(true);
 
     public boolean hasMessagesLeftOnServer() {
         return messagesLeftOnServer;
@@ -941,6 +944,17 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
             this.messages.addAll(index, messages);
         }
         account.getPgpDecryptionService().decrypt(messages);
+    }
+
+    public void expireOldMessages(long timestamp) {
+        synchronized (this.messages) {
+            for (ListIterator<Message> iterator = this.messages.listIterator(); iterator.hasNext(); ) {
+                if (iterator.next().getTimeSent() < timestamp) {
+                    iterator.remove();
+                }
+            }
+            untieMessages();
+        }
     }
 
     public void sort() {

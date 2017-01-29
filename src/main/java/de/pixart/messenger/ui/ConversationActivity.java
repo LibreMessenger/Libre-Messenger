@@ -2137,11 +2137,4 @@ public class ConversationActivity extends XmppActivity
             startActivity(intent);
         }
     }
-
-    public void setMessagesLoaded() {
-        if (mConversationFragment != null) {
-            mConversationFragment.setMessagesLoaded();
-            mConversationFragment.updateMessages();
-        }
-    }
 }

@@ -681,5 +681,12 @@
     <string name="distrust_omemo_key">Gerät misstrauen</string>
     <string name="distrust_omemo_key_text">Bist du sicher, dass du die Verifizierung dieses Gerätes misstrauen möchtest? Dieses Gerät und Nachrichten von dem Gerät werden als unverifiziert markiert.</string>
     <string name="transcoding_video_progress">Video wird komprimiert (%s%% fertiggestellt)</string>
+    <string name="encrypting_message">Nachricht wird verschlüsselt</string>
+    <string name="pref_automatically_delete_messages">Nachrichten automatisch löschen</string>
+    <string name="pref_automatically_delete_messages_description">Nachrichten von diesel Gerät nach dem eingestellten Zeitfenster automatisch löschen.</string>
+    <string name="timeout_24_hours">24 Studnen</string>
+    <string name="timeout_30_days">30 Tage</string>
+    <string name="timeout_6_months">6 Monate</string>
+    <string name="timeout_7_days">7 Tage</string>
 
 </resources>

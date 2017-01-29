@@ -62,6 +62,7 @@ import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.Message.FileParams;
 import de.pixart.messenger.entities.Transferable;
 import de.pixart.messenger.persistance.FileBackend;
+import de.pixart.messenger.services.MessageArchiveService;
 import de.pixart.messenger.services.NotificationService;
 import de.pixart.messenger.ui.ConversationActivity;
 import de.pixart.messenger.ui.ShowFullscreenMessageActivity;
@@ -679,9 +680,13 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         if (timestamp == 0) {
             timestamp = System.currentTimeMillis();
         }
-        activity.setMessagesLoaded();
-        activity.xmppConnectionService.getMessageArchiveService().query(conversation, 0, timestamp);
-        Toast.makeText(activity, R.string.fetching_history_from_server, Toast.LENGTH_LONG).show();
+        conversation.messagesLoaded.set(true);
+        MessageArchiveService.Query query = activity.xmppConnectionService.getMessageArchiveService().query(conversation, 0, timestamp);
+        if (query != null) {
+            Toast.makeText(activity, R.string.fetching_history_from_server, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(activity, R.string.not_fetching_history_retention_period, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
