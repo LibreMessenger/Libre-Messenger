@@ -55,7 +55,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
     private static DatabaseBackend instance = null;
 
     public static final String DATABASE_NAME = "history";
-    public static final int DATABASE_VERSION = 33;
+    public static final int DATABASE_VERSION = 34;
 
     private static String CREATE_CONTATCS_STATEMENT = "create table "
             + Contact.TABLENAME + "(" + Contact.ACCOUNT + " TEXT, "
@@ -144,6 +144,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 
     private static String START_TIMES_TABLE = "start_times";
     private static String CREATE_START_TIMES_TABLE = "create table " + START_TIMES_TABLE + " (timestamp NUMBER);";
+    private static String CREATE_MESSAGE_TIME_INDEX = "create INDEX message_time_index ON " + Message.TABLENAME + "(" + Message.TIME_SENT + ")";
 
     private DatabaseBackend(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -193,6 +194,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
                 + Conversation.TABLENAME + "(" + Conversation.UUID
                 + ") ON DELETE CASCADE);");
 
+        db.execSQL(CREATE_MESSAGE_TIME_INDEX);
         db.execSQL(CREATE_CONTATCS_STATEMENT);
         db.execSQL(CREATE_DISCOVERY_RESULTS_STATEMENT);
         db.execSQL(CREATE_SESSIONS_STATEMENT);
@@ -386,6 +388,10 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         if (oldVersion < 33 && newVersion >= 33) {
             String whereClause = SQLiteAxolotlStore.OWN+"=1";
             db.update(SQLiteAxolotlStore.IDENTITIES_TABLENAME,createFingerprintStatusContentValues(FingerprintStatus.Trust.VERIFIED,true),whereClause,null);
+        }
+        if (oldVersion < 34 && newVersion >= 34) {
+            db.execSQL(CREATE_MESSAGE_TIME_INDEX);
+            // do nothing else at this point because we have seperated videos, images, audios and other files in different directories
         }
     }
 
