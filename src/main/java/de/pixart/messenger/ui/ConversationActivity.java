@@ -376,79 +376,18 @@ public class ConversationActivity extends XmppActivity
         String PREFS_NAME = "UpdateTimeStamp";
         SharedPreferences UpdateTimeStamp = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         long lastUpdateTime = UpdateTimeStamp.getLong("lastUpdateTime", 0);
-
-        //detect installed plugins and deinstall them
-        PackageInfo pInfo = null;
-        try {
-            pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        //get the app version Name for display
-        final int versionCode = pInfo.versionCode;
-        // delete voice recorder and location plugin for versions >= 142 (1.12.1)
-        if (versionCode >= 142) {
-            Log.d(Config.LOGTAG, "New Features - Uninstall plugins");
-            if (isPackageInstalled("eu.siacs.conversations.voicerecorder") || isPackageInstalled("eu.siacs.conversations.sharelocation") || isPackageInstalled("com.samwhited.opensharelocationplugin")) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(ConversationActivity.this);
-                builder.setMessage(R.string.uninstall_plugins)
-                        .setPositiveButton(R.string.uninstall, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //start the deinstallation of voice recorder
-                                if (isPackageInstalled("eu.siacs.conversations.voicerecorder")) {
-                                    Uri packageURI_VR = Uri.parse("package:eu.siacs.conversations.voicerecorder");
-                                    Intent uninstallIntent_VR = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageURI_VR);
-                                    if (uninstallIntent_VR.resolveActivity(getPackageManager()) != null) {
-                                        Log.d(Config.LOGTAG, "New Features - Uninstall voice recorder");
-                                        startActivity(uninstallIntent_VR);
-                                    }
-                                }
-                                //start the deinstallation of share location
-                                if (isPackageInstalled("eu.siacs.conversations.sharelocation")) {
-                                    Uri packageURI_SL = Uri.parse("package:eu.siacs.conversations.sharelocation");
-                                    Intent uninstallIntent_SL = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageURI_SL);
-                                    if (uninstallIntent_SL.resolveActivity(getPackageManager()) != null) {
-                                        Log.d(Config.LOGTAG, "New Features - Uninstall share location");
-                                        startActivity(uninstallIntent_SL);
-                                    }
-                                }
-                                //start the deinstallation of open share location
-                                if (isPackageInstalled("com.samwhited.opensharelocationplugin")) {
-                                    Uri packageURI_SL = Uri.parse("package:com.samwhited.opensharelocationplugin");
-                                    Intent uninstallIntent_SL = new Intent(Intent.ACTION_UNINSTALL_PACKAGE, packageURI_SL);
-                                    if (uninstallIntent_SL.resolveActivity(getPackageManager()) != null) {
-                                        Log.d(Config.LOGTAG, "New Features - Uninstall open share location");
-                                        startActivity(uninstallIntent_SL);
-                                    }
-                                }
-                            }
-                        })
-                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                Log.d(Config.LOGTAG, "New Features - Uninstall cancled");
-
-                            }
-                        });
-                builder.create().show();
-            }
-        }
-
         Log.d(Config.LOGTAG, "AppUpdater - LastUpdateTime: " + lastUpdateTime);
-
         if ((lastUpdateTime + (Config.UPDATE_CHECK_TIMER * 1000)) < System.currentTimeMillis()) {
             lastUpdateTime = System.currentTimeMillis();
             SharedPreferences.Editor editor = UpdateTimeStamp.edit();
             editor.putLong("lastUpdateTime", lastUpdateTime);
             editor.commit();
-
             // run AppUpdater
             Log.d(Config.LOGTAG, "AppUpdater - CurrentTime: " + lastUpdateTime);
             Intent AppUpdater = new Intent(this, UpdaterActivity.class);
             startActivity(AppUpdater);
             Log.d(Config.LOGTAG, "AppUpdater started");
-
         } else {
-
             Log.d(Config.LOGTAG, "AppUpdater stopped");
             return;
         }

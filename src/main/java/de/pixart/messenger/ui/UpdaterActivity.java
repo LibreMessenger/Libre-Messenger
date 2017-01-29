@@ -33,13 +33,13 @@ import de.pixart.messenger.services.UpdaterWebService;
 
 public class UpdaterActivity extends Activity {
 
+    static final private String FileName = "update.apk";
     String appURI = "";
     private UpdateReceiver receiver = null;
     private int versionCode = 0;
+    private String localVersion = null;
     private DownloadManager downloadManager;
     private long downloadReference;
-    static final private String FileName = "update.apk";
-
     BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
 
         @Override
@@ -48,7 +48,7 @@ public class UpdaterActivity extends Activity {
             long referenceId = intent.getExtras().getLong(DownloadManager.EXTRA_DOWNLOAD_ID);
             if (downloadReference == referenceId) {
                 File file = new File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), FileName);
-                //start the installation of the latest version
+                //start the installation of the latest localVersion
                 Intent installIntent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
                 installIntent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
                 installIntent.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
@@ -162,6 +162,37 @@ public class UpdaterActivity extends Activity {
         alert.show();
     }
 
+    private int checkVersion(String remoteVersion, String installedVersion) {
+        String[] remote = null;
+        String[] installed = null;
+        try {
+            remote = remoteVersion.split("\\.");
+        } catch (Exception ignored) {
+            //ignored
+        }
+        try {
+            installed = installedVersion.split("\\.");
+        } catch (Exception ignored) {
+            //ignored
+        }
+        int i = 0;
+        // set index to first non-equal ordinal or length of shortest localVersion string
+        if (remote != null && installed != null) {
+            while (i < remote.length && i < installed.length && remote[i].equals(installed[i])) {
+                i++;
+            }
+            // compare first non-equal ordinal number
+            if (i < remote.length && i < installed.length) {
+                int diff = Integer.valueOf(remote[i]).compareTo(Integer.valueOf(installed[i]));
+                return Integer.signum(diff);
+            }
+            // the strings are equal or one string is a substring of the other
+            // e.g. "1.2.3" = "1.2.3" or "1.2.3" < "1.2.3.4"
+            return Integer.signum(remote.length - installed.length);
+        }
+        return 0;
+    }
+
     //broadcast receiver to get notification when the web request finishes
     public class UpdateReceiver extends BroadcastReceiver {
 
@@ -198,19 +229,18 @@ public class UpdaterActivity extends Activity {
                         } catch (PackageManager.NameNotFoundException e) {
                             e.printStackTrace();
                         }
-                        //get the app version Name for display
-                        final String versionName = pInfo.versionName;
-                        final int versionCode = pInfo.versionCode;
-                        //get the latest version from the JSON string
+                        //get the app localVersion Name for display
+                        String localVersion = pInfo.versionName;
+                        //get the latest localVersion from the JSON string
                         int latestVersionCode = reponseObj.getInt("latestVersionCode");
-                        String latestVersion = reponseObj.getString("latestVersion");
+                        String remoteVersion = reponseObj.getString("latestVersion");
                         String filesize = reponseObj.getString("filesize");
                         String changelog = reponseObj.getString("changelog");
                         //get the lastest application URI from the JSON string
                         appURI = reponseObj.getString("appURI");
                         //check if we need to upgrade?
-                        if (latestVersionCode > versionCode) {
-                            //delete old downloaded version files
+                        if (checkVersion(remoteVersion, localVersion) >= 1) {
+                            //delete old downloaded localVersion files
                             File dir = new File(getExternalFilesDir(null), Environment.DIRECTORY_DOWNLOADS);
                             if (dir.isDirectory()) {
                                 String[] children = dir.list();
@@ -224,9 +254,8 @@ public class UpdaterActivity extends Activity {
                             //oh yeah we do need an upgrade, let the user know send an alert message
                             AlertDialog.Builder builder = new AlertDialog.Builder(UpdaterActivity.this);
                             builder.setCancelable(false);
-
                             String UpdateMessageInfo = getResources().getString(R.string.update_available);
-                            builder.setMessage(String.format(UpdateMessageInfo, latestVersion, filesize, versionName, changelog))
+                            builder.setMessage(String.format(UpdateMessageInfo, remoteVersion, filesize, localVersion, changelog))
                                     .setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
                                         //if the user agrees to upgrade
                                         public void onClick(DialogInterface dialog, int id) {
