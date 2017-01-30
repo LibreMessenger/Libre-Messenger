@@ -684,7 +684,7 @@
     <string name="encrypting_message">Nachricht wird verschlüsselt</string>
     <string name="pref_automatically_delete_messages">Nachrichten automatisch löschen</string>
     <string name="pref_automatically_delete_messages_description">Nachrichten von diesel Gerät nach dem eingestellten Zeitfenster automatisch löschen.</string>
-    <string name="timeout_24_hours">24 Studnen</string>
+    <string name="timeout_24_hours">24 Stunden</string>
     <string name="timeout_30_days">30 Tage</string>
     <string name="timeout_6_months">6 Monate</string>
     <string name="timeout_7_days">7 Tage</string>
