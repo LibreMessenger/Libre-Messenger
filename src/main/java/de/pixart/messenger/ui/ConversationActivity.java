@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,6 +23,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.widget.SlidingPaneLayout;
@@ -141,6 +141,7 @@ public class ConversationActivity extends XmppActivity
     private AtomicBoolean mRedirected = new AtomicBoolean(false);
     private Pair<Integer, Intent> mPostponedActivityResult;
     private boolean mUnprocessedNewIntent = false;
+    private boolean showLastSeen = false;
 
     long FirstStartTime = -1;
 
@@ -438,11 +439,19 @@ public class ConversationActivity extends XmppActivity
                                 absubtitle.setSelected(true);
                                 absubtitle.setOnClickListener(this);
                             } else if (state == ChatState.PAUSED) {
-                                absubtitle.setText(UIHelper.lastseen(getApplicationContext(), conversation.getContact().isActive(), conversation.getContact().getLastseen()));
+                                if (showLastSeen && conversation.getContact().getLastseen() > 0) {
+                                    absubtitle.setText(UIHelper.lastseen(getApplicationContext(), conversation.getContact().isActive(), conversation.getContact().getLastseen()));
+                                } else {
+                                    absubtitle.setText(getString(R.string.account_status_online));
+                                }
                                 absubtitle.setSelected(true);
                                 absubtitle.setOnClickListener(this);
                             } else {
-                                absubtitle.setText(UIHelper.lastseen(getApplicationContext(), conversation.getContact().isActive(), conversation.getContact().getLastseen()));
+                                if (showLastSeen && conversation.getContact().getLastseen() > 0) {
+                                    absubtitle.setText(UIHelper.lastseen(getApplicationContext(), conversation.getContact().isActive(), conversation.getContact().getLastseen()));
+                                } else {
+                                    absubtitle.setText(getString(R.string.account_status_online));
+                                }
                                 absubtitle.setSelected(true);
                                 absubtitle.setOnClickListener(this);
                             }
@@ -462,7 +471,7 @@ public class ConversationActivity extends XmppActivity
                     abtitle.setText(conversation.getJid().toBareJid().toString());
                     abtitle.setOnClickListener(this);
                     abtitle.setSelected(true);
-                    absubtitle.setText(null);
+                    absubtitle.setText("");
                     absubtitle.setOnClickListener(this);
                 }
             } else {
@@ -1256,6 +1265,8 @@ public class ConversationActivity extends XmppActivity
         if (conversationList.size() >= 1) {
             this.onConversationUpdate();
         }
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        this.showLastSeen = preferences.getBoolean("last_activity", false);
     }
 
     @Override
