@@ -614,7 +614,6 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
             MenuItem retryDecryption = menu.findItem(R.id.retry_decryption);
             MenuItem correctMessage = menu.findItem(R.id.correct_message);
             MenuItem shareWith = menu.findItem(R.id.share_with);
-            MenuItem sendAgain = menu.findItem(R.id.send_again);
             MenuItem copyUrl = menu.findItem(R.id.copy_url);
             MenuItem downloadFile = menu.findItem(R.id.download_file);
             MenuItem cancelTransmission = menu.findItem(R.id.cancel_transmission);
@@ -646,7 +645,6 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                 shareWith.setVisible(true);
             }
             if (m.getStatus() == Message.STATUS_SEND_FAILED) {
-                sendAgain.setVisible(true);
             }
             if (m.hasFileOnRemoteHost()
                     || GeoHelper.isGeoUri(m.getBody())
@@ -694,9 +692,6 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                 return true;
             case R.id.correct_message:
                 correctMessage(selectedMessage);
-                return true;
-            case R.id.send_again:
-                resendMessage(selectedMessage);
                 return true;
             case R.id.copy_url:
                 copyUrl(selectedMessage);
@@ -792,7 +787,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         }
     }
 
-    private void resendMessage(Message message) {
+    public void resendMessage(Message message) {
         if (message.getType() == Message.TYPE_FILE || message.getType() == Message.TYPE_IMAGE) {
             DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
             if (!file.exists()) {

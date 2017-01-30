@@ -174,7 +174,8 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
     }
 
-    private void displayStatus(ViewHolder viewHolder, Message message, int type, boolean darkBackground, boolean inValidSession) {
+    private void displayStatus(ViewHolder viewHolder, final Message message, int type, boolean darkBackground, boolean inValidSession) {
+        viewHolder.download_button.setVisibility(View.GONE);
         String filesize = null;
         String info = null;
         boolean error = false;
@@ -243,6 +244,16 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
         if (error && type == SENT) {
             viewHolder.time.setTextColor(activity.getWarningTextColor());
+            viewHolder.download_button.setVisibility(View.VISIBLE);
+            viewHolder.download_button.setText(R.string.send_again);
+            viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_resend_grey600_48dp, 0, 0, 0);
+            viewHolder.download_button.setOnClickListener(new OnClickListener() {
+            final Message mMessage = message;
+                @Override
+                public void onClick(View v) {
+                    activity.mConversationFragment.resendMessage(mMessage);
+                }
+            });
         } else if (!message.isValidInSession() && type == RECEIVED) {
             viewHolder.time.setTextColor(activity.getUnencryptedTextColor());
         } else {

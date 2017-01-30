@@ -133,7 +133,7 @@ public class ConversationActivity extends XmppActivity
     private Conversation swipedConversation = null;
     private Conversation mSelectedConversation = null;
     private EnhancedListView listView;
-    private ConversationFragment mConversationFragment;
+    public ConversationFragment mConversationFragment;
 
     private ArrayAdapter<Conversation> listAdapter;
 
