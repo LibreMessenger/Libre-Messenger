@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
@@ -19,8 +18,9 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.github.rtoshiro.view.video.FullscreenVideoLayout;
 
 import java.io.File;
@@ -172,15 +172,15 @@ public class ShowFullscreenMessageActivity extends Activity {
         try {
             Glide.with(this)
                     .load(file)
-                    .asBitmap()
-                    .into(new BitmapImageViewTarget(mImage) {
+                    .into(new GlideDrawableImageViewTarget(mImage) {
                         @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                            super.onResourceReady(resource, glideAnimation);
+                        public void onResourceReady(GlideDrawable resource,  GlideAnimation<? super GlideDrawable> animation) {
+                            super.onResourceReady(resource, animation);
                             mAttacher.update();
                         }
                     });
         } catch (Exception e) {
+            Toast.makeText(this, getString(R.string.error_file_corrupt), Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
     }
@@ -228,6 +228,7 @@ public class ShowFullscreenMessageActivity extends Activity {
             mVideo.setShouldAutoplay(true);
 
         } catch (IOException e) {
+            Toast.makeText(this, getString(R.string.error_file_corrupt), Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
     }
