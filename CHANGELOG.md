@@ -1,5 +1,13 @@
 ###Changelog
 
+###Version 1.16.0
+* show unread messages in chatlist
+* increase image size to 4k UHD
+* add support for GIF files
+* reworked video compression
+* reworked app updater
+* bug fixes
+
 ###Version 1.15.4
 * improve video compression quality
 * support for POSH (RFC7711)
