@@ -1,5 +1,8 @@
 ###Changelog
 
+###Version 1.16.1
+* bug fixes
+
 ###Version 1.16.0
 * show unread messages in chatlist
 * increase image size to 4k UHD
