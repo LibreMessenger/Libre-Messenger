@@ -175,7 +175,6 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     }
 
     private void displayStatus(ViewHolder viewHolder, final Message message, int type, boolean darkBackground, boolean inValidSession) {
-        viewHolder.download_button.setVisibility(View.GONE);
         String filesize = null;
         String info = null;
         boolean error = false;
@@ -244,16 +243,19 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
         if (error && type == SENT) {
             viewHolder.time.setTextColor(activity.getWarningTextColor());
-            viewHolder.download_button.setVisibility(View.VISIBLE);
-            viewHolder.download_button.setText(R.string.send_again);
-            viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_resend_grey600_48dp, 0, 0, 0);
-            viewHolder.download_button.setOnClickListener(new OnClickListener() {
-            final Message mMessage = message;
+            viewHolder.resend_button.setVisibility(View.VISIBLE);
+            viewHolder.resend_button.setText(R.string.send_again);
+            viewHolder.resend_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_resend_grey600_48dp, 0, 0, 0);
+            viewHolder.resend_button.setOnClickListener(new OnClickListener() {
+                final Message mMessage = message;
+
                 @Override
                 public void onClick(View v) {
                     activity.mConversationFragment.resendMessage(mMessage);
                 }
             });
+        } else if (!error && type == SENT) {
+            viewHolder.resend_button.setVisibility(View.GONE);
         } else if (!message.isValidInSession() && type == RECEIVED) {
             viewHolder.time.setTextColor(activity.getUnencryptedTextColor());
         } else {
@@ -722,6 +724,8 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 viewHolder.aw_player = (ViewGroup) view.findViewById(R.id.aw_player);
                 viewHolder.download_button = (Button) view
                         .findViewById(R.id.download_button);
+                viewHolder.resend_button = (Button) view
+                        .findViewById(R.id.resend_button);
                 viewHolder.indicator = (ImageView) view
                         .findViewById(R.id.security_indicator);
                 viewHolder.edit_indicator = (ImageView) view.findViewById(R.id.edit_indicator);
@@ -1110,6 +1114,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
         protected LinearLayout message_box;
         protected Button download_button;
+        protected Button resend_button;
         protected ViewGroup aw_player;
         protected ImageView image;
         protected ImageView indicator;
