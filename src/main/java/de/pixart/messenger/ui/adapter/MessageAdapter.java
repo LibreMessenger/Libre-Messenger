@@ -3,6 +3,7 @@ package de.pixart.messenger.ui.adapter;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
@@ -596,6 +597,23 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_account_card_details_grey600_48dp, 0, 0, 0);
             } else if (message.getMimeType().contains("calendar")) {
                 viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_calendar_grey600_48dp, 0, 0, 0);
+            } else if (message.getMimeType().equals("application/vnd.android.package-archive")) {
+                String file = activity.xmppConnectionService.getFileBackend().getFile(message).toString();
+                Log.d(Config.LOGTAG, "APK path: " + file);
+                try {
+                    PackageManager pm = getContext().getPackageManager();
+                    PackageInfo pi = pm.getPackageArchiveInfo(file, 0);
+                    pi.applicationInfo.sourceDir = file;
+                    pi.applicationInfo.publicSourceDir = file;
+                    Drawable APKicon = pi.applicationInfo.loadIcon(pm);
+                    String AppName = (String) pi.applicationInfo.loadLabel(pm);
+                    String AppVersion = (String) pi.versionName;
+                    Log.d(Config.LOGTAG, "APK name: " + AppName);
+                    fullName = " (" + AppName + " " + AppVersion + ")";
+                } catch (Exception e) {
+                    //ignored
+                }
+                viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_file_grey600_48dp, 0, 0, 0);
             } else {
                 viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_file_grey600_48dp, 0, 0, 0);
             }
