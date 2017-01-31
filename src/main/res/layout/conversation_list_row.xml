@@ -110,7 +110,7 @@
                     android:text="100"
                     android:textColor="@color/grey50"
                     android:textSize="?attr/TextSizeBody"
-                    android:background="@drawable/circle"
+                    android:background="@drawable/rounded_rectangle"
                     android:visibility="gone"
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
