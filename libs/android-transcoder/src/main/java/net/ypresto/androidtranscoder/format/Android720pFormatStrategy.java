@@ -63,8 +63,8 @@ class Android720pFormatStrategy implements MediaFormatStrategy {
         if (longer * 9 != shorter * 16) {
             throw new OutputFormatUnavailableException("This video is not 16:9, and is not able to transcode. (" + width + "x" + height + ")");
         }
-        if (shorter <= SHORTER_LENGTH) {
-            Log.d(TAG, "This video is less or equal to 720p, pass-through. (" + width + "x" + height + ")");
+        if (shorter < SHORTER_LENGTH) {
+            Log.d(TAG, "This video is less to 720p, pass-through. (" + width + "x" + height + ")");
             return null;
         }
         MediaFormat format = MediaFormat.createVideoFormat("video/avc", outWidth, outHeight);
