@@ -1,5 +1,9 @@
 ###Changelog
 
+###Version 1.16.2
+* show app name and version from shared apk files
+* add ability to compress videos with 720p and not only bigger ones
+
 ###Version 1.16.1
 * bug fixes
 
