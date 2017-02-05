@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
@@ -18,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +31,9 @@ import java.io.File;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.services.UpdaterWebService;
+import de.pixart.messenger.services.XmppConnectionService;
 
 public class UpdaterActivity extends Activity {
 
@@ -40,6 +44,7 @@ public class UpdaterActivity extends Activity {
     private String localVersion = null;
     private DownloadManager downloadManager;
     private long downloadReference;
+
     BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
 
         @Override
@@ -47,13 +52,14 @@ public class UpdaterActivity extends Activity {
             //check if the broadcast message is for our Enqueued download
             long referenceId = intent.getExtras().getLong(DownloadManager.EXTRA_DOWNLOAD_ID);
             if (downloadReference == referenceId) {
-                File file = new File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), FileName);
+                File file = new File(FileBackend.getConversationsDirectory("Update"), FileName);
                 //start the installation of the latest localVersion
                 Intent installIntent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
-                installIntent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+                installIntent.setDataAndType(FileBackend.getUriForFile(UpdaterActivity.this, file), "application/vnd.android.package-archive");
                 installIntent.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
                 installIntent.putExtra(Intent.EXTRA_RETURN_RESULT, true);
                 installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                installIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 startActivity(installIntent);
                 UpdaterActivity.this.finish();
             }
@@ -163,17 +169,16 @@ public class UpdaterActivity extends Activity {
     }
 
     /**
-    * Use this instead of String.compareTo() for a non-lexicographical 
-    * comparison that works for version strings. e.g. "1.10".compareTo("1.6").
-    * 
-    * @note It does not work if "1.10" is supposed to be equal to "1.10.0".
-    * 
-    * @param str1 a string of ordinal numbers separated by decimal points. 
-    * @param str2 a string of ordinal numbers separated by decimal points.
-    * @return The result is a negative integer if str1 is _numerically_ less than str2. 
-    *         The result is a positive integer if str1 is _numerically_ greater than str2. 
-    *         The result is zero if the strings are _numerically_ equal.
-    */
+     * Use this instead of String.compareTo() for a non-lexicographical
+     * comparison that works for version strings. e.g. "1.10".compareTo("1.6").
+     *
+     * @param str1 a string of ordinal numbers separated by decimal points.
+     * @param str2 a string of ordinal numbers separated by decimal points.
+     * @return The result is a negative integer if str1 is _numerically_ less than str2.
+     * The result is a positive integer if str1 is _numerically_ greater than str2.
+     * The result is zero if the strings are _numerically_ equal.
+     * @note It does not work if "1.10" is supposed to be equal to "1.10.0".
+     */
     private int checkVersion(String remoteVersion, String installedVersion) {
         String[] remote = null;
         String[] installed = null;
@@ -253,11 +258,12 @@ public class UpdaterActivity extends Activity {
                         //check if we need to upgrade?
                         if (checkVersion(remoteVersion, localVersion) >= 1) {
                             //delete old downloaded localVersion files
-                            File dir = new File(getExternalFilesDir(null), Environment.DIRECTORY_DOWNLOADS);
+                            File dir = new File(FileBackend.getConversationsDirectory("Update"));
                             if (dir.isDirectory()) {
                                 String[] children = dir.list();
-                                for (int i = 0; i < children.length; i++) {
-                                    new File(dir, children[i]).delete();
+                                for (String aChildren : children) {
+                                    Log.d(Config.LOGTAG, "Updater delete old update files " + aChildren + " in " + dir);
+                                    new File(dir, aChildren).delete();
                                 }
                             }
                             //enable touch events
@@ -280,10 +286,8 @@ public class UpdaterActivity extends Activity {
                                                 downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
                                                 Uri Download_Uri = Uri.parse(appURI);
                                                 DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
-                                                //request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI);
-                                                //request.setAllowedOverRoaming(false);
                                                 request.setTitle("Pix-Art Messenger Update");
-                                                request.setDestinationInExternalFilesDir(UpdaterActivity.this, Environment.DIRECTORY_DOWNLOADS, FileName);
+                                                request.setDestinationInExternalPublicDir(FileBackend.getDirectoryName("Update"), FileName);
                                                 downloadReference = downloadManager.enqueue(request);
                                                 Toast.makeText(getApplicationContext(),
                                                         getText(R.string.download_started),

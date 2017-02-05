@@ -174,11 +174,19 @@ public class FileBackend {
         return true;
     }
 
-    public static String getConversationsDirectory(final String type) {
-        if (type == "null") {
-            return Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger/";
+    public static String getDirectoryName(final String type) {
+        if (type == "null" || type == null) {
+            return "/Pix-Art Messenger/";
         } else {
-            return Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger" + "/" + type + "/";
+            return "/Pix-Art Messenger" + "/" + type + "/";
+        }
+    }
+
+    public static String getConversationsDirectory(final String type) {
+        if (type == "null" || type == null) {
+            return Environment.getExternalStorageDirectory().getAbsolutePath() + getDirectoryName(null);
+        } else {
+            return Environment.getExternalStorageDirectory().getAbsolutePath() + getDirectoryName(type);
         }
     }
 
