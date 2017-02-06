@@ -1,5 +1,9 @@
 ###Changelog
 
+###Version 1.16.3
+* don't use jingle as fallback if file is too big
+* bug fixes
+
 ###Version 1.16.2
 * show app name and version from shared apk files
 * add ability to compress videos with 720p and not only bigger ones

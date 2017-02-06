@@ -78,8 +78,8 @@ android {
         minSdkVersion 14
         targetSdkVersion 25
 
-        versionCode 187
-        versionName "1.16.2"
+        versionCode 188
+        versionName "1.16.3"
 
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"
