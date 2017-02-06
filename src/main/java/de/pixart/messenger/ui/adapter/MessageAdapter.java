@@ -244,7 +244,10 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
         if (error && type == SENT) {
             viewHolder.time.setTextColor(activity.getWarningTextColor());
-            viewHolder.resend_button.setVisibility(View.VISIBLE);
+            DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
+            if (file.exists()) {
+                viewHolder.resend_button.setVisibility(View.VISIBLE);
+            }
             viewHolder.resend_button.setText(R.string.send_again);
             viewHolder.resend_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_resend_grey600_48dp, 0, 0, 0);
             viewHolder.resend_button.setOnClickListener(new OnClickListener() {
