@@ -183,11 +183,18 @@ public class FileBackend {
     }
 
     public static String getConversationsDirectory(final String type) {
-        if (type == "null" || type == null) {
-            return Environment.getExternalStorageDirectory().getAbsolutePath() + getDirectoryName(null);
-        } else {
-            return Environment.getExternalStorageDirectory().getAbsolutePath() + getDirectoryName(type);
+        String DirName = null;
+        if (type != "null" || type != null) {
+            DirName = type;
         }
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + getDirectoryName(DirName);
+        File createFolders = new File(path);
+        if (!createFolders.exists()) {
+            Log.d(Config.LOGTAG, "creating directory " + createFolders);
+            createFolders.mkdirs();
+        }
+        return path;
+
     }
 
     public Bitmap resize(Bitmap originalBitmap, int size) {
