@@ -260,8 +260,6 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             });
         } else if (!error && type == SENT) {
             viewHolder.resend_button.setVisibility(View.GONE);
-        } else if (!message.isValidInSession() && type == RECEIVED) {
-            viewHolder.time.setTextColor(activity.getUnencryptedTextColor());
         } else {
             viewHolder.time.setTextColor(this.getMessageTextColor(darkBackground, false));
         }
@@ -270,10 +268,10 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         } else {
             boolean verified = false;
             if (message.getEncryption() == Message.ENCRYPTION_AXOLOTL) {
-                final FingerprintStatus status = message.getConversation()
+                FingerprintStatus status = message.getConversation()
                         .getAccount().getAxolotlService().getFingerprintTrust(
                                 message.getFingerprint());
-                if (status != null && status.isVerified()) {
+                if (status != null && status.isTrustedAndActive()) {
                     verified = true;
                 }
             }

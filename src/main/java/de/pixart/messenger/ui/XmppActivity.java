@@ -968,10 +968,6 @@ public abstract class XmppActivity extends Activity {
         return this.mColorRed;
     }
 
-    public int getUnencryptedTextColor() {
-        return this.mColorWhite;
-    }
-
     public int getOnlineColor() {
         return this.mColorGreen;
     }
