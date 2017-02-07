@@ -21,5 +21,5 @@ Please post the output of adb logcat. The log should begin with the start of Pix
 steps it takes to reproduce the problem.
 
 ````
-C:\ADB>adb -d logcat -v time | FINDSTR Pix-Art > logcat.txt
+adb -d logcat -v time | FINDSTR Pix-Art > logcat.txt
 ````
