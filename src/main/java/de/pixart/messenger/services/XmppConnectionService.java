@@ -99,6 +99,7 @@ import de.pixart.messenger.generator.IqGenerator;
 import de.pixart.messenger.generator.MessageGenerator;
 import de.pixart.messenger.generator.PresenceGenerator;
 import de.pixart.messenger.http.HttpConnectionManager;
+import de.pixart.messenger.http.AesGcmURLStreamHandlerFactory;
 import de.pixart.messenger.parser.AbstractParser;
 import de.pixart.messenger.parser.IqParser;
 import de.pixart.messenger.parser.MessageParser;
@@ -143,8 +144,13 @@ import de.pixart.messenger.xmpp.stanzas.IqPacket;
 import de.pixart.messenger.xmpp.stanzas.MessagePacket;
 import de.pixart.messenger.xmpp.stanzas.PresencePacket;
 import me.leolin.shortcutbadger.ShortcutBadger;
+import java.net.URL;
 
 public class XmppConnectionService extends Service {
+
+    static {
+        URL.setURLStreamHandlerFactory(new AesGcmURLStreamHandlerFactory());
+    }
 
     public static final String ACTION_REPLY_TO_CONVERSATION = "reply_to_conversations";
     public static final String ACTION_CLEAR_NOTIFICATION = "clear_notification";

@@ -9,6 +9,7 @@ import java.net.URL;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.crypto.axolotl.FingerprintStatus;
+import de.pixart.messenger.http.AesGcmURLStreamHandler;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.GeoHelper;
 import de.pixart.messenger.utils.MimeUtils;
@@ -659,6 +660,12 @@ public class Message extends AbstractEntity {
         }
         try {
             URL url = new URL(body);
+            String ref = url.getRef();
+            final String protocol = url.getProtocol();
+            final boolean encrypted = ref != null && ref.matches("([A-Fa-f0-9]{2}){48}");
+            if (AesGcmURLStreamHandler.PROTOCOL_NAME.equalsIgnoreCase(protocol) && encrypted) {
+                return Decision.MUST;
+            }
             if (!url.getProtocol().equalsIgnoreCase("http") && !url.getProtocol().equalsIgnoreCase("https")) {
                 return Decision.NEVER;
             } else if (oob) {
@@ -668,8 +675,6 @@ public class Message extends AbstractEntity {
             if (extension == null) {
                 return Decision.NEVER;
             }
-            String ref = url.getRef();
-            boolean encrypted = ref != null && ref.matches("([A-Fa-f0-9]{2}){48}");
 
             if (encrypted) {
                 return Decision.MUST;
