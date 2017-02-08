@@ -55,7 +55,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
     private static DatabaseBackend instance = null;
 
     public static final String DATABASE_NAME = "history";
-    public static final int DATABASE_VERSION = 34;
+    public static final int DATABASE_VERSION = 35;
 
     private static String CREATE_CONTATCS_STATEMENT = "create table "
             + Contact.TABLENAME + "(" + Contact.ACCOUNT + " TEXT, "
@@ -145,6 +145,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
     private static String START_TIMES_TABLE = "start_times";
     private static String CREATE_START_TIMES_TABLE = "create table " + START_TIMES_TABLE + " (timestamp NUMBER);";
     private static String CREATE_MESSAGE_TIME_INDEX = "create INDEX message_time_index ON " + Message.TABLENAME + "(" + Message.TIME_SENT + ")";
+    private static String CREATE_MESSAGE_CONVERSATION_INDEX = "create INDEX message_conversation_index ON " + Message.TABLENAME + "(" + Message.CONVERSATION + ")";
 
     private DatabaseBackend(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -195,6 +196,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
                 + ") ON DELETE CASCADE);");
 
         db.execSQL(CREATE_MESSAGE_TIME_INDEX);
+        db.execSQL(CREATE_MESSAGE_CONVERSATION_INDEX);
         db.execSQL(CREATE_CONTATCS_STATEMENT);
         db.execSQL(CREATE_DISCOVERY_RESULTS_STATEMENT);
         db.execSQL(CREATE_SESSIONS_STATEMENT);
@@ -392,6 +394,9 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         if (oldVersion < 34 && newVersion >= 34) {
             db.execSQL(CREATE_MESSAGE_TIME_INDEX);
             // do nothing else at this point because we have seperated videos, images, audios and other files in different directories
+        }
+        if (oldVersion < 35 && newVersion >= 35) {
+            db.execSQL(CREATE_MESSAGE_CONVERSATION_INDEX);
         }
     }
 
