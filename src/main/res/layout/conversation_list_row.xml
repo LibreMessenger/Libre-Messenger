@@ -46,13 +46,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@+id/conversation_lastwrapper"
-                    android:layout_toLeftOf="@+id/conversation_unread"
                     android:paddingRight="4dp"
                     android:singleLine="true"
                     android:text="Awesome groupchat"
                     android:textColor="@color/black87"
                     android:textSize="?attr/TextSizeHeadline"
-                    android:typeface="sans" />
+                    android:typeface="sans"
+                    android:layout_toLeftOf="@+id/conversation_failed" />
 
                 <RelativeLayout
                     android:id="@+id/conversation_lastwrapper"
@@ -110,18 +110,34 @@
                     android:text="100"
                     android:textColor="@color/grey50"
                     android:textSize="?attr/TextSizeBody"
-                    android:background="@drawable/rounded_rectangle"
+                    android:background="@drawable/rounded_rectangle_primary"
                     android:visibility="gone"
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
-                    android:paddingBottom="2dp" />
+                    android:paddingBottom="2dp"
+                    android:layout_margin="1dp" />
+                <TextView
+                    android:id="@+id/conversation_failed"
+                    android:layout_toLeftOf="@+id/conversation_unread"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/conversation_name"
+                    android:text="100"
+                    android:textColor="@color/grey50"
+                    android:textSize="?attr/TextSizeBody"
+                    android:background="@drawable/rounded_rectangle_red"
+                    android:visibility="gone"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:paddingBottom="2dp"
+                    android:layout_margin="1dp" />
 
                 <TextView
                     android:id="@+id/conversation_lastupdate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/conversation_name"
                     android:layout_alignParentRight="true"
+                    android:layout_alignBaseline="@+id/conversation_name"
                     android:paddingLeft="4dp"
                     android:gravity="right"
                     android:text="23:42"

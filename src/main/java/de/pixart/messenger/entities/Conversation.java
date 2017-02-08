@@ -994,6 +994,21 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
         }
     }
 
+    public int failedCount() {
+        synchronized (this.messages) {
+            int count = 0;
+            for (int i = this.messages.size() - 1; i >= 0; --i) {
+                Message message = this.messages.get(i);
+                if ((message.getType() == Message.TYPE_IMAGE || message.getType() == Message.TYPE_FILE) && message.getEncryption() != Message.ENCRYPTION_PGP) {
+                    if (message.getStatus() == Message.STATUS_SEND_FAILED){
+                        ++count;
+                    }
+                }
+            }
+            return count;
+        }
+    }
+
     public class Smp {
         public static final int STATUS_NONE = 0;
         public static final int STATUS_CONTACT_REQUESTED = 1;

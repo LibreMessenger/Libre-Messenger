@@ -86,8 +86,10 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
         ImageView imagePreview = (ImageView) view.findViewById(R.id.conversation_lastimage);
         ImageView notificationStatus = (ImageView) view.findViewById(R.id.notification_status);
         TextView mUnread = (TextView) view.findViewById(R.id.conversation_unread);
+        TextView mFailed = (TextView) view.findViewById(R.id.conversation_failed);
         Message message = conversation.getLatestMessage();
         int unreadcount = conversation.unreadCount();
+        int failedcount = conversation.failedCount();
         String mimeType = message.getMimeType();
 
         if (!conversation.isRead()) {
@@ -136,6 +138,12 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
             mUnread.setText(String.valueOf(unreadcount));
         } else {
             mUnread.setVisibility(View.GONE);
+        }
+        if (failedcount > 0) {
+            mFailed.setVisibility(View.VISIBLE);
+            mFailed.setText(String.valueOf(failedcount));
+        } else {
+            mFailed.setVisibility(View.GONE);
         }
         if (preview.second) {
             if (conversation.isRead()) {
