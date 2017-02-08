@@ -729,7 +729,7 @@
     <string name="transcoding_video_progress">Compressing video (%s%% completed)</string>
     <string name="pref_automatically_delete_messages_description">Automatically delete messages from this device that are older than the configured time frame.</string>
     <string name="pref_automatically_delete_messages">Automatic message deletion</string>
-    <string name="not_fetching_history_retention_period">Overstepping local retention period.</string>
+    <string name="not_fetching_history_retention_period">Not fetching messages due to local retention period.</string>
     <string name="timeout_24_hours">24 hours</string>
     <string name="timeout_7_days">7 days</string>
     <string name="timeout_30_days">30 days</string>
