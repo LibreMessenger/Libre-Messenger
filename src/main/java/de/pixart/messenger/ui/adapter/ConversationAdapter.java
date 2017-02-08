@@ -22,6 +22,7 @@ import java.util.concurrent.RejectedExecutionException;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Message;
+import de.pixart.messenger.entities.Transferable;
 import de.pixart.messenger.ui.ConversationActivity;
 import de.pixart.messenger.ui.XmppActivity;
 import de.pixart.messenger.utils.UIHelper;
@@ -90,7 +91,6 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
         Message message = conversation.getLatestMessage();
         int unreadcount = conversation.unreadCount();
         int failedcount = conversation.failedCount();
-        String mimeType = message.getMimeType();
 
         if (!conversation.isRead()) {
             convName.setTypeface(null, Typeface.BOLD);
@@ -98,41 +98,6 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
             convName.setTypeface(null, Typeface.NORMAL);
         }
 
-
-        /*if (message.getTransferable() == null
-                || message.getTransferable().getStatus() != Transferable.STATUS_DELETED) {
-            if (mimeType != null && message.getMimeType().startsWith("video/")) {
-                mLastMessage.setVisibility(View.GONE);
-                imagePreview.setVisibility(View.VISIBLE);
-                activity.loadVideoPreview(message, imagePreview);
-            } else if (message.getFileParams().width > 0) {
-                mLastMessage.setVisibility(View.GONE);
-                imagePreview.setVisibility(View.VISIBLE);
-                activity.loadBitmap(message, imagePreview);
-            } else {
-                Pair<String, Boolean> preview = UIHelper.getMessagePreview(activity, message);
-                mLastMessage.setVisibility(View.VISIBLE);
-                imagePreview.setVisibility(View.GONE);
-                mLastMessage.setText(preview.first);
-                if (preview.second) {
-                    if (conversation.isRead()) {
-                        mLastMessage.setTypeface(null, Typeface.ITALIC);
-                    } else {
-                        mLastMessage.setTypeface(null, Typeface.BOLD_ITALIC);
-                    }
-                } else {
-                    if (conversation.isRead()) {
-                        mLastMessage.setTypeface(null, Typeface.NORMAL);
-                    } else {
-                        mLastMessage.setTypeface(null, Typeface.BOLD);
-                    }
-                }
-            }
-        } else {*/
-        Pair<String, Boolean> preview = UIHelper.getMessagePreview(activity, message);
-        mLastMessage.setVisibility(View.VISIBLE);
-        imagePreview.setVisibility(View.GONE);
-        mLastMessage.setText(preview.first);
         if (unreadcount > 0) {
             mUnread.setVisibility(View.VISIBLE);
             mUnread.setText(String.valueOf(unreadcount));
@@ -145,20 +110,32 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
         } else {
             mFailed.setVisibility(View.GONE);
         }
-        if (preview.second) {
-            if (conversation.isRead()) {
-                mLastMessage.setTypeface(null, Typeface.ITALIC);
-            } else {
-                mLastMessage.setTypeface(null, Typeface.BOLD_ITALIC);
-            }
+
+        if (message.getFileParams().width > 0
+                && (message.getTransferable() == null
+                || message.getTransferable().getStatus() != Transferable.STATUS_DELETED)) {
+            mLastMessage.setVisibility(View.GONE);
+            imagePreview.setVisibility(View.VISIBLE);
+            activity.loadBitmap(message, imagePreview);
         } else {
-            if (conversation.isRead()) {
-                mLastMessage.setTypeface(null, Typeface.NORMAL);
+            Pair<String, Boolean> preview = UIHelper.getMessagePreview(activity, message);
+            mLastMessage.setVisibility(View.VISIBLE);
+            imagePreview.setVisibility(View.GONE);
+            mLastMessage.setText(preview.first);
+            if (preview.second) {
+                if (conversation.isRead()) {
+                    mLastMessage.setTypeface(null, Typeface.ITALIC);
+                } else {
+                    mLastMessage.setTypeface(null, Typeface.BOLD_ITALIC);
+                }
             } else {
-                mLastMessage.setTypeface(null, Typeface.BOLD);
+                if (conversation.isRead()) {
+                    mLastMessage.setTypeface(null, Typeface.NORMAL);
+                } else {
+                    mLastMessage.setTypeface(null, Typeface.BOLD);
+                }
             }
         }
-        //}
 
         long muted_till = conversation.getLongAttribute(Conversation.ATTRIBUTE_MUTED_TILL, 0);
         if (muted_till == Long.MAX_VALUE) {
