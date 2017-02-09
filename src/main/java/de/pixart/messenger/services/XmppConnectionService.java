@@ -711,6 +711,12 @@ public class XmppConnectionService extends Service {
             }
             if (pingNow) {
                 for (Account account : pingCandidates) {
+                    List<Conversation> conversations = getConversations();
+                    for (Conversation conversation : conversations) {
+                        if (conversation.getAccount() == account && !account.pendingConferenceJoins.contains(conversation)) {
+                            resendFailedFileMessages(conversation);
+                        }
+                    }
                     final boolean lowTimeout = mLowPingTimeoutMode.contains(account.getJid().toBareJid());
                     account.getXmppConnection().sendPing();
                     Log.d(Config.LOGTAG, account.getJid().toBareJid() + " send ping (action=" + action + ", lowTimeout=" + Boolean.toString(lowTimeout) + ")");
@@ -1431,6 +1437,7 @@ public class XmppConnectionService extends Service {
             @Override
             public void onMessageFound(Message message) {
                 if (AcceptFileSize() >= message.getFileParams().size) {
+                    Log.d(Config.LOGTAG, "Resend failed message with size " + message.getFileParams().size  + " bytes for " + conversation.getJid());
                     resendMessage(message, true);
                 }
             }
