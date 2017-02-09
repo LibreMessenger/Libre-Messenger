@@ -512,8 +512,6 @@ public class ConversationActivity extends XmppActivity
         final MenuItem menuClearHistory = menu.findItem(R.id.action_clear_history);
         final MenuItem menuAdd = menu.findItem(R.id.action_add);
         final MenuItem menuInviteContact = menu.findItem(R.id.action_invite);
-        final MenuItem menuMute = menu.findItem(R.id.action_mute);
-        final MenuItem menuUnmute = menu.findItem(R.id.action_unmute);
         final MenuItem menuUpdater = menu.findItem(R.id.action_check_updates);
         final MenuItem menuInviteUser = menu.findItem(R.id.action_invite_user);
 
@@ -524,8 +522,6 @@ public class ConversationActivity extends XmppActivity
             menuInviteContact.setVisible(false);
             menuAttach.setVisible(false);
             menuClearHistory.setVisible(false);
-            menuMute.setVisible(false);
-            menuUnmute.setVisible(false);
         } else {
             menuAdd.setVisible(!isConversationsOverviewHideable());
             //hide settings, accounts and updater in all menus except in main window
@@ -551,11 +547,6 @@ public class ConversationActivity extends XmppActivity
                     menuSecure.setVisible((Config.supportOpenPgp() || Config.supportOmemo()) && Config.multipleEncryptionChoices()); //only if pgp is supported we have a choice
                 } else {
                     menuSecure.setVisible(Config.multipleEncryptionChoices());
-                }
-                if (this.getSelectedConversation().isMuted()) {
-                    menuMute.setVisible(false);
-                } else {
-                    menuUnmute.setVisible(false);
                 }
             }
         }
@@ -842,12 +833,6 @@ public class ConversationActivity extends XmppActivity
                 case R.id.action_clear_history:
                     clearHistoryDialog(getSelectedConversation());
                     break;
-                case R.id.action_mute:
-                    muteConversationDialog(getSelectedConversation());
-                    break;
-                case R.id.action_unmute:
-                    unmuteConversation(getSelectedConversation());
-                    break;
                 case R.id.action_block:
                     BlockContactDialog.show(this, xmppConnectionService, getSelectedConversation());
                     break;
@@ -1086,39 +1071,6 @@ public class ConversationActivity extends XmppActivity
             }
             popup.show();
         }
-    }
-
-    protected void muteConversationDialog(final Conversation conversation) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.disable_notifications);
-        final int[] durations = getResources().getIntArray(R.array.mute_options_durations);
-        builder.setItems(R.array.mute_options_descriptions,
-                new OnClickListener() {
-
-                    @Override
-                    public void onClick(final DialogInterface dialog, final int which) {
-                        final long till;
-                        if (durations[which] == -1) {
-                            till = Long.MAX_VALUE;
-                        } else {
-                            till = System.currentTimeMillis() + (durations[which] * 1000);
-                        }
-                        conversation.setMutedTill(till);
-                        ConversationActivity.this.xmppConnectionService.updateConversation(conversation);
-                        updateConversationList();
-                        ConversationActivity.this.mConversationFragment.updateMessages();
-                        invalidateOptionsMenu();
-                    }
-                });
-        builder.create().show();
-    }
-
-    public void unmuteConversation(final Conversation conversation) {
-        conversation.setMutedTill(0);
-        this.xmppConnectionService.updateConversation(conversation);
-        updateConversationList();
-        ConversationActivity.this.mConversationFragment.updateMessages();
-        invalidateOptionsMenu();
     }
 
     @Override

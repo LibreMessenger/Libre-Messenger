@@ -34,6 +34,7 @@ import com.wefika.flowlayout.FlowLayout;
 import org.openintents.openpgp.util.OpenPgpUtils;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
@@ -43,6 +44,7 @@ import de.pixart.messenger.crypto.axolotl.FingerprintStatus;
 import de.pixart.messenger.crypto.axolotl.XmppAxolotlSession;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Contact;
+import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.ListItem;
 import de.pixart.messenger.services.XmppConnectionService.OnAccountUpdate;
 import de.pixart.messenger.services.XmppConnectionService.OnRosterUpdate;
@@ -59,6 +61,8 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
     public static final String ACTION_VIEW_CONTACT = "view_contact";
 
     private Contact contact;
+    private Conversation mConversation;
+
     private DialogInterface.OnClickListener removeFromRoster = new DialogInterface.OnClickListener() {
 
         @Override
@@ -123,6 +127,8 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
     private boolean showLastSeen = false;
     private boolean showInactiveOmemo = false;
     private String messageFingerprint;
+    private TextView mNotifyStatusText;
+    private ImageButton mNotifyStatusButton;
 
     private DialogInterface.OnClickListener addToPhonebook = new DialogInterface.OnClickListener() {
 
@@ -157,6 +163,62 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
                 intent.setData(systemAccount);
                 startActivity(intent);
             }
+        }
+    };
+
+    private OnClickListener mNotifyStatusClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(ContactDetailsActivity.this);
+            builder.setTitle(R.string.pref_notification_settings);
+            String[] choices = {
+                    getString(R.string.notify_on_all_messages),
+                    getString(R.string.notify_never)
+            };
+            final AtomicInteger choice;
+            if (mConversation.getLongAttribute(Conversation.ATTRIBUTE_MUTED_TILL, 0) <= Long.MAX_VALUE) {
+                choice = new AtomicInteger(1);
+            } else {
+                choice = new AtomicInteger(0);
+            }
+            builder.setSingleChoiceItems(choices, choice.get(), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    choice.set(which);
+                }
+            });
+            builder.setNegativeButton(R.string.cancel, null);
+            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (choice.get() == 1) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ContactDetailsActivity.this);
+                        builder.setTitle(R.string.disable_notifications);
+                        final int[] durations = getResources().getIntArray(R.array.mute_options_durations);
+                        builder.setItems(R.array.mute_options_descriptions,
+                                new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(final DialogInterface dialog, final int which) {
+                                        final long till;
+                                        if (durations[which] == -1) {
+                                            till = Long.MAX_VALUE;
+                                        } else {
+                                            till = System.currentTimeMillis() + (durations[which] * 1000);
+                                        }
+                                        mConversation.setMutedTill(till);
+                                    }
+                                });
+                        builder.create().show();
+                    } else {
+                        mConversation.setMutedTill(0);
+                        mConversation.setAttribute(Conversation.ATTRIBUTE_ALWAYS_NOTIFY, String.valueOf(choice.get() == 0));
+                    }
+                    xmppConnectionService.updateConversation(mConversation);
+                    populateView();
+                }
+            });
+            builder.create().show();
         }
     };
 
@@ -236,6 +298,9 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
                 populateView();
             }
         });
+        this.mNotifyStatusButton = (ImageButton) findViewById(R.id.notification_status_button);
+        this.mNotifyStatusButton.setOnClickListener(this.mNotifyStatusClickListener);
+        this.mNotifyStatusText = (TextView) findViewById(R.id.notification_status_text);
     }
 
     @Override
@@ -337,6 +402,18 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
     private void populateView() {
         if (contact == null) {
             return;
+        }
+
+        long mutedTill = mConversation.getLongAttribute(Conversation.ATTRIBUTE_MUTED_TILL, 0);
+        if (mutedTill == Long.MAX_VALUE) {
+            mNotifyStatusText.setText(R.string.notify_never);
+            mNotifyStatusButton.setImageResource(R.drawable.ic_notifications_off_grey600_24dp);
+        } else if (System.currentTimeMillis() < mutedTill) {
+            mNotifyStatusText.setText(R.string.notify_paused);
+            mNotifyStatusButton.setImageResource(R.drawable.ic_notifications_paused_grey600_24dp);
+        } else {
+            mNotifyStatusButton.setImageResource(R.drawable.ic_notifications_grey600_24dp);
+            mNotifyStatusText.setText(R.string.notify_on_all_messages);
         }
         if (getActionBar() != null) {
             final ActionBar ab = getActionBar();
@@ -579,6 +656,10 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             Account account = xmppConnectionService.findAccountByJid(accountJid);
             if (account == null) {
                 return;
+            }
+            this.mConversation = xmppConnectionService.findOrCreateConversation(account, contactJid, false);
+            if (this.mConversation != null) {
+                populateView();
             }
             this.contact = account.getRoster().getContact(contactJid);
             if (mPendingFingerprintVerificationUri != null) {

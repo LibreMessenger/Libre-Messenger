@@ -111,7 +111,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                     getString(R.string.notify_never)
             };
             final AtomicInteger choice;
-            if (mConversation.getLongAttribute(Conversation.ATTRIBUTE_MUTED_TILL, 0) == Long.MAX_VALUE) {
+            if (mConversation.getLongAttribute(Conversation.ATTRIBUTE_MUTED_TILL, 0) <= Long.MAX_VALUE) {
                 choice = new AtomicInteger(2);
             } else {
                 choice = new AtomicInteger(mConversation.alwaysNotify() ? 0 : 1);
@@ -127,7 +127,24 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     if (choice.get() == 2) {
-                        mConversation.setMutedTill(Long.MAX_VALUE);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ConferenceDetailsActivity.this);
+                        builder.setTitle(R.string.disable_notifications);
+                        final int[] durations = getResources().getIntArray(R.array.mute_options_durations);
+                        builder.setItems(R.array.mute_options_descriptions,
+                                new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(final DialogInterface dialog, final int which) {
+                                        final long till;
+                                        if (durations[which] == -1) {
+                                            till = Long.MAX_VALUE;
+                                        } else {
+                                            till = System.currentTimeMillis() + (durations[which] * 1000);
+                                        }
+                                        mConversation.setMutedTill(till);
+                                    }
+                                });
+                        builder.create().show();
                     } else {
                         mConversation.setMutedTill(0);
                         mConversation.setAttribute(Conversation.ATTRIBUTE_ALWAYS_NOTIFY, String.valueOf(choice.get() == 0));

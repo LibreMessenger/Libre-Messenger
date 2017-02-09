@@ -18,19 +18,6 @@
         android:orderInCategory="30"
         android:showAsAction="always"
         android:title="@string/attach_file" />
-    <!--    <item
-            android:id="@+id/action_contact_details"
-            android:icon="?attr/icon_group"
-            android:orderInCategory="40"
-            android:showAsAction="never"
-            android:title="@string/action_contact_details"/>
-        <item
-            android:id="@+id/action_muc_details"
-            android:icon="?attr/icon_group"
-            android:orderInCategory="40"
-            android:showAsAction="never"
-            android:title="@string/action_muc_details"/>
-    -->
     <item
         android:id="@+id/action_invite"
         android:orderInCategory="45"
@@ -51,18 +38,6 @@
         android:orderInCategory="60"
         android:showAsAction="never"
         android:title="@string/action_end_conversation_muc" />
-    <item
-        android:id="@+id/action_mute"
-        android:orderInCategory="70"
-        android:showAsAction="never"
-        android:title="@string/disable_notifications" />
-
-    <item
-        android:id="@+id/action_unmute"
-        android:orderInCategory="71"
-        android:showAsAction="never"
-        android:title="@string/enable_notifications" />
-
     <item
         android:id="@+id/action_accounts"
         android:orderInCategory="90"
