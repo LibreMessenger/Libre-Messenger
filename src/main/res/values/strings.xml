@@ -273,10 +273,10 @@
     <string name="pref_dont_save_encrypted">Don’t save encrypted messages</string>
     <string name="pref_dont_save_encrypted_summary">Warning: This could lead to message loss</string>
     <string name="pref_expert_options">Expert settings</string>
-    <string name="title_activity_about">About Pix-Art Messenger</string>
+    <string name="title_activity_about">About</string>
     <string name="pref_about_conversations_summary">Build and licensing information</string>
-	<string name="pref_about_message" translatable="false">Pix-Art Messenger
-			\n\nCopyright © 2014-2016 Christian Schneppe
+	<string name="pref_about_message" translatable="false"><b>Pix-Art Messenger</b>
+			\n\nCopyright © 2014-2017 Christian Schneppe
 			\n\nhttp://jabber.pix-art.de
 			\n\nThis program is free software: you can redistribute it and/or modify
 			it under the terms of the GNU General Public License as published by
@@ -308,6 +308,7 @@
 			\n\nhttps://github.com/jdamcd/android-crop\n(Apache License, Version 2.0)
 			\n\nhttps://github.com/jaydeepw/audio-wife\n(The MIT License (MIT))
 		    \n\nhttps://github.com/google/gson\n(Apache License, Version 2.0)
+		    \n\nhttps://github.com/google/gcm\n(Apache License, Version 2.0)
 		    \n\nhttp://hc.apache.org/httpcomponents-client\n(Apache License, Version 2.0)
 		    \n\nhttp://hc.apache.org/httpcomponents-core\n(Apache License, Version 2.0)
 			\n\nhttps://github.com/bumptech/glide\n(BSD, The MIT License (MIT) and Apache License, Version 2.0)
@@ -317,6 +318,8 @@
             \n\nhttps://github.com/googlesamples/easypermissions\n(Apache License, Version 2.0)
             \n\nhttps://github.com/blazsolar/FlowLayout\n(Apache License, Version 2.0)
             \n\nhttps://github.com/ankushsachdeva/emojicon\n(Apache License, Version 2.0)
+            \n\nhttps://github.com/ypresto/android-transcoder\n(Apache License, Version 2.0)
+            \n\nhttp://www.eclipse.org/jetty/\n(Apache License, Version 2.0 and Eclipse Public License 1.0)
 	</string>
     <string name="title_pref_quiet_hours">Quiet Hours</string>
     <string name="title_pref_quiet_hours_start_time">Start time</string>
