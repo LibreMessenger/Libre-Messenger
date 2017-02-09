@@ -804,6 +804,10 @@ public class Message extends AbstractEntity {
         return type == TYPE_FILE || type == TYPE_IMAGE;
     }
 
+    public boolean isDeleted() {
+        return (type == TYPE_FILE || type == TYPE_IMAGE) && getTransferable() != null && getTransferable().getFileSize() == 0;
+    }
+
     public boolean hasFileOnRemoteHost() {
         return isFileOrImage() && getFileParams().url != null;
     }

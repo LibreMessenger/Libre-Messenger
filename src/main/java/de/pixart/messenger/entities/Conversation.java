@@ -1000,7 +1000,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
             for (int i = this.messages.size() - 1; i >= 0; --i) {
                 Message message = this.messages.get(i);
                 if ((message.getType() == Message.TYPE_IMAGE || message.getType() == Message.TYPE_FILE) && message.getEncryption() != Message.ENCRYPTION_PGP) {
-                    if (message.getStatus() == Message.STATUS_SEND_FAILED){
+                    if (message.getStatus() == Message.STATUS_SEND_FAILED && !message.isDeleted()){
                         ++count;
                     }
                 }
