@@ -27,6 +27,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.crypto.PgpDecryptionService;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
+import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
@@ -94,6 +95,8 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
     private Message correctingMessage;
     public AtomicBoolean messagesLoaded = new AtomicBoolean(true);
 
+    XmppConnectionService mXmppConnectionService;
+
     public boolean hasMessagesLeftOnServer() {
         return messagesLeftOnServer;
     }
@@ -155,6 +158,19 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
                 if ((message.getType() == Message.TYPE_IMAGE || message.getType() == Message.TYPE_FILE)
                         && message.getEncryption() != Message.ENCRYPTION_PGP) {
                     onMessageFound.onMessageFound(message);
+                }
+            }
+        }
+    }
+
+    public void findFailedMessagesWithFiles(final OnMessageFound onMessageFound) {
+        synchronized (this.messages) {
+            for (final Message message : this.messages) {
+                if ((message.getType() == Message.TYPE_IMAGE || message.getType() == Message.TYPE_FILE)
+                        && message.getEncryption() != Message.ENCRYPTION_PGP) {
+                    if (message.getStatus() == Message.STATUS_SEND_FAILED && !message.isDeleted()) {
+                        onMessageFound.onMessageFound(message);
+                    }
                 }
             }
         }
