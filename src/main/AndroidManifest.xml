@@ -50,6 +50,12 @@
                     android:path="de.pixart.messenger"
                     android:scheme="package" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_RESTARTED" />
+                <data
+                    android:path="de.pixart.messenger"
+                    android:scheme="package" />
+            </intent-filter>
         </receiver>
         <receiver android:name="de.pixart.messenger.services.AlarmReceiver"></receiver>
 
