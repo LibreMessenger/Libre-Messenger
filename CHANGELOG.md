@@ -1,5 +1,13 @@
 ###Changelog
 
+###Version 1.16.4
+* show failed file uploads in chatlist
+* resend failed file uploads automatically
+* preview files in chatlist
+* move (un)mute settings to contact-/conference details
+* UI performance fixes
+* bug fixes
+
 ###Version 1.16.3
 * don't use jingle as fallback if file is too big
 * bug fixes
