@@ -111,7 +111,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                     getString(R.string.notify_never)
             };
             final AtomicInteger choice;
-            if (mConversation.getLongAttribute(Conversation.ATTRIBUTE_MUTED_TILL, 0) <= Long.MAX_VALUE) {
+            if (mConversation.getLongAttribute(Conversation.ATTRIBUTE_MUTED_TILL, 0) == Long.MAX_VALUE) {
                 choice = new AtomicInteger(2);
             } else {
                 choice = new AtomicInteger(mConversation.alwaysNotify() ? 0 : 1);
@@ -142,6 +142,8 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                                             till = System.currentTimeMillis() + (durations[which] * 1000);
                                         }
                                         mConversation.setMutedTill(till);
+                                        xmppConnectionService.updateConversation(mConversation);
+                                        updateView();
                                     }
                                 });
                         builder.create().show();

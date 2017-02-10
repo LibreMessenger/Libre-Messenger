@@ -176,10 +176,10 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
                     getString(R.string.notify_never)
             };
             final AtomicInteger choice;
-            if (mConversation.getLongAttribute(Conversation.ATTRIBUTE_MUTED_TILL, 0) <= Long.MAX_VALUE) {
-                choice = new AtomicInteger(1);
-            } else {
+            if (mConversation.alwaysNotify()) {
                 choice = new AtomicInteger(0);
+            } else {
+                choice = new AtomicInteger(1);
             }
             builder.setSingleChoiceItems(choices, choice.get(), new DialogInterface.OnClickListener() {
                 @Override
@@ -207,6 +207,8 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
                                             till = System.currentTimeMillis() + (durations[which] * 1000);
                                         }
                                         mConversation.setMutedTill(till);
+                                        xmppConnectionService.updateConversation(mConversation);
+                                        populateView();
                                     }
                                 });
                         builder.create().show();
