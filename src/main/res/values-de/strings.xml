@@ -255,7 +255,7 @@
     <string name="pref_dont_save_encrypted">Verschlüsselte Nachrichten nicht speichern</string>
     <string name="pref_dont_save_encrypted_summary">Achtung: kann zu Nachrichtenverlust führen</string>
     <string name="pref_expert_options">Experteneinstellungen</string>
-    <string name="title_activity_about">Über Pix-Art Messenger</string>
+    <string name="title_activity_about">Über</string>
     <string name="pref_about_conversations_summary">Versions- und Lizenzinformationen</string>
     <string name="title_pref_quiet_hours">Ruhige Stunden</string>
     <string name="title_pref_quiet_hours_start_time">Beginn</string>
@@ -680,7 +680,7 @@
     <string name="show_inactive_devices">Zeige inaktive Geräte</string>
     <string name="distrust_omemo_key">Gerät misstrauen</string>
     <string name="distrust_omemo_key_text">Bist du sicher, dass du die Verifizierung dieses Gerätes misstrauen möchtest? Dieses Gerät und Nachrichten von dem Gerät werden als unverifiziert markiert.</string>
-    <string name="transcoding_video_progress">Video wird komprimiert (%s%% fertiggestellt)</string>
+    <string name="transcoding_video_progress">Video wird komprimiert (%s%%)</string>
     <string name="encrypting_message">Nachricht wird verschlüsselt</string>
     <string name="pref_automatically_delete_messages">Nachrichten automatisch löschen</string>
     <string name="pref_automatically_delete_messages_description">Nachrichten von diesel Gerät nach dem eingestellten Zeitfenster automatisch löschen.</string>
