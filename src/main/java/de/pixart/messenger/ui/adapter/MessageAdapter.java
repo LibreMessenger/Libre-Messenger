@@ -933,10 +933,10 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
         if (type == RECEIVED) {
             if (isInValidSession) {
-                viewHolder.message_box.setBackgroundResource(R.drawable.message_bubble_received);
+                viewHolder.message_box.setBackgroundResource(R.drawable.message_bubble_received_white);
                 viewHolder.encryption.setVisibility(View.GONE);
             } else {
-                viewHolder.message_box.setBackgroundResource(R.drawable.message_bubble_received_warning);
+                viewHolder.message_box.setBackgroundResource(R.drawable.message_bubble_received_lightred);
                 viewHolder.encryption.setVisibility(View.VISIBLE);
                 if (omemoEncryption && !message.isTrusted()) {
                     viewHolder.encryption.setText(R.string.not_trusted);
@@ -950,7 +950,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             if (mUseWhiteBackground) {
                 viewHolder.message_box.setBackgroundResource(R.drawable.message_bubble_sent_white);
             } else {
-                viewHolder.message_box.setBackgroundResource(R.drawable.message_bubble_sent);
+                viewHolder.message_box.setBackgroundResource(R.drawable.message_bubble_sent_lightblue);
             }
         }
 
