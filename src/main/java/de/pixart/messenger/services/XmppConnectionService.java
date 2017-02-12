@@ -562,10 +562,14 @@ public class XmppConnectionService extends Service {
             public void run() {
                 final String mimeType = MimeUtils.guessMimeTypeFromUri(XmppConnectionService.this, uri);
                 if (mimeType != null && mimeType.startsWith("video/") && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                    try {
-                        processAsVideo();
-                    } catch (Throwable e) {
+                    if (getFileBackend().useFileAsIs(uri)) {
                         processAsFile();
+                    } else {
+                        try {
+                            processAsVideo();
+                        } catch (Throwable e) {
+                            processAsFile();
+                        }
                     }
                 } else {
                     processAsFile();

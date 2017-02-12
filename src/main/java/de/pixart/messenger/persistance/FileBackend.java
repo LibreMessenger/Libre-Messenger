@@ -261,6 +261,18 @@ public class FileBackend {
         }
     }
 
+    public boolean useFileAsIs(Uri uri) {
+        String path = getOriginalPath(uri);
+        if (path == null) {
+            return false;
+        }
+        if (path.contains(getConversationsDirectory("null"))) {
+            Log.d(Config.LOGTAG, "File " + path + " is in our directory, sending as is");
+            return true;
+        }
+        return false;
+    }
+
     public String getOriginalPath(Uri uri) {
         return FileUtils.getPath(mXmppConnectionService, uri);
     }
