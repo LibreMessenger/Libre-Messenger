@@ -547,6 +547,7 @@ public class ConversationActivity extends XmppActivity
                     menuSecure.setVisible((Config.supportOpenPgp() || Config.supportOmemo()) && Config.multipleEncryptionChoices()); //only if pgp is supported we have a choice
                 } else {
                     menuSecure.setVisible(Config.multipleEncryptionChoices());
+                    menuInviteContact.setVisible(xmppConnectionService != null && xmppConnectionService.findConferenceServer(getSelectedConversation().getAccount()) != null);
                 }
             }
         }
