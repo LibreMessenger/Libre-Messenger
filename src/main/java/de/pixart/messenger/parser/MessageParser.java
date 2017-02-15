@@ -505,7 +505,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                             }
                             mXmppConnectionService.updateMessage(replacedMessage, uuid);
                             mXmppConnectionService.getNotificationService().updateNotification(false);
-                            if (mXmppConnectionService.confirmMessages() && remoteMsgId != null && !isForwarded && !isTypeGroupChat) {
+                            if (mXmppConnectionService.confirmMessages() && (replacedMessage.trusted() || replacedMessage.getType() == Message.TYPE_PRIVATE) && remoteMsgId != null && !isForwarded && !isTypeGroupChat) {
                                 sendMessageReceipts(account, packet);
                             }
                             if (replacedMessage.getEncryption() == Message.ENCRYPTION_PGP) {
@@ -560,7 +560,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                 mXmppConnectionService.updateConversationUi();
             }
 
-            if (mXmppConnectionService.confirmMessages() && message.trusted() && remoteMsgId != null && !isForwarded && !isTypeGroupChat) {
+            if (mXmppConnectionService.confirmMessages() && (message.trusted() || message.getType() == Message.TYPE_PRIVATE) && remoteMsgId != null && !isForwarded && !isTypeGroupChat) {
                 sendMessageReceipts(account, packet);
             }
 
