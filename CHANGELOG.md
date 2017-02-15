@@ -1,5 +1,9 @@
 ###Changelog
 
+###Version 1.16.5
+* show read marker in whisper messages
+* bug fixes 
+
 ###Version 1.16.4
 * show failed file uploads in chatlist
 * resend failed file uploads automatically
