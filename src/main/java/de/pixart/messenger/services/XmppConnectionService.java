@@ -1797,6 +1797,7 @@ public class XmppConnectionService extends Service {
                     conversation = new Conversation(conversationName, account, jid.toBareJid(),
                             Conversation.MODE_SINGLE);
                 }
+                this.databaseBackend.createConversation(conversation);
                 loadMessagesFromDb = false;
             }
             final Conversation c = conversation;
