@@ -808,7 +808,6 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         if (type == STATUS) {
             if ("LOAD_MORE".equals(message.getBody())) {
                 viewHolder.status_message.setVisibility(View.GONE);
-                viewHolder.contact_picture.setVisibility(View.GONE);
                 viewHolder.load_more_messages.setVisibility(View.VISIBLE);
                 viewHolder.load_more_messages.setOnClickListener(new OnClickListener() {
                     @Override
@@ -818,14 +817,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 });
             } else {
                 viewHolder.status_message.setVisibility(View.VISIBLE);
-                viewHolder.contact_picture.setVisibility(View.VISIBLE);
                 viewHolder.load_more_messages.setVisibility(View.GONE);
-                if (conversation.getMode() == Conversation.MODE_SINGLE) {
-                    viewHolder.contact_picture.setImageBitmap(activity
-                            .avatarService().get(conversation.getContact(),
-                                    activity.getPixel(32)));
-                    viewHolder.contact_picture.setAlpha(0.5f);
-                }
                 viewHolder.status_message.setText(message.getBody());
             }
             return view;

@@ -19,30 +19,18 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
-    <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/message_photo"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="-1.5dp"
-        android:padding="1dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_profile"
-        android:background="@drawable/message_border"
-        app:riv_corner_radius="5dp" />
-
     <TextView
         android:id="@+id/status_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="8dp"
-        android:layout_toEndOf="@+id/message_photo"
-        android:layout_toRightOf="@+id/message_photo"
-        android:text="@string/contact_has_read_up_to_this_point"
-        android:textColor="@color/black54"
+        android:text="01.01.2017"
+        android:textColor="@color/black87"
         android:textSize="?attr/TextSizeInfo"
-        android:textStyle="italic" />
+        android:textStyle="italic"
+        android:background="@drawable/date_bubble"
+        android:layout_alignBaseline="@+id/load_more_messages"
+        android:layout_alignBottom="@+id/load_more_messages"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="8dp" />
 
 </RelativeLayout>

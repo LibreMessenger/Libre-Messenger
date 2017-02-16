@@ -41,9 +41,11 @@ import android.widget.Toast;
 
 import net.java.otr4j.session.SessionStatus;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import de.pixart.messenger.Config;
@@ -119,6 +121,9 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     private TextView snackbarMessage;
     private TextView snackbarAction;
     private Toast messageLoaderToast;
+    SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd. MMM yyyy", Locale.getDefault());
+    String first = sdf.format(System.currentTimeMillis());
+    String today = sdf.format(System.currentTimeMillis());
 
     private OnScrollListener mOnScrollListener = new OnScrollListener() {
 
@@ -1264,25 +1269,26 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
             if (showLoadMoreMessages(conversation)) {
                 this.messageList.add(0, Message.createLoadMoreMessage(conversation));
             }
-            if (conversation.getMode() == Conversation.MODE_SINGLE) {
-                ChatState state = conversation.getIncomingChatState();
-                if (state == ChatState.COMPOSING) {
-                    //this.messageList.add(Message.createStatusMessage(conversation, getString(R.string.contact_is_typing, conversation.getName())));
-                } else if (state == ChatState.PAUSED) {
-                    //this.messageList.add(Message.createStatusMessage(conversation, getString(R.string.contact_has_stopped_typing, conversation.getName())));
-                } else {
-                    for (int i = this.messageList.size() - 1; i >= 0; --i) {
-                        if (this.messageList.get(i).getStatus() == Message.STATUS_RECEIVED) {
-                            return;
-                        } else {
-                            if (this.messageList.get(i).getStatus() == Message.STATUS_SEND_DISPLAYED) {
-//								this.messageList.add(i + 1,
-//										Message.createStatusMessage(conversation, getString(R.string.contact_has_read_up_to_this_point, conversation.getName())));
-//								return;
+
+            // show date in chat view
+            int max = this.messageList.size();
+            if (max == 0 || (max <= 1 && showLoadMoreMessages(conversation))){
+                this.messageList.add(0, Message.createDateMessage(conversation, getString(R.string.start_chatting)));
+            } else if ((max > 0 && !showLoadMoreMessages(conversation)) || (max > 1 && showLoadMoreMessages(conversation))) {
+                for (int i = (max - 1); i > 0; --i) {
+                    String last = sdf.format(this.messageList.get(i).getTimeSent());
+                    String date = first;
+                    if (!last.equals(first)) {
+                        if (i < (max - 1)) {
+                            if (today.equals(first)) {
+                                date = getString(R.string.today);
                             }
+                            this.messageList.add(i + 1, Message.createDateMessage(conversation, date));
                         }
                     }
+                    first = last;
                 }
+                this.messageList.add(0, Message.createDateMessage(conversation, first));
             }
         }
     }

@@ -189,6 +189,14 @@ public class Message extends AbstractEntity {
                 cursor.getString(cursor.getColumnIndex(ERROR_MESSAGE)));
     }
 
+    public static Message createDateMessage(Conversation conversation, String body) {
+        final Message message = new Message();
+        message.setType(Message.TYPE_STATUS);
+        message.setConversation(conversation);
+        message.setBody(body);
+        return message;
+    }
+
     public static Message createStatusMessage(Conversation conversation, String body) {
         final Message message = new Message();
         message.setType(Message.TYPE_STATUS);
