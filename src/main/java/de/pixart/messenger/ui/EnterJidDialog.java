@@ -89,7 +89,11 @@ public class EnterJidDialog {
                 }
                 try {
                     if (Config.DOMAIN_LOCK != null) {
-                        accountJid = Jid.fromParts((String) spinner.getSelectedItem(), Config.DOMAIN_LOCK, null);
+                        if (spinner.getSelectedItem().toString().contains("@")) {
+                            accountJid = Jid.fromString((String) spinner.getSelectedItem());
+                        } else {
+                            accountJid = Jid.fromParts(String.valueOf(spinner.getSelectedItem()), Config.DOMAIN_LOCK, null);
+                        }
                     } else {
                         accountJid = Jid.fromString((String) spinner.getSelectedItem());
                     }
