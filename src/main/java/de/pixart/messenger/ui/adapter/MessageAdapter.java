@@ -576,39 +576,35 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.download_button.setVisibility(View.VISIBLE);
         String mimeType = message.getMimeType();
         String fullName = "";
+        final File file = new File(activity.xmppConnectionService.getFileBackend().getFile(message).toString());
         if (mimeType != null) {
             if (message.getMimeType().contains("pdf")) {
                 viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_file_pdf_grey600_48dp, 0, 0, 0);
             } else if (message.getMimeType().contains("vcard")) {
-                File file = new File(activity.xmppConnectionService.getFileBackend().getFile(message).toString());
                 VCard vcard = null;
-                String name = null;
-                String version = null;
                 try {
                     vcard = Ezvcard.parse(file).first();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 if (vcard != null) {
-                    version = vcard.getVersion().toString();
+                    final String version = vcard.getVersion().toString();
                     Log.d(Config.LOGTAG, "VCard version: " + version);
-                    name = vcard.getFormattedName().getValue();
+                    final String name = vcard.getFormattedName().getValue();
                     fullName = " (" + name + ")";
                 }
                 viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_account_card_details_grey600_48dp, 0, 0, 0);
             } else if (message.getMimeType().contains("calendar")) {
                 viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_calendar_grey600_48dp, 0, 0, 0);
             } else if (message.getMimeType().equals("application/vnd.android.package-archive")) {
-                String file = activity.xmppConnectionService.getFileBackend().getFile(message).toString();
-                Log.d(Config.LOGTAG, "APK path: " + file);
+                Log.d(Config.LOGTAG, "APK path: " + file.toString());
                 try {
-                    PackageManager pm = getContext().getPackageManager();
-                    PackageInfo pi = pm.getPackageArchiveInfo(file, 0);
-                    pi.applicationInfo.sourceDir = file;
-                    pi.applicationInfo.publicSourceDir = file;
-                    Drawable APKicon = pi.applicationInfo.loadIcon(pm);
-                    String AppName = (String) pi.applicationInfo.loadLabel(pm);
-                    String AppVersion = (String) pi.versionName;
+                    final PackageManager pm = getContext().getPackageManager();
+                    final PackageInfo pi = pm.getPackageArchiveInfo(file.toString(), 0);
+                    pi.applicationInfo.sourceDir = file.toString();
+                    pi.applicationInfo.publicSourceDir = file.toString();
+                    final String AppName = (String) pi.applicationInfo.loadLabel(pm);
+                    final String AppVersion = (String) pi.versionName;
                     Log.d(Config.LOGTAG, "APK name: " + AppName);
                     fullName = " (" + AppName + " " + AppVersion + ")";
                 } catch (Exception e) {
