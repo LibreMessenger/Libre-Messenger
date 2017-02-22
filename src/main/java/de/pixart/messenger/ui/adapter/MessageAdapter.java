@@ -634,6 +634,22 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.messageBody.setVisibility(View.GONE);
         String url = GeoHelper.MapPreviewUri(message);
         viewHolder.image.setVisibility(View.VISIBLE);
+        double target = metrics.density * 200;
+        int scaledW;
+        int scaledH;
+        if (Math.max(500, 500) * metrics.density <= target) {
+            scaledW = (int) (500 * metrics.density);
+            scaledH = (int) (500 * metrics.density);
+        } else if (Math.max(500, 500) <= target) {
+            scaledW = 500;
+            scaledH = 500;
+        } else {
+            scaledW = (int) target;
+            scaledH = (int) (500 / ((double) 500 / target));
+        }
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(scaledW, scaledH);
+        layoutParams.setMargins(0, (int) (metrics.density * 4), 0, (int) (metrics.density * 4));
+        viewHolder.image.setLayoutParams(layoutParams);
         viewHolder.image.setOnClickListener(new OnClickListener() {
 
             @Override
