@@ -3163,7 +3163,10 @@ public class XmppConnectionService extends Service {
                 disconnect(account, force || account.getTrueStatus().isError() || !hasInternet);
                 account.getRoster().clearPresences();
                 connection.resetEverything();
-                account.getAxolotlService().resetBrokenness();
+                final AxolotlService axolotlService = account.getAxolotlService();
+                if (axolotlService != null) {
+                    axolotlService.resetBrokenness();
+                }
                 if (!hasInternet) {
                     account.setStatus(Account.State.NO_INTERNET);
                 }
