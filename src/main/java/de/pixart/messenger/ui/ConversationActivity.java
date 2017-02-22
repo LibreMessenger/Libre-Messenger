@@ -234,9 +234,9 @@ public class ConversationActivity extends XmppActivity
         this.listAdapter = new ConversationAdapter(this, conversationList);
         listView.setAdapter(this.listAdapter);
 
-        if (getActionBar() != null) {
-            getActionBar().setDisplayHomeAsUpEnabled(false);
-            getActionBar().setHomeButtonEnabled(false);
+        final ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
         }
 
         listView.setOnItemClickListener(new OnItemClickListener() {
@@ -415,8 +415,9 @@ public class ConversationActivity extends XmppActivity
         final Conversation conversation = getSelectedConversation();
         if (ab != null) {
             if (titleShouldBeName && conversation != null) {
-                ab.setDisplayHomeAsUpEnabled(true);
-                ab.setHomeButtonEnabled(true);
+                if ((ab.getDisplayOptions() & ActionBar.DISPLAY_HOME_AS_UP) != ActionBar.DISPLAY_HOME_AS_UP) {
+                    ab.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE);
+                }
                 ab.setDisplayShowTitleEnabled(false);
                 ab.setDisplayShowCustomEnabled(true);
                 ab.setCustomView(R.layout.ab_title);
@@ -475,8 +476,9 @@ public class ConversationActivity extends XmppActivity
                     absubtitle.setOnClickListener(this);
                 }
             } else {
-                ab.setDisplayHomeAsUpEnabled(false);
-                ab.setHomeButtonEnabled(false);
+                if ((ab.getDisplayOptions() & ActionBar.DISPLAY_HOME_AS_UP) == ActionBar.DISPLAY_HOME_AS_UP) {
+                    ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
+                }
                 ab.setDisplayShowTitleEnabled(true);
                 ab.setDisplayShowCustomEnabled(false);
                 ab.setTitle(R.string.app_name);
