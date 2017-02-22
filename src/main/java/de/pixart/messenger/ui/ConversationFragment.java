@@ -1275,9 +1275,9 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
             if (max == 0 || (max <= 1 && showLoadMoreMessages(conversation))){
                 this.messageList.add(0, Message.createDateMessage(conversation, getString(R.string.start_chatting)));
             } else if ((max > 0 && !showLoadMoreMessages(conversation)) || (max > 1 && showLoadMoreMessages(conversation))) {
+                String date = first;
                 for (int i = (max - 1); i > 0; --i) {
                     String last = sdf.format(this.messageList.get(i).getTimeSent());
-                    String date = first;
                     if (!last.equals(first)) {
                         if (i < (max - 1)) {
                             if (today.equals(first)) {
@@ -1288,7 +1288,10 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                     }
                     first = last;
                 }
-                this.messageList.add(0, Message.createDateMessage(conversation, first));
+                if (today.equals(first)) {
+                    date = getString(R.string.today);
+                }
+                this.messageList.add(0, Message.createDateMessage(conversation, date));
             }
         }
     }
