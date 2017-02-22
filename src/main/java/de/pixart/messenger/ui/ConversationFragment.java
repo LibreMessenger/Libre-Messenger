@@ -9,8 +9,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v13.view.inputmethod.InputConnectionCompat;
 import android.support.v13.view.inputmethod.InputContentInfoCompat;
 import android.text.Editable;
@@ -1485,12 +1487,25 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
     @Override
     public void onTypingStarted() {
+        final boolean broadcastLastActivity = broadcastLastActivity();
         Account.State status = conversation.getAccount().getStatus();
         if (status == Account.State.ONLINE && conversation.setOutgoingChatState(ChatState.COMPOSING)) {
             activity.xmppConnectionService.sendChatState(conversation);
         }
+        if (broadcastLastActivity) {
+            activity.xmppConnectionService.sendPresence(conversation.getAccount(), false); //send new presence but don't include idle because we are not
+        }
         activity.hideConversationsOverview();
         updateSendButton();
+    }
+
+    public boolean broadcastLastActivity() {
+        return getPreferences().getBoolean("last_activity", true);
+    }
+
+    public SharedPreferences getPreferences() {
+        return PreferenceManager
+                .getDefaultSharedPreferences(getActivity().getApplicationContext());
     }
 
     @Override

@@ -3558,7 +3558,7 @@ public class XmppConnectionService extends Service {
         sendPresence(account, checkListeners() && broadcastLastActivity());
     }
 
-    private void sendPresence(final Account account, final boolean includeIdleTimestamp) {
+    public void sendPresence(final Account account, final boolean includeIdleTimestamp) {
         PresencePacket packet;
         if (manuallyChangePresence()) {
             packet = mPresenceGenerator.selfPresence(account, account.getPresenceStatus());
