@@ -1667,12 +1667,12 @@ public class XmppConnection implements Runnable {
 
         public boolean mam() {
             return hasDiscoFeature(account.getJid().toBareJid(), Xmlns.MAM)
-                    || hasDiscoFeature(account.getJid().toBareJid(), Xmlns.MAM_LAGECY);
+                    || hasDiscoFeature(account.getJid().toBareJid(), Xmlns.MAM_LEGACY);
         }
 
         public boolean mamLegacy() {
             return !hasDiscoFeature(account.getJid().toBareJid(), Xmlns.MAM)
-                    && hasDiscoFeature(account.getJid().toBareJid(), Xmlns.MAM_LAGECY);
+                    && hasDiscoFeature(account.getJid().toBareJid(), Xmlns.MAM_LEGACY);
         }
 
         public boolean push() {
