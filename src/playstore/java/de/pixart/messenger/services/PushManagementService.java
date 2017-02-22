@@ -105,7 +105,7 @@ public class PushManagementService {
     }
 
     public boolean availableAndUseful(Account account) {
-        return account.getServerIdentity() == XmppConnection.Identity.EJABBERD && available(account);
+        return Patches.SUFFICIENT_PUSH.contains(account.getServerIdentity()) && available(account);
     }
 
     private boolean playServicesAvailable() {

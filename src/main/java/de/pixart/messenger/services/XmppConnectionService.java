@@ -50,6 +50,7 @@ import org.openintents.openpgp.util.OpenPgpServiceConnection;
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.math.BigInteger;
+import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -98,8 +99,8 @@ import de.pixart.messenger.generator.AbstractGenerator;
 import de.pixart.messenger.generator.IqGenerator;
 import de.pixart.messenger.generator.MessageGenerator;
 import de.pixart.messenger.generator.PresenceGenerator;
-import de.pixart.messenger.http.HttpConnectionManager;
 import de.pixart.messenger.http.AesGcmURLStreamHandlerFactory;
+import de.pixart.messenger.http.HttpConnectionManager;
 import de.pixart.messenger.parser.AbstractParser;
 import de.pixart.messenger.parser.IqParser;
 import de.pixart.messenger.parser.MessageParser;
@@ -130,6 +131,7 @@ import de.pixart.messenger.xmpp.OnMessagePacketReceived;
 import de.pixart.messenger.xmpp.OnPresencePacketReceived;
 import de.pixart.messenger.xmpp.OnStatusChanged;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
+import de.pixart.messenger.xmpp.Patches;
 import de.pixart.messenger.xmpp.XmppConnection;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 import de.pixart.messenger.xmpp.forms.Data;
@@ -144,7 +146,6 @@ import de.pixart.messenger.xmpp.stanzas.IqPacket;
 import de.pixart.messenger.xmpp.stanzas.MessagePacket;
 import de.pixart.messenger.xmpp.stanzas.PresencePacket;
 import me.leolin.shortcutbadger.ShortcutBadger;
-import java.net.URL;
 
 public class XmppConnectionService extends Service {
 
@@ -1247,7 +1248,7 @@ public class XmppConnectionService extends Service {
         account.deactivateGracePeriod();
         MessagePacket packet = null;
         final boolean addToConversation = (conversation.getMode() != Conversation.MODE_MULTI
-                || account.getServerIdentity() != XmppConnection.Identity.SLACK)
+                || !Patches.BAD_MUC_REFLECTION.contains(account.getServerIdentity()))
                 && !message.edited();
         boolean saveInDb = addToConversation;
         message.setStatus(Message.STATUS_WAITING);
