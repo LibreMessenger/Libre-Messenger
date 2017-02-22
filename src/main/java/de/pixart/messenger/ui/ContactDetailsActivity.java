@@ -115,6 +115,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
     private TextView contactJidTv;
     private TextView accountJidTv;
     private TextView statusMessage;
+    private TextView resource;
     private CheckBox send;
     private CheckBox receive;
     private Button addContactButton;
@@ -275,6 +276,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
         accountJidTv = (TextView) findViewById(R.id.details_account);
         lastseen = (TextView) findViewById(R.id.details_lastseen);
         statusMessage = (TextView) findViewById(R.id.status_message);
+        resource = (TextView) findViewById(R.id.resource);
         send = (CheckBox) findViewById(R.id.details_send_presence);
         receive = (CheckBox) findViewById(R.id.details_receive_presence);
         badge = (QuickContactBadge) findViewById(R.id.details_contact_badge);
@@ -456,6 +458,14 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
                     }
                 }
                 statusMessage.setText(builder);
+            }
+
+            String resources = contact.getPresences().getMostAvailableResource();
+            if (resources.length() == 0) {
+                resource.setVisibility(View.GONE);
+            } else {
+                statusMessage.setVisibility(View.VISIBLE);
+                statusMessage.setText(resources);
             }
 
             if (contact.getOption(Contact.Options.FROM)) {

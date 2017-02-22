@@ -88,6 +88,18 @@
                     android:textStyle="italic"
                     android:layout_marginBottom="4dp" />
 
+                <github.ankushsachdeva.emojicon.EmojiconTextView
+                    android:id="@+id/resource"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/black54"
+                    android:textSize="?attr/TextSizeBody"
+                    android:textStyle="italic"
+                    android:layout_marginBottom="4dp" />
+
                 <Button
                     android:id="@+id/add_contact_button"
                     android:layout_width="wrap_content"

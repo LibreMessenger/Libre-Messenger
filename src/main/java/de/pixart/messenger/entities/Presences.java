@@ -3,8 +3,10 @@ package de.pixart.messenger.entities;
 import android.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +47,23 @@ public class Presences {
             }
         }
         return status;
+    }
+
+    public String getMostAvailableResource() {
+        synchronized (this.presences) {
+            if (presences.size() < 1) {
+                return "";
+            }
+            Presence p = Collections.min(presences.values());
+            Iterator<Map.Entry<String, Presence>> it = presences.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<String, Presence> entry = it.next();
+                if (entry.getValue().equals(p)) {
+                    return entry.getKey();
+                }
+            }
+            return "";
+        }
     }
 
     public int size() {
