@@ -363,11 +363,8 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
             Toast.makeText(this, R.string.invalid_jid, Toast.LENGTH_SHORT).show();
             return;
         }
-        Conversation conversation = xmppConnectionService.findOrCreateConversation(bookmark.getAccount(), jid, true);
+        Conversation conversation = xmppConnectionService.findOrCreateConversation(bookmark.getAccount(), jid, true, true);
         conversation.setBookmark(bookmark);
-        if (!conversation.getMucOptions().online()) {
-            xmppConnectionService.joinMuc(conversation);
-        }
         if (!bookmark.autojoin() && getPreferences().getBoolean("autojoin", true)) {
             bookmark.setAutojoin(true);
             xmppConnectionService.pushBookmarks(bookmark.getAccount());
@@ -522,23 +519,15 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
                                 account.getBookmarks().add(bookmark);
                                 xmppConnectionService.pushBookmarks(account);
                                 final Conversation conversation = xmppConnectionService
-                                        .findOrCreateConversation(account,
-                                                conferenceJid, true);
+                                        .findOrCreateConversation(account, conferenceJid, true, true);
                                 conversation.setBookmark(bookmark);
-                                if (!conversation.getMucOptions().online()) {
-                                    xmppConnectionService.joinMuc(conversation);
-                                }
                                 dialog.dismiss();
                                 mCurrentDialog = null;
                                 switchToConversation(conversation);
                             }
                         } else {
                             final Conversation conversation = xmppConnectionService
-                                    .findOrCreateConversation(account,
-                                            conferenceJid, true);
-                            if (!conversation.getMucOptions().online()) {
-                                xmppConnectionService.joinMuc(conversation);
-                            }
+                                    .findOrCreateConversation(account,conferenceJid, true, true);
                             dialog.dismiss();
                             mCurrentDialog = null;
                             switchToConversation(conversation);
