@@ -720,13 +720,11 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.mgmt_account_reconnect:
-                if (xmppConnectionServiceBound) {
-                    unbindService(mConnection);
-                    xmppConnectionServiceBound = false;
+                XmppConnection connection = mAccount.getXmppConnection();
+                if (connection != null) {
+                    connection.resetStreamId();
                 }
-                stopService(new Intent(EditAccountActivity.this,
-                        XmppConnectionService.class));
-                finish();
+                xmppConnectionService.reconnectAccountInBackground(mAccount);
                 break;
             case R.id.action_show_block_list:
                 final Intent showBlocklistIntent = new Intent(this, BlocklistActivity.class);
