@@ -14,6 +14,7 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.generator.AbstractGenerator;
+import de.pixart.messenger.utils.Xmlns;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.OnAdvancedStreamFeaturesLoaded;
 import de.pixart.messenger.xmpp.OnIqPacketReceived;
@@ -154,6 +155,7 @@ public class MessageArchiveService implements OnAdvancedStreamFeaturesLoaded {
             this.mXmppConnectionService.sendIqPacket(account, packet, new OnIqPacketReceived() {
                 @Override
                 public void onIqPacketReceived(Account account, IqPacket packet) {
+                    Element fin = packet.findChild("fin", Xmlns.MAM);
                     if (packet.getType() == IqPacket.TYPE.TIMEOUT) {
                         synchronized (MessageArchiveService.this.queries) {
                             MessageArchiveService.this.queries.remove(query);
@@ -161,7 +163,11 @@ public class MessageArchiveService implements OnAdvancedStreamFeaturesLoaded {
                                 query.callback(false);
                             }
                         }
-                    } else if (packet.getType() != IqPacket.TYPE.RESULT) {
+                    } else if (packet.getType() == IqPacket.TYPE.RESULT && fin != null) {
+                        processFin(fin);
+                    } else if (packet.getType() == IqPacket.TYPE.RESULT && query.isLegacy()) {
+                        //do nothing
+                    } else {
                         Log.d(Config.LOGTAG, account.getJid().toBareJid().toString() + ": error executing mam: " + packet.toString());
                         finalizeQuery(query, true);
                     }
@@ -214,12 +220,16 @@ public class MessageArchiveService implements OnAdvancedStreamFeaturesLoaded {
         return queryInProgress(conversation, null);
     }
 
-    public void processFin(Element fin, Jid from) {
-        if (fin == null) {
-            return;
-        }
+    public void processFinLagecy(Element fin, Jid from) {
         Query query = findQuery(fin.getAttribute("queryid"));
-        if (query == null || !query.validFrom(from)) {
+        if (query != null && query.validFrom(from)) {
+            processFin(fin);
+        }
+    }
+
+    public void processFin(Element fin) {
+        Query query = findQuery(fin.getAttribute("queryid"));
+        if (query == null) {
             return;
         }
         boolean complete = fin.getAttributeAsBoolean("complete");
@@ -315,6 +325,14 @@ public class MessageArchiveService implements OnAdvancedStreamFeaturesLoaded {
             query.callback = callback;
             query.catchup = catchup;
             return query;
+        }
+
+        public boolean isLegacy() {
+            if (conversation == null || conversation.getMode() == Conversation.MODE_SINGLE) {
+                return account.getXmppConnection().getFeatures().mamLegacy();
+            } else {
+                return conversation.getMucOptions().mamLegacy();
+            }
         }
 
         public Query next(String reference) {

@@ -3789,12 +3789,13 @@ public class XmppConnectionService extends Service {
     }
 
     public void fetchMamPreferences(Account account, final OnMamPreferencesFetched callback) {
+        final boolean lagecy = account.getXmppConnection().getFeatures().mamLegacy();
         IqPacket request = new IqPacket(IqPacket.TYPE.GET);
-        request.addChild("prefs", "urn:xmpp:mam:0");
+        request.addChild("prefs",lagecy ? Xmlns.MAM_LAGECY : Xmlns.MAM);
         sendIqPacket(account, request, new OnIqPacketReceived() {
             @Override
             public void onIqPacketReceived(Account account, IqPacket packet) {
-                Element prefs = packet.findChild("prefs", "urn:xmpp:mam:0");
+                Element prefs = packet.findChild("prefs",lagecy ? Xmlns.MAM_LAGECY : Xmlns.MAM);
                 if (packet.getType() == IqPacket.TYPE.RESULT && prefs != null) {
                     callback.onPreferencesFetched(prefs);
                 } else {
