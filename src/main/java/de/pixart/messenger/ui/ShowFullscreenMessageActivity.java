@@ -133,7 +133,7 @@ public class ShowFullscreenMessageActivity extends Activity {
         }
     }
 
-    private void DisplayImage(File file) {
+    private void DisplayImage(final File file) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(new File(file.getPath()).getAbsolutePath(), options);
@@ -147,6 +147,7 @@ public class ShowFullscreenMessageActivity extends Activity {
         try {
             Glide.with(this)
                     .load(file)
+                    .dontAnimate()
                     .into(new GlideDrawableImageViewTarget(mImage) {
                         @Override
                         public void onResourceReady(GlideDrawable resource,  GlideAnimation<? super GlideDrawable> animation) {
@@ -160,7 +161,7 @@ public class ShowFullscreenMessageActivity extends Activity {
         }
     }
 
-    private void DisplayVideo(Uri uri) {
+    private void DisplayVideo(final Uri uri) {
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         retriever.setDataSource(uri.getPath());
         height = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
@@ -192,7 +193,7 @@ public class ShowFullscreenMessageActivity extends Activity {
         }
     }
 
-    private void rotateScreen(int width, int height, int rotation) {
+    private void rotateScreen(final int width, final int height, final int rotation) {
         if (width > height) {
             if (rotation == 0 || rotation == 180) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
