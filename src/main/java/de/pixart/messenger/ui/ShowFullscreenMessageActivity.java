@@ -2,12 +2,14 @@ package de.pixart.messenger.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -54,7 +56,9 @@ public class ShowFullscreenMessageActivity extends Activity {
         oldOrientation = getRequestedOrientation();
 
         WindowManager.LayoutParams layout = getWindow().getAttributes();
-        layout.screenBrightness = 1;
+        if (useMaxBrightness()) {
+            layout.screenBrightness = 1;
+        }
         getWindow().setAttributes(layout);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_fullscreen_message);
@@ -212,7 +216,9 @@ public class ShowFullscreenMessageActivity extends Activity {
     @Override
     protected void onResume() {
         WindowManager.LayoutParams layout = getWindow().getAttributes();
-        layout.screenBrightness = 1;
+        if (useMaxBrightness()) {
+            layout.screenBrightness = 1;
+        }
         getWindow().setAttributes(layout);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mVideo.setShouldAutoplay(true);
@@ -223,7 +229,9 @@ public class ShowFullscreenMessageActivity extends Activity {
     protected void onPause() {
         mVideo.reset();
         WindowManager.LayoutParams layout = getWindow().getAttributes();
-        layout.screenBrightness = -1;
+        if (useMaxBrightness()) {
+            layout.screenBrightness = -1;
+        }
         getWindow().setAttributes(layout);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setRequestedOrientation(oldOrientation);
@@ -234,10 +242,20 @@ public class ShowFullscreenMessageActivity extends Activity {
     public void onStop() {
         mVideo.reset();
         WindowManager.LayoutParams layout = getWindow().getAttributes();
-        layout.screenBrightness = -1;
+        if (useMaxBrightness()) {
+            layout.screenBrightness = -1;
+        }
         getWindow().setAttributes(layout);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setRequestedOrientation(oldOrientation);
         super.onStop();
+    }
+
+    public boolean useMaxBrightness() {
+        return getPreferences().getBoolean("use_max_brightness", true);
+    }
+
+    protected SharedPreferences getPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     }
 }
