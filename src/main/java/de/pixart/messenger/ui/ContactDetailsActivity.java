@@ -464,8 +464,8 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             if (resources.length() == 0) {
                 resource.setVisibility(View.GONE);
             } else {
-                statusMessage.setVisibility(View.VISIBLE);
-                statusMessage.setText(resources);
+                resource.setVisibility(View.VISIBLE);
+                resource.setText(resources);
             }
 
             if (contact.getOption(Contact.Options.FROM)) {
