@@ -137,7 +137,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem,
-                             int visibleItemCount, int totalItemCount) {
+                             int visibleItemCount, final int totalItemCount) {
             synchronized (ConversationFragment.this.messageList) {
                 if (firstVisibleItem < 5 && conversation != null && conversation.messagesLoaded.compareAndSet(true,false) && messageList.size() > 0) {
                     long timestamp;
@@ -175,6 +175,8 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                                     }
                                     messageListAdapter.notifyDataSetChanged();
                                     int pos = Math.max(getIndexOf(uuid, messageList), 0);
+                                    messagesView.setSmoothScrollbarEnabled(true);
+                                    messagesView.setFastScrollEnabled(false);
                                     messagesView.setSelectionFromTop(pos, pxOffset);
                                     if (messageLoaderToast != null) {
                                         messageLoaderToast.cancel();
@@ -1295,8 +1297,8 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                     }
                     first = last;
                 }
-                String date = first;
-                if (today.equals(first)) {
+                String date = sdf.format(this.messageList.get(max - 1).getTimeSent());
+                if (today.equals(date)) {
                     date = getString(R.string.today);
                 }
                 this.messageList.add(0, Message.createDateMessage(conversation, date));
