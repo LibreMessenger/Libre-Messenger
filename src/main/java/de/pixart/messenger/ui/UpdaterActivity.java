@@ -182,15 +182,24 @@ public class UpdaterActivity extends Activity {
     private int checkVersion(String remoteVersion, String installedVersion) {
         String[] remote = null;
         String[] installed = null;
+        String[] remoteV = null;
+        String[] installedV = null;
         try {
-            remote = remoteVersion.split("\\.");
-        } catch (Exception ignored) {
-            //ignored
+            installedV = installedVersion.split(" ");
+            Log.d(Config.LOGTAG, "Updater Version installed: " + installedV[0]);
+            installed = installedV[0].split("\\.");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         try {
-            installed = installedVersion.split("\\.");
-        } catch (Exception ignored) {
-            //ignored
+            remoteV = remoteVersion.split(" ");
+            if (installedV[1] != null) {
+                remoteV[0] = remoteV[0] + ".1";
+            }
+            Log.d(Config.LOGTAG, "Updater Version on server: " + remoteV[0]);
+            remote = remoteV[0].split("\\.");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         int i = 0;
         // set index to first non-equal ordinal or length of shortest localVersion string
