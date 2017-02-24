@@ -59,7 +59,7 @@ public class Presences {
             while (it.hasNext()) {
                 Map.Entry<String, Presence> entry = it.next();
                 if (entry.getValue().equals(p)) {
-                    return entry.getKey();
+                    return "(" + entry.getKey() + ")";
                 }
             }
             return "";
