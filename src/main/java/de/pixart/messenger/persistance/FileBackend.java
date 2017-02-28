@@ -262,11 +262,11 @@ public class FileBackend {
     }
 
     public boolean useFileAsIs(Uri uri) {
-        String path = getOriginalPath(uri);
+        String path = uri.getPath();
         if (path == null) {
             return false;
         }
-        if (path.contains(getConversationsDirectory("null"))) {
+        if (path.contains(getDirectoryName("null"))) {
             Log.d(Config.LOGTAG, "File " + path + " is in our directory, sending as is");
             return true;
         }
