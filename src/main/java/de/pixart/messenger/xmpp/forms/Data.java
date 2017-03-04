@@ -1,5 +1,7 @@
 package de.pixart.messenger.xmpp.forms;
 
+import android.os.Bundle;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -53,6 +55,15 @@ public class Data extends Element {
             this.addChild(field);
         }
         field.setValues(values);
+    }
+
+    public void submit(Bundle options) {
+        for (Field field : getFields()) {
+            if (options.containsKey(field.getFieldName())) {
+                field.setValue(options.getString(field.getFieldName()));
+            }
+        }
+        submit();
     }
 
     public void submit() {
