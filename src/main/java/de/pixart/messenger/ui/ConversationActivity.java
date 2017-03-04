@@ -2073,7 +2073,7 @@ public class ConversationActivity extends XmppActivity
     }
 
     public boolean enterIsSend() {
-        return getPreferences().getBoolean("enter_is_send", false);
+        return getPreferences().getBoolean("enter_is_send", getResources().getBoolean(R.bool.enter_is_send));
     }
 
     @Override
