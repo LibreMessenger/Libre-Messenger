@@ -18,7 +18,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
@@ -29,8 +28,6 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v4.widget.SlidingPaneLayout.PanelSlideListener;
-import android.text.SpannableStringBuilder;
-import android.text.style.ImageSpan;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
@@ -914,24 +911,6 @@ public class ConversationActivity extends XmppActivity
         builder.create().show();
     }
 
-    /**
-     * Moves icons from the PopupMenu's MenuItems' icon fields into the menu title as a Spannable with the icon and title text.
-     */
-    public static void insertMenuItemIcons(Context context, PopupMenu popupMenu) {
-        Menu menu = popupMenu.getMenu();
-        for (int i = 0; i < menu.size(); i++) {
-            MenuItem menuItem = menu.getItem(i);
-            Drawable icon = menuItem.getIcon();
-            int iconSize = context.getResources().getDimensionPixelSize(R.dimen.menu_item_icon_size);
-            icon.setBounds(0, 0, iconSize, iconSize);
-            ImageSpan imageSpan = new ImageSpan(icon);
-            SpannableStringBuilder ssb = new SpannableStringBuilder("   " + menuItem.getTitle());
-            ssb.setSpan(imageSpan, 0, 1, 0);
-            menuItem.setTitle(ssb);
-            menuItem.setIcon(null);
-        }
-    }
-
     protected void attachFileDialog() {
         View menuAttachFile = findViewById(R.id.action_attach_file);
         if (menuAttachFile == null) {
@@ -972,7 +951,7 @@ public class ConversationActivity extends XmppActivity
                 return false;
             }
         });
-        insertMenuItemIcons(getApplicationContext(), attachFilePopup);
+        UIHelper.showIconsInPopup(attachFilePopup);
         attachFilePopup.show();
     }
 
