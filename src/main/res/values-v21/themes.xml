@@ -40,6 +40,13 @@
         <item name="attr/icon_share">@drawable/ic_share_white_24dp</item>
         <item name="attr/icon_scan_qr_code">@drawable/ic_barcode_scan_white_24dp</item>
 
+        <item name="attr/ic_attach_camera">@drawable/ic_attach_camera</item>
+        <item name="attr/ic_attach_document">@drawable/ic_attach_document</item>
+        <item name="attr/ic_attach_location">@drawable/ic_attach_location</item>
+        <item name="attr/ic_attach_photo">@drawable/ic_attach_photo</item>
+        <item name="attr/ic_attach_video">@drawable/ic_attach_video</item>
+        <item name="attr/ic_attach_record">@drawable/ic_attach_record</item>
+
     </style>
 
 </resources>
