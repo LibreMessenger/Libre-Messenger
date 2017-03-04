@@ -43,5 +43,6 @@
     <attr name="ic_attach_location" format="reference" />
     <attr name="ic_attach_photo" format="reference" />
     <attr name="ic_attach_record" format="reference" />
+    <attr name="ic_attach_video" format="reference" />
 
 </resources>
