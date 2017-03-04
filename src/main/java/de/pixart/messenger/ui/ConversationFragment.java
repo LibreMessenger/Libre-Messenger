@@ -49,6 +49,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
@@ -1122,6 +1123,10 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         mEditMessage.requestFocus();
     }
 
+    public void doneSendingPgpMessage() {
+        mSendingPgpMessage.set(false);
+    }
+
     enum SendButtonAction {TEXT, TAKE_PHOTO, SEND_LOCATION, RECORD_VOICE, CANCEL, CHOOSE_PICTURE}
 
     private int getSendButtonImageResource(SendButtonAction action, Presence.Status status) {
@@ -1343,6 +1348,8 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         messageSent();
     }
 
+    private AtomicBoolean mSendingPgpMessage = new AtomicBoolean(false);
+
     protected void sendPgpMessage(final Message message) {
         final ConversationActivity activity = (ConversationActivity) getActivity();
         final XmppConnectionService xmppService = activity.xmppConnectionService;
@@ -1354,6 +1361,9 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         if (conversation.getAccount().getPgpSignature() == null) {
             activity.announcePgp(conversation.getAccount(), conversation, activity.onOpenPGPKeyPublished);
             return;
+        }
+        if (!mSendingPgpMessage.compareAndSet(false, true)) {
+            Log.d(Config.LOGTAG, "sending pgp message already in progress");
         }
         if (conversation.getMode() == Conversation.MODE_SINGLE) {
             if (contact.getPgpKeyId() != 0) {
@@ -1384,6 +1394,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                                         ).show();
                                     }
                                 });
+                                mSendingPgpMessage.set(false);
                             }
                         });
 

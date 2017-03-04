@@ -2009,6 +2009,9 @@ public class ConversationActivity extends XmppActivity
                                 ).show();
                             }
                         });
+                        if (mConversationFragment != null) {
+                            mConversationFragment.doneSendingPgpMessage();
+                        }
                     }
                 });
     }
