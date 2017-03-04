@@ -355,11 +355,11 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                         break;
                     case CANCEL:
                         if (conversation != null) {
-                            if (conversation.getCorrectingMessage() != null) {
-                                conversation.setCorrectingMessage(null);
+                            if (conversation.setCorrectingMessage(null)) {
                                 mEditMessage.getEditableText().clear();
-                            }
-                            if (conversation.getMode() == Conversation.MODE_MULTI) {
+                                mEditMessage.getEditableText().append(conversation.getDraftMessage());
+                                conversation.setDraftMessage(null);
+                            } else if (conversation.getMode() == Conversation.MODE_MULTI) {
                                 conversation.setNextCounterpart(null);
                             }
                             updateChatMsgHint();
@@ -873,6 +873,8 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
             message = message.next();
         }
         this.conversation.setCorrectingMessage(message);
+        final Editable editable = mEditMessage.getText();
+        this.conversation.setDraftMessage(editable.toString());
         this.mEditMessage.getEditableText().clear();
         this.mEditMessage.getEditableText().append(message.getBody());
 
@@ -1107,8 +1109,12 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     }
 
     protected void messageSent() {
-        mEditMessage.getEditableText().clear();
-        conversation.setCorrectingMessage(null);
+        Editable editable = mEditMessage.getEditableText();
+        editable.clear();
+        if (conversation.setCorrectingMessage(null)) {
+            editable.append(conversation.getDraftMessage());
+            conversation.setDraftMessage(null);
+        }
         updateChatMsgHint();
         new Handler().post(new Runnable() {
             @Override
