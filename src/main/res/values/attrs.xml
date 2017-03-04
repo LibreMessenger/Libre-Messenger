@@ -4,6 +4,7 @@
     <attr name="TextSizeInfo" format="dimension" />
     <attr name="TextSizeBody" format="dimension" />
     <attr name="TextSizeHeadline" format="dimension" />
+    <attr name="IconSize" format="dimension" />
 
     <attr name="icon_add_group" format="reference" />
     <attr name="icon_add_person" format="reference" />

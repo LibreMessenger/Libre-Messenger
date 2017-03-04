@@ -75,6 +75,8 @@
                             android:layout_height="wrap_content"
                             android:scrollHorizontally="false"
                             android:singleLine="true"
+                            android:gravity="center_vertical"
+                            android:minHeight="?attr/IconSize"
                             android:text="This is a placeholder text to show the last messages"
                             android:textColor="@color/black87"
                             android:textSize="?attr/TextSizeBody" />
@@ -93,8 +95,8 @@
 
                     <ImageView
                         android:id="@+id/notification_status"
-                        android:layout_width="16sp"
-                        android:layout_height="16sp"
+                        android:layout_width="?attr/IconSize"
+                        android:layout_height="?attr/IconSize"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="4dp"
