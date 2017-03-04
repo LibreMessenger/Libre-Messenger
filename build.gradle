@@ -103,7 +103,7 @@ android {
 
     productFlavors {
         playstore
-        free
+        standard
         open {
             buildConfigField("String", "XMPP_IP", "null")
             buildConfigField("Integer[]", "XMPP_Ports", "null")
