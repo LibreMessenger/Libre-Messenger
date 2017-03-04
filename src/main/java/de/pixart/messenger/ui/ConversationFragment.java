@@ -416,7 +416,6 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
             message.setBody(body);
             message.setEdited(message.getUuid());
             message.setUuid(UUID.randomUUID().toString());
-            conversation.setCorrectingMessage(null);
         }
         switch (conversation.getNextEncryption()) {
             case Message.ENCRYPTION_OTR:
@@ -1108,7 +1107,8 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     }
 
     protected void messageSent() {
-        mEditMessage.setText("");
+        mEditMessage.getEditableText().clear();
+        conversation.setCorrectingMessage(null);
         updateChatMsgHint();
         new Handler().post(new Runnable() {
             @Override
