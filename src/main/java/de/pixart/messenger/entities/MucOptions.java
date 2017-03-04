@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.pixart.messenger.R;
-import de.pixart.messenger.utils.Xmlns;
+import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.xmpp.forms.Data;
 import de.pixart.messenger.xmpp.forms.Field;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
@@ -374,11 +374,11 @@ public class MucOptions {
     }
 
     public boolean mamSupport() {
-        return hasFeature(Xmlns.MAM) || hasFeature(Xmlns.MAM_LEGACY);
+        return hasFeature(Namespace.MAM) || hasFeature(Namespace.MAM_LEGACY);
     }
 
     public boolean mamLegacy() {
-        return hasFeature(Xmlns.MAM_LEGACY) && !hasFeature(Xmlns.MAM);
+        return hasFeature(Namespace.MAM_LEGACY) && !hasFeature(Namespace.MAM);
     }
 
     public boolean nonanonymous() {

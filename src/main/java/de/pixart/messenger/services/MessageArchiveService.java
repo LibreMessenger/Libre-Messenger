@@ -14,7 +14,7 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.generator.AbstractGenerator;
-import de.pixart.messenger.utils.Xmlns;
+import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.OnAdvancedStreamFeaturesLoaded;
 import de.pixart.messenger.xmpp.OnIqPacketReceived;
@@ -155,7 +155,7 @@ public class MessageArchiveService implements OnAdvancedStreamFeaturesLoaded {
             this.mXmppConnectionService.sendIqPacket(account, packet, new OnIqPacketReceived() {
                 @Override
                 public void onIqPacketReceived(Account account, IqPacket packet) {
-                    Element fin = packet.findChild("fin", Xmlns.MAM);
+                    Element fin = packet.findChild("fin", Namespace.MAM);
                     if (packet.getType() == IqPacket.TYPE.TIMEOUT) {
                         synchronized (MessageArchiveService.this.queries) {
                             MessageArchiveService.this.queries.remove(query);

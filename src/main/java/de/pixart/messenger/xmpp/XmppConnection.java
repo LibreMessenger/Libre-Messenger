@@ -70,7 +70,7 @@ import de.pixart.messenger.ui.EditAccountActivity;
 import de.pixart.messenger.utils.DNSHelper;
 import de.pixart.messenger.utils.SSLSocketHelper;
 import de.pixart.messenger.utils.SocksSocketFactory;
-import de.pixart.messenger.utils.Xmlns;
+import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xml.Tag;
 import de.pixart.messenger.xml.TagWriter;
@@ -1631,7 +1631,7 @@ public class XmppConnection implements Runnable {
         }
 
         public boolean blocking() {
-            return hasDiscoFeature(account.getServer(), Xmlns.BLOCKING);
+            return hasDiscoFeature(account.getServer(), Namespace.BLOCKING);
         }
 
         public boolean spamReporting() {
@@ -1639,7 +1639,7 @@ public class XmppConnection implements Runnable {
         }
 
         public boolean register() {
-            return hasDiscoFeature(account.getServer(), Xmlns.REGISTER);
+            return hasDiscoFeature(account.getServer(), Namespace.REGISTER);
         }
 
         public boolean sm() {
@@ -1666,13 +1666,13 @@ public class XmppConnection implements Runnable {
         }
 
         public boolean mam() {
-            return hasDiscoFeature(account.getJid().toBareJid(), Xmlns.MAM)
-                    || hasDiscoFeature(account.getJid().toBareJid(), Xmlns.MAM_LEGACY);
+            return hasDiscoFeature(account.getJid().toBareJid(), Namespace.MAM)
+                    || hasDiscoFeature(account.getJid().toBareJid(), Namespace.MAM_LEGACY);
         }
 
         public boolean mamLegacy() {
-            return !hasDiscoFeature(account.getJid().toBareJid(), Xmlns.MAM)
-                    && hasDiscoFeature(account.getJid().toBareJid(), Xmlns.MAM_LEGACY);
+            return !hasDiscoFeature(account.getJid().toBareJid(), Namespace.MAM)
+                    && hasDiscoFeature(account.getJid().toBareJid(), Namespace.MAM_LEGACY);
         }
 
         public boolean push() {
@@ -1692,10 +1692,10 @@ public class XmppConnection implements Runnable {
             if (Config.DISABLE_HTTP_UPLOAD) {
                 return false;
             } else {
-                List<Entry<Jid, ServiceDiscoveryResult>> items = findDiscoItemsByFeature(Xmlns.HTTP_UPLOAD);
+                List<Entry<Jid, ServiceDiscoveryResult>> items = findDiscoItemsByFeature(Namespace.HTTP_UPLOAD);
                 if (items.size() > 0) {
                     try {
-                        long maxsize = Long.parseLong(items.get(0).getValue().getExtendedDiscoInformation(Xmlns.HTTP_UPLOAD, "max-file-size"));
+                        long maxsize = Long.parseLong(items.get(0).getValue().getExtendedDiscoInformation(Namespace.HTTP_UPLOAD, "max-file-size"));
                         if (filesize <= maxsize) {
                             return true;
                         } else {
@@ -1712,10 +1712,10 @@ public class XmppConnection implements Runnable {
         }
 
         public long getMaxHttpUploadSize() {
-            List<Entry<Jid, ServiceDiscoveryResult>> items = findDiscoItemsByFeature(Xmlns.HTTP_UPLOAD);
+            List<Entry<Jid, ServiceDiscoveryResult>> items = findDiscoItemsByFeature(Namespace.HTTP_UPLOAD);
             if (items.size() > 0) {
                 try {
-                    return Long.parseLong(items.get(0).getValue().getExtendedDiscoInformation(Xmlns.HTTP_UPLOAD, "max-file-size"));
+                    return Long.parseLong(items.get(0).getValue().getExtendedDiscoInformation(Namespace.HTTP_UPLOAD, "max-file-size"));
                 } catch (Exception e) {
                     return -1;
                 }
@@ -1725,7 +1725,7 @@ public class XmppConnection implements Runnable {
         }
 
         public boolean stanzaIds() {
-            return hasDiscoFeature(account.getJid().toBareJid(), Xmlns.STANZA_IDS);
+            return hasDiscoFeature(account.getJid().toBareJid(), Namespace.STANZA_IDS);
         }
     }
 

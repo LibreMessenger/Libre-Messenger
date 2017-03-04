@@ -26,7 +26,7 @@ import de.pixart.messenger.services.AbstractConnectionManager;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.UiCallback;
 import de.pixart.messenger.utils.CryptoHelper;
-import de.pixart.messenger.utils.Xmlns;
+import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.OnIqPacketReceived;
 import de.pixart.messenger.xmpp.jid.Jid;
@@ -119,13 +119,13 @@ public class HttpUploadConnection implements Transferable {
             this.file.setExpectedSize(pair.second);
             this.mFileInputStream = pair.first;
         }
-        Jid host = account.getXmppConnection().findDiscoItemByFeature(Xmlns.HTTP_UPLOAD);
+        Jid host = account.getXmppConnection().findDiscoItemByFeature(Namespace.HTTP_UPLOAD);
         IqPacket request = mXmppConnectionService.getIqGenerator().requestHttpUploadSlot(host, file, mime);
         mXmppConnectionService.sendIqPacket(account, request, new OnIqPacketReceived() {
             @Override
             public void onIqPacketReceived(Account account, IqPacket packet) {
                 if (packet.getType() == IqPacket.TYPE.RESULT) {
-                    Element slot = packet.findChild("slot", Xmlns.HTTP_UPLOAD);
+                    Element slot = packet.findChild("slot", Namespace.HTTP_UPLOAD);
                     if (slot != null) {
                         try {
                             mGetUrl = new URL(slot.findChildContent("get"));
