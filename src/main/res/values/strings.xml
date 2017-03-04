@@ -584,8 +584,13 @@
     <string name="notify_only_when_highlighted">Notify only when highlighted</string>
     <string name="notify_never">Notifications disabled</string>
     <string name="notify_paused">Notifications paused</string>
-    <string name="pref_picture_compression">Compress Pictures</string>
+    <string name="pref_picture_compression">Compress pictures</string>
     <string name="pref_picture_compression_summary">Resize and compress pictures</string>
+    <string name="pref_video_compression">Compress videos</string>
+    <string name="pref_video_compression_summary">Resize and compress videos</string>
+    <string name="video_low">low (144p)</string>
+    <string name="video_mid">middle (360p)</string>
+    <string name="video_high">high (720p)</string>
     <string name="always">Always</string>
     <string name="automatically">Automatically</string>
     <string name="battery_optimizations_enabled">Battery optimizations enabled</string>

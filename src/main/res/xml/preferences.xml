@@ -120,6 +120,13 @@
             android:key="picture_compression"
             android:summary="@string/pref_picture_compression_summary"
             android:title="@string/pref_picture_compression" />
+        <ListPreference
+            android:defaultValue="720"
+            android:entries="@array/video_compression_entries"
+            android:entryValues="@array/video_compression_values"
+            android:key="video_compression"
+            android:summary="@string/pref_video_compression_summary"
+            android:title="@string/pref_video_compression" />
     </PreferenceScreen>
     <!--status-->
     <PreferenceScreen

@@ -555,7 +555,7 @@ public class XmppConnectionService extends Service {
                     }
                 };
                 MediaTranscoder.getInstance().transcodeVideo(fileDescriptor, file.getAbsolutePath(),
-                        MediaFormatStrategyPresets.createAndroid720pStrategy(Config.VIDEO_BITRATE), listener);
+                        MediaFormatStrategyPresets.createAndroidStandardStrategy(Config.VIDEO_BITRATE, getCompressVideosPreference()), listener);
             }
 
             @Override
@@ -880,6 +880,19 @@ public class XmppConnectionService extends Service {
 
     private String getCompressPicturesPreference() {
         return getPreferences().getString("picture_compression", "auto");
+    }
+
+    private int getCompressVideosPreference() {
+        switch (getPreferences().getString("video_compression", "high")) {
+            case "low":
+                return 144;
+            case "mid":
+                return 360;
+            case "high":
+                return 720;
+            default:
+                return 720;
+        }
     }
 
     private Presence.Status getTargetPresence() {

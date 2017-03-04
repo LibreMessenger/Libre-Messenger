@@ -692,5 +692,10 @@
     <string name="start_chatting">Fange an zu schreiben…</string>
     <string name="pref_use_max_brightness">Maximale Helligkeit</string>
     <string name="pref_use_max_brightness_summary">Maximale Helligkeit aktivieren, wenn Videos oder Bilder im Vollbild betracht werden.</string>
+    <string name="pref_video_compression">Videos komprimieren</string>
+    <string name="pref_video_compression_summary">Videogröße anpassen und komprimieren</string>
+    <string name="video_high">hoch (720p)</string>
+    <string name="video_low">niedrig (144p)</string>
+    <string name="video_mid">mittelmäßig (360p)</string>
 
 </resources>

@@ -70,6 +70,18 @@
         <item>@string/always</item>
     </string-array>
 
+    <string-array name="video_compression_values">
+        <item>low</item>
+        <item>mid</item>
+        <item>high</item>
+    </string-array>
+
+    <string-array name="video_compression_entries">
+        <item>@string/video_low</item>
+        <item>@string/video_mid</item>
+        <item>@string/video_high</item>
+    </string-array>
+
     <string-array name="mam_prefs">
         <item>@string/never</item>
         <item>@string/contacts</item>
