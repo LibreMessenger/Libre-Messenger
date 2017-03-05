@@ -555,7 +555,7 @@ public class XmppConnectionService extends Service {
                     }
                 };
                 MediaTranscoder.getInstance().transcodeVideo(fileDescriptor, file.getAbsolutePath(),
-                        MediaFormatStrategyPresets.createAndroidStandardStrategy(Config.VIDEO_BITRATE, getCompressVideosPreference()), listener);
+                        MediaFormatStrategyPresets.createAndroidStandardStrategy(getCompressVideoBitratePreference(), getCompressVideoResolutionPreference()), listener);
             }
 
             @Override
@@ -882,7 +882,7 @@ public class XmppConnectionService extends Service {
         return getPreferences().getString("picture_compression", "auto");
     }
 
-    private int getCompressVideosPreference() {
+    private int getCompressVideoResolutionPreference() {
         switch (getPreferences().getString("video_compression", "high")) {
             case "low":
                 return 144;
@@ -892,6 +892,19 @@ public class XmppConnectionService extends Service {
                 return 720;
             default:
                 return 720;
+        }
+    }
+
+    private int getCompressVideoBitratePreference() {
+        switch (getPreferences().getString("video_compression", "high")) {
+            case "low":
+                return 100000;
+            case "mid":
+                return 500000;
+            case "high":
+                return 2000000;
+            default:
+                return 2000000;
         }
     }
 
