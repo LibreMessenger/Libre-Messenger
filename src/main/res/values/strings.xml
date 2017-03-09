@@ -746,4 +746,5 @@
     <string name="start_chatting">Start chtatting…</string>
     <string name="pref_use_max_brightness_summary">Switch to maximum brightness while watching videos or images in fullscreen.</string>
     <string name="pref_use_max_brightness">Maximum brightness</string>
+    <string name="block_jabber_id">Block Jabber ID</string>
 </resources>

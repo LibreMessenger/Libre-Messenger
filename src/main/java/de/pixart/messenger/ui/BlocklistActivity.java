@@ -2,18 +2,23 @@ package de.pixart.messenger.ui;
 
 import android.os.Bundle;
 import android.text.Editable;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
+import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.jid.Jid;
 
 public class BlocklistActivity extends AbstractSearchableListItemActivity implements OnUpdateBlocklist {
-
+    private List<String> mKnownHosts = new ArrayList<String>();
     private Account account = null;
 
     @Override
@@ -41,6 +46,7 @@ public class BlocklistActivity extends AbstractSearchableListItemActivity implem
             }
         }
         filterContacts();
+        this.mKnownHosts = xmppConnectionService.getKnownHosts();
     }
 
     @Override
@@ -56,6 +62,41 @@ public class BlocklistActivity extends AbstractSearchableListItemActivity implem
             Collections.sort(getListItems());
         }
         getListItemAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        menu.findItem(R.id.action_add_contact).setVisible(true);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add_contact:
+                showEnterJidDialog();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    protected void showEnterJidDialog() {
+        EnterJidDialog dialog = new EnterJidDialog(
+                this, mKnownHosts, null,
+                getString(R.string.block_jabber_id), getString(R.string.block),
+                null, account.getJid().toBareJid().toString(), true
+        );
+
+        dialog.setOnEnterJidDialogPositiveListener(new EnterJidDialog.OnEnterJidDialogPositiveListener() {
+            @Override
+            public boolean onEnterJidDialogPositive(Jid accountJid, Jid contactJid) throws EnterJidDialog.JidError {
+                Contact contact = account.getRoster().getContact(contactJid);
+                xmppConnectionService.sendBlockRequest(contact, false);
+                return true;
+            }
+        });
+        dialog.show();
     }
 
     protected void refreshUiReal() {
