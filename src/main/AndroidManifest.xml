@@ -26,6 +26,7 @@
     <uses-sdk tools:overrideLibrary="net.ypresto.androidtranscoder" />
 
     <application
+        android:networkSecurityConfig="@xml/network_security_configuration"
         android:name="android.support.multidex.MultiDexApplication"
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
