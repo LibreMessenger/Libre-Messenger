@@ -67,7 +67,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="3sp"
+                        android:layout_marginRight="5sp"
                         android:gravity="center_vertical"
                         android:minHeight="?attr/IconSize"
                         android:text="@string/me"
@@ -77,19 +77,20 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentLeft="false"
                         android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/notification_status"
+                        android:layout_toRightOf="@+id/sender_name"
                         android:orientation="vertical">
 
                         <github.ankushsachdeva.emojicon.EmojiconTextView
                             android:id="@+id/conversation_lastmsg"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:scrollHorizontally="false"
-                            android:singleLine="true"
                             android:gravity="center_vertical"
                             android:minHeight="?attr/IconSize"
+                            android:scrollHorizontally="false"
+                            android:singleLine="true"
                             android:text="This is a placeholder text to show the last messages"
                             android:textColor="@color/black87"
                             android:textSize="?attr/TextSizeBody" />
@@ -98,12 +99,12 @@
                             android:id="@+id/conversation_lastimage"
                             android:layout_width="wrap_content"
                             android:layout_height="36dp"
-                            app:riv_border_color="@color/grey500"
-                            app:riv_border_width="1dp"
+                            android:maxWidth="400dp"
                             android:scaleType="centerCrop"
                             android:visibility="gone"
-                            app:riv_corner_radius="5dp"
-                            android:maxWidth="400dp" />
+                            app:riv_border_color="@color/grey500"
+                            app:riv_border_width="1dp"
+                            app:riv_corner_radius="5dp" />
                     </LinearLayout>
 
                     <ImageView
