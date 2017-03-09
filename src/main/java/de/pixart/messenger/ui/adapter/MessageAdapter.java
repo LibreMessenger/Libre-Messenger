@@ -116,14 +116,13 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
     private DisplayMetrics metrics;
 
-    private AudioWife audioWife;
-
     private OnContactPictureClicked mOnContactPictureClickedListener;
     private OnContactPictureLongClicked mOnContactPictureLongClickedListener;
 
     private boolean mIndicateReceived = false;
     private OnQuoteListener onQuoteListener;
     private final ListSelectionManager listSelectionManager = new ListSelectionManager();
+    private AudioWife audioWife = new AudioWife();
     private HashMap<Integer, AudioWife> audioPlayer;
     private boolean mUseWhiteBackground = false;
 
@@ -545,7 +544,9 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     }
 
     private void displayAudioMessage(ViewHolder viewHolder, final Message message, int position) {
-        if (audioPlayer == null) audioPlayer = new HashMap<>();
+        if (audioPlayer == null) {
+            audioPlayer = new HashMap<>();
+        }
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.GONE);
         if (viewHolder.download_button != null) {
