@@ -425,13 +425,14 @@ public class NotificationService {
                     style.addLine(styledString);
                 }
                 builder.setStyle(style);
-                if (messages.size() == 1) {
+                int count = messages.size();
+                if (count == 1) {
                     final String name = UIHelper.getMessageDisplayName(messages.get(0));
                     styledString = new SpannableString(name + ": " + messages.get(0).getBody());
                     styledString.setSpan(new StyleSpan(Typeface.BOLD), 0, name.length(), 0);
                     builder.setContentText(styledString);
                 } else {
-                    builder.setContentText(messages.size() + " " + mXmppConnectionService.getString(R.string.unread_conversations));
+                    builder.setContentText(mXmppConnectionService.getResources().getQuantityString(R.plurals.x_messages,count,count));
                 }
             }
         }
