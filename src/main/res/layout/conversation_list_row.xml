@@ -61,6 +61,19 @@
                     android:layout_below="@id/conversation_name"
                     android:layout_marginTop="4dp">
 
+                    <TextView
+                        android:id="@+id/sender_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="3sp"
+                        android:gravity="center_vertical"
+                        android:minHeight="?attr/IconSize"
+                        android:text="@string/me"
+                        android:textColor="@color/primary"
+                        android:visibility="visible" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

@@ -84,6 +84,7 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
         }
         TextView mLastMessage = (TextView) view.findViewById(R.id.conversation_lastmsg);
         TextView mTimestamp = (TextView) view.findViewById(R.id.conversation_lastupdate);
+        TextView mSenderName = (TextView) view.findViewById(R.id.sender_name);
         ImageView imagePreview = (ImageView) view.findViewById(R.id.conversation_lastimage);
         ImageView notificationStatus = (ImageView) view.findViewById(R.id.notification_status);
         TextView mUnread = (TextView) view.findViewById(R.id.conversation_unread);
@@ -125,15 +126,30 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
             if (preview.second) {
                 if (conversation.isRead()) {
                     mLastMessage.setTypeface(null, Typeface.ITALIC);
+                    mSenderName.setTypeface(null, Typeface.NORMAL);
                 } else {
                     mLastMessage.setTypeface(null, Typeface.BOLD_ITALIC);
+                    mSenderName.setTypeface(null, Typeface.BOLD);
                 }
             } else {
                 if (conversation.isRead()) {
                     mLastMessage.setTypeface(null, Typeface.NORMAL);
+                    mSenderName.setTypeface(null, Typeface.NORMAL);
                 } else {
                     mLastMessage.setTypeface(null, Typeface.BOLD);
+                    mSenderName.setTypeface(null, Typeface.BOLD);
                 }
+            }
+            if (message.getStatus() == Message.STATUS_RECEIVED) {
+                if (conversation.getMode() == Conversation.MODE_MULTI) {
+                    mSenderName.setVisibility(View.VISIBLE);
+                    mSenderName.setText(UIHelper.getMessageDisplayName(message));
+                } else {
+                    mSenderName.setVisibility(View.GONE);
+                }
+            } else {
+                mSenderName.setVisibility(View.VISIBLE);
+                mSenderName.setText(activity.getString(R.string.me));
             }
         }
 
@@ -158,6 +174,7 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
         if (conversation.getIncomingChatState().equals(ChatState.COMPOSING)) {
             mLastMessage.setText(R.string.is_typing);
             mLastMessage.setTypeface(null, Typeface.BOLD_ITALIC);
+            mSenderName.setVisibility(View.GONE);
         }
         return view;
     }
