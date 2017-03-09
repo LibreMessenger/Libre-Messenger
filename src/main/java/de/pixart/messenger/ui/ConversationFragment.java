@@ -981,7 +981,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                 }
             });
             if (conversation.isDomainBlocked()) {
-                BlockContactDialog.show(activity, activity.xmppConnectionService, conversation);
+                BlockContactDialog.show(activity, conversation);
             } else {
                 activity.unblockConversation(conversation);
             }

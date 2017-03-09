@@ -26,7 +26,6 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Contact;
-import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.xml.Element;
@@ -321,11 +320,12 @@ public class IqParser extends AbstractParser implements OnIqPacketReceived {
                 }
                 account.getBlocklist().addAll(jids);
                 if (packet.getType() == IqPacket.TYPE.SET) {
+                    boolean removed = false;
                     for(Jid jid : jids) {
-                        Conversation conversation = mXmppConnectionService.find(account,jid);
-                        if (conversation != null) {
-                            mXmppConnectionService.markRead(conversation);
-                        }
+                        removed |= mXmppConnectionService.removeBlockedConversations(account, jid);
+                    }
+                    if (removed) {
+                        mXmppConnectionService.updateConversationUi();
                     }
                 }
             }
