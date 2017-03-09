@@ -3,13 +3,13 @@ package de.pixart.messenger.entities;
 import de.pixart.messenger.xmpp.jid.Jid;
 
 public interface Blockable {
-    public boolean isBlocked();
+    boolean isBlocked();
 
-    public boolean isDomainBlocked();
+    boolean isDomainBlocked();
 
-    public Jid getBlockedJid();
+    Jid getBlockedJid();
 
-    public Jid getJid();
+    Jid getJid();
 
-    public Account getAccount();
+    Account getAccount();
 }
