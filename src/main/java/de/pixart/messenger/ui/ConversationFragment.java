@@ -1302,7 +1302,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
     protected void updateDateBubbles() {
         synchronized (this.messageList) {
-            final int max = this.messageList.size();
+            int max = this.messageList.size();
             if (max == 0 || (max <= 1 && showLoadMoreMessages(conversation))) {
                 this.messageList.add(0, Message.createDateMessage(conversation, getString(R.string.start_chatting)));
             } else if ((max > 0 && !showLoadMoreMessages(conversation)) || (max > 1 && showLoadMoreMessages(conversation))) {
