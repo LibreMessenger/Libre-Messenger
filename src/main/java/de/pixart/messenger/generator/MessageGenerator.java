@@ -17,6 +17,7 @@ import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.services.XmppConnectionService;
+import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 import de.pixart.messenger.xmpp.jid.Jid;
@@ -54,6 +55,7 @@ public class MessageGenerator extends AbstractGenerator {
         }
         packet.setFrom(account.getJid());
         packet.setId(message.getUuid());
+        packet.addChild("origin-id", Namespace.STANZA_IDS).setAttribute("id", message.getUuid());
         if (message.edited()) {
             packet.addChild("replace", "urn:xmpp:message-correct:0").setAttribute("id", message.getEditedId());
         }
