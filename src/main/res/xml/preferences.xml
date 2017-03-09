@@ -86,6 +86,12 @@
             android:ringtoneType="notification"
             android:summary="@string/pref_sound_summary"
             android:title="@string/pref_sound" />
+        <CheckBoxPreference
+            android:defaultValue="@bool/notifications_from_strangers"
+            android:dependency="show_notification"
+            android:key="notifications_from_strangers"
+            android:summary="@string/pref_notifications_from_strangers_summary"
+            android:title="@string/pref_notifications_from_strangers" />
     </PreferenceScreen>
     <!--Attachments-->
     <PreferenceScreen
