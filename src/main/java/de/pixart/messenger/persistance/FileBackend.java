@@ -577,6 +577,8 @@ public class FileBackend {
             return null;
         } catch (IOException e) {
             return null;
+        } catch (OutOfMemoryError e) {
+            return null;
         }
     }
 
@@ -692,6 +694,8 @@ public class FileBackend {
         } catch (SecurityException e) {
             return null; // happens for example on Android 6.0 if contacts permissions get revoked
         } catch (FileNotFoundException e) {
+            return null;
+        } catch (OutOfMemoryError e) {
             return null;
         } finally {
             close(is);
