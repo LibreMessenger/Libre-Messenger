@@ -140,7 +140,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         public void onScroll(AbsListView view, int firstVisibleItem,
                              int visibleItemCount, final int totalItemCount) {
             synchronized (ConversationFragment.this.messageList) {
-                if (firstVisibleItem < 5 && conversation != null && conversation.messagesLoaded.compareAndSet(true,false) && messageList.size() > 0) {
+                if (firstVisibleItem < 25 && conversation != null && conversation.messagesLoaded.compareAndSet(true,false) && messageList.size() > 0) {
                     long timestamp;
                     if (messageList.get(0).getType() == Message.TYPE_STATUS && messageList.size() >= 2) {
                         timestamp = messageList.get(1).getTimeSent();
