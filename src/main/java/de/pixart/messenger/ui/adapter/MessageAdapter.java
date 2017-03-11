@@ -835,7 +835,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             }
             return view;
         } else {
-            loadAvatar(message, viewHolder.contact_picture);
+            loadAvatar(message, viewHolder.contact_picture, activity.getPixel(48));
         }
 
         viewHolder.contact_picture
@@ -1156,14 +1156,16 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     class BitmapWorkerTask extends AsyncTask<Message, Void, Bitmap> {
         private final WeakReference<ImageView> imageViewReference;
         private Message message = null;
+        private final int size;
 
-        public BitmapWorkerTask(ImageView imageView) {
+        public BitmapWorkerTask(ImageView imageView, int size) {
             imageViewReference = new WeakReference<>(imageView);
+            this.size = size;
         }
 
         @Override
         protected Bitmap doInBackground(Message... params) {
-            return activity.avatarService().get(params[0], activity.getPixel(48), isCancelled());
+            return activity.avatarService().get(params[0], size, isCancelled());
         }
 
         @Override
@@ -1178,9 +1180,9 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
     }
 
-    public void loadAvatar(Message message, ImageView imageView) {
+    public void loadAvatar(Message message, ImageView imageView, int size) {
         if (cancelPotentialWork(message, imageView)) {
-            final Bitmap bm = activity.avatarService().get(message, activity.getPixel(48), true);
+            final Bitmap bm = activity.avatarService().get(message, size, true);
             if (bm != null) {
                 cancelPotentialWork(message, imageView);
                 imageView.setImageBitmap(bm);
@@ -1188,7 +1190,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             } else {
                 imageView.setBackgroundColor(UIHelper.getColorForName(UIHelper.getMessageDisplayName(message)));
                 imageView.setImageDrawable(null);
-                final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+                final BitmapWorkerTask task = new BitmapWorkerTask(imageView, size);
                 final AsyncDrawable asyncDrawable = new AsyncDrawable(activity.getResources(), null, task);
                 imageView.setImageDrawable(asyncDrawable);
                 try {

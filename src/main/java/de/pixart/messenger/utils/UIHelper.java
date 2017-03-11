@@ -21,6 +21,7 @@ import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.ListItem;
 import de.pixart.messenger.entities.Message;
+import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.entities.Transferable;
 import de.pixart.messenger.xmpp.jid.Jid;
@@ -258,6 +259,15 @@ public class UIHelper {
     private static boolean isPositionFollowedByBigGrin(CharSequence body, int pos) {
         return body.length() <= pos + 1
                 || ((body.charAt(pos + 1) == '<') && (body.length() == pos + 2 || Character.isWhitespace(body.charAt(pos + 2))));
+    }
+
+    public static String getDisplayName(MucOptions.User user) {
+        Contact contact = user.getContact();
+        if (contact != null) {
+            return contact.getDisplayName();
+        } else {
+            return user.getName();
+        }
     }
 
     public static String getFileDescriptionString(final Context context, final Message message) {

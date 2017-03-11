@@ -67,6 +67,7 @@ import de.pixart.messenger.entities.Blockable;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Message;
+import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.entities.Transferable;
 import de.pixart.messenger.persistance.FileBackend;
@@ -423,58 +424,73 @@ public class ConversationActivity extends XmppActivity
                 ab.setCustomView(R.layout.ab_title);
                 TextView abtitle = (TextView) findViewById(android.R.id.text1);
                 TextView absubtitle = (TextView) findViewById(android.R.id.text2);
-                if (conversation.getMode() == Conversation.MODE_SINGLE || useSubjectToIdentifyConference()) {
-                    abtitle.setText(conversation.getName());
-                    abtitle.setOnClickListener(this);
-                    abtitle.setSelected(true);
-                    if (conversation.getMode() == Conversation.MODE_SINGLE && !this.getSelectedConversation().withSelf()) {
-                        if (conversation.getContact().getShownStatus() == Presence.Status.OFFLINE) {
-                            absubtitle.setText(getString(R.string.account_status_offline));
+                abtitle.setText(conversation.getName());
+                abtitle.setOnClickListener(this);
+                abtitle.setSelected(true);
+                if (conversation.getMode() == Conversation.MODE_SINGLE && !this.getSelectedConversation().withSelf()) {
+                    ChatState state = conversation.getIncomingChatState();
+                    if (conversation.getContact().getShownStatus() == Presence.Status.OFFLINE) {
+                        absubtitle.setText(getString(R.string.account_status_offline));
+                        absubtitle.setSelected(true);
+                        absubtitle.setOnClickListener(this);
+                    } else {
+                        if (state == ChatState.COMPOSING) {
+                            absubtitle.setText(getString(R.string.is_typing));
+                            absubtitle.setTypeface(null, Typeface.BOLD_ITALIC);
                             absubtitle.setSelected(true);
                             absubtitle.setOnClickListener(this);
                         } else {
-                            ChatState state = conversation.getIncomingChatState();
-                            if (state == ChatState.COMPOSING) {
-                                absubtitle.setText(getString(R.string.is_typing));
-                                absubtitle.setTypeface(null, Typeface.BOLD_ITALIC);
-                                absubtitle.setSelected(true);
-                                absubtitle.setOnClickListener(this);
-                            } else if (state == ChatState.PAUSED) {
-                                if (showLastSeen && conversation.getContact().getLastseen() > 0) {
-                                    absubtitle.setText(UIHelper.lastseen(getApplicationContext(), conversation.getContact().isActive(), conversation.getContact().getLastseen()));
-                                } else {
-                                    absubtitle.setText(getString(R.string.account_status_online));
-                                }
-                                absubtitle.setSelected(true);
-                                absubtitle.setOnClickListener(this);
+                            if (showLastSeen && conversation.getContact().getLastseen() > 0) {
+                                absubtitle.setText(UIHelper.lastseen(getApplicationContext(), conversation.getContact().isActive(), conversation.getContact().getLastseen()));
                             } else {
-                                if (showLastSeen && conversation.getContact().getLastseen() > 0) {
-                                    absubtitle.setText(UIHelper.lastseen(getApplicationContext(), conversation.getContact().isActive(), conversation.getContact().getLastseen()));
-                                } else {
-                                    absubtitle.setText(getString(R.string.account_status_online));
-                                }
-                                absubtitle.setSelected(true);
-                                absubtitle.setOnClickListener(this);
+                                absubtitle.setText(getString(R.string.account_status_online));
                             }
-                        }
-                    } else if (useSubjectToIdentifyConference()) {
-                        if (conversation.getParticipants() != null) {
-                            absubtitle.setText(conversation.getParticipants());
                             absubtitle.setSelected(true);
-                            absubtitle.setOnClickListener(this);
-                        } else {
-                            absubtitle.setText(R.string.no_participants);
-                            abtitle.setSelected(true);
                             absubtitle.setOnClickListener(this);
                         }
                     }
                 } else {
-                    abtitle.setText(conversation.getJid().toBareJid().toString());
-                    abtitle.setOnClickListener(this);
-                    abtitle.setSelected(true);
-                    absubtitle.setText("");
-                    absubtitle.setOnClickListener(this);
+                    if (conversation.getParticipants() != null) {
+                        ChatState state = ChatState.COMPOSING;
+                        List<MucOptions.User> userWithChatStates = conversation.getMucOptions().getUsersWithChatState(state, 5);
+                        if (userWithChatStates.size() == 0) {
+                            state = ChatState.PAUSED;
+                            userWithChatStates = conversation.getMucOptions().getUsersWithChatState(state, 5);
+
+                        }
+                        List<MucOptions.User> users = conversation.getMucOptions().getUsers(true);
+                        if (state == ChatState.COMPOSING) {
+                            if (userWithChatStates.size() > 0) {
+                                if (userWithChatStates.size() == 1) {
+                                    MucOptions.User user = userWithChatStates.get(0);
+                                    absubtitle.setText(getString(R.string.contact_is_typing, UIHelper.getDisplayName(user)));
+                                } else {
+                                    StringBuilder builder = new StringBuilder();
+                                    for (MucOptions.User user : userWithChatStates) {
+                                        if (builder.length() != 0) {
+                                            builder.append(", ");
+                                        }
+                                        builder.append(UIHelper.getDisplayName(user));
+                                    }
+                                    absubtitle.setText(getString(R.string.contacts_are_typing, builder.toString()));
+                                }
+                            }
+                        } else {
+                            if (users.size() == 1) {
+                                absubtitle.setText(getString(R.string.one_participant));
+                            } else {
+                                absubtitle.setText(getString(R.string.more_participants, users.size()));
+                            }
+                        }
+                        absubtitle.setSelected(true);
+                        absubtitle.setOnClickListener(this);
+                    } else {
+                        absubtitle.setText(R.string.no_participants);
+                        abtitle.setSelected(true);
+                        absubtitle.setOnClickListener(this);
+                    }
                 }
+
             } else {
                 if ((ab.getDisplayOptions() & ActionBar.DISPLAY_HOME_AS_UP) == ActionBar.DISPLAY_HOME_AS_UP) {
                     ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);

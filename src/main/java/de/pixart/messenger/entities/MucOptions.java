@@ -542,12 +542,15 @@ public class MucOptions {
         }
     }
 
-    public ArrayList<User> getUsersWithChatState(ChatState state) {
+    public ArrayList<User> getUsersWithChatState(ChatState state, int max) {
         synchronized (users) {
             ArrayList<User> list = new ArrayList<>();
             for (User user : users) {
                 if (user.chatState == state) {
                     list.add(user);
+                    if (list.size() >= max) {
+                        break;
+                    }
                 }
             }
             return list;
@@ -627,6 +630,16 @@ public class MucOptions {
     public String getSubject() {
         return this.subject;
     }
+
+    public int NumberOfUsers() {
+        if (users.size() >= 1) {
+            return users.size();
+        } else {
+            return 0;
+        }
+    }
+
+
 
     public String createNameFromParticipants() {
         if (users.size() >= 1) {

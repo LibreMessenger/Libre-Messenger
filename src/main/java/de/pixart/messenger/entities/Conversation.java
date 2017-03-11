@@ -515,6 +515,14 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
         }
     }
 
+    public int getNumberOfParticipants() {
+        if (getMode() == MODE_MULTI) {
+            return getMucOptions().NumberOfUsers();
+        } else {
+            return 0;
+        }
+    }
+
     public String getAccountUuid() {
         return this.accountUuid;
     }

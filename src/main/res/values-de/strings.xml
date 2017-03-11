@@ -697,5 +697,9 @@
     <string name="video_high">hoch (720p)</string>
     <string name="video_low">niedrig (144p)</string>
     <string name="video_mid">mittelmäßig (360p)</string>
+    <string name="contact_is_typing">%s schreibt…</string>
+    <string name="contacts_are_typing">%s tippen…</string>
+    <string name="more_participants">%d Teilnehmer</string>
+    <string name="one_participant">Ein Teilnehmer</string>
 
 </resources>
