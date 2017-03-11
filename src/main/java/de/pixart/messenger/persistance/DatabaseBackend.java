@@ -7,6 +7,7 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteCantOpenDatabaseException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
 import android.util.Pair;
@@ -22,6 +23,7 @@ import org.whispersystems.libaxolotl.state.SessionRecord;
 import org.whispersystems.libaxolotl.state.SignedPreKeyRecord;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
@@ -55,7 +57,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
     private static DatabaseBackend instance = null;
 
     public static final String DATABASE_NAME = "history";
-    public static final int DATABASE_VERSION = 35;
+    public static final int DATABASE_VERSION = 36;
 
     private static String CREATE_CONTATCS_STATEMENT = "create table "
             + Contact.TABLENAME + "(" + Contact.ACCOUNT + " TEXT, "
@@ -398,6 +400,58 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         if (oldVersion < 35 && newVersion >= 35) {
             db.execSQL(CREATE_MESSAGE_CONVERSATION_INDEX);
         }
+        if (oldVersion < 36 && newVersion >= 36) {
+						// only rename videos, images, audios and other files directories
+						final File oldPicturesDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger/Images/");
+						final File oldFilesDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger/Files/");
+						final File oldAudiosDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger/Audios/");
+						final File oldVideosDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger/Videos/");
+						
+						if (oldPicturesDirectory.exists() && oldPicturesDirectory.isDirectory()) {
+								final File newPicturesDirectory = new File(Environment.getExternalStorageDirectory() + "/Pix-Art Messenger/Media/Pix-Art Messenger Images/");
+								newPicturesDirectory.getParentFile().mkdirs();
+								final File[] files = oldPicturesDirectory.listFiles();
+								if (files == null) {
+									return;
+								}
+								if (oldPicturesDirectory.renameTo(newPicturesDirectory)) {
+										Log.d(Config.LOGTAG,"moved " + oldPicturesDirectory.getAbsolutePath() + " to " + newPicturesDirectory.getAbsolutePath());
+								}
+						}
+						if (oldFilesDirectory.exists() && oldFilesDirectory.isDirectory()) {
+								final File newFilesDirectory = new File(Environment.getExternalStorageDirectory() + "/Pix-Art Messenger/Media/Pix-Art Messenger Files/");
+								newFilesDirectory.mkdirs();
+								final File[] files = oldFilesDirectory.listFiles();
+								if (files == null) {
+									return;
+								}
+								if (oldFilesDirectory.renameTo(newFilesDirectory)) {
+										Log.d(Config.LOGTAG,"moved " + oldFilesDirectory.getAbsolutePath() + " to " + newFilesDirectory.getAbsolutePath());
+								}
+						}
+						if (oldAudiosDirectory.exists() && oldAudiosDirectory.isDirectory()) {
+								final File newAudiosDirectory = new File(Environment.getExternalStorageDirectory() + "/Pix-Art Messenger/Media/Pix-Art Messenger Audios/");
+								newAudiosDirectory.mkdirs();
+								final File[] files = oldAudiosDirectory.listFiles();
+								if (files == null) {
+									return;
+								}
+								if (oldAudiosDirectory.renameTo(newAudiosDirectory)) {
+										Log.d(Config.LOGTAG,"moved " + oldAudiosDirectory.getAbsolutePath() + " to " + newAudiosDirectory.getAbsolutePath());
+								}
+						}
+						if (oldVideosDirectory.exists() && oldVideosDirectory.isDirectory()) {
+								final File newVideosDirectory = new File(Environment.getExternalStorageDirectory() + "/Pix-Art Messenger/Media/Pix-Art Messenger Videos/");
+								newVideosDirectory.mkdirs();
+								final File[] files = oldVideosDirectory.listFiles();
+								if (files == null) {
+									return;
+								}
+								if (oldVideosDirectory.renameTo(newVideosDirectory)) {
+										Log.d(Config.LOGTAG,"moved " + oldVideosDirectory.getAbsolutePath() + " to " + newVideosDirectory.getAbsolutePath());
+								}
+						}
+				}
     }
 
     private static ContentValues createFingerprintStatusContentValues(FingerprintStatus.Trust trust, boolean active) {

@@ -52,7 +52,7 @@ public class UpdaterActivity extends Activity {
             //check if the broadcast message is for our Enqueued download
             long referenceId = intent.getExtras().getLong(DownloadManager.EXTRA_DOWNLOAD_ID);
             if (downloadReference == referenceId) {
-                File file = new File(FileBackend.getConversationsDirectory("Update"), FileName);
+                File file = new File(FileBackend.getConversationsDirectory("Update", false), FileName);
                 //start the installation of the latest localVersion
                 Intent installIntent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
                 installIntent.setDataAndType(FileBackend.getUriForFile(UpdaterActivity.this, file), "application/vnd.android.package-archive");
@@ -267,7 +267,7 @@ public class UpdaterActivity extends Activity {
                         //check if we need to upgrade?
                         if (checkVersion(remoteVersion, localVersion) >= 1) {
                             //delete old downloaded localVersion files
-                            File dir = new File(FileBackend.getConversationsDirectory("Update"));
+                            File dir = new File(FileBackend.getConversationsDirectory("Update", false));
                             if (dir.isDirectory()) {
                                 String[] children = dir.list();
                                 for (String aChildren : children) {
@@ -296,7 +296,7 @@ public class UpdaterActivity extends Activity {
                                                 Uri Download_Uri = Uri.parse(appURI);
                                                 DownloadManager.Request request = new DownloadManager.Request(Download_Uri);
                                                 request.setTitle("Pix-Art Messenger Update");
-                                                request.setDestinationInExternalPublicDir(FileBackend.getDirectoryName("Update"), FileName);
+                                                request.setDestinationInExternalPublicDir(FileBackend.getDirectoryName("Update", false), FileName);
                                                 downloadReference = downloadManager.enqueue(request);
                                                 Toast.makeText(getApplicationContext(),
                                                         getText(R.string.download_started),

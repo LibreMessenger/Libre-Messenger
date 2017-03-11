@@ -681,7 +681,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
             if (treatAsFile) {
                 String path = m.getRelativeFilePath();
                 Log.d(Config.LOGTAG, "Path = " + path);
-                if (path == null || !path.startsWith("/") || path.contains(FileBackend.getConversationsDirectory("null"))) {
+                if (path == null || !path.startsWith("/") || path.contains(FileBackend.getConversationsDirectory("null", false))) {
                     deleteFile.setVisible(true);
                     deleteFile.setTitle(activity.getString(R.string.delete_x_file, UIHelper.getFileDescriptionString(activity, m)));
                 }

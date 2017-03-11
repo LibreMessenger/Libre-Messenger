@@ -346,6 +346,7 @@ public class XmppConnectionService extends Service {
                         if (!conversation.startOtrIfNeeded()) {
                             Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": couldn't start OTR with " + conversation.getContact().getJid() + " when needed");
                         }
+                        checkDeletedFiles(conversation);
                         sendUnsentMessages(conversation);
                         resendFailedFileMessages(conversation);
                     }

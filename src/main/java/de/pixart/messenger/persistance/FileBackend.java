@@ -74,8 +74,8 @@ public class FileBackend {
     }
 
     private void createNoMedia() {
-        final File nomedia_files = new File(getConversationsDirectory("Files") + ".nomedia");
-        final File nomedia_audios = new File(getConversationsDirectory("Audios") + ".nomedia");
+        final File nomedia_files = new File(getConversationsDirectory("Files", true) + ".nomedia");
+        final File nomedia_audios = new File(getConversationsDirectory("Audios", true) + ".nomedia");
         if (!nomedia_files.exists()) {
             try {
                 nomedia_files.createNewFile();
@@ -93,8 +93,8 @@ public class FileBackend {
     }
 
     public void updateMediaScanner(File file) {
-        if (file.getAbsolutePath().startsWith(getConversationsDirectory("Images"))
-                || file.getAbsolutePath().startsWith(getConversationsDirectory("Videos"))) {
+        if (file.getAbsolutePath().startsWith(getConversationsDirectory("Images", true))
+                || file.getAbsolutePath().startsWith(getConversationsDirectory("Videos", true))) {
             Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             intent.setData(Uri.fromFile(file));
             mXmppConnectionService.sendBroadcast(intent);
@@ -132,17 +132,17 @@ public class FileBackend {
         } else {
             String mime = message.getMimeType();
             if (mime != null && mime.startsWith("image")) {
-                file = new DownloadableFile(getConversationsDirectory("Images") + path);
+                file = new DownloadableFile(getConversationsDirectory("Images", true) + path);
             } else if (mime != null && mime.startsWith("video")) {
-                file = new DownloadableFile(getConversationsDirectory("Videos") + path);
+                file = new DownloadableFile(getConversationsDirectory("Videos", true) + path);
             } else if (mime != null && mime.startsWith("audio")) {
-                file = new DownloadableFile(getConversationsDirectory("Audios") + path);
+                file = new DownloadableFile(getConversationsDirectory("Audios", true) + path);
             } else {
-                file = new DownloadableFile(getConversationsDirectory("Files") + path);
+                file = new DownloadableFile(getConversationsDirectory("Files", true) + path);
             }
         }
         if (encrypted) {
-            return new DownloadableFile(getConversationsDirectory("Files") + file.getName() + ".pgp");
+            return new DownloadableFile(getConversationsDirectory("Files", true) + file.getName() + ".pgp");
         } else {
             return file;
         }
@@ -177,20 +177,24 @@ public class FileBackend {
         return true;
     }
 
-    public static String getDirectoryName(final String type) {
+    public static String getDirectoryName(final String type, final boolean isMedia) {
+        String media = "";
+        if (isMedia) {
+        		media = "Media/Pix-Art Messenger ";
+        }
         if (type == "null" || type == null) {
             return "/Pix-Art Messenger/";
         } else {
-            return "/Pix-Art Messenger" + "/" + type + "/";
+            return "/Pix-Art Messenger" + "/" + media + type + "/";
         }
     }
 
-    public static String getConversationsDirectory(final String type) {
+    public static String getConversationsDirectory(final String type, final boolean isMedia) {
         String DirName = null;
         if (type != "null" || type != null) {
             DirName = type;
         }
-        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + getDirectoryName(DirName);
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + getDirectoryName(DirName, isMedia);
         File createFolders = new File(path);
         if (!createFolders.exists()) {
             Log.d(Config.LOGTAG, "creating directory " + createFolders);
@@ -266,7 +270,7 @@ public class FileBackend {
         if (path == null) {
             return false;
         }
-        if (path.contains(getDirectoryName("null"))) {
+        if (path.contains(getDirectoryName("null", true))) {
             Log.d(Config.LOGTAG, "File " + path + " is in our directory, sending as is");
             return true;
         }
@@ -577,8 +581,6 @@ public class FileBackend {
             return null;
         } catch (IOException e) {
             return null;
-        } catch (OutOfMemoryError e) {
-            return null;
         }
     }
 
@@ -694,8 +696,6 @@ public class FileBackend {
         } catch (SecurityException e) {
             return null; // happens for example on Android 6.0 if contacts permissions get revoked
         } catch (FileNotFoundException e) {
-            return null;
-        } catch (OutOfMemoryError e) {
             return null;
         } finally {
             close(is);
