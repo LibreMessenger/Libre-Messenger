@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v13.view.inputmethod.EditorInfoCompat;
 import android.support.v13.view.inputmethod.InputConnectionCompat;
 import android.support.v13.view.inputmethod.InputContentInfoCompat;
@@ -150,6 +151,7 @@ public class EditMessage extends EmojiconEditText {
     }
 
     @Override
+    @Nullable
     public InputConnection onCreateInputConnection(EditorInfo editorInfo) {
         final InputConnection ic = super.onCreateInputConnection(editorInfo);
 
