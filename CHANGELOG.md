@@ -1,5 +1,19 @@
 ###Changelog
 
+###Version 1.17.0
+* add date bubbles in chat view
+* show last used resource in contact details
+* make brightness overwrite in image/video viewer configurable
+* make video resolution configurable
+* do not notify for messages from strangers by default
+* blocking a JID closes the corresponding conversation
+* show message sender in conversation overview
+* Support for the latest MAM namespace
+* Icons for attach menu
+* send typing notifications in private, non-anonymous MUCs
+* change media directory names
+* bug fixes
+
 ###Version 1.16.5
 * show read marker in whisper messages
 * bug fixes 
