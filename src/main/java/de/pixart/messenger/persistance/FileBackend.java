@@ -521,7 +521,7 @@ public class FileBackend {
     }
 
     public Uri getTakePhotoUri() {
-        File file = new File(getTakePhotoPath() + "IMG_" + fileDateFormat.format(new Date()) + ".jpg");
+        File file = new File(getTakePhotoPath() + "IMG_" + this.fileDateFormat.format(new Date()) + ".jpg");
         file.getParentFile().mkdirs();
         return getUriForFile(mXmppConnectionService, file);
     }
