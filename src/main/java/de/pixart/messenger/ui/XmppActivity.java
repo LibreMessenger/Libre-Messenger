@@ -1096,6 +1096,7 @@ public abstract class XmppActivity extends Activity {
             final int width = (size.x < size.y ? size.x : size.y);
             Bitmap bitmap = BarcodeProvider.createAztecBitmap(uri, width);
             ImageView view = new ImageView(this);
+            view.setBackgroundColor(Color.WHITE);
             view.setImageBitmap(bitmap);
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setView(view);
