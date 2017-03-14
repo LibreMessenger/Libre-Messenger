@@ -49,7 +49,11 @@ import org.openintents.openpgp.util.OpenPgpServiceConnection;
 
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigInteger;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
@@ -120,6 +124,7 @@ import de.pixart.messenger.utils.PhoneHelper;
 import de.pixart.messenger.utils.ReplacingSerialSingleThreadExecutor;
 import de.pixart.messenger.utils.SerialSingleThreadExecutor;
 import de.pixart.messenger.utils.Namespace;
+import de.pixart.messenger.utils.SocksSocketFactory;
 import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.OnBindListener;
@@ -3534,16 +3539,22 @@ public class XmppConnectionService extends Service {
     }
 
     public synchronized void updateUnreadCountBadge() {
-        int count = unreadCount();
-        if (unreadCount != count) {
-            Log.d(Config.LOGTAG, "update unread count to " + count);
-            if (count > 0) {
-                ShortcutBadger.applyCount(getApplicationContext(), count);
-            } else {
-                ShortcutBadger.removeCount(getApplicationContext());
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                int count = unreadCount();
+                if (unreadCount != count) {
+                    Log.d(Config.LOGTAG, "update unread count to " + count);
+                    if (count > 0) {
+                        ShortcutBadger.applyCount(getApplicationContext(), count);
+                    } else {
+                        ShortcutBadger.removeCount(getApplicationContext());
+                    }
+                    unreadCount = count;
+                }
             }
-            unreadCount = count;
-        }
+        }).start();
     }
 
     public void sendReadMarker(final Conversation conversation) {
