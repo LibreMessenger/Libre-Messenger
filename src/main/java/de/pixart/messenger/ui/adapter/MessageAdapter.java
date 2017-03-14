@@ -575,48 +575,32 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.GONE);
         viewHolder.download_button.setVisibility(View.VISIBLE);
-        String mimeType = message.getMimeType();
-        String fullName = "";
+        final String mimeType = message.getMimeType();
         final File file = new File(activity.xmppConnectionService.getFileBackend().getFile(message).toString());
         if (mimeType != null) {
             if (message.getMimeType().contains("pdf")) {
                 viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_file_pdf_grey600_48dp, 0, 0, 0);
+                viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message)));
             } else if (message.getMimeType().contains("vcard")) {
-                VCard vcard = null;
                 try {
-                    vcard = Ezvcard.parse(file).first();
-                } catch (IOException e) {
+                    showVCard(message, file, viewHolder);
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (vcard != null) {
-                    final String version = vcard.getVersion().toString();
-                    Log.d(Config.LOGTAG, "VCard version: " + version);
-                    final String name = vcard.getFormattedName().getValue();
-                    fullName = " (" + name + ")";
-                }
-                viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_account_card_details_grey600_48dp, 0, 0, 0);
             } else if (message.getMimeType().contains("calendar")) {
                 viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_calendar_grey600_48dp, 0, 0, 0);
+                viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message)));
             } else if (message.getMimeType().equals("application/vnd.android.package-archive")) {
-                Log.d(Config.LOGTAG, "APK path: " + file.toString());
                 try {
-                    final PackageManager pm = getContext().getPackageManager();
-                    final PackageInfo pi = pm.getPackageArchiveInfo(file.toString(), 0);
-                    pi.applicationInfo.sourceDir = file.toString();
-                    pi.applicationInfo.publicSourceDir = file.toString();
-                    final String AppName = (String) pi.applicationInfo.loadLabel(pm);
-                    final String AppVersion = (String) pi.versionName;
-                    Log.d(Config.LOGTAG, "APK name: " + AppName);
-                    fullName = " (" + AppName + " " + AppVersion + ")";
+                    showAPK(message, file, viewHolder);
                 } catch (Exception e) {
-                    //ignored
+                    e.printStackTrace();
                 }
-                viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_file_grey600_48dp, 0, 0, 0);
             } else {
                 viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_file_grey600_48dp, 0, 0, 0);
+                viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message)));
             }
         }
-        viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message) + fullName));
         viewHolder.download_button.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -624,6 +608,40 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 openDownloadable(message);
             }
         });
+    }
+
+    private void showAPK(final Message message, final File file, ViewHolder viewHolder) {
+        final String APKName;
+        //final Drawable icon;
+        final PackageManager pm = getContext().getPackageManager();
+        final PackageInfo pi = pm.getPackageArchiveInfo(file.toString(), 0);
+        pi.applicationInfo.sourceDir = file.toString();
+        pi.applicationInfo.publicSourceDir = file.toString();
+        //icon = pi.applicationInfo.loadIcon(pm);
+        final String AppName = (String) pi.applicationInfo.loadLabel(pm);
+        final String AppVersion = (String) pi.versionName;
+        Log.d(Config.LOGTAG, "APK name: " + AppName);
+        APKName = " (" + AppName + " " + AppVersion + ")";
+        viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_file_grey600_48dp, 0, 0, 0);
+        viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message) + APKName));
+    }
+
+    private void showVCard(final Message message, final File file, ViewHolder viewHolder) {
+        VCard vcard = new VCard();
+        String VCardName = null;
+        try {
+            vcard = Ezvcard.parse(file).first();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (vcard != null) {
+            final String version = vcard.getVersion().toString();
+            Log.d(Config.LOGTAG, "VCard version: " + version);
+            final String name = vcard.getFormattedName().getValue();
+            VCardName = " (" + name + ")";
+        }
+        viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_account_card_details_grey600_48dp, 0, 0, 0);
+        viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message) + VCardName));
     }
 
     private void displayLocationMessage(ViewHolder viewHolder, final Message message) {
