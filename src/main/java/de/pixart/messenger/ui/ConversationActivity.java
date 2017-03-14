@@ -456,7 +456,6 @@ public class ConversationActivity extends XmppActivity
                         if (userWithChatStates.size() == 0) {
                             state = ChatState.PAUSED;
                             userWithChatStates = conversation.getMucOptions().getUsersWithChatState(state, 5);
-
                         }
                         List<MucOptions.User> users = conversation.getMucOptions().getUsers(true);
                         if (state == ChatState.COMPOSING) {

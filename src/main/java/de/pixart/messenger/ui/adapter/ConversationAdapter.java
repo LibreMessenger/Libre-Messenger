@@ -22,6 +22,7 @@ import java.util.concurrent.RejectedExecutionException;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Message;
+import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.Transferable;
 import de.pixart.messenger.ui.ConversationActivity;
 import de.pixart.messenger.ui.XmppActivity;
@@ -174,10 +175,42 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
         ImageView profilePicture = (ImageView) view.findViewById(R.id.conversation_image);
         loadAvatar(conversation, profilePicture);
 
-        if (conversation.getIncomingChatState().equals(ChatState.COMPOSING)) {
-            mLastMessage.setText(R.string.is_typing);
-            mLastMessage.setTypeface(null, Typeface.BOLD_ITALIC);
-            mSenderName.setVisibility(View.GONE);
+        if (conversation.getMode() == Conversation.MODE_SINGLE) {
+            if (conversation.getIncomingChatState().equals(ChatState.COMPOSING)) {
+                mLastMessage.setText(R.string.is_typing);
+                mLastMessage.setTypeface(null, Typeface.BOLD_ITALIC);
+                mSenderName.setVisibility(View.GONE);
+            }
+        } else {
+            if (conversation.getParticipants() != null) {
+                ChatState state = ChatState.COMPOSING;
+                List<MucOptions.User> userWithChatStates = conversation.getMucOptions().getUsersWithChatState(state, 5);
+                if (userWithChatStates.size() == 0) {
+                    state = ChatState.PAUSED;
+                    userWithChatStates = conversation.getMucOptions().getUsersWithChatState(state, 5);
+                }
+                if (state == ChatState.COMPOSING) {
+                    if (userWithChatStates.size() > 0) {
+                        if (userWithChatStates.size() == 1) {
+                            MucOptions.User user = userWithChatStates.get(0);
+                            mLastMessage.setText(activity.getString(R.string.contact_is_typing, UIHelper.getDisplayName(user)));
+                            mLastMessage.setTypeface(null, Typeface.BOLD_ITALIC);
+                            mSenderName.setVisibility(View.GONE);
+                        } else {
+                            StringBuilder builder = new StringBuilder();
+                            for (MucOptions.User user : userWithChatStates) {
+                                if (builder.length() != 0) {
+                                    builder.append(", ");
+                                }
+                                builder.append(UIHelper.getDisplayName(user));
+                            }
+                            mLastMessage.setText(activity.getString(R.string.contacts_are_typing, builder.toString()));
+                            mLastMessage.setTypeface(null, Typeface.BOLD_ITALIC);
+                            mSenderName.setVisibility(View.GONE);
+                        }
+                    }
+                }
+            }
         }
         return view;
     }
