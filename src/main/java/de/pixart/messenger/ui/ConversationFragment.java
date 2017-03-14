@@ -46,6 +46,7 @@ import net.java.otr4j.session.SessionStatus;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -125,8 +126,6 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     private TextView snackbarAction;
     private Toast messageLoaderToast;
     SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd. MMM yyyy", Locale.getDefault());
-    String first = sdf.format(System.currentTimeMillis());
-    String today = sdf.format(System.currentTimeMillis());
 
     private OnScrollListener mOnScrollListener = new OnScrollListener() {
 
@@ -1304,29 +1303,23 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     }
 
     protected void updateDateBubbles() {
-        synchronized (this.messageList) {
-            int max = this.messageList.size();
-            if (max == 0 || (max <= 1 && showLoadMoreMessages(conversation))) {
-                this.messageList.add(0, Message.createDateMessage(conversation, getString(R.string.start_chatting)));
-            } else if ((max > 0 && !showLoadMoreMessages(conversation)) || (max > 1 && showLoadMoreMessages(conversation))) {
-                for (int i = (max - 1); i > 0; --i) {
-                    String last = sdf.format(this.messageList.get(i).getTimeSent());
-                    String date = first;
-                    if (!last.equals(first)) {
-                        if (i < (max - 1)) {
-                            if (today.equals(first)) {
-                                date = getString(R.string.today);
-                            }
-                            this.messageList.add(i + 1, Message.createDateMessage(conversation, date));
-                        }
-                    }
+        String first = null;
+        String today = sdf.format(System.currentTimeMillis());
+        int max = this.messageList.size();
+        if (max == 0 || (max <= 1 && showLoadMoreMessages(conversation))) {
+            this.messageList.add(0, Message.createDateMessage(conversation, getString(R.string.start_chatting)));
+        } else if ((max > 0 && !showLoadMoreMessages(conversation)) || (max > 1 && showLoadMoreMessages(conversation))) {
+            for (int i = 0; i < this.messageList.size(); i++) {
+                Date date = new Date(this.messageList.get(i).getTimeSent());
+                String last = sdf.format(date);
+                if (first == null || !first.equals(last)) {
                     first = last;
+                    String dateString = first;
+                    if (today.equals(first)) {
+                        dateString = getString(R.string.today);
+                    }
+                    this.messageList.add(i, Message.createDateMessage(conversation, dateString));
                 }
-                String date = sdf.format(this.messageList.get(0).getTimeSent());
-                if (today.equals(date)) {
-                    date = getString(R.string.today);
-                }
-                this.messageList.add(0, Message.createDateMessage(conversation, date));
             }
         }
     }
