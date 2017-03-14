@@ -669,7 +669,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             if (account == null) {
                 return;
             }
-            this.mConversation = xmppConnectionService.findOrCreateConversation(account, contactJid, false);
+            this.mConversation = xmppConnectionService.findConversation(account, contactJid, false);
             if (this.mConversation != null) {
                 populateView();
             }

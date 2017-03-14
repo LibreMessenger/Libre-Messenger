@@ -1861,6 +1861,61 @@ public class XmppConnectionService extends Service {
         }
     }
 
+    public Conversation findConversation(final Account account, final Jid jid, final boolean muc) {
+        synchronized (this.conversations) {
+            Conversation conversation = find(account, jid);
+            if (conversation != null) {
+                return conversation;
+            }
+            conversation = databaseBackend.findConversation(account, jid);
+            final boolean loadMessagesFromDb;
+            if (conversation != null) {
+                conversation.setStatus(Conversation.STATUS_AVAILABLE);
+                conversation.setAccount(account);
+                if (muc) {
+                    conversation.setMode(Conversation.MODE_MULTI);
+                    conversation.setContactJid(jid);
+                } else {
+                    conversation.setMode(Conversation.MODE_SINGLE);
+                    conversation.setContactJid(jid.toBareJid());
+                }
+                databaseBackend.updateConversation(conversation);
+                loadMessagesFromDb = conversation.messagesLoaded.compareAndSet(true,false);
+            } else {
+                String conversationName;
+                Contact contact = account.getRoster().getContact(jid);
+                if (contact != null) {
+                    conversationName = contact.getDisplayName();
+                } else {
+                    conversationName = jid.getLocalpart();
+                }
+                if (muc) {
+                    conversation = new Conversation(conversationName, account, jid,
+                            Conversation.MODE_MULTI);
+                } else {
+                    conversation = new Conversation(conversationName, account, jid.toBareJid(),
+                            Conversation.MODE_SINGLE);
+                }
+                this.databaseBackend.createConversation(conversation);
+                loadMessagesFromDb = false;
+            }
+            final Conversation c = conversation;
+            mDatabaseExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    if (loadMessagesFromDb) {
+                        c.addAll(0, databaseBackend.getMessages(c, Config.PAGE_SIZE));
+                        updateConversationUi();
+                        c.messagesLoaded.set(true);
+                    }
+                    checkDeletedFiles(c);
+                }
+            });
+            updateConversationUi();
+            return conversation;
+        }
+    }
+
     public void archiveConversation(Conversation conversation) {
         getNotificationService().clear(conversation);
         conversation.setStatus(Conversation.STATUS_ARCHIVED);
