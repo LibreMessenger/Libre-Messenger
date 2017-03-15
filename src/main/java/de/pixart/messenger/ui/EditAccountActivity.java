@@ -571,6 +571,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         final MenuItem renewCertificate = menu.findItem(R.id.action_renew_certificate);
         final MenuItem mamPrefs = menu.findItem(R.id.action_mam_prefs);
         final MenuItem changePresence = menu.findItem(R.id.action_change_presence);
+        final MenuItem actionShare = menu.findItem(R.id.action_share);
         final MenuItem shareBarcode = menu.findItem(R.id.action_share_barcode);
         final MenuItem shareHttp = menu.findItem(R.id.action_share_http);
         final MenuItem shareUri = menu.findItem(R.id.action_share_uri);
@@ -592,6 +593,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             changePassword.setVisible(false);
             mamPrefs.setVisible(false);
             changePresence.setVisible(false);
+            actionShare.setVisible(false);
             shareBarcode.setVisible(false);
             shareHttp.setVisible(false);
             shareUri.setVisible(false);
