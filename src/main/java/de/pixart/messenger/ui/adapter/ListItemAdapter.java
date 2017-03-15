@@ -28,8 +28,11 @@ import de.pixart.messenger.utils.UIHelper;
 
 public class ListItemAdapter extends ArrayAdapter<ListItem> {
 
+    private static final float INACTIVE_ALPHA = 0.4684f;
+    private static final float ACTIVE_ALPHA = 1.0f;
     protected XmppActivity activity;
     protected boolean showDynamicTags = false;
+    protected boolean offline = false;
     private View.OnClickListener onTagTvClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -63,6 +66,7 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
         FlowLayout tagLayout = (FlowLayout) view.findViewById(R.id.tags);
 
         List<ListItem.Tag> tags = item.getTags(activity);
+
         if (tags.size() == 0 || !this.showDynamicTags) {
             tagLayout.setVisibility(View.GONE);
         } else {
@@ -84,6 +88,22 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
             tvJid.setVisibility(View.GONE);
         }
         tvName.setText(item.getDisplayName());
+        if (tags.size() != 0) {
+            for (ListItem.Tag tag : tags) {
+                offline = tag.getOffline() == 1;
+            }
+        }
+        if (offline) {
+            tvName.setAlpha(INACTIVE_ALPHA);
+            tvJid.setAlpha(INACTIVE_ALPHA);
+            picture.setAlpha(INACTIVE_ALPHA);
+            tagLayout.setAlpha(INACTIVE_ALPHA);
+        } else {
+            tvName.setAlpha(ACTIVE_ALPHA);
+            tvJid.setAlpha(ACTIVE_ALPHA);
+            picture.setAlpha(ACTIVE_ALPHA);
+            tagLayout.setAlpha(ACTIVE_ALPHA);
+        }
         loadAvatar(item, picture);
         return view;
     }

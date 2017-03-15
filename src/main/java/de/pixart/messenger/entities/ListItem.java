@@ -11,6 +11,8 @@ public interface ListItem extends Comparable<ListItem> {
 
     String getDisplayJid();
 
+    int getOffline();
+
     Jid getJid();
 
     List<Tag> getTags(Context context);
@@ -18,10 +20,12 @@ public interface ListItem extends Comparable<ListItem> {
     final class Tag {
         private final String name;
         private final int color;
+        private final int offline;
 
-        public Tag(final String name, final int color) {
+        public Tag(final String name, final int color, final int offline) {
             this.name = name;
             this.color = color;
+            this.offline = offline;
         }
 
         public int getColor() {
@@ -30,6 +34,10 @@ public interface ListItem extends Comparable<ListItem> {
 
         public String getName() {
             return this.name;
+        }
+
+        public int getOffline() {
+            return this.offline;
         }
     }
 

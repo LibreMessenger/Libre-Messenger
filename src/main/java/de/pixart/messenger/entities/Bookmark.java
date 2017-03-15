@@ -72,6 +72,11 @@ public class Bookmark extends Element implements ListItem {
     }
 
     @Override
+    public int getOffline() {
+        return 0;
+    }
+
+    @Override
     public Jid getJid() {
         return this.getAttributeAsJid("jid");
     }
@@ -82,7 +87,7 @@ public class Bookmark extends Element implements ListItem {
         for (Element element : getChildren()) {
             if (element.getName().equals("group") && element.getContent() != null) {
                 String group = element.getContent();
-                tags.add(new Tag(group, UIHelper.getColorForName(group)));
+                tags.add(new Tag(group, UIHelper.getColorForName(group), 0));
             }
         }
         return tags;

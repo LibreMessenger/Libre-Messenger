@@ -136,6 +136,11 @@ public class Contact implements ListItem, Blockable {
         }
     }
 
+    @Override
+    public int getOffline() {
+        return 0;
+    }
+
     public String getProfilePhoto() {
         return this.photoUri;
     }
@@ -148,14 +153,12 @@ public class Contact implements ListItem, Blockable {
     public List<Tag> getTags(Context context) {
         final ArrayList<Tag> tags = new ArrayList<>();
         for (final String group : getGroups()) {
-            tags.add(new Tag(group, UIHelper.getColorForName(group)));
+            tags.add(new Tag(group, UIHelper.getColorForName(group), 0));
         }
         Presence.Status status = getShownStatus();
-        if (status != Presence.Status.OFFLINE) {
-            tags.add(UIHelper.getTagForStatus(context, status));
-        }
+        tags.add(UIHelper.getTagForStatus(context, status));
         if (isBlocked()) {
-            tags.add(new Tag("blocked", 0xff2e2f3b));
+            tags.add(new Tag("blocked", 0xff2e2f3b, 0));
         }
         return tags;
     }
