@@ -51,6 +51,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             inviteToConversation(mConversation);
         }
     };
+    private TextView ConferenceName;
     private TextView mYourNick;
     private ImageView mYourPhoto;
     private ImageButton mEditNickButton;
@@ -247,6 +248,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_muc_details);
+        ConferenceName = (TextView) findViewById(R.id.conference_name);
         mYourNick = (TextView) findViewById(R.id.muc_your_nick);
         mYourPhoto = (ImageView) findViewById(R.id.your_photo);
         mEditNickButton = (ImageButton) findViewById(R.id.edit_nick_button);
@@ -548,6 +550,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             absubtitle.setVisibility(View.GONE);
             absubtitle.setClickable(false);
         }
+        ConferenceName.setText(mConversation.getName());
         mAccountJid.setText(getString(R.string.using_account, account));
         mYourPhoto.setImageBitmap(avatarService().get(mConversation.getAccount(), getPixel(48)));
         setTitle(mConversation.getName());

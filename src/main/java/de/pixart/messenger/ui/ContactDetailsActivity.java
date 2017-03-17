@@ -112,6 +112,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
     private Jid accountJid;
     private TextView lastseen;
     private Jid contactJid;
+    private TextView contactDisplayName;
     private TextView contactJidTv;
     private TextView accountJidTv;
     private TextView statusMessage;
@@ -272,6 +273,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
         this.messageFingerprint = getIntent().getStringExtra("fingerprint");
         setContentView(R.layout.activity_contact_details);
 
+        contactDisplayName = (TextView) findViewById(R.id.contact_display_name);
         contactJidTv = (TextView) findViewById(R.id.details_contactjid);
         accountJidTv = (TextView) findViewById(R.id.details_account);
         lastseen = (TextView) findViewById(R.id.details_lastseen);
@@ -434,6 +436,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
 
         invalidateOptionsMenu();
         setTitle(contact.getDisplayName());
+        contactDisplayName.setText(contact.getDisplayName());
         if (contact.showInRoster()) {
             send.setVisibility(View.VISIBLE);
             receive.setVisibility(View.VISIBLE);
