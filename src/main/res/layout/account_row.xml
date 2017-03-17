@@ -17,7 +17,7 @@
         android:contentDescription="@string/account_image_description"
         android:background="@drawable/message_border"
         android:padding="1dp"
-        app:riv_corner_radius="5dp" />
+        app:riv_corner_radius="24dp" />
 
     <LinearLayout
         android:layout_width="fill_parent"
