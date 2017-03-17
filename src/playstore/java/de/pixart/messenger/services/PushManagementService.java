@@ -13,6 +13,7 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.OnIqPacketReceived;
+import de.pixart.messenger.xmpp.Patches;
 import de.pixart.messenger.xmpp.XmppConnection;
 import de.pixart.messenger.xmpp.forms.Data;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
