@@ -1411,7 +1411,7 @@ public class ConversationActivity extends XmppActivity
             if (ImageUrisCount == 1) {
                 Uri uri = mPendingImageUris.get(0);
                 Log.d(Config.LOGTAG, "ConversationActivity.onBackendConnected() - attaching image to conversations. stopping=" + Boolean.toString(stopping));
-                attachImageToConversation(getSelectedConversation(), uri);
+                attachImageToConversation(getSelectedConversation(), uri, false);
             } else {
                 for (Iterator<Uri> i = mPendingImageUris.iterator(); i.hasNext(); i.remove()) {
                     Uri foo = i.next();
@@ -1577,7 +1577,7 @@ public class ConversationActivity extends XmppActivity
                     if (ImageUrisCount == 1) {
                         Uri uri = mPendingImageUris.get(0);
                         Log.d(Config.LOGTAG, "ConversationActivity.onActivityResult() - attaching image to conversations. CHOOSE_IMAGE");
-                        attachImageToConversation(getSelectedConversation(), uri);
+                        attachImageToConversation(getSelectedConversation(), uri, false);
                     } else {
                         for (Iterator<Uri> i = mPendingImageUris.iterator(); i.hasNext(); i.remove()) {
                             Log.d(Config.LOGTAG, "ConversationActivity.onActivityResult() - attaching images to conversations. CHOOSE_IMAGES");
@@ -1844,24 +1844,36 @@ public class ConversationActivity extends XmppActivity
     }
 
     public void attachImageToConversation(Uri uri) {
-        this.attachImageToConversation(getSelectedConversation(), uri);
+        this.attachImageToConversation(getSelectedConversation(), uri, true);
     }
 
-    private void attachImageToConversation(Conversation conversation, Uri uri) {
+    private void attachImageToConversation(Conversation conversation, Uri uri, boolean sendAsIs) {
         if (conversation == null) {
+            return;
+        }
+        if (sendAsIs) {
+            sendImage(conversation, uri);
             return;
         }
         final Conversation conversation_preview = conversation;
         final Uri uri_preview = uri;
         Bitmap bitmap = BitmapFactory.decodeFile(FileUtils.getPath(this, uri));
-        File file = new File(FileUtils.getPath(this, uri));
+        File file = null;
         ExifInterface exif = null;
+        int orientation = 0;
         try {
-            exif = new ExifInterface(file.toString());
-        } catch (IOException e) {
+            file = new File(FileUtils.getPath(this, uri));
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+        if (file != null) {
+            try {
+                exif = new ExifInterface(file.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+        }
         Log.d(Config.LOGTAG, "EXIF: " + orientation);
         Bitmap rotated_image = null;
         Log.d(Config.LOGTAG, "Rotate image");
@@ -1902,33 +1914,7 @@ public class ConversationActivity extends XmppActivity
             builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(final DialogInterface dialog, final int which) {
-                    final Toast prepareFileToast = Toast.makeText(getApplicationContext(), getText(R.string.preparing_image), Toast.LENGTH_LONG);
-                    prepareFileToast.show();
-                    xmppConnectionService.attachImageToConversation(conversation_preview, uri_preview,
-                            new UiCallback<Message>() {
-
-                                @Override
-                                public void userInputRequried(PendingIntent pi, Message object) {
-                                    hidePrepareFileToast(prepareFileToast);
-                                }
-
-                                @Override
-                                public void success(Message message) {
-                                    hidePrepareFileToast(prepareFileToast);
-                                    xmppConnectionService.sendMessage(message);
-                                }
-
-                                @Override
-                                public void error(final int error, Message message) {
-                                    hidePrepareFileToast(prepareFileToast);
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            replaceToast(getString(error));
-                                        }
-                                    });
-                                }
-                            });
+                    sendImage(conversation_preview, uri_preview);
                 }
             });
             builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -1950,6 +1936,36 @@ public class ConversationActivity extends XmppActivity
         } else {
             Toast.makeText(getApplicationContext(), getText(R.string.error_file_not_found), Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void sendImage(Conversation conversation, Uri uri) {
+        final Toast prepareFileToast = Toast.makeText(getApplicationContext(), getText(R.string.preparing_image), Toast.LENGTH_LONG);
+        prepareFileToast.show();
+        xmppConnectionService.attachImageToConversation(conversation, uri,
+                new UiCallback<Message>() {
+
+                    @Override
+                    public void userInputRequried(PendingIntent pi, Message object) {
+                        hidePrepareFileToast(prepareFileToast);
+                    }
+
+                    @Override
+                    public void success(Message message) {
+                        hidePrepareFileToast(prepareFileToast);
+                        xmppConnectionService.sendMessage(message);
+                    }
+
+                    @Override
+                    public void error(final int error, Message message) {
+                        hidePrepareFileToast(prepareFileToast);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                replaceToast(getString(error));
+                            }
+                        });
+                    }
+                });
     }
 
     private void hidePrepareFileToast(final Toast prepareFileToast) {
