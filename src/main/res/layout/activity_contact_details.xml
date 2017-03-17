@@ -64,7 +64,8 @@
                     android:layout_marginBottom="4dp"
                     android:layout_marginLeft="-2dp"
                     android:layout_marginTop="4dp"
-                    android:orientation="horizontal"></com.wefika.flowlayout.FlowLayout>
+                    android:orientation="horizontal">
+                </com.wefika.flowlayout.FlowLayout>
 
                 <TextView
                     android:id="@+id/details_lastseen"
@@ -76,7 +77,7 @@
                     android:layout_marginBottom="4dp"
                     android:layout_marginTop="4dp" />
 
-                <github.ankushsachdeva.emojicon.EmojiconTextView
+                <com.vanniktech.emoji.EmojiTextView
                     android:id="@+id/status_message"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -88,7 +89,7 @@
                     android:textStyle="italic"
                     android:layout_marginBottom="4dp" />
 
-                <github.ankushsachdeva.emojicon.EmojiconTextView
+                <com.vanniktech.emoji.EmojiTextView
                     android:id="@+id/resource"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

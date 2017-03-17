@@ -30,7 +30,6 @@ configurations {
 dependencies {
     compile project(':libs:MemorizingTrustManager')
     compile project(':libs:audiowife')
-    compile project(':libs:emojicon')
     compile project(':libs:android-transcoder')
     playstoreCompile 'com.google.android.gms:play-services-gcm:10.2.0'
     compile 'org.sufficientlysecure:openpgp-api:10.0'
@@ -61,6 +60,7 @@ dependencies {
     compile 'pub.devrel:easypermissions:0.2.1'
     compile 'com.wefika:flowlayout:0.4.1'
     compile 'com.googlecode.ez-vcard:ez-vcard:0.10.1'
+    compile 'com.vanniktech:emoji-ios:0.4.0'
 }
 
 ext {

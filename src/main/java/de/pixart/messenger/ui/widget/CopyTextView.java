@@ -7,9 +7,9 @@ import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
 
-import github.ankushsachdeva.emojicon.EmojiconTextView;
+import com.vanniktech.emoji.EmojiTextView;
 
-public class CopyTextView extends EmojiconTextView {
+public class CopyTextView extends EmojiTextView {
 
     public CopyTextView(Context context) {
         super(context);
@@ -20,13 +20,13 @@ public class CopyTextView extends EmojiconTextView {
     }
 
     public CopyTextView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        super(context, attrs); //, defStyleAttr);
     }
 
     @SuppressWarnings("unused")
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public CopyTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr); //, defStyleRes);
+        super(context, attrs); //, defStyleAttr); //, defStyleRes);
     }
 
     public interface CopyHandler {

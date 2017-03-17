@@ -24,7 +24,7 @@
         android:orientation="vertical"
         android:paddingLeft="8dp">
 
-        <github.ankushsachdeva.emojicon.EmojiconTextView
+        <com.vanniktech.emoji.EmojiTextView
             android:id="@+id/contact_display_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,7 +45,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="-2dp"
-            android:orientation="horizontal"></com.wefika.flowlayout.FlowLayout>
+            android:orientation="horizontal">
+        </com.wefika.flowlayout.FlowLayout>
 
         <TextView
             android:id="@+id/key"

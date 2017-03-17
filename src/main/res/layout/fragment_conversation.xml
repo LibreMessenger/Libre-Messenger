@@ -19,7 +19,8 @@
         android:listSelector="@android:color/transparent"
         android:stackFromBottom="true"
         android:transcriptMode="normal"
-        tools:listitem="@layout/message_sent"></ListView>
+        tools:listitem="@layout/message_sent">
+    </ListView>
 
     <RelativeLayout
         android:id="@+id/textsend"
@@ -53,7 +54,6 @@
             android:textColor="@color/black87"
             android:singleLine="false">
 
-            <requestFocus />
         </de.pixart.messenger.ui.EditMessage>
 
         <ImageButton

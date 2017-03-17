@@ -15,11 +15,11 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
+import android.widget.EditText;
 
 import de.pixart.messenger.Config;
-import github.ankushsachdeva.emojicon.EmojiconEditText;
 
-public class EditMessage extends EmojiconEditText {
+public class EditMessage extends EditText {
 
     private OnCommitContentListener mCommitContentListener = null;
     private String[] mimeTypes = null;

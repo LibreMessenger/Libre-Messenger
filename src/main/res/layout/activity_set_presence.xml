@@ -21,7 +21,7 @@
             android:padding="@dimen/infocard_padding"
             android:orientation="vertical">
 
-            <github.ankushsachdeva.emojicon.EmojiconEditText
+            <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
@@ -70,6 +70,7 @@
             android:padding="@dimen/infocard_padding"
             android:orientation="vertical"
             android:divider="?android:dividerHorizontal"
-            android:showDividers="middle"></LinearLayout>
+            android:showDividers="middle">
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

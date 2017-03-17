@@ -1,5 +1,4 @@
 include ':libs:MemorizingTrustManager'
 include ':libs:audiowife'
-include ':libs:emojicon'
 include ':libs:android-transcoder'
 rootProject.name = 'Pix-Art Messenger'

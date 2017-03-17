@@ -19,14 +19,14 @@
         android:layout_toStartOf="@+id/delete_button"
         android:layout_marginRight="8dp">
 
-        <github.ankushsachdeva.emojicon.EmojiconTextView
+        <com.vanniktech.emoji.EmojiTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/presence_status_message"
             android:textColor="@color/black87"
             android:textSize="?attr/TextSizeBody" />
 
-        <github.ankushsachdeva.emojicon.EmojiconTextView
+        <com.vanniktech.emoji.EmojiTextView
             android:id="@+id/status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
