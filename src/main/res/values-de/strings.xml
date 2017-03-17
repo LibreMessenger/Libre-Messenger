@@ -553,10 +553,10 @@
     <string name="share_uri_with">Teile URI mit…</string>
     <string name="shared_text_with_x">Text mit %s geteilt</string>
     <string name="create_account">Neues Profil erstellen</string>
-    <string name="magic_create_text">Wir erstellen nun mit dir gemeinsam ein Profil auf pix-art.de mit einem zufällig generierten Passwort, welches du benutzen oder auf der nächsten Seite ändern kannst\nDanach kannst du mit Kontakten auf diesem und anderen Servern in Kontakt treten, indem du ihnen deine Jabber-ID gibst.</string>
+    <string name="magic_create_text">Wir erstellen nun mit dir gemeinsam ein Profil mit einem zufällig generierten Passwort, welches du benutzen oder auf der nächsten Seite ändern kannst\nDanach kannst du mit Kontakten auf diesem und anderen Servern in Kontakt treten, indem du ihnen deine Jabber-ID gibst.</string>
     <string name="pick_your_username">Wähle deinen Benutzernamen</string>
     <string name="use_existing_accout">Nutze ein bestehendes Profil</string>
-    <string name="welcome_text">…ist ein kostenfreier und sicherer XMPP/Jabber Client für die Benutzung mit pix-art.de</string>
+    <string name="welcome_text">…ist ein kostenfreier und sicherer XMPP/Jabber Client</string>
     <string name="your_full_jid_will_be">Deine Jabber-ID lautet: %s</string>
     <string name="pref_manually_change_presence">Status manuell festlegen</string>
     <string name="pref_manually_change_presence_summary">Ändere deinen Status in deinem Profil</string>
@@ -708,5 +708,6 @@
     <string name="pref_notifications_from_strangers_summary">Benachrichtigen bei Erhalt einer neuen Nachricht von Unbekannten.</string>
     <string name="pref_notifications_from_strangers">Benachrichtigungen von Unbekannten</string>
     <string name="one_participant">Ein Teilnehmer</string>
+    <string name="presence_offline">Offline</string>
 
 </resources>
