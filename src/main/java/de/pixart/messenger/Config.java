@@ -69,15 +69,13 @@ public final class Config {
     public static final int CONNECT_DISCO_TIMEOUT = 30;
     public static final int MINI_GRACE_PERIOD = 750;
 
-    public static final int AVATAR_SIZE = 720;
+    public static final int AVATAR_SIZE = 480;
     public static final Bitmap.CompressFormat AVATAR_FORMAT = Bitmap.CompressFormat.JPEG;
 
     public static final int IMAGE_SIZE = 3840;
     public static final Bitmap.CompressFormat IMAGE_FORMAT = Bitmap.CompressFormat.JPEG;
     public static final int IMAGE_QUALITY = 75;
     public static final int IMAGE_MAX_SIZE = 1 * 1024 * 1024; // 1 MiB
-
-    public static final int VIDEO_BITRATE = 2 * 1000 * 1000; // 2 Mbps; default = 8 Mbps
 
     public static final int DEFAULT_ZOOM = 15; //for locations
 
