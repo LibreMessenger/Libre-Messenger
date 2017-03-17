@@ -99,7 +99,7 @@
                             android:id="@+id/conversation_lastimage"
                             android:layout_width="wrap_content"
                             android:layout_height="36dp"
-                            android:maxWidth="400dp"
+                            android:maxWidth="500dp"
                             android:scaleType="centerCrop"
                             android:visibility="gone"
                             app:riv_border_color="@color/grey500"
