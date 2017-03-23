@@ -42,4 +42,4 @@ Pix-Art Messenger ist eine Kopie der offiziellen Android-App [Conversations](htt
 11. Führe nun die Schritte aus, die zum Fehler führen.
 12. Zum Schluss schaue dir die `logcat.txt` an, lösche ggf. persönliche Angaben und sende diese Datei zur Problemlösung mit einer Beschreibung des Fehlers und was man tun muss, um diesen Fehler zu erhalten, an mich. Nutz dafür den Menüpunkt [Issues](https://github.com/kriztan/Pix-Art-Messenger/issues)
 
-Weitere Informationen git es unter http://jabber.pix-art.de
+Weitere Informationen gibt es unter http://jabber.pix-art.de
