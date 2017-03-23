@@ -17,6 +17,7 @@ import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.generator.IqGenerator;
 import de.pixart.messenger.generator.PresenceGenerator;
 import de.pixart.messenger.services.XmppConnectionService;
+import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.OnPresencePacketReceived;
 import de.pixart.messenger.xmpp.jid.Jid;
@@ -210,18 +211,19 @@ public class PresenceParser extends AbstractParser implements
                 mXmppConnectionService.fetchCaps(account, from, presence);
             }
 
-            final Element idle = packet.findChild("idle", "urn:xmpp:idle:1");
+            final Element idle = packet.findChild("idle", Namespace.IDLE);
             if (idle != null) {
                 contact.flagInactive();
-                String since = idle.getAttribute("since");
+                final String since = idle.getAttribute("since");
                 try {
                     contact.setLastseen(AbstractParser.parseTimestamp(since));
                 } catch (NullPointerException | ParseException e) {
                     contact.setLastseen(System.currentTimeMillis());
                 }
             } else {
-                contact.flagActive();
-                contact.setLastseen(AbstractParser.parseTimestamp(packet));
+                if (contact.setLastseen(AbstractParser.parseTimestamp(packet))) {
+                    contact.flagActive();
+                }
             }
 
             PgpEngine pgp = mXmppConnectionService.getPgpEngine();
@@ -234,6 +236,9 @@ public class PresenceParser extends AbstractParser implements
             boolean online = sizeBefore < contact.getPresences().size();
             mXmppConnectionService.onContactStatusChanged.onContactStatusChanged(contact, online);
         } else if (type.equals("unavailable")) {
+            if (contact.setLastseen(AbstractParser.parseTimestamp(packet))) {
+                contact.flagInactive();
+            }
             if (from.isBareJid()) {
                 contact.clearPresences();
             } else {

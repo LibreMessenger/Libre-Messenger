@@ -49,6 +49,7 @@ import de.pixart.messenger.entities.ListItem;
 import de.pixart.messenger.services.XmppConnectionService.OnAccountUpdate;
 import de.pixart.messenger.services.XmppConnectionService.OnRosterUpdate;
 import de.pixart.messenger.utils.CryptoHelper;
+import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xmpp.OnKeyStatusUpdated;
@@ -516,7 +517,9 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             lastseen.setVisibility(View.VISIBLE);
             lastseen.setText(R.string.contact_blocked);
         } else {
-            if (showLastSeen && contact.getLastseen() > 0) {
+            if (showLastSeen
+                    && contact.getLastseen() > 0
+                    && contact.getPresences().allOrNonSupport(Namespace.IDLE)) {
                 lastseen.setVisibility(View.VISIBLE);
                 lastseen.setText(UIHelper.lastseen(getApplicationContext(), contact.isActive(), contact.getLastseen()));
             } else {

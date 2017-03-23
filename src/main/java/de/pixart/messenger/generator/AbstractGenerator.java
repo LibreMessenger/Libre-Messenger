@@ -16,6 +16,7 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.services.XmppConnectionService;
+import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.utils.PhoneHelper;
 import de.pixart.messenger.xmpp.jingle.stanzas.Content;
 
@@ -117,6 +118,9 @@ public abstract class AbstractGenerator {
         }
         if (Config.supportOtr()) {
             features.addAll(Arrays.asList(OTR));
+        }
+        if (mXmppConnectionService.broadcastLastActivity()) {
+            features.add(Namespace.IDLE);
         }
         Collections.sort(features);
         return features;
