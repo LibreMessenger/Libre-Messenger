@@ -1,14 +1,14 @@
 ![logo](https://raw.githubusercontent.com/kriztan/Pix-Art-Messenger/c85bd74f468963563f5bcfc818a7f2cdc4cded07/art/icon.png)
-#Pix-Art Messenger
+# Pix-Art Messenger
 
 Pix-Art Messenger ist eine Kopie der offiziellen Android-App [Conversations](https://github.com/siacs/Conversations) mit einigen Änderungen.
 
-####Welche Version soll ich herunterladen?
+#### Welche Version soll ich herunterladen?
 
 1. Du hast einen eigenen XMPP Server? Dann wähle die open-Variante
 2. Du hast keinen eigenen XMPP-Server? Dann wähle die free-Variante bzw. standard-Variante, mit der du Zugriff auf meinen Server hast. So kannst du ohne Aufwand sofort loslegen.
 
-####Wie erstelle ich Debug- bzw. ADB-Logs?
+#### Wie erstelle ich Debug- bzw. ADB-Logs?
 1. Lade dir die SDK-Plattform-Tools für dein Betriebssystem von Google herunter: https://developer.android.com/studio/releases/platform-tools.html
 2. Falls noch nicht getan, lade dir die ADB Treiber für dein Betriebssystem von Google herunter, für Windows hier: https://developer.android.com/studio/run/win-usb.html
 3. Entpacke die zip (für Windows nach z.B. C:\ADB\)
