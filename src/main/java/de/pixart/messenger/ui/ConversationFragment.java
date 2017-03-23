@@ -36,6 +36,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -55,6 +56,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
+import de.pixart.messenger.entities.Blockable;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.DownloadableFile;
@@ -990,8 +992,30 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
     private OnClickListener mBlockClickListener = new OnClickListener() {
         @Override
-        public void onClick(final View v) {
-            BlockContactDialog.show(activity, conversation);
+        public void onClick(final View view) {
+            final Jid jid = conversation.getJid();
+            if (jid.isDomainJid()) {
+                BlockContactDialog.show(activity, conversation);
+            } else {
+                PopupMenu popupMenu = new PopupMenu(activity, view);
+                popupMenu.inflate(R.menu.block);
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        Blockable blockable;
+                        switch (menuItem.getItemId()) {
+                            case R.id.block_domain:
+                                blockable = conversation.getAccount().getRoster().getContact(jid.toDomainJid());
+                                break;
+                            default:
+                                blockable = conversation;
+                        }
+                        BlockContactDialog.show(activity, blockable);
+                        return true;
+                    }
+                });
+                popupMenu.show();
+            }
         }
     };
 

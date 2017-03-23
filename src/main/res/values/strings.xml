@@ -757,4 +757,6 @@
     <string name="one_participant">one participant</string>
     <string name="more_participants">%d participants</string>
     <string name="presence_offline">Offline</string>
+    <string name="block_stranger">Block stranger</string>
+    <string name="block_entire_domain">Block entire domain</string>
 </resources>
