@@ -888,6 +888,32 @@ public class XmppConnectionService extends Service {
         return getPreferences().getString("picture_compression", "auto");
     }
 
+    public int getCompressImageResolutionPreference() {
+        switch (getPreferences().getString("image_compression", "high")) {
+            case "low":
+                return 720;
+            case "mid":
+                return 1920;
+            case "high":
+                return 3840;
+            default:
+                return 3840;
+        }
+    }
+
+    public int getCompressImageSizePreference() {
+        switch (getPreferences().getString("image_compression", "high")) {
+            case "low":
+                return 209715; // 0.2 * 1024 * 1024 = 209715 (0.2 MiB)
+            case "mid":
+                return 524288; // 0.5 * 1024 * 1024 = 524288 (0.5 MiB)
+            case "high":
+                return 1048576; // 1 * 1024 * 1024 = 1048576 (1 MiB)
+            default:
+                return 1048576;
+        }
+    }
+
     private int getCompressVideoResolutionPreference() {
         switch (getPreferences().getString("video_compression", "high")) {
             case "low":

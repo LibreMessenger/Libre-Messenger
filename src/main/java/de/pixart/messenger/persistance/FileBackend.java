@@ -249,7 +249,7 @@ public class FileBackend {
         }
         File file = new File(path);
         long size = file.length();
-        if (size == 0 || size >= Config.IMAGE_MAX_SIZE) {
+        if (size == 0 || size >= mXmppConnectionService.getCompressImageSizePreference()) {
             return false;
         }
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -259,7 +259,7 @@ public class FileBackend {
             if (options == null || options.outMimeType == null || options.outHeight <= 0 || options.outWidth <= 0) {
                 return false;
             }
-            return (options.outWidth <= Config.IMAGE_SIZE && options.outHeight <= Config.IMAGE_SIZE && options.outMimeType.contains(Config.IMAGE_FORMAT.name().toLowerCase()));
+            return (options.outWidth <= mXmppConnectionService.getCompressImageResolutionPreference() && options.outHeight <= mXmppConnectionService.getCompressImageResolutionPreference() && options.outMimeType.contains(Config.IMAGE_FORMAT.name().toLowerCase()));
         } catch (FileNotFoundException e) {
             return false;
         }
@@ -370,7 +370,7 @@ public class FileBackend {
             if (originalBitmap == null) {
                 throw new FileCopyException(R.string.error_not_an_image_file);
             }
-            Bitmap scaledBitmap = resize(originalBitmap, Config.IMAGE_SIZE);
+            Bitmap scaledBitmap = resize(originalBitmap, mXmppConnectionService.getCompressImageResolutionPreference());
             int rotation = getRotation(image);
             scaledBitmap = rotate(scaledBitmap, rotation);
             boolean targetSizeReached = false;
@@ -382,7 +382,7 @@ public class FileBackend {
                     throw new FileCopyException(R.string.error_compressing_image);
                 }
                 os.flush();
-                targetSizeReached = file.length() <= Config.IMAGE_MAX_SIZE || quality <= 50;
+                targetSizeReached = file.length() <= mXmppConnectionService.getCompressImageSizePreference() || quality <= 50;
                 quality -= 5;
             }
             scaledBitmap.recycle();

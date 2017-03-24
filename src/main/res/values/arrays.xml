@@ -70,6 +70,18 @@
         <item>@string/always</item>
     </string-array>
 
+    <string-array name="image_compression_values">
+        <item>low</item>
+        <item>mid</item>
+        <item>high</item>
+    </string-array>
+
+    <string-array name="image_compression_entries">
+        <item>@string/image_low</item>
+        <item>@string/image_mid</item>
+        <item>@string/image_high</item>
+    </string-array>
+
     <string-array name="video_compression_values">
         <item>low</item>
         <item>mid</item>

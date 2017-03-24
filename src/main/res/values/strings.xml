@@ -764,4 +764,7 @@
     <string name="pref_use_tor">Connect via Tor</string>
     <string name="pref_use_tor_summary">Tunnel all connections through the Tor network.</string>
     <string name="pref_connection_options">Connection options</string>
+    <string name="image_low">low (720p)</string>
+    <string name="image_mid">middle (1920p)</string>
+    <string name="image_high">high (3840p)</string>
 </resources>

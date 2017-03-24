@@ -125,10 +125,10 @@
             android:summary="@string/pref_accept_files_summary_mobileroaming"
             android:title="@string/pref_accept_files_mobileroaming" />
         <ListPreference
-            android:defaultValue="auto"
-            android:entries="@array/picture_compression_entries"
-            android:entryValues="@array/picture_compression_values"
-            android:key="picture_compression"
+            android:defaultValue="high"
+            android:entries="@array/image_compression_entries"
+            android:entryValues="@array/image_compression_values"
+            android:key="image_compression"
             android:summary="@string/pref_picture_compression_summary"
             android:title="@string/pref_picture_compression" />
         <ListPreference
