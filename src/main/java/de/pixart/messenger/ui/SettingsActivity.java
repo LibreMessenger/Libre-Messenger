@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 
 import de.duenndns.ssl.MemorizingTrustManager;
+import de.pixart.messenger.BuildConfig;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
@@ -77,6 +78,14 @@ public class SettingsActivity extends XmppActivity implements
         }
 
         if (Config.FORCE_ORBOT) {
+            PreferenceCategory connectionOptions = (PreferenceCategory) mSettingsFragment.findPreference("connection_options");
+            PreferenceScreen expert = (PreferenceScreen) mSettingsFragment.findPreference("expert");
+            if (connectionOptions != null) {
+                expert.removePreference(connectionOptions);
+            }
+        }
+
+        if (BuildConfig.FLAVOR != "open") {
             PreferenceCategory connectionOptions = (PreferenceCategory) mSettingsFragment.findPreference("connection_options");
             PreferenceScreen expert = (PreferenceScreen) mSettingsFragment.findPreference("expert");
             if (connectionOptions != null) {

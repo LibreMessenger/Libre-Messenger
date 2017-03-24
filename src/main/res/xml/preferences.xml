@@ -269,6 +269,15 @@
                 android:summary="@string/pref_remove_trusted_certificates_summary"
                 android:title="@string/pref_remove_trusted_certificates_title" />
         </PreferenceCategory>
+        <PreferenceCategory
+            android:key="connection_options"
+            android:title="@string/pref_connection_options">
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:key="use_tor"
+                android:summary="@string/pref_use_tor_summary"
+                android:title="@string/pref_use_tor" />
+        </PreferenceCategory>
         <PreferenceCategory android:title="@string/pref_input_options">
             <CheckBoxPreference
                 android:defaultValue="@bool/enter_is_send"
