@@ -599,7 +599,6 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                     mXmppConnectionService.getNotificationService().pushFromBacklog(message);
                 } else if (account.getXmppConnection().isWaitingForSmCatchup()) {
                     account.getXmppConnection().incrementSmCatchupMessageCounter();
-                } else if (query.isCatchup()) { // mam catchup
                     mXmppConnectionService.getNotificationService().pushFromBacklog(message);
                 } else {
                     mXmppConnectionService.getNotificationService().push(message);
