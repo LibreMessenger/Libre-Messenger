@@ -141,7 +141,9 @@ public class ShowFullscreenMessageActivity extends Activity {
         width = options.outWidth;
         rotation = getRotation(Uri.parse("file://" + file.getAbsolutePath()));
         Log.d(Config.LOGTAG, "Image height: " + height + ", width: " + width + ", rotation: " + rotation);
-        rotateScreen(width, height, rotation);
+        if (useAutoRotateScreen()) {
+            rotateScreen(width, height, rotation);
+        }
         final PhotoViewAttacher mAttacher = new PhotoViewAttacher(mImage);
         mImage.setVisibility(View.VISIBLE);
         try {
@@ -168,7 +170,9 @@ public class ShowFullscreenMessageActivity extends Activity {
         width = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
         rotation = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION));
         Log.d(Config.LOGTAG, "Video height: " + height + ", width: " + width + ", rotation: " + rotation);
-        rotateScreen(width, height, rotation);
+        if (useAutoRotateScreen()) {
+            rotateScreen(width, height, rotation);
+        }
         try {
             mVideo.setVisibility(View.VISIBLE);
             mVideo.setVideoURI(uri);
@@ -254,6 +258,10 @@ public class ShowFullscreenMessageActivity extends Activity {
 
     public boolean useMaxBrightness() {
         return getPreferences().getBoolean("use_max_brightness", true);
+    }
+
+    public boolean useAutoRotateScreen() {
+        return getPreferences().getBoolean("use_auto_rotate", true);
     }
 
     protected SharedPreferences getPreferences() {
