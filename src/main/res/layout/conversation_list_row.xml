@@ -46,13 +46,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@+id/conversation_lastwrapper"
+                    android:layout_toLeftOf="@+id/conversation_failed"
                     android:paddingRight="4dp"
                     android:singleLine="true"
                     android:text="Awesome groupchat"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textColor="@color/black87"
-                    android:textSize="?attr/TextSizeHeadline"
-                    android:typeface="sans"
-                    android:layout_toLeftOf="@+id/conversation_failed" />
+                    android:textSize="?attr/TextSizeHeadline" />
 
                 <RelativeLayout
                     android:id="@+id/conversation_lastwrapper"
@@ -79,7 +79,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="false"
                         android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/notification_status"
+                        android:layout_toLeftOf="@+id/indicators"
                         android:layout_toRightOf="@+id/sender_name"
                         android:orientation="vertical">
 
@@ -107,14 +107,44 @@
                             app:riv_corner_radius="5dp" />
                     </LinearLayout>
 
-                    <ImageView
-                        android:id="@+id/notification_status"
-                        android:layout_width="?attr/IconSize"
-                        android:layout_height="?attr/IconSize"
-                        android:layout_alignParentRight="true"
+                    <LinearLayout
+                        android:id="@+id/indicators"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="false"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="4dp"
-                        android:src="@drawable/ic_notifications_grey600_24dp" />
+                        android:layout_alignParentRight="true"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/indicator_received"
+                            android:layout_width="?attr/TextSizeInfo"
+                            android:layout_height="?attr/TextSizeInfo"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="4sp"
+                            android:layout_toLeftOf="@+id/indicator_read"
+                            android:gravity="center_vertical"
+                            android:src="@drawable/ic_received_indicator" />
+
+                        <ImageView
+                            android:id="@+id/indicator_read"
+                            android:layout_width="?attr/TextSizeInfo"
+                            android:layout_height="?attr/TextSizeInfo"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="-8sp"
+                            android:layout_toLeftOf="@+id/notification_status"
+                            android:adjustViewBounds="false"
+                            android:gravity="center_vertical"
+                            android:src="@drawable/ic_read_indicator" />
+
+                        <ImageView
+                            android:id="@+id/notification_status"
+                            android:layout_width="?attr/IconSize"
+                            android:layout_height="?attr/IconSize"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="4dp"
+                            android:src="@drawable/ic_notifications_grey600_24dp" />
+                    </LinearLayout>
                 </RelativeLayout>
 
                 <TextView

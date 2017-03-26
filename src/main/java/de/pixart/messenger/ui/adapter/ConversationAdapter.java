@@ -93,6 +93,11 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
         Message message = conversation.getLatestMessage();
         int unreadcount = conversation.unreadCount();
         int failedcount = conversation.failedCount();
+        ImageView ReceivedStatus = (ImageView) view.findViewById(R.id.indicator_received);
+        ImageView ReadStatus = (ImageView) view.findViewById(R.id.indicator_read);
+
+        ReceivedStatus.setVisibility(View.GONE);
+        ReadStatus.setVisibility(View.GONE);
 
         if (!conversation.isRead()) {
             convName.setTypeface(null, Typeface.BOLD);
@@ -175,6 +180,17 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
         ImageView profilePicture = (ImageView) view.findViewById(R.id.conversation_image);
         loadAvatar(conversation, profilePicture);
 
+        if (activity.xmppConnectionService.indicateReceived()) {
+            switch (message.getMergedStatus()) {
+                case Message.STATUS_SEND_RECEIVED:
+                    ReceivedStatus.setVisibility(View.VISIBLE);
+                    break;
+                case Message.STATUS_SEND_DISPLAYED:
+                    ReceivedStatus.setVisibility(View.VISIBLE);
+                    ReadStatus.setVisibility(View.VISIBLE);
+                    break;
+            }
+        }
         if (conversation.getMode() == Conversation.MODE_SINGLE) {
             if (conversation.getIncomingChatState().equals(ChatState.COMPOSING)) {
                 mLastMessage.setText(R.string.is_typing);
