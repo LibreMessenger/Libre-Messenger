@@ -34,7 +34,7 @@ dependencies {
     standardPushCompile 'com.google.android.gms:play-services-gcm:10.2.1'
     compile 'org.sufficientlysecure:openpgp-api:10.0'
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
-    compile 'com.android.support:support-v13:25.2.0'
+    compile 'com.android.support:support-v13:25.3.0'
     compile 'org.bouncycastle:bcprov-jdk15on:1.56'
     compile 'org.bouncycastle:bcmail-jdk15on:1.56'
     compile 'org.jitsi:org.otr4j:0.22'
@@ -50,16 +50,17 @@ dependencies {
     compile 'jetty:javax.servlet:5.1.12'
     compile 'com.google.code.gson:gson:2.7'
     compile 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
-    compile 'com.android.support:appcompat-v7:25.2.0'
+    compile 'com.android.support:appcompat-v7:25.3.0'
     compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:support-v4:25.3.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.github.chrisbanes:PhotoView:1.3.1'
+    compile 'com.github.chrisbanes:PhotoView:2.0.0'
     compile 'com.github.rtoshiro.fullscreenvideoview:fullscreenvideoview:1.1.2'
-    compile 'com.google.android.gms:play-services-location:10.2.0'
-    compile 'com.google.android.gms:play-services-maps:10.2.0'
-    compile 'pub.devrel:easypermissions:0.2.1'
+    compile 'com.google.android.gms:play-services-location:10.2.1'
+    compile 'com.google.android.gms:play-services-maps:10.2.1'
+    compile 'pub.devrel:easypermissions:0.3.0'
     compile 'com.wefika:flowlayout:0.4.1'
-    compile 'com.googlecode.ez-vcard:ez-vcard:0.10.1'
+    compile 'com.googlecode.ez-vcard:ez-vcard:0.10.2'
     compile 'com.vanniktech:emoji-ios:0.4.0'
 }
 
@@ -75,7 +76,7 @@ android {
     buildToolsVersion "25.0.2"
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 25
 
         versionCode 192

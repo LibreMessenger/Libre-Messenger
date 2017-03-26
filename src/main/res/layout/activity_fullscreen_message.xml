@@ -7,9 +7,10 @@
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/tool_bar"></include>
+        layout="@layout/tool_bar">
+    </include>
 
-    <uk.co.senab.photoview.PhotoView
+    <com.github.chrisbanes.photoview.PhotoView
         android:id="@id/message_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
