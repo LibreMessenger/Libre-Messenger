@@ -35,7 +35,7 @@ public final class Config {
         return (ENCRYPTION_MASK & (ENCRYPTION_MASK - 1)) != 0;
     }
 
-    public static final String LOGTAG = "Pix-Art Messenger";
+    public static final String LOGTAG = "Pix-Art_Messenger";
 
     public static final String BUG_REPORTS = "bugs@pix-art.de";
 
