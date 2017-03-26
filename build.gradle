@@ -24,14 +24,14 @@ allprojects {
 }
 
 configurations {
-    playstoreCompile
+    standardPushCompile
 }
 
 dependencies {
     compile project(':libs:MemorizingTrustManager')
     compile project(':libs:audiowife')
     compile project(':libs:android-transcoder')
-    playstoreCompile 'com.google.android.gms:play-services-gcm:10.2.0'
+    standardPushCompile 'com.google.android.gms:play-services-gcm:10.2.1'
     compile 'org.sufficientlysecure:openpgp-api:10.0'
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
     compile 'com.android.support:support-v13:25.2.0'
@@ -102,7 +102,7 @@ android {
     }
 
     productFlavors {
-        playstore
+        standardPush
         standard
         open {
             buildConfigField("String", "XMPP_IP", "null")
