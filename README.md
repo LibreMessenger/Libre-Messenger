@@ -3,6 +3,8 @@
 
 Pix-Art Messenger ist eine Kopie der offiziellen Android-App [Conversations](https://github.com/siacs/Conversations) mit einigen Änderungen.
 
+[Download](https://xmpp.pix-art.de/Pix-Art_Messenger/)
+
 #### Wie erstelle ich Debug- bzw. ADB-Logs?
 1. Lade dir die SDK-Plattform-Tools für dein Betriebssystem von Google herunter: https://developer.android.com/studio/releases/platform-tools.html
 2. Falls noch nicht getan, lade dir die ADB Treiber für dein Betriebssystem von Google herunter, für Windows hier: https://developer.android.com/studio/run/win-usb.html
