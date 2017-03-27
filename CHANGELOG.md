@@ -9,6 +9,8 @@
 * open version can use tor networks
 * make image compression configurable
 * show read/received markers in chatlist
+* OMEMO: put auth tag into key (verify auth tag as well)
+* offer to block entire domain in message from stanger snackbar
 * bug fixes
 
 #### Version 1.17.0
