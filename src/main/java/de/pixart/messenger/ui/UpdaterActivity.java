@@ -193,8 +193,10 @@ public class UpdaterActivity extends Activity {
         }
         try {
             remoteV = remoteVersion.split(" ");
-            if (installedV[1] != null) {
-                remoteV[0] = remoteV[0] + ".1";
+            if (installedV != null && installedV.length > 1) {
+                if (installedV[1] != null) {
+                    remoteV[0] = remoteV[0] + ".1";
+                }
             }
             Log.d(Config.LOGTAG, "Updater Version on server: " + remoteV[0]);
             remote = remoteV[0].split("\\.");
