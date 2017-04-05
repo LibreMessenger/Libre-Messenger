@@ -175,7 +175,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
     }
 
-    private void displayStatus(ViewHolder viewHolder, Message message, int type, boolean darkBackground) {
+    private void displayStatus(ViewHolder viewHolder, final Message message, int type, boolean darkBackground) {
         String filesize = null;
         String info = null;
         boolean error = false;
