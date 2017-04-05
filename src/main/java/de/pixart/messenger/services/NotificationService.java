@@ -14,6 +14,7 @@ import android.support.v4.app.NotificationCompat.BigPictureStyle;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.RemoteInput;
+import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.util.DisplayMetrics;
@@ -233,7 +234,7 @@ public class NotificationService {
     }
 
     private void setNotificationColor(final Builder mBuilder) {
-        mBuilder.setColor(mXmppConnectionService.getResources().getColor(R.color.primary));
+        mBuilder.setColor(ContextCompat.getColor(mXmppConnectionService, R.color.primary));
     }
 
     public void updateNotification(final boolean notify) {
