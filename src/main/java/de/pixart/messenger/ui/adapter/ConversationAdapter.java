@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.support.v4.content.ContextCompat;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -179,6 +180,27 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
         mTimestamp.setText(UIHelper.readableTimeDifference(activity, conversation.getLatestMessage().getTimeSent()));
         ImageView profilePicture = (ImageView) view.findViewById(R.id.conversation_image);
         loadAvatar(conversation, profilePicture);
+
+        if (conversation.getMode() == Conversation.MODE_SINGLE) {
+            switch (conversation.getContact().getPresences().getShownStatus()) {
+                case CHAT:
+                case ONLINE:
+                    convName.setTextColor(ContextCompat.getColor(activity, R.color.online));
+                    break;
+                case AWAY:
+                    convName.setTextColor(ContextCompat.getColor(activity, R.color.away));
+                    break;
+                case XA:
+                case DND:
+                    convName.setTextColor(ContextCompat.getColor(activity, R.color.notavailable));
+                    break;
+                default:
+                    convName.setTextColor(ContextCompat.getColor(activity, R.color.black87));
+                    break;
+            }
+        } else {
+            convName.setTextColor(ContextCompat.getColor(activity, R.color.black87));
+        }
 
         if (activity.xmppConnectionService.indicateReceived()) {
             switch (message.getMergedStatus()) {

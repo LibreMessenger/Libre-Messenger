@@ -8,6 +8,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
     private static final float ACTIVE_ALPHA = 1.0f;
     protected XmppActivity activity;
     protected boolean showDynamicTags = false;
+    protected int color = 0;
     protected boolean offline = false;
     private View.OnClickListener onTagTvClick = new View.OnClickListener() {
         @Override
@@ -91,14 +93,17 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
         if (tags.size() != 0) {
             for (ListItem.Tag tag : tags) {
                 offline = tag.getOffline() == 1;
+                color = tag.getColor();
             }
         }
         if (offline) {
+            tvName.setTextColor(ContextCompat.getColor(activity, R.color.black87));
             tvName.setAlpha(INACTIVE_ALPHA);
             tvJid.setAlpha(INACTIVE_ALPHA);
             picture.setAlpha(INACTIVE_ALPHA);
             tagLayout.setAlpha(INACTIVE_ALPHA);
         } else {
+            tvName.setTextColor(color);
             tvName.setAlpha(ACTIVE_ALPHA);
             tvJid.setAlpha(ACTIVE_ALPHA);
             picture.setAlpha(ACTIVE_ALPHA);

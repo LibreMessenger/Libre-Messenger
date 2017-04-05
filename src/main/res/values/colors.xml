@@ -22,4 +22,8 @@
     <color name="lightblue">#ffc7d1e8</color>
     <color name="lightred">#ffd55555</color>
     <color name="lightgreen">#ffb0ecaf</color>
+    <color name="online">#ff259b24</color>
+    <color name="away">#ffff9800</color>
+    <color name="notavailable">#fff44336</color>
+    <color name="offline">#ff808080</color>
 </resources>
