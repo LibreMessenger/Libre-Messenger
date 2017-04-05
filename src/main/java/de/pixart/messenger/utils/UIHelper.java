@@ -115,7 +115,7 @@ public class UIHelper {
         if (active) {
             return context.getString(R.string.last_seen_now);
         } else if (difference < 60) {
-            return context.getString(R.string.last_seen_now);
+            return context.getString(R.string.last_seen_just_away);
         } else if (difference < 60 * 2) {
             return context.getString(R.string.last_seen_min);
         } else if (difference < 60 * 60) {

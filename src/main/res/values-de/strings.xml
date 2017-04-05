@@ -719,5 +719,6 @@
     <string name="pref_use_auto_rotate_summary">Bilder und Videos in Vollbildanzeige automatisch ausrichten</string>
     <string name="pref_use_tor">Über Tor verbinden</string>
     <string name="pref_use_tor_summary">Alle Verbindungen über das Tor-Netzwerk tunneln. Benötigt Orbot</string>
+    <string name="last_seen_just_away">kürzlich</string>
 
 </resources>
