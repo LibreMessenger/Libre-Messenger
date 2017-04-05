@@ -2,6 +2,7 @@ package de.pixart.messenger.entities;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 
 import net.java.otr4j.OtrException;
 import net.java.otr4j.crypto.OtrCryptoException;
@@ -15,7 +16,6 @@ import org.json.JSONObject;
 
 import java.security.interfaces.DSAPublicKey;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -38,7 +38,6 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
 
     public static final int STATUS_AVAILABLE = 0;
     public static final int STATUS_ARCHIVED = 1;
-    public static final int STATUS_DELETED = 2;
 
     public static final int MODE_MULTI = 1;
     public static final int MODE_SINGLE = 0;
@@ -363,7 +362,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
 
     public List<Jid> getAcceptedCryptoTargets() {
         if (mode == MODE_SINGLE) {
-            return Arrays.asList(getJid().toBareJid());
+            return Collections.singletonList(getJid().toBareJid());
         } else {
             return getJidListAttribute(ATTRIBUTE_CRYPTO_TARGETS);
         }
@@ -387,7 +386,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
     }
 
     @Override
-    public int compareTo(Conversation another) {
+    public int compareTo(@NonNull Conversation another) {
         final Message left = getLatestMessage();
         final Message right = another.getLatestMessage();
         if (left.getTimeSent() > right.getTimeSent()) {
