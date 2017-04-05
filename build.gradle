@@ -6,7 +6,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.android.tools.build:gradle:2.3.1'
     }
 }
 
@@ -34,7 +34,7 @@ dependencies {
     standardPushCompile 'com.google.android.gms:play-services-gcm:10.2.1'
     compile 'org.sufficientlysecure:openpgp-api:10.0'
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
-    compile 'com.android.support:support-v13:25.3.0'
+    compile 'com.android.support:support-v13:25.3.1'
     compile 'org.bouncycastle:bcprov-jdk15on:1.56'
     compile 'org.bouncycastle:bcmail-jdk15on:1.56'
     compile 'org.jitsi:org.otr4j:0.22'
@@ -50,9 +50,9 @@ dependencies {
     compile 'jetty:javax.servlet:5.1.12'
     compile 'com.google.code.gson:gson:2.7'
     compile 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
-    compile 'com.android.support:appcompat-v7:25.3.0'
+    compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:support-v4:25.3.0'
+    compile 'com.android.support:support-v4:25.3.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.github.chrisbanes:PhotoView:2.0.0'
     compile 'com.github.rtoshiro.fullscreenvideoview:fullscreenvideoview:1.1.2'
