@@ -709,5 +709,15 @@
     <string name="pref_notifications_from_strangers">Benachrichtigungen von Unbekannten</string>
     <string name="one_participant">Ein Teilnehmer</string>
     <string name="presence_offline">Offline</string>
+    <string name="block_entire_domain">Gesamte Domain sperren</string>
+    <string name="block_stranger">Unbekannten sperren</string>
+    <string name="image_high">hoch (3840p)</string>
+    <string name="image_low">niedrig (720p)</string>
+    <string name="image_mid">mittelmäßig  (1920p)</string>
+    <string name="pref_connection_options">Verbindung</string>
+    <string name="pref_use_auto_rotate">Medien in Vollbildanzeige drehen</string>
+    <string name="pref_use_auto_rotate_summary">Bilder und Videos in Vollbildanzeige automatisch ausrichten</string>
+    <string name="pref_use_tor">Über Tor verbinden</string>
+    <string name="pref_use_tor_summary">Alle Verbindungen über das Tor-Netzwerk tunneln. Benötigt Orbot</string>
 
 </resources>
