@@ -96,14 +96,18 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
                 color = tag.getColor();
             }
         }
-        if (offline || !ShowPresenceColoredNames()) {
+        if (offline) {
             tvName.setTextColor(ContextCompat.getColor(activity, R.color.black87));
             tvName.setAlpha(INACTIVE_ALPHA);
             tvJid.setAlpha(INACTIVE_ALPHA);
             picture.setAlpha(INACTIVE_ALPHA);
             tagLayout.setAlpha(INACTIVE_ALPHA);
         } else {
-            tvName.setTextColor(color);
+            if (ShowPresenceColoredNames()) {
+                tvName.setTextColor(color);
+            } else {
+                tvName.setTextColor(ContextCompat.getColor(activity, R.color.black87));
+            }
             tvName.setAlpha(ACTIVE_ALPHA);
             tvJid.setAlpha(ACTIVE_ALPHA);
             picture.setAlpha(ACTIVE_ALPHA);
