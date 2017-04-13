@@ -110,13 +110,13 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
 
         if (unreadcount > 0) {
             mUnread.setVisibility(View.VISIBLE);
-            mUnread.setText(String.valueOf(unreadcount));
+            mUnread.setText(unreadcount > 99 ? "\u221E" : String.valueOf(unreadcount));
         } else {
             mUnread.setVisibility(View.GONE);
         }
         if (failedcount > 0) {
             mFailed.setVisibility(View.VISIBLE);
-            mFailed.setText(String.valueOf(failedcount));
+            mFailed.setText(failedcount > 99 ? "\u221E" : String.valueOf(failedcount));
         } else {
             mFailed.setVisibility(View.GONE);
         }
