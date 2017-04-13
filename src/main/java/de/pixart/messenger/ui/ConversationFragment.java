@@ -871,16 +871,20 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         String oldString = editable.toString().trim();
         final int pos = mEditMessage.getSelectionStart();
         if (oldString.isEmpty() || pos == 0) {
-            mEditMessage.getText().insert(0, nick + ": ");
+            editable.insert(0, nick + ": ");
         } else {
             final char before = editable.charAt(pos - 1);
             final char after = editable.length() > pos ? editable.charAt(pos) : '\0';
             if (before == '\n') {
                 editable.insert(pos, nick + ": ");
             } else {
-                editable.insert(pos, (Character.isWhitespace(before) ? "" : " ") + nick + (Character.isWhitespace(after) ? "" : " "));
-                if (Character.isWhitespace(after)) {
-                    mEditMessage.setSelection(mEditMessage.getSelectionStart() + 1);
+                if (pos > 2 && editable.subSequence(pos - 2, pos).toString().equals(": ")) {
+                    editable.insert(pos - 2, ", " + nick);
+                } else {
+                    editable.insert(pos, (Character.isWhitespace(before) ? "" : " ") + nick + (Character.isWhitespace(after) ? "" : " "));
+                    if (Character.isWhitespace(after)) {
+                        mEditMessage.setSelection(mEditMessage.getSelectionStart() + 1);
+                    }
                 }
             }
         }
