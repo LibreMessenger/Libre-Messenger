@@ -205,7 +205,7 @@ public class UIHelper {
                 } else {
                     return new Pair<>(context.getString(R.string.contact), true);
                 }
-            } else if (message.treatAsDownloadable() == Message.Decision.MUST) {
+            } else if (message.treatAsDownloadable()) {
                 return new Pair<>(context.getString(R.string.x_file_offered_for_download,
                         getFileDescriptionString(context, message)), true);
             } else {

@@ -936,8 +936,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 displayHeartMessage(viewHolder, message.getBody().trim());
             } else if (message.bodyIsXmpp()) {
                 displayXmppMessage(viewHolder, message.getBody().trim());
-            } else if (message.treatAsDownloadable() == Message.Decision.MUST ||
-                    message.treatAsDownloadable() == Message.Decision.SHOULD) {
+            } else if (message.treatAsDownloadable()) {
                 try {
                     URL url = new URL(message.getBody());
                     displayDownloadableMessage(viewHolder,

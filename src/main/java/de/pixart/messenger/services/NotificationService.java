@@ -482,10 +482,7 @@ public class NotificationService {
 
     private Message getFirstDownloadableMessage(final Iterable<Message> messages) {
         for (final Message message : messages) {
-            if (message.getTransferable() != null
-                    && (message.getType() == Message.TYPE_FILE
-                    || message.getType() == Message.TYPE_IMAGE
-                    || message.treatAsDownloadable() != Message.Decision.NEVER)) {
+            if (message.getTransferable() != null || (message.getType() == Message.TYPE_TEXT && message.treatAsDownloadable())) {
                 return message;
             }
         }
