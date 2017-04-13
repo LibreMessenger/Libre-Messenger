@@ -577,6 +577,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         final MenuItem shareBarcode = menu.findItem(R.id.action_share_barcode);
         final MenuItem shareHttp = menu.findItem(R.id.action_share_http);
         final MenuItem shareUri = menu.findItem(R.id.action_share_uri);
+        final MenuItem announcePGP = menu.findItem(R.id.mgmt_account_announce_pgp);
         renewCertificate.setVisible(mAccount != null && mAccount.getPrivateKeyAlias() != null);
 
         if (mAccount != null && mAccount.isOnlineAndConnected()) {
@@ -587,9 +588,11 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 changePassword.setVisible(false);
             }
             reconnect.setVisible(true);
+            announcePGP.setVisible(true);
             mamPrefs.setVisible(mAccount.getXmppConnection().getFeatures().mam());
             changePresence.setVisible(manuallyChangePresence());
         } else {
+            announcePGP.setVisible(false);
             reconnect.setVisible(false);
             showQrCode.setVisible(false);
             showBlocklist.setVisible(false);
@@ -769,8 +772,19 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             case R.id.action_show_password:
                 showPassword();
                 break;
+            case R.id.mgmt_account_announce_pgp:
+                publishOpenPGPPublicKey(mAccount);
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void publishOpenPGPPublicKey(Account account) {
+        if (EditAccountActivity.this.hasPgp()) {
+            announcePgp(account, null, onOpenPGPKeyPublished);
+        } else {
+            this.showInstallPgpDialog();
+        }
     }
 
     private void shareLink(boolean http) {

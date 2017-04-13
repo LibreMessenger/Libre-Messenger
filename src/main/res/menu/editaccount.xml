@@ -67,6 +67,9 @@
         android:showAsAction="never"
         android:title="@string/mgmt_account_reconnect" />
     <item
+        android:id="@+id/mgmt_account_announce_pgp"
+        android:title="@string/mgmt_account_publish_pgp" />
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:showAsAction="never"
