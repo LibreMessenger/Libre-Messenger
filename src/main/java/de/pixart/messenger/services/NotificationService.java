@@ -228,7 +228,9 @@ public class NotificationService {
         if (messages != null && messages.size() > 0) {
             Message last = messages.get(messages.size() - 1);
             if (last.getStatus() != Message.STATUS_RECEIVED) {
-                mXmppConnectionService.markRead(last.getConversation(), false);
+                if (mXmppConnectionService.markRead(last.getConversation(), false)) {
+                    mXmppConnectionService.updateConversationUi();
+                }
             }
         }
     }
@@ -440,7 +442,7 @@ public class NotificationService {
         } else {
             if (messages.get(0).getConversation().getMode() == Conversation.MODE_SINGLE) {
                 builder.setStyle(new NotificationCompat.BigTextStyle().bigText(getMergedBodies(messages)));
-                builder.setContentText(UIHelper.getMessagePreview(mXmppConnectionService, messages.get((messages.size() - 1))).first);
+                builder.setContentText(UIHelper.getMessagePreview(mXmppConnectionService, messages.get(0)).first);
             } else {
                 final NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();
                 SpannableString styledString;
@@ -500,11 +502,11 @@ public class NotificationService {
 
     private CharSequence getMergedBodies(final ArrayList<Message> messages) {
         final StringBuilder text = new StringBuilder();
-        for (int i = 0; i < messages.size(); ++i) {
-            text.append(UIHelper.getMessagePreview(mXmppConnectionService, messages.get(i)).first);
-            if (i != messages.size() - 1) {
+        for(Message message : messages) {
+            if (text.length() != 0) {
                 text.append("\n");
             }
+            text.append(UIHelper.getMessagePreview(mXmppConnectionService, message).first);
         }
         return text.toString();
     }
