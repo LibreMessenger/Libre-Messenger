@@ -301,7 +301,7 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
 
             try {
                 conversation = xmppConnectionService
-                        .findOrCreateConversation(account, Jid.fromString(share.contact), false);
+                        .findOrCreateConversation(account, Jid.fromString(share.contact), false, true);
             } catch (final InvalidJidException e) {
                 return;
             }
