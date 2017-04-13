@@ -329,9 +329,11 @@
     <string name="pref_use_larger_font">Increase font size</string>
     <string name="pref_use_larger_font_summary">Use larger font sizes across the entire app</string>
     <string name="pref_use_send_button_to_indicate_status">Send button indicates status</string>
+    <string name="pref_use_colored_names_to_indicate_status">Colored names indicates status</string>
     <string name="pref_use_indicate_received">Request message receipts</string>
     <string name="pref_use_indicate_received_summary">Received messages will be marked with a green tick if supported</string>
     <string name="pref_use_send_button_to_indicate_status_summary">Colorize send button to indicate contact status</string>
+    <string name="pref_use_colored_names_to_indicate_status_summary">Colorize contact names to indicate contact status</string>
     <string name="pref_expert_options_other">Other</string>
     <string name="pref_autojoin">Automatically join conferences</string>
     <string name="pref_autojoin_summary">Respect the autojoin flag in conference bookmarks</string>

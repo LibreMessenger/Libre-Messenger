@@ -1,12 +1,14 @@
 package de.pixart.messenger.ui.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -181,7 +183,7 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
         ImageView profilePicture = (ImageView) view.findViewById(R.id.conversation_image);
         loadAvatar(conversation, profilePicture);
 
-        if (conversation.getMode() == Conversation.MODE_SINGLE) {
+        if (conversation.getMode() == Conversation.MODE_SINGLE && ShowPresenceColoredNames()) {
             switch (conversation.getContact().getPresences().getShownStatus()) {
                 case CHAT:
                 case ONLINE:
@@ -310,5 +312,13 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
                 }
             }
         }
+    }
+
+    public boolean ShowPresenceColoredNames() {
+        return getPreferences().getBoolean("presence_colored_names", false);
+    }
+
+    protected SharedPreferences getPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
     }
 }

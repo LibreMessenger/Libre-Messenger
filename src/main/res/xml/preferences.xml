@@ -20,6 +20,11 @@
             android:key="send_button_status"
             android:summary="@string/pref_use_send_button_to_indicate_status_summary"
             android:title="@string/pref_use_send_button_to_indicate_status" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="presence_colored_names"
+            android:summary="@string/pref_use_colored_names_to_indicate_status_summary"
+            android:title="@string/pref_use_colored_names_to_indicate_status" />
         <ListPreference
             android:defaultValue="recent"
             android:dialogTitle="@string/choose_quick_action"

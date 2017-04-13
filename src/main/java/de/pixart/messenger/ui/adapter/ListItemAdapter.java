@@ -96,7 +96,7 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
                 color = tag.getColor();
             }
         }
-        if (offline) {
+        if (offline || !ShowPresenceColoredNames()) {
             tvName.setTextColor(ContextCompat.getColor(activity, R.color.black87));
             tvName.setAlpha(INACTIVE_ALPHA);
             tvJid.setAlpha(INACTIVE_ALPHA);
@@ -205,4 +205,11 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
         }
     }
 
+    public boolean ShowPresenceColoredNames() {
+        return getPreferences().getBoolean("presence_colored_names", false);
+    }
+
+    protected SharedPreferences getPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+    }
 }
