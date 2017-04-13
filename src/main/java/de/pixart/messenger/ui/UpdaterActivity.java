@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
@@ -17,7 +16,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.WindowManager;
@@ -33,7 +31,6 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.services.UpdaterWebService;
-import de.pixart.messenger.services.XmppConnectionService;
 
 public class UpdaterActivity extends Activity {
 

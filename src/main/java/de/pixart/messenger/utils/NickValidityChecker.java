@@ -1,8 +1,8 @@
 package de.pixart.messenger.utils;
 
 import java.util.HashSet;
-import java.util.Set;
 import java.util.List;
+import java.util.Set;
 
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
