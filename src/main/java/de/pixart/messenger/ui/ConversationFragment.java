@@ -44,6 +44,7 @@ import net.java.otr4j.session.SessionStatus;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -74,6 +75,7 @@ import de.pixart.messenger.ui.adapter.MessageAdapter.OnContactPictureClicked;
 import de.pixart.messenger.ui.adapter.MessageAdapter.OnContactPictureLongClicked;
 import de.pixart.messenger.ui.widget.ListSelectionManager;
 import de.pixart.messenger.utils.GeoHelper;
+import de.pixart.messenger.utils.NickValidityChecker;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xmpp.XmppConnection;
@@ -879,12 +881,14 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                 editable.insert(pos, nick + ": ");
             } else {
                 if (pos > 2 && editable.subSequence(pos - 2, pos).toString().equals(": ")) {
-                    editable.insert(pos - 2, ", " + nick);
-                } else {
-                    editable.insert(pos, (Character.isWhitespace(before) ? "" : " ") + nick + (Character.isWhitespace(after) ? "" : " "));
-                    if (Character.isWhitespace(after)) {
-                        mEditMessage.setSelection(mEditMessage.getSelectionStart() + 1);
+                    if (NickValidityChecker.check(conversation, Arrays.asList(editable.subSequence(0, pos - 2).toString().split(", ")))) {
+                        editable.insert(pos - 2, ", " + nick);
+                        return;
                     }
+                }
+                editable.insert(pos, (Character.isWhitespace(before) ? "" : " ") + nick + (Character.isWhitespace(after) ? "" : " "));
+                if (Character.isWhitespace(after)) {
+                    mEditMessage.setSelection(mEditMessage.getSelectionStart() + 1);
                 }
             }
         }
