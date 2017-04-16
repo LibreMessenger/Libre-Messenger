@@ -75,9 +75,9 @@ public class HttpDownloadConnection implements Transferable {
         this.message.setTransferable(this);
         try {
             if (message.hasFileOnRemoteHost()) {
-                mUrl = message.getFileParams().url;
+                mUrl = CryptoHelper.toHttpsUrl(message.getFileParams().url);
             } else {
-                mUrl = new URL(message.getBody());
+                mUrl = CryptoHelper.toHttpsUrl(new URL(message.getBody()));
             }
             String[] parts = mUrl.getPath().toLowerCase().split("\\.");
             String lastPart = parts.length >= 1 ? parts[parts.length - 1] : null;
@@ -97,8 +97,8 @@ public class HttpDownloadConnection implements Transferable {
             String filename = fileDateFormat.format(new Date(message.getTimeSent())) + "_" + message.getUuid().substring(0, 4);
             message.setRelativeFilePath(filename + "." + extension);
             this.file = mXmppConnectionService.getFileBackend().getFile(message, false);
-            String reference = mUrl.getRef();
-            if (reference != null && reference.length() == 96) {
+            final String reference = mUrl.getRef();
+            if (reference != null && reference.matches("([A-Fa-f0-9]{2}){48}")) {
                 this.file.setKeyAndIv(CryptoHelper.hexToBytes(reference));
             }
 
@@ -342,7 +342,14 @@ public class HttpDownloadConnection implements Transferable {
 
         private void updateImageBounds() {
             message.setType(Message.TYPE_FILE);
-            mXmppConnectionService.getFileBackend().updateFileParams(message, mUrl);
+            final URL url;
+            final String ref = mUrl.getRef();
+            if (ref != null && ref.matches("([A-Fa-f0-9]{2}){48}")) {
+                url = CryptoHelper.toAesGcmUrl(mUrl);
+            } else {
+                url = mUrl;
+            }
+            mXmppConnectionService.getFileBackend().updateFileParams(message, url);
             mXmppConnectionService.updateMessage(message);
         }
 

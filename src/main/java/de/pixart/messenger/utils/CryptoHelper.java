@@ -29,6 +29,7 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Message;
+import de.pixart.messenger.http.AesGcmURLStreamHandler;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
 
@@ -238,7 +239,18 @@ public final class CryptoHelper {
             return url;
         }
         try {
-            return new URL("aesgcm" + url.toString().substring(url.getProtocol().length()));
+            return new URL(AesGcmURLStreamHandler.PROTOCOL_NAME + url.toString().substring(url.getProtocol().length()));
+        } catch (MalformedURLException e) {
+            return url;
+        }
+    }
+
+    public static URL toHttpsUrl(URL url) {
+        if (!url.getProtocol().equalsIgnoreCase(AesGcmURLStreamHandler.PROTOCOL_NAME)) {
+            return url;
+        }
+        try {
+            return new URL("https" + url.toString().substring(url.getProtocol().length()));
         } catch (MalformedURLException e) {
             return url;
         }
