@@ -1470,30 +1470,12 @@ public class XmppConnectionService extends Service {
         });
     }
 
-    private long AcceptFileSize() {
-        String config = "0";
-        SharedPreferences sharedPref = getPreferences();
-        if (isWIFI()) {
-            config = sharedPref.getString("auto_accept_file_size_wifi", "10485760");
-        } else if (isMobile() && !isMobileRoaming()) {
-            config = sharedPref.getString("auto_accept_file_size_mobile", "262144");
-        } else if (isMobile() && isMobileRoaming()) {
-            config = sharedPref.getString("auto_accept_file_size_roaming", "1");
-        }
-
-        try {
-            return Long.parseLong(config);
-        } catch (NumberFormatException e) {
-            return 1048576;
-        }
-    }
-
     private void resendFailedFileMessages(final Conversation conversation) {
         conversation.findFailedMessagesWithFiles(new Conversation.OnMessageFound() {
 
             @Override
             public void onMessageFound(Message message) {
-                if (AcceptFileSize() >= message.getFileParams().size) {
+                if (mHttpConnectionManager.getAutoAcceptFileSize() >= message.getFileParams().size) {
                     Log.d(Config.LOGTAG, "Resend failed message with size " + message.getFileParams().size  + " bytes for " + conversation.getJid());
                     resendMessage(message, true);
                 }
