@@ -723,5 +723,6 @@
     <string name="pref_use_colored_names_to_indicate_status">Kontaktnamen-Farbe zeigt Online-Status an</string>
     <string name="pref_use_colored_names_to_indicate_status_summary">Kontaktnamen einfärben, um den Online-Status des Kontakts anzuzeigen</string>
     <string name="send_message">Nachricht senden</string>
+    <string name="send_failed_resend">Zustellung fehlgeschlagen, sende erneut…</string>
 
 </resources>

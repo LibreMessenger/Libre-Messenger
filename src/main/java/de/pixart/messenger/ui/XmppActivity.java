@@ -75,6 +75,7 @@ import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.Presences;
+import de.pixart.messenger.http.HttpConnectionManager;
 import de.pixart.messenger.services.AvatarService;
 import de.pixart.messenger.services.BarcodeProvider;
 import de.pixart.messenger.services.XmppConnectionService;
@@ -97,6 +98,7 @@ public abstract class XmppActivity extends Activity {
     public static final String EXTRA_ACCOUNT = "account";
 
     public XmppConnectionService xmppConnectionService;
+    public HttpConnectionManager mHttpConnectionManager;
     public boolean xmppConnectionServiceBound = false;
     protected boolean registeredListeners = false;
 

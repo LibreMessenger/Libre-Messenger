@@ -232,8 +232,7 @@ public class XmppConnectionService extends Service {
             }
         }
     };
-    private HttpConnectionManager mHttpConnectionManager = new HttpConnectionManager(
-            this);
+    public HttpConnectionManager mHttpConnectionManager = new HttpConnectionManager(this);
     private AvatarService mAvatarService = new AvatarService(this);
     private MessageArchiveService mMessageArchiveService = new MessageArchiveService(this);
     private PushManagementService mPushManagementService = new PushManagementService(this);
