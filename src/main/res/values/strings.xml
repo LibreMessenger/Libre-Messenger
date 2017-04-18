@@ -770,4 +770,5 @@
     <string name="image_mid">middle (1920p)</string>
     <string name="image_high">high (3840p)</string>
     <string name="last_seen_just_away">recently</string>
+    <string name="send_message">Send message</string>
 </resources>
