@@ -1,5 +1,15 @@
 ### Changelog
 
+#### Version 1.18.0
+* enable OTR and OpenPGP again
+* fix bug with updater on devices < SDK 21
+* Show colored contact names for their presence status (via settings)
+* treat URL as file if URL is in oob or contains key
+* added support for Android Auto
+* fixed HTTP Download over Tor
+* work around for nimbuzz.com MUCs
+* bug fixes
+
 #### Version 1.17.1
 * grey out offline contacts in StartConversation
 * change emoji library which supports newer emojis
