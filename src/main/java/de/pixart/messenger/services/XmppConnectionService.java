@@ -153,6 +153,7 @@ public class XmppConnectionService extends Service {
     }
 
     public static final String ACTION_REPLY_TO_CONVERSATION = "reply_to_conversations";
+    public static final String ACTION_MARK_AS_READ = "mark_as_read";
     public static final String ACTION_CLEAR_NOTIFICATION = "clear_notification";
     public static final String ACTION_DISABLE_FOREGROUND = "disable_foreground";
     public static final String ACTION_TRY_AGAIN = "try_again";
@@ -675,6 +676,9 @@ public class XmppConnectionService extends Service {
                             directReply(c, body.toString(), intent.getBooleanExtra("dismiss_notification", false));
                         }
                     }
+                    break;
+                case ACTION_MARK_AS_READ:
+                    markRead(c, true);
                     break;
                 case AudioManager.RINGER_MODE_CHANGED_ACTION:
                     if (xaOnSilentMode()) {

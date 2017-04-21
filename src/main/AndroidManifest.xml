@@ -35,6 +35,10 @@
         android:theme="@style/ConversationsTheme"
         tools:replace="android:label, android:allowBackup" >
 
+        <meta-data
+            android:name="com.google.android.gms.car.application"
+            android:resource="@xml/automotive_app_desc" />
+
         <service android:name="de.pixart.messenger.services.XmppConnectionService" />
 
         <receiver android:name="de.pixart.messenger.services.EventReceiver">
