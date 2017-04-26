@@ -773,4 +773,6 @@
     <string name="last_seen_just_away">recently</string>
     <string name="send_message">Send message</string>
     <string name="send_failed_resend">delivery failed, resending…</string>
+    <string name="pref_show_connection_options_summary">Show hostname and port settings when setting up an account</string>
+    <string name="pref_show_connection_options">Extended connection settings</string>
 </resources>

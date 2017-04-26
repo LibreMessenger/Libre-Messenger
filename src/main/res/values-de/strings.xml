@@ -725,5 +725,7 @@
     <string name="send_message">Nachricht senden</string>
     <string name="send_failed_resend">Zustellung fehlgeschlagen, sende erneut…</string>
     <string name="timeout_12_months">12 Monate</string>
+    <string name="pref_show_connection_options">Erweiterte Verbindungsoptionen</string>
+    <string name="pref_show_connection_options_summary">Hostname- und Port-Optionen bei Kontoeinrichtung anzeigen</string>
 
 </resources>
