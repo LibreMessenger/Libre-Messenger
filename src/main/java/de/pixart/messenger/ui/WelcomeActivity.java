@@ -236,9 +236,9 @@ public class WelcomeActivity extends XmppActivity {
             WelcomeActivity.this.runOnUiThread(new Runnable() {
                 public void run() {
                     Toast.makeText(WelcomeActivity.this, R.string.Password_wrong, Toast.LENGTH_LONG).show();
+                    enterPasswordDialog();
                 }
             });
-            enterPasswordDialog();
         } else {
             WelcomeActivity.this.runOnUiThread(new Runnable() {
                 public void run() {
