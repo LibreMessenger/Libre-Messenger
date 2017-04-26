@@ -228,7 +228,8 @@ public class XmppConnection implements Runnable {
 
     protected synchronized void changeStatus(final Account.State nextStatus) {
         if (Thread.currentThread().isInterrupted()) {
-            Log.d(Config.LOGTAG,account.getJid().toBareJid()+": not changing status to "+nextStatus+" because thread was interrupted");
+            Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": not changing status to " + nextStatus + " because thread was interrupted");
+            return;
         }
         if (account.getStatus() != nextStatus) {
             if ((nextStatus == Account.State.OFFLINE)
@@ -485,7 +486,7 @@ public class XmppConnection implements Runnable {
      *
      * @return true if server returns with valid xmpp, false otherwise
      */
-    private boolean startXmpp(Socket socket) throws Exception {
+    private synchronized boolean startXmpp(Socket socket) throws Exception {
         if (Thread.currentThread().isInterrupted()) {
             throw new InterruptedException();
         }

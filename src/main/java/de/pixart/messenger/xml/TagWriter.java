@@ -13,15 +13,14 @@ import de.pixart.messenger.xmpp.stanzas.AbstractStanza;
 public class TagWriter {
 
     private OutputStreamWriter outputStream;
-    private boolean finshed = false;
+    private boolean finished = false;
     private LinkedBlockingQueue<AbstractStanza> writeQueue = new LinkedBlockingQueue<AbstractStanza>();
     private Thread asyncStanzaWriter = new Thread() {
-        private boolean shouldStop = false;
 
         @Override
         public void run() {
-            while (!shouldStop) {
-                if ((finshed) && (writeQueue.size() == 0)) {
+            while (!isInterrupted()) {
+                if (finished && writeQueue.size() == 0) {
                     return;
                 }
                 try {
@@ -29,7 +28,7 @@ public class TagWriter {
                     outputStream.write(output.toString());
                     outputStream.flush();
                 } catch (Exception e) {
-                    shouldStop = true;
+                    return;
                 }
             }
         }
@@ -73,7 +72,7 @@ public class TagWriter {
     }
 
     public TagWriter writeStanzaAsync(AbstractStanza stanza) {
-        if (finshed) {
+        if (finished) {
             Log.d(Config.LOGTAG, "attempting to write stanza to finished TagWriter");
             return this;
         } else {
@@ -90,7 +89,7 @@ public class TagWriter {
     }
 
     public void finish() {
-        this.finshed = true;
+        this.finished = true;
     }
 
     public boolean finished() {
@@ -102,7 +101,7 @@ public class TagWriter {
     }
 
     public synchronized void forceClose() {
-        finish();
+        asyncStanzaWriter.interrupt();
         if (outputStream != null) {
             try {
                 outputStream.close();
