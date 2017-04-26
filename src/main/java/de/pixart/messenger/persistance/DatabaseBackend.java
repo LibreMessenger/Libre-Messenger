@@ -655,9 +655,8 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         if (cursor.getCount() > 0) {
             cursor.moveToLast();
             do {
-                Message message = Message.fromCursor(cursor);
+                Message message = Message.fromCursor(cursor, conversation);
                 if (message != null) {
-                    message.setConversation(conversation);
                     list.add(message);
                 }
             } while (cursor.moveToPrevious());
@@ -688,7 +687,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 
                     @Override
                     public Message next() {
-                        Message message = Message.fromCursor(cursor);
+                        Message message = Message.fromCursor(cursor, conversation);
                         cursor.moveToNext();
                         return message;
                     }

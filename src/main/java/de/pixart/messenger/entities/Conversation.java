@@ -486,7 +486,6 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
             return message;
         } else {
             Message message = this.messages.get(this.messages.size() - 1);
-            message.setConversation(this);
             return message;
         }
     }
@@ -974,14 +973,12 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
     }
 
     public void add(Message message) {
-        message.setConversation(this);
         synchronized (this.messages) {
             this.messages.add(message);
         }
     }
 
     public void prepend(Message message) {
-        message.setConversation(this);
         synchronized (this.messages) {
             this.messages.add(0, message);
         }
