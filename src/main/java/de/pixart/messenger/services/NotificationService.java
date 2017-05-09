@@ -243,6 +243,7 @@ public class NotificationService {
     }
 
     public void updateNotification(final boolean notify) {
+        Log.d(Config.LOGTAG, "updateNotification(" + Boolean.toString(notify) + ")");
         final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mXmppConnectionService);
         final SharedPreferences preferences = mXmppConnectionService.getPreferences();
 
@@ -261,13 +262,14 @@ public class NotificationService {
             } else {
                 Log.d(Config.LOGTAG, "Notification: Received multiple notification or using Android N");
                 mBuilder = buildMultipleConversation();
-                notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+                modifyForSoundVibrationAndLight(mBuilder, notify, preferences);
                 for (Map.Entry<String, ArrayList<Message>> entry : notifications.entrySet()) {
                     Builder singleBuilder = buildSingleConversations(entry.getValue());
                     singleBuilder.setGroup(CONVERSATIONS_GROUP);
                     modifyForSoundVibrationAndLight(singleBuilder, notify, preferences);
                     notificationManager.notify(entry.getKey(), NOTIFICATION_ID, singleBuilder.build());
                 }
+                notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
             }
         }
     }
