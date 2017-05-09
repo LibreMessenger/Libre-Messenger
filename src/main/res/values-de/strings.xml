@@ -279,7 +279,6 @@
     <string name="not_connected_try_again">Nicht verbunden, bitte später versuchen</string>
     <string name="check_x_filesize">%s-Größe prüfen</string>
     <string name="message_options">Nachrichtenoptionen</string>
-    <string name="copy_text">Text kopieren</string>
     <string name="copy_original_url">Original-URL kopieren</string>
     <string name="send_again">Erneut senden</string>
     <string name="file_url">Datei-URL</string>
