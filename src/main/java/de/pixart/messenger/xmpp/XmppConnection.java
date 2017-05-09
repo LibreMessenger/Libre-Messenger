@@ -98,7 +98,7 @@ public class XmppConnection implements Runnable {
     private static final int PACKET_IQ = 0;
     private static final int PACKET_MESSAGE = 1;
     private static final int PACKET_PRESENCE = 2;
-    protected Account account;
+    protected final Account account;
     private final WakeLock wakeLock;
     private Socket socket;
     private XmlReader tagReader;
@@ -136,7 +136,7 @@ public class XmppConnection implements Runnable {
     private OnBindListener bindListener = null;
     private final ArrayList<OnAdvancedStreamFeaturesLoaded> advancedStreamFeaturesLoadedListeners = new ArrayList<>();
     private OnMessageAcknowledged acknowledgedListener = null;
-    private XmppConnectionService mXmppConnectionService = null;
+    private final XmppConnectionService mXmppConnectionService;
     private EditAccountActivity mEditAccountActivity = null;
 
     private SaslMechanism saslMechanism;
@@ -657,11 +657,13 @@ public class XmppConnection implements Runnable {
                 final AckPacket ack = new AckPacket(this.stanzasReceived, smVersion);
                 tagWriter.writeStanzaAsync(ack);
             } else if (nextTag.isStart("a")) {
-                if (mWaitingForSmCatchup.compareAndSet(true, false)) {
-                    int count = mSmCatchupMessageCounter.get();
-                    Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": SM catchup complete (" + count + ")");
-                    if (count > 0) {
-                        mXmppConnectionService.getNotificationService().finishBacklog(true, account);
+                synchronized (account) {
+                    if (mWaitingForSmCatchup.compareAndSet(true, false)) {
+                        int count = mSmCatchupMessageCounter.get();
+                        Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": SM catchup complete (" + count + ")");
+                        if (count > 0) {
+                            mXmppConnectionService.getNotificationService().finishBacklog(true, account);
+                        }
                     }
                 }
                 final Element ack = tagReader.readElement(nextTag);

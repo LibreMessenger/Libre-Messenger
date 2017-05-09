@@ -45,6 +45,7 @@ import de.pixart.messenger.ui.ManageAccountActivity;
 import de.pixart.messenger.ui.TimePreference;
 import de.pixart.messenger.utils.GeoHelper;
 import de.pixart.messenger.utils.UIHelper;
+import de.pixart.messenger.xmpp.XmppConnection;
 
 public class NotificationService {
 
@@ -175,6 +176,18 @@ public class NotificationService {
     }
 
     public void push(final Message message) {
+        synchronized (message.getConversation().getAccount()) {
+            final XmppConnection connection = message.getConversation().getAccount().getXmppConnection();
+            if (connection.isWaitingForSmCatchup()) {
+                connection.incrementSmCatchupMessageCounter();
+                pushFromBacklog(message);
+            } else {
+                pushNow(message);
+            }
+        }
+    }
+
+    private void pushNow(final Message message) {
         mXmppConnectionService.updateUnreadCountBadge();
         if (!notify(message)) {
             Log.d(Config.LOGTAG, message.getConversation().getAccount().getJid().toBareJid() + ": suppressing notification because turned off");
