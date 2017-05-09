@@ -1093,7 +1093,9 @@ public class XmppConnectionService extends Service {
             }
         };
 
+        Log.d(Config.LOGTAG, "initializing database...");
         this.databaseBackend = DatabaseBackend.getInstance(getApplicationContext());
+        Log.d(Config.LOGTAG, "restoring accounts...");
         this.accounts = databaseBackend.getAccounts();
 
         if (databaseBackend.startTimeCountExceedsThreshold()) {
@@ -1559,6 +1561,8 @@ public class XmppConnectionService extends Service {
             for (Account account : this.accounts) {
                 accountLookupTable.put(account.getUuid(), account);
             }
+            Log.d(Config.LOGTAG, "restoring conversations...");
+            final long startTimeConversationsRestore = SystemClock.elapsedRealtime();
             this.conversations.addAll(databaseBackend.getConversations(Conversation.STATUS_AVAILABLE));
             for (Iterator<Conversation> iterator = conversations.listIterator(); iterator.hasNext(); ) {
                 Conversation conversation = iterator.next();
@@ -1570,6 +1574,8 @@ public class XmppConnectionService extends Service {
                     iterator.remove();
                 }
             }
+            long diffConversationsRestore = SystemClock.elapsedRealtime() - startTimeConversationsRestore;
+            Log.d(Config.LOGTAG, "finished restoring conversations in " + diffConversationsRestore + "ms");
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
@@ -1579,14 +1585,15 @@ public class XmppConnectionService extends Service {
                         Log.d(Config.LOGTAG, "deleting messages that are older than " + AbstractGenerator.getTimestamp(deletionDate));
                         databaseBackend.expireOldMessages(deletionDate);
                     }
-                    Log.d(Config.LOGTAG, "restoring roster");
+                    Log.d(Config.LOGTAG, "restoring roster...");
                     for (Account account : accounts) {
                         databaseBackend.readRoster(account.getRoster());
                         account.initAccountServices(XmppConnectionService.this); //roster needs to be loaded at this stage
                     }
                     getBitmapCache().evictAll();
                     loadPhoneContacts();
-                    Log.d(Config.LOGTAG, "restoring messages");
+                    Log.d(Config.LOGTAG, "restoring messages...");
+                    final long startMessageRestore = SystemClock.elapsedRealtime();
                     for (Conversation conversation : conversations) {
                         conversation.addAll(0, databaseBackend.getMessages(conversation, Config.PAGE_SIZE));
                         checkDeletedFiles(conversation);
@@ -1606,7 +1613,8 @@ public class XmppConnectionService extends Service {
                     }
                     mNotificationService.finishBacklog(false);
                     mRestoredFromDatabase = true;
-                    Log.d(Config.LOGTAG, "restored all messages");
+                    final long diffMessageRestore = SystemClock.elapsedRealtime() - startMessageRestore;
+                    Log.d(Config.LOGTAG, "finished restoring messages in " + diffMessageRestore + "ms");
                     updateConversationUi();
                 }
             };
