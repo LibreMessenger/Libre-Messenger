@@ -41,6 +41,7 @@ import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.ui.ConversationActivity;
+import de.pixart.messenger.ui.EditAccountActivity;
 import de.pixart.messenger.ui.ManageAccountActivity;
 import de.pixart.messenger.ui.TimePreference;
 import de.pixart.messenger.utils.GeoHelper;
@@ -747,10 +748,22 @@ public class NotificationService {
         mBuilder.setDeleteIntent(createDismissErrorIntent());
         mBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         mBuilder.setSmallIcon(R.drawable.ic_warning_white_24dp);
-        mBuilder.setContentIntent(PendingIntent.getActivity(mXmppConnectionService,
-                145,
-                new Intent(mXmppConnectionService, ManageAccountActivity.class),
-                PendingIntent.FLAG_UPDATE_CURRENT));
+        if (errors.size() == 1) {
+            Intent intent = new Intent(mXmppConnectionService, EditAccountActivity.class);
+            Account mAccount = mXmppConnectionService.getAccounts().get(0);
+            intent.putExtra("jid", mAccount.getJid().toBareJid().toString());
+            intent.putExtra("init", false);
+            mBuilder.setContentIntent(PendingIntent.getActivity(mXmppConnectionService,
+                    145,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT));
+        } else {
+            mBuilder.setContentIntent(PendingIntent.getActivity(mXmppConnectionService,
+                    145,
+                    new Intent(mXmppConnectionService, ManageAccountActivity.class),
+                    PendingIntent.FLAG_UPDATE_CURRENT));
+        }
+
         notificationManager.notify(ERROR_NOTIFICATION_ID, mBuilder.build());
     }
 }
