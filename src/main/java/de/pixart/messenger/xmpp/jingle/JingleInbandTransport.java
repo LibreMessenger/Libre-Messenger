@@ -14,7 +14,6 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.DownloadableFile;
 import de.pixart.messenger.persistance.FileBackend;
-import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.OnIqPacketReceived;
 import de.pixart.messenger.xmpp.jid.Jid;
