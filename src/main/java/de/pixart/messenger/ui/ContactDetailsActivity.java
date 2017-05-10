@@ -37,7 +37,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
-import de.pixart.messenger.crypto.PgpEngine;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.crypto.axolotl.FingerprintStatus;
 import de.pixart.messenger.crypto.axolotl.XmppAxolotlSession;
@@ -555,7 +554,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
                         .findViewById(R.id.button_remove);
                 removeButton.setVisibility(View.VISIBLE);
                 key.setText(CryptoHelper.prettifyFingerprint(otrFingerprint));
-                if (otrFingerprint != null && otrFingerprint.equals(messageFingerprint)) {
+                if (otrFingerprint != null && otrFingerprint.equalsIgnoreCase(messageFingerprint)) {
                     keyType.setText(R.string.otr_fingerprint_selected_message);
                     keyType.setTextColor(ContextCompat.getColor(this, R.color.accent));
                 } else {
@@ -613,14 +612,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
 
                 @Override
                 public void onClick(View v) {
-                    PgpEngine pgp = ContactDetailsActivity.this.xmppConnectionService.getPgpEngine();
-                    try {
-                        startIntentSenderForResult(
-                                pgp.getIntentForKey(contact).getIntentSender(), 0, null, 0,
-                                0, 0);
-                    } catch (Throwable e) {
-                        Toast.makeText(ContactDetailsActivity.this, R.string.openpgp_error, Toast.LENGTH_SHORT).show();
-                    }
+                    launchOpenKeyChain(contact.getPgpKeyId());
                 }
             };
             view.setOnClickListener(openKey);

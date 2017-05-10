@@ -304,10 +304,6 @@ public class PgpEngine {
         }
     }
 
-    public PendingIntent getIntentForKey(Contact contact) {
-        return getIntentForKey(contact.getPgpKeyId());
-    }
-
     public PendingIntent getIntentForKey(long pgpKeyId) {
         Intent params = new Intent();
         params.setAction(OpenPgpApi.ACTION_GET_KEY);

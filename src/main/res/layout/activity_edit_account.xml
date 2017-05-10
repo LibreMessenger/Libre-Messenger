@@ -213,13 +213,13 @@
                 <Button
                     android:id="@+id/os_optimization_disable"
                     style="?android:attr/borderlessButtonStyle"
-                    android:layout_marginRight="-8dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/os_optimization_body"
+                    android:layout_marginRight="-8dp"
                     android:text="@string/disable"
                     android:textColor="@color/accent" />
             </RelativeLayout>
@@ -251,19 +251,19 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:singleLine="true"
                             android:text="@string/server_info_session_established"
                             android:textColor="@color/black87"
-                            android:textSize="?attr/TextSizeBody"
-                            android:singleLine="true"
-                            android:ellipsize="end" />
+                            android:textSize="?attr/TextSizeBody" />
 
                         <TextView
                             android:id="@+id/session_est"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
-                            android:textColor="@color/black87"
                             android:paddingLeft="4dp"
+                            android:textColor="@color/black87"
                             android:textSize="?attr/TextSizeBody"
                             tools:ignore="RtlHardcoded" />
                     </TableRow>
@@ -285,19 +285,19 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:singleLine="true"
                             android:text="@string/server_info_pep"
                             android:textColor="@color/black87"
-                            android:textSize="?attr/TextSizeBody"
-                            android:singleLine="true"
-                            android:ellipsize="end" />
+                            android:textSize="?attr/TextSizeBody" />
 
                         <TextView
                             android:id="@+id/server_info_pep"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
-                            android:textColor="@color/black87"
                             android:paddingLeft="4dp"
+                            android:textColor="@color/black87"
                             android:textSize="?attr/TextSizeBody"
                             tools:ignore="RtlHardcoded" />
                     </TableRow>
@@ -309,19 +309,19 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:singleLine="true"
                             android:text="@string/server_info_blocking"
                             android:textColor="@color/black87"
-                            android:textSize="?attr/TextSizeBody"
-                            android:singleLine="true"
-                            android:ellipsize="end" />
+                            android:textSize="?attr/TextSizeBody" />
 
                         <TextView
                             android:id="@+id/server_info_blocking"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
-                            android:textColor="@color/black87"
                             android:paddingLeft="4dp"
+                            android:textColor="@color/black87"
                             android:textSize="?attr/TextSizeBody"
                             tools:ignore="RtlHardcoded" />
                     </TableRow>
@@ -333,19 +333,19 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:singleLine="true"
                             android:text="@string/server_info_stream_management"
                             android:textColor="@color/black87"
-                            android:textSize="?attr/TextSizeBody"
-                            android:singleLine="true"
-                            android:ellipsize="end" />
+                            android:textSize="?attr/TextSizeBody" />
 
                         <TextView
                             android:id="@+id/server_info_sm"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
-                            android:textColor="@color/black87"
                             android:paddingLeft="4dp"
+                            android:textColor="@color/black87"
                             android:textSize="?attr/TextSizeBody"
                             tools:ignore="RtlHardcoded" />
                     </TableRow>
@@ -357,19 +357,19 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:singleLine="true"
                             android:text="@string/server_info_roster_version"
                             android:textColor="@color/black87"
-                            android:textSize="?attr/TextSizeBody"
-                            android:singleLine="true"
-                            android:ellipsize="end" />
+                            android:textSize="?attr/TextSizeBody" />
 
                         <TextView
                             android:id="@+id/server_info_roster_version"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
-                            android:textColor="@color/black87"
                             android:paddingLeft="4dp"
+                            android:textColor="@color/black87"
                             android:textSize="?attr/TextSizeBody"
                             tools:ignore="RtlHardcoded" />
                     </TableRow>
@@ -381,19 +381,19 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:singleLine="true"
                             android:text="@string/server_info_carbon_messages"
                             android:textColor="@color/black87"
-                            android:textSize="?attr/TextSizeBody"
-                            android:singleLine="true"
-                            android:ellipsize="end" />
+                            android:textSize="?attr/TextSizeBody" />
 
                         <TextView
                             android:id="@+id/server_info_carbons"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
-                            android:textColor="@color/black87"
                             android:paddingLeft="4dp"
+                            android:textColor="@color/black87"
                             android:textSize="?attr/TextSizeBody"
                             tools:ignore="RtlHardcoded" />
                     </TableRow>
@@ -405,19 +405,19 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:singleLine="true"
                             android:text="@string/server_info_mam"
                             android:textColor="@color/black87"
-                            android:textSize="?attr/TextSizeBody"
-                            android:singleLine="true"
-                            android:ellipsize="end" />
+                            android:textSize="?attr/TextSizeBody" />
 
                         <TextView
                             android:id="@+id/server_info_mam"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
-                            android:textColor="@color/black87"
                             android:paddingLeft="4dp"
+                            android:textColor="@color/black87"
                             android:textSize="?attr/TextSizeBody"
                             tools:ignore="RtlHardcoded" />
                     </TableRow>
@@ -429,19 +429,19 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:singleLine="true"
                             android:text="@string/server_info_csi"
                             android:textColor="@color/black87"
-                            android:textSize="?attr/TextSizeBody"
-                            android:singleLine="true"
-                            android:ellipsize="end" />
+                            android:textSize="?attr/TextSizeBody" />
 
                         <TextView
                             android:id="@+id/server_info_csi"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
-                            android:textColor="@color/black87"
                             android:paddingLeft="4dp"
+                            android:textColor="@color/black87"
                             android:textSize="?attr/TextSizeBody"
                             tools:ignore="RtlHardcoded" />
                     </TableRow>
@@ -454,19 +454,19 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:singleLine="true"
                             android:text="@string/server_info_push"
                             android:textColor="@color/black87"
-                            android:textSize="?attr/TextSizeBody"
-                            android:singleLine="true"
-                            android:ellipsize="end" />
+                            android:textSize="?attr/TextSizeBody" />
 
                         <TextView
                             android:id="@+id/server_info_push"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
-                            android:textColor="@color/black87"
                             android:paddingLeft="4dp"
+                            android:textColor="@color/black87"
                             android:textSize="?attr/TextSizeBody" />
                     </TableRow>
 
@@ -477,26 +477,26 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:singleLine="true"
                             android:text="@string/server_info_http_upload"
                             android:textColor="@color/black87"
-                            android:textSize="?attr/TextSizeBody"
-                            android:singleLine="true"
-                            android:ellipsize="end" />
+                            android:textSize="?attr/TextSizeBody" />
 
                         <TextView
                             android:id="@+id/server_info_http_upload"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"
-                            android:textColor="@color/black87"
                             android:paddingLeft="4dp"
+                            android:textColor="@color/black87"
                             android:textSize="?attr/TextSizeBody" />
 
                     </TableRow>
                 </TableLayout>
 
                 <RelativeLayout
-                    android:id="@+id/otr_fingerprint_box"
+                    android:id="@+id/pgp_fingerprint_box"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginTop="32dp">
@@ -505,6 +505,52 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/action_delete_pgp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/pgp_fingerprint"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="monospace"
+                            android:textColor="@color/primary"
+                            android:textSize="?attr/TextSizeBody"
+                            android:typeface="monospace" />
+
+                        <TextView
+                            android:id="@+id/pgp_fingerprint_desc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/openpgp_key_id"
+                            android:textColor="@color/black54"
+                            android:textSize="?attr/TextSizeInfo" />
+                    </LinearLayout>
+
+                    <ImageButton
+                        android:id="@+id/action_delete_pgp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:alpha="1.0"
+                        android:background="?android:selectableItemBackground"
+                        android:padding="@dimen/image_button_padding"
+                        android:src="?attr/icon_remove"
+                        android:visibility="visible" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/otr_fingerprint_box"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="24dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/action_copy_to_clipboard"
                         android:orientation="vertical">
 
@@ -518,6 +564,7 @@
                             android:typeface="monospace" />
 
                         <TextView
+                            android:id="@+id/otr_fingerprint_desc"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/otr_fingerprint"
@@ -543,12 +590,13 @@
                     android:id="@+id/axolotl_fingerprint_box"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="32dp">
+                    android:layout_marginTop="24dp">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/axolotl_actions"
                         android:orientation="vertical">
 
@@ -629,16 +677,16 @@
                     android:layout_height="wrap_content"
                     android:divider="?android:dividerHorizontal"
                     android:orientation="vertical"
-                    android:showDividers="middle">
-                </LinearLayout>
+                    android:showDividers="middle"></LinearLayout>
+
                 <Button
                     android:id="@+id/clear_devices"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/clear_other_devices"
                     android:layout_gravity="center_horizontal"
-                    android:textColor="@color/accent"/>
+                    android:text="@string/clear_other_devices"
+                    android:textColor="@color/accent" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
