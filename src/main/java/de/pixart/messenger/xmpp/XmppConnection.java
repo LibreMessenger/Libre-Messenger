@@ -472,7 +472,7 @@ public class XmppConnection implements Runnable {
      *
      * @return true if server returns with valid xmpp, false otherwise
      */
-    private synchronized boolean startXmpp(Socket socket) throws Exception {
+    private boolean startXmpp(Socket socket) throws Exception {
         if (Thread.currentThread().isInterrupted()) {
             throw new InterruptedException();
         }
@@ -674,9 +674,7 @@ public class XmppConnection implements Runnable {
                     Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": resumption failed");
                 }
                 resetStreamId();
-                if (account.getStatus() != Account.State.ONLINE) {
-                    sendBindRequest();
-                }
+                sendBindRequest();
             } else if (nextTag.isStart("iq")) {
                 processIq(nextTag);
             } else if (nextTag.isStart("message")) {
