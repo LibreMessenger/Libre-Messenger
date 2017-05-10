@@ -256,7 +256,6 @@ public class NotificationService {
     }
 
     public void updateNotification(final boolean notify) {
-        Log.d(Config.LOGTAG, "updateNotification(" + Boolean.toString(notify) + ")");
         final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mXmppConnectionService);
         final SharedPreferences preferences = mXmppConnectionService.getPreferences();
 
