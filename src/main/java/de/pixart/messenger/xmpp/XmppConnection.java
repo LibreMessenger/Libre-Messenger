@@ -327,7 +327,7 @@ public class XmppConnection implements Runnable {
                             final SSLSession session = ((SSLSocket) localSocket).getSession();
                             if (!tlsFactoryVerifier.verifier.verify(account.getServer().getDomainpart(), session)) {
                                 Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": TLS certificate verification failed");
-                                throw new SecurityException();
+                                throw new StateChangingException(Account.State.TLS_ERROR);
                             }
                         } catch (KeyManagementException e) {
                             features.encryptionEnabled = false;
@@ -416,7 +416,7 @@ public class XmppConnection implements Runnable {
 
                             if (!tlsFactoryVerifier.verifier.verify(account.getServer().getDomainpart(), ((SSLSocket) localSocket).getSession())) {
                                 Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": TLS certificate verification failed");
-                                throw new SecurityException();
+                                throw new StateChangingException(Account.State.TLS_ERROR);
                             }
                         }
 
@@ -425,7 +425,7 @@ public class XmppConnection implements Runnable {
                         } else {
                             localSocket.close();
                         }
-                    } catch (final SecurityException e) {
+                    } catch (final StateChangingException e) {
                         throw e;
                     } catch (InterruptedException e) {
                         Log.d(Config.LOGTAG,account.getJid().toBareJid()+": thread was interrupted before beginning stream");
@@ -439,28 +439,14 @@ public class XmppConnection implements Runnable {
                 }
             }
             processStream();
-        } catch (final java.lang.SecurityException e) {
-            this.changeStatus(Account.State.MISSING_INTERNET_PERMISSION);
-        } catch (final RegistrationNotSupportedException e) {
-            this.changeStatus(Account.State.REGISTRATION_NOT_SUPPORTED);
-        } catch (final IncompatibleServerException e) {
-            this.changeStatus(Account.State.INCOMPATIBLE_SERVER);
         } catch (final SecurityException e) {
-            this.changeStatus(Account.State.SECURITY_ERROR);
-        } catch (final UnauthorizedException e) {
-            this.changeStatus(Account.State.UNAUTHORIZED);
-        } catch (final PaymentRequiredException e) {
-            this.changeStatus(Account.State.PAYMENT_REQUIRED);
+            this.changeStatus(Account.State.MISSING_INTERNET_PERMISSION);
+        } catch (final StateChangingException e) {
+            this.changeStatus(e.state);
         } catch (final UnknownHostException | ConnectException e) {
             this.changeStatus(Account.State.SERVER_NOT_FOUND);
         } catch (final SocksSocketFactory.SocksProxyNotFoundException e) {
             this.changeStatus(Account.State.TOR_NOT_AVAILABLE);
-        } catch (final StreamErrorHostUnknown e) {
-            this.changeStatus(Account.State.HOST_UNKNOWN);
-        } catch (final StreamErrorPolicyViolation e) {
-            this.changeStatus(Account.State.POLICY_VIOLATION);
-        } catch (final StreamError e) {
-            this.changeStatus(Account.State.STREAM_ERROR);
         } catch (final IOException | XmlPullParserException | NoSuchAlgorithmException e) {
             Log.d(Config.LOGTAG, account.getJid().toBareJid().toString() + ": " + e.getMessage());
             this.changeStatus(Account.State.OFFLINE);
@@ -559,8 +545,8 @@ public class XmppConnection implements Runnable {
                 try {
                     saslMechanism.getResponse(challenge);
                 } catch (final SaslMechanism.AuthenticationException e) {
-                    disconnect(true);
                     Log.e(Config.LOGTAG, String.valueOf(e));
+                    throw new StateChangingException(Account.State.UNAUTHORIZED);
                 }
                 Log.d(Config.LOGTAG, account.getJid().toBareJid().toString() + ": logged in");
                 account.setKey(Account.PINNED_MECHANISM_KEY,
@@ -582,9 +568,9 @@ public class XmppConnection implements Runnable {
                         && text.contains("renew")
                         && Config.MAGIC_CREATE_DOMAIN != null
                         && text.contains(Config.MAGIC_CREATE_DOMAIN)) {
-                    throw new PaymentRequiredException();
+                    throw new StateChangingException(Account.State.PAYMENT_REQUIRED);
                 } else {
-                    throw new UnauthorizedException();
+                    throw new StateChangingException(Account.State.UNAUTHORIZED);
                 }
             } else if (nextTag.isStart("challenge")) {
                 final String challenge = tagReader.readElement(nextTag).getContent();
@@ -807,7 +793,7 @@ public class XmppConnection implements Runnable {
                 }
             }
             if (callback != null) {
-                callback.onIqPacketReceived(account, packet);
+                throw new StateChangingException(Account.State.TLS_ERROR);
             }
         }
     }
@@ -849,7 +835,7 @@ public class XmppConnection implements Runnable {
 
             if (!tlsFactoryVerifier.verifier.verify(account.getServer().getDomainpart(), sslSocket.getSession())) {
                 Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": TLS certificate verification failed");
-                throw new SecurityException();
+                throw new StateChangingException(Account.State.TLS_ERROR);
             }
             tagReader.setInputStream(sslSocket.getInputStream());
             tagWriter.setOutputStream(sslSocket.getOutputStream());
@@ -878,10 +864,10 @@ public class XmppConnection implements Runnable {
             if (features.encryptionEnabled || Config.ALLOW_NON_TLS_CONNECTIONS) {
                 sendRegistryRequest();
             } else {
-                throw new IncompatibleServerException();
+                throw new StateChangingException(Account.State.INCOMPATIBLE_SERVER);
             }
         } else if (!this.streamFeatures.hasChild("register") && account.isOptionSet(Account.OPTION_REGISTER)) {
-            throw new RegistrationNotSupportedException();
+            throw new StateChangingException(Account.State.REGISTRATION_NOT_SUPPORTED);
         } else if (this.streamFeatures.hasChild("mechanisms")
                 && shouldAuthenticate
                 && (features.encryptionEnabled || Config.ALLOW_NON_TLS_CONNECTIONS)) {
@@ -898,7 +884,7 @@ public class XmppConnection implements Runnable {
             if (this.streamFeatures.hasChild("bind")) {
                 sendBindRequest();
             } else {
-                throw new IncompatibleServerException();
+                throw new StateChangingException(Account.State.INCOMPATIBLE_SERVER);
             }
         }
     }
@@ -928,7 +914,7 @@ public class XmppConnection implements Runnable {
                         " has lower priority (" + String.valueOf(saslMechanism.getPriority()) +
                         ") than pinned priority (" + pinnedMechanism +
                         "). Possible downgrade attack?");
-                throw new SecurityException();
+                throw new StateChangingException(Account.State.DOWNGRADE_ATTACK);
             }
             Log.d(Config.LOGTAG, account.getJid().toString() + ": Authenticating with " + saslMechanism.getMechanism());
             auth.setAttribute("mechanism", saslMechanism.getMechanism());
@@ -937,7 +923,7 @@ public class XmppConnection implements Runnable {
             }
             tagWriter.writeElement(auth);
         } else {
-            throw new IncompatibleServerException();
+            throw new StateChangingException(Account.State.INCOMPATIBLE_SERVER);
         }
     }
 
@@ -1072,8 +1058,7 @@ public class XmppConnection implements Runnable {
                 } else {
                     Log.d(Config.LOGTAG, account.getJid() + ": disconnecting because of bind failure (" + packet.toString());
                 }
-                forceCloseSocket();
-                changeStatus(Account.State.BIND_FAILURE);
+                throw new StateChangingError(Account.State.BIND_FAILURE);
             }
         });
     }
@@ -1115,8 +1100,7 @@ public class XmppConnection implements Runnable {
                 if (packet.getType() == IqPacket.TYPE.RESULT) {
                     sendPostBindInitialization();
                 } else if (packet.getType() != IqPacket.TYPE.TIMEOUT) {
-                    Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": could not init sessions");
-                    disconnect(true);
+                    throw new StateChangingError(Account.State.SESSION_FAILURE);
                 }
             }
         });
@@ -1296,12 +1280,12 @@ public class XmppConnection implements Runnable {
                             + account.getResource() + ")");
             throw new IOException();
         } else if (streamError.hasChild("host-unknown")) {
-            throw new StreamErrorHostUnknown();
+            throw new StateChangingException(Account.State.HOST_UNKNOWN);
         } else if (streamError.hasChild("policy-violation")) {
-            throw new StreamErrorPolicyViolation();
+            throw new StateChangingException(Account.State.POLICY_VIOLATION);
         } else {
             Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": stream error " + streamError.toString());
-            throw new StreamError();
+            throw new StateChangingException(Account.State.STREAM_ERROR);
         }
     }
 
@@ -1592,36 +1576,20 @@ public class XmppConnection implements Runnable {
         return Identity.UNKNOWN;
     }
 
-    private class UnauthorizedException extends IOException {
+    private class StateChangingError extends Error {
+        private final Account.State state;
 
+        public StateChangingError(Account.State state) {
+            this.state = state;
+        }
     }
 
-    private class SecurityException extends IOException {
+    private class StateChangingException extends IOException {
+        private final Account.State state;
 
-    }
-
-    private class IncompatibleServerException extends IOException {
-
-    }
-
-    private class StreamErrorHostUnknown extends StreamError {
-
-    }
-
-    private class StreamErrorPolicyViolation extends StreamError {
-
-    }
-
-    private class StreamError extends IOException {
-
-    }
-
-    private class PaymentRequiredException extends IOException {
-
-    }
-
-    private class RegistrationNotSupportedException extends IOException {
-
+        public StateChangingException(Account.State state) {
+            this.state = state;
+        }
     }
 
     public enum Identity {

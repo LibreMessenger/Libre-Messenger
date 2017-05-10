@@ -140,7 +140,7 @@
     <string name="account_status_regis_conflict">Benutzername wird bereits verwendet</string>
     <string name="account_status_regis_success">Registrierung abgeschlossen</string>
     <string name="account_status_regis_not_sup">Der Server unterstützt keine Registrierung</string>
-    <string name="account_status_security_error">Sicherheitsfehler</string>
+    <string name="account_status_security_error">TLS-Fehler</string>
     <string name="account_status_incompatible_server">Inkompatibler Server</string>
     <string name="encryption_choice_unencrypted">Unverschlüsselt</string>
     <string name="encryption_choice_otr">OTR</string>
