@@ -726,5 +726,11 @@
     <string name="timeout_12_months">12 Monate</string>
     <string name="pref_show_connection_options">Erweiterte Verbindungsoptionen</string>
     <string name="pref_show_connection_options_summary">Hostname- und Port-Optionen bei Kontoeinrichtung anzeigen</string>
+    <string name="account_status_tls_error">TLS Fehler</string>
+    <string name="downgrade_attack">Downgrade Angriff</string>
+    <string name="retry_decryption">Entschlüsseln wiederholen</string>
+    <string name="session_failure">Sitzungsfehler</string>
+    <string name="unpublish_pgp">Öffentlichen OpenPGP-Schlüssel verwerfen</string>
+    <string name="unpublish_pgp_message">Bist du sicher, dass du deinen öffentlichen OpenPGP-Schlüssel aus deiner Anwesenheitsmitteilung entfernen möchtest?\\nDeine Kontakte können dir dann keine OpenPGP-verschlüsselten Nachrichten senden.</string>
 
 </resources>
