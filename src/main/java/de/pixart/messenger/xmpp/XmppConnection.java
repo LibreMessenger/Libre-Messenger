@@ -791,7 +791,11 @@ public class XmppConnection implements Runnable {
                 }
             }
             if (callback != null) {
-                throw new StateChangingException(Account.State.TLS_ERROR);
+                try {
+                    callback.onIqPacketReceived(account, packet);
+                } catch (StateChangingError error) {
+                    throw new StateChangingException(error.state);
+                }
             }
         }
     }
@@ -849,7 +853,7 @@ public class XmppConnection implements Runnable {
             sslSocket.close();
         } catch (final NoSuchAlgorithmException | KeyManagementException e1) {
             Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": TLS certificate verification failed");
-            throw new SecurityException();
+            throw new StateChangingException(Account.State.TLS_ERROR);
         }
     }
 
