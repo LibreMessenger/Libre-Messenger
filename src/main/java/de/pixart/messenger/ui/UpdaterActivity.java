@@ -46,6 +46,12 @@ public class UpdaterActivity extends Activity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (intent == null) {
+                Toast.makeText(getApplicationContext(),
+                        getText(R.string.failed),
+                        Toast.LENGTH_LONG).show();
+                UpdaterActivity.this.finish();
+            }
             //check if the broadcast message is for our Enqueued download
             long referenceId = intent.getExtras().getLong(DownloadManager.EXTRA_DOWNLOAD_ID);
             if (downloadReference == referenceId) {
