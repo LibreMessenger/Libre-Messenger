@@ -10,7 +10,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
-import android.util.Pair;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,6 +50,7 @@ import de.pixart.messenger.entities.Roster;
 import de.pixart.messenger.entities.ServiceDiscoveryResult;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
+import de.pixart.messenger.xmpp.mam.MamReference;
 
 public class DatabaseBackend extends SQLiteOpenHelper {
 
@@ -841,7 +841,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         return db.delete(Message.TABLENAME, where, whereArgs) > 0;
     }
 
-    public Pair<Long, String> getLastMessageReceived(Account account) {
+    public MamReference getLastMessageReceived(Account account) {
         Cursor cursor = null;
         try {
             SQLiteDatabase db = this.getReadableDatabase();
@@ -852,7 +852,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
                 return null;
             } else {
                 cursor.moveToFirst();
-                return new Pair<>(cursor.getLong(0), cursor.getString(1));
+                return new MamReference(cursor.getLong(0), cursor.getString(1));
             }
         } catch (Exception e) {
             return null;
@@ -877,23 +877,23 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         return time;
     }
 
-    public Pair<Long, String> getLastClearDate(Account account) {
+    public MamReference getLastClearDate(Account account) {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] columns = {Conversation.ATTRIBUTES};
         String selection = Conversation.ACCOUNT + "=?";
         String[] args = {account.getUuid()};
         Cursor cursor = db.query(Conversation.TABLENAME, columns, selection, args, null, null, null);
-        long maxClearDate = 0;
+        MamReference maxClearDate = new MamReference(0);
         while (cursor.moveToNext()) {
             try {
-                final JSONObject jsonObject = new JSONObject(cursor.getString(0));
-                maxClearDate = Math.max(maxClearDate, jsonObject.getLong(Conversation.ATTRIBUTE_LAST_CLEAR_HISTORY));
+                final JSONObject o = new JSONObject(cursor.getString(0));
+                maxClearDate = MamReference.max(maxClearDate, MamReference.fromAttribute(o.getString(Conversation.ATTRIBUTE_LAST_CLEAR_HISTORY)));
             } catch (Exception e) {
                 //ignored
             }
         }
         cursor.close();
-        return new Pair<>(maxClearDate, null);
+        return maxClearDate;
     }
 
     private Cursor getCursorForSession(Account account, AxolotlAddress contact) {

@@ -77,6 +77,7 @@ import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.GeoHelper;
 import de.pixart.messenger.utils.Patterns;
 import de.pixart.messenger.utils.UIHelper;
+import de.pixart.messenger.xmpp.mam.MamReference;
 import ezvcard.Ezvcard;
 import ezvcard.VCard;
 import nl.changer.audiowife.AudioWife;
@@ -745,16 +746,16 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     }
 
     private void loadMoreMessages(Conversation conversation) {
-        conversation.setLastClearHistory(0);
+        conversation.setLastClearHistory(0, null);
         activity.xmppConnectionService.updateConversation(conversation);
         conversation.setHasMessagesLeftOnServer(true);
         conversation.setFirstMamReference(null);
-        long timestamp = conversation.getLastMessageTransmitted();
+        long timestamp = conversation.getLastMessageTransmitted().getTimestamp();
         if (timestamp == 0) {
             timestamp = System.currentTimeMillis();
         }
         conversation.messagesLoaded.set(true);
-        MessageArchiveService.Query query = activity.xmppConnectionService.getMessageArchiveService().query(conversation, 0, timestamp, false);
+        MessageArchiveService.Query query = activity.xmppConnectionService.getMessageArchiveService().query(conversation, new MamReference(0), timestamp, false);
         if (query != null) {
             Toast.makeText(activity, R.string.fetching_history_from_server, Toast.LENGTH_LONG).show();
         } else {

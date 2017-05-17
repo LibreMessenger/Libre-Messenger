@@ -140,6 +140,7 @@ import de.pixart.messenger.xmpp.jid.Jid;
 import de.pixart.messenger.xmpp.jingle.JingleConnectionManager;
 import de.pixart.messenger.xmpp.jingle.OnJinglePacketReceived;
 import de.pixart.messenger.xmpp.jingle.stanzas.JinglePacket;
+import de.pixart.messenger.xmpp.mam.MamReference;
 import de.pixart.messenger.xmpp.pep.Avatar;
 import de.pixart.messenger.xmpp.stanzas.IqPacket;
 import de.pixart.messenger.xmpp.stanzas.MessagePacket;
@@ -1754,10 +1755,10 @@ public class XmppConnectionService extends Service {
                     callback.onMoreMessagesLoaded(messages.size(), conversation);
                 } else if (conversation.hasMessagesLeftOnServer()
                         && account.isOnlineAndConnected()
-                        && conversation.getLastClearHistory() == 0) {
+                        && conversation.getLastClearHistory().getTimestamp() == 0) {
                     if ((conversation.getMode() == Conversation.MODE_SINGLE && account.getXmppConnection().getFeatures().mam())
                             || (conversation.getMode() == Conversation.MODE_MULTI && conversation.getMucOptions().mamSupport())) {
-                        MessageArchiveService.Query query = getMessageArchiveService().query(conversation, 0, timestamp, false);
+                        MessageArchiveService.Query query = getMessageArchiveService().query(conversation, new MamReference(0), timestamp, false);
                         if (query != null) {
                             query.setCallback(callback);
                             callback.informUser(R.string.fetching_history_from_server);
@@ -2417,7 +2418,7 @@ public class XmppConnectionService extends Service {
                         x.addChild("history").setAttribute("maxchars", "0");
                     } else {
                         // Fallback to muc history
-                        x.addChild("history").setAttribute("since", PresenceGenerator.getTimestamp(conversation.getLastMessageTransmitted()));
+                        x.addChild("history").setAttribute("since", PresenceGenerator.getTimestamp(conversation.getLastMessageTransmitted().getTimestamp()));
                     }
                     sendPresencePacket(account, packet);
                     if (onConferenceJoined != null) {
@@ -3836,15 +3837,19 @@ public class XmppConnectionService extends Service {
     }
 
     public void clearConversationHistory(final Conversation conversation) {
-        long clearDate;
+        final long clearDate;
+        final String reference;
         if (conversation.countMessages() > 0) {
-            clearDate = conversation.getLatestMessage().getTimeSent() + 1000;
+            Message latestMessage = conversation.getLatestMessage();
+            clearDate = latestMessage.getTimeSent() + 1000;
+            reference = latestMessage.getServerMsgId();
         } else {
             clearDate = System.currentTimeMillis();
+            reference = null;
         }
         conversation.clearMessages();
         conversation.setHasMessagesLeftOnServer(false); //avoid messages getting loaded through mam
-        conversation.setLastClearHistory(clearDate);
+        conversation.setLastClearHistory(clearDate, reference);
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
