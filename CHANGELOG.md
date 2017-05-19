@@ -1,5 +1,15 @@
 ### Changelog
 
+#### Version 1.18.1
+* limited GPG encryption for MUC offline members
+* show extended connection settings for open version in export settings
+* fixed landscape layout problems for tablets
+* fixed UI freezes during connection timeout
+* fixed notification sound playing twice
+* fixed conversations being marked as read
+* removed 'copy text' in favor of 'select text' and 'share with'
+* bug fixes
+
 #### Version 1.18.0
 * enable OTR and OpenPGP again
 * fix bug with updater on devices < SDK 21
