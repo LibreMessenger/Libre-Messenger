@@ -52,13 +52,14 @@ import de.pixart.messenger.xmpp.XmppConnection;
 
 public class NotificationService {
 
+    public static final Object CATCHUP_LOCK = new Object();
+    private static final String CONVERSATIONS_GROUP = "de.pixart.messenger";
+    private final XmppConnectionService mXmppConnectionService;
+    private final LinkedHashMap<String, ArrayList<Message>> notifications = new LinkedHashMap<>();
     private static final int NOTIFICATION_ID_MULTIPLIER = 1024 * 1024;
     public static final int NOTIFICATION_ID = 2 * NOTIFICATION_ID_MULTIPLIER;
     public static final int FOREGROUND_NOTIFICATION_ID = NOTIFICATION_ID_MULTIPLIER * 4;
     public static final int ERROR_NOTIFICATION_ID = NOTIFICATION_ID_MULTIPLIER * 6;
-    private static final String CONVERSATIONS_GROUP = "de.pixart.messenger";
-    private final XmppConnectionService mXmppConnectionService;
-    private final LinkedHashMap<String, ArrayList<Message>> notifications = new LinkedHashMap<>();
     private Conversation mOpenConversation;
     private boolean mIsInForeground;
     private long mLastNotification;
@@ -179,7 +180,7 @@ public class NotificationService {
     }
 
     public void push(final Message message) {
-        synchronized (message.getConversation().getAccount()) {
+        synchronized (CATCHUP_LOCK) {
             final XmppConnection connection = message.getConversation().getAccount().getXmppConnection();
             if (connection.isWaitingForSmCatchup()) {
                 connection.incrementSmCatchupMessageCounter();

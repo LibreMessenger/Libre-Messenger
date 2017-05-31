@@ -65,6 +65,7 @@ import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.ServiceDiscoveryResult;
 import de.pixart.messenger.generator.IqGenerator;
+import de.pixart.messenger.services.NotificationService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.EditAccountActivity;
 import de.pixart.messenger.utils.DNSHelper;
@@ -648,14 +649,19 @@ public class XmppConnection implements Runnable {
                 final AckPacket ack = new AckPacket(this.stanzasReceived, smVersion);
                 tagWriter.writeStanzaAsync(ack);
             } else if (nextTag.isStart("a")) {
-                synchronized (account) {
+                boolean accountUiNeedsRefresh = false;
+                synchronized (NotificationService.CATCHUP_LOCK) {
                     if (mWaitingForSmCatchup.compareAndSet(true, false)) {
                         int count = mSmCatchupMessageCounter.get();
                         Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": SM catchup complete (" + count + ")");
+                        accountUiNeedsRefresh = true;
                         if (count > 0) {
                             mXmppConnectionService.getNotificationService().finishBacklog(true, account);
                         }
                     }
+                }
+                if (accountUiNeedsRefresh) {
+                    mXmppConnectionService.updateAccountUi();
                 }
                 final Element ack = tagReader.readElement(nextTag);
                 lastPacketReceived = SystemClock.elapsedRealtime();
