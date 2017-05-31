@@ -901,6 +901,7 @@ public class ConversationActivity extends XmppActivity
                 .findViewById(R.id.end_conversation_checkbox);
         if (conversation.getMode() == Conversation.MODE_SINGLE) {
             endConversationCheckBox.setVisibility(View.VISIBLE);
+            endConversationCheckBox.setChecked(true);
         }
         builder.setView(dialogView);
         builder.setNegativeButton(getString(R.string.cancel), null);
