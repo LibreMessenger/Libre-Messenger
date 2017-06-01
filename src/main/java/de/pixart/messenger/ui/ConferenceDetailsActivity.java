@@ -54,7 +54,6 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
     private TextView ConferenceName;
     private TextView mYourNick;
     private ImageView mYourPhoto;
-    private ImageButton mEditNickButton;
     private TextView mRoleAffiliaton;
     private TextView mFullJid;
     private TextView mAccountJid;
@@ -256,10 +255,10 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         membersView = (LinearLayout) findViewById(R.id.muc_members);
         mAccountJid = (TextView) findViewById(R.id.details_account);
         mMoreDetails = (LinearLayout) findViewById(R.id.muc_more_details);
-        mMoreDetails.setVisibility(View.GONE);
         mChangeConferenceSettingsButton = (ImageButton) findViewById(R.id.change_conference_button);
         mChangeConferenceSettingsButton.setOnClickListener(this.mChangeConferenceSettings);
         mInviteButton = (Button) findViewById(R.id.invite);
+        mInviteButton.setVisibility(View.GONE);
         mInviteButton.setOnClickListener(inviteListener);
         mConferenceType = (TextView) findViewById(R.id.muc_conference_type);
         if (getActionBar() != null) {
