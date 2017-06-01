@@ -12,6 +12,7 @@ import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
+import de.pixart.messenger.xmpp.stanzas.AbstractStanza;
 
 public abstract class AbstractParser {
 
@@ -22,11 +23,25 @@ public abstract class AbstractParser {
     }
 
     public static Long parseTimestamp(Element element, Long d) {
+        return parseTimestamp(element, d, false);
+    }
+
+    public static Long parseTimestamp(Element element, Long d, boolean ignoreCsiAndSm) {
         long min = Long.MAX_VALUE;
         boolean returnDefault = true;
+        final Jid to;
+        if (ignoreCsiAndSm && element instanceof AbstractStanza) {
+            to = ((AbstractStanza) element).getTo();
+        } else {
+            to = null;
+        }
         for (Element child : element.getChildren()) {
             if ("delay".equals(child.getName()) && "urn:xmpp:delay".equals(child.getNamespace())) {
-                String stamp = child.getAttribute("stamp");
+                final Jid f = to == null ? null : child.getAttributeAsJid("from");
+                if (f != null && (to.toBareJid().equals(f) || to.getDomainpart().equals(f.toString()))) {
+                    continue;
+                }
+                final String stamp = child.getAttribute("stamp");
                 if (stamp != null) {
                     try {
                         min = Math.min(min, AbstractParser.parseTimestamp(stamp));
