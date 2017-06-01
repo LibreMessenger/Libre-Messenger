@@ -140,7 +140,6 @@
     <string name="account_status_regis_conflict">Benutzername wird bereits verwendet</string>
     <string name="account_status_regis_success">Registrierung abgeschlossen</string>
     <string name="account_status_regis_not_sup">Der Server unterstützt keine Registrierung</string>
-    <string name="account_status_security_error">TLS-Fehler</string>
     <string name="account_status_incompatible_server">Inkompatibler Server</string>
     <string name="encryption_choice_unencrypted">Unverschlüsselt</string>
     <string name="encryption_choice_otr">OTR</string>
@@ -221,7 +220,6 @@
     <string name="leave">Verlassen</string>
     <string name="contact_added_you">Der Kontakt hat dich zur Kontaktliste hinzugefügt</string>
     <string name="add_back">Auch hinzufügen</string>
-    <string name="contact_has_read_up_to_this_point">%s hat bis zu diesem Punkt gelesen</string>
     <string name="publish">Veröffentlichen</string>
     <string name="touch_to_choose_picture">Profilbild antippen, um Bild aus Galerie auszuwählen</string>
     <string name="publish_avatar_explanation">Achtung: Jeder, der deinen Status sehen darf, sieht auch dein Profilbild.</string>
@@ -252,8 +250,6 @@
     <string name="pref_security_settings">Sicherheit und Datenschutz</string>
     <string name="pref_allow_message_correction">Nachrichtenkorrektur erlauben</string>
     <string name="pref_allow_message_correction_summary">Erlaube Deinen Kontakten das nachträgliche Korrigieren ihrer Nachrichten</string>
-    <string name="pref_dont_save_encrypted">Verschlüsselte Nachrichten nicht speichern</string>
-    <string name="pref_dont_save_encrypted_summary">Achtung: kann zu Nachrichtenverlust führen</string>
     <string name="pref_expert_options">Experteneinstellungen</string>
     <string name="title_activity_about">Über</string>
     <string name="pref_about_conversations_summary">Versions- und Lizenzinformationen</string>
@@ -282,9 +278,7 @@
     <string name="copy_original_url">Original-URL kopieren</string>
     <string name="send_again">Erneut senden</string>
     <string name="file_url">Datei-URL</string>
-    <string name="message_text">Nachrichtentext</string>
     <string name="url_copied_to_clipboard">URL in Zwischenablage kopiert</string>
-    <string name="message_copied_to_clipboard">Nachricht in Zwischenablage kopiert</string>
     <string name="scan_qr_code">Barcode scannen</string>
     <string name="show_qr_code">Barcode anzeigen</string>
     <string name="show_block_list">Sperrliste anzeigen</string>
@@ -324,7 +318,6 @@
     <string name="are_you_sure_verify_fingerprint">Bist du sicher, dass du den OTR-Fingerabdruck des Kontakts überprüfen willst?</string>
     <string name="pref_show_dynamic_tags">Dynamische Tags anzeigen</string>
     <string name="pref_show_dynamic_tags_summary">Schreibgeschütze Tags unterhalb der Kontakte anzeigen</string>
-    <string name="enable_notifications">Benachrichtigungen aktivieren</string>
     <string name="no_conference_server_found">Kein Konferenz-Server gefunden</string>
     <string name="conference_creation_failed">Erstellen der Konferenz fehlgeschlagen!</string>
     <string name="account_image_description">Profilbild</string>
@@ -520,7 +513,6 @@
     <string name="pref_picture_compression">Bilder komprimieren</string>
     <string name="pref_picture_compression_summary">Bildgröße anpassen und komprimieren</string>
     <string name="always">Immer</string>
-    <string name="automatically">Automatisch</string>
     <string name="battery_optimizations_enabled">Batterieoptimierung aktiv</string>
     <string name="battery_optimizations_enabled_explained">Dein Telefon wendet Batterioptimierungen bei Pix-Art Messenger an, welche verspätete Benachrichtigungen oder Nachrichtenverlust verursachen können.\nEs ist empfehlenswert diese zu deaktivieren.</string>
     <string name="battery_optimizations_enabled_dialog">Dein Telefon wendet Batterioptimierungen bei Pix-Art Messenger an, welche verspätete Benachrichtigungen oder Nachrichtenverlust verursachen können. Es ist empfehlenswert dies zu deaktivieren.</string>
@@ -573,8 +565,6 @@
     <string name="location_sharing_disabled">GPS ist in den Android-Einstellungen deaktiviert</string>
     <string name="share">Teilen</string>
     <string name="share_location">Standort teilen</string>
-    <string name="uninstall">Deinstallieren</string>
-    <string name="uninstall_plugins">Wir haben den VoiceRecorder und das ShareLocation Plugin direkt integriert. Die Plugins sind nicht länger erforderlich und sollten deinstalliert werden.</string>
     <string name="action_end_conversation_muc">Konferenz verlassen</string>
     <string name="leave_conference_warning">Willst du die Konferenz wirklich verlassen? Du wirst keine neuen Nachrichten mehr bekommen, bis du der Konferenz erneut beitrittst.</string>
     <string name="show_password">Passwort anzeigen</string>
