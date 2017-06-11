@@ -92,9 +92,9 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
     private ViewPager mViewPager;
     private ListPagerAdapter mListPagerAdapter;
     private List<ListItem> contacts = new ArrayList<>();
-    private ArrayAdapter<ListItem> mContactsAdapter;
+    private ListItemAdapter mContactsAdapter;
     private List<ListItem> conferences = new ArrayList<>();
-    private ArrayAdapter<ListItem> mConferenceAdapter;
+    private ListItemAdapter mConferenceAdapter;
     private List<String> mActivatedAccounts = new ArrayList<>();
     private List<String> mKnownHosts;
     private List<String> mKnownConferenceHosts;
@@ -304,6 +304,8 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
         } else {
             askForContactsPermissions();
         }
+        mConferenceAdapter.refreshSettings();
+        mContactsAdapter.refreshSettings();
     }
 
     @Override

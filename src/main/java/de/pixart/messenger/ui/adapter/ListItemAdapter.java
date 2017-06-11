@@ -24,6 +24,7 @@ import java.util.concurrent.RejectedExecutionException;
 
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.ListItem;
+import de.pixart.messenger.ui.SettingsActivity;
 import de.pixart.messenger.ui.XmppActivity;
 import de.pixart.messenger.utils.UIHelper;
 
@@ -50,8 +51,11 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
     public ListItemAdapter(XmppActivity activity, List<ListItem> objects) {
         super(activity, 0, objects);
         this.activity = activity;
+    }
+
+    public void refreshSettings() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        this.showDynamicTags = preferences.getBoolean("show_dynamic_tags", false);
+        this.showDynamicTags = preferences.getBoolean(SettingsActivity.SHOW_DYNAMIC_TAGS, false);
     }
 
     @Override
