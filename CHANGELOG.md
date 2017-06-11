@@ -1,5 +1,10 @@
 ### Changelog
 
+#### Version 1.18.2
+* colorize send button only after history is caught up
+* improved MAM catchup strategy
+* bug fixes
+
 #### Version 1.18.1
 * limited GPG encryption for MUC offline members
 * show extended connection settings for open version in export settings
