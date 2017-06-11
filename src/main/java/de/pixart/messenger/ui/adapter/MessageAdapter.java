@@ -92,6 +92,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                     + Patterns.GOOD_IRI_CHAR
                     + "\\;\\/\\?\\@\\&\\=\\#\\~\\-\\.\\+\\!\\*\\'\\(\\)\\,\\_])"
                     + "|(?:\\%[a-fA-F0-9]{2}))+");
+    boolean isResendable = false;
 
     private static final Linkify.TransformFilter WEBURL_TRANSFORM_FILTER = new Linkify.TransformFilter() {
         @Override
@@ -234,7 +235,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 }
                 break;
             case Message.STATUS_SEND_FAILED:
-                if (activity.xmppConnectionService.mHttpConnectionManager.getAutoAcceptFileSize() >= message.getFileParams().size) {
+                if (isResendable) {
                     info = getContext().getString(R.string.send_failed_resend);
                 } else {
                     info = getContext().getString(R.string.send_failed);
@@ -252,9 +253,12 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
             if (file.exists()) {
                 if (activity.xmppConnectionService.mHttpConnectionManager.getAutoAcceptFileSize() >= message.getFileParams().size) {
+                    isResendable = false;
                     viewHolder.resend_button.setVisibility(View.GONE);
                 } else {
+                    isResendable = true;
                     viewHolder.resend_button.setVisibility(View.VISIBLE);
+
                 }
             }
             viewHolder.resend_button.setText(R.string.send_again);
