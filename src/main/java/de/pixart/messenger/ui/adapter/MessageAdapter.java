@@ -253,12 +253,11 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
             if (file.exists()) {
                 if (activity.xmppConnectionService.mHttpConnectionManager.getAutoAcceptFileSize() >= message.getFileParams().size) {
-                    isResendable = false;
+                    isResendable = true;
                     viewHolder.resend_button.setVisibility(View.GONE);
                 } else {
-                    isResendable = true;
+                    isResendable = false;
                     viewHolder.resend_button.setVisibility(View.VISIBLE);
-
                 }
             }
             viewHolder.resend_button.setText(R.string.send_again);
