@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import de.pixart.messenger.Config;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Message;
@@ -39,7 +40,7 @@ public class GeoHelper {
         } catch (NumberFormatException nfe) {
             return null;
         }
-        return "https://maps.google.com/maps/api/staticmap?center=" + latitude + "," + longitude + "&size=500x500&scale=2&format=jpg&markers=" + latitude + "," + longitude + "&sensor=false";
+        return "https://xmpp.pix-art.de/staticmap/staticmap.php?center=" + latitude + "," + longitude + "&size=500x500&markers=" + latitude + "," + longitude + "&zoom= " + Config.DEFAULT_ZOOM;
     }
 
     public static ArrayList<Intent> createGeoIntentsFromMessage(Message message) {
