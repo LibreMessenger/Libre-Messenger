@@ -86,6 +86,8 @@ import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
 import de.timroes.android.listview.EnhancedListView;
 
+import static de.pixart.messenger.ui.ShowFullscreenMessageActivity.getMimeType;
+
 public class ConversationActivity extends XmppActivity
         implements OnAccountUpdate, OnConversationUpdate, OnRosterUpdate, OnUpdateBlocklist, XmppConnectionService.OnShowErrorToast, View.OnClickListener {
 
@@ -103,7 +105,7 @@ public class ConversationActivity extends XmppActivity
     public static final int REQUEST_TRUST_KEYS_MENU = 0x0209;
     public static final int REQUEST_START_DOWNLOAD = 0x0210;
     public static final int ATTACHMENT_CHOICE_CHOOSE_IMAGE = 0x0301;
-    public static final int ATTACHMENT_CHOICE_TAKE_PHOTO = 0x0302;
+    public static final int ATTACHMENT_CHOICE_TAKE_FROM_CAMERA = 0x0302;
     public static final int ATTACHMENT_CHOICE_CHOOSE_FILE = 0x0303;
     public static final int ATTACHMENT_CHOICE_RECORD_VOICE = 0x0304;
     public static final int ATTACHMENT_CHOICE_LOCATION = 0x0305;
@@ -617,7 +619,7 @@ public class ConversationActivity extends XmppActivity
 
             @Override
             public void onPresenceSelected() {
-                Intent intent = new Intent();
+                final Intent intent = new Intent();
                 boolean chooser = false;
                 String fallbackPackageId = null;
                 switch (attachmentChoice) {
@@ -635,13 +637,36 @@ public class ConversationActivity extends XmppActivity
                         intent.addCategory(Intent.CATEGORY_OPENABLE);
                         intent.setAction(Intent.ACTION_GET_CONTENT);
                         break;
-                    case ATTACHMENT_CHOICE_TAKE_PHOTO:
-                        Uri uri = xmppConnectionService.getFileBackend().getTakePhotoUri();
-                        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                        intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                        mPendingPhotoUris.clear();
-                        mPendingPhotoUris.add(uri);
+                    case ATTACHMENT_CHOICE_TAKE_FROM_CAMERA:
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ConversationActivity.this);
+                        builder.setTitle(getString(R.string.attach_take_from_camera));
+                        builder.setNegativeButton(getString(R.string.action_take_photo),
+                                new OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Uri uri = xmppConnectionService.getFileBackend().getTakePhotoUri();
+                                        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                        intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+                                        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                                        mPendingPhotoUris.clear();
+                                        mPendingPhotoUris.add(uri);
+                                        startActivityForResult(intent, attachmentChoice);
+                                    }
+                                });
+                        builder.setPositiveButton(getString(R.string.action_take_video),
+                                new OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Uri uri = xmppConnectionService.getFileBackend().getTakeVideoUri();
+                                        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                        intent.setAction(MediaStore.ACTION_VIDEO_CAPTURE);
+                                        mPendingFileUris.clear();
+                                        mPendingFileUris.add(uri);
+                                        startActivityForResult(intent, attachmentChoice);
+                                    }
+                                });
+                        builder.create().show();
                         break;
                     case ATTACHMENT_CHOICE_CHOOSE_FILE:
                         chooser = true;
@@ -712,7 +737,7 @@ public class ConversationActivity extends XmppActivity
             case ATTACHMENT_CHOICE_RECORD_VOICE:
                 getPreferences().edit().putString("recently_used_quick_action", "voice").apply();
                 break;
-            case ATTACHMENT_CHOICE_TAKE_PHOTO:
+            case ATTACHMENT_CHOICE_TAKE_FROM_CAMERA:
                 getPreferences().edit().putString("recently_used_quick_action", "photo").apply();
                 break;
             case ATTACHMENT_CHOICE_CHOOSE_IMAGE:
@@ -949,7 +974,7 @@ public class ConversationActivity extends XmppActivity
                         attachFile(ATTACHMENT_CHOICE_CHOOSE_IMAGE);
                         break;
                     case R.id.attach_take_picture:
-                        attachFile(ATTACHMENT_CHOICE_TAKE_PHOTO);
+                        attachFile(ATTACHMENT_CHOICE_TAKE_FROM_CAMERA);
                         break;
                     case R.id.attach_choose_video:
                         attachFile(ATTACHMENT_CHOICE_CHOOSE_VIDEO);
@@ -1543,7 +1568,7 @@ public class ConversationActivity extends XmppActivity
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
+    protected void onActivityResult(final int requestCode, int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == REQUEST_DECRYPT_PGP) {
@@ -1586,7 +1611,10 @@ public class ConversationActivity extends XmppActivity
                         }
                     }
                 }
-            } else if (requestCode == ATTACHMENT_CHOICE_CHOOSE_FILE || requestCode == ATTACHMENT_CHOICE_RECORD_VOICE || requestCode == ATTACHMENT_CHOICE_CHOOSE_VIDEO) {
+            } else if (requestCode == ATTACHMENT_CHOICE_CHOOSE_FILE
+                    || requestCode == ATTACHMENT_CHOICE_RECORD_VOICE
+                    || requestCode == ATTACHMENT_CHOICE_CHOOSE_VIDEO
+                    || requestCode == ATTACHMENT_CHOICE_TAKE_FROM_CAMERA) {
                 final List<Uri> uris = extractUriFromIntent(data);
                 final Conversation c = getSelectedConversation();
                 final OnPresenceSelected callback = new OnPresenceSelected() {
@@ -1596,6 +1624,9 @@ public class ConversationActivity extends XmppActivity
                         mPendingFileUris.addAll(uris);
                         if (xmppConnectionServiceBound) {
                             for (Iterator<Uri> i = mPendingFileUris.iterator(); i.hasNext(); i.remove()) {
+                                if (requestCode == ATTACHMENT_CHOICE_TAKE_FROM_CAMERA && getMimeType(i.next().toString()).contains("image")) {
+                                    return;
+                                }
                                 Log.d(Config.LOGTAG, "ConversationActivity.onActivityResult() - attaching file to conversations. CHOOSE_FILE/RECORD_VOICE");
                                 attachFileToConversation(c, i.next());
                             }
@@ -1609,12 +1640,12 @@ public class ConversationActivity extends XmppActivity
                 } else {
                     selectPresence(c, callback);
                 }
-            } else if (requestCode == ATTACHMENT_CHOICE_TAKE_PHOTO) {
+            } else if (requestCode == ATTACHMENT_CHOICE_TAKE_FROM_CAMERA) {
                 if (mPendingPhotoUris.size() == 1) {
                     Uri uri = FileBackend.getIndexableTakePhotoUri(mPendingPhotoUris.get(0));
                     mPendingPhotoUris.set(0, uri);
                     if (xmppConnectionServiceBound) {
-                        Log.d(Config.LOGTAG, "ConversationActivity.onActivityResult() - attaching photo to conversations. TAKE_PHOTO");
+                        Log.d(Config.LOGTAG, "ConversationActivity.onActivityResult() - attaching photo to conversations. TAKE_FROM_CAMERA");
                         attachPhotoToConversation(getSelectedConversation(), uri);
                         mPendingPhotoUris.clear();
                     }

@@ -121,7 +121,7 @@
     <string name="receive_presence_updates">Online-Status empfangen</string>
     <string name="ask_for_presence_updates">Online-Status anfragen</string>
     <string name="attach_choose_picture">Bild auswählen</string>
-    <string name="attach_take_picture">Bild aufnehmen</string>
+    <string name="attach_take_from_camera">Mit Kamera aufnehmen</string>
     <string name="preemptively_grant">Statusanfragen vorab erlauben</string>
     <string name="error_not_an_image_file">Die ausgewählte Datei ist kein Bild</string>
     <string name="error_compressing_image">Fehler beim Umwandeln des Bildes</string>
@@ -722,5 +722,7 @@
     <string name="session_failure">Sitzungsfehler</string>
     <string name="unpublish_pgp">Öffentlichen OpenPGP-Schlüssel verwerfen</string>
     <string name="unpublish_pgp_message">Bist du sicher, dass du deinen öffentlichen OpenPGP-Schlüssel aus deiner Anwesenheitsmitteilung entfernen möchtest?\\nDeine Kontakte können dir dann keine OpenPGP-verschlüsselten Nachrichten senden.</string>
+    <string name="action_take_photo">Foto aufnehmen</string>
+    <string name="action_take_video">Video aufnehmen</string>
 
 </resources>

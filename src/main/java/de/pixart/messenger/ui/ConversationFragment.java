@@ -342,8 +342,8 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
             if (tag instanceof SendButtonAction) {
                 SendButtonAction action = (SendButtonAction) tag;
                 switch (action) {
-                    case TAKE_PHOTO:
-                        activity.attachFile(ConversationActivity.ATTACHMENT_CHOICE_TAKE_PHOTO);
+                    case TAKE_FROM_CAMERA:
+                        activity.attachFile(ConversationActivity.ATTACHMENT_CHOICE_TAKE_FROM_CAMERA);
                         break;
                     case SEND_LOCATION:
                         activity.attachFile(ConversationActivity.ATTACHMENT_CHOICE_LOCATION);
@@ -1173,7 +1173,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         mSendingPgpMessage.set(false);
     }
 
-    enum SendButtonAction {TEXT, TAKE_PHOTO, SEND_LOCATION, RECORD_VOICE, CANCEL, CHOOSE_PICTURE}
+    enum SendButtonAction {TEXT, TAKE_FROM_CAMERA, SEND_LOCATION, RECORD_VOICE, CANCEL, CHOOSE_PICTURE}
 
     private int getSendButtonImageResource(SendButtonAction action, Presence.Status status) {
         switch (action) {
@@ -1190,7 +1190,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                     default:
                         return R.drawable.ic_send_text_offline;
                 }
-            case TAKE_PHOTO:
+            case TAKE_FROM_CAMERA:
                 switch (status) {
                     case CHAT:
                     case ONLINE:
@@ -1287,7 +1287,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                     }
                     switch (setting) {
                         case "photo":
-                            action = SendButtonAction.TAKE_PHOTO;
+                            action = SendButtonAction.TAKE_FROM_CAMERA;
                             break;
                         case "location":
                             action = SendButtonAction.SEND_LOCATION;
