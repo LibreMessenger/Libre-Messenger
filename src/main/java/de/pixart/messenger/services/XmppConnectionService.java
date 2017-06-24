@@ -120,6 +120,7 @@ import de.pixart.messenger.utils.OnPhoneContactsLoadedListener;
 import de.pixart.messenger.utils.PRNGFixes;
 import de.pixart.messenger.utils.PhoneHelper;
 import de.pixart.messenger.utils.ReplacingSerialSingleThreadExecutor;
+import de.pixart.messenger.utils.Resolver;
 import de.pixart.messenger.utils.SerialSingleThreadExecutor;
 import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xml.Element;
@@ -1085,6 +1086,7 @@ public class XmppConnectionService extends Service {
     public void onCreate() {
         ExceptionHelper.init(getApplicationContext());
         PRNGFixes.apply();
+        Resolver.registerLookupMechanism(this);
         this.mRandom = new SecureRandom();
         updateMemorizingTrustmanager();
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
