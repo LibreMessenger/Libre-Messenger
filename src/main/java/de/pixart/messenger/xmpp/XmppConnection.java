@@ -41,6 +41,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.KeyManager;
@@ -70,6 +71,7 @@ import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.EditAccountActivity;
 import de.pixart.messenger.utils.DNSHelper;
 import de.pixart.messenger.utils.Namespace;
+import de.pixart.messenger.utils.Patterns;
 import de.pixart.messenger.utils.SSLSocketHelper;
 import de.pixart.messenger.utils.SocksSocketFactory;
 import de.pixart.messenger.xml.Element;
@@ -141,6 +143,7 @@ public class XmppConnection implements Runnable {
     private EditAccountActivity mEditAccountActivity = null;
 
     private SaslMechanism saslMechanism;
+    private String webRegistrationUrl = null;
 
     private class MyKeyManager implements X509KeyManager {
         @Override
@@ -467,8 +470,7 @@ public class XmppConnection implements Runnable {
                     }
                 }
             } else {
-                Log.d(Config.LOGTAG,account.getJid().toBareJid()+": not force closing socket and releasing wake lock because thread was interrupted");
-
+                Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": not force closing socket and releasing wake lock (is held=" + wakeLock.isHeld() + ") because thread was interrupted");
             }
         }
     }
@@ -1006,19 +1008,38 @@ public class XmppConnection implements Runnable {
                 }
 
                 if (failed) {
-                    final Element instructions = packet.query().findChild("instructions");
-                    setAccountCreationFailed((instructions != null) ? instructions.getContent() : "");
+                    final Element query = packet.query();
+                    final String instructions = query.findChildContent("instructions");
+                    final Element oob = query.findChild("x", Namespace.OOB);
+                    final String url = oob == null ? null : oob.findChildContent("url");
+                    if (url == null && instructions != null) {
+                        Matcher matcher = Patterns.AUTOLINK_WEB_URL.matcher(instructions);
+                        if (matcher.find()) {
+                            setAccountCreationFailed(instructions.substring(matcher.start(), matcher.end()));
+                        } else {
+                            setAccountCreationFailed(null);
+                        }
+                    } else {
+                        setAccountCreationFailed(url);
+                    }
                 }
             }
         });
     }
 
-    private void setAccountCreationFailed(String instructions) {
-        changeStatus(Account.State.REGISTRATION_FAILED);
+    private void setAccountCreationFailed(String url) {
+        if (url != null && (url.toLowerCase().startsWith("http://") || url.toLowerCase().startsWith("https://"))) {
+            changeStatus(Account.State.REGISTRATION_WEB);
+            this.webRegistrationUrl = url;
+        } else {
+            changeStatus(Account.State.REGISTRATION_FAILED);
+        }
         disconnect(true);
-        Log.d(Config.LOGTAG, account.getJid().toBareJid()
-                + ": could not register. instructions are"
-                + instructions);
+        Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": could not register. url=" + url);
+    }
+
+    public String getWebRegistrationUrl() {
+        return this.webRegistrationUrl;
     }
 
     public void resetEverything() {
@@ -1026,6 +1047,7 @@ public class XmppConnection implements Runnable {
         resetStreamId();
         clearIqCallbacks();
         mStanzaQueue.clear();
+        this.webRegistrationUrl = null;
         synchronized (this.disco) {
             disco.clear();
         }

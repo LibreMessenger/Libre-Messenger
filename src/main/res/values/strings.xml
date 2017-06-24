@@ -772,4 +772,7 @@
     <string name="sasl_downgrade">Downgraded SASL mechanism</string>
     <string name="action_take_photo">take photo</string>
     <string name="action_take_video">record video</string>
+    <string name="account_status_regis_web">Server requires registration on website</string>
+    <string name="application_found_to_open_website">No application found to open website</string>
+    <string name="open_website">Open website</string>
 </resources>
