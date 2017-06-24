@@ -45,7 +45,7 @@ dependencies {
     compile 'de.timroes.android:EnhancedListView:0.3.4'
     compile 'me.leolin:ShortcutBadger:1.1.17@aar'
     compile 'com.kyleduo.switchbutton:library:1.2.8'
-    compile 'org.whispersystems:axolotl-android:1.4.3'
+    compile 'org.whispersystems:signal-protocol-java:2.5.3'
     compile 'com.makeramen:roundedimageview:2.3.0'
     compile 'jetty:javax.servlet:5.1.12'
     compile 'com.google.code.gson:gson:2.7'
