@@ -54,6 +54,12 @@
             android:key="show_notification"
             android:summary="@string/pref_notifications_summary"
             android:title="@string/pref_notifications" />
+        <CheckBoxPreference
+            android:defaultValue="@bool/headsup_notifications"
+            android:dependency="show_notification"
+            android:key="notification_headsup"
+            android:summary="@string/pref_headsup_notifications_summary"
+            android:title="@string/pref_headsup_notifications" />
         <PreferenceScreen
             android:dependency="show_notification"
             android:key="quiet_hours"

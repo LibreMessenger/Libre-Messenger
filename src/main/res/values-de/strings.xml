@@ -727,5 +727,7 @@
     <string name="account_status_regis_web">Server verlangt Registrierung auf Webseite</string>
     <string name="application_found_to_open_website">Keine Anwendung zum Öffnen von Webseiten gefunden</string>
     <string name="open_website">Webseite anzeigen</string>
+    <string name="pref_headsup_notifications">Benachrichtigungsvorschau</string>
+    <string name="pref_headsup_notifications_summary">Zeige Benachrichtigungsvorschau am oberen Bildschirmrand an</string>
 
 </resources>
