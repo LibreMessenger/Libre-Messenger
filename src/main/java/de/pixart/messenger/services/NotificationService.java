@@ -278,7 +278,6 @@ public class NotificationService {
             } else {
                 Log.d(Config.LOGTAG, "Notification: Received multiple notification or using Android N");
                 mBuilder = buildMultipleConversation();
-                modifyForSoundVibrationAndLight(mBuilder, notify, preferences);
                 for (Map.Entry<String, ArrayList<Message>> entry : notifications.entrySet()) {
                     Builder singleBuilder = buildSingleConversations(entry.getValue());
                     singleBuilder.setGroup(CONVERSATIONS_GROUP);
