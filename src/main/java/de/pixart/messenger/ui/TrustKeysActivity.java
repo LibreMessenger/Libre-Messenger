@@ -32,6 +32,7 @@ import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.crypto.axolotl.FingerprintStatus;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Conversation;
+import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xmpp.OnKeyStatusUpdated;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
@@ -250,8 +251,9 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
         AxolotlService service = this.mAccount.getAxolotlService();
         Set<IdentityKey> ownKeysSet = service.getKeysWithTrust(FingerprintStatus.createActiveUndecided());
         for (final IdentityKey identityKey : ownKeysSet) {
-            if (!ownKeysToTrust.containsKey(identityKey)) {
-                ownKeysToTrust.put(identityKey.getFingerprint().replaceAll("\\s", ""), false);
+            final String fingerprint = CryptoHelper.bytesToHex(identityKey.getPublicKey().serialize());
+            if (!ownKeysToTrust.containsKey(fingerprint)) {
+                ownKeysToTrust.put(fingerprint, false);
             }
         }
         synchronized (this.foreignKeysToTrust) {
@@ -263,8 +265,9 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
                 }
                 Map<String, Boolean> foreignFingerprints = new HashMap<>();
                 for (final IdentityKey identityKey : foreignKeysSet) {
-                    if (!foreignFingerprints.containsKey(identityKey)) {
-                        foreignFingerprints.put(identityKey.getFingerprint().replaceAll("\\s", ""), false);
+                    final String fingerprint = CryptoHelper.bytesToHex(identityKey.getPublicKey().serialize());
+                    if (!foreignFingerprints.containsKey(fingerprint)) {
+                        foreignFingerprints.put(fingerprint, false);
                     }
                 }
                 if (foreignFingerprints.size() > 0 || !acceptedTargets.contains(jid)) {

@@ -3,15 +3,15 @@ package de.pixart.messenger.crypto.axolotl;
 import android.util.Log;
 import android.util.LruCache;
 
-import org.whispersystems.libsignal.SignalProtocolAddress;
 import org.whispersystems.libsignal.IdentityKey;
 import org.whispersystems.libsignal.IdentityKeyPair;
 import org.whispersystems.libsignal.InvalidKeyIdException;
+import org.whispersystems.libsignal.SignalProtocolAddress;
 import org.whispersystems.libsignal.ecc.Curve;
 import org.whispersystems.libsignal.ecc.ECKeyPair;
-import org.whispersystems.libsignal.state.SignalProtocolStore;
 import org.whispersystems.libsignal.state.PreKeyRecord;
 import org.whispersystems.libsignal.state.SessionRecord;
+import org.whispersystems.libsignal.state.SignalProtocolStore;
 import org.whispersystems.libsignal.state.SignedPreKeyRecord;
 import org.whispersystems.libsignal.util.KeyHelper;
 
@@ -22,6 +22,7 @@ import java.util.Set;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.services.XmppConnectionService;
+import de.pixart.messenger.utils.CryptoHelper;
 
 public class SQLiteAxolotlStore implements SignalProtocolStore {
 
@@ -186,7 +187,7 @@ public class SQLiteAxolotlStore implements SignalProtocolStore {
     @Override
     public boolean saveIdentity(SignalProtocolAddress address, IdentityKey identityKey) {
         if (!mXmppConnectionService.databaseBackend.loadIdentityKeys(account, address.getName()).contains(identityKey)) {
-            String fingerprint = identityKey.getFingerprint().replaceAll("\\s", "");
+            String fingerprint = CryptoHelper.bytesToHex(identityKey.getPublicKey().serialize());
             FingerprintStatus status = getFingerprintStatus(fingerprint);
             if (status == null) {
                 if (mXmppConnectionService.blindTrustBeforeVerification() && !account.getAxolotlService().hasVerifiedKeys(address.getName())) {

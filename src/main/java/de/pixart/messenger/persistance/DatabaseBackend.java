@@ -13,10 +13,10 @@ import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.whispersystems.libsignal.SignalProtocolAddress;
 import org.whispersystems.libsignal.IdentityKey;
 import org.whispersystems.libsignal.IdentityKeyPair;
 import org.whispersystems.libsignal.InvalidKeyException;
+import org.whispersystems.libsignal.SignalProtocolAddress;
 import org.whispersystems.libsignal.state.PreKeyRecord;
 import org.whispersystems.libsignal.state.SessionRecord;
 import org.whispersystems.libsignal.state.SignedPreKeyRecord;
@@ -49,6 +49,7 @@ import de.pixart.messenger.entities.PresenceTemplate;
 import de.pixart.messenger.entities.Roster;
 import de.pixart.messenger.entities.ServiceDiscoveryResult;
 import de.pixart.messenger.services.ShortcutService;
+import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
 import de.pixart.messenger.xmpp.mam.MamReference;
@@ -308,7 +309,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
                 if (identityKeyPair != null) {
                     String[] selectionArgs = {
                             account.getUuid(),
-                            identityKeyPair.getPublicKey().getFingerprint().replaceAll("\\s", "")
+                            CryptoHelper.bytesToHex(identityKeyPair.getPublicKey().serialize())
                     };
                     ContentValues values = new ContentValues();
                     values.put(SQLiteAxolotlStore.TRUSTED, 2);
@@ -1363,11 +1364,11 @@ public class DatabaseBackend extends SQLiteOpenHelper {
     }
 
     public void storeIdentityKey(Account account, String name, IdentityKey identityKey, FingerprintStatus status) {
-        storeIdentityKey(account, name, false, identityKey.getFingerprint().replaceAll("\\s", ""), Base64.encodeToString(identityKey.serialize(), Base64.DEFAULT), status);
+        storeIdentityKey(account, name, false, CryptoHelper.bytesToHex(identityKey.getPublicKey().serialize()), Base64.encodeToString(identityKey.serialize(), Base64.DEFAULT), status);
     }
 
     public void storeOwnIdentityKeyPair(Account account, IdentityKeyPair identityKeyPair) {
-        storeIdentityKey(account, account.getJid().toBareJid().toPreppedString(), true, identityKeyPair.getPublicKey().getFingerprint().replaceAll("\\s", ""), Base64.encodeToString(identityKeyPair.serialize(), Base64.DEFAULT), FingerprintStatus.createActiveVerified(false));
+        storeIdentityKey(account, account.getJid().toBareJid().toPreppedString(), true, CryptoHelper.bytesToHex(identityKeyPair.getPublicKey().serialize()), Base64.encodeToString(identityKeyPair.serialize(), Base64.DEFAULT), FingerprintStatus.createActiveVerified(false));
     }
 
     public void recreateAxolotlDb(SQLiteDatabase db) {
