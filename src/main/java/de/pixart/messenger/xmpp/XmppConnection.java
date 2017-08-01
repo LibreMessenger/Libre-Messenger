@@ -1114,7 +1114,12 @@ public class XmppConnection implements Runnable {
             }
         }
         for (OnIqPacketReceived callback : callbacks) {
-            callback.onIqPacketReceived(account, failurePacket);
+            try {
+                callback.onIqPacketReceived(account, failurePacket);
+            } catch (StateChangingError error) {
+                Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": caught StateChangingError(" + error.state.toString() + ") while clearing callbacks");
+                //ignore
+            }
         }
         Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": done clearing iq callbacks. " + this.packetCallbacks.size() + " left");
     }
@@ -1350,8 +1355,7 @@ public class XmppConnection implements Runnable {
 
     public synchronized String sendUnmodifiedIqPacket(final IqPacket packet, final OnIqPacketReceived callback) {
         if (packet.getId() == null) {
-            final String id = nextRandomId();
-            packet.setAttribute("id", id);
+            packet.setAttribute("id", nextRandomId());
         }
         if (callback != null) {
             synchronized (this.packetCallbacks) {
