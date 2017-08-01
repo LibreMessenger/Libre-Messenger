@@ -52,6 +52,15 @@ public class WelcomeActivity extends XmppActivity {
     private static final int REQUEST_READ_EXTERNAL_STORAGE = 0XD737;
 
     @Override
+    public void onStart() {
+        super.onStart();
+        final int theme = findTheme();
+        if (this.mTheme != theme) {
+            recreate();
+        }
+    }
+
+    @Override
     protected void onCreate(final Bundle savedInstanceState) {
         if (getResources().getBoolean(R.bool.portrait_only)) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);

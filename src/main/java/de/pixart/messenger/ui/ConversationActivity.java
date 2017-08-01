@@ -2073,15 +2073,15 @@ public class ConversationActivity extends XmppActivity
     }
 
     public boolean useSendButtonToIndicateStatus() {
-        return getPreferences().getBoolean("send_button_status", true);
+        return getPreferences().getBoolean("send_button_status", getResources().getBoolean(R.bool.send_button_status));
     }
 
     public boolean indicateReceived() {
-        return getPreferences().getBoolean("indicate_received", true);
+        return getPreferences().getBoolean("indicate_received", getResources().getBoolean(R.bool.indicate_received));
     }
 
     public boolean useWhiteBackground() {
-        return getPreferences().getBoolean("use_white_background", false);
+        return getPreferences().getBoolean("use_white_background", getResources().getBoolean(R.bool.use_white_background));
     }
 
     protected boolean trustKeysIfNeeded(int requestCode) {

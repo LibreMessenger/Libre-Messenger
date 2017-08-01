@@ -875,7 +875,7 @@ public class XmppConnectionService extends Service {
     }
 
     private boolean manuallyChangePresence() {
-        return getPreferences().getBoolean(SettingsActivity.MANUALLY_CHANGE_PRESENCE, false);
+        return getPreferences().getBoolean(SettingsActivity.MANUALLY_CHANGE_PRESENCE, getResources().getBoolean(R.bool.manually_change_presence));
     }
 
     private boolean treatVibrateAsSilent() {
@@ -883,15 +883,15 @@ public class XmppConnectionService extends Service {
     }
 
     private boolean awayWhenScreenOff() {
-        return getPreferences().getBoolean(SettingsActivity.AWAY_WHEN_SCREEN_IS_OFF, false);
+        return getPreferences().getBoolean(SettingsActivity.AWAY_WHEN_SCREEN_IS_OFF, getResources().getBoolean(R.bool.away_when_screen_off));
     }
 
     private String getCompressPicturesPreference() {
-        return getPreferences().getString("picture_compression", "auto");
+        return getPreferences().getString("picture_compression", getResources().getString(R.string.picture_compression));
     }
 
     public int getCompressImageResolutionPreference() {
-        switch (getPreferences().getString("image_compression", "high")) {
+        switch (getPreferences().getString("image_compression", getResources().getString(R.string.picture_compression))) {
             case "low":
                 return 720;
             case "mid":
@@ -904,7 +904,7 @@ public class XmppConnectionService extends Service {
     }
 
     public int getCompressImageSizePreference() {
-        switch (getPreferences().getString("image_compression", "high")) {
+        switch (getPreferences().getString("image_compression", getResources().getString(R.string.picture_compression))) {
             case "low":
                 return 209715; // 0.2 * 1024 * 1024 = 209715 (0.2 MiB)
             case "mid":
@@ -912,12 +912,12 @@ public class XmppConnectionService extends Service {
             case "high":
                 return 1048576; // 1 * 1024 * 1024 = 1048576 (1 MiB)
             default:
-                return 1048576;
+                return 524288;
         }
     }
 
     private int getCompressVideoResolutionPreference() {
-        switch (getPreferences().getString("video_compression", "high")) {
+        switch (getPreferences().getString("video_compression", getResources().getString(R.string.video_compression))) {
             case "low":
                 return 144;
             case "mid":
@@ -925,12 +925,12 @@ public class XmppConnectionService extends Service {
             case "high":
                 return 720;
             default:
-                return 720;
+                return 360;
         }
     }
 
     private int getCompressVideoBitratePreference() {
-        switch (getPreferences().getString("video_compression", "high")) {
+        switch (getPreferences().getString("video_compression", getResources().getString(R.string.video_compression))) {
             case "low":
                 return 100000;
             case "mid":
@@ -938,7 +938,7 @@ public class XmppConnectionService extends Service {
             case "high":
                 return 2000000;
             default:
-                return 2000000;
+                return 500000;
         }
     }
 
@@ -2914,7 +2914,7 @@ public class XmppConnectionService extends Service {
     }
 
     public void createContact(Contact contact) {
-        boolean autoGrant = getPreferences().getBoolean("grant_new_contacts", true);
+        boolean autoGrant = getPreferences().getBoolean("grant_new_contacts", getResources().getBoolean(R.bool.grant_new_contacts));
         if (autoGrant) {
             contact.setOption(Contact.Options.PREEMPTIVE_GRANT);
             contact.setOption(Contact.Options.ASKING);
@@ -3424,7 +3424,7 @@ public class XmppConnectionService extends Service {
 
     public long getAutomaticMessageDeletionDate() {
         try {
-            final long timeout = Long.parseLong(getPreferences().getString(SettingsActivity.AUTOMATIC_MESSAGE_DELETION, "0")) * 1000;
+            final long timeout = Long.parseLong(getPreferences().getString(SettingsActivity.AUTOMATIC_MESSAGE_DELETION, String.valueOf(getResources().getInteger(R.integer.automatic_message_deletion)))) * 1000;
             return timeout == 0 ? timeout : System.currentTimeMillis() - timeout;
         } catch (NumberFormatException e) {
             return 0;
@@ -3432,35 +3432,35 @@ public class XmppConnectionService extends Service {
     }
 
     public boolean confirmMessages() {
-        return getPreferences().getBoolean("confirm_messages", true);
+        return getPreferences().getBoolean("confirm_messages", getResources().getBoolean(R.bool.confirm_messages));
     }
 
     public boolean allowMessageCorrection() {
-        return getPreferences().getBoolean("allow_message_correction", true);
+        return getPreferences().getBoolean("allow_message_correction",  getResources().getBoolean(R.bool.allow_message_correction));
     }
 
     public boolean sendChatStates() {
-        return getPreferences().getBoolean("chat_states", true);
+        return getPreferences().getBoolean("chat_states", getResources().getBoolean(R.bool.chat_states));
     }
 
     private boolean respectAutojoin() {
-        return getPreferences().getBoolean("autojoin", true);
+        return getPreferences().getBoolean("autojoin", getResources().getBoolean(R.bool.autojoin));
     }
 
     public boolean indicateReceived() {
-        return getPreferences().getBoolean("indicate_received", true);
+        return getPreferences().getBoolean("indicate_received", getResources().getBoolean(R.bool.indicate_received));
     }
 
     public boolean useTorToConnect() {
-        return Config.FORCE_ORBOT || getPreferences().getBoolean("use_tor", false);
+        return Config.FORCE_ORBOT || getPreferences().getBoolean("use_tor", getResources().getBoolean(R.bool.use_tor));
     }
 
     public boolean showExtendedConnectionOptions() {
-        return getPreferences().getBoolean("show_connection_options", false);
+        return getPreferences().getBoolean("show_connection_options", getResources().getBoolean(R.bool.show_connection_options));
     }
 
     public boolean broadcastLastActivity() {
-        return getPreferences().getBoolean(SettingsActivity.BROADCAST_LAST_ACTIVITY, true);
+        return getPreferences().getBoolean(SettingsActivity.BROADCAST_LAST_ACTIVITY, getResources().getBoolean(R.bool.last_activity));
     }
 
     public int unreadCount() {
@@ -3622,7 +3622,7 @@ public class XmppConnectionService extends Service {
 
     public void updateMemorizingTrustmanager() {
         final MemorizingTrustManager tm;
-        final boolean dontTrustSystemCAs = getPreferences().getBoolean("dont_trust_system_cas", false);
+        final boolean dontTrustSystemCAs = getPreferences().getBoolean("dont_trust_system_cas", getResources().getBoolean(R.bool.dont_trust_system_cas));
         if (dontTrustSystemCAs) {
             tm = new MemorizingTrustManager(getApplicationContext(), null);
         } else {
@@ -4080,7 +4080,7 @@ public class XmppConnectionService extends Service {
         if (name != null && !name.trim().isEmpty()) {
             bookmark.setBookmarkName(name.trim());
         }
-        bookmark.setAutojoin(getPreferences().getBoolean("autojoin", true));
+        bookmark.setAutojoin(getPreferences().getBoolean("autojoin", getResources().getBoolean(R.bool.autojoin)));
         account.getBookmarks().add(bookmark);
         pushBookmarks(account);
         conversation.setBookmark(bookmark);
@@ -4145,7 +4145,7 @@ public class XmppConnectionService extends Service {
     }
 
     public boolean blindTrustBeforeVerification() {
-        return getPreferences().getBoolean(SettingsActivity.BLIND_TRUST_BEFORE_VERIFICATION, true);
+        return getPreferences().getBoolean(SettingsActivity.BLIND_TRUST_BEFORE_VERIFICATION, getResources().getBoolean(R.bool.btbv));
     }
 
     public void pushMamPreferences(Account account, Element prefs) {

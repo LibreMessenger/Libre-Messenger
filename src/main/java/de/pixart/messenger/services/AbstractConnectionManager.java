@@ -33,6 +33,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import de.pixart.messenger.Config;
+import de.pixart.messenger.R;
 import de.pixart.messenger.entities.DownloadableFile;
 
 public class AbstractConnectionManager {
@@ -49,21 +50,25 @@ public class AbstractConnectionManager {
     }
 
     public long getAutoAcceptFileSize() {
+        long defaultValue_wifi = this.getXmppConnectionService().getResources().getInteger(R.integer.auto_accept_filesize_wifi);
+        long defaultValue_mobile = this.getXmppConnectionService().getResources().getInteger(R.integer.auto_accept_filesize_mobile);
+        long defaultValue_roaming = this.getXmppConnectionService().getResources().getInteger(R.integer.auto_accept_filesize_roaming);
+
         String config = "0";
         if (mXmppConnectionService.isWIFI()) {
             config = this.mXmppConnectionService.getPreferences().getString(
-                    "auto_accept_file_size_wifi", "10485760");
+                    "auto_accept_file_size_wifi", String.valueOf(defaultValue_wifi));
         } else if (mXmppConnectionService.isMobile()) {
             config = this.mXmppConnectionService.getPreferences().getString(
-                    "auto_accept_file_size_mobile", "262144");
+                    "auto_accept_file_size_mobile", String.valueOf(defaultValue_mobile));
         } else if (mXmppConnectionService.isMobileRoaming()) {
             config = this.mXmppConnectionService.getPreferences().getString(
-                    "auto_accept_file_size_roaming", "1");
+                    "auto_accept_file_size_roaming", String.valueOf(defaultValue_roaming));
         }
         try {
             return Long.parseLong(config);
         } catch (NumberFormatException e) {
-            return 1048576;
+            return defaultValue_mobile;
         }
     }
 

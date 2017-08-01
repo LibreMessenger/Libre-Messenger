@@ -90,7 +90,7 @@ public class NotificationService {
     }
 
     public boolean notificationsEnabled() {
-        return mXmppConnectionService.getPreferences().getBoolean("show_notification", true);
+        return mXmppConnectionService.getPreferences().getBoolean("show_notification", mXmppConnectionService.getResources().getBoolean(R.bool.show_notification));
     }
 
     private boolean notificationsFromStrangers() {
@@ -99,7 +99,7 @@ public class NotificationService {
     }
 
     public boolean isQuietHours() {
-        if (!mXmppConnectionService.getPreferences().getBoolean("enable_quiet_hours", false)) {
+        if (!mXmppConnectionService.getPreferences().getBoolean("enable_quiet_hours", mXmppConnectionService.getResources().getBoolean(R.bool.enable_quiet_hours))) {
             return false;
         }
         final long startTime = mXmppConnectionService.getPreferences().getLong("quiet_hours_start", TimePreference.DEFAULT_VALUE) % Config.MILLISECONDS_IN_DAY;

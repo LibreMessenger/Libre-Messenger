@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import de.pixart.messenger.Config;
+import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.OtrService;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.crypto.axolotl.XmppAxolotlMessage;
@@ -736,8 +737,14 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
     private static SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm:ss");
 
     private void activateGracePeriod(Account account) {
-        long duration = mXmppConnectionService.getPreferences().getLong("race_period_length", 144) * 1000;
-        Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": activating grace period till " + TIME_FORMAT.format(new Date(System.currentTimeMillis() + duration)));
+        long duration;
+        long defaultValue = mXmppConnectionService.getResources().getInteger(R.integer.grace_period);
+        try {
+            duration = Long.parseLong(mXmppConnectionService.getPreferences().getString("grace_period_length", String.valueOf(defaultValue))) * 1000;
+        } catch (NumberFormatException e) {
+            duration = defaultValue * 1000;
+        }
+        Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": activating grace period (" + duration + ") till " + TIME_FORMAT.format(new Date(System.currentTimeMillis() + duration)));
         account.activateGracePeriod(duration);
     }
 }

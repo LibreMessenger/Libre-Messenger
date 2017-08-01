@@ -257,11 +257,11 @@ public class ShowFullscreenMessageActivity extends Activity {
     }
 
     public boolean useMaxBrightness() {
-        return getPreferences().getBoolean("use_max_brightness", true);
+        return getPreferences().getBoolean("use_max_brightness", getResources().getBoolean(R.bool.use_max_brightness));
     }
 
     public boolean useAutoRotateScreen() {
-        return getPreferences().getBoolean("use_auto_rotate", true);
+        return getPreferences().getBoolean("use_auto_rotate", getResources().getBoolean(R.bool.auto_rotate));
     }
 
     protected SharedPreferences getPreferences() {

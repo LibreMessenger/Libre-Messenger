@@ -55,7 +55,7 @@ public class ExportLogsService extends Service {
         mDatabaseBackend = DatabaseBackend.getInstance(getBaseContext());
         mAccounts = mDatabaseBackend.getAccounts();
         final SharedPreferences ReadableLogs = PreferenceManager.getDefaultSharedPreferences(this);
-        ReadableLogsEnabled = ReadableLogs.getBoolean("export_plain_text_logs", false);
+        ReadableLogsEnabled = ReadableLogs.getBoolean("export_plain_text_logs", getResources().getBoolean(R.bool.plain_text_logs));
         pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "ExportLogsService");
     }

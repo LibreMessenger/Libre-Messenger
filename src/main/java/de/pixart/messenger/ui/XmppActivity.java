@@ -417,7 +417,7 @@ public abstract class XmppActivity extends Activity {
         this.mTheme = findTheme();
         setTheme(this.mTheme);
         this.mUsingEnterKey = usingEnterKey();
-        mUseSubject = getPreferences().getBoolean("use_subject", true);
+        mUseSubject = getPreferences().getBoolean("use_subject", getResources().getBoolean(R.bool.use_subject));
         final ActionBar ab = getActionBar();
         if (ab != null) {
             ab.setDisplayHomeAsUpEnabled(true);
@@ -454,7 +454,7 @@ public abstract class XmppActivity extends Activity {
     }
 
     protected boolean usingEnterKey() {
-        return getPreferences().getBoolean("display_enter_key", false);
+        return getPreferences().getBoolean("display_enter_key", getResources().getBoolean(R.bool.display_enter_key));
     }
 
     protected SharedPreferences getPreferences() {
@@ -1021,11 +1021,11 @@ public abstract class XmppActivity extends Activity {
     }
 
     protected boolean neverCompressPictures() {
-        return getPreferences().getString("picture_compression", "auto").equals("never");
+        return getPreferences().getString("picture_compression", getResources().getString(R.string.picture_compression)).equals("never");
     }
 
     protected boolean manuallyChangePresence() {
-        return getPreferences().getBoolean(SettingsActivity.MANUALLY_CHANGE_PRESENCE, true);
+        return getPreferences().getBoolean(SettingsActivity.MANUALLY_CHANGE_PRESENCE,  getResources().getBoolean(R.bool.manually_change_presence));
     }
 
     protected void unregisterNdefPushMessageCallback() {
@@ -1095,7 +1095,9 @@ public abstract class XmppActivity extends Activity {
     }
 
     protected int findTheme() {
-        if (getPreferences().getBoolean("use_larger_font", false)) {
+        Boolean larger = getPreferences().getBoolean("use_larger_font", getResources().getBoolean(R.bool.use_larger_font));
+
+        if (larger) {
             return R.style.ConversationsTheme_LargerText;
         } else {
             return R.style.ConversationsTheme;

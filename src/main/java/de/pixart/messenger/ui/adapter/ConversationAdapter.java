@@ -315,7 +315,7 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
     }
 
     public boolean ShowPresenceColoredNames() {
-        return getPreferences().getBoolean("presence_colored_names", false);
+        return getPreferences().getBoolean("presence_colored_names", activity.getResources().getBoolean(R.bool.presence_colored_names));
     }
 
     protected SharedPreferences getPreferences() {

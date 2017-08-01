@@ -44,7 +44,7 @@ public class ExceptionHelper {
         try {
             final SharedPreferences preferences = PreferenceManager
                     .getDefaultSharedPreferences(activity);
-            boolean crashreport = preferences.getBoolean("crashreport", true);
+            boolean crashreport = preferences.getBoolean("crashreport", activity.getResources().getBoolean(R.bool.send_crashreport));
             if (!crashreport || Config.BUG_REPORTS == null) {
                 return false;
             }
