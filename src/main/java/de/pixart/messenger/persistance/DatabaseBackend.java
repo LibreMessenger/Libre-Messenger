@@ -59,7 +59,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
     private static DatabaseBackend instance = null;
 
     public static final String DATABASE_NAME = "history";
-    public static final int DATABASE_VERSION = 36;
+    public static final int DATABASE_VERSION = 37; // = Conversations DATABASE_VERSION + 1
 
     private static String CREATE_CONTATCS_STATEMENT = "create table "
             + Contact.TABLENAME + "(" + Contact.ACCOUNT + " TEXT, "
@@ -456,6 +456,15 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 								}
 						}
 				}
+
+        if (oldVersion < 37 && newVersion >= 37) {
+            List<Account> accounts = getAccounts(db);
+            for (Account account : accounts) {
+                account.setOption(Account.OPTION_REQURIES_ACCESS_MODE_CHANGE, true);
+                db.update(Account.TABLENAME, account.getContentValues(), Account.UUID
+                        + "=?", new String[]{account.getUuid()});
+            }
+        }
     }
 
     private static ContentValues createFingerprintStatusContentValues(FingerprintStatus.Trust trust, boolean active) {
