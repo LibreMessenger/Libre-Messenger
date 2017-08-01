@@ -448,13 +448,16 @@ public class MucOptions {
         return user;
     }
 
-    public void updateUser(User user) {
+    //returns true if real jid was new;
+    public boolean updateUser(User user) {
         User old;
+        boolean realJidFound = false;
         if (user.fullJid == null && user.realJid != null) {
             old = findUserByRealJid(user.realJid);
+            realJidFound = old != null;
             if (old != null) {
                 if (old.fullJid != null) {
-                    return; //don't add. user already exists
+                    return false; //don't add. user already exists
                 } else {
                     synchronized (users) {
                         users.remove(old);
@@ -463,6 +466,7 @@ public class MucOptions {
             }
         } else if (user.realJid != null) {
             old = findUserByRealJid(user.realJid);
+            realJidFound = old != null;
             synchronized (users) {
                 if (old != null && old.fullJid == null) {
                     users.remove(old);
@@ -479,8 +483,10 @@ public class MucOptions {
                     && user.getAffiliation().outranks(Affiliation.OUTCAST)
                     && !fullJidIsSelf) {
                 this.users.add(user);
+                return !realJidFound && user.realJid != null;
             }
         }
+        return false;
     }
 
     public User findUserByFullJid(Jid jid) {

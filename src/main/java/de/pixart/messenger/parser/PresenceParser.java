@@ -8,6 +8,7 @@ import java.util.List;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.crypto.PgpEngine;
+import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
@@ -75,7 +76,11 @@ public class PresenceParser extends AbstractParser implements
                                 mucOptions.onRenameListener = null;
                             }
                         }
-                        mucOptions.updateUser(user);
+                        boolean isNew = mucOptions.updateUser(user);
+                        final AxolotlService axolotlService = conversation.getAccount().getAxolotlService();
+                        if (isNew && user.getRealJid() != null && mucOptions.membersOnly() && mucOptions.nonanonymous() && axolotlService.hasEmptyDeviceList(user.getRealJid())) {
+                            axolotlService.fetchDeviceIds(user.getRealJid());
+                        }
                         if (codes.contains(MucOptions.STATUS_CODE_ROOM_CREATED) && mucOptions.autoPushConfiguration()) {
                             Log.d(Config.LOGTAG, mucOptions.getAccount().getJid().toBareJid()
                                     + ": room '"
