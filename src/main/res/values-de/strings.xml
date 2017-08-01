@@ -724,7 +724,7 @@
     <string name="unpublish_pgp_message">Bist du sicher, dass du deinen öffentlichen OpenPGP-Schlüssel aus deiner Anwesenheitsmitteilung entfernen möchtest?\\nDeine Kontakte können dir dann keine OpenPGP-verschlüsselten Nachrichten senden.</string>
     <string name="action_take_photo">Foto aufnehmen</string>
     <string name="action_take_video">Video aufnehmen</string>
-    <string name="account_status_regis_web">Server verlangt Registrierung auf Webseite</string>
+    <string name="account_status_regis_web">Der Server benötigt eine Registrierung auf einer Website</string>
     <string name="application_found_to_open_website">Keine Anwendung zum Öffnen von Webseiten gefunden</string>
     <string name="open_website">Webseite anzeigen</string>
     <string name="pref_headsup_notifications">Benachrichtigungsvorschau</string>
