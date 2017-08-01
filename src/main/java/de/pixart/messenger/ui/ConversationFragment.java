@@ -935,9 +935,6 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         }
 
         this.conversation = conversation;
-        boolean canWrite = this.conversation.getMode() == Conversation.MODE_SINGLE || this.conversation.getMucOptions().participating();
-        this.mEditMessage.setEnabled(canWrite);
-        this.mSendButton.setEnabled(canWrite);
         this.mEditMessage.setKeyboardListener(null);
         this.mEditMessage.setText("");
         this.mEditMessage.append(this.conversation.getNextMessage());
@@ -1145,7 +1142,8 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                 if (!activity.isConversationsOverviewVisable() || !activity.isConversationsOverviewHideable()) {
                     activity.sendReadMarkerIfNecessary(conversation);
                 }
-                this.updateSendButton();
+                updateSendButton();
+                updateEditablity();
             }
         }
     }
@@ -1259,6 +1257,14 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                 }
         }
         return R.drawable.ic_send_text_offline;
+    }
+
+    private void updateEditablity() {
+        boolean canWrite = this.conversation.getMode() == Conversation.MODE_SINGLE || this.conversation.getMucOptions().participating();
+        this.mEditMessage.setFocusable(canWrite);
+        this.mEditMessage.setFocusableInTouchMode(canWrite);
+        this.mSendButton.setEnabled(canWrite);
+        this.mEditMessage.setCursorVisible(canWrite);
     }
 
     public void updateSendButton() {
