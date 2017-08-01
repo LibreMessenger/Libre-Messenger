@@ -46,7 +46,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -159,18 +158,19 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                                 @Override
                                 public void run() {
                                     final int oldPosition = messagesView.getFirstVisiblePosition();
-                                    final Message message;
-                                    if (oldPosition < messageList.size()) {
-                                        message = messageList.get(oldPosition);
-                                    } else {
-                                        message = null;
+                                    Message message = null;
+                                    int childPos;
+                                    for (childPos = 0; childPos + oldPosition < messageList.size(); ++childPos) {
+                                        message = messageList.get(oldPosition + childPos);
+                                        if (message.getType() != Message.TYPE_STATUS) {
+                                            break;
+                                        }
                                     }
-                                    String uuid = message != null ? message.getUuid() : null;
-                                    View v = messagesView.getChildAt(0);
+                                    final String uuid = message != null ? message.getUuid() : null;
+                                    View v = messagesView.getChildAt(childPos);
                                     final int pxOffset = (v == null) ? 0 : v.getTop();
                                     ConversationFragment.this.conversation.populateWithMessages(ConversationFragment.this.messageList);
                                     try {
-                                        updateDateBubbles();
                                         updateStatusMessages();
                                     } catch (IllegalStateException e) {
                                         Log.d(Config.LOGTAG, "caught illegal state exception while updating status messages");
@@ -1137,7 +1137,6 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
             if (this.conversation != null) {
                 conversation.populateWithMessages(ConversationFragment.this.messageList);
                 updateSnackBar(conversation);
-                updateDateBubbles();
                 updateStatusMessages();
                 this.messageListAdapter.notifyDataSetChanged();
                 updateChatMsgHint();
@@ -1333,6 +1332,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     }
 
     protected void updateStatusMessages() {
+        updateDateBubbles();
         synchronized (this.messageList) {
             if (showLoadMoreMessages(conversation)) {
                 this.messageList.add(0, Message.createLoadMoreMessage(conversation));
@@ -1341,22 +1341,12 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     }
 
     protected void updateDateBubbles() {
-        String first = null;
-        String today = sdf.format(System.currentTimeMillis());
-        int max = this.messageList.size();
-        if (max == 0 || (max <= 1 && showLoadMoreMessages(conversation))) {
-            this.messageList.add(0, Message.createDateMessage(conversation, getString(R.string.start_chatting)));
-        } else if ((max > 0 && !showLoadMoreMessages(conversation)) || (max > 1 && showLoadMoreMessages(conversation))) {
-            for (int i = 0; i < this.messageList.size(); i++) {
-                Date date = new Date(this.messageList.get(i).getTimeSent());
-                String last = sdf.format(date);
-                if (first == null || !first.equals(last)) {
-                    first = last;
-                    String dateString = first;
-                    if (today.equals(first)) {
-                        dateString = getString(R.string.today);
-                    }
-                    this.messageList.add(i, Message.createDateMessage(conversation, dateString));
+        synchronized (this.messageList) {
+            for (int i = 0; i < this.messageList.size(); ++i) {
+                final Message current = this.messageList.get(i);
+                if (i == 0 || !UIHelper.sameDay(this.messageList.get(i - 1).getTimeSent(), current.getTimeSent())) {
+                    this.messageList.add(i, Message.createDateSeparator(current));
+                    i++;
                 }
             }
         }

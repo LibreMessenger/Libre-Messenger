@@ -18,18 +18,4 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
-    <TextView
-        android:id="@+id/status_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="01.01.2017"
-        android:textColor="@color/black87"
-        android:textSize="?attr/TextSizeInfo"
-        android:textStyle="italic"
-        android:background="@drawable/date_bubble"
-        android:layout_alignBaseline="@+id/load_more_messages"
-        android:layout_alignBottom="@+id/load_more_messages"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="8dp" />
-
 </RelativeLayout>

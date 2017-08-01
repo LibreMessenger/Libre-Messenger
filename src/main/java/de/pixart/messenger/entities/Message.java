@@ -10,6 +10,7 @@ import java.net.URL;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.crypto.axolotl.FingerprintStatus;
 import de.pixart.messenger.http.AesGcmURLStreamHandler;
+import de.pixart.messenger.ui.adapter.MessageAdapter;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.GeoHelper;
 import de.pixart.messenger.utils.MimeUtils;
@@ -190,13 +191,6 @@ public class Message extends AbstractEntity {
                 cursor.getString(cursor.getColumnIndex(ERROR_MESSAGE)));
     }
 
-    public static Message createDateMessage(Conversation conversation, String body) {
-        final Message message = new Message(conversation);
-        message.setType(Message.TYPE_STATUS);
-        message.setBody(body);
-        return message;
-    }
-
     public static Message createStatusMessage(Conversation conversation, String body) {
         final Message message = new Message(conversation);
         message.setType(Message.TYPE_STATUS);
@@ -209,6 +203,14 @@ public class Message extends AbstractEntity {
         message.setType(Message.TYPE_STATUS);
         message.setBody("LOAD_MORE");
         return message;
+    }
+
+    public static Message createDateSeparator(Message message) {
+        final Message separator = new Message(message.getConversation());
+        separator.setType(Message.TYPE_STATUS);
+        separator.setBody(MessageAdapter.DATE_SEPARATOR_BODY);
+        separator.setTime(message.getTimeSent());
+        return separator;
     }
 
     @Override
@@ -503,7 +505,8 @@ public class Message extends AbstractEntity {
                         !message.bodyIsHeart() &&
                         !this.bodyIsXmpp() &&
                         !message.bodyIsXmpp() &&
-                        ((this.axolotlFingerprint == null && message.axolotlFingerprint == null) || this.axolotlFingerprint.equals(message.getFingerprint()))
+                        ((this.axolotlFingerprint == null && message.axolotlFingerprint == null) || this.axolotlFingerprint.equals(message.getFingerprint())) &&
+                        UIHelper.sameDay(message.getTimeSent(), this.getTimeSent())
                 );
     }
 
