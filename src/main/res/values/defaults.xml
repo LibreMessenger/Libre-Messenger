@@ -46,4 +46,5 @@
     <bool name="use_white_background">false</bool>
     <bool name="send_crashreport">true</bool>
     <bool name="plain_text_logs">false</bool>
+    <bool name="validate_hostname">false</bool>
 </resources>
