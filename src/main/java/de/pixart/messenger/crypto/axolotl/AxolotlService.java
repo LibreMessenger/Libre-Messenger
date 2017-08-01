@@ -1081,6 +1081,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
                     }
                 }
             } else {
+                mXmppConnectionService.keyStatusUpdated(FetchStatus.ERROR);
                 Log.w(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Have no target devices in PEP!");
             }
         }
