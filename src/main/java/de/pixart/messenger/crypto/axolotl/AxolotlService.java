@@ -224,7 +224,6 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
         public void put(SignalProtocolAddress address, XmppAxolotlSession value) {
             super.put(address, value);
             value.setNotFresh();
-            xmppConnectionService.syncRosterToDisk(account); //TODO why?
         }
 
         public void put(XmppAxolotlSession session) {

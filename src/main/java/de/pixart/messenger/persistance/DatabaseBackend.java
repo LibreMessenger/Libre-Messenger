@@ -967,7 +967,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 
     public List<String> getKnownSignalAddresses(Account account) {
         List<String> addresses = new ArrayList<>();
-        String[] colums = {SQLiteAxolotlStore.NAME};
+        String[] colums = {"DISTINCT "+SQLiteAxolotlStore.NAME};
         String[] selectionArgs = {account.getUuid()};
         Cursor cursor = getReadableDatabase().query(SQLiteAxolotlStore.SESSION_TABLENAME,
                 colums,
@@ -976,7 +976,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
                 null, null, null
         );
         while (cursor.moveToNext()) {
-            addresses.add(cursor.getString(cursor.getColumnIndex(SQLiteAxolotlStore.NAME)));
+            addresses.add(cursor.getString(0));
         }
         cursor.close();
         return addresses;
