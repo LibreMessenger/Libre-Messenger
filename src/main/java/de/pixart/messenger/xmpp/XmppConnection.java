@@ -16,7 +16,6 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigInteger;
 import java.net.ConnectException;
 import java.net.IDN;
 import java.net.InetAddress;
@@ -68,6 +67,7 @@ import de.pixart.messenger.generator.IqGenerator;
 import de.pixart.messenger.services.NotificationService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.EditAccountActivity;
+import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.IP;
 import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.utils.Patterns;
@@ -1351,7 +1351,7 @@ public class XmppConnection implements Runnable {
     }
 
     private String nextRandomId() {
-        return new BigInteger(50, mXmppConnectionService.getRNG()).toString(36);
+        return CryptoHelper.random(50,mXmppConnectionService.getRNG());
     }
 
     public String sendIqPacket(final IqPacket packet, final OnIqPacketReceived callback) {
