@@ -453,10 +453,10 @@
     <string name="pref_presence_settings">Status</string>
     <string name="pref_away_when_screen_off">Abwesend bei abgeschaltetem Bildschirm</string>
     <string name="pref_away_when_screen_off_summary">Setzt deinen Status auf \"abwesend\", solange dein Bildschirm abgeschaltet ist</string>
-    <string name="pref_xa_on_silent_mode">Nicht verfügbar bei Stummschaltung</string>
-    <string name="pref_xa_on_silent_mode_summary">Setzt deinen Status auf \"nicht verfügbar\", solange dein Gerät lautlos ist</string>
-    <string name="pref_treat_vibrate_as_silent">Vibration als Lautlos behandeln</string>
-    <string name="pref_treat_vibrate_as_silent_summary">Setzt deinen Status auf \"nicht verfügbar\", solange das Gerät auf Vibration geschaltet ist</string>
+    <string name="pref_dnd_on_silent_mode">\"Bitte nicht stören\" bei Stummschaltung</string>
+    <string name="pref_dnd_on_silent_mode_summary">Setzt deinen Status auf \"Bitte nicht stören\", solange dein Gerät stummgeschaltet ist</string>
+    <string name="pref_treat_vibrate_as_dnd">Vibration als \"Lautlos\" behandeln</string>
+    <string name="pref_treat_vibrate_as_dnd_summary">Setzt deinen Status auf \"Bitte nicht stören\", solange das Gerät auf Vibration geschaltet ist</string>
     <string name="hostname_example">xmpp.pix-art.de</string>
     <string name="action_add_account_with_certificate">Profil mit Zertifikat hinzufügen</string>
     <string name="unable_to_parse_certificate">Zertifikat kann nicht gelesen werden</string>
