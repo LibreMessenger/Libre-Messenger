@@ -43,6 +43,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.vdurmont.emoji.EmojiManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -361,7 +362,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.messageBody.setTextIsSelectable(false);
     }
 
-    private void displayHeartMessage(final ViewHolder viewHolder, final String body) {
+    private void displayEmojiMessage(final ViewHolder viewHolder, final String body) {
         viewHolder.aw_player.setVisibility(View.GONE);
         if (viewHolder.download_button != null) {
             viewHolder.download_button.setVisibility(View.GONE);
@@ -370,8 +371,8 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.messageBody.setVisibility(View.VISIBLE);
         viewHolder.messageBody.setIncludeFontPadding(false);
         Spannable span = new SpannableString(body);
-        span.setSpan(new RelativeSizeSpan(4.0f), 0, body.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        span.setSpan(new ForegroundColorSpan(activity.getWarningTextColor()), 0, body.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        float size = EmojiManager.isEmoji(body) ? 3.0f : 2.0f;
+        span.setSpan(new RelativeSizeSpan(size), 0, body.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         viewHolder.messageBody.setText(span);
     }
 
@@ -962,8 +963,8 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         } else {
             if (GeoHelper.isGeoUri(message.getBody())) {
                 displayLocationMessage(viewHolder, message);
-            } else if (message.bodyIsHeart()) {
-                displayHeartMessage(viewHolder, message.getBody().trim());
+            } else if (message.bodyIsOnlyEmojis()) {
+                displayEmojiMessage(viewHolder, message.getBody().trim());
             } else if (message.bodyIsXmpp()) {
                 displayXmppMessage(viewHolder, message.getBody().trim());
             } else if (message.treatAsDownloadable()) {
