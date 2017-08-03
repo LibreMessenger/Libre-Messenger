@@ -6,7 +6,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.2'
+        classpath 'com.android.tools.build:gradle:2.3.3'
     }
 }
 
@@ -31,7 +31,7 @@ dependencies {
     compile project(':libs:MemorizingTrustManager')
     compile project(':libs:audiowife')
     compile project(':libs:android-transcoder')
-    standardPushCompile 'com.google.android.gms:play-services-gcm:10.2.6'
+    standardPushCompile 'com.google.android.gms:play-services-gcm:11.0.4'
     compile 'org.sufficientlysecure:openpgp-api:10.0'
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
     compile 'com.android.support:support-v13:25.3.1'
@@ -45,7 +45,7 @@ dependencies {
     compile 'de.timroes.android:EnhancedListView:0.3.4'
     compile 'me.leolin:ShortcutBadger:1.1.17@aar'
     compile 'com.kyleduo.switchbutton:library:1.2.8'
-    compile 'org.whispersystems:signal-protocol-java:2.5.3'
+    compile 'org.whispersystems:signal-protocol-java:2.6.2'
     compile 'com.makeramen:roundedimageview:2.3.0'
     compile 'jetty:javax.servlet:5.1.12'
     compile 'com.google.code.gson:gson:2.7'
@@ -56,8 +56,8 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.8.0'
     compile 'com.github.chrisbanes:PhotoView:2.0.0'
     compile 'com.github.rtoshiro.fullscreenvideoview:fullscreenvideoview:1.1.2'
-    compile 'com.google.android.gms:play-services-location:10.2.6'
-    compile 'com.google.android.gms:play-services-maps:10.2.6'
+    compile 'com.google.android.gms:play-services-location:11.0.4'
+    compile 'com.google.android.gms:play-services-maps:11.0.4'
     compile 'pub.devrel:easypermissions:0.4.0'
     compile 'com.wefika:flowlayout:0.4.1'
     compile 'com.googlecode.ez-vcard:ez-vcard:0.10.2'
@@ -69,18 +69,17 @@ dependencies {
 
 ext {
     travisBuild = System.getenv("TRAVIS") == "true"
-    // allows for -Dpre-dex=false to be set
-    preDexEnabled = "true".equals(System.getProperty("pre-dex", "true"))
+    preDexEnabled = System.getProperty("pre-dex", "true")
 }
 
 android {
 
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 25
+        targetSdkVersion 26
 
         versionCode 199
         versionName "1.18.2"
@@ -98,6 +97,7 @@ android {
         // Skip pre-dexing when running on Travis CI or when disabled via -Dpre-dex=false.
         preDexLibraries = preDexEnabled && !travisBuild
         javaMaxHeapSize "4g"
+        jumboMode true
     }
 
     compileOptions {
