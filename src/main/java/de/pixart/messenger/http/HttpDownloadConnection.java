@@ -160,6 +160,30 @@ public class HttpDownloadConnection implements Transferable {
         }
     }
 
+    public void updateProgress(long i) {
+        this.mProgress = (int) i;
+        mHttpConnectionManager.updateConversationUi(false);
+    }
+
+    @Override
+    public int getStatus() {
+        return this.mStatus;
+    }
+
+    @Override
+    public long getFileSize() {
+        if (this.file != null) {
+            return this.file.getExpectedSize();
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public int getProgress() {
+        return this.mProgress;
+    }
+
     private class FileSizeChecker implements Runnable {
 
         private boolean interactive = false;
@@ -186,6 +210,7 @@ public class HttpDownloadConnection implements Transferable {
                 return;
             }
             file.setExpectedSize(size);
+            message.resetFileParams();
             if (mHttpConnectionManager.hasStoragePermission()
                     && size <= mHttpConnectionManager.getAutoAcceptFileSize()
                     && mXmppConnectionService.isDataSaverDisabled()) {
@@ -283,12 +308,13 @@ public class HttpDownloadConnection implements Transferable {
                     mHttpConnectionManager.setupTrustManager((HttpsURLConnection) connection, interactive);
                 }
                 connection.setRequestProperty("User-Agent", mXmppConnectionService.getIqGenerator().getIdentityName());
-                final boolean tryResume = file.exists() && file.getKey() == null;
+                final boolean tryResume = file.exists() && file.getKey() == null && file.getSize() > 0;
                 long resumeSize = 0;
+                long expected = file.getExpectedSize();
                 if (tryResume) {
-                    Log.d(Config.LOGTAG, "http download trying resume");
                     resumeSize = file.getSize();
-                    connection.setRequestProperty("Range", "bytes="+resumeSize+"-");
+                    Log.d(Config.LOGTAG, "http download trying resume after" + resumeSize + " of " + expected);
+                    connection.setRequestProperty("Range", "bytes=" + resumeSize + "-");
                 }
                 connection.setConnectTimeout(Config.SOCKET_TIMEOUT * 1000);
                 connection.setReadTimeout(Config.CONNECT_TIMEOUT * 1000);
@@ -297,16 +323,24 @@ public class HttpDownloadConnection implements Transferable {
                 final String contentRange = connection.getHeaderField("Content-Range");
                 boolean serverResumed = tryResume && contentRange != null && contentRange.startsWith("bytes "+resumeSize+"-");
                 long transmitted = 0;
-                long expected = file.getExpectedSize();
                 if (tryResume && serverResumed) {
                     Log.d(Config.LOGTAG, "server resumed");
                     transmitted = file.getSize();
-                    updateProgress((int) ((((double) transmitted) / expected) * 100));
+                    updateProgress(Math.round(((double) transmitted / expected) * 100));
                     os = AbstractConnectionManager.createAppendedOutputStream(file);
                     if (os == null) {
                         throw new FileWriterException();
                     }
                 } else {
+                    long reportedContentLengthOnGet;
+                    try {
+                        reportedContentLengthOnGet = Long.parseLong(connection.getHeaderField("Content-Length"));
+                    } catch (NumberFormatException | NullPointerException e) {
+                        reportedContentLengthOnGet = 0;
+                    }
+                    if (expected != reportedContentLengthOnGet) {
+                        Log.d(Config.LOGTAG, "content-length reported on GET (" + reportedContentLengthOnGet + ") did not match Content-Length reported on HEAD (" + expected + ")");
+                    }
                     file.getParentFile().mkdirs();
                     if (!file.exists() && !file.createNewFile()) {
                         throw new FileWriterException();
@@ -314,7 +348,7 @@ public class HttpDownloadConnection implements Transferable {
                     os = AbstractConnectionManager.createOutputStream(file, true);
                 }
                 int count;
-                byte[] buffer = new byte[1024];
+                byte[] buffer = new byte[4096];
                 while ((count = is.read(buffer)) != -1) {
                     transmitted += count;
                     try {
@@ -322,7 +356,7 @@ public class HttpDownloadConnection implements Transferable {
                     } catch (IOException e) {
                         throw new FileWriterException();
                     }
-                    updateProgress((int) ((((double) transmitted) / expected) * 100));
+                    updateProgress(Math.round(((double) transmitted / expected) * 100));
                     if (canceled) {
                         throw new CancellationException();
                     }
@@ -358,29 +392,5 @@ public class HttpDownloadConnection implements Transferable {
             mXmppConnectionService.updateMessage(message);
         }
 
-    }
-
-    public void updateProgress(int i) {
-        this.mProgress = i;
-        mHttpConnectionManager.updateConversationUi(false);
-    }
-
-    @Override
-    public int getStatus() {
-        return this.mStatus;
-    }
-
-    @Override
-    public long getFileSize() {
-        if (this.file != null) {
-            return this.file.getExpectedSize();
-        } else {
-            return 0;
-        }
-    }
-
-    @Override
-    public int getProgress() {
-        return this.mProgress;
     }
 }

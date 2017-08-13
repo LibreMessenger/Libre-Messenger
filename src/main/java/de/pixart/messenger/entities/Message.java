@@ -706,6 +706,10 @@ public class Message extends AbstractEntity {
         return isGeoUri;
     }
 
+    public synchronized void resetFileParams() {
+        this.fileParams = null;
+    }
+
     public synchronized FileParams getFileParams() {
         if (fileParams == null) {
             fileParams = new FileParams();
