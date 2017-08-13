@@ -672,7 +672,7 @@ public class Message extends AbstractEntity {
     }
 
     public boolean bodyIsOnlyEmojis() {
-        return EmojiManager.isOnlyEmojis(body.trim());
+        return EmojiManager.isOnlyEmojis(body.replaceAll("\\s", ""));
     }
 
     public boolean bodyIsXmpp() {
