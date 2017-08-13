@@ -205,13 +205,13 @@ public class UIHelper {
             if (body.startsWith(Message.ME_COMMAND)) {
                 return new Pair<>(body.replaceAll("^" + Message.ME_COMMAND,
                         UIHelper.getMessageDisplayName(message) + " "), false);
-            } else if (GeoHelper.isGeoUri(message.getBody())) {
+            } else if (message.isGeoUri()) {
                 if (message.getStatus() == Message.STATUS_RECEIVED) {
                     return new Pair<>(context.getString(R.string.received_location), true);
                 } else {
                     return new Pair<>(context.getString(R.string.location), true);
                 }
-            } else if (message.bodyIsXmpp()) {
+            } else if (message.isXmppUri()) {
                 if (message.getStatus() == Message.STATUS_RECEIVED) {
                     return new Pair<>(context.getString(R.string.received_contact), true);
                 } else {

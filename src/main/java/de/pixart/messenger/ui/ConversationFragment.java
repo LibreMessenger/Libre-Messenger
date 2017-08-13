@@ -73,10 +73,8 @@ import de.pixart.messenger.ui.adapter.MessageAdapter;
 import de.pixart.messenger.ui.adapter.MessageAdapter.OnContactPictureClicked;
 import de.pixart.messenger.ui.adapter.MessageAdapter.OnContactPictureLongClicked;
 import de.pixart.messenger.ui.widget.ListSelectionManager;
-import de.pixart.messenger.utils.GeoHelper;
 import de.pixart.messenger.utils.NickValidityChecker;
 import de.pixart.messenger.utils.UIHelper;
-import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xmpp.XmppConnection;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 import de.pixart.messenger.xmpp.jid.Jid;
@@ -636,20 +634,15 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
             MenuItem downloadFile = menu.findItem(R.id.download_file);
             MenuItem deleteFile = menu.findItem(R.id.delete_file);
             MenuItem showErrorMessage = menu.findItem(R.id.show_error_message);
-            if (!treatAsFile && !GeoHelper.isGeoUri(m.getBody()) && !m.treatAsDownloadable()) {
+            if (!treatAsFile && !m.isGeoUri() && !m.isXmppUri() && !m.treatAsDownloadable()) {
                 selectText.setVisible(ListSelectionManager.isSupported());
             }
             if (m.getEncryption() == Message.ENCRYPTION_DECRYPTION_FAILED) {
                 retryDecryption.setVisible(true);
             }
-            if (((relevantForCorrection.getType() == Message.TYPE_TEXT
+            if (relevantForCorrection.getType() == Message.TYPE_TEXT
                     && relevantForCorrection.isLastCorrectableMessage()
-                    && conversation.getMode() == Conversation.MODE_SINGLE)
-                    || (relevantForCorrection.getType() == Message.TYPE_TEXT
-                    && relevantForCorrection.isLastCorrectableMessage()
-                    && conversation.getMode() == Conversation.MODE_MULTI
-                    && m.getConversation().getMucOptions().nonanonymous()))
-                    && !(GeoHelper.isGeoUri(m.getBody()) || XmppUri.isXmppUri(m.getBody()))) {
+                    && (m.getConversation().getMucOptions().nonanonymous() || m.getConversation().getMode() == Conversation.MODE_SINGLE)) {
                 correctMessage.setVisible(true);
             }
             if (treatAsFile || (m.getType() == Message.TYPE_TEXT && !m.treatAsDownloadable())) {
@@ -660,8 +653,8 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                 sendAgain.setVisible(true);
             }
             if (m.hasFileOnRemoteHost()
-                    || GeoHelper.isGeoUri(m.getBody())
-                    || XmppUri.isXmppUri(m.getBody())
+                    || m.isGeoUri()
+                    || m.isXmppUri()
                     || m.treatAsDownloadable()
                     || (t != null && t instanceof HttpDownloadConnection)) {
                 copyUrl.setVisible(true);
@@ -739,7 +732,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     private void shareWith(Message message) {
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
-        if (GeoHelper.isGeoUri(message.getBody())) {
+        if (message.isGeoUri() || message.isXmppUri()) {
             shareIntent.putExtra(Intent.EXTRA_TEXT, message.getBody());
             shareIntent.setType("text/plain");
         } else if (!message.isFileOrImage()) {
@@ -811,10 +804,10 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     private void copyUrl(Message message) {
         final String url;
         final int resId;
-        if (GeoHelper.isGeoUri(message.getBody())) {
+        if (message.isGeoUri()) {
             resId = R.string.location;
             url = message.getBody();
-        } else if (XmppUri.isXmppUri(message.getBody())) {
+        } else if (message.isXmppUri()) {
             resId = R.string.contact;
             url = message.getBody();
         } else if (message.hasFileOnRemoteHost()) {

@@ -17,10 +17,6 @@ import de.pixart.messenger.entities.Message;
 public class GeoHelper {
     public static Pattern GEO_URI = Pattern.compile("geo:([\\-0-9.]+),([\\-0-9.]+)(?:,([\\-0-9.]+))?(?:\\?(.*))?", Pattern.CASE_INSENSITIVE);
 
-    public static boolean isGeoUri(String body) {
-        return body != null && GEO_URI.matcher(body).matches();
-    }
-
     public static String MapPreviewUri(Message message) {
         Matcher matcher = GEO_URI.matcher(message.getBody());
         if (!matcher.matches()) {
