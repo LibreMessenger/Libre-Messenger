@@ -159,7 +159,7 @@ public class Account extends AbstractEntity {
         }
 
         State() {
-            tthis(true, true);
+            this(true, true);
         }
 
         public int getReadableId() {
