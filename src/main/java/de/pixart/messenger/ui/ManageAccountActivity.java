@@ -33,6 +33,7 @@ import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.services.XmppConnectionService.OnAccountUpdate;
 import de.pixart.messenger.ui.adapter.AccountAdapter;
+import de.pixart.messenger.xmpp.XmppConnection;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
 
@@ -319,6 +320,10 @@ public class ManageAccountActivity extends XmppActivity implements OnAccountUpda
 
     private void enableAccount(Account account) {
         account.setOption(Account.OPTION_DISABLED, false);
+        final XmppConnection connection = account.getXmppConnection();
+        if (connection != null) {
+            connection.resetEverything();
+        }
         if (!xmppConnectionService.updateAccount(account)) {
             Toast.makeText(this, R.string.unable_to_update_account, Toast.LENGTH_SHORT).show();
         }
