@@ -724,6 +724,7 @@ public class Message extends AbstractEntity {
                     } catch (NumberFormatException e) {
                         fileParams.url = parseUrl(parts[0]);
                     }
+                    break;
                 case 4:
                     fileParams.width = parseInt(parts[2]);
                     fileParams.height = parseInt(parts[3]);
