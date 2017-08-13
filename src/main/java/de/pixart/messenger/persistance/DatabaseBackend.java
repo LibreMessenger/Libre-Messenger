@@ -460,7 +460,8 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         if (oldVersion < 37 && newVersion >= 37) {
             List<Account> accounts = getAccounts(db);
             for (Account account : accounts) {
-                account.setOption(Account.OPTION_REQURIES_ACCESS_MODE_CHANGE, true);
+                account.setOption(Account.OPTION_REQUIRES_ACCESS_MODE_CHANGE, true);
+                account.setOption(Account.OPTION_LOGGED_IN_SUCCESSFULLY, false);
                 db.update(Account.TABLENAME, account.getContentValues(), Account.UUID
                         + "=?", new String[]{account.getUuid()});
             }
