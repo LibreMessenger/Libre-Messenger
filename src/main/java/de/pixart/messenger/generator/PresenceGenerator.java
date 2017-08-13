@@ -2,6 +2,7 @@ package de.pixart.messenger.generator;
 
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Contact;
+import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.xml.Element;
@@ -60,6 +61,14 @@ public class PresenceGenerator extends AbstractGenerator {
             cap.setAttribute("ver", capHash);
         }
         return packet;
+    }
+
+    public PresencePacket leave(final MucOptions mucOptions) {
+        PresencePacket presencePacket = new PresencePacket();
+        presencePacket.setTo(mucOptions.getSelf().getFullJid());
+        presencePacket.setFrom(mucOptions.getAccount().getJid());
+        presencePacket.setAttribute("type", "unavailable");
+        return presencePacket;
     }
 
     public PresencePacket sendOfflinePresence(Account account) {
