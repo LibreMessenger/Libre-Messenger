@@ -1,5 +1,18 @@
 ### Changelog
 
+#### Version 1.19.0
+
+* Added 'App Shortcuts' to quickly access frequent contacts
+* Use DNSSEC to verify hostname instead of domain in certificate
+* Setting to enable Heads-up notifications
+* Made DNSSEC hostname validation opt-in
+* work around for OpensFire's self signed certs
+* use VPN's DNS servers first
+* fixed connection loop on Android < 4.4
+* presence subscription no longer required for OMEMO on compatible servers
+* bug fixes
+
+
 #### Version 1.18.2
 * colorize send button only after history is caught up
 * improved MAM catchup strategy
