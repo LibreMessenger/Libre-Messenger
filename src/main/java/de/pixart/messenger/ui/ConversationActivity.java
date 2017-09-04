@@ -104,6 +104,7 @@ public class ConversationActivity extends XmppActivity
     public static final int REQUEST_TRUST_KEYS_TEXT = 0x0208;
     public static final int REQUEST_TRUST_KEYS_MENU = 0x0209;
     public static final int REQUEST_START_DOWNLOAD = 0x0210;
+    public static final int REQUEST_ADD_EDITOR_CONTENT = 0x0211;
     public static final int ATTACHMENT_CHOICE_CHOOSE_IMAGE = 0x0301;
     public static final int ATTACHMENT_CHOICE_TAKE_FROM_CAMERA = 0x0302;
     public static final int ATTACHMENT_CHOICE_CHOOSE_FILE = 0x0303;
@@ -144,6 +145,7 @@ public class ConversationActivity extends XmppActivity
     private AtomicBoolean mRedirected = new AtomicBoolean(false);
     private Pair<Integer, Intent> mPostponedActivityResult;
     private boolean mUnprocessedNewIntent = false;
+    public Uri mPendingEditorContent = null;
     private boolean showLastSeen = false;
 
     long FirstStartTime = -1;
@@ -813,6 +815,10 @@ public class ConversationActivity extends XmppActivity
                 if (requestCode == REQUEST_START_DOWNLOAD) {
                     if (this.mPendingDownloadableMessage != null) {
                         startDownloadable(this.mPendingDownloadableMessage);
+                    }
+                } else if (requestCode == REQUEST_ADD_EDITOR_CONTENT) {
+                    if (this.mPendingEditorContent != null) {
+                        attachImageToConversation(this.mPendingEditorContent);
                     }
                 } else {
                     attachFile(requestCode);
