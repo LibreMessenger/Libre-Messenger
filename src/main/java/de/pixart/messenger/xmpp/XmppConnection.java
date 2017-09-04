@@ -64,6 +64,7 @@ import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.ServiceDiscoveryResult;
 import de.pixart.messenger.generator.IqGenerator;
+import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.services.NotificationService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.EditAccountActivity;
@@ -1053,10 +1054,7 @@ public class XmppConnection implements Runnable {
 
     private void sendBindRequest() {
         while (!mXmppConnectionService.areMessagesInitialized() && socket != null && !socket.isClosed()) {
-            try {
-                Thread.sleep(500);
-            } catch (final InterruptedException ignored) {
-            }
+            uninterruptedSleep(500);
         }
         needsBinding = false;
         clearIqCallbacks();
@@ -1476,32 +1474,38 @@ public class XmppConnection implements Runnable {
         } else {
             if (tagWriter.isActive()) {
                 tagWriter.finish();
+                final Socket currentSocket = socket;
                 try {
-                    int i = 0;
-                    boolean warned = false;
-                    while (!tagWriter.finished() && socket.isConnected() && i <= 10) {
-                        if (!warned) {
-                            Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": waiting for tag writer to finish");
-                            warned = true;
-                        }
-                        try {
-                            Thread.sleep(200);
-                        } catch (InterruptedException e) {
-                            Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": sleep interrupted");
-                        }
-                        i++;
-                    }
-                    if (warned) {
-                        Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": tag writer has finished");
+                    for (int i = 0; i <= 10 && !tagWriter.finished() && !currentSocket.isClosed(); ++i) {
+                        uninterruptedSleep(100);
                     }
                     Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": closing stream");
                     tagWriter.writeTag(Tag.end("stream:stream"));
+                    for (int i = 0; i <= 20 && !currentSocket.isClosed(); ++i) {
+                        uninterruptedSleep(100);
+                    }
+                    if (currentSocket.isClosed()) {
+                        Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": remote closed socket");
+                    } else {
+                        Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": remote has not closed socket. force closing");
+                    }
                 } catch (final IOException e) {
                     Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": io exception during disconnect (" + e.getMessage() + ")");
                 } finally {
+                    FileBackend.close(currentSocket);
                     forceCloseSocket();
                 }
+            } else {
+                forceCloseSocket();
             }
+        }
+    }
+
+    private static void uninterruptedSleep(int time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            //ignore
         }
     }
 
