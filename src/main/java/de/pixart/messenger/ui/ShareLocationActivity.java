@@ -236,15 +236,14 @@ public class ShareLocationActivity extends Activity implements OnMapReadyCallbac
                 e.printStackTrace();
             }
 
-            if (addresses != null) {
+            if (addresses != null && addresses.size() > 0) {
                 Address Address = addresses.get(0);
                 StringBuilder strAddress = new StringBuilder("");
 
-                for (int i = 0; i < Address.getMaxAddressLineIndex(); i++) {
-                    strAddress.append(Address.getAddressLine(i)).append("\n");
+                if (Address.getAddressLine(0).length() > 0) {
+                    strAddress.append(Address.getAddressLine(0));
                 }
-                address = strAddress.toString();
-                address = address.substring(0, address.length() - 1); //trim last \n
+                address = strAddress.toString().replace(", ", "\n");
             }
 
             return address;
@@ -254,9 +253,11 @@ public class ShareLocationActivity extends Activity implements OnMapReadyCallbac
         @Override
         protected void onPostExecute(String address) {
             // Setting address of the touched Position
-            mLocationInfo.setVisibility(View.VISIBLE);
-            mSnackbarLocation.setText(address);
-            Log.d(Config.LOGTAG, "Location: Address = " + address);
+            if (address.length() > 0) {
+                mLocationInfo.setVisibility(View.VISIBLE);
+                mSnackbarLocation.setText(address);
+                Log.d(Config.LOGTAG, "Location: Address = " + address);
+            }
         }
     }
 }
