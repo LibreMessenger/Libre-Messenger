@@ -785,4 +785,5 @@
     <string name="certificate_does_not_contain_jid">Certificate does not contain a Jabber ID</string>
     <string name="error_no_keys_to_trust_presence">There are no usable keys available for this contact.\\nMake sure you have mutual presence subscription.</string>
     <string name="mark_as_read">Mark as read</string>
+    <string name="server_info_partial">partial</string>
 </resources>

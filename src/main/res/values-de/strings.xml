@@ -737,5 +737,6 @@
     <string name="error_no_keys_to_trust_presence">Für diesen Kontakt sind keine benutzbaren Schlüssel verfügbar.\\nStelle sicher, dass du den gegenseitigen Online-Status aktiviert hast.</string>
     <string name="mark_as_read">Als gelesen markieren</string>
     <string name="network_is_unreachable">Netzwerk nicht verfügbar</string>
+    <string name="server_info_partial">teilweise</string>
 
 </resources>
