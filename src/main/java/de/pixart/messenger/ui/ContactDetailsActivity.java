@@ -435,7 +435,11 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
 
         invalidateOptionsMenu();
         setTitle(contact.getDisplayName());
-        contactDisplayName.setText(contact.getDisplayName());
+        if (contact.getServer().toString().toLowerCase().equals(accountJid.getDomainpart().toLowerCase())) {
+            contactDisplayName.setText(contact.getDisplayName());
+        } else {
+            contactDisplayName.setText(contact.getDisplayJid());
+        }
         if (contact.showInRoster()) {
             send.setVisibility(View.VISIBLE);
             receive.setVisibility(View.VISIBLE);
