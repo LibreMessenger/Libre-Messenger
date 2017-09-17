@@ -652,7 +652,8 @@ public class XmppConnectionService extends Service {
         String pushedAccountHash = null;
         boolean interactive = false;
         if (action != null) {
-            final Conversation c = findConversationByUuid(intent.getStringExtra("uuid"));
+            final String uuid = intent.getStringExtra("uuid");
+            final Conversation c = findConversationByUuid(uuid);
             switch (action) {
                 case ConnectivityManager.CONNECTIVITY_ACTION:
                     if (hasInternetConnection() && Config.RESET_ATTEMPT_COUNT_ON_NETWORK_CHANGE) {
@@ -691,7 +692,11 @@ public class XmppConnectionService extends Service {
                     }
                     break;
                 case ACTION_MARK_AS_READ:
-                    sendReadMarker(c);
+                    if (c != null) {
+                        sendReadMarker(c);
+                    } else {
+                        Log.d(Config.LOGTAG, "received mark read intent for unknown conversation (" + uuid + ")");
+                    }
                     break;
                 case AudioManager.RINGER_MODE_CHANGED_ACTION:
                     if (dndOnSilentMode()) {
