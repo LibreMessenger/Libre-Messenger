@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -282,12 +284,6 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
         receive = (CheckBox) findViewById(R.id.details_receive_presence);
         badge = (QuickContactBadge) findViewById(R.id.details_contact_badge);
         addContactButton = (Button) findViewById(R.id.add_contact_button);
-        addContactButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showAddToRosterDialog(contact);
-            }
-        });
         keys = (LinearLayout) findViewById(R.id.details_contact_keys);
         keysWrapper = (LinearLayout) findViewById(R.id.keys_wrapper);
         tags = (FlowLayout) findViewById(R.id.tags);
@@ -443,7 +439,22 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
         if (contact.showInRoster()) {
             send.setVisibility(View.VISIBLE);
             receive.setVisibility(View.VISIBLE);
-            addContactButton.setVisibility(View.GONE);
+            addContactButton.setVisibility(View.VISIBLE);
+            addContactButton.setText(getString(R.string.action_delete_contact));
+            addContactButton.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
+            final AlertDialog.Builder deleteFromRosterDialog = new AlertDialog.Builder(ContactDetailsActivity.this);
+            addContactButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    deleteFromRosterDialog.setNegativeButton(getString(R.string.cancel), null);
+                    deleteFromRosterDialog.setTitle(getString(R.string.action_delete_contact))
+                            .setMessage(
+                                    getString(R.string.remove_contact_text,
+                                            contact.getDisplayJid()))
+                            .setPositiveButton(getString(R.string.delete),
+                                    removeFromRoster).create().show();
+                }
+            });
             send.setOnCheckedChangeListener(null);
             receive.setOnCheckedChangeListener(null);
 
@@ -510,6 +521,14 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             receive.setOnCheckedChangeListener(this.mOnReceiveCheckedChange);
         } else {
             addContactButton.setVisibility(View.VISIBLE);
+            addContactButton.setText(getString(R.string.add_contact));
+            addContactButton.getBackground().clearColorFilter();
+            addContactButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showAddToRosterDialog(contact);
+                }
+            });
             send.setVisibility(View.GONE);
             receive.setVisibility(View.GONE);
             statusMessage.setVisibility(View.GONE);
