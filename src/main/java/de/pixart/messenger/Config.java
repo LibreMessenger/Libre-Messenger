@@ -54,8 +54,6 @@ public final class Config {
     public static final boolean HIDE_MESSAGE_TEXT_IN_NOTIFICATION = false;
 
     public static final boolean SHOW_CONNECTED_ACCOUNTS = false; //show number of connected accounts in foreground notification
-    public static final boolean SHOW_DISABLE_FOREGROUND = false; //if set to true the foreground notification has a button to disable it
-    public static final boolean USE_ALWAYS_FOREGROUND = true; //if set to true the foreground service is always enabled
 
     public static final boolean ALWAYS_NOTIFY_BY_DEFAULT = false;
 

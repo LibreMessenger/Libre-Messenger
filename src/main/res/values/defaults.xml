@@ -47,4 +47,5 @@
     <bool name="send_crashreport">true</bool>
     <bool name="plain_text_logs">false</bool>
     <bool name="validate_hostname">false</bool>
+    <bool name="show_foreground_service">true</bool>
 </resources>

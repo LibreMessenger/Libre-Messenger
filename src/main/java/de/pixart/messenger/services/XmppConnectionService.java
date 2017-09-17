@@ -160,7 +160,6 @@ public class XmppConnectionService extends Service {
     public static final String ACTION_REPLY_TO_CONVERSATION = "reply_to_conversations";
     public static final String ACTION_MARK_AS_READ = "mark_as_read";
     public static final String ACTION_CLEAR_NOTIFICATION = "clear_notification";
-    public static final String ACTION_DISABLE_FOREGROUND = "disable_foreground";
     public static final String ACTION_TRY_AGAIN = "try_again";
     public static final String ACTION_DISMISS_ERROR_NOTIFICATIONS = "dismiss_error";
     public static final String ACTION_IDLE_PING = "idle_ping";
@@ -1121,6 +1120,11 @@ public class XmppConnectionService extends Service {
             Log.d(Config.LOGTAG, "number of restarts exceeds threshold.");
         }
 
+        if (this.accounts.size() == 0 && Arrays.asList("Sony","Sony Ericsson").contains(Build.MANUFACTURER)) {
+            getPreferences().edit().putBoolean(SettingsActivity.SHOW_FOREGROUND_SERVICE, true).commit();
+            Log.d(Config.LOGTAG, Build.MANUFACTURER + " is on blacklist. enabling foreground service");
+        }
+
         restoreFromDatabase();
 
         getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, contactObserver);
@@ -1203,7 +1207,7 @@ public class XmppConnectionService extends Service {
     }
 
     public void toggleForegroundService() {
-        if (Config.USE_ALWAYS_FOREGROUND) {
+        if (showForegroundService()) {
             startForeground(NotificationService.FOREGROUND_NOTIFICATION_ID, this.mNotificationService.createForegroundNotification());
         } else {
             stopForeground(true);
@@ -1213,7 +1217,7 @@ public class XmppConnectionService extends Service {
     @Override
     public void onTaskRemoved(final Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
-        if (!Config.USE_ALWAYS_FOREGROUND) {
+        if (!showForegroundService()) {
             this.logoutAndSave(false);
         } else {
             Log.d(Config.LOGTAG,"ignoring onTaskRemoved because foreground service is activated");
@@ -2005,6 +2009,7 @@ public class XmppConnectionService extends Service {
         this.accounts.add(account);
         this.reconnectAccountInBackground(account);
         updateAccountUi();
+        toggleForegroundService();
     }
 
     public void createAccountFromKey(final String alias, final OnAccountCreated callback) {
@@ -2078,6 +2083,7 @@ public class XmppConnectionService extends Service {
             reconnectAccountInBackground(account);
             updateAccountUi();
             getNotificationService().updateErrorNotification();
+            toggleForegroundService();
             return true;
         } else {
             return false;
@@ -4175,6 +4181,10 @@ public class XmppConnectionService extends Service {
 
     public boolean blindTrustBeforeVerification() {
         return getPreferences().getBoolean(SettingsActivity.BLIND_TRUST_BEFORE_VERIFICATION, getResources().getBoolean(R.bool.btbv));
+    }
+
+    public boolean showForegroundService() {
+        return getPreferences().getBoolean(SettingsActivity.SHOW_FOREGROUND_SERVICE, getResources().getBoolean(R.bool.show_foreground_service));
     }
 
     public void pushMamPreferences(Account account, Element prefs) {

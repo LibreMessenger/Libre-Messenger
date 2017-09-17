@@ -786,4 +786,6 @@
     <string name="error_no_keys_to_trust_presence">There are no usable keys available for this contact.\\nMake sure you have mutual presence subscription.</string>
     <string name="mark_as_read">Mark as read</string>
     <string name="server_info_partial">partial</string>
+    <string name="pref_show_foreground_service_summary">Some Android devices will close some apps after a period of time and you wont be able to receive new messages. If you have such problems, try to activate the foreground service. But keep in mind, that you will have a permanent notification with this option checked.</string>
+    <string name="pref_show_foreground_service">Use foreground service</string>
 </resources>

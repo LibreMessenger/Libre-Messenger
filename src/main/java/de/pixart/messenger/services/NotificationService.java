@@ -625,13 +625,6 @@ public class NotificationService {
         return PendingIntent.getService(mXmppConnectionService, (conversation.getUuid().hashCode() % NOTIFICATION_ID_MULTIPLIER) + 16 * NOTIFICATION_ID_MULTIPLIER, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    private PendingIntent createDisableForeground() {
-        final Intent intent = new Intent(mXmppConnectionService,
-                XmppConnectionService.class);
-        intent.setAction(XmppConnectionService.ACTION_DISABLE_FOREGROUND);
-        return PendingIntent.getService(mXmppConnectionService, 34, intent, 0);
-    }
-
     private PendingIntent createTryAgainIntent() {
         final Intent intent = new Intent(mXmppConnectionService, XmppConnectionService.class);
         intent.setAction(XmppConnectionService.ACTION_TRY_AGAIN);
@@ -721,18 +714,6 @@ public class NotificationService {
         } else {
             mBuilder.setSmallIcon(R.drawable.ic_unlink_white_24dp);
         }
-        if (Config.SHOW_DISABLE_FOREGROUND && !Config.USE_ALWAYS_FOREGROUND) {
-            final int cancelIcon;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mBuilder.setCategory(Notification.CATEGORY_SERVICE);
-                cancelIcon = R.drawable.ic_cancel_white_24dp;
-            } else {
-                cancelIcon = R.drawable.ic_action_cancel;
-            }
-            mBuilder.addAction(cancelIcon,
-                    mXmppConnectionService.getString(R.string.disable_foreground_service),
-                    createDisableForeground());
-        }
         return mBuilder.build();
     }
 
@@ -748,7 +729,7 @@ public class NotificationService {
                 errors.add(account);
             }
         }
-        if (Config.USE_ALWAYS_FOREGROUND) {
+        if (mXmppConnectionService.showForegroundService()) {
             notificationManager.notify(FOREGROUND_NOTIFICATION_ID, createForegroundNotification());
         }
         final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(mXmppConnectionService);

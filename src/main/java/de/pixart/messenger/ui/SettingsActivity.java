@@ -36,7 +36,6 @@ import de.pixart.messenger.xmpp.jid.Jid;
 public class SettingsActivity extends XmppActivity implements
         OnSharedPreferenceChangeListener {
 
-    public static final String KEEP_FOREGROUND_SERVICE = "keep_foreground_service";
     public static final String AWAY_WHEN_SCREEN_IS_OFF = "away_when_screen_off";
     public static final String TREAT_VIBRATE_AS_SILENT = "treat_vibrate_as_silent";
     public static final String DND_ON_SILENT_MODE = "dnd_on_silent_mode";
@@ -46,6 +45,7 @@ public class SettingsActivity extends XmppActivity implements
     public static final String BROADCAST_LAST_ACTIVITY = "last_activity";
     public static final String THEME = "theme";
     public static final String SHOW_DYNAMIC_TAGS = "show_dynamic_tags";
+    public static final String SHOW_FOREGROUND_SERVICE = "show_foreground_service";
 
     public static final int REQUEST_WRITE_LOGS = 0xbf8701;
     private SettingsFragment mSettingsFragment;
@@ -261,6 +261,8 @@ public class SettingsActivity extends XmppActivity implements
                     }
                 }
             }
+        } else if (name.equals(SHOW_FOREGROUND_SERVICE)) {
+            xmppConnectionService.toggleForegroundService();
         } else if (resendPresence.contains(name)) {
             if (xmppConnectionServiceBound) {
                 if (name.equals(AWAY_WHEN_SCREEN_IS_OFF)

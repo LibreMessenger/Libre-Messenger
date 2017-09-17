@@ -245,6 +245,11 @@
                 android:key="resource"
                 android:summary="@string/pref_xmpp_resource_summary"
                 android:title="@string/pref_xmpp_resource" />
+            <CheckBoxPreference
+                android:defaultValue="@bool/show_foreground_service"
+                android:key="show_foreground_service"
+                android:summary="@string/pref_show_foreground_service_summary"
+                android:title="@string/pref_show_foreground_service"/>
         </PreferenceCategory>
         <PreferenceCategory android:title="@string/pref_ui_options">
             <CheckBoxPreference
