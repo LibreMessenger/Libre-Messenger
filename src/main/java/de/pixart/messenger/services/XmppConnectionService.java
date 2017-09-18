@@ -21,7 +21,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
-import android.os.ParcelFileDescriptor;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.SystemClock;
@@ -42,15 +41,11 @@ import net.java.otr4j.session.Session;
 import net.java.otr4j.session.SessionID;
 import net.java.otr4j.session.SessionImpl;
 import net.java.otr4j.session.SessionStatus;
-import net.ypresto.androidtranscoder.MediaTranscoder;
-import net.ypresto.androidtranscoder.format.MediaFormatStrategyPresets;
 
 import org.openintents.openpgp.IOpenPgpService2;
 import org.openintents.openpgp.util.OpenPgpApi;
 import org.openintents.openpgp.util.OpenPgpServiceConnection;
 
-import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
 import java.math.BigInteger;
 import java.net.URL;
 import java.security.SecureRandom;
@@ -62,7 +57,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -112,7 +106,6 @@ import de.pixart.messenger.persistance.DatabaseBackend;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.ui.SettingsActivity;
 import de.pixart.messenger.ui.UiCallback;
-import de.pixart.messenger.ui.UiInformableCallback;
 import de.pixart.messenger.utils.ConversationsFileObserver;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.ExceptionHelper;
@@ -190,11 +183,12 @@ public class XmppConnectionService extends Service {
             startService(intent);
         }
     };
-    private FileBackend fileBackend = new FileBackend(this);
+    public FileBackend fileBackend = new FileBackend(this);
     private MemorizingTrustManager mMemorizingTrustManager;
     private NotificationService mNotificationService = new NotificationService(this);
  	private ShortcutService mShortcutService = new ShortcutService(this);
  	private AtomicBoolean mInitialAddressbookSyncCompleted = new AtomicBoolean(false);
+    private AtomicBoolean mForceForegroundService = new AtomicBoolean(false);
     private OnMessagePacketReceived mMessageParser = new MessageParser(this);
     private OnPresencePacketReceived mPresenceParser = new PresenceParser(this);
     private IqParser mIqParser = new IqParser(this);
@@ -405,6 +399,16 @@ public class XmppConnectionService extends Service {
         }
     }
 
+    public void startForcingForegroundNotification() {
+        mForceForegroundService.set(true);
+        toggleForegroundService();
+    }
+
+    public void stopForcingForegroundNotification() {
+        mForceForegroundService.set(false);
+        toggleForegroundService();
+    }
+
     private OpenPgpServiceConnection pgpServiceConnection;
     private PgpEngine mPgpEngine = null;
     private PowerManager pm;
@@ -489,107 +493,8 @@ public class XmppConnectionService extends Service {
         }
         message.setCounterpart(conversation.getNextCounterpart());
         message.setType(Message.TYPE_FILE);
-        mFileAddingExecutor.execute(new Runnable() {
-            private void processAsFile() {
-                final String path = getFileBackend().getOriginalPath(uri);
-                if (path != null) {
-                    message.setRelativeFilePath(path);
-                    getFileBackend().updateFileParams(message);
-                    if (message.getEncryption() == Message.ENCRYPTION_DECRYPTED) {
-                        getPgpEngine().encrypt(message, callback);
-                    } else {
-                        callback.success(message);
-                    }
-                } else {
-                    try {
-                        getFileBackend().copyFileToPrivateStorage(message, uri);
-                        getFileBackend().updateFileParams(message);
-                        if (message.getEncryption() == Message.ENCRYPTION_DECRYPTED) {
-                            final PgpEngine pgpEngine = getPgpEngine();
-                            if (pgpEngine != null) {
-                                pgpEngine.encrypt(message, callback);
-                            } else if (callback != null) {
-                                callback.error(R.string.unable_to_connect_to_keychain, null);
-                            }
-                        } else {
-                            callback.success(message);
-                        }
-                    } catch (FileBackend.FileCopyException e) {
-                        callback.error(e.getResId(), message);
-                    }
-                }
-            }
-
-            private void processAsVideo() throws FileNotFoundException {
-                Log.d(Config.LOGTAG, "processing file as video");
-                SimpleDateFormat fileDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
-                message.setRelativeFilePath(fileDateFormat.format(new Date(message.getTimeSent())) + "_" + message.getUuid().substring(0, 4) + "_komp.mp4");
-                final DownloadableFile file = getFileBackend().getFile(message);
-                file.getParentFile().mkdirs();
-                ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(uri, "r");
-                FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
-                final ArrayList<Integer> progressTracker = new ArrayList<>();
-                final UiInformableCallback<Message> informableCallback;
-                if (callback instanceof UiInformableCallback) {
-                    informableCallback = (UiInformableCallback<Message>) callback;
-                } else {
-                    informableCallback = null;
-                }
-                MediaTranscoder.Listener listener = new MediaTranscoder.Listener() {
-                    @Override
-                    public void onTranscodeProgress(double progress) {
-                        int p = ((int) Math.round(progress * 100) / 5) * 5;
-                        if (!progressTracker.contains(p) && p != 100 && p != 0) {
-                            progressTracker.add(p);
-                            if (informableCallback != null) {
-                                informableCallback.inform(getString(R.string.transcoding_video_progress, String.valueOf(p)));
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onTranscodeCompleted() {
-                        getFileBackend().updateFileParams(message);
-                        if (message.getEncryption() == Message.ENCRYPTION_DECRYPTED) {
-                            getPgpEngine().encrypt(message, callback);
-                        } else {
-                            callback.success(message);
-                        }
-                    }
-
-                    @Override
-                    public void onTranscodeCanceled() {
-                        processAsFile();
-                    }
-
-                    @Override
-                    public void onTranscodeFailed(Exception e) {
-                        Log.d(Config.LOGTAG, "video transcoding failed " + e.getMessage());
-                        processAsFile();
-                    }
-                };
-                MediaTranscoder.getInstance().transcodeVideo(fileDescriptor, file.getAbsolutePath(),
-                        MediaFormatStrategyPresets.createAndroidStandardStrategy(getCompressVideoBitratePreference(), getCompressVideoResolutionPreference()), listener);
-            }
-
-            @Override
-            public void run() {
-                final String mimeType = MimeUtils.guessMimeTypeFromUri(XmppConnectionService.this, uri);
-                if (mimeType != null && mimeType.startsWith("video/") && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                    if (getFileBackend().useFileAsIs(uri)) {
-                        processAsFile();
-                    } else {
-                        try {
-                            processAsVideo();
-                        } catch (Throwable e) {
-                            processAsFile();
-                        }
-                    }
-                } else {
-                    processAsFile();
-                }
-            }
-        });
+        AttachFileToConversationRunnable runnable = new AttachFileToConversationRunnable(this,uri,message,callback);
+        mFileAddingExecutor.execute(runnable);
     }
 
     public void attachImageToConversation(final Conversation conversation, final Uri uri, final UiCallback<Message> callback) {
@@ -1208,20 +1113,22 @@ public class XmppConnectionService extends Service {
     }
 
     public void toggleForegroundService() {
-        if (showForegroundService()) {
+        if (mForceForegroundService.get() || (showForegroundService())) {
             startForeground(NotificationService.FOREGROUND_NOTIFICATION_ID, this.mNotificationService.createForegroundNotification());
+            Log.d(Config.LOGTAG, "started foreground service");
         } else {
             stopForeground(true);
+            Log.d(Config.LOGTAG, "stopped foreground service");
         }
     }
 
     @Override
     public void onTaskRemoved(final Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
-        if (!showForegroundService()) {
-            this.logoutAndSave(false);
+        if (showForegroundService() || mForceForegroundService.get()) {
+            Log.d(Config.LOGTAG, "ignoring onTaskRemoved because foreground service is activated");
         } else {
-            Log.d(Config.LOGTAG,"ignoring onTaskRemoved because foreground service is activated");
+            this.logoutAndSave(false);
         }
     }
 
@@ -4230,6 +4137,8 @@ public class XmppConnectionService extends Service {
     public ShortcutService getShortcutService() {
         return mShortcutService;
     }
+
+
 
     public interface OnMamPreferencesFetched {
         void onPreferencesFetched(Element prefs);

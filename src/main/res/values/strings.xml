@@ -729,7 +729,7 @@
     <string name="hide_inactive_devices">Hide inactive devices</string>
     <string name="reply">Reply</string>
     <string name="encrypting_message">Encrypting message</string>
-    <string name="transcoding_video_progress">Compressing video (%s%%)</string>
+    <string name="transcoding_video">Compressing video</string>
     <string name="pref_automatically_delete_messages_description">Automatically delete messages from this device that are older than the configured time frame.</string>
     <string name="pref_automatically_delete_messages">Automatic message deletion</string>
     <string name="not_fetching_history_retention_period">Not fetching messages due to local retention period.</string>
