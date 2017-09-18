@@ -549,6 +549,7 @@ public class XmppConnectionService extends Service {
 
                     @Override
                     public void onTranscodeCompleted() {
+                        getFileBackend().updateFileParams(message);
                         if (message.getEncryption() == Message.ENCRYPTION_DECRYPTED) {
                             getPgpEngine().encrypt(message, callback);
                         } else {
