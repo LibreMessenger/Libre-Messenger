@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.Future;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
@@ -81,7 +82,12 @@ public class AttachFileToConversationRunnable implements Runnable, MediaTranscod
         file.getParentFile().mkdirs();
         ParcelFileDescriptor parcelFileDescriptor = mXmppConnectionService.getContentResolver().openFileDescriptor(uri, "r");
         FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
-        MediaTranscoder.getInstance().transcodeVideo(fileDescriptor, file.getAbsolutePath(), MediaFormatStrategyPresets.createAndroidStandardStrategy(mXmppConnectionService.getCompressVideoBitratePreference(), mXmppConnectionService.getCompressVideoResolutionPreference()), this);
+        Future<Void> future = MediaTranscoder.getInstance().transcodeVideo(fileDescriptor, file.getAbsolutePath(), MediaFormatStrategyPresets.createAndroidStandardStrategy(mXmppConnectionService.getCompressVideoBitratePreference(), mXmppConnectionService.getCompressVideoResolutionPreference()), this);
+        try {
+            future.get();
+        } catch (Exception e) {
+            throw new AssertionError(e);
+        }
     }
 
     @Override
@@ -113,7 +119,7 @@ public class AttachFileToConversationRunnable implements Runnable, MediaTranscod
     @Override
     public void onTranscodeFailed(Exception e) {
         mXmppConnectionService.stopForcingForegroundNotification();
-        Log.d(Config.LOGTAG, "video transcoding failed " + e.getMessage());
+        Log.d(Config.LOGTAG, "video transcoding failed", e);
         processAsFile();
     }
 
