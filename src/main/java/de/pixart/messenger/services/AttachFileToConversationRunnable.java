@@ -6,7 +6,6 @@ import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
 import net.ypresto.androidtranscoder.MediaTranscoder;
-import net.ypresto.androidtranscoder.format.MediaFormatStrategy;
 import net.ypresto.androidtranscoder.format.MediaFormatStrategyPresets;
 
 import java.io.FileDescriptor;
@@ -79,12 +78,10 @@ public class AttachFileToConversationRunnable implements Runnable, MediaTranscod
         message.setRelativeFilePath(fileDateFormat.format(new Date(message.getTimeSent())) + "_" + message.getUuid().substring(0, 4) + "_komp.mp4");
         final DownloadableFile file = mXmppConnectionService.getFileBackend().getFile(message);
         final int runtime = mXmppConnectionService.getFileBackend().getMediaRuntime(uri);
-        MediaFormatStrategy formatStrategy = runtime >= 8000 ? MediaFormatStrategyPresets.createExportPreset960x540Strategy() : MediaFormatStrategyPresets.createAndroid720pStrategy();
-        Log.d(Config.LOGTAG, "runtime " + runtime);
         file.getParentFile().mkdirs();
         ParcelFileDescriptor parcelFileDescriptor = mXmppConnectionService.getContentResolver().openFileDescriptor(uri, "r");
         FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
-        MediaTranscoder.getInstance().transcodeVideo(fileDescriptor, file.getAbsolutePath(), formatStrategy, this);
+        MediaTranscoder.getInstance().transcodeVideo(fileDescriptor, file.getAbsolutePath(), MediaFormatStrategyPresets.createAndroidStandardStrategy(mXmppConnectionService.getCompressVideoBitratePreference(), mXmppConnectionService.getCompressVideoResolutionPreference()), this);
     }
 
     @Override
