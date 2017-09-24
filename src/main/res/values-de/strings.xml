@@ -260,10 +260,10 @@
     <string name="pref_quiet_hours_summary">Benachrichtigungen sind während der ruhigen Stunden stumm.</string>
     <string name="pref_use_larger_font">Schrift vergrößern</string>
     <string name="pref_use_larger_font_summary">Größere Schriften für die gesamte App verwenden</string>
-    <string name="pref_use_send_button_to_indicate_status">\"Senden\"-Schaltfläche zeigt Online-Status an</string>
+    <string name="pref_use_send_button_to_indicate_status">"Senden"-Schaltfläche zeigt Online-Status an</string>
     <string name="pref_use_indicate_received">Empfangsbestätigungen anfragen</string>
     <string name="pref_use_indicate_received_summary">Empfangene Nachrichten werden mit einem grünen Häkchen markiert. Bitte beachte, dass dies nicht in allen Fällen funktioniert.</string>
-    <string name="pref_use_send_button_to_indicate_status_summary">\"Senden\"-Schaltfläche einfärben, um den Online-Status des Kontakts anzuzeigen</string>
+    <string name="pref_use_send_button_to_indicate_status_summary">"Senden"-Schaltfläche einfärben, um den Online-Status des Kontakts anzuzeigen</string>
     <string name="pref_expert_options_other">Sonstiges</string>
     <string name="toast_message_otr_fingerprint">OTR-Fingerabdruck in die Zwischenablage kopiert!</string>
     <string name="toast_message_omemo_fingerprint">OMEMO-Fingerabdruck in die Zwischenablage kopiert!</string>
@@ -452,11 +452,9 @@
     <string name="update_info">Pix-Art Messenger prüft auf eine neuere Version. Wenn ein Update verfügbar ist, wirst du gefragt, ob du deine Version aktualisieren möchtest. Der Update Dienst lädt und installiert die neue Version automatisch.\n\nBitte warten…</string>
     <string name="pref_presence_settings">Status</string>
     <string name="pref_away_when_screen_off">Abwesend bei abgeschaltetem Bildschirm</string>
-    <string name="pref_away_when_screen_off_summary">Setzt deinen Status auf \"abwesend\", solange dein Bildschirm abgeschaltet ist</string>
-    <string name="pref_dnd_on_silent_mode">\"Bitte nicht stören\" bei Stummschaltung</string>
-    <string name="pref_dnd_on_silent_mode_summary">Setzt deinen Status auf \"Bitte nicht stören\", solange dein Gerät stummgeschaltet ist</string>
-    <string name="pref_treat_vibrate_as_dnd">Vibration als \"Lautlos\" behandeln</string>
-    <string name="pref_treat_vibrate_as_dnd_summary">Setzt deinen Status auf \"Bitte nicht stören\", solange das Gerät auf Vibration geschaltet ist</string>
+    <string name="pref_away_when_screen_off_summary">Setzt deinen Status auf "abwesend", solange dein Bildschirm abgeschaltet ist</string>
+    <string name="pref_dnd_on_silent_mode">"Bitte nicht stören" bei Stummschaltung</string>
+    <string name="pref_dnd_on_silent_mode_summary">Setzt deinen Status auf "Bitte nicht stören", solange dein Gerät stummgeschaltet ist</string>
     <string name="hostname_example">xmpp.pix-art.de</string>
     <string name="action_add_account_with_certificate">Profil mit Zertifikat hinzufügen</string>
     <string name="unable_to_parse_certificate">Zertifikat kann nicht gelesen werden</string>
@@ -532,7 +530,7 @@
     <string name="conference_shutdown">Konferenz wurde geschlossen</string>
     <string name="check_x_filesize_on_host">%1$s-Größe auf %2$s prüfen</string>
     <string name="contact_has_no_pgp_key">Pix-Art Messenger ist nicht in der Lage, deine Nachrichten zu verschlüsseln, weil dein Kontakt seinen Schlüssel nicht preisgibt.\n\n</string>
-    <string name="no_keys_just_confirm">Du vertraust diesem Kontakt bereits. Durch Auswählen von \"Fertig\" bestätigst du, dass %s Teil dieser Konferenz ist.</string>
+    <string name="no_keys_just_confirm">Du vertraust diesem Kontakt bereits. Durch Auswählen von "Fertig" bestätigst du, dass %s Teil dieser Konferenz ist.</string>
     <string name="select_image_and_crop">Bild auswählen und zuschneiden</string>
     <string name="this_account_is_disabled">Du hast diesen Account deaktiviert</string>
     <string name="preparing_images">Bilder werden für Übertragung vorbereitet</string>
@@ -732,7 +730,7 @@
     <string name="yesterday">Gestern</string>
     <string name="pref_validate_hostname">Überprüfe den Hostnamen mit DNSSEC</string>
     <string name="pref_validate_hostname_summary">Serverzertifikate, die den überprüften Hostnamen enthalten, werden als verifiziert betrachtet</string>
-    <string name="pref_treat_vibrate_as_silent">Vibration als \"Lautlos\" behandeln</string>
+    <string name="pref_treat_vibrate_as_silent">Vibration als "Lautlos" behandeln</string>
     <string name="certificate_does_not_contain_jid">Zertifikat enthält keine Jabber-ID</string>
     <string name="error_no_keys_to_trust_presence">Für diesen Kontakt sind keine benutzbaren Schlüssel verfügbar.\\nStelle sicher, dass du den gegenseitigen Online-Status aktiviert hast.</string>
     <string name="mark_as_read">Als gelesen markieren</string>
