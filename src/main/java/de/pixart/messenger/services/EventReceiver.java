@@ -9,8 +9,7 @@ import de.pixart.messenger.persistance.DatabaseBackend;
 public class EventReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent mIntentForService = new Intent(context,
-                XmppConnectionService.class);
+        Intent mIntentForService = new Intent(context, XmppConnectionService.class);
         if (intent.getAction() != null) {
             mIntentForService.setAction(intent.getAction());
         } else {
