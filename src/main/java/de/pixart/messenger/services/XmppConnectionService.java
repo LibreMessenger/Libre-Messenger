@@ -186,8 +186,8 @@ public class XmppConnectionService extends Service {
     public FileBackend fileBackend = new FileBackend(this);
     private MemorizingTrustManager mMemorizingTrustManager;
     private NotificationService mNotificationService = new NotificationService(this);
- 	private ShortcutService mShortcutService = new ShortcutService(this);
- 	private AtomicBoolean mInitialAddressbookSyncCompleted = new AtomicBoolean(false);
+    private ShortcutService mShortcutService = new ShortcutService(this);
+    private AtomicBoolean mInitialAddressbookSyncCompleted = new AtomicBoolean(false);
     private AtomicBoolean mForceForegroundService = new AtomicBoolean(false);
     private OnMessagePacketReceived mMessageParser = new MessageParser(this);
     private OnPresencePacketReceived mPresenceParser = new PresenceParser(this);
@@ -1005,7 +1005,7 @@ public class XmppConnectionService extends Service {
     public void onCreate() {
         ExceptionHelper.init(getApplicationContext());
         PRNGFixes.apply();
-        Resolver.registerXmppConnectionService(this);
+        Resolver.init(this);
         this.mRandom = new SecureRandom();
         updateMemorizingTrustmanager();
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
@@ -2573,9 +2573,9 @@ public class XmppConnectionService extends Service {
     }
 
     public boolean createAdhocConference(final Account account,
-                                      final String subject,
-                                      final Iterable<Jid> jids,
-                                      final UiCallback<Conversation> callback) {
+                                         final String subject,
+                                         final Iterable<Jid> jids,
+                                         final UiCallback<Conversation> callback) {
         Log.d(Config.LOGTAG, account.getJid().toBareJid().toString() + ": creating adhoc conference with " + jids.toString());
         if (account.getStatus() == Account.State.ONLINE) {
             try {
@@ -3365,7 +3365,7 @@ public class XmppConnectionService extends Service {
     }
 
     public long getLongPreference(String name, @IntegerRes int res) {
-        		long defaultValue = getResources().getInteger(res);
+        long defaultValue = getResources().getInteger(res);
         try {
             return Long.parseLong(getPreferences().getString(name,String.valueOf(defaultValue)));
         } catch (NumberFormatException e) {
@@ -4105,7 +4105,7 @@ public class XmppConnectionService extends Service {
     }
 
     public void ScheduleAutomaticExport() {
-    //start export log service every day at given time
+        //start export log service every day at given time
         if (Config.ExportLogs) {
             if (Config.ExportLogs_Hour >= 0 && Config.ExportLogs_Hour <= 23 && Config.ExportLogs_Minute >= 0 && Config.ExportLogs_Minute <= 59) {
                 Calendar now = Calendar.getInstance();
