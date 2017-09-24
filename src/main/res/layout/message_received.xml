@@ -40,39 +40,7 @@
             android:orientation="vertical"
             android:padding="2dp">
 
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/message_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="4dp"
-                android:adjustViewBounds="true"
-                app:riv_border_width="1dp"
-                app:riv_border_color="@color/grey500"
-                app:riv_corner_radius="5dp"
-                android:scaleType="centerCrop"
-                android:longClickable="true"
-                android:maxHeight="500dp"
-                android:maxWidth="500dp" />
-
-            <de.pixart.messenger.ui.widget.CopyTextView
-                android:id="@+id/message_body"
-                app:emojiSize="28sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:autoLink="web"
-                android:longClickable="true"
-                android:textColorLink="@color/dark"
-                android:textColor="@color/dark"
-                android:textColorHighlight="@color/grey800"
-                android:textSize="?attr/TextSizeBody" />
-
-            <Button
-                android:id="@+id/download_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:longClickable="true"
-                android:visibility="gone" />
+            <include layout="@layout/message_content"/>
 
             <RelativeLayout
                 android:id="@+id/aw_player"
