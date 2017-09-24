@@ -311,8 +311,11 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                             this.onSubjectEdited);
                 }
                 break;
-            case R.id.action_share:
-                shareUri();
+            case R.id.action_share_http:
+                shareLink(true);
+                break;
+            case R.id.action_share_uri:
+                shareLink(false);
                 break;
             case R.id.action_save_as_bookmark:
                 saveAsBookmark();
@@ -333,11 +336,15 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
     }
 
     @Override
-    protected String getShareableUri() {
+    protected String getShareableUri(boolean http) {
         if (mConversation != null) {
-            return "xmpp:" + mConversation.getJid().toBareJid().toString() + "?join";
+            if (http) {
+                return Config.inviteMUCURL + mConversation.getJid().toBareJid();
+            } else {
+                return "xmpp:" + mConversation.getJid().toBareJid() + "?join";
+            }
         } else {
-            return "";
+            return null;
         }
     }
 

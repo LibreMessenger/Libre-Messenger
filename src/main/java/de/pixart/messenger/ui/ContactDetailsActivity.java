@@ -249,9 +249,10 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
     }
 
     @Override
-    protected String getShareableUri() {
+    protected String getShareableUri(boolean http) {
+        final String prefix = http ? Config.inviteUserURL : "xmpp:";
         if (contact != null) {
-            return "xmpp:" + contact.getJid().toBareJid().toString();
+            return prefix + contact.getJid().toBareJid().toString();
         } else {
             return "";
         }
@@ -331,8 +332,11 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             case android.R.id.home:
                 finish();
                 break;
-            case R.id.action_share:
-                shareUri();
+            case R.id.action_share_http:
+                shareLink(true);
+                break;
+            case R.id.action_share_uri:
+                shareLink(false);
                 break;
             case R.id.action_delete_contact:
                 builder.setTitle(getString(R.string.action_delete_contact))

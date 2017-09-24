@@ -499,11 +499,11 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     }
 
     @Override
-    protected String getShareableUri() {
+    protected String getShareableUri(boolean http) {
         if (mAccount != null) {
-            return mAccount.getShareableUri();
+            return http ? mAccount.getShareableLink() : mAccount.getShareableUri();
         } else {
-            return "";
+            return null;
         }
     }
 
@@ -597,7 +597,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     public boolean onCreateOptionsMenu(final Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.editaccount, menu);
-        final MenuItem showQrCode = menu.findItem(R.id.action_show_qr_code);
         final MenuItem showBlocklist = menu.findItem(R.id.action_show_block_list);
         final MenuItem reconnect = menu.findItem(R.id.mgmt_account_reconnect);
         final MenuItem showMoreInfo = menu.findItem(R.id.action_server_info_show_more);
@@ -608,8 +607,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         final MenuItem changePresence = menu.findItem(R.id.action_change_presence);
         final MenuItem actionShare = menu.findItem(R.id.action_share);
         final MenuItem shareBarcode = menu.findItem(R.id.action_share_barcode);
-        final MenuItem shareHttp = menu.findItem(R.id.action_share_http);
-        final MenuItem shareUri = menu.findItem(R.id.action_share_uri);
         final MenuItem announcePGP = menu.findItem(R.id.mgmt_account_announce_pgp);
         renewCertificate.setVisible(mAccount != null && mAccount.getPrivateKeyAlias() != null);
 
@@ -627,7 +624,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         } else {
             announcePGP.setVisible(false);
             reconnect.setVisible(false);
-            showQrCode.setVisible(false);
             showBlocklist.setVisible(false);
             showMoreInfo.setVisible(false);
             changePassword.setVisible(false);
@@ -635,8 +631,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             changePresence.setVisible(false);
             actionShare.setVisible(false);
             shareBarcode.setVisible(false);
-            shareHttp.setVisible(false);
-            shareUri.setVisible(false);
         }
 
         if (mAccount != null) {
@@ -818,19 +812,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         } else {
             this.showInstallPgpDialog();
         }
-    }
-
-    private void shareLink(boolean http) {
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        String text;
-        if (http) {
-            text = mAccount.getShareableLink();
-        } else {
-            text = mAccount.getShareableUri();
-        }
-        intent.putExtra(Intent.EXTRA_TEXT,text);
-        startActivity(Intent.createChooser(intent, getText(R.string.share_with)));
     }
 
     private void shareBarcode() {

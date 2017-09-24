@@ -40,6 +40,7 @@ public final class Config {
     public static final String BUG_REPORTS = "bugs@pix-art.de";
 
     public static final String inviteUserURL = "https://jabber.pix-art.de/i/";
+    public static final String inviteMUCURL = "https://jabber.pix-art.de/j/";
 
     public static final String XMPP_IP = BuildConfig.XMPP_IP; // set to null means disable
     public static final Integer[] XMPP_Ports = BuildConfig.XMPP_Ports; // set to null means disable

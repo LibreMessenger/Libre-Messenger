@@ -1036,6 +1036,10 @@ public abstract class XmppActivity extends Activity {
     }
 
     protected String getShareableUri() {
+        return getShareableUri(false);
+    }
+
+    protected String getShareableUri(boolean http) {
         return null;
     }
 
@@ -1059,17 +1063,16 @@ public abstract class XmppActivity extends Activity {
         startActivity(intent);
     }
 
-    protected void shareUri() {
-        String uri = getShareableUri();
+    protected void shareLink(boolean http) {
+        String uri = getShareableUri(http);
         if (uri == null || uri.isEmpty()) {
             return;
         }
-        Intent shareIntent = new Intent();
-        shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, getShareableUri());
-        shareIntent.setType("text/plain");
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, getShareableUri(http));
         try {
-            startActivity(Intent.createChooser(shareIntent, getText(R.string.share_uri_with)));
+            startActivity(Intent.createChooser(intent, getText(R.string.share_uri_with)));
         } catch (ActivityNotFoundException e) {
             Toast.makeText(this, R.string.no_application_to_share_uri, Toast.LENGTH_SHORT).show();
         }
@@ -1111,19 +1114,20 @@ public abstract class XmppActivity extends Activity {
     }
 
     protected void showQrCode() {
-        String uri = getShareableUri();
-        if (uri != null) {
-            Point size = new Point();
-            getWindowManager().getDefaultDisplay().getSize(size);
-            final int width = (size.x < size.y ? size.x : size.y);
-            Bitmap bitmap = BarcodeProvider.create2dBarcodeBitmap(uri, width);
-            ImageView view = new ImageView(this);
-            view.setBackgroundColor(Color.WHITE);
-            view.setImageBitmap(bitmap);
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setView(view);
-            builder.create().show();
+        final String uri = getShareableUri();
+        if (uri == null || uri.isEmpty()) {
+            return;
         }
+        Point size = new Point();
+        getWindowManager().getDefaultDisplay().getSize(size);
+        final int width = (size.x < size.y ? size.x : size.y);
+        Bitmap bitmap = BarcodeProvider.create2dBarcodeBitmap(uri, width);
+        ImageView view = new ImageView(this);
+        view.setBackgroundColor(Color.WHITE);
+        view.setImageBitmap(bitmap);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view);
+        builder.create().show();
     }
 
     protected Account extractAccount(Intent intent) {
