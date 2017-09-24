@@ -51,12 +51,6 @@
                 android:longClickable="true"
                 android:visibility="gone" />
 
-            <RelativeLayout
-                android:id="@+id/aw_player"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="visible" />
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

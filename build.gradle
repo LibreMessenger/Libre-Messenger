@@ -33,7 +33,6 @@ configurations {
 
 dependencies {
     compile project(':libs:MemorizingTrustManager')
-    compile project(':libs:audiowife')
     compile project(':libs:android-transcoder')
     standardPushCompile 'com.google.android.gms:play-services-gcm:11.0.4'
     compile 'org.sufficientlysecure:openpgp-api:10.0'

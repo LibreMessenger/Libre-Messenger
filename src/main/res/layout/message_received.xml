@@ -42,12 +42,6 @@
 
             <include layout="@layout/message_content"/>
 
-            <RelativeLayout
-                android:id="@+id/aw_player"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="visible" />
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
