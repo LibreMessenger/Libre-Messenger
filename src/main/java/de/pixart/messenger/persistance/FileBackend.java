@@ -278,7 +278,7 @@ public class FileBackend {
     }
 
     public boolean useFileAsIs(Uri uri) {
-        String path = uri.getPath();
+        String path = getOriginalPath(uri);
         if (path == null) {
             return false;
         }

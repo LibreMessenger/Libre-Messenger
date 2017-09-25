@@ -39,7 +39,7 @@ public class AttachFileToConversationRunnable implements Runnable, MediaTranscod
         this.message = message;
         this.callback = callback;
         final String mimeType = MimeUtils.guessMimeTypeFromUri(mXmppConnectionService, uri);
-        this.isVideoMessage = (mimeType != null && mimeType.startsWith("video/") && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2 || !getFileBackend().useFileAsIs(uri)));
+        this.isVideoMessage = (mimeType != null && mimeType.startsWith("video/") && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)) && !getFileBackend().useFileAsIs(uri);
     }
 
     public boolean isVideoMessage() {
