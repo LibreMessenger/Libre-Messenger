@@ -93,7 +93,7 @@ android {
         buildConfigField("String", "XMPP_IP", '"185.26.156.37"')
         buildConfigField("Integer[]", "XMPP_Ports", "{61000, 65000}")
         buildConfigField("String", "DOMAIN_LOCK", '"pix-art.de"')
-        buildConfigField("String", "UPDATE_URL", '"http://xmpp.pix-art.de/Pix-Art_Messenger/update/"')
+        buildConfigField("String", "UPDATE_URL", '"https://xmpp.pix-art.de/Pix-Art_Messenger/update/"')
     }
 
     dexOptions {

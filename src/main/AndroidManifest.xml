@@ -261,8 +261,7 @@
             android:name="com.soundcloud.android.crop.CropImageActivity">
         </activity>
 
-        <service android:name="de.pixart.messenger.services.UpdaterWebService" />
-        <service android:name="de.pixart.messenger.services.CheckAppVersionService" />
+        <service android:name="de.pixart.messenger.services.UpdateService" />
         <service android:name="de.pixart.messenger.services.ExportLogsService" />
         <service
             android:name="de.pixart.messenger.services.ContactChooserTargetService"

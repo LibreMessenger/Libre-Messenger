@@ -122,7 +122,7 @@ public final class Config {
     public static final int EXPIRY_INTERVAL = 30 * 60 * 1000; // 30 minutes
 
     public static final String UPDATE_URL = BuildConfig.UPDATE_URL;
-    public static final long UPDATE_CHECK_TIMER = 24 * 60 * 60; // in seconds
+    public static final long UPDATE_CHECK_TIMER = 24 * 60 * 60; // 24 h in seconds
 
     public static final String ISSUE_URL = "xmpp://support@room.pix-art.de?join";
 

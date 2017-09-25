@@ -210,7 +210,6 @@
     <string name="omemo_fingerprint_x509">v\\OMEMO fingerprint</string>
     <string name="omemo_fingerprint_selected_message">OMEMO fingerprint of message</string>
     <string name="omemo_fingerprint_x509_selected_message">v\\OMEMO fingerprint of message</string>
-    <string name="this_device_omemo_fingerprint">Own OMEMO fingerprint</string>
     <string name="other_devices">Other devices</string>
     <string name="trust_omemo_fingerprints">Trust OMEMO Fingerprints</string>
     <string name="fetching_keys">Fetching keys…</string>
@@ -465,7 +464,6 @@
     <string name="apk">Android App</string>
     <string name="vcard">Contact</string>
     <string name="received_x_file">Received %s</string>
-    <string name="disable_foreground_service">Disable foreground service</string>
     <string name="touch_to_open_conversations">Touch to open Pix-Art Messenger</string>
     <string name="avatar_has_been_published">Avatar has been published!</string>
     <string name="sending_x_file">Sending %s</string>
@@ -516,9 +514,8 @@
     <string name="pref_use_white_background">Use white background</string>
     <string name="pref_use_white_background_summary">Show received messages as black text on a white background</string>
     <string name="action_check_update">Check for Updates</string>
-    <string name="title_activity_updater">Update Service</string>
-    <string name="update_available">Version %1$s is available.\n\nFilesize: %2$s\n\nUpdate to version %1$s now?\n\n\n%4$s</string>
-    <string name="checking_for_updates">Checking for Pix-Art Messenger updates</string>
+    <string name="title_activity_updater">Update service</string>
+    <string name="update_available">Version %1$s is available.\n\nFilesize: %2$s\n\nUpdate to version %1$s now?</string>
     <string name="remind_later">later</string>
     <string name="update">update</string>
     <string name="no_update_available">No update available</string>
@@ -531,7 +528,7 @@
     <string name="pref_away_when_screen_off">Away when screen is off</string>
     <string name="pref_away_when_screen_off_summary">Marks your resource as away when the screen is turned off</string>
     <string name="pref_dnd_on_silent_mode">\"Do not disturb\" in silent mode</string>
-    <string name="update_info">Pix-Art Messenger is checking for an update. If an update is available you will be asked, if you want to update your version. The update process is downloading and installing the new version automatically.\n\nPlease wait…</string>
+    <string name="update_info">Pix-Art Messenger is downloading and installing the new version automatically.\n\nPlease wait…</string>
     <string name="pref_dnd_on_silent_mode_summary">Marks your resource as \"Do not disturb\" when device is in silent mode</string>
     <string name="pref_treat_vibrate_as_silent">Treat vibrate as silent mode</string>
     <string name="pref_treat_vibrate_as_dnd_summary">Marks your resource as \"Do not disturb\" when device is on vibrate</string>
@@ -595,7 +592,7 @@
     <string name="battery_optimizations_enabled_dialog">Your device is doing some heavy battery optimizations on Pix-Art Messenger that might lead to delayed notifications or even message loss.\n\nYou will now be asked to disable those.</string>
     <string name="disable">Disable</string>
     <string name="selection_too_large">The selected area is too large</string>
-    <string name="cancel_update">Cancel update check?</string>
+    <string name="cancel_update">Cancel update?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="no_accounts">(No activated accounts)</string>
@@ -739,7 +736,6 @@
     <string name="timeout_6_months">6 months</string>
     <string name="timeout_12_months">12 months</string>
     <string name="today">Today</string>
-    <string name="start_chatting">Start chatting…</string>
     <string name="pref_use_max_brightness_summary">Switch to maximum brightness while watching videos or images in fullscreen.</string>
     <string name="pref_use_max_brightness">Maximum brightness</string>
     <string name="block_jabber_id">Block Jabber-ID</string>
@@ -788,4 +784,6 @@
     <string name="server_info_partial">partial</string>
     <string name="pref_show_foreground_service_summary">Some Android devices will close some apps after a period of time and you wont be able to receive new messages. If you have such problems, try to activate the foreground service. But keep in mind, that you will have a permanent notification with this option checked.</string>
     <string name="pref_show_foreground_service">Use foreground service</string>
+    <string name="update_service">Pix-Art Messenger update service</string>
+    <string name="install_update">Install update?</string>
 </resources>
