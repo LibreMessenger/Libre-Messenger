@@ -2497,6 +2497,15 @@ public class XmppConnectionService extends Service {
         }
     }
 
+    private boolean hasEnabledAccounts() {
+        for(Account account : this.accounts) {
+            if (!account.isOptionSet(Account.OPTION_DISABLED)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void renameInMuc(final Conversation conversation, final String nick, final UiCallback<Conversation> callback) {
         final MucOptions options = conversation.getMucOptions();
         final Jid joinJid = options.createJoinJid(nick);
