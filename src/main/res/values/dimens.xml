@@ -5,4 +5,5 @@
     <dimen name="infocard_padding">16dp</dimen>
     <dimen name="image_button_padding">8dp</dimen>
     <dimen name="elv_touch_slop">64dp</dimen>
+    <dimen name="audio_player_width">224dp</dimen>
 </resources>
