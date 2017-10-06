@@ -149,17 +149,17 @@ public class FileBackend {
     }
 
     private static long getFileSize(Context context, Uri uri) {
-        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            long size = cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE));
-            cursor.close();
-            return size;
-        } else {
-            if (cursor != null) {
+        try {
+            final Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                long size = cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE));
                 cursor.close();
+                return size;
+            } else {
+                return -1;
             }
-            File f = new File(uri.getPath());
-            return f.length();
+        } catch (Exception e) {
+            return -1;
         }
     }
 
