@@ -85,11 +85,11 @@ android {
     buildToolsVersion "26.0.2"
 
     defaultConfig {
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 25
 
-        versionCode 203
-        versionName "1.19.1"
+        versionCode 205
+        versionName "1.19.2"
 
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"

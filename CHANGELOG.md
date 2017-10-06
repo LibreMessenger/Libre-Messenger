@@ -1,5 +1,11 @@
 ### Changelog
 
+#### Version 1.19.2
+* reworked inline player for audio messages
+* long press the 'add back' button to show block menu
+* foregroundservice can be switched off 
+* bug fixes
+
 #### Version 1.19.1
 * fixed OTR encrypted file transfer
 * bug fixes
