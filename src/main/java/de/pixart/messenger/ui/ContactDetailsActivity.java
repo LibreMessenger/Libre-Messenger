@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
@@ -338,14 +337,6 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             case R.id.action_share_uri:
                 shareLink(false);
                 break;
-            case R.id.action_delete_contact:
-                builder.setTitle(getString(R.string.action_delete_contact))
-                        .setMessage(
-                                getString(R.string.remove_contact_text,
-                                        contact.getDisplayJid()))
-                        .setPositiveButton(getString(R.string.delete),
-                                removeFromRoster).create().show();
-                break;
             case R.id.action_edit_contact:
                 Uri systemAccount = contact.getSystemAccount();
                 if (systemAccount == null) {
@@ -382,7 +373,6 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
         MenuItem block = menu.findItem(R.id.action_block);
         MenuItem unblock = menu.findItem(R.id.action_unblock);
         MenuItem edit = menu.findItem(R.id.action_edit_contact);
-        MenuItem delete = menu.findItem(R.id.action_delete_contact);
         if (contact == null) {
             return true;
         }
@@ -399,7 +389,6 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
         }
         if (!contact.showInRoster()) {
             edit.setVisible(false);
-            delete.setVisible(false);
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -445,7 +434,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             receive.setVisibility(View.VISIBLE);
             addContactButton.setVisibility(View.VISIBLE);
             addContactButton.setText(getString(R.string.action_delete_contact));
-            addContactButton.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
+            addContactButton.getBackground().setColorFilter(getWarningButtonColor(), PorterDuff.Mode.MULTIPLY);
             final AlertDialog.Builder deleteFromRosterDialog = new AlertDialog.Builder(ContactDetailsActivity.this);
             addContactButton.setOnClickListener(new OnClickListener() {
                 @Override

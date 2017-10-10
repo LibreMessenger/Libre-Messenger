@@ -110,6 +110,7 @@ public abstract class XmppActivity extends Activity {
     protected int mPrimaryBackgroundColor;
     protected int mSecondaryBackgroundColor;
     protected int mColorRed;
+    protected int mColorWarningButton;
     protected int mColorWhite;
     protected int mColorOrange;
     protected int mColorGreen;
@@ -410,6 +411,7 @@ public abstract class XmppActivity extends Activity {
         mSecondaryTextColor = ContextCompat.getColor(this, R.color.black54);
         mTertiaryTextColor = ContextCompat.getColor(this, R.color.black12);
         mColorRed = ContextCompat.getColor(this, R.color.red800);
+        mColorWarningButton = ContextCompat.getColor(this, R.color.warning_button);
         mColorWhite = ContextCompat.getColor(this, R.color.white70);
         mColorOrange = ContextCompat.getColor(this, R.color.orange500);
         mColorGreen = ContextCompat.getColor(this, R.color.realgreen);
@@ -977,6 +979,10 @@ public abstract class XmppActivity extends Activity {
 
     public int getWarningTextColor() {
         return this.mColorRed;
+    }
+
+    public int getWarningButtonColor() {
+        return this.mColorWarningButton;
     }
 
     public int getOnlineColor() {

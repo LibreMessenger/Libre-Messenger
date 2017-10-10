@@ -24,4 +24,5 @@
     <color name="online">#ff259b24</color>
     <color name="away">#ffff9800</color>
     <color name="notavailable">#fff44336</color>
+    <color name="warning_button">#fffcd9d6</color>
 </resources>
