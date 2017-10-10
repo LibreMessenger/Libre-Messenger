@@ -62,6 +62,7 @@ public class NotificationService {
     public static final int NOTIFICATION_ID = 2 * NOTIFICATION_ID_MULTIPLIER;
     public static final int FOREGROUND_NOTIFICATION_ID = NOTIFICATION_ID_MULTIPLIER * 4;
     public static final int ERROR_NOTIFICATION_ID = NOTIFICATION_ID_MULTIPLIER * 6;
+    public static final int UPDATE_NOTIFICATION_ID = NOTIFICATION_ID_MULTIPLIER * 8;
     private Conversation mOpenConversation;
     private boolean mIsInForeground;
     private long mLastNotification;
@@ -779,4 +780,5 @@ public class NotificationService {
         notificationManager.notify(FOREGROUND_NOTIFICATION_ID, notification);
         return notification;
     }
+
 }

@@ -79,6 +79,7 @@ import de.pixart.messenger.entities.Presences;
 import de.pixart.messenger.http.HttpConnectionManager;
 import de.pixart.messenger.services.AvatarService;
 import de.pixart.messenger.services.BarcodeProvider;
+import de.pixart.messenger.services.UpdateService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.services.XmppConnectionService.XmppConnectionBinder;
 import de.pixart.messenger.utils.CryptoHelper;
@@ -376,7 +377,8 @@ public abstract class XmppActivity extends Activity {
                 break;
             case R.id.action_check_updates:
                 if (xmppConnectionService.hasInternetConnection()) {
-                    startActivity(new Intent(this, UpdaterActivity.class));
+                    UpdateService task = new UpdateService(this);
+                    task.execute("true");
                 } else {
                     Toast.makeText(this, R.string.account_status_no_internet, Toast.LENGTH_LONG).show();
                 }

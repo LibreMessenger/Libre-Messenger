@@ -191,7 +191,6 @@
     <string name="otr_fingerprint">OTR-Fingerabdruck</string>
     <string name="omemo_fingerprint">OMEMO-Fingerabdruck</string>
     <string name="omemo_fingerprint_selected_message">OMEMO-Fingerabdruck der Nachricht</string>
-    <string name="this_device_omemo_fingerprint">Eigener OMEMO-Fingerabdruck</string>
     <string name="other_devices">Andere Geräte</string>
     <string name="trust_omemo_fingerprints">OMEMO-Fingerabdruck vertrauen</string>
     <string name="fetching_keys">Fingerabdrücke werden abgerufen …</string>
@@ -389,7 +388,6 @@
     <string name="vcard">Kontakt</string>
     <string name="received_x_file">%s empfangen</string>
     <string name="touch_to_open_conversations">Antippen, um Pix-Art Messenger zu öffnen</string>
-    <string name="disable_foreground_service">Vordergrund-Dienst deaktivieren</string>
     <string name="avatar_has_been_published">Profilbild wurde gespeichert</string>
     <string name="sending_x_file">%s wird gesendet</string>
     <string name="offering_x_file">%s wird angeboten</string>
@@ -439,17 +437,16 @@
     <string name="pref_use_white_background_summary">Empfangene Nachrichten als schwarzen Text auf weißem Hintergrund anzeigen</string>
     <string name="action_check_update">Auf Updates prüfen</string>
     <string name="remind_later">später</string>
-    <string name="checking_for_updates">Auf Pix-Art Messenger Updates prüfen</string>
     <string name="title_activity_updater">Update Dienst</string>
     <string name="update">aktualisieren</string>
-    <string name="update_available">Version %1$s ist verfügbar.\n\nDateigröße: %2$s\n\nJetzt auf Version %1$s aktualisieren?\n\n\n%4$s</string>
+    <string name="update_available">Version %1$s ist verfügbar.\n\nDateigröße: %2$s\n\nJetzt auf Version %1$s aktualisieren?</string>
     <string name="download_started">Download gestartet</string>
     <string name="no_update_available">Kein Update verfügbar</string>
     <string name="account_status_tor_unavailable">Tor-Netzwerk nicht verfügbar</string>
     <string name="account_status_bind_failure">Bindungsfehler</string>
     <string name="account_status_host_unknown">Host unbekannt</string>
     <string name="server_info_broken">Fehlerhaft</string>
-    <string name="update_info">Pix-Art Messenger prüft auf eine neuere Version. Wenn ein Update verfügbar ist, wirst du gefragt, ob du deine Version aktualisieren möchtest. Der Update Dienst lädt und installiert die neue Version automatisch.\n\nBitte warten…</string>
+    <string name="update_info">Pix-Art Messenger lädt und installiert die neue Version automatisch.\n\nBitte warten…</string>
     <string name="pref_presence_settings">Status</string>
     <string name="pref_away_when_screen_off">Abwesend bei abgeschaltetem Bildschirm</string>
     <string name="pref_away_when_screen_off_summary">Setzt deinen Status auf "abwesend", solange dein Bildschirm abgeschaltet ist</string>
@@ -676,7 +673,6 @@
     <string name="timeout_6_months">6 Monate</string>
     <string name="timeout_7_days">7 Tage</string>
     <string name="today">Heute</string>
-    <string name="start_chatting">Fange an zu schreiben…</string>
     <string name="pref_use_max_brightness">Maximale Helligkeit</string>
     <string name="pref_use_max_brightness_summary">Maximale Helligkeit aktivieren, wenn Videos oder Bilder im Vollbild betracht werden.</string>
     <string name="pref_video_compression">Videos komprimieren</string>
@@ -738,5 +734,7 @@
     <string name="server_info_partial">teilweise</string>
     <string name="pref_show_foreground_service">Nutze Vordergrunddienst</string>
     <string name="pref_show_foreground_service_summary">Einige Android Geräte schließen manche Apps nach einer gewissen Zeitspanne automatisch und du wirst keine neuen Nachrichten mehr empfangen können. Falls du solche Probleme hast, versuche den Vordergrunddienst zu aktivieren. Bitte beachte, dass dadurch ein permanente Eintrag in der Benachrichtigungsleiste erscheint.</string>
+    <string name="update_service">Pix-Art Messenger Update Dienst</string>
+    <string name="install_update">Update installieren?</string>
 
 </resources>

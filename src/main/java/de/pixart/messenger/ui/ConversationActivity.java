@@ -71,6 +71,7 @@ import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.entities.Transferable;
 import de.pixart.messenger.persistance.FileBackend;
+import de.pixart.messenger.services.UpdateService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.services.XmppConnectionService.OnAccountUpdate;
 import de.pixart.messenger.services.XmppConnectionService.OnConversationUpdate;
@@ -382,16 +383,15 @@ public class ConversationActivity extends XmppActivity
         String PREFS_NAME = "UpdateTimeStamp";
         SharedPreferences UpdateTimeStamp = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         long lastUpdateTime = UpdateTimeStamp.getLong("lastUpdateTime", 0);
-        Log.d(Config.LOGTAG, "AppUpdater - LastUpdateTime: " + lastUpdateTime);
+        Log.d(Config.LOGTAG, "AppUpdater: LastUpdateTime: " + lastUpdateTime);
         if ((lastUpdateTime + (Config.UPDATE_CHECK_TIMER * 1000)) < System.currentTimeMillis()) {
             lastUpdateTime = System.currentTimeMillis();
             SharedPreferences.Editor editor = UpdateTimeStamp.edit();
             editor.putLong("lastUpdateTime", lastUpdateTime);
             editor.commit();
-            // run AppUpdater
-            Log.d(Config.LOGTAG, "AppUpdater - CurrentTime: " + lastUpdateTime);
-            Intent AppUpdater = new Intent(this, UpdaterActivity.class);
-            startActivity(AppUpdater);
+            Log.d(Config.LOGTAG, "AppUpdater: CurrentTime: " + lastUpdateTime);
+            UpdateService task = new UpdateService(this);
+            task.execute("false");
             Log.d(Config.LOGTAG, "AppUpdater started");
         } else {
             Log.d(Config.LOGTAG, "AppUpdater stopped");
