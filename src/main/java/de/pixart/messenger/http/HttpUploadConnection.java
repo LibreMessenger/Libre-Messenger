@@ -162,7 +162,7 @@ public class HttpUploadConnection implements Transferable {
             try {
                 wakeLock.acquire();
                 final int expectedFileSize = (int) file.getExpectedSize();
-                final int readTimeout = (expectedFileSize / 2048) + Config.SOCKET_TIMEOUT; //assuming a minimum transfer speed of 16kbit/s
+                final int readTimeout = (expectedFileSize / 2048) + Config.SOCKET_TIMEOUT * 1000; //assuming a minimum transfer speed of 16kbit/s
                 Log.d(Config.LOGTAG, "uploading to " + mPutUrl.toString() + " w/ read timeout of " + readTimeout + "s");
                 if (mUseTor) {
                     connection = (HttpURLConnection) mPutUrl.openConnection(mHttpConnectionManager.getProxy());
