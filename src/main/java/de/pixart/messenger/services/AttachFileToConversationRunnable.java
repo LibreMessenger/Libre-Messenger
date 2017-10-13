@@ -133,7 +133,7 @@ public class AttachFileToConversationRunnable implements Runnable, MediaTranscod
             try {
                 processAsVideo();
             } catch (Throwable e) {
-                processAsFile();
+                e.printStackTrace();
             }
         } else {
             processAsFile();
