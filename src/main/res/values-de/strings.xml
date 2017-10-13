@@ -1,4 +1,4 @@
-﻿<?xml version='1.0' encoding='UTF-8'?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <string name="action_settings">Einstellungen</string>
     <string name="action_add">Neue Unterhaltung</string>
@@ -733,7 +733,7 @@
     <string name="network_is_unreachable">Netzwerk nicht verfügbar</string>
     <string name="server_info_partial">teilweise</string>
     <string name="pref_show_foreground_service">Nutze Vordergrunddienst</string>
-    <string name="pref_show_foreground_service_summary">Einige Android Geräte schließen manche Apps nach einer gewissen Zeitspanne automatisch und du wirst keine neuen Nachrichten mehr empfangen können. Falls du solche Probleme hast, versuche den Vordergrunddienst zu aktivieren. Bitte beachte, dass dadurch ein permanente Eintrag in der Benachrichtigungsleiste erscheint.</string>
+    <string name="pref_show_foreground_service_summary">Einige Android Geräte schließen manche Apps nach einer gewissen Zeitspanne automatisch und du wirst keine neuen Nachrichten mehr empfangen können. Falls du solche Probleme hast, versuche den Vordergrunddienst zu aktivieren. Bitte beachte, dass dadurch ein permanenter Eintrag in der Benachrichtigungsleiste erscheint.</string>
     <string name="update_service">Pix-Art Messenger Update Dienst</string>
     <string name="install_update">Update installieren?</string>
 

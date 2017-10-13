@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <string name="app_name" translatable="false">Pix-Art Messenger</string>
     <string name="action_settings">Settings</string>
@@ -600,7 +600,7 @@
     <string name="no_participants">No participants</string>
     <string name="correct_message">Correct message</string>
     <string name="send_corrected_message">Send corrected message</string>
-    <string name="no_keys_just_confirm">You already trust this contact. By selecting \'done\' you are just confirming that %s is part of this conference.</string>
+    <string name="no_keys_just_confirm">You already trust this contact. By selecting ’done’ you are just confirming that %s is part of this conference.</string>
     <string name="select_image_and_crop">Select image and crop</string>
     <string name="contacts_have_no_pgp_keys">Pix-Art Messenger is unable to encrypt your messages because your contacts are not announcing their public keys.\n\n</string>
     <string name="this_account_is_disabled">You have disabled this account</string>
@@ -715,7 +715,7 @@
     <string name="share_as_http">Share as HTTP link</string>
     <string name="blindly_trusted_omemo_keys">Blindly trusted OMEMO keys</string>
     <string name="pref_blind_trust_before_verification">Blind Trust Before Verification</string>
-    <string name="pref_blind_trust_before_verification_summary">Automatically trust all new devices from contacts that haven\'t been verified before.</string>
+    <string name="pref_blind_trust_before_verification_summary">Automatically trust all new devices from contacts that haven’t been verified before.</string>
     <string name="not_trusted">Untrusted</string>
     <string name="invalid_barcode">Invalid barcode</string>
     <string name="verify_with_qr_code">verify with barcode</string>
@@ -779,10 +779,10 @@
     <string name="pref_validate_hostname_summary">Server certificates that contain the validated hostname are considered verified</string>
     <string name="network_is_unreachable">Network is unreachable</string>
     <string name="certificate_does_not_contain_jid">Certificate does not contain a Jabber ID</string>
-    <string name="error_no_keys_to_trust_presence">There are no usable keys available for this contact.\\nMake sure you have mutual presence subscription.</string>
+    <string name="error_no_keys_to_trust_presence">There are no usable keys available for this contact.\n\nMake sure you have mutual presence subscription.</string>
     <string name="mark_as_read">Mark as read</string>
     <string name="server_info_partial">partial</string>
-    <string name="pref_show_foreground_service_summary">Some Android devices will close some apps after a period of time and you won't be able to receive new messages. If you have such problems, try to activate the foreground service. But keep in mind, that you will have a permanent notification with this option checked.</string>
+    <string name="pref_show_foreground_service_summary">Some Android devices will close some apps after a period of time and you won’t be able to receive new messages. If you have such problems, try to activate the foreground service. But keep in mind, that you will have a permanent notification with this option checked.</string>
     <string name="pref_show_foreground_service">Use foreground service</string>
     <string name="update_service">Pix-Art Messenger update service</string>
     <string name="install_update">Install update?</string>
