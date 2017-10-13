@@ -4,6 +4,8 @@ import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -37,6 +39,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 import java.net.URL;
 import java.security.DigestOutputStream;
@@ -58,6 +61,8 @@ import de.pixart.messenger.utils.FileUtils;
 import de.pixart.messenger.utils.FileWriterException;
 import de.pixart.messenger.utils.MimeUtils;
 import de.pixart.messenger.xmpp.pep.Avatar;
+import ezvcard.Ezvcard;
+import ezvcard.VCard;
 
 public class FileBackend {
 
@@ -826,6 +831,8 @@ public class FileBackend {
         boolean image = message.getType() == Message.TYPE_IMAGE || (mime != null && mime.startsWith("image/"));
         boolean video = mime != null && mime.startsWith("video/");
         boolean audio = mime != null && mime.startsWith("audio/");
+        boolean vcard = mime != null && mime.contains("vcard");
+        boolean apk = mime != null && mime.equals("application/vnd.android.package-archive");
         final StringBuilder body = new StringBuilder();
         if (url != null) {
             body.append(url.toString());
@@ -841,6 +848,10 @@ public class FileBackend {
             }
         } else if (audio) {
             body.append("|0|0|").append(getMediaRuntime(file));
+        } else if (vcard) {
+            body.append("|0|0|0|").append(getVCard(file));
+        } else if (apk) {
+            body.append("|0|0|0|").append(getAPK(file, mXmppConnectionService.getApplicationContext()));
         }
         message.setBody(body.toString());
     }
@@ -863,6 +874,54 @@ public class FileBackend {
         } catch (IllegalArgumentException e) {
             return 0;
         }
+    }
+
+    private String getAPK (File file, Context context) {
+        String APKName;
+        //final Drawable icon;
+        final PackageManager pm = context.getPackageManager();
+        final PackageInfo pi = pm.getPackageArchiveInfo(file.toString(), 0);
+        pi.applicationInfo.sourceDir = file.toString();
+        pi.applicationInfo.publicSourceDir = file.toString();
+        //icon = pi.applicationInfo.loadIcon(pm);
+        final String AppName = (String) pi.applicationInfo.loadLabel(pm);
+        final String AppVersion = (String) pi.versionName;
+        Log.d(Config.LOGTAG, "APK name: " + AppName);
+        APKName = " (" + AppName + " " + AppVersion + ")";
+        try {
+            byte[] data = APKName.getBytes("UTF-8");
+            APKName = Base64.encodeToString(data, Base64.DEFAULT);
+
+        } catch (UnsupportedEncodingException e) {
+            APKName = "";
+            e.printStackTrace();
+        }
+        return APKName;
+    }
+
+    private String getVCard (File file) {
+        VCard VCard = new VCard();
+        String VCardName = "";
+        try {
+            VCard = Ezvcard.parse(file).first();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (VCard != null) {
+            final String version = VCard.getVersion().toString();
+            Log.d(Config.LOGTAG, "VCard version: " + version);
+            final String name = VCard.getFormattedName().getValue();
+            VCardName = " (" + name + ")";
+        }
+        try {
+            byte[] data = VCardName.getBytes("UTF-8");
+            VCardName = Base64.encodeToString(data, Base64.DEFAULT);
+
+        } catch (UnsupportedEncodingException e) {
+            VCardName = "";
+            e.printStackTrace();
+        }
+        return VCardName;
     }
 
     private Dimensions getImageDimensions(File file) {

@@ -3,6 +3,7 @@ package de.pixart.messenger.entities;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.SpannableStringBuilder;
+import android.util.Log;
 
 import com.vdurmont.emoji.EmojiManager;
 
@@ -740,7 +741,14 @@ public class Message extends AbstractEntity {
                     fileParams.width = parseInt(parts[1]);
                     fileParams.height = parseInt(parts[2]);
                     break;
+                case 6:
+                    fileParams.url = parseUrl(parts[0]);
+                    fileParams.size = parseLong(parts[1]);
+                    fileParams.subject = parseString(parts[5]);
+                    break;
+
             }
+            Log.d(Config.LOGTAG, "FileParams: " + body);
         }
         return fileParams;
     }
@@ -766,6 +774,14 @@ public class Message extends AbstractEntity {
             return new URL(value);
         } catch (MalformedURLException e) {
             return null;
+        }
+    }
+
+    private static String parseString(String value) {
+        try {
+            return value;
+        } catch (Exception e) {
+            return "";
         }
     }
 
@@ -796,6 +812,7 @@ public class Message extends AbstractEntity {
         public int width = 0;
         public int height = 0;
         public int runtime = 0;
+        public String subject = "";
     }
 
     public void setFingerprint(String fingerprint) {

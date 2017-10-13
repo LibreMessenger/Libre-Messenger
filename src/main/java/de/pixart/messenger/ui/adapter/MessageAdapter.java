@@ -2,7 +2,6 @@ package de.pixart.messenger.ui.adapter;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
@@ -22,8 +21,8 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.text.util.Linkify;
+import android.util.Base64;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,8 +42,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.vdurmont.emoji.EmojiManager;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.List;
@@ -78,8 +76,6 @@ import de.pixart.messenger.utils.GeoHelper;
 import de.pixart.messenger.utils.Patterns;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.mam.MamReference;
-import ezvcard.Ezvcard;
-import ezvcard.VCard;
 
 public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextView.CopyHandler {
 
@@ -562,14 +558,13 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.messageBody.setVisibility(View.GONE);
         viewHolder.download_button.setVisibility(View.VISIBLE);
         final String mimeType = message.getMimeType();
-        final File file = new File(activity.xmppConnectionService.getFileBackend().getFile(message).toString());
         if (mimeType != null) {
             if (message.getMimeType().contains("pdf")) {
                 viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_file_pdf_grey600_48dp, 0, 0, 0);
                 viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message)));
             } else if (message.getMimeType().contains("vcard")) {
                 try {
-                    showVCard(message, file, viewHolder);
+                    showVCard(message, viewHolder);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -578,7 +573,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message)));
             } else if (message.getMimeType().equals("application/vnd.android.package-archive")) {
                 try {
-                    showAPK(message, file, viewHolder);
+                    showAPK(message, viewHolder);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -596,35 +591,31 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         });
     }
 
-    private void showAPK(final Message message, final File file, ViewHolder viewHolder) {
-        final String APKName;
-        //final Drawable icon;
-        final PackageManager pm = getContext().getPackageManager();
-        final PackageInfo pi = pm.getPackageArchiveInfo(file.toString(), 0);
-        pi.applicationInfo.sourceDir = file.toString();
-        pi.applicationInfo.publicSourceDir = file.toString();
-        //icon = pi.applicationInfo.loadIcon(pm);
-        final String AppName = (String) pi.applicationInfo.loadLabel(pm);
-        final String AppVersion = (String) pi.versionName;
-        Log.d(Config.LOGTAG, "APK name: " + AppName);
-        APKName = " (" + AppName + " " + AppVersion + ")";
+    private void showAPK(final Message message, ViewHolder viewHolder) {
+        String APKName = "";
+        if (message.getFileParams().subject.length() != 0) {
+            try {
+                byte[] data = Base64.decode(message.getFileParams().subject, Base64.DEFAULT);
+                APKName = new String(data, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                APKName = "";
+                e.printStackTrace();
+            }
+        }
         viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_file_grey600_48dp, 0, 0, 0);
         viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message) + APKName));
     }
 
-    private void showVCard(final Message message, final File file, ViewHolder viewHolder) {
-        VCard vcard = new VCard();
-        String VCardName = null;
-        try {
-            vcard = Ezvcard.parse(file).first();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (vcard != null) {
-            final String version = vcard.getVersion().toString();
-            Log.d(Config.LOGTAG, "VCard version: " + version);
-            final String name = vcard.getFormattedName().getValue();
-            VCardName = " (" + name + ")";
+    private void showVCard(final Message message, ViewHolder viewHolder) {
+        String VCardName = "";
+        if (message.getFileParams().subject.length() != 0) {
+            try {
+                byte[] data = Base64.decode(message.getFileParams().subject, Base64.DEFAULT);
+                VCardName = new String(data, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                VCardName = "";
+                e.printStackTrace();
+            }
         }
         viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_account_card_details_grey600_48dp, 0, 0, 0);
         viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message) + VCardName));
