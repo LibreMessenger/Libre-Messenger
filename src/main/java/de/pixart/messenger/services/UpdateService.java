@@ -39,8 +39,8 @@ public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapp
 
     public class Wrapper
     {
-        public boolean UpdateAvailable;
-        public boolean showNoUpdateToast;
+        public boolean UpdateAvailable = false;
+        public boolean showNoUpdateToast = false;
     }
 
     @Override
