@@ -208,7 +208,6 @@ public class NotificationService {
         }
         if (this.mIsInForeground && isScreenOn) {
             mXmppConnectionService.vibrate();
-            return;
         }
         synchronized (notifications) {
             pushToStack(message);
