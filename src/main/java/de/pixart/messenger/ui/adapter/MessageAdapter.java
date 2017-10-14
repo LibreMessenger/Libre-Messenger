@@ -283,10 +283,10 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         } else {
             boolean verified = false;
             if (message.getEncryption() == Message.ENCRYPTION_AXOLOTL) {
-                FingerprintStatus status = message.getConversation()
+                final FingerprintStatus status = message.getConversation()
                         .getAccount().getAxolotlService().getFingerprintTrust(
                                 message.getFingerprint());
-                if (status != null && status.isTrustedAndActive()) {
+                if (status != null && status.isVerified()) {
                     verified = true;
                 }
             }
