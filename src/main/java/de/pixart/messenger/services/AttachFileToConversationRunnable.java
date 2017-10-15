@@ -83,7 +83,6 @@ public class AttachFileToConversationRunnable implements Runnable, MediaTranscod
         SimpleDateFormat fileDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
         message.setRelativeFilePath(fileDateFormat.format(new Date(message.getTimeSent())) + "_" + message.getUuid().substring(0, 4) + "_komp.mp4");
         final DownloadableFile file = mXmppConnectionService.getFileBackend().getFile(message);
-        final int runtime = mXmppConnectionService.getFileBackend().getMediaRuntime(uri);
         file.getParentFile().mkdirs();
         final ParcelFileDescriptor parcelFileDescriptor = mXmppConnectionService.getContentResolver().openFileDescriptor(uri, "r");
         if (parcelFileDescriptor == null) {

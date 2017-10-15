@@ -948,7 +948,11 @@ public class FileBackend {
 
     private static Dimensions getVideoDimensions(Context context, Uri uri) throws NotAVideoFile {
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-        mediaMetadataRetriever.setDataSource(context, uri);
+        try {
+            mediaMetadataRetriever.setDataSource(context, uri);
+        } catch (Exception e) {
+            throw new NotAVideoFile();
+        }
         return getVideoDimensions(mediaMetadataRetriever);
     }
 
