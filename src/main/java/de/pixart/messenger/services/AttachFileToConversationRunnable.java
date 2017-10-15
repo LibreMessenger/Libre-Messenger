@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import de.pixart.messenger.Config;
@@ -84,13 +85,18 @@ public class AttachFileToConversationRunnable implements Runnable, MediaTranscod
         final DownloadableFile file = mXmppConnectionService.getFileBackend().getFile(message);
         final int runtime = mXmppConnectionService.getFileBackend().getMediaRuntime(uri);
         file.getParentFile().mkdirs();
-        ParcelFileDescriptor parcelFileDescriptor = mXmppConnectionService.getContentResolver().openFileDescriptor(uri, "r");
+        final ParcelFileDescriptor parcelFileDescriptor = mXmppConnectionService.getContentResolver().openFileDescriptor(uri, "r");
+        if (parcelFileDescriptor == null) {
+            throw new FileNotFoundException("Parcel File Descriptor was null");
+        }
         FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
         Future<Void> future = MediaTranscoder.getInstance().transcodeVideo(fileDescriptor, file.getAbsolutePath(), MediaFormatStrategyPresets.createAndroidStandardStrategy(mXmppConnectionService.getCompressVideoBitratePreference(), mXmppConnectionService.getCompressVideoResolutionPreference()), this);
         try {
             future.get();
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
             throw new AssertionError(e);
+        } catch (ExecutionException e) {
+            Log.d(Config.LOGTAG, "ignoring execution exception. Should get handled by onTranscodeFiled() instead", e);
         }
     }
 
@@ -132,7 +138,8 @@ public class AttachFileToConversationRunnable implements Runnable, MediaTranscod
         if (isVideoMessage) {
             try {
                 processAsVideo();
-            } catch (Throwable e) {
+            } catch (FileNotFoundException e) {
+                processAsFile();
                 e.printStackTrace();
             }
         } else {
