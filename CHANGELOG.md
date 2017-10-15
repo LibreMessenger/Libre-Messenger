@@ -1,5 +1,11 @@
 ### Changelog
 
+#### Version 1.20.0 (not released yet)
+* reworked AppUpdater and show a notification if there is an update available
+* some UI and performance improvements
+* bug fixes
+
+
 #### Version 1.19.2
 * reworked inline player for audio messages
 * long press the 'add back' button to show block menu
