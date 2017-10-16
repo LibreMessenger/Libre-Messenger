@@ -7,6 +7,11 @@ Pix-Art Messenger ist eine Kopie der offiziellen Android-App [Conversations](htt
 
 Alternativ kannst du das IzzySoft F-Droid Repo installieren: https://android.izzysoft.de/repo, darin ist unser Messenger ebenfalls enthalten.
 
+#### Wie kann ich bei der Übersetzung helfen?
+Übersetzungen werden bei [https://poeditor.com](https://poeditor.com/join/project/I4cKFcY0Iv) geführt. Dort kann erstellt, geändert und ergänzt werden.
+
+[Hier geht's zur Projektseite bei poeditor.com](https://poeditor.com/join/project/I4cKFcY0Iv)
+
 #### Wie erstelle ich Debug- bzw. ADB-Logs?
 1. Lade dir die SDK-Plattform-Tools für dein Betriebssystem von Google herunter: https://developer.android.com/studio/releases/platform-tools.html
 2. Falls noch nicht getan, lade dir die ADB Treiber für dein Betriebssystem von Google herunter, für Windows hier: https://developer.android.com/studio/run/win-usb.html
