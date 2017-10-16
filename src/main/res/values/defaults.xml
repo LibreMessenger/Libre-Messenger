@@ -1,5 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name" translatable="false">Pix-Art Messenger</string>
+    <string name="pref_about_message" translatable="false"><b>Pix-Art Messenger</b>
+			\n\nCopyright © 2014-2017 Christian Schneppe
+			\n\nhttp://jabber.pix-art.de
+			\n\nThis program is free software: you can redistribute it and/or modify
+			it under the terms of the GNU General Public License as published by
+			the Free Software Foundation, either version 3 of the License, or
+			(at your option) any later version.
+			\n\nThis program is distributed in the hope that it will be useful,
+			but WITHOUT ANY WARRANTY; without even the implied warranty of
+			MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+			GNU General Public License for more details.
+			\n\nYou should have received a copy of the GNU General Public License
+			along with this program. If not, see https://www.gnu.org/licenses
+			\n\nDownload the full original source code at https://github.com/siacs/Conversations (Copyright © 2014-2016 Daniel Gultsch)
+			\n\nDownload the modified source code at https://github.com/kriztan/Pix-Art-Messenger
+			\n\n\nLibraries
+			\n\nhttps://www.bouncycastle.org\n(The MIT License (MIT))
+			\n\nhttps://www.gnu.org/software/libidn\n(Apache License, Version 2.0)
+			\n\nhttps://github.com/ge0rg/MemorizingTrustManager\n(The MIT License (MIT))
+			\n\nhttps://github.com/rtreffer/minidns\n(WTFPL)
+			\n\nhttps://github.com/open-keychain/openkeychain-api-lib\n(Apache License, Version 2.0)
+			\n\nhttps://github.com/jitsi/otr4j\n(LGPL-3.0)
+			\n\nhttps://developer.android.com/tools/support-library\n(Apache License, Version 2.0)
+			\n\nhttps://github.com/zxing/zxing\n(Apache License, Version 2.0)
+			\n\nhttps://github.com/google/material-design-icons\n(CC BY 4.0)
+			\n\nhttps://github.com/timroes/EnhancedListView\n(Apache License, Version 2.0)
+			\n\nhttps://github.com/leolin310148/ShortcutBadger\n(Apache License, Version 2.0)
+			\n\nhttps://github.com/kyleduo/SwitchButton\n(Apache License, Version 2.0)
+			\n\nhttps://github.com/WhisperSystems/libaxolotl-java\n(GPLv3)
+			\n\nhttps://github.com/vinc3m1/RoundedImageView\n(Apache License, Version 2.0)
+			\n\nhttps://github.com/jdamcd/android-crop\n(Apache License, Version 2.0)
+			\n\nhttps://github.com/jaydeepw/audio-wife\n(The MIT License (MIT))
+		    \n\nhttps://github.com/google/gson\n(Apache License, Version 2.0)
+		    \n\nhttps://github.com/google/gcm\n(Apache License, Version 2.0)
+		    \n\nhttp://hc.apache.org/httpcomponents-client\n(Apache License, Version 2.0)
+		    \n\nhttp://hc.apache.org/httpcomponents-core\n(Apache License, Version 2.0)
+			\n\nhttps://github.com/bumptech/glide\n(BSD, The MIT License (MIT) and Apache License, Version 2.0)
+			\n\nhttps://github.com/chrisbanes/PhotoView\n(Apache License, Version 2.0)
+			\n\nhttps://github.com/rtoshiro/FullscreenVideoView\n(Apache License, Version 2.0)
+            \n\nhttps://github.com/mangstadt/ez-vcard\n(FreeBSD)
+            \n\nhttps://github.com/googlesamples/easypermissions\n(Apache License, Version 2.0)
+            \n\nhttps://github.com/blazsolar/FlowLayout\n(Apache License, Version 2.0)
+            \n\nhttps://github.com/vanniktech/Emoji\n(Apache License, Version 2.0)
+            \n\nhttps://github.com/ypresto/android-transcoder\n(Apache License, Version 2.0)
+            \n\nhttp://www.eclipse.org/jetty/\n(Apache License, Version 2.0 and Eclipse Public License 1.0)
+            \n\nhttps://github.com/vdurmont/emoji-java\n(The MIT License)
+	</string>
     <string name="default_resource" translatable="false">Phone</string>
     <bool name="portrait_only">true</bool>
     <bool name="enter_is_send">false</bool>
