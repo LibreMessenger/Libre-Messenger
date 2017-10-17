@@ -560,7 +560,6 @@
     <string name="no_application_to_share_uri">No application found to share URI</string>
     <string name="share_uri_with">Share URI with…</string>
     <string name="mgmt_account_reconnect">Reconnect</string>
-    <string name="welcome_header" translatable="false">Pix-Art Messenger</string>
     <string name="welcome_text">…is a free and secure XMPP/Jabber client.</string>
     <string name="magic_create_text">We will guide you through the process of creating an account with a random password, which you can use or change to your own password on the next page. \nThan you will be able to communicate with users of this and other providers by giving them your full Jabber-ID.</string>
     <string name="your_full_jid_will_be">Your Jabber-ID will be: %s</string>
@@ -607,11 +606,6 @@
     <string name="no_permission">Pix-Art Messenger has no permissions</string>
     <string name="send_image">Send image?</string>
     <string name="this_device_is_no_longer_in_use">This device is no longer in use</string>
-    <string name="type_pc" translatable="false">Computer</string>
-    <string name="type_phone" translatable="false">Mobile phone</string>
-    <string name="type_tablet" translatable="false">Tablet</string>
-    <string name="type_web" translatable="false">Web browser</string>
-    <string name="type_console" translatable="false">Console</string>
     <string name="import_canceled">Import canceled</string>
     <string name="Import_failed">Database import failed, an import is not possible</string>
     <string name="Password_wrong">Wrong password, try again</string>

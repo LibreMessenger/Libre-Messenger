@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">Pix-Art Messenger</string>
+    <string name="welcome_header" translatable="false">Pix-Art Messenger</string>
+    <string name="type_pc" translatable="false">Computer</string>
+    <string name="type_phone" translatable="false">Mobile phone</string>
+    <string name="type_tablet" translatable="false">Tablet</string>
+    <string name="type_web" translatable="false">Web browser</string>
+    <string name="type_console" translatable="false">Console</string>
     <string name="pref_about_message" translatable="false"><b>Pix-Art Messenger</b>
 			\n\nCopyright © 2014-2017 Christian Schneppe
 			\n\nhttp://jabber.pix-art.de
