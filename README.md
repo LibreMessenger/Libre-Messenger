@@ -1,4 +1,4 @@
-![logo](/art/icon.png)
+![logo](/art/icon.png) 
 # Pix-Art Messenger
 
 Pix-Art Messenger ist eine Kopie der offiziellen Android-App [Conversations](https://github.com/siacs/Conversations) mit einigen Änderungen.
@@ -8,9 +8,11 @@ Pix-Art Messenger ist eine Kopie der offiziellen Android-App [Conversations](htt
 Alternativ kannst du das IzzySoft F-Droid Repo installieren: https://android.izzysoft.de/repo, darin ist unser Messenger ebenfalls enthalten.
 
 #### Wie kann ich bei der Übersetzung helfen?
-Übersetzungen werden bei [https://poeditor.com](https://poeditor.com/join/project/I4cKFcY0Iv) geführt. Dort kann erstellt, geändert und ergänzt werden.
+[![Crowdin](https://d322cqt584bo4o.cloudfront.net/pix-art-messenger/localized.svg)](https://crowdin.com/project/pix-art-messenger)
 
-[Hier geht's zur Projektseite bei poeditor.com](https://poeditor.com/join/project/I4cKFcY0Iv)
+Übersetzungen werden bei [crowdin.com](https://crowdin.com/project/pix-art-messenger) geführt. Dort können Übersetzungen erstellt, geändert und ergänzt werden.
+
+[Hier geht's zur Projektseite bei crowdin.com](https://crowdin.com/project/pix-art-messenger/invite?d=75l6j4k6k6k523f4j4m4e473u663d3m4p4t4q4)
 
 #### Wie erstelle ich Debug- bzw. ADB-Logs?
 1. Lade dir die SDK-Plattform-Tools für dein Betriebssystem von Google herunter: https://developer.android.com/studio/releases/platform-tools.html
