@@ -732,4 +732,5 @@
     <string name="pref_show_foreground_service">Use foreground service</string>
     <string name="update_service">Pix-Art Messenger update service</string>
     <string name="install_update">Install update?</string>
+    <string name="highlight_in_muc">highlight user</string>
 </resources>

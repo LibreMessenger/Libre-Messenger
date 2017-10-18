@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/highlight_in_muc"
+        android:title="@string/highlight_in_muc"
+        android:visible="false" />
+    <item
         android:id="@+id/start_conversation"
         android:title="@string/start_conversation"
         android:visible="false" />
