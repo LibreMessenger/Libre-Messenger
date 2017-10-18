@@ -3,6 +3,7 @@
 #### Version 1.20.0 (not released yet)
 * reworked AppUpdater and show a notification if there is an update available
 * some UI and performance improvements
+* add french and spanish translations
 * bug fixes
 
 
