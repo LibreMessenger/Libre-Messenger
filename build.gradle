@@ -119,7 +119,7 @@ android {
             buildConfigField("String", "XMPP_IP", "null")
             buildConfigField("Integer[]", "XMPP_Ports", "null")
             buildConfigField("String", "DOMAIN_LOCK", "null")
-            buildConfigField("String", "UPDATE_URL", '"http://xmpp.pix-art.de/Pix-Art_Messenger/update/open/"')
+            buildConfigField("String", "UPDATE_URL", '"https://xmpp.pix-art.de/Pix-Art_Messenger/update/open/"')
             applicationId "de.pixart.openmessenger"
         }
     }

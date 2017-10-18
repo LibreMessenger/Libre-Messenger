@@ -40,21 +40,22 @@ public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapp
     public class Wrapper
     {
         public boolean UpdateAvailable = false;
-        public boolean showNoUpdateToast = false;
+        public boolean NoUpdate = false;
+        public boolean isError = false;
     }
 
     @Override
     protected Wrapper doInBackground(String... params) {
-
+        String jsonString = "";
+        boolean UpdateAvailable = false;
         boolean showNoUpdateToast = false;
+        boolean isError = false;
+
         if (params[0].equals("true")) {
             showNoUpdateToast = true;
         }
 
-
         HttpsURLConnection connection = null;
-        String jsonString = "";
-        boolean UpdateAvailable = false;
 
         try  {
             URL url = new URL(Config.UPDATE_URL);
@@ -69,7 +70,7 @@ public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapp
 
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            isError = true;
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -100,20 +101,25 @@ public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapp
             e.printStackTrace();
         }
         Wrapper w = new Wrapper();
+        w.isError = isError;
         w.UpdateAvailable = UpdateAvailable;
-        w.showNoUpdateToast = showNoUpdateToast;
+        w.NoUpdate = showNoUpdateToast;
         return w;
     }
 
     @Override
     protected void onPostExecute(Wrapper w) {
         super.onPostExecute(w);
+        if (w.isError) {
+            showToastMessage(true, true);
+            return;
+        }
         if (!w.UpdateAvailable) {
-            noUpdateMessage(w.showNoUpdateToast);
+            showToastMessage(w.NoUpdate, false);
         }
     }
 
-    private void noUpdateMessage(boolean show) {
+    private void showToastMessage(boolean show, final boolean error) {
         if (!show) {
             return;
         }
@@ -122,7 +128,13 @@ public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapp
 
             @Override
             public void run() {
-                Toast.makeText(context, context.getString(R.string.no_update_available), Toast.LENGTH_LONG).show();
+                String ToastMessage = "";
+                if (error) {
+                    ToastMessage = context.getString(R.string.failed);
+                } else {
+                    ToastMessage = context.getString(R.string.no_update_available);
+                }
+                Toast.makeText(context, ToastMessage, Toast.LENGTH_LONG).show();
             }
         });
     }
