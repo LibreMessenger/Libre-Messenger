@@ -153,7 +153,7 @@ public class FileBackend {
         }
     }
 
-    private static long getFileSize(Context context, Uri uri) {
+    public static long getFileSize(Context context, Uri uri) {
         try {
             final Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
             if (cursor != null && cursor.moveToFirst()) {
@@ -273,7 +273,7 @@ public class FileBackend {
         options.inJustDecodeBounds = true;
         try {
             BitmapFactory.decodeStream(mXmppConnectionService.getContentResolver().openInputStream(uri), null, options);
-            if (options == null || options.outMimeType == null || options.outHeight <= 0 || options.outWidth <= 0) {
+            if (options.outMimeType == null || options.outHeight <= 0 || options.outWidth <= 0) {
                 return false;
             }
             return (options.outWidth <= mXmppConnectionService.getCompressImageResolutionPreference() && options.outHeight <= mXmppConnectionService.getCompressImageResolutionPreference() && options.outMimeType.contains(Config.IMAGE_FORMAT.name().toLowerCase()));

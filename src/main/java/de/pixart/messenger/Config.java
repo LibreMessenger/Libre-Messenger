@@ -68,6 +68,8 @@ public final class Config {
     public static final int CONNECT_DISCO_TIMEOUT = 30;
     public static final int MINI_GRACE_PERIOD = 750;
 
+    public static final int FILE_SIZE = 1048576; // 1 MiB
+
     public static final int AVATAR_SIZE = 480;
     public static final Bitmap.CompressFormat AVATAR_FORMAT = Bitmap.CompressFormat.JPEG;
 
