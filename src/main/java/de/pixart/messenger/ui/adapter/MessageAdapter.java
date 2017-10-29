@@ -915,7 +915,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         } else {
             if (message.isGeoUri()) {
                 displayLocationMessage(viewHolder, message);
-            } else if (message.bodyIsOnlyEmojis()) {
+            } else if (message.bodyIsOnlyEmojis() && message.getType() != Message.TYPE_PRIVATE) {
                 displayEmojiMessage(viewHolder, message.getBody().replaceAll("\\s", ""));
             } else if (message.isXmppUri()) {
                 displayXmppMessage(viewHolder, message.getBody().trim());
