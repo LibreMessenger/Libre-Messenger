@@ -2,6 +2,7 @@ package de.pixart.messenger.ui;
 
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,7 +36,9 @@ import static java.lang.String.format;
 
 public class ShareWithActivity extends XmppActivity implements XmppConnectionService.OnConversationUpdate {
 
+    private static final int REQUEST_STORAGE_PERMISSION = 0x733f32;
     private boolean mReturnToPrevious = false;
+    private Conversation mPendingConversation = null;
     private static final String STATE_SHARING_IS_RUNNING = "state_sharing_is_running";
     static boolean ContactChosen = false;
     static boolean IntentReceived = false;
@@ -148,6 +151,22 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
                 && share.account != null) {
             share();
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (grantResults.length > 0)
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (requestCode == REQUEST_STORAGE_PERMISSION) {
+                    if (this.mPendingConversation != null) {
+                        share(this.mPendingConversation);
+                    } else {
+                        Log.d(Config.LOGTAG, "unable to find stored conversation");
+                    }
+                }
+            } else {
+                Toast.makeText(this, R.string.no_storage_permission, Toast.LENGTH_SHORT).show();
+            }
     }
 
     @Override
@@ -311,6 +330,10 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
     }
 
     private void share(final Conversation conversation) {
+        if (share.uris.size() != 0 && !hasStoragePermission(REQUEST_STORAGE_PERMISSION)) {
+            mPendingConversation = conversation;
+            return;
+        }
         final Account account = conversation.getAccount();
         final XmppConnection connection = account.getXmppConnection();
         final long max = connection == null ? -1 : connection.getFeatures().getMaxHttpUploadSize();
