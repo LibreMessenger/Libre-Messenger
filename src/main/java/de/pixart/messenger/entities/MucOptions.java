@@ -3,13 +3,13 @@ package de.pixart.messenger.entities;
 import android.annotation.SuppressLint;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.utils.JidHelper;
 import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 import de.pixart.messenger.xmpp.forms.Data;
@@ -20,8 +20,6 @@ import de.pixart.messenger.xmpp.pep.Avatar;
 
 @SuppressLint("DefaultLocale")
 public class MucOptions {
-
-    private static List<String> LOCALPART_BLACKLIST = Arrays.asList("xmpp", "jabber");
 
     private boolean mAutoPushConfiguration = true;
 
@@ -602,14 +600,7 @@ public class MucOptions {
         } else if (!conversation.getJid().isBareJid()) {
             return conversation.getJid().getResourcepart();
         } else {
-            Jid jid = account.getJid();
-            if (LOCALPART_BLACKLIST.contains(jid.getLocalpart())) {
-                final String domain = jid.getDomainpart();
-                final int index = domain.lastIndexOf('.');
-                return index > 1 ? domain.substring(0, index) : domain;
-            } else {
-                return jid.getLocalpart();
-            }
+            return JidHelper.localPartOrFallback(account.getJid());
         }
     }
 

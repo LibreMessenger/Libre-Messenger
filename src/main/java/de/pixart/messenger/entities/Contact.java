@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Locale;
 
 import de.pixart.messenger.Config;
+import de.pixart.messenger.utils.JidHelper;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
@@ -121,7 +122,7 @@ public class Contact implements ListItem, Blockable {
         } else if (this.presenceName != null && !this.presenceName.isEmpty() && mutualPresenceSubscription()) {
             return this.presenceName;
         } else if (jid.hasLocalpart()) {
-            return jid.getUnescapedLocalpart();
+            return JidHelper.localPartOrFallback(jid);
         } else {
             return jid.getDomainpart();
         }
