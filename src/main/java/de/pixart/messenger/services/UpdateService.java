@@ -63,6 +63,7 @@ public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapp
             connection = (HttpsURLConnection)url.openConnection();
             connection.setConnectTimeout(Config.SOCKET_TIMEOUT * 1000);
             connection.setReadTimeout(Config.SOCKET_TIMEOUT * 1000);
+            connection.setRequestProperty("User-Agent", context.getString(R.string.app_name));
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {
