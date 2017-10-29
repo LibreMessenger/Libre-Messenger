@@ -40,7 +40,6 @@ dependencies {
     standardPushCompile 'com.google.android.gms:play-services-gcm:11.0.4'
     compile 'org.sufficientlysecure:openpgp-api:10.0'
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
-    compile 'com.android.support:support-v13:25.4.0'
     compile 'org.bouncycastle:bcprov-jdk15on:1.56'
     compile 'org.bouncycastle:bcmail-jdk15on:1.56'
     compile 'org.jitsi:org.otr4j:0.22'
