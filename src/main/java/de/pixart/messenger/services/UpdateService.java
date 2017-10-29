@@ -29,7 +29,8 @@ import de.pixart.messenger.ui.UpdaterActivity;
 import static de.pixart.messenger.services.NotificationService.UPDATE_NOTIFICATION_ID;
 
 public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapper> {
-    public UpdateService (){}
+    public UpdateService (){
+    }
 
     private Context context;
 

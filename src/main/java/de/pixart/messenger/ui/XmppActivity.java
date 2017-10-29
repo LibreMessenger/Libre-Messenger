@@ -379,7 +379,7 @@ public abstract class XmppActivity extends Activity {
             case R.id.action_check_updates:
                 if (xmppConnectionService.hasInternetConnection()) {
                     UpdateService task = new UpdateService(this);
-                    task.execute("true");
+                    task.executeOnExecutor(UpdateService.THREAD_POOL_EXECUTOR, "true");
                 } else {
                     Toast.makeText(this, R.string.account_status_no_internet, Toast.LENGTH_LONG).show();
                 }

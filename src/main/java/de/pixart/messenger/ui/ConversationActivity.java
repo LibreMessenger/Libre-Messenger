@@ -391,7 +391,7 @@ public class ConversationActivity extends XmppActivity
             editor.commit();
             Log.d(Config.LOGTAG, "AppUpdater: CurrentTime: " + lastUpdateTime);
             UpdateService task = new UpdateService(this);
-            task.execute("false");
+            task.executeOnExecutor(UpdateService.THREAD_POOL_EXECUTOR, "false");
             Log.d(Config.LOGTAG, "AppUpdater started");
         } else {
             Log.d(Config.LOGTAG, "AppUpdater stopped");
