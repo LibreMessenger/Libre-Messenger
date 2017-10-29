@@ -110,6 +110,7 @@ public class XmppConnection implements Runnable {
     private final Features features = new Features(this);
     private boolean needsBinding = true;
     private boolean shouldAuthenticate = true;
+    private boolean inSmacksSession = false;
     private Element streamFeatures;
     private final HashMap<Jid, ServiceDiscoveryResult> disco = new HashMap<>();
 
@@ -281,6 +282,7 @@ public class XmppConnection implements Runnable {
         }
         Log.d(Config.LOGTAG, account.getJid().toBareJid().toString() + ": connecting");
         features.encryptionEnabled = false;
+        inSmacksSession = false;
         this.attempt++;
         this.verifiedHostname = null; //will be set if user entered hostname is being used or hostname was verified with dnssec
         try {
@@ -607,9 +609,11 @@ public class XmppConnection implements Runnable {
                             + ": stream management(" + smVersion + ") enabled");
                 }
                 this.stanzasReceived = 0;
+                this.inSmacksSession = true;
                 final RequestPacket r = new RequestPacket(smVersion);
                 tagWriter.writeStanzaAsync(r);
             } else if (nextTag.isStart("resumed")) {
+                this.inSmacksSession = true;
                 this.tagWriter.writeStanzaAsync(new RequestPacket(smVersion));
                 lastPacketReceived = SystemClock.elapsedRealtime();
                 final Element resumed = tagReader.readElement(nextTag);
@@ -762,7 +766,11 @@ public class XmppConnection implements Runnable {
             resetStreamId();
             throw new IOException("time to restart the session. cant handle >2 billion pcks");
         }
-        ++stanzasReceived;
+        if (inSmacksSession) {
+            ++stanzasReceived;
+        } else if (features.sm()) {
+            Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": not counting stanza(" + element.getClass().getSimpleName() + "). Not in smacks session.");
+        }
         lastPacketReceived = SystemClock.elapsedRealtime();
         if (Config.BACKGROUND_STANZA_LOGGING && mXmppConnectionService.checkListeners()) {
             Log.d(Config.LOGTAG, "[background stanza] " + element);
