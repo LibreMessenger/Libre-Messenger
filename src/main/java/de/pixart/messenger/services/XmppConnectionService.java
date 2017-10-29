@@ -1031,11 +1031,13 @@ public class XmppConnectionService extends Service {
             Log.d(Config.LOGTAG, "number of restarts exceeds threshold.");
         }
 
-        if (this.accounts.size() == 0 && Arrays.asList("Sony","Sony Ericsson").contains(Build.MANUFACTURER)) {
-            getPreferences().edit().putBoolean(SettingsActivity.SHOW_FOREGROUND_SERVICE, true).commit();
+        final SharedPreferences.Editor editor = getPreferences().edit();
+        if (this.accounts.size() == 0 && Arrays.asList("Sony", "Sony Ericsson").contains(Build.MANUFACTURER)) {
+            editor.putBoolean(SettingsActivity.SHOW_FOREGROUND_SERVICE, true);
             Log.d(Config.LOGTAG, Build.MANUFACTURER + " is on blacklist. enabling foreground service");
         }
-
+        editor.putBoolean(EventReceiver.SETTING_ENABLED_ACCOUNTS, hasEnabledAccounts()).apply();
+        editor.apply();
         restoreFromDatabase();
 
         getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, contactObserver);
@@ -1046,7 +1048,7 @@ public class XmppConnectionService extends Service {
             }
         }).start();
         if (Config.supportOpenPgp()) {
-            this.pgpServiceConnection = new OpenPgpServiceConnection(getApplicationContext(), "org.sufficientlysecure.keychain", new OpenPgpServiceConnection.OnBound() {
+            this.pgpServiceConnection = new OpenPgpServiceConnection(this, "org.sufficientlysecure.keychain", new OpenPgpServiceConnection.OnBound() {
                 @Override
                 public void onBound(IOpenPgpService2 service) {
                     for (Account account : accounts) {
@@ -2058,6 +2060,7 @@ public class XmppConnectionService extends Service {
             this.accounts.remove(account);
             updateAccountUi();
             getNotificationService().updateErrorNotification();
+            syncEnabledAccountSetting();
         }
     }
 
