@@ -27,10 +27,10 @@ public class StartUI extends AppCompatActivity
         implements EasyPermissions.PermissionCallbacks {
 
     private static final int NeededPermissions = 1000;
-
     String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
     };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,21 +42,21 @@ public class StartUI extends AppCompatActivity
 
     @AfterPermissionGranted(NeededPermissions)
     private void requestNeededPermissions() {
-        String PREFS_NAME = "FirstStart";
-        SharedPreferences FirstStart = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        long FirstStartTime = FirstStart.getLong("FirstStart", 0);
+        String PREF_FIRST_START = "FirstStart";
+        SharedPreferences FirstStart = getApplicationContext().getSharedPreferences(PREF_FIRST_START, Context.MODE_PRIVATE);
+        long FirstStartTime = FirstStart.getLong(PREF_FIRST_START, 0);
         if (EasyPermissions.hasPermissions(this, perms)) {
             // Already have permission, start ConversationsActivity
             Log.d(Config.LOGTAG, "All permissions granted, starting " + getString(R.string.app_name) + "(" + FirstStartTime + ")");
             Intent intent = new Intent(this, ConversationActivity.class);
-            intent.putExtra("FirstStart", FirstStartTime);
+            intent.putExtra(PREF_FIRST_START, FirstStartTime);
             startActivity(intent);
             finish();
         } else {
             // set first start to 0 if there are permissions to request
             Log.d(Config.LOGTAG, "Requesting required permissions");
             SharedPreferences.Editor editor = FirstStart.edit();
-            editor.putLong("FirstStart", 0);
+            editor.putLong(PREF_FIRST_START, 0);
             editor.commit();
             // Do not have permissions, request them now
             EasyPermissions.requestPermissions(this, getString(R.string.request_permissions_message),

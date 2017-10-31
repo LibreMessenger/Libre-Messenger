@@ -151,6 +151,8 @@ public class ConversationActivity extends XmppActivity
 
     long FirstStartTime = -1;
 
+    String PREF_FIRST_START = "FirstStart";
+
     public Conversation getSelectedConversation() {
         return this.mSelectedConversation;
     }
@@ -1349,8 +1351,8 @@ public class ConversationActivity extends XmppActivity
 
         Bundle extras = getIntent().getExtras();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (extras != null && extras.containsKey("FirstStart")) {
-                FirstStartTime = extras.getLong("FirstStart");
+            if (extras != null && extras.containsKey(PREF_FIRST_START)) {
+                FirstStartTime = extras.getLong(PREF_FIRST_START);
                 Log.d(Config.LOGTAG, "Get first start time from StartUI: " + FirstStartTime);
             }
         } else {
@@ -1369,11 +1371,10 @@ public class ConversationActivity extends XmppActivity
         if (FirstStartTime == 0) {
             Log.d(Config.LOGTAG, "First start time: " + FirstStartTime + ", restarting App");
             //write first start timestamp to file
-            String PREFS_NAME = "FirstStart";
             FirstStartTime = System.currentTimeMillis();
-            SharedPreferences FirstStart = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+            SharedPreferences FirstStart = getApplicationContext().getSharedPreferences(PREF_FIRST_START, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = FirstStart.edit();
-            editor.putLong("FirstStart", FirstStartTime);
+            editor.putLong(PREF_FIRST_START, FirstStartTime);
             editor.commit();
             // restart
             Intent intent = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
