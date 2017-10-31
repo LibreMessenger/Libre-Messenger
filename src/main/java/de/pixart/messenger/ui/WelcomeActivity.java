@@ -41,6 +41,8 @@ import de.pixart.messenger.utils.EncryptDecryptFile;
 
 public class WelcomeActivity extends XmppActivity {
 
+    boolean importSuccessful = false;
+
     @Override
     protected void refreshUiReal() {
     }
@@ -240,7 +242,17 @@ public class WelcomeActivity extends XmppActivity {
         }
         Log.d(Config.LOGTAG, "checkDB = " + checkDB.toString() + ", Backup DB = " + Backup_DB_Version + ", DB = " + DB_Version);
         if (checkDB != null && Backup_DB_Version != 0 && Backup_DB_Version <= DB_Version) {
-            ImportDatabase();
+            try {
+                ImportDatabase();
+                importSuccessful = true;
+            } catch (Exception e) {
+                importSuccessful = false;
+                e.printStackTrace();
+            } finally {
+                if (importSuccessful) {
+                    restart();
+                }
+            }
         } else if (checkDB != null && Backup_DB_Version == 0) {
             WelcomeActivity.this.runOnUiThread(new Runnable() {
                 public void run() {
@@ -257,7 +269,7 @@ public class WelcomeActivity extends XmppActivity {
         }
     }
 
-    private void ImportDatabase() throws IOException {
+    private void ImportDatabase() throws Exception {
         // Set location for the db:
         final OutputStream OutputFile = new FileOutputStream(this.getDatabasePath(DatabaseBackend.DATABASE_NAME));
         // Set the folder on the SDcard
@@ -277,7 +289,6 @@ public class WelcomeActivity extends XmppActivity {
             Log.d(Config.LOGTAG, "Delete temp file from " + TempFile.toString());
             TempFile.delete();
         }
-        restart();
     }
 
     private void restart() {
