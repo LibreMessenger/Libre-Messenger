@@ -1204,7 +1204,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 final AsyncDrawable asyncDrawable = new AsyncDrawable(activity.getResources(), null, task);
                 imageView.setImageDrawable(asyncDrawable);
                 try {
-                    task.execute(message);
+                    task.executeOnExecutor(BitmapWorkerTask.THREAD_POOL_EXECUTOR, message);
                 } catch (final RejectedExecutionException ignored) {
                 }
             }

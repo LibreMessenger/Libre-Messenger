@@ -104,7 +104,7 @@ public class AccountAdapter extends ArrayAdapter<Account> {
                 final AsyncDrawable asyncDrawable = new AsyncDrawable(activity.getResources(), null, task);
                 imageView.setImageDrawable(asyncDrawable);
                 try {
-                    task.execute(account);
+                    task.executeOnExecutor(BitmapWorkerTask.THREAD_POOL_EXECUTOR, account);
                 } catch (final RejectedExecutionException ignored) {
                 }
             }

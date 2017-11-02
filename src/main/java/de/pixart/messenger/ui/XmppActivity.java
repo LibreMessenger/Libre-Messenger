@@ -1249,7 +1249,7 @@ public abstract class XmppActivity extends Activity {
                         getResources(), null, task);
                 imageView.setImageDrawable(asyncDrawable);
                 try {
-                    task.execute(message);
+                    task.executeOnExecutor(BitmapWorkerTask.THREAD_POOL_EXECUTOR, message);
                 } catch (final RejectedExecutionException ignored) {
                     ignored.printStackTrace();
                 }

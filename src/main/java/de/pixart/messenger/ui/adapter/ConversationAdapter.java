@@ -269,7 +269,7 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
                 final AsyncDrawable asyncDrawable = new AsyncDrawable(activity.getResources(), null, task);
                 imageView.setImageDrawable(asyncDrawable);
                 try {
-                    task.execute(conversation);
+                    task.executeOnExecutor(BitmapWorkerTask.THREAD_POOL_EXECUTOR, conversation);
                 } catch (final RejectedExecutionException ignored) {
                 }
             }

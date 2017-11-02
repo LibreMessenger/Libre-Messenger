@@ -168,7 +168,7 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
                 final AsyncDrawable asyncDrawable = new AsyncDrawable(activity.getResources(), null, task);
                 imageView.setImageDrawable(asyncDrawable);
                 try {
-                    task.execute(item);
+                    task.executeOnExecutor(BitmapWorkerTask.THREAD_POOL_EXECUTOR, item);
                 } catch (final RejectedExecutionException ignored) {
                 }
             }
