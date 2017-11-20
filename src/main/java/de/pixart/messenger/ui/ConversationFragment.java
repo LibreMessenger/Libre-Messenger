@@ -72,6 +72,7 @@ import de.pixart.messenger.ui.XmppActivity.OnValueEdited;
 import de.pixart.messenger.ui.adapter.MessageAdapter;
 import de.pixart.messenger.ui.adapter.MessageAdapter.OnContactPictureClicked;
 import de.pixart.messenger.ui.adapter.MessageAdapter.OnContactPictureLongClicked;
+import de.pixart.messenger.utils.MessageUtils;
 import de.pixart.messenger.utils.NickValidityChecker;
 import de.pixart.messenger.utils.StylingHelper;
 import de.pixart.messenger.utils.UIHelper;
@@ -601,7 +602,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     }
 
     private void quoteMessage(Message message) {
-        quoteText(message.getMergedBody().toString());
+        quoteText(MessageUtils.prepareQuote(message));
     }
 
     @Override
@@ -642,7 +643,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
             MenuItem showErrorMessage = menu.findItem(R.id.show_error_message);
             if (!treatAsFile && !encrypted && !m.isGeoUri() && !m.treatAsDownloadable()) {
                 copyMessage.setVisible(true);
-                quoteMessage.setVisible(true);
+                quoteMessage.setVisible(MessageUtils.prepareQuote(m).length() > 0);
             }
             if (m.getEncryption() == Message.ENCRYPTION_DECRYPTION_FAILED) {
                 retryDecryption.setVisible(true);
