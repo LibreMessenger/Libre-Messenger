@@ -454,12 +454,16 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         return startsWithQuote;
     }
 
-    private void displayTextMessage(final ViewHolder viewHolder, final Message message, boolean darkBackground) {
+    private void displayTextMessage(final ViewHolder viewHolder, final Message message, boolean darkBackground, int type) {
         if (viewHolder.download_button != null) {
             viewHolder.download_button.setVisibility(View.GONE);
         }
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.VISIBLE);
+        viewHolder.messageBody.setTextColor(this.getMessageTextColor(darkBackground, true));
+        viewHolder.messageBody.setLinkTextColor(this.getMessageTextColor(darkBackground, true));
+        viewHolder.messageBody.setHighlightColor(ContextCompat.getColor(activity, darkBackground ? R.color.grey800 : R.color.grey500));
+        viewHolder.messageBody.setTypeface(null, Typeface.NORMAL);
         if (message.getBody() != null) {
             final String nick = UIHelper.getMessageDisplayName(message);
             SpannableStringBuilder body = message.getMergedBody();
@@ -518,7 +522,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                     body.setSpan(new StyleSpan(Typeface.BOLD), matcher.start(), matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }
-            StylingHelper.format(body, true);
+            StylingHelper.format(body, viewHolder.messageBody.getCurrentTextColor());
             Linkify.addLinks(body, XMPP_PATTERN, "xmpp");
             Linkify.addLinks(body, Patterns.AUTOLINK_WEB_URL, "http", WEBURL_MATCH_FILTER, WEBURL_TRANSFORM_FILTER);
             Linkify.addLinks(body, GeoHelper.GEO_URI, "geo");
@@ -532,10 +536,6 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             viewHolder.messageBody.setText("");
             viewHolder.messageBody.setTextIsSelectable(false);
         }
-        viewHolder.messageBody.setTextColor(this.getMessageTextColor(darkBackground, true));
-        viewHolder.messageBody.setLinkTextColor(this.getMessageTextColor(darkBackground, true));
-        viewHolder.messageBody.setHighlightColor(ContextCompat.getColor(activity, darkBackground ? R.color.grey800 : R.color.grey500));
-        viewHolder.messageBody.setTypeface(null, Typeface.NORMAL);
     }
 
     private void displayDownloadableMessage(ViewHolder viewHolder, final Message message, String text) {
@@ -936,7 +936,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                                     UIHelper.getFileDescriptionString(activity, message)));
                 }
             } else {
-                displayTextMessage(viewHolder, message, darkBackground);
+                displayTextMessage(viewHolder, message, darkBackground, type);
             }
         }
 
