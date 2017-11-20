@@ -365,7 +365,7 @@ public class XmppConnectionService extends Service {
                 scheduleWakeUpCall(Config.PING_MAX_INTERVAL, account.getUuid().hashCode());
             } else if (account.getStatus() == Account.State.OFFLINE || account.getStatus() == Account.State.DISABLED) {
                 resetSendingToWaiting(account);
-                if (!account.isOptionSet(Account.OPTION_DISABLED) && isInLowPingTimeoutMode(account)) {
+                if (account.isEnabled() && isInLowPingTimeoutMode(account)) {
                     Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": went into offline state during low ping mode. reconnecting now");
                     reconnectAccount(account, true, false);
                 } else {
@@ -2502,7 +2502,7 @@ public class XmppConnectionService extends Service {
 
     private boolean hasEnabledAccounts() {
         for(Account account : this.accounts) {
-            if (!account.isOptionSet(Account.OPTION_DISABLED)) {
+            if (account.isEnabled()) {
                 return true;
             }
         }
@@ -3265,7 +3265,7 @@ public class XmppConnectionService extends Service {
                 account.setXmppConnection(connection);
             }
             boolean hasInternet = hasInternetConnection();
-            if (!account.isOptionSet(Account.OPTION_DISABLED) && hasInternet) {
+            if (account.isEnabled() && hasInternet) {
                 if (!force) {
                     disconnect(account, false);
                 }
@@ -3724,7 +3724,7 @@ public class XmppConnectionService extends Service {
     public void refreshAllPresences() {
         boolean includeIdleTimestamp = checkListeners() && broadcastLastActivity();
         for (Account account : getAccounts()) {
-            if (!account.isOptionSet(Account.OPTION_DISABLED)) {
+            if (account.isEnabled()) {
                 sendPresence(account, includeIdleTimestamp);
             }
         }
@@ -3770,7 +3770,7 @@ public class XmppConnectionService extends Service {
     public List<Contact> findContacts(Jid jid, String accountJid) {
         ArrayList<Contact> contacts = new ArrayList<>();
         for (Account account : getAccounts()) {
-            if ((!account.isOptionSet(Account.OPTION_DISABLED) || accountJid != null)
+            if ((account.isEnabled() || accountJid != null)
                     && (accountJid == null || accountJid.equals(account.getJid().toBareJid().toString()))) {
                 Contact contact = account.getRoster().getContactFromRoster(jid);
                 if (contact != null) {
@@ -3783,8 +3783,7 @@ public class XmppConnectionService extends Service {
 
     public Conversation findFirstMuc(Jid jid) {
         for (Conversation conversation : getConversations()) {
-            if (conversation.getJid().toBareJid().equals(jid.toBareJid())
-                    && conversation.getMode() == Conversation.MODE_MULTI) {
+            if (conversation.getAccount().isEnabled() && conversation.getJid().toBareJid().equals(jid.toBareJid()) && conversation.getMode() == Conversation.MODE_MULTI) {
                 return conversation;
             }
         }
@@ -4016,7 +4015,7 @@ public class XmppConnectionService extends Service {
         account.setPresenceStatus(status);
         account.setPresenceStatusMessage(statusMessage);
         databaseBackend.updateAccount(account);
-        if (!account.isOptionSet(Account.OPTION_DISABLED) && send) {
+        if (account.isEnabled() && send) {
             sendPresence(account);
         }
     }
