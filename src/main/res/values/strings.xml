@@ -636,7 +636,9 @@
     <string name="missing_presence_subscription">Missing presence subscription</string>
     <string name="missing_omemo_keys">Missing OMEMO keys</string>
     <string name="error_publish_avatar_offline">You need to be connected to publish your avatar.</string>
-    <string name="select_text">Select text</string>
+    <string name="copy_to_clipboard">Copy to clipboard</string>
+    <string name="message_copied_to_clipboard">Message copied to clipboard</string>
+    <string name="message">Message</string>
     <string name="quote">Quote</string>
     <string name="show_error_message">Show error message</string>
     <string name="error_message">Error Message</string>
