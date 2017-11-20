@@ -21,22 +21,20 @@ import de.pixart.messenger.Config;
 
 public class EditMessage extends EditText {
 
+    private static final InputFilter SPAN_FILTER = new InputFilter() {
+
+        @Override
+        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+            return source instanceof Spanned ? source.toString() : source;
+        }
+    };
+    protected Handler mTypingHandler = new Handler();
+    protected KeyboardListener keyboardListener;
+
     private OnCommitContentListener mCommitContentListener = null;
     private String[] mimeTypes = null;
 
-    public interface OnCommitContentListener {
-        boolean onCommitContent(InputContentInfoCompat inputContentInfo, int flags, Bundle opts, String[] mimeTypes);
-    }
-
-    public EditMessage(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public EditMessage(Context context) {
-        super(context);
-    }
-
-    protected Handler mTypingHandler = new Handler();
+    private boolean isUserTyping = false;
 
     protected Runnable mTypingTimeout = new Runnable() {
         @Override
@@ -48,11 +46,15 @@ public class EditMessage extends EditText {
         }
     };
 
-    private boolean isUserTyping = false;
-
     private boolean lastInputWasTab = false;
 
-    protected KeyboardListener keyboardListener;
+    public EditMessage(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public EditMessage(Context context) {
+        super(context);
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent e) {
@@ -97,28 +99,6 @@ public class EditMessage extends EditText {
             this.isUserTyping = false;
         }
     }
-
-    public interface KeyboardListener {
-        boolean onEnterPressed();
-
-        void onTypingStarted();
-
-        void onTypingStopped();
-
-        void onTextDeleted();
-
-        void onTextChanged();
-
-        boolean onTabPressed(boolean repeated);
-    }
-
-    private static final InputFilter SPAN_FILTER = new InputFilter() {
-
-        @Override
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            return source instanceof Spanned ? source.toString() : source;
-        }
-    };
 
     @Override
     public boolean onTextContextMenuItem(int id) {
@@ -167,5 +147,23 @@ public class EditMessage extends EditText {
         } else {
             return ic;
         }
+    }
+
+    public interface OnCommitContentListener {
+        boolean onCommitContent(InputContentInfoCompat inputContentInfo, int flags, Bundle opts, String[] mimeTypes);
+    }
+
+    public interface KeyboardListener {
+        boolean onEnterPressed();
+
+        void onTypingStarted();
+
+        void onTypingStopped();
+
+        void onTextDeleted();
+
+        void onTextChanged();
+
+        boolean onTabPressed(boolean repeated);
     }
 }
