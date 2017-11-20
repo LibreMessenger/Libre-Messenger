@@ -74,6 +74,7 @@ import de.pixart.messenger.ui.adapter.MessageAdapter.OnContactPictureClicked;
 import de.pixart.messenger.ui.adapter.MessageAdapter.OnContactPictureLongClicked;
 import de.pixart.messenger.ui.widget.ListSelectionManager;
 import de.pixart.messenger.utils.NickValidityChecker;
+import de.pixart.messenger.utils.StylingHelper;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.XmppConnection;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
@@ -475,6 +476,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                 }
             }
         });
+        mEditMessage.addTextChangedListener(new StylingHelper.MessageEditorStyler(mEditMessage));
         mEditMessage.setOnEditorActionListener(mEditorActionListener);
         mEditMessage.setRichContentListener(new String[]{"image/*"}, mEditorContentListener);
 

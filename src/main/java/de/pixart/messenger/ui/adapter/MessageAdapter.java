@@ -74,6 +74,7 @@ import de.pixart.messenger.ui.widget.ListSelectionManager;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.GeoHelper;
 import de.pixart.messenger.utils.Patterns;
+import de.pixart.messenger.utils.StylingHelper;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.mam.MamReference;
 
@@ -517,6 +518,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                     body.setSpan(new StyleSpan(Typeface.BOLD), matcher.start(), matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }
+            StylingHelper.format(body, true);
             Linkify.addLinks(body, XMPP_PATTERN, "xmpp");
             Linkify.addLinks(body, Patterns.AUTOLINK_WEB_URL, "http", WEBURL_MATCH_FILTER, WEBURL_TRANSFORM_FILTER);
             Linkify.addLinks(body, GeoHelper.GEO_URI, "geo");
