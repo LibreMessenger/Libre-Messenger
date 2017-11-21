@@ -136,7 +136,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         }
 
         @Override
-        public void onScroll(AbsListView view, int firstVisibleItem,
+        public void onScroll(final AbsListView view, int firstVisibleItem,
                              int visibleItemCount, final int totalItemCount) {
             synchronized (ConversationFragment.this.messageList) {
                 if (firstVisibleItem < 25 && conversation != null && conversation.messagesLoaded.compareAndSet(true,false) && messageList.size() > 0) {
@@ -199,7 +199,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                                     if (ConversationFragment.this.conversation != conversation) {
                                         return;
                                     }
-                                    messageLoaderToast = Toast.makeText(activity, resId, Toast.LENGTH_LONG);
+                                    messageLoaderToast = Toast.makeText(view.getContext(), resId, Toast.LENGTH_LONG);
                                     messageLoaderToast.show();
                                 }
                             });
