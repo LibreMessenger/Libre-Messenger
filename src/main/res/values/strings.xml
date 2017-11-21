@@ -735,4 +735,5 @@
     <string name="update_service">Pix-Art Messenger update service</string>
     <string name="install_update">Install update?</string>
     <string name="highlight_in_muc">highlight user</string>
+    <string name="no_application_found_to_open_link">No application found to open link</string>
 </resources>
