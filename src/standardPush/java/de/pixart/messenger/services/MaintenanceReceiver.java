@@ -9,7 +9,7 @@ import com.google.android.gms.iid.InstanceID;
 
 import java.io.IOException;
 
-import eu.siacs.conversations.Config;
+import de.pixart.messenger.Config;
 
 public class MaintenanceReceiver extends BroadcastReceiver {
     @Override
