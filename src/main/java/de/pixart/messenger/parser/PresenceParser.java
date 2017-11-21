@@ -2,7 +2,6 @@ package de.pixart.messenger.parser;
 
 import android.util.Log;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -224,7 +223,7 @@ public class PresenceParser extends AbstractParser implements
                     final String since = idle.getAttribute("since");
                     contact.setLastseen(AbstractParser.parseTimestamp(since));
                     contact.flagInactive();
-                } catch (NullPointerException | ParseException e) {
+                } catch (Throwable throwable) {
                     if (contact.setLastseen(AbstractParser.parseTimestamp(packet))) {
                         contact.flagActive();
                     }
