@@ -10,6 +10,7 @@
         <item name="TextSizeBody">14sp</item>
         <item name="IconSize">16sp</item>
         <item name="TextSizeHeadline">18sp</item>
+        <item name="TextSeparation">5sp</item>
 
         <item name="attr/icon_add_group">@drawable/ic_group_add_white_24dp</item>
         <item name="attr/icon_add_person">@drawable/ic_person_add_white_24dp</item>

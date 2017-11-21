@@ -14,6 +14,7 @@
         <item name="TextSizeBody">14sp</item>
         <item name="IconSize">16sp</item>
         <item name="TextSizeHeadline">18sp</item>
+        <item name="TextSeparation">5sp</item>
 
         <item name="attr/dialog_horizontal_padding">24dp</item>
         <item name="attr/dialog_vertical_padding">16dp</item>

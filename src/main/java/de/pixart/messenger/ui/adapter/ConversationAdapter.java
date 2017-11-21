@@ -87,6 +87,7 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
             convName.setText(conversation.getJid().toBareJid().toString());
         }
         TextView mLastMessage = (TextView) view.findViewById(R.id.conversation_lastmsg);
+        ImageView mLastMessageImage = (ImageView) view.findViewById(R.id.conversation_lastmsg_img);
         TextView mTimestamp = (TextView) view.findViewById(R.id.conversation_lastupdate);
         TextView mSenderName = (TextView) view.findViewById(R.id.sender_name);
         ImageView imagePreview = (ImageView) view.findViewById(R.id.conversation_lastimage);
@@ -126,13 +127,36 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
                 || message.getTransferable().getStatus() != Transferable.STATUS_DELETED)) {
             mSenderName.setVisibility(View.GONE);
             mLastMessage.setVisibility(View.GONE);
+            mLastMessageImage.setVisibility(View.GONE);
             imagePreview.setVisibility(View.VISIBLE);
             activity.loadBitmap(message, imagePreview);
         } else {
-            Pair<String, Boolean> preview = UIHelper.getMessagePreview(activity, message);
-            mLastMessage.setVisibility(View.VISIBLE);
+            final boolean showPreviewText;
+            if (message.getFileParams().runtime > 0) {
+                showPreviewText = false;
+                mLastMessageImage.setImageResource(activity.getThemeResource(R.attr.ic_attach_record, R.drawable.ic_attach_record));
+                mLastMessageImage.setVisibility(View.VISIBLE);
+            } else if (message.getType() == Message.TYPE_FILE) {
+                showPreviewText = true;
+                mLastMessageImage.setImageResource(activity.getThemeResource(R.attr.ic_attach_document, R.drawable.ic_attach_document));
+                mLastMessageImage.setVisibility(View.VISIBLE);
+            } else if (message.isGeoUri()) {
+                showPreviewText = false;
+                mLastMessageImage.setImageResource(activity.getThemeResource(R.attr.ic_attach_location, R.drawable.ic_attach_location));
+                mLastMessageImage.setVisibility(View.VISIBLE);
+            } else {
+                showPreviewText = true;
+                mLastMessageImage.setVisibility(View.GONE);
+            }
+
+            final Pair<String, Boolean> preview = UIHelper.getMessagePreview(activity, message);
+            if (showPreviewText) {
+                mLastMessage.setText(preview.first);
+            } else {
+                mLastMessageImage.setContentDescription(preview.first);
+            }
+            mLastMessage.setVisibility(showPreviewText ? View.VISIBLE : View.GONE);
             imagePreview.setVisibility(View.GONE);
-            mLastMessage.setText(preview.first);
             if (preview.second) {
                 if (conversation.isRead()) {
                     mLastMessage.setTypeface(null, Typeface.ITALIC);

@@ -48,8 +48,8 @@
                     android:layout_alignLeft="@+id/conversation_lastwrapper"
                     android:layout_toLeftOf="@+id/conversation_failed"
                     android:paddingRight="4dp"
-                    android:singleLine="true"
-                    android:text="Awesome groupchat"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textColor="@color/black87"
                     android:textSize="?attr/TextSizeHeadline" />
@@ -81,7 +81,13 @@
                         android:layout_centerVertical="true"
                         android:layout_toLeftOf="@+id/indicators"
                         android:layout_toRightOf="@+id/sender_name"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/conversation_lastmsg_img"
+                            android:layout_width="?attr/IconSize"
+                            android:layout_height="?attr/IconSize"
+                            android:layout_marginRight="?attr/TextSeparation"/>/>
 
                         <com.vanniktech.emoji.EmojiTextView
                             android:id="@+id/conversation_lastmsg"
@@ -90,8 +96,8 @@
                             android:gravity="center_vertical"
                             android:minHeight="?attr/IconSize"
                             android:scrollHorizontally="false"
-                            android:singleLine="true"
-                            android:text="This is a placeholder text to show the last messages"
+                            android:maxLines="1"
+                            android:ellipsize="end"
                             android:textColor="@color/black87"
                             android:textSize="?attr/TextSizeBody" />
 
@@ -186,7 +192,6 @@
                     android:layout_alignBaseline="@+id/conversation_name"
                     android:paddingLeft="4dp"
                     android:gravity="right"
-                    android:text="23:42"
                     android:textColor="@color/black54"
                     android:textSize="?attr/TextSizeInfo" />
             </RelativeLayout>
