@@ -3,6 +3,9 @@
     <external-path
         name="external"
         path="/" />
+    <root-path
+        name="storage"
+        path="/storage/" />
     <files-path
         name="pictures"
         path="Images/" />

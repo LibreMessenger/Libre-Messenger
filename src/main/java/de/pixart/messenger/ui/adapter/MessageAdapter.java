@@ -1096,6 +1096,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         try {
             uri = FileBackend.getUriForFile(activity, file);
         } catch (SecurityException e) {
+            Log.d(Config.LOGTAG, "No permission to access " + file.getAbsolutePath(), e);
             Toast.makeText(activity, activity.getString(R.string.no_permission_to_access_x, file.getAbsolutePath()), Toast.LENGTH_SHORT).show();
             return;
         }
