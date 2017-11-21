@@ -886,7 +886,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
     public boolean setAttribute(String key, String value) {
         synchronized (this.attributes) {
             try {
-                this.attributes.put(key, value);
+                this.attributes.put(key, value == null ? "" : value);
                 return true;
             } catch (JSONException e) {
                 return false;

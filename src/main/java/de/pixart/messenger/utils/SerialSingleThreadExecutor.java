@@ -1,22 +1,26 @@
 package de.pixart.messenger.utils;
 
 import android.os.Looper;
+import android.util.Log;
 
 import java.util.ArrayDeque;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
+import de.pixart.messenger.Config;
 
 public class SerialSingleThreadExecutor implements Executor {
 
     final Executor executor = Executors.newSingleThreadExecutor();
     protected final ArrayDeque<Runnable> tasks = new ArrayDeque<>();
     private Runnable active;
+    private final String name;
 
-    public SerialSingleThreadExecutor() {
-        this(false);
+    public SerialSingleThreadExecutor(String name) {
+        this(name, false);
     }
 
-    public SerialSingleThreadExecutor(boolean prepareLooper) {
+    public SerialSingleThreadExecutor(String name, boolean prepareLooper) {
         if (prepareLooper) {
             execute(new Runnable() {
                 @Override
@@ -25,6 +29,7 @@ public class SerialSingleThreadExecutor implements Executor {
                 }
             });
         }
+        this.name = name;
     }
 
     public synchronized void execute(final Runnable r) {
@@ -45,6 +50,10 @@ public class SerialSingleThreadExecutor implements Executor {
     protected synchronized void scheduleNext() {
         if ((active = tasks.poll()) != null) {
             executor.execute(active);
+            int remaining = tasks.size();
+            if (remaining > 0) {
+                Log.d(Config.LOGTAG, remaining + " remaining tasks on executor '" + name + "'");
+            }
         }
     }
 }

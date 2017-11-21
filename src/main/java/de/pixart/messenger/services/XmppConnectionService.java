@@ -159,9 +159,10 @@ public class XmppConnectionService extends Service {
     public static final String ACTION_GCM_TOKEN_REFRESH = "gcm_token_refresh";
     public static final String ACTION_GCM_MESSAGE_RECEIVED = "gcm_message_received";
     private static final String ACTION_MERGE_PHONE_CONTACTS = "merge_phone_contacts";
-    private final SerialSingleThreadExecutor mFileAddingExecutor = new SerialSingleThreadExecutor();
-    private final SerialSingleThreadExecutor mVideoCompressionExecutor = new SerialSingleThreadExecutor();
-    private final SerialSingleThreadExecutor mDatabaseExecutor = new SerialSingleThreadExecutor();
+    private final SerialSingleThreadExecutor mFileAddingExecutor = new SerialSingleThreadExecutor("FileAdding");
+    private final SerialSingleThreadExecutor mVideoCompressionExecutor = new SerialSingleThreadExecutor("VideoCompression");
+    private final SerialSingleThreadExecutor mDatabaseWriterExecutor = new SerialSingleThreadExecutor("DatabaseWriter");
+    private final SerialSingleThreadExecutor mDatabaseReaderExecutor = new SerialSingleThreadExecutor("DatabaseReader");
     private final IBinder mBinder = new XmppConnectionBinder();
     private final List<Conversation> conversations = new CopyOnWriteArrayList<>();
     private final IqGenerator mIqGenerator = new IqGenerator(this);
@@ -937,7 +938,7 @@ public class XmppConnectionService extends Service {
 
     public void expireOldMessages(final boolean resetHasMessagesLeftOnServer) {
         mLastExpiryRun.set(SystemClock.elapsedRealtime());
-        mDatabaseExecutor.execute(new Runnable() {
+        mDatabaseWriterExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 long timestamp = getAutomaticMessageDeletionDate();
@@ -1582,7 +1583,7 @@ public class XmppConnectionService extends Service {
                     updateConversationUi();
                 }
             };
-            mDatabaseExecutor.execute(runnable);
+            mDatabaseReaderExecutor.execute(runnable); //will contain one write command (expiry) but that's fine
         }
     }
 
@@ -1733,7 +1734,7 @@ public class XmppConnectionService extends Service {
                 }
             }
         };
-        mDatabaseExecutor.execute(runnable);
+        mDatabaseReaderExecutor.execute(runnable);
     }
 
     public List<Account> getAccounts() {
@@ -1846,7 +1847,7 @@ public class XmppConnectionService extends Service {
                 }
             };
             if (async) {
-                mDatabaseExecutor.execute(runnable);
+                mDatabaseReaderExecutor.execute(runnable);
             } else {
                 runnable.run();
             }
@@ -1895,7 +1896,7 @@ public class XmppConnectionService extends Service {
                 loadMessagesFromDb = false;
             }
             final Conversation c = conversation;
-            mDatabaseExecutor.execute(new Runnable() {
+            mDatabaseReaderExecutor.execute(new Runnable() {
                 @Override
                 public void run() {
                     if (loadMessagesFromDb) {
@@ -2078,7 +2079,7 @@ public class XmppConnectionService extends Service {
                     }
                 }
             };
-            mDatabaseExecutor.execute(runnable);
+            mDatabaseWriterExecutor.execute(runnable);
             this.accounts.remove(account);
             updateAccountUi();
             getNotificationService().updateErrorNotification();
@@ -3271,7 +3272,7 @@ public class XmppConnectionService extends Service {
     }
 
     public void updateConversation(final Conversation conversation) {
-        mDatabaseExecutor.execute(new Runnable() {
+        mDatabaseWriterExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 databaseBackend.updateConversation(conversation);
@@ -3558,7 +3559,7 @@ public class XmppConnectionService extends Service {
                     }
                 }
             };
-            mDatabaseExecutor.execute(runnable);
+            mDatabaseWriterExecutor.execute(runnable);
             updateUnreadCountBadge();
             return true;
         } else {
@@ -3638,7 +3639,7 @@ public class XmppConnectionService extends Service {
                 databaseBackend.writeRoster(account.getRoster());
             }
         };
-        mDatabaseExecutor.execute(runnable);
+        mDatabaseWriterExecutor.execute(runnable);
 
     }
 
@@ -3860,7 +3861,7 @@ public class XmppConnectionService extends Service {
 
             }
         };
-        mDatabaseExecutor.execute(runnable);
+        mDatabaseWriterExecutor.execute(runnable);
     }
 
     public boolean sendBlockRequest(final Blockable blockable, boolean reportSpam) {
@@ -4074,15 +4075,6 @@ public class XmppConnectionService extends Service {
         account.getBookmarks().add(bookmark);
         pushBookmarks(account);
         conversation.setBookmark(bookmark);
-    }
-
-    public void clearStartTimeCounter() {
-        mDatabaseExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                databaseBackend.clearStartTimeCounter(false);
-            }
-        });
     }
 
     public boolean verifyFingerprints(Contact contact, List<XmppUri.Fingerprint> fingerprints) {
