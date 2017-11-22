@@ -132,13 +132,14 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
             activity.loadBitmap(message, imagePreview);
         } else {
             final boolean showPreviewText;
-            if (message.getFileParams().runtime > 0) {
-                showPreviewText = false;
-                mLastMessageImage.setImageResource(activity.getThemeResource(R.attr.ic_attach_record, R.drawable.ic_attach_record));
-                mLastMessageImage.setVisibility(View.VISIBLE);
-            } else if (message.getType() == Message.TYPE_FILE) {
-                showPreviewText = true;
-                mLastMessageImage.setImageResource(activity.getThemeResource(R.attr.ic_attach_document, R.drawable.ic_attach_document));
+            if (message.getType() == Message.TYPE_FILE) {
+                if (message.getFileParams().runtime > 0) {
+                    showPreviewText = false;
+                    mLastMessageImage.setImageResource(activity.getThemeResource(R.attr.ic_attach_record, R.drawable.ic_attach_record));
+                } else {
+                    showPreviewText = true;
+                    mLastMessageImage.setImageResource(activity.getThemeResource(R.attr.ic_attach_document, R.drawable.ic_attach_document));
+                }
                 mLastMessageImage.setVisibility(View.VISIBLE);
             } else if (message.isGeoUri()) {
                 showPreviewText = false;
