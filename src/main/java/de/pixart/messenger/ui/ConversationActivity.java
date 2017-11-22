@@ -162,6 +162,9 @@ public class ConversationActivity extends XmppActivity
     }
 
     public void showConversationsOverview() {
+        if (mConversationFragment != null) {
+            mConversationFragment.stopScrolling();
+        }
         if (mContentView instanceof SlidingPaneLayout) {
             SlidingPaneLayout mSlidingPaneLayout = (SlidingPaneLayout) mContentView;
             mShouldPanelBeOpen.set(true);
@@ -253,6 +256,7 @@ public class ConversationActivity extends XmppActivity
             public void onItemClick(AdapterView<?> arg0, View clickedView,
                                     int position, long arg3) {
                 if (getSelectedConversation() != conversationList.get(position)) {
+                    ConversationActivity.this.mConversationFragment.stopScrolling();
                     setSelectedConversation(conversationList.get(position));
                     ConversationActivity.this.mConversationFragment.reInit(getSelectedConversation());
                     conversationWasSelectedByKeyboard = false;
@@ -1236,6 +1240,7 @@ public class ConversationActivity extends XmppActivity
     private boolean openConversationByIndex(int index) {
         try {
             this.conversationWasSelectedByKeyboard = true;
+            this.mConversationFragment.stopScrolling();
             setSelectedConversation(this.conversationList.get(index));
             this.mConversationFragment.reInit(getSelectedConversation());
             if (index > listView.getLastVisiblePosition() - 1 || index < listView.getFirstVisiblePosition() + 1) {
@@ -1503,6 +1508,7 @@ public class ConversationActivity extends XmppActivity
         final String text = intent.getStringExtra(TEXT);
         final String nick = intent.getStringExtra(NICK);
         final boolean pm = intent.getBooleanExtra(PRIVATE_MESSAGE, false);
+        this.mConversationFragment.stopScrolling();
         if (selectConversationByUuid(uuid)) {
             this.mConversationFragment.reInit(getSelectedConversation());
             if (nick != null) {
