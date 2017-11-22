@@ -88,7 +88,7 @@ public final class Config {
     public static final long OMEMO_AUTO_EXPIRY = 7 * MILLISECONDS_IN_DAY; // delete old OMEMO devices after 7 days od inactivity
     public static final boolean REMOVE_BROKEN_DEVICES = false;
     public static final boolean OMEMO_PADDING = false;
-    public static boolean PUT_AUTH_TAG_INTO_KEY = true;
+    public static final boolean PUT_AUTH_TAG_INTO_KEY = true;
 
     public static final int MAX_DISPLAY_MESSAGE_CHARS = 4096;
     public static final int MAX_STORAGE_MESSAGE_CHARS = 1024 * 1024 * 1024;
