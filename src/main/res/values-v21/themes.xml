@@ -16,6 +16,9 @@
         <item name="TextSizeHeadline">18sp</item>
         <item name="TextSeparation">5sp</item>
 
+        <item name="attr/color_text_primary">@color/black87</item>
+        <item name="attr/color_text_secondary">@color/black54</item>
+
         <item name="attr/dialog_horizontal_padding">24dp</item>
         <item name="attr/dialog_vertical_padding">16dp</item>
 

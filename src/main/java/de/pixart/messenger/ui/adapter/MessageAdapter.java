@@ -6,11 +6,13 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.annotation.ColorInt;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -754,60 +756,42 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         switch (type) {
             case DATE_SEPARATOR:
                 view = activity.getLayoutInflater().inflate(R.layout.message_date_bubble, parent, false);
-                viewHolder.status_message = (TextView) view.findViewById(R.id.status_message);
+                viewHolder.status_message = view.findViewById(R.id.status_message);
                 break;
             case SENT:
-                view = activity.getLayoutInflater().inflate(
-                        R.layout.message_sent, parent, false);
-                viewHolder.message_box = (LinearLayout) view
-                        .findViewById(R.id.message_box);
-                viewHolder.contact_picture = (ImageView) view
-                        .findViewById(R.id.message_photo);
-                viewHolder.audioPlayer = (RelativeLayout) view.findViewById(R.id.audio_player);
-                viewHolder.download_button = (Button) view
-                        .findViewById(R.id.download_button);
-                viewHolder.resend_button = (Button) view
-                        .findViewById(R.id.resend_button);
-                viewHolder.indicator = (ImageView) view
-                        .findViewById(R.id.security_indicator);
-                viewHolder.edit_indicator = (ImageView) view.findViewById(R.id.edit_indicator);
-                viewHolder.image = (ImageView) view
-                        .findViewById(R.id.message_image);
-                viewHolder.messageBody = (CopyTextView) view
-                        .findViewById(R.id.message_body);
-                viewHolder.time = (TextView) view
-                        .findViewById(R.id.message_time);
-                viewHolder.indicatorReceived = (ImageView) view
-                        .findViewById(R.id.indicator_received);
-                viewHolder.indicatorRead = (ImageView) view
-                        .findViewById(R.id.indicator_read);
+                view = activity.getLayoutInflater().inflate(R.layout.message_sent, parent, false);
+                viewHolder.message_box = view.findViewById(R.id.message_box);
+                viewHolder.contact_picture = view.findViewById(R.id.message_photo);
+                viewHolder.audioPlayer = view.findViewById(R.id.audio_player);
+                viewHolder.download_button = view.findViewById(R.id.download_button);
+                viewHolder.resend_button = view.findViewById(R.id.resend_button);
+                viewHolder.indicator = view.findViewById(R.id.security_indicator);
+                viewHolder.edit_indicator = view.findViewById(R.id.edit_indicator);
+                viewHolder.image = view.findViewById(R.id.message_image);
+                viewHolder.messageBody = view.findViewById(R.id.message_body);
+                viewHolder.time = view.findViewById(R.id.message_time);
+                viewHolder.indicatorReceived = view.findViewById(R.id.indicator_received);
+                viewHolder.indicatorRead = view.findViewById(R.id.indicator_read);
                 break;
             case RECEIVED:
-                view = activity.getLayoutInflater().inflate(
-                        R.layout.message_received, parent, false);
-                viewHolder.message_box = (LinearLayout) view
-                        .findViewById(R.id.message_box);
-                viewHolder.contact_picture = (ImageView) view
-                        .findViewById(R.id.message_photo);
-                viewHolder.audioPlayer = (RelativeLayout) view.findViewById(R.id.audio_player);
-                viewHolder.download_button = (Button) view
-                        .findViewById(R.id.download_button);
-                viewHolder.indicator = (ImageView) view
-                        .findViewById(R.id.security_indicator);
-                viewHolder.edit_indicator = (ImageView) view.findViewById(R.id.edit_indicator);
-                viewHolder.image = (ImageView) view
-                        .findViewById(R.id.message_image);
-                viewHolder.messageBody = (CopyTextView) view
-                        .findViewById(R.id.message_body);
-                viewHolder.time = (TextView) view
-                        .findViewById(R.id.message_time);
-                viewHolder.indicatorReceived = (ImageView) view
-                        .findViewById(R.id.indicator_received);
-                viewHolder.encryption = (TextView) view.findViewById(R.id.message_encryption);
+                view = activity.getLayoutInflater().inflate(R.layout.message_received, parent, false);
+                viewHolder.message_box = view.findViewById(R.id.message_box);
+                viewHolder.contact_picture = view.findViewById(R.id.message_photo);
+                viewHolder.audioPlayer = view.findViewById(R.id.audio_player);
+                viewHolder.download_button = view.findViewById(R.id.download_button);
+                viewHolder.indicator = view.findViewById(R.id.security_indicator);
+                viewHolder.edit_indicator = view.findViewById(R.id.edit_indicator);
+                viewHolder.image = view.findViewById(R.id.message_image);
+                viewHolder.messageBody = view.findViewById(R.id.message_body);
+                viewHolder.time = view.findViewById(R.id.message_time);
+                viewHolder.indicatorReceived = view.findViewById(R.id.indicator_received);
+                viewHolder.encryption = view.findViewById(R.id.message_encryption);
                 break;
             case STATUS:
                 view = activity.getLayoutInflater().inflate(R.layout.message_status, parent, false);
-                viewHolder.load_more_messages = (Button) view.findViewById(R.id.load_more_messages);
+                viewHolder.contact_picture = view.findViewById(R.id.message_photo);
+                viewHolder.status_message = view.findViewById(R.id.status_message);
+                viewHolder.load_more_messages = view.findViewById(R.id.load_more_messages);
                 break;
             default:
                 throw new AssertionError("Unknown view type");
@@ -844,7 +828,22 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                     }
                 });
             } else {
+                viewHolder.status_message.setVisibility(View.VISIBLE);
                 viewHolder.load_more_messages.setVisibility(View.GONE);
+                viewHolder.status_message.setText(message.getBody());
+                boolean showAvatar;
+                if (conversation.getMode() == Conversation.MODE_MULTI && (message.getCounterpart() != null || message.getTrueCounterpart() != null || (message.getCounterparts() != null && message.getCounterparts().size() > 0))) {
+                    showAvatar = true;
+                    loadAvatar(message, viewHolder.contact_picture, activity.getPixel(32));
+                } else {
+                    showAvatar = false;
+                }
+                if (showAvatar) {
+                    viewHolder.contact_picture.setAlpha(0.5f);
+                    viewHolder.contact_picture.setVisibility(View.VISIBLE);
+                } else {
+                    viewHolder.contact_picture.setVisibility(View.GONE);
+                }
             }
             return view;
         } else {
@@ -1201,9 +1200,15 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             if (bm != null) {
                 cancelPotentialWork(message, imageView);
                 imageView.setImageBitmap(bm);
-                imageView.setBackgroundColor(0x00000000);
+                imageView.setBackgroundColor(Color.TRANSPARENT);
             } else {
-                imageView.setBackgroundColor(UIHelper.getColorForName(UIHelper.getMessageDisplayName(message)));
+                @ColorInt int bg;
+                if (message.getType() == Message.TYPE_STATUS && message.getCounterparts() != null && message.getCounterparts().size() > 1) {
+                    bg = Color.TRANSPARENT;
+                } else {
+                    bg = UIHelper.getColorForName(UIHelper.getMessageDisplayName(message));
+                }
+                imageView.setBackgroundColor(bg);
                 imageView.setImageDrawable(null);
                 final BitmapWorkerTask task = new BitmapWorkerTask(imageView, size);
                 final AsyncDrawable asyncDrawable = new AsyncDrawable(activity.getResources(), null, task);

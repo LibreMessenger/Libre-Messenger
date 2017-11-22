@@ -9,6 +9,10 @@ import com.vdurmont.emoji.EmojiManager;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.crypto.axolotl.FingerprintStatus;
@@ -65,6 +69,7 @@ public class Message extends AbstractEntity {
     public static final String FINGERPRINT = "axolotl_fingerprint";
     public static final String READ = "read";
     public static final String ERROR_MESSAGE = "errorMsg";
+    public static final String READ_BY_MARKERS = "readByMarkers";
     public static final String ME_COMMAND = "/me ";
 
 
@@ -91,12 +96,14 @@ public class Message extends AbstractEntity {
     private Message mPreviousMessage = null;
     private String axolotlFingerprint = null;
     private String errorMessage = null;
+    protected Set<ReadByMarker> readByMarkers = new HashSet<>();
 
     private Boolean isGeoUri = null;
     private Boolean isXmppUri = null;
     private Boolean isEmojisOnly = null;
     private Boolean treatAsDownloadable = null;
     private FileParams fileParams = null;
+    private List<MucOptions.User> counterparts;
 
     private Message(Conversation conversation) {
         this.conversation = conversation;
@@ -124,6 +131,7 @@ public class Message extends AbstractEntity {
                 true,
                 null,
                 false,
+                null,
                 null);
     }
 
@@ -132,7 +140,7 @@ public class Message extends AbstractEntity {
                     final int encryption, final int status, final int type, final boolean carbon,
                     final String remoteMsgId, final String relativeFilePath,
                     final String serverMsgId, final String fingerprint, final boolean read,
-                    final String edited, final boolean oob, final String errorMessage) {
+                    final String edited, final boolean oob, final String errorMessage, final Set<ReadByMarker> readByMarkers) {
         this.conversation = conversation;
         this.uuid = uuid;
         this.conversationUuid = conversationUUid;
@@ -152,6 +160,7 @@ public class Message extends AbstractEntity {
         this.edited = edited;
         this.oob = oob;
         this.errorMessage = errorMessage;
+        this.readByMarkers = new HashSet<>();
     }
 
     public static Message fromCursor(Cursor cursor, Conversation conversation) {
@@ -197,7 +206,8 @@ public class Message extends AbstractEntity {
                 cursor.getInt(cursor.getColumnIndex(READ)) > 0,
                 cursor.getString(cursor.getColumnIndex(EDITED)),
                 cursor.getInt(cursor.getColumnIndex(OOB)) > 0,
-                cursor.getString(cursor.getColumnIndex(ERROR_MESSAGE)));
+                cursor.getString(cursor.getColumnIndex(ERROR_MESSAGE)),
+                ReadByMarker.fromJsonString(cursor.getString(cursor.getColumnIndex(READ_BY_MARKERS))));
     }
 
     public static Message createStatusMessage(Conversation conversation, String body) {
@@ -252,6 +262,7 @@ public class Message extends AbstractEntity {
         values.put(EDITED, edited);
         values.put(OOB, oob ? 1 : 0);
         values.put(ERROR_MESSAGE, errorMessage);
+        values.put(READ_BY_MARKERS, ReadByMarker.toJson(readByMarkers).toString());
         return values;
     }
 
@@ -420,6 +431,25 @@ public class Message extends AbstractEntity {
         this.transferable = transferable;
     }
 
+    public boolean addReadByMarker(ReadByMarker readByMarker) {
+        if (readByMarker.getRealJid() != null) {
+            if (readByMarker.getRealJid().toBareJid().equals(trueCounterpart)) {
+                Log.d(Config.LOGTAG, "trying to add read marker by " + readByMarker.getRealJid() + " to " + body);
+                return false;
+            }
+        } else if (readByMarker.getFullJid() != null) {
+            if (readByMarker.getFullJid().equals(counterpart)) {
+                Log.d(Config.LOGTAG, "trying to add read marker by " + readByMarker.getFullJid() + " to " + body);
+                return false;
+            }
+        }
+        return this.readByMarkers.add(readByMarker);
+    }
+
+    public Set<ReadByMarker> getReadByMarkers() {
+        return Collections.unmodifiableSet(this.readByMarkers);
+    }
+
     public boolean similar(Message message) {
         if (type != TYPE_PRIVATE && this.serverMsgId != null && message.getServerMsgId() != null) {
             return this.serverMsgId.equals(message.getServerMsgId());
@@ -522,7 +552,8 @@ public class Message extends AbstractEntity {
                         !this.isXmppUri() &&
                         !message.isXmppUri() &&
                         ((this.axolotlFingerprint == null && message.axolotlFingerprint == null) || this.axolotlFingerprint.equals(message.getFingerprint())) &&
-                        UIHelper.sameDay(message.getTimeSent(), this.getTimeSent())
+                        UIHelper.sameDay(message.getTimeSent(), this.getTimeSent()) &&
+                        this.getReadByMarkers().equals(message.getReadByMarkers())
                 );
     }
 
@@ -534,6 +565,14 @@ public class Message extends AbstractEntity {
                         || (a == Message.STATUS_SEND && b == Message.STATUS_UNSEND)
                         || (a == Message.STATUS_SEND && b == Message.STATUS_WAITING)
         );
+    }
+
+    public void setCounterparts(List<MucOptions.User> counterparts) {
+        this.counterparts = counterparts;
+    }
+
+    public List<MucOptions.User> getCounterparts() {
+        return this.counterparts;
     }
 
     public static class MergeSeparator {

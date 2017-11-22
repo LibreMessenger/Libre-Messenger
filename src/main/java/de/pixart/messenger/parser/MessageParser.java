@@ -29,6 +29,7 @@ import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.Presence;
+import de.pixart.messenger.entities.ReadByMarker;
 import de.pixart.messenger.entities.ServiceDiscoveryResult;
 import de.pixart.messenger.http.HttpConnectionManager;
 import de.pixart.messenger.services.MessageArchiveService;
@@ -686,13 +687,36 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
         }
         Element displayed = packet.findChild("displayed", "urn:xmpp:chat-markers:0");
         if (displayed != null) {
+            final String id = displayed.getAttribute("id");
             if (packet.fromAccount(account)) {
                 Conversation conversation = mXmppConnectionService.find(account, counterpart.toBareJid());
                 if (conversation != null && (query == null || query.isCatchup())) {
                     mXmppConnectionService.markRead(conversation);
                 }
+            } else if (isTypeGroupChat) {
+                Conversation conversation = mXmppConnectionService.find(account, counterpart.toBareJid());
+                if (conversation != null && id != null) {
+                    Message message = conversation.findMessageWithRemoteId(id);
+                    if (message != null) {
+                        if (conversation.getMucOptions().isSelf(counterpart)) {
+                            if (!message.isRead() && (query == null || query.isCatchup())) { //checking if message is unread fixes race conditions with reflections
+                                mXmppConnectionService.markRead(conversation);
+                            }
+                        } else {
+                            final Jid fallback = conversation.getMucOptions().getTrueCounterpart(counterpart);
+                            Jid trueJid = getTrueCounterpart(query != null ? mucUserElement : null, fallback);
+                            ReadByMarker readByMarker = ReadByMarker.from(counterpart, trueJid);
+                            if (message.addReadByMarker(readByMarker)) {
+                                Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": added read by (" + readByMarker.getRealJid() + ") to message '" + message.getBody() + "'");
+                                mXmppConnectionService.markMessage(message, Message.STATUS_SEND_DISPLAYED);
+                                mXmppConnectionService.updateMessage(message);
+                            }
+                        }
+                    }
+
+                }
             } else {
-                final Message displayedMessage = mXmppConnectionService.markMessage(account, from.toBareJid(), displayed.getAttribute("id"), Message.STATUS_SEND_DISPLAYED);
+                final Message displayedMessage = mXmppConnectionService.markMessage(account, from.toBareJid(), id, Message.STATUS_SEND_DISPLAYED);
                 Message message = displayedMessage == null ? null : displayedMessage.prev();
                 while (message != null
                         && message.getStatus() == Message.STATUS_SEND_RECEIVED

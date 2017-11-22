@@ -48,8 +48,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -63,6 +65,7 @@ import de.pixart.messenger.entities.DownloadableFile;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.Presence;
+import de.pixart.messenger.entities.ReadByMarker;
 import de.pixart.messenger.entities.Transferable;
 import de.pixart.messenger.entities.TransferablePlaceholder;
 import de.pixart.messenger.http.HttpDownloadConnection;
@@ -1367,6 +1370,54 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         synchronized (this.messageList) {
             if (showLoadMoreMessages(conversation)) {
                 this.messageList.add(0, Message.createLoadMoreMessage(conversation));
+            }
+            if (conversation.getMode() == Conversation.MODE_MULTI) {
+                final MucOptions mucOptions = conversation.getMucOptions();
+                final List<MucOptions.User> allUsers = mucOptions.getUsers();
+                final Set<ReadByMarker> addedMarkers = new HashSet<>();
+                ChatState state = ChatState.COMPOSING;
+                List<MucOptions.User> users = conversation.getMucOptions().getUsersWithChatState(state, 5);
+                if (users.size() == 0) {
+                    state = ChatState.PAUSED;
+                    users = conversation.getMucOptions().getUsersWithChatState(state, 5);
+                }
+                int markersAdded = 0;
+                if (mucOptions.membersOnly() && mucOptions.nonanonymous()) {
+                    //addedMarkers.addAll(ReadByMarker.from(users));
+                    for (int i = this.messageList.size() - 1; i >= 0; --i) {
+                        final Set<ReadByMarker> markersForMessage = messageList.get(i).getReadByMarkers();
+                        final List<MucOptions.User> shownMarkers = new ArrayList<>();
+                        for (ReadByMarker marker : markersForMessage) {
+                            if (!ReadByMarker.contains(marker, addedMarkers)) {
+                                addedMarkers.add(marker); //may be put outside this condition. set should do dedup anyway
+                                MucOptions.User user = mucOptions.findUser(marker);
+                                if (user != null && !users.contains(user)) {
+                                    shownMarkers.add(user);
+                                }
+                            }
+                        }
+                        final ReadByMarker markerForSender = ReadByMarker.from(messageList.get(i));
+                        final Message statusMessage;
+                        if (shownMarkers.size() > 1) {
+                            statusMessage = Message.createStatusMessage(conversation, getString(R.string.contacts_have_read_up_to_this_point, UIHelper.concatNames(shownMarkers)));
+                            statusMessage.setCounterparts(shownMarkers);
+                        } else if (shownMarkers.size() == 1) {
+                            statusMessage = Message.createStatusMessage(conversation, getString(R.string.contact_has_read_up_to_this_point, UIHelper.getDisplayName(shownMarkers.get(0))));
+                            statusMessage.setCounterpart(shownMarkers.get(0).getFullJid());
+                            statusMessage.setTrueCounterpart(shownMarkers.get(0).getRealJid());
+                        } else {
+                            statusMessage = null;
+                        }
+                        if (statusMessage != null) {
+                            ++markersAdded;
+                            this.messageList.add(i + 1, statusMessage);
+                        }
+                        addedMarkers.add(markerForSender);
+                        if (ReadByMarker.allUsersRepresented(allUsers, addedMarkers)) {
+                            break;
+                        }
+                    }
+                }
             }
         }
     }
