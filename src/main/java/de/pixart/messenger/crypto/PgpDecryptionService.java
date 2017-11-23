@@ -25,13 +25,13 @@ import de.pixart.messenger.services.XmppConnectionService;
 
 public class PgpDecryptionService {
 
-    private final XmppConnectionService mXmppConnectionService;
-    private OpenPgpApi openPgpApi = null;
-
     protected final ArrayDeque<Message> messages = new ArrayDeque();
     protected final HashSet<Message> pendingNotifications = new HashSet<>();
-    Message currentMessage;
+    private final XmppConnectionService mXmppConnectionService;
+    private OpenPgpApi openPgpApi = null;
+    private Message currentMessage;
     private PendingIntent pendingIntent;
+    private Intent userInteractionResult;
 
 
     public PgpDecryptionService(XmppConnectionService service) {
@@ -111,6 +111,12 @@ public class PgpDecryptionService {
         continueDecryption();
     }
 
+    public synchronized void continueDecryption(Intent userInteractionResult) {
+        this.pendingIntent = null;
+        this.userInteractionResult = userInteractionResult;
+        continueDecryption();
+    }
+
     public synchronized void continueDecryption() {
         if (currentMessage == null) {
             decryptNext();
@@ -126,7 +132,7 @@ public class PgpDecryptionService {
 
     private void executeApi(Message message) {
         synchronized (message) {
-            Intent params = new Intent();
+            Intent params = userInteractionResult != null ? userInteractionResult : new Intent();
             params.setAction(OpenPgpApi.ACTION_DECRYPT_VERIFY);
             if (message.getType() == Message.TYPE_TEXT) {
                 InputStream is = new ByteArrayInputStream(message.getBody().getBytes());
