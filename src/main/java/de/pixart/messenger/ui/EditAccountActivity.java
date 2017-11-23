@@ -514,63 +514,63 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             this.mSavedInstanceInit = savedInstanceState.getBoolean("initMode", false);
         }
         setContentView(R.layout.activity_edit_account);
-        this.mAccountJid = (AutoCompleteTextView) findViewById(R.id.account_jid);
+        this.mAccountJid = findViewById(R.id.account_jid);
         this.mAccountJid.addTextChangedListener(this.mTextWatcher);
-        this.mAccountJidLabel = (TextView) findViewById(R.id.account_jid_label);
-        this.mPassword = (EditText) findViewById(R.id.account_password);
+        this.mAccountJidLabel = findViewById(R.id.account_jid_label);
+        this.mPassword = findViewById(R.id.account_password);
         this.mPassword.addTextChangedListener(this.mTextWatcher);
-        this.mPasswordConfirm = (EditText) findViewById(R.id.account_password_confirm);
-        this.mAvatar = (ImageView) findViewById(R.id.avater);
+        this.mPasswordConfirm = findViewById(R.id.account_password_confirm);
+        this.mAvatar = findViewById(R.id.avater);
         this.mAvatar.setOnClickListener(this.mAvatarClickListener);
-        this.mRegisterNew = (CheckBox) findViewById(R.id.account_register_new);
-        this.mStats = (LinearLayout) findViewById(R.id.stats);
-        this.mOsOptimizations = (RelativeLayout) findViewById(R.id.os_optimization);
-        this.mDisableOsOptimizationsButton = (Button) findViewById(R.id.os_optimization_disable);
-        this.mDisableOsOptimizationsHeadline = (TextView) findViewById(R.id.os_optimization_headline);
-        this.getmDisableOsOptimizationsBody = (TextView) findViewById(R.id.os_optimization_body);
-        this.mSessionEst = (TextView) findViewById(R.id.session_est);
-        this.mServerInfoRosterVersion = (TextView) findViewById(R.id.server_info_roster_version);
-        this.mServerInfoCarbons = (TextView) findViewById(R.id.server_info_carbons);
-        this.mServerInfoMam = (TextView) findViewById(R.id.server_info_mam);
-        this.mServerInfoCSI = (TextView) findViewById(R.id.server_info_csi);
-        this.mServerInfoBlocking = (TextView) findViewById(R.id.server_info_blocking);
-        this.mServerInfoSm = (TextView) findViewById(R.id.server_info_sm);
-        this.mServerInfoPep = (TextView) findViewById(R.id.server_info_pep);
-        this.mServerInfoHttpUpload = (TextView) findViewById(R.id.server_info_http_upload);
-        this.mPushRow = (TableRow) findViewById(R.id.push_row);
-        this.mServerInfoPush = (TextView) findViewById(R.id.server_info_push);
-        this.mPgpFingerprintBox = (RelativeLayout) findViewById(R.id.pgp_fingerprint_box);
-        this.mPgpFingerprint = (TextView) findViewById(R.id.pgp_fingerprint);
-        this.getmPgpFingerprintDesc = (TextView) findViewById(R.id.pgp_fingerprint_desc);
-        this.mPgpDeleteFingerprintButton = (ImageButton) findViewById(R.id.action_delete_pgp);
-        this.mOtrFingerprint = (TextView) findViewById(R.id.otr_fingerprint);
-        this.mOtrFingerprintDesc = (TextView) findViewById(R.id.otr_fingerprint_desc);
-        this.mOtrFingerprintBox = (RelativeLayout) findViewById(R.id.otr_fingerprint_box);
-        this.mOtrFingerprintToClipboardButton = (ImageButton) findViewById(R.id.action_copy_to_clipboard);
-        this.mAxolotlFingerprint = (TextView) findViewById(R.id.axolotl_fingerprint);
-        this.mAxolotlFingerprintBox = (RelativeLayout) findViewById(R.id.axolotl_fingerprint_box);
-        this.mAxolotlFingerprintToClipboardButton = (ImageButton) findViewById(R.id.action_copy_axolotl_to_clipboard);
-        this.mOwnFingerprintDesc = (TextView) findViewById(R.id.own_fingerprint_desc);
-        this.keysCard = (LinearLayout) findViewById(R.id.other_device_keys_card);
-        this.keys = (LinearLayout) findViewById(R.id.other_device_keys);
-        this.mNamePort = (LinearLayout) findViewById(R.id.name_port);
-        this.mHostname = (EditText) findViewById(R.id.hostname);
+        this.mRegisterNew = findViewById(R.id.account_register_new);
+        this.mStats = findViewById(R.id.stats);
+        this.mOsOptimizations = findViewById(R.id.os_optimization);
+        this.mDisableOsOptimizationsButton = findViewById(R.id.os_optimization_disable);
+        this.mDisableOsOptimizationsHeadline = findViewById(R.id.os_optimization_headline);
+        this.getmDisableOsOptimizationsBody = findViewById(R.id.os_optimization_body);
+        this.mSessionEst = findViewById(R.id.session_est);
+        this.mServerInfoRosterVersion = findViewById(R.id.server_info_roster_version);
+        this.mServerInfoCarbons = findViewById(R.id.server_info_carbons);
+        this.mServerInfoMam = findViewById(R.id.server_info_mam);
+        this.mServerInfoCSI = findViewById(R.id.server_info_csi);
+        this.mServerInfoBlocking = findViewById(R.id.server_info_blocking);
+        this.mServerInfoSm = findViewById(R.id.server_info_sm);
+        this.mServerInfoPep = findViewById(R.id.server_info_pep);
+        this.mServerInfoHttpUpload = findViewById(R.id.server_info_http_upload);
+        this.mPushRow = findViewById(R.id.push_row);
+        this.mServerInfoPush = findViewById(R.id.server_info_push);
+        this.mPgpFingerprintBox = findViewById(R.id.pgp_fingerprint_box);
+        this.mPgpFingerprint = findViewById(R.id.pgp_fingerprint);
+        this.getmPgpFingerprintDesc = findViewById(R.id.pgp_fingerprint_desc);
+        this.mPgpDeleteFingerprintButton = findViewById(R.id.action_delete_pgp);
+        this.mOtrFingerprint = findViewById(R.id.otr_fingerprint);
+        this.mOtrFingerprintDesc = findViewById(R.id.otr_fingerprint_desc);
+        this.mOtrFingerprintBox = findViewById(R.id.otr_fingerprint_box);
+        this.mOtrFingerprintToClipboardButton = findViewById(R.id.action_copy_to_clipboard);
+        this.mAxolotlFingerprint = findViewById(R.id.axolotl_fingerprint);
+        this.mAxolotlFingerprintBox = findViewById(R.id.axolotl_fingerprint_box);
+        this.mAxolotlFingerprintToClipboardButton = findViewById(R.id.action_copy_axolotl_to_clipboard);
+        this.mOwnFingerprintDesc = findViewById(R.id.own_fingerprint_desc);
+        this.keysCard = findViewById(R.id.other_device_keys_card);
+        this.keys = findViewById(R.id.other_device_keys);
+        this.mNamePort = findViewById(R.id.name_port);
+        this.mHostname = findViewById(R.id.hostname);
         this.mHostname.addTextChangedListener(mTextWatcher);
-        this.mClearDevicesButton = (Button) findViewById(R.id.clear_devices);
+        this.mClearDevicesButton = findViewById(R.id.clear_devices);
         this.mClearDevicesButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 showWipePepDialog();
             }
         });
-        this.mPort = (EditText) findViewById(R.id.port);
+        this.mPort = findViewById(R.id.port);
         this.mPort.setText("5222");
         this.mPort.addTextChangedListener(mTextWatcher);
-        this.mSaveButton = (Button) findViewById(R.id.save_button);
-        this.mCancelButton = (Button) findViewById(R.id.cancel_button);
+        this.mSaveButton = findViewById(R.id.save_button);
+        this.mCancelButton = findViewById(R.id.cancel_button);
         this.mSaveButton.setOnClickListener(this.mSaveButtonClickListener);
         this.mCancelButton.setOnClickListener(this.mCancelButtonClickListener);
-        this.mMoreTable = (TableLayout) findViewById(R.id.server_info_more);
+        this.mMoreTable = findViewById(R.id.server_info_more);
         if (savedInstanceState != null && savedInstanceState.getBoolean("showMoreTable")) {
             changeMoreTableVisibility(true);
         }
@@ -1156,7 +1156,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     private void showPassword() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = getLayoutInflater().inflate(R.layout.dialog_show_password, null);
-        TextView password = (TextView) view.findViewById(R.id.password);
+        TextView password = view.findViewById(R.id.password);
         password.setText(mAccount.getPassword());
         builder.setTitle(R.string.password);
         builder.setView(view);
@@ -1179,8 +1179,8 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 }
                 final AlertDialog.Builder builder = new AlertDialog.Builder(EditAccountActivity.this);
                 final View view = getLayoutInflater().inflate(R.layout.captcha, null);
-                final ImageView imageView = (ImageView) view.findViewById(R.id.captcha);
-                final EditText input = (EditText) view.findViewById(R.id.input);
+                final ImageView imageView = view.findViewById(R.id.captcha);
+                final EditText input = view.findViewById(R.id.input);
                 imageView.setImageBitmap(captcha);
 
                 builder.setTitle(getString(R.string.captcha_required));

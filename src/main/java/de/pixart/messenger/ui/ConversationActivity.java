@@ -191,11 +191,7 @@ public class ConversationActivity extends XmppActivity
     }
 
     public boolean isConversationsOverviewHideable() {
-        if (mContentView instanceof SlidingPaneLayout) {
-            return true;
-        } else {
-            return false;
-        }
+        return mContentView instanceof SlidingPaneLayout;
     }
 
     public boolean isConversationsOverviewVisable() {
@@ -241,7 +237,7 @@ public class ConversationActivity extends XmppActivity
         transaction.replace(R.id.selected_conversation, this.mConversationFragment, "conversation");
         transaction.commit();
 
-        listView = (EnhancedListView) findViewById(R.id.list);
+        listView = findViewById(R.id.list);
         this.listAdapter = new ConversationAdapter(this, conversationList);
         listView.setAdapter(this.listAdapter);
 
@@ -432,8 +428,8 @@ public class ConversationActivity extends XmppActivity
                 ab.setDisplayShowTitleEnabled(false);
                 ab.setDisplayShowCustomEnabled(true);
                 ab.setCustomView(R.layout.ab_title);
-                TextView abtitle = (TextView) findViewById(android.R.id.text1);
-                TextView absubtitle = (TextView) findViewById(android.R.id.text2);
+                TextView abtitle = findViewById(android.R.id.text1);
+                TextView absubtitle = findViewById(android.R.id.text2);
                 abtitle.setText(conversation.getName());
                 abtitle.setOnClickListener(this);
                 abtitle.setSelected(true);
@@ -936,7 +932,7 @@ public class ConversationActivity extends XmppActivity
         builder.setTitle(getString(R.string.clear_conversation_history));
         View dialogView = getLayoutInflater().inflate(
                 R.layout.dialog_clear_history, null);
-        final CheckBox endConversationCheckBox = (CheckBox) dialogView
+        final CheckBox endConversationCheckBox = dialogView
                 .findViewById(R.id.end_conversation_checkbox);
         if (conversation.getMode() == Conversation.MODE_SINGLE) {
             endConversationCheckBox.setVisibility(View.VISIBLE);

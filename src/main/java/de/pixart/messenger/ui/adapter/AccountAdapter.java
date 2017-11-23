@@ -40,14 +40,14 @@ public class AccountAdapter extends ArrayAdapter<Account> {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.account_row, parent, false);
         }
-        TextView jid = (TextView) view.findViewById(R.id.account_jid);
+        TextView jid = view.findViewById(R.id.account_jid);
         if (Config.DOMAIN_LOCK != null) {
             jid.setText(account.getJid().getLocalpart());
         } else {
             jid.setText(account.getJid().toBareJid().toString());
         }
-        TextView statusView = (TextView) view.findViewById(R.id.account_status);
-        ImageView imageView = (ImageView) view.findViewById(R.id.account_image);
+        TextView statusView = view.findViewById(R.id.account_status);
+        ImageView imageView = view.findViewById(R.id.account_image);
         loadAvatar(account,imageView);
         statusView.setText(getContext().getString(account.getStatus().getReadableId()));
         switch (account.getStatus()) {

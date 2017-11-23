@@ -547,7 +547,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_conversation, container, false);
         view.setOnClickListener(null);
-        mEditMessage = (EditMessage) view.findViewById(R.id.textinput);
+        mEditMessage = view.findViewById(R.id.textinput);
         mEditMessage.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -561,15 +561,15 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         mEditMessage.setOnEditorActionListener(mEditorActionListener);
         mEditMessage.setRichContentListener(new String[]{"image/*"}, mEditorContentListener);
 
-        mSendButton = (ImageButton) view.findViewById(R.id.textSendButton);
+        mSendButton = view.findViewById(R.id.textSendButton);
         mSendButton.setOnClickListener(this.mSendButtonListener);
         mSendButton.setOnLongClickListener(this.mSendButtonLongListener);
 
-        snackbar = (RelativeLayout) view.findViewById(R.id.snackbar);
-        snackbarMessage = (TextView) view.findViewById(R.id.snackbar_message);
-        snackbarAction = (TextView) view.findViewById(R.id.snackbar_action);
+        snackbar = view.findViewById(R.id.snackbar);
+        snackbarMessage = view.findViewById(R.id.snackbar_message);
+        snackbarAction = view.findViewById(R.id.snackbar_action);
 
-        messagesView = (ListView) view.findViewById(R.id.messages_view);
+        messagesView = view.findViewById(R.id.messages_view);
         messagesView.setOnScrollListener(mOnScrollListener);
         messagesView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
         messageListAdapter = new MessageAdapter((ConversationActivity) getActivity(), this.messageList);

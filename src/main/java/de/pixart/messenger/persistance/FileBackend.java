@@ -542,7 +542,7 @@ public class FileBackend {
     }
 
     public Uri getTakePhotoUri() {
-        File file = new File(getTakeFromCameraPath() + "IMG_" + this.fileDateFormat.format(new Date()) + ".jpg");
+        File file = new File(getTakeFromCameraPath() + "IMG_" + fileDateFormat.format(new Date()) + ".jpg");
         file.getParentFile().mkdirs();
         return getUriForFile(mXmppConnectionService, file);
     }
@@ -574,7 +574,7 @@ public class FileBackend {
     }
 
     public Uri getTakeVideoUri() {
-        File file = new File(getTakeFromCameraPath() + "VID_" + this.fileDateFormat.format(new Date()) + ".mp4");
+        File file = new File(getTakeFromCameraPath() + "VID_" + fileDateFormat.format(new Date()) + ".mp4");
         file.getParentFile().mkdirs();
         return getUriForFile(mXmppConnectionService, file);
     }
@@ -885,7 +885,7 @@ public class FileBackend {
         pi.applicationInfo.publicSourceDir = file.toString();
         //icon = pi.applicationInfo.loadIcon(pm);
         final String AppName = (String) pi.applicationInfo.loadLabel(pm);
-        final String AppVersion = (String) pi.versionName;
+        final String AppVersion = pi.versionName;
         Log.d(Config.LOGTAG, "APK name: " + AppName);
         APKName = " (" + AppName + " " + AppVersion + ")";
         try {

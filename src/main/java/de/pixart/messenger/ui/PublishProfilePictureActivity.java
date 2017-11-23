@@ -98,12 +98,12 @@ public class PublishProfilePictureActivity extends XmppActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publish_profile_picture);
-        this.avatar = (ImageView) findViewById(R.id.account_image);
-        this.cancelButton = (Button) findViewById(R.id.cancel_button);
-        this.publishButton = (Button) findViewById(R.id.publish_button);
-        this.accountTextView = (TextView) findViewById(R.id.account);
-        this.hintOrWarning = (TextView) findViewById(R.id.hint_or_warning);
-        this.secondaryHint = (TextView) findViewById(R.id.secondary_hint);
+        this.avatar = findViewById(R.id.account_image);
+        this.cancelButton = findViewById(R.id.cancel_button);
+        this.publishButton = findViewById(R.id.publish_button);
+        this.accountTextView = findViewById(R.id.account);
+        this.hintOrWarning = findViewById(R.id.hint_or_warning);
+        this.secondaryHint = findViewById(R.id.secondary_hint);
         this.publishButton.setOnClickListener(new OnClickListener() {
 
             @Override

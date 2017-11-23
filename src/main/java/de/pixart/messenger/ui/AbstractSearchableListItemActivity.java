@@ -93,7 +93,7 @@ public abstract class AbstractSearchableListItemActivity extends XmppActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_contact);
-        mListView = (ListView) findViewById(R.id.choose_contact_list);
+        mListView = findViewById(R.id.choose_contact_list);
         mListView.setFastScrollEnabled(true);
         mListItemsAdapter = new ListItemAdapter(this, listItems);
         mListView.setAdapter(mListItemsAdapter);
@@ -104,7 +104,7 @@ public abstract class AbstractSearchableListItemActivity extends XmppActivity {
         getMenuInflater().inflate(R.menu.choose_contact, menu);
         final MenuItem menuSearchView = menu.findItem(R.id.action_search);
         final View mSearchView = menuSearchView.getActionView();
-        mSearchEditText = (EditText) mSearchView
+        mSearchEditText = mSearchView
                 .findViewById(R.id.search_field);
         mSearchEditText.addTextChangedListener(mSearchTextWatcher);
         menuSearchView.setOnActionExpandListener(mOnActionExpandListener);

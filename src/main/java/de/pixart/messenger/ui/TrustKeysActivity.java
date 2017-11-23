@@ -98,15 +98,15 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
             }
         }
 
-        keyErrorMessageCard = (LinearLayout) findViewById(R.id.key_error_message_card);
-        keyErrorMessage = (TextView) findViewById(R.id.key_error_message);
-        ownKeysTitle = (TextView) findViewById(R.id.own_keys_title);
-        ownKeys = (LinearLayout) findViewById(R.id.own_keys_details);
-        ownKeysCard = (LinearLayout) findViewById(R.id.own_keys_card);
-        foreignKeys = (LinearLayout) findViewById(R.id.foreign_keys);
-        mCancelButton = (Button) findViewById(R.id.cancel_button);
+        keyErrorMessageCard = findViewById(R.id.key_error_message_card);
+        keyErrorMessage = findViewById(R.id.key_error_message);
+        ownKeysTitle = findViewById(R.id.own_keys_title);
+        ownKeys = findViewById(R.id.own_keys_details);
+        ownKeysCard = findViewById(R.id.own_keys_card);
+        foreignKeys = findViewById(R.id.foreign_keys);
+        mCancelButton = findViewById(R.id.cancel_button);
         mCancelButton.setOnClickListener(mCancelButtonListener);
-        mSaveButton = (Button) findViewById(R.id.save_button);
+        mSaveButton = findViewById(R.id.save_button);
         mSaveButton.setOnClickListener(mSaveButtonListener);
 
 
@@ -211,9 +211,9 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
                 hasForeignKeys = true;
                 final LinearLayout layout = (LinearLayout) getLayoutInflater().inflate(R.layout.keys_card, foreignKeys, false);
                 final Jid jid = entry.getKey();
-                final TextView header = (TextView) layout.findViewById(R.id.foreign_keys_title);
-                final LinearLayout keysContainer = (LinearLayout) layout.findViewById(R.id.foreign_keys_details);
-                final TextView informNoKeys = (TextView) layout.findViewById(R.id.no_keys_to_accept);
+                final TextView header = layout.findViewById(R.id.foreign_keys_title);
+                final LinearLayout keysContainer = layout.findViewById(R.id.foreign_keys_details);
+                final TextView informNoKeys = layout.findViewById(R.id.no_keys_to_accept);
                 header.setText(jid.toString());
                 header.setOnClickListener(new OnClickListener() {
                     @Override

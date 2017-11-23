@@ -57,9 +57,9 @@ public class ShowLocationActivity extends Activity implements OnMapReadyCallback
         @Override
         public View getInfoContents(Marker marker) {
 
-            TextView Title = ((TextView) InfoWindow.findViewById(R.id.title));
+            TextView Title = InfoWindow.findViewById(R.id.title);
             Title.setText(marker.getTitle());
-            TextView Snippet = ((TextView) InfoWindow.findViewById(R.id.snippet));
+            TextView Snippet = InfoWindow.findViewById(R.id.snippet);
             Snippet.setText(marker.getSnippet());
 
             return InfoWindow;

@@ -66,10 +66,10 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
         if (view == null) {
             view = inflater.inflate(R.layout.contact, parent, false);
         }
-        TextView tvName = (TextView) view.findViewById(R.id.contact_display_name);
-        TextView tvJid = (TextView) view.findViewById(R.id.contact_jid);
-        ImageView picture = (ImageView) view.findViewById(R.id.contact_photo);
-        FlowLayout tagLayout = (FlowLayout) view.findViewById(R.id.tags);
+        TextView tvName = view.findViewById(R.id.contact_display_name);
+        TextView tvJid = view.findViewById(R.id.contact_jid);
+        ImageView picture = view.findViewById(R.id.contact_photo);
+        FlowLayout tagLayout = view.findViewById(R.id.tags);
 
         List<ListItem.Tag> tags = item.getTags(activity);
 

@@ -50,10 +50,10 @@ public class RecordingActivity extends Activity implements View.OnClickListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recording);
-        this.mTimerTextView = (TextView) this.findViewById(R.id.timer);
-        this.mCancelButton = (Button) this.findViewById(R.id.cancel_button);
+        this.mTimerTextView = this.findViewById(R.id.timer);
+        this.mCancelButton = this.findViewById(R.id.cancel_button);
         this.mCancelButton.setOnClickListener(this);
-        this.mStopButton = (Button) this.findViewById(R.id.share_button);
+        this.mStopButton = this.findViewById(R.id.share_button);
         this.mStopButton.setOnClickListener(this);
         this.setFinishOnTouchOutside(false);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);

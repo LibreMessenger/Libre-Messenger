@@ -274,20 +274,20 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
         this.messageFingerprint = getIntent().getStringExtra("fingerprint");
         setContentView(R.layout.activity_contact_details);
 
-        contactDisplayName = (TextView) findViewById(R.id.contact_display_name);
-        contactJidTv = (TextView) findViewById(R.id.details_contactjid);
-        accountJidTv = (TextView) findViewById(R.id.details_account);
-        lastseen = (TextView) findViewById(R.id.details_lastseen);
-        statusMessage = (TextView) findViewById(R.id.status_message);
-        resource = (TextView) findViewById(R.id.resource);
-        send = (CheckBox) findViewById(R.id.details_send_presence);
-        receive = (CheckBox) findViewById(R.id.details_receive_presence);
-        badge = (QuickContactBadge) findViewById(R.id.details_contact_badge);
-        addContactButton = (Button) findViewById(R.id.add_contact_button);
-        keys = (LinearLayout) findViewById(R.id.details_contact_keys);
-        keysWrapper = (LinearLayout) findViewById(R.id.keys_wrapper);
-        tags = (FlowLayout) findViewById(R.id.tags);
-        mShowInactiveDevicesButton = (Button) findViewById(R.id.show_inactive_devices);
+        contactDisplayName = findViewById(R.id.contact_display_name);
+        contactJidTv = findViewById(R.id.details_contactjid);
+        accountJidTv = findViewById(R.id.details_account);
+        lastseen = findViewById(R.id.details_lastseen);
+        statusMessage = findViewById(R.id.status_message);
+        resource = findViewById(R.id.resource);
+        send = findViewById(R.id.details_send_presence);
+        receive = findViewById(R.id.details_receive_presence);
+        badge = findViewById(R.id.details_contact_badge);
+        addContactButton = findViewById(R.id.add_contact_button);
+        keys = findViewById(R.id.details_contact_keys);
+        keysWrapper = findViewById(R.id.keys_wrapper);
+        tags = findViewById(R.id.tags);
+        mShowInactiveDevicesButton = findViewById(R.id.show_inactive_devices);
         if (getActionBar() != null) {
             getActionBar().setHomeButtonEnabled(true);
             getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -299,9 +299,9 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
                 populateView();
             }
         });
-        this.mNotifyStatusButton = (ImageButton) findViewById(R.id.notification_status_button);
+        this.mNotifyStatusButton = findViewById(R.id.notification_status_button);
         this.mNotifyStatusButton.setOnClickListener(this.mNotifyStatusClickListener);
-        this.mNotifyStatusText = (TextView) findViewById(R.id.notification_status_text);
+        this.mNotifyStatusText = findViewById(R.id.notification_status_text);
     }
 
     @Override
@@ -413,8 +413,8 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             final ActionBar ab = getActionBar();
             ab.setCustomView(R.layout.ab_title);
             ab.setDisplayShowCustomEnabled(true);
-            TextView abtitle = (TextView) findViewById(android.R.id.text1);
-            TextView absubtitle = (TextView) findViewById(android.R.id.text2);
+            TextView abtitle = findViewById(android.R.id.text1);
+            TextView absubtitle = findViewById(android.R.id.text2);
             abtitle.setText(contact.getDisplayName());
             abtitle.setSelected(true);
             abtitle.setClickable(false);
@@ -564,9 +564,9 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             for (final String otrFingerprint : contact.getOtrFingerprints()) {
                 hasKeys = true;
                 View view = inflater.inflate(R.layout.contact_key, keys, false);
-                TextView key = (TextView) view.findViewById(R.id.key);
-                TextView keyType = (TextView) view.findViewById(R.id.key_type);
-                ImageButton removeButton = (ImageButton) view
+                TextView key = view.findViewById(R.id.key);
+                TextView keyType = view.findViewById(R.id.key_type);
+                ImageButton removeButton = view
                         .findViewById(R.id.button_remove);
                 removeButton.setVisibility(View.VISIBLE);
                 key.setText(CryptoHelper.prettifyFingerprint(otrFingerprint));
@@ -617,8 +617,8 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
         if (Config.supportOpenPgp() && contact.getPgpKeyId() != 0) {
             hasKeys = true;
             View view = inflater.inflate(R.layout.contact_key, keys, false);
-            TextView key = (TextView) view.findViewById(R.id.key);
-            TextView keyType = (TextView) view.findViewById(R.id.key_type);
+            TextView key = view.findViewById(R.id.key);
+            TextView keyType = view.findViewById(R.id.key_type);
             keyType.setText(R.string.openpgp_key_id);
             if ("pgp".equals(messageFingerprint)) {
                 keyType.setTextColor(ContextCompat.getColor(this, R.color.accent));

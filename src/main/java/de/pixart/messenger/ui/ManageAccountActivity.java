@@ -89,7 +89,7 @@ public class ManageAccountActivity extends XmppActivity implements OnAccountUpda
             }
         }
 
-        accountListView = (ListView) findViewById(R.id.account_list);
+        accountListView = findViewById(R.id.account_list);
         this.mAccountAdapter = new AccountAdapter(this, accountList);
         accountListView.setAdapter(this.mAccountAdapter);
         accountListView.setOnItemClickListener(new OnItemClickListener() {

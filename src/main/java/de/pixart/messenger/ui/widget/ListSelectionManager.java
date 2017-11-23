@@ -141,10 +141,7 @@ public class ListSelectionManager {
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            if (additionalCallback != null && additionalCallback.onActionItemClicked(mode, item)) {
-                return true;
-            }
-            return false;
+            return additionalCallback != null && additionalCallback.onActionItemClicked(mode, item);
         }
 
         @Override

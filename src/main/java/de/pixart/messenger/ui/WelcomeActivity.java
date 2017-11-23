@@ -81,8 +81,8 @@ public class WelcomeActivity extends XmppActivity {
         }
 
 
-        final Button ImportDatabase = (Button) findViewById(R.id.import_database);
-        final TextView ImportText = (TextView) findViewById(R.id.import_text);
+        final Button ImportDatabase = findViewById(R.id.import_database);
+        final TextView ImportText = findViewById(R.id.import_text);
 
         if (BackupAvailable()) {
             ImportDatabase.setVisibility(View.VISIBLE);
@@ -96,7 +96,7 @@ public class WelcomeActivity extends XmppActivity {
             }
         });
 
-        final Button createAccount = (Button) findViewById(R.id.create_account);
+        final Button createAccount = findViewById(R.id.create_account);
         createAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,7 +105,7 @@ public class WelcomeActivity extends XmppActivity {
                 startActivity(intent);
             }
         });
-        final Button useOwnProvider = (Button) findViewById(R.id.use_existing_account);
+        final Button useOwnProvider = findViewById(R.id.use_existing_account);
         useOwnProvider.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,7 +128,7 @@ public class WelcomeActivity extends XmppActivity {
         View promptsView = li.inflate(R.layout.password, null);
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(WelcomeActivity.this);
         alertDialogBuilder.setView(promptsView);
-        final EditText userInput = (EditText) promptsView
+        final EditText userInput = promptsView
                 .findViewById(R.id.password);
         alertDialogBuilder.setTitle(R.string.enter_password);
         alertDialogBuilder.setMessage(R.string.enter_account_password);

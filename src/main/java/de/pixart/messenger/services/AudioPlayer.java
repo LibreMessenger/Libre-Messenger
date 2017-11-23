@@ -265,9 +265,9 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
             ViewHolder viewHolder = (ViewHolder) audioPlayer.getTag(R.id.TAG_AUDIO_PLAYER_VIEW_HOLDER);
             if (viewHolder == null) {
                 viewHolder = new ViewHolder();
-                viewHolder.runtime = (TextView) audioPlayer.findViewById(R.id.runtime);
-                viewHolder.progress = (SeekBar) audioPlayer.findViewById(R.id.progress);
-                viewHolder.playPause = (ImageButton) audioPlayer.findViewById(R.id.play_pause);
+                viewHolder.runtime = audioPlayer.findViewById(R.id.runtime);
+                viewHolder.progress = audioPlayer.findViewById(R.id.progress);
+                viewHolder.playPause = audioPlayer.findViewById(R.id.play_pause);
                 audioPlayer.setTag(R.id.TAG_AUDIO_PLAYER_VIEW_HOLDER, viewHolder);
             }
             return viewHolder;

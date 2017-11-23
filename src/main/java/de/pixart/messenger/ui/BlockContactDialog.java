@@ -25,8 +25,8 @@ public final class BlockContactDialog {
         builder.setNegativeButton(R.string.cancel, null);
         LayoutInflater inflater = (LayoutInflater) xmppActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout view = (LinearLayout) inflater.inflate(R.layout.dialog_block_contact, null);
-        TextView message = (TextView) view.findViewById(R.id.text);
-        final CheckBox report = (CheckBox) view.findViewById(R.id.report_spam);
+        TextView message = view.findViewById(R.id.text);
+        final CheckBox report = view.findViewById(R.id.report_spam);
         final boolean reporting = blockable.getAccount().getXmppConnection().getFeatures().spamReporting();
         report.setVisibility(!isBlocked && reporting ? View.VISIBLE : View.GONE);
         builder.setView(view);

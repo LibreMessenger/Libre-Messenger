@@ -47,10 +47,10 @@ public class EnterJidDialog {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title);
         View dialogView = LayoutInflater.from(context).inflate(R.layout.enter_jid_dialog, null);
-        final TextView jabberIdDesc = (TextView) dialogView.findViewById(R.id.jabber_id);
+        final TextView jabberIdDesc = dialogView.findViewById(R.id.jabber_id);
         jabberIdDesc.setText(R.string.account_settings_jabber_id);
-        final Spinner spinner = (Spinner) dialogView.findViewById(R.id.account);
-        final AutoCompleteTextView jid = (AutoCompleteTextView) dialogView.findViewById(R.id.jid);
+        final Spinner spinner = dialogView.findViewById(R.id.account);
+        final AutoCompleteTextView jid = dialogView.findViewById(R.id.jid);
         jid.setAdapter(new KnownHostsAdapter(context, R.layout.simple_list_item, knownHosts));
         if (prefilledJid != null) {
             jid.append(prefilledJid);

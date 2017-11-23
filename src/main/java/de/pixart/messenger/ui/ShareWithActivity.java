@@ -181,7 +181,7 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
         setContentView(R.layout.share_with);
         setTitle(getString(R.string.title_activity_sharewith));
 
-        mListView = (ListView) findViewById(R.id.choose_conversation_list);
+        mListView = findViewById(R.id.choose_conversation_list);
         mAdapter = new ConversationAdapter(this, this.mConversations);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(new OnItemClickListener() {

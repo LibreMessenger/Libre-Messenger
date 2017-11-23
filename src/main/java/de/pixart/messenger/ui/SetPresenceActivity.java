@@ -51,17 +51,17 @@ public class SetPresenceActivity extends XmppActivity implements View.OnClickLis
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_presence);
-        mScrollView = (ScrollView) findViewById(R.id.scroll_view);
-        mShowSpinner = (Spinner) findViewById(R.id.presence_show);
+        mScrollView = findViewById(R.id.scroll_view);
+        mShowSpinner = findViewById(R.id.presence_show);
         ArrayAdapter adapter = ArrayAdapter.createFromResource(this,
                 R.array.presence_show_options,
                 R.layout.simple_list_item);
         mShowSpinner.setAdapter(adapter);
         mShowSpinner.setSelection(1);
-        mStatusMessage = (EditText) findViewById(R.id.presence_status_message);
-        mAllAccounts = (CheckBox) findViewById(R.id.all_accounts);
-        mTemplatesView = (LinearLayout) findViewById(R.id.templates);
-        final Button changePresence = (Button) findViewById(R.id.change_presence);
+        mStatusMessage = findViewById(R.id.presence_status_message);
+        mAllAccounts = findViewById(R.id.all_accounts);
+        mTemplatesView = findViewById(R.id.templates);
+        final Button changePresence = findViewById(R.id.change_presence);
         changePresence.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -193,9 +193,9 @@ public class SetPresenceActivity extends XmppActivity implements View.OnClickLis
                 templateLayout.setTag(template);
                 setListItemBackgroundOnView(templateLayout);
                 templateLayout.setOnClickListener(this);
-                TextView message = (TextView) templateLayout.findViewById(R.id.presence_status_message);
-                TextView status = (TextView) templateLayout.findViewById(R.id.status);
-                ImageButton button = (ImageButton) templateLayout.findViewById(R.id.delete_button);
+                TextView message = templateLayout.findViewById(R.id.presence_status_message);
+                TextView status = templateLayout.findViewById(R.id.status);
+                ImageButton button = templateLayout.findViewById(R.id.delete_button);
                 button.setTag(template);
                 button.setOnClickListener(this);
                 ListItem.Tag tag = UIHelper.getTagForStatus(this, template.getStatus());

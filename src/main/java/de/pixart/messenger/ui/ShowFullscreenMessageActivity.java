@@ -62,10 +62,10 @@ public class ShowFullscreenMessageActivity extends Activity {
         getWindow().setAttributes(layout);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_fullscreen_message);
-        mImage = (PhotoView) findViewById(R.id.message_image_view);
-        mVideo = (FullscreenVideoLayout) findViewById(R.id.message_video_view);
-        mFullscreenbutton = (ImageView) findViewById(R.id.vcv_img_fullscreen);
-        mFAB = (ImageButton) findViewById(R.id.imageButton);
+        mImage = findViewById(R.id.message_image_view);
+        mVideo = findViewById(R.id.message_video_view);
+        mFullscreenbutton = findViewById(R.id.vcv_img_fullscreen);
+        mFAB = findViewById(R.id.imageButton);
         mFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

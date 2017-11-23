@@ -69,7 +69,7 @@ public class ShareLocationActivity extends Activity implements OnMapReadyCallbac
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-        mCancelButton = (Button) findViewById(R.id.cancel_button);
+        mCancelButton = findViewById(R.id.cancel_button);
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,7 +77,7 @@ public class ShareLocationActivity extends Activity implements OnMapReadyCallbac
                 finish();
             }
         });
-        mShareButton = (Button) findViewById(R.id.share_button);
+        mShareButton = findViewById(R.id.share_button);
         mShareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,10 +92,10 @@ public class ShareLocationActivity extends Activity implements OnMapReadyCallbac
                 }
             }
         });
-        mSnackbar = (RelativeLayout) findViewById(R.id.snackbar);
-        mLocationInfo = (RelativeLayout) findViewById(R.id.snackbar_location);
-        mSnackbarLocation = (TextView) findViewById(R.id.snackbar_location_message);
-        mSnackbarAction = (TextView) findViewById(R.id.snackbar_action);
+        mSnackbar = findViewById(R.id.snackbar);
+        mLocationInfo = findViewById(R.id.snackbar_location);
+        mSnackbarLocation = findViewById(R.id.snackbar_location_message);
+        mSnackbarAction = findViewById(R.id.snackbar_action);
         mSnackbarAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

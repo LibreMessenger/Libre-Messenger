@@ -1016,7 +1016,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     }
 
     public interface OnQuoteListener {
-        public void onQuote(String text);
+        void onQuote(String text);
     }
 
     private class MessageBodyActionModeCallback implements ActionMode.Callback {

@@ -54,10 +54,10 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher {
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.magic_create);
-        mFullJidDisplay = (TextView) findViewById(R.id.full_jid);
-        mUsername = (EditText) findViewById(R.id.username);
+        mFullJidDisplay = findViewById(R.id.full_jid);
+        mUsername = findViewById(R.id.username);
         mRandom = new SecureRandom();
-        Button next = (Button) findViewById(R.id.create_account);
+        Button next = findViewById(R.id.create_account);
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

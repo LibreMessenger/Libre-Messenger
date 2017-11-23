@@ -273,7 +273,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_conversation);
-        mViewPager = (ViewPager) findViewById(R.id.start_conversation_view_pager);
+        mViewPager = findViewById(R.id.start_conversation_view_pager);
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
@@ -290,7 +290,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
 
         mConferenceAdapter = new ListItemAdapter(this, conferences);
         mContactsAdapter = new ListItemAdapter(this, contacts);
-        ((ListItemAdapter) mContactsAdapter).setOnTagClickedListener(this.mOnTagClickedListener);
+        mContactsAdapter.setOnTagClickedListener(this.mOnTagClickedListener);
         this.mHideOfflineContacts = getPreferences().getBoolean("hide_offline", false);
 
     }
@@ -479,9 +479,9 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.join_conference);
         final View dialogView = getLayoutInflater().inflate(R.layout.join_conference_dialog, null);
-        final Spinner spinner = (Spinner) dialogView.findViewById(R.id.account);
-        final AutoCompleteTextView jid = (AutoCompleteTextView) dialogView.findViewById(R.id.jid);
-        final TextView jabberIdDesc = (TextView) dialogView.findViewById(R.id.jabber_id);
+        final Spinner spinner = dialogView.findViewById(R.id.account);
+        final AutoCompleteTextView jid = dialogView.findViewById(R.id.jid);
+        final TextView jabberIdDesc = dialogView.findViewById(R.id.jabber_id);
         jabberIdDesc.setText(R.string.conference_address);
         jid.setHint(R.string.conference_address_example);
         jid.setAdapter(new KnownHostsAdapter(this, R.layout.simple_list_item, mKnownConferenceHosts));
@@ -551,8 +551,8 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.create_conference);
         final View dialogView = getLayoutInflater().inflate(R.layout.create_conference_dialog, null);
-        final Spinner spinner = (Spinner) dialogView.findViewById(R.id.account);
-        final EditText subject = (EditText) dialogView.findViewById(R.id.subject);
+        final Spinner spinner = dialogView.findViewById(R.id.account);
+        final EditText subject = dialogView.findViewById(R.id.subject);
         populateAccountSpinner(this, mActivatedAccounts, spinner);
         builder.setView(dialogView);
         builder.setPositiveButton(R.string.choose_participants, new OnClickListener() {
@@ -613,7 +613,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
         mMenuSearchView = menu.findItem(R.id.action_search);
         mMenuSearchView.setOnActionExpandListener(mOnActionExpandListener);
         View mSearchView = mMenuSearchView.getActionView();
-        mSearchEditText = (EditText) mSearchView
+        mSearchEditText = mSearchView
                 .findViewById(R.id.search_field);
         mSearchEditText.addTextChangedListener(mSearchTextWatcher);
         mSearchEditText.setOnEditorActionListener(mSearchDone);
@@ -920,8 +920,8 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.verify_omemo_keys);
         View view = getLayoutInflater().inflate(R.layout.dialog_verify_fingerprints, null);
-        final CheckBox isTrustedSource = (CheckBox) view.findViewById(R.id.trusted_source);
-        TextView warning = (TextView) view.findViewById(R.id.warning);
+        final CheckBox isTrustedSource = view.findViewById(R.id.trusted_source);
+        TextView warning = view.findViewById(R.id.warning);
         String jid = contact.getJid().toBareJid().toString();
         SpannableString spannable = new SpannableString(getString(R.string.verifying_omemo_keys_trusted_source,jid,contact.getDisplayName()));
         int start = spannable.toString().indexOf(jid);

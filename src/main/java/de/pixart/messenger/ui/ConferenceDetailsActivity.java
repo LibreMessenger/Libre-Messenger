@@ -247,20 +247,20 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_muc_details);
-        ConferenceName = (TextView) findViewById(R.id.conference_name);
-        mYourNick = (TextView) findViewById(R.id.muc_your_nick);
-        mYourPhoto = (ImageView) findViewById(R.id.your_photo);
-        ImageButton mEditNickButton = (ImageButton) findViewById(R.id.edit_nick_button);
-        mFullJid = (TextView) findViewById(R.id.muc_jabberid);
-        membersView = (LinearLayout) findViewById(R.id.muc_members);
-        mAccountJid = (TextView) findViewById(R.id.details_account);
-        mMoreDetails = (LinearLayout) findViewById(R.id.muc_more_details);
-        mChangeConferenceSettingsButton = (ImageButton) findViewById(R.id.change_conference_button);
+        ConferenceName = findViewById(R.id.conference_name);
+        mYourNick = findViewById(R.id.muc_your_nick);
+        mYourPhoto = findViewById(R.id.your_photo);
+        ImageButton mEditNickButton = findViewById(R.id.edit_nick_button);
+        mFullJid = findViewById(R.id.muc_jabberid);
+        membersView = findViewById(R.id.muc_members);
+        mAccountJid = findViewById(R.id.details_account);
+        mMoreDetails = findViewById(R.id.muc_more_details);
+        mChangeConferenceSettingsButton = findViewById(R.id.change_conference_button);
         mChangeConferenceSettingsButton.setOnClickListener(this.mChangeConferenceSettings);
-        mInviteButton = (Button) findViewById(R.id.invite);
+        mInviteButton = findViewById(R.id.invite);
         mInviteButton.setVisibility(View.GONE);
         mInviteButton.setOnClickListener(inviteListener);
-        mConferenceType = (TextView) findViewById(R.id.muc_conference_type);
+        mConferenceType = findViewById(R.id.muc_conference_type);
         if (getActionBar() != null) {
             getActionBar().setHomeButtonEnabled(true);
             getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -281,12 +281,12 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             }
         });
         this.mAdvancedMode = getPreferences().getBoolean("advanced_muc_mode", false);
-        this.mConferenceInfoTable = (LinearLayout) findViewById(R.id.muc_info_more);
+        this.mConferenceInfoTable = findViewById(R.id.muc_info_more);
         mConferenceInfoTable.setVisibility(this.mAdvancedMode ? View.VISIBLE : View.GONE);
-        this.mConferenceInfoMam = (TextView) findViewById(R.id.muc_info_mam);
-        this.mNotifyStatusButton = (ImageButton) findViewById(R.id.notification_status_button);
+        this.mConferenceInfoMam = findViewById(R.id.muc_info_mam);
+        this.mNotifyStatusButton = findViewById(R.id.notification_status_button);
         this.mNotifyStatusButton.setOnClickListener(this.mNotifyStatusClickListener);
-        this.mNotifyStatusText = (TextView) findViewById(R.id.notification_status_text);
+        this.mNotifyStatusText = findViewById(R.id.notification_status_text);
     }
 
     @Override
@@ -554,8 +554,8 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             final ActionBar ab = getActionBar();
             ab.setCustomView(R.layout.ab_title);
             ab.setDisplayShowCustomEnabled(true);
-            TextView abtitle = (TextView) findViewById(android.R.id.text1);
-            TextView absubtitle = (TextView) findViewById(android.R.id.text2);
+            TextView abtitle = findViewById(android.R.id.text1);
+            TextView absubtitle = findViewById(android.R.id.text2);
             abtitle.setText(mConversation.getName());
             abtitle.setSelected(true);
             abtitle.setClickable(false);
@@ -568,7 +568,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         setTitle(mConversation.getName());
         mFullJid.setText(mConversation.getJid().toBareJid().toString());
         mYourNick.setText(mucOptions.getActualNick());
-        TextView mRoleAffiliaton = (TextView) findViewById(R.id.muc_role);
+        TextView mRoleAffiliaton = findViewById(R.id.muc_role);
         if (mucOptions.online()) {
             mMoreDetails.setVisibility(View.VISIBLE);
             final String status = getStatus(self);
@@ -628,9 +628,9 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             }
             registerForContextMenu(view);
             view.setTag(user);
-            TextView tvDisplayName = (TextView) view.findViewById(R.id.contact_display_name);
-            TextView tvKey = (TextView) view.findViewById(R.id.key);
-            TextView tvStatus = (TextView) view.findViewById(R.id.contact_jid);
+            TextView tvDisplayName = view.findViewById(R.id.contact_display_name);
+            TextView tvKey = view.findViewById(R.id.key);
+            TextView tvStatus = view.findViewById(R.id.contact_jid);
             if (mAdvancedMode && user.getPgpKeyId() != 0) {
                 tvKey.setVisibility(View.VISIBLE);
                 tvKey.setOnClickListener(new OnClickListener() {
@@ -651,7 +651,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                 tvStatus.setText(getStatus(user));
 
             }
-            ImageView iv = (ImageView) view.findViewById(R.id.contact_photo);
+            ImageView iv = view.findViewById(R.id.contact_photo);
             iv.setImageBitmap(avatarService().get(user, getPixel(48), false));
             if (user.getRole() == MucOptions.Role.NONE) {
                 tvDisplayName.setAlpha(INACTIVE_ALPHA);

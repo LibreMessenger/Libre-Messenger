@@ -3,5 +3,5 @@ package de.pixart.messenger.xmpp;
 import de.pixart.messenger.entities.Account;
 
 public interface OnAdvancedStreamFeaturesLoaded {
-    public void onAdvancedStreamFeaturesAvailable(final Account account);
+    void onAdvancedStreamFeaturesAvailable(final Account account);
 }

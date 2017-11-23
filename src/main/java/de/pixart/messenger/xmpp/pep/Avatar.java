@@ -9,8 +9,6 @@ public class Avatar {
 
     public enum Origin {PEP, VCARD}
 
-    ;
-
     public String type;
     public String sha1sum;
     public String image;

@@ -520,9 +520,9 @@ public class UIHelper {
             field.setAccessible(true);
             Object menuPopupHelper = field.get(attachFilePopup);
             Class<?> cls = Class.forName("com.android.internal.view.menu.MenuPopupHelper");
-            Method method = cls.getDeclaredMethod("setForceShowIcon", new Class[]{boolean.class});
+            Method method = cls.getDeclaredMethod("setForceShowIcon", boolean.class);
             method.setAccessible(true);
-            method.invoke(menuPopupHelper, new Object[]{true});
+            method.invoke(menuPopupHelper, true);
             return true;
         } catch (Exception e) {
             return false;

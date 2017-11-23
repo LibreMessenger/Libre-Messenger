@@ -175,11 +175,11 @@ public abstract class XmppActivity extends Activity {
     abstract protected void refreshUiReal();
 
     protected interface OnValueEdited {
-        public void onValueEdited(String value);
+        void onValueEdited(String value);
     }
 
     public interface OnPresenceSelected {
-        public void onPresenceSelected();
+        void onPresenceSelected();
     }
 
     protected ServiceConnection mConnection = new ServiceConnection() {
@@ -748,7 +748,7 @@ public abstract class XmppActivity extends Activity {
                            boolean password) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = getLayoutInflater().inflate(R.layout.quickedit, null);
-        final EditText editor = (EditText) view.findViewById(R.id.editor);
+        final EditText editor = view.findViewById(R.id.editor);
         OnClickListener mClickListener = new OnClickListener() {
 
             @Override

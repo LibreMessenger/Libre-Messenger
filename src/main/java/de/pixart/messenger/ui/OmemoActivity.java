@@ -135,8 +135,8 @@ public abstract class OmemoActivity extends XmppActivity {
                                                           onCheckedChangeListener) {
 
         View view = getLayoutInflater().inflate(R.layout.contact_key, keys, false);
-        TextView key = (TextView) view.findViewById(R.id.key);
-        TextView keyType = (TextView) view.findViewById(R.id.key_type);
+        TextView key = view.findViewById(R.id.key);
+        TextView keyType = view.findViewById(R.id.key_type);
         if (Config.X509_VERIFICATION && status.getTrust() == FingerprintStatus.Trust.VERIFIED_X509) {
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override
@@ -147,8 +147,8 @@ public abstract class OmemoActivity extends XmppActivity {
             key.setOnClickListener(listener);
             keyType.setOnClickListener(listener);
         }
-        Switch trustToggle = (Switch) view.findViewById(R.id.tgl_trust);
-        ImageView verifiedFingerprintSymbol = (ImageView) view.findViewById(R.id.verified_fingerprint);
+        Switch trustToggle = view.findViewById(R.id.tgl_trust);
+        ImageView verifiedFingerprintSymbol = view.findViewById(R.id.verified_fingerprint);
         trustToggle.setVisibility(View.VISIBLE);
         registerForContextMenu(view);
         view.setTag(R.id.TAG_ACCOUNT, account);
@@ -268,11 +268,11 @@ public abstract class OmemoActivity extends XmppActivity {
     private void showCertificateInformationDialog(Bundle bundle) {
         View view = getLayoutInflater().inflate(R.layout.certificate_information, null);
         final String not_available = getString(R.string.certicate_info_not_available);
-        TextView subject_cn = (TextView) view.findViewById(R.id.subject_cn);
-        TextView subject_o = (TextView) view.findViewById(R.id.subject_o);
-        TextView issuer_cn = (TextView) view.findViewById(R.id.issuer_cn);
-        TextView issuer_o = (TextView) view.findViewById(R.id.issuer_o);
-        TextView sha1 = (TextView) view.findViewById(R.id.sha1);
+        TextView subject_cn = view.findViewById(R.id.subject_cn);
+        TextView subject_o = view.findViewById(R.id.subject_o);
+        TextView issuer_cn = view.findViewById(R.id.issuer_cn);
+        TextView issuer_o = view.findViewById(R.id.issuer_o);
+        TextView sha1 = view.findViewById(R.id.sha1);
 
         subject_cn.setText(bundle.getString("subject_cn", not_available));
         subject_o.setText(bundle.getString("subject_o", not_available));

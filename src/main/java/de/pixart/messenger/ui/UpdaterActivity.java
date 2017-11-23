@@ -47,7 +47,7 @@ public class UpdaterActivity extends Activity {
 
         //set activity
         setContentView(R.layout.activity_updater);
-        TextView textView = (TextView) findViewById(R.id.updater);
+        TextView textView = findViewById(R.id.updater);
         textView.setText(R.string.update_info);
     }
 

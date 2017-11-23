@@ -395,17 +395,17 @@ public class VerifyOTRActivity extends XmppActivity implements XmppConnectionSer
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verify_otr);
-        this.mRemoteFingerprint = (TextView) findViewById(R.id.remote_fingerprint);
-        this.mYourFingerprint = (TextView) findViewById(R.id.your_fingerprint);
-        this.mLeftButton = (Button) findViewById(R.id.left_button);
-        this.mRightButton = (Button) findViewById(R.id.right_button);
-        this.mVerificationExplain = (TextView) findViewById(R.id.verification_explanation);
-        this.mStatusMessage = (TextView) findViewById(R.id.status_message);
-        this.mSharedSecretSecret = (EditText) findViewById(R.id.shared_secret_secret);
-        this.mSharedSecretHintEditable = (EditText) findViewById(R.id.shared_secret_hint_editable);
-        this.mSharedSecretHint = (TextView) findViewById(R.id.shared_secret_hint);
-        this.mManualVerificationArea = (LinearLayout) findViewById(R.id.manual_verification_area);
-        this.mSmpVerificationArea = (LinearLayout) findViewById(R.id.smp_verification_area);
+        this.mRemoteFingerprint = findViewById(R.id.remote_fingerprint);
+        this.mYourFingerprint = findViewById(R.id.your_fingerprint);
+        this.mLeftButton = findViewById(R.id.left_button);
+        this.mRightButton = findViewById(R.id.right_button);
+        this.mVerificationExplain = findViewById(R.id.verification_explanation);
+        this.mStatusMessage = findViewById(R.id.status_message);
+        this.mSharedSecretSecret = findViewById(R.id.shared_secret_secret);
+        this.mSharedSecretHintEditable = findViewById(R.id.shared_secret_hint_editable);
+        this.mSharedSecretHint = findViewById(R.id.shared_secret_hint);
+        this.mManualVerificationArea = findViewById(R.id.manual_verification_area);
+        this.mSmpVerificationArea = findViewById(R.id.smp_verification_area);
     }
 
     @Override

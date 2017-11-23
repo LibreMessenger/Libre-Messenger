@@ -35,7 +35,7 @@ public class SettingsFragment extends PreferenceFragment {
                 if (homeBtnContainer instanceof FrameLayout) {
                     ViewGroup containerParent = (ViewGroup) homeBtnContainer.getParent();
                     if (containerParent instanceof LinearLayout) {
-                        ((LinearLayout) containerParent).setOnClickListener(dismissDialogClickListener);
+                        containerParent.setOnClickListener(dismissDialogClickListener);
                     } else {
                         ((FrameLayout) homeBtnContainer).setOnClickListener(dismissDialogClickListener);
                     }
