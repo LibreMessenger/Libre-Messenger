@@ -4,6 +4,10 @@
 * reworked AppUpdater and show a notification if there is an update available
 * some UI and performance improvements
 * add french and spanish translations
+* text markup *bold*, _italic_,`monospace` and ~strikethrough~
+* fixed 'No permission to access …' when opening files shared from the SD card
+* always open URLs in new tab
+* bring back quick share (default off) and return to previous app after sharing
 * bug fixes
 
 
