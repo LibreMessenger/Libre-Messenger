@@ -713,8 +713,8 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                             ReadByMarker readByMarker = ReadByMarker.from(counterpart, trueJid);
                             if (message.addReadByMarker(readByMarker)) {
                                 Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": added read by (" + readByMarker.getRealJid() + ") to message '" + message.getBody() + "'");
-                                mXmppConnectionService.markMessage(message, Message.STATUS_SEND_DISPLAYED);
                                 mXmppConnectionService.updateMessage(message);
+                                mXmppConnectionService.markMessage(message, Message.STATUS_SEND_DISPLAYED);
                             }
                         }
                     }

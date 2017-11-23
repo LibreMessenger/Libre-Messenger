@@ -11,6 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -443,7 +444,20 @@ public class Message extends AbstractEntity {
                 return false;
             }
         }
-        return this.readByMarkers.add(readByMarker);
+        if (this.readByMarkers.add(readByMarker)) {
+            if (readByMarker.getRealJid() != null && readByMarker.getFullJid() != null) {
+                Iterator<ReadByMarker> iterator = this.readByMarkers.iterator();
+                while (iterator.hasNext()) {
+                    ReadByMarker marker = iterator.next();
+                    if (marker.getRealJid() == null && readByMarker.getFullJid().equals(marker.getFullJid())) {
+                        iterator.remove();
+                    }
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public Set<ReadByMarker> getReadByMarkers() {
