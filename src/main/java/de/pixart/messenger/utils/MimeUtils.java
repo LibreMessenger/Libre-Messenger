@@ -233,6 +233,7 @@ public final class MimeUtils {
         add("audio/mpeg", "mp2");
         add("audio/mpeg", "m4a");
         add("audio/mpegurl", "m3u");
+        add("audio/opus", "opus");
         add("audio/prs.sid", "sid");
         add("audio/x-aiff", "aif");
         add("audio/x-aiff", "aiff");
