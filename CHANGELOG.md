@@ -8,6 +8,8 @@
 * fixed 'No permission to access …' when opening files shared from the SD card
 * always open URLs in new tab
 * bring back quick share (default off) and return to previous app after sharing
+* send and show read markers in private, non-anonymous groups
+* warn if chat is unencrypted and switch to OMEMO if available after pressing OK
 * bug fixes
 
 
