@@ -311,6 +311,17 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
             return true;
         }
     };
+
+    private OnClickListener mOK = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (conversation.getAccount().getAxolotlService().isConversationAxolotlCapable(conversation)) {
+                conversation.setNextEncryption(Message.ENCRYPTION_AXOLOTL);
+                activity.refreshUi();
+            }
+            hideSnackbar();
+        }
+    };
     private OnClickListener mAllowPresenceSubscription = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -1096,6 +1107,9 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
             showSnackbar(R.string.contact_added_you, R.string.add_back, this.mAddBackClickListener, this.mLongPressBlockListener);
         } else if (contact.getOption(Contact.Options.PENDING_SUBSCRIPTION_REQUEST)) {
             showSnackbar(R.string.contact_asks_for_presence_subscription, R.string.allow, this.mAllowPresenceSubscription, this.mLongPressBlockListener);
+        } else if (conversation.getNextEncryption() == Message.ENCRYPTION_NONE
+                && (mode == Conversation.MODE_SINGLE || (mode == Conversation.MODE_MULTI && conversation.getMucOptions().membersOnly() && conversation.getMucOptions().nonanonymous()))) {
+            showSnackbar(R.string.conversation_unencrypted_hint, R.string.ok, mOK , null);
         } else if (mode == Conversation.MODE_MULTI
                 && !conversation.getMucOptions().online()
                 && account.getStatus() == Account.State.ONLINE) {

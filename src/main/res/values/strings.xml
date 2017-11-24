@@ -741,4 +741,5 @@
     <string name="contacts_and_n_more_have_read_up_to_this_point">%1$s +%2$d% more have read up to this point</string>
     <string name="pref_return_to_previous">Quick Sharing</string>
     <string name="pref_return_to_previous_summary">Immediately return to previous activity instead of opening the conversation after sharing something</string>
+    <string name="conversation_unencrypted_hint">This chat is unencrypted, for security reasons you should activate message encryption by using the lock icon. The preferable encryption is OMEMO.</string>
 </resources>
