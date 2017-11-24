@@ -34,7 +34,7 @@
         android:paddingLeft="2dp"
         android:paddingBottom="2dp">
 
-        <de.pixart.messenger.ui.EditMessage
+        <de.pixart.messenger.ui.widget.EditMessage
             android:id="@+id/textinput"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -54,7 +54,7 @@
             android:textColor="@color/black87"
             android:singleLine="false">
 
-        </de.pixart.messenger.ui.EditMessage>
+        </de.pixart.messenger.ui.widget.EditMessage>
 
         <ImageButton
             android:id="@+id/textSendButton"

@@ -26,6 +26,7 @@ import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.persistance.FileBackend;
+import de.pixart.messenger.services.EmojiService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.adapter.ConversationAdapter;
 import de.pixart.messenger.xmpp.XmppConnection;
@@ -172,7 +173,7 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        new EmojiService(this).init();
         if (getActionBar() != null) {
             getActionBar().setDisplayHomeAsUpEnabled(false);
             getActionBar().setHomeButtonEnabled(false);

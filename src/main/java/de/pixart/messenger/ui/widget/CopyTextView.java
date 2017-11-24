@@ -6,10 +6,9 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.widget.TextView;
 
-import com.vanniktech.emoji.EmojiTextView;
-
-public class CopyTextView extends EmojiTextView {
+public class CopyTextView extends TextView {
 
     public CopyTextView(Context context) {
         super(context);

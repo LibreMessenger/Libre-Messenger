@@ -20,7 +20,7 @@
             android:background="@drawable/infocard_border"
             android:padding="@dimen/infocard_padding">
 
-            <com.vanniktech.emoji.EmojiTextView
+            <android.support.text.emoji.widget.EmojiTextView
                 android:id="@+id/contact_display_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -92,7 +92,7 @@
                     android:layout_marginBottom="4dp"
                     android:layout_marginTop="4dp" />
 
-                <com.vanniktech.emoji.EmojiTextView
+                <android.support.text.emoji.widget.EmojiTextView
                     android:id="@+id/status_message"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -104,7 +104,7 @@
                     android:textStyle="italic"
                     android:layout_marginBottom="4dp" />
 
-                <com.vanniktech.emoji.EmojiTextView
+                <android.support.text.emoji.widget.EmojiTextView
                     android:id="@+id/resource"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

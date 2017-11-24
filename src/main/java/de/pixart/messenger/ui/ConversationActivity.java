@@ -71,6 +71,7 @@ import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.entities.Transferable;
 import de.pixart.messenger.persistance.FileBackend;
+import de.pixart.messenger.services.EmojiService;
 import de.pixart.messenger.services.UpdateService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.services.XmppConnectionService.OnAccountUpdate;
@@ -205,6 +206,7 @@ public class ConversationActivity extends XmppActivity
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new EmojiService(this).init();
         if (savedInstanceState != null) {
             mOpenConversation = savedInstanceState.getString(STATE_OPEN_CONVERSATION, null);
             mPanelOpen = savedInstanceState.getBoolean(STATE_PANEL_OPEN, true);

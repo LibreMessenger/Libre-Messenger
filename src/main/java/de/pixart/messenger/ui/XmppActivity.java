@@ -53,9 +53,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.vanniktech.emoji.EmojiManager;
-import com.vanniktech.emoji.ios.IosEmojiProvider;
-
 import net.java.otr4j.session.SessionID;
 
 import java.io.FileNotFoundException;
@@ -404,7 +401,6 @@ public abstract class XmppActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EmojiManager.install(new IosEmojiProvider()); // This line needs to be executed before any usage of EmojiTextView or EmojiEditText.
         metrics = getResources().getDisplayMetrics();
         ExceptionHelper.init(getApplicationContext());
         mPrimaryTextColor = ContextCompat.getColor(this, R.color.black87);

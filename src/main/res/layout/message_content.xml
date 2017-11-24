@@ -26,8 +26,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
     android:textColor="@color/dark"
     android:textColorHighlight="@color/grey800"
     android:textColorLink="@color/dark"
-    android:textSize="?attr/TextSizeBody"
-    app:emojiSize="28sp" />
+    android:textSize="?attr/TextSizeBody" />
 
 <Button
     android:id="@+id/download_button"

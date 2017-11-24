@@ -52,7 +52,6 @@
             \n\nhttps://github.com/vanniktech/Emoji\n(Apache License, Version 2.0)
             \n\nhttps://github.com/ypresto/android-transcoder\n(Apache License, Version 2.0)
             \n\nhttp://www.eclipse.org/jetty/\n(Apache License, Version 2.0 and Eclipse Public License 1.0)
-            \n\nhttps://github.com/vdurmont/emoji-java\n(The MIT License)
 	</string>
     <string name="default_resource" translatable="false">Phone</string>
     <bool name="portrait_only">true</bool>

@@ -77,6 +77,7 @@ import de.pixart.messenger.ui.XmppActivity.OnValueEdited;
 import de.pixart.messenger.ui.adapter.MessageAdapter;
 import de.pixart.messenger.ui.adapter.MessageAdapter.OnContactPictureClicked;
 import de.pixart.messenger.ui.adapter.MessageAdapter.OnContactPictureLongClicked;
+import de.pixart.messenger.ui.widget.EditMessage;
 import de.pixart.messenger.utils.MessageUtils;
 import de.pixart.messenger.utils.NickValidityChecker;
 import de.pixart.messenger.utils.StylingHelper;

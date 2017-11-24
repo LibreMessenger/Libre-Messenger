@@ -13,9 +13,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.vanniktech.emoji.EmojiManager;
-import com.vanniktech.emoji.ios.IosEmojiProvider;
-
 import java.util.List;
 
 import de.pixart.messenger.Config;
@@ -36,7 +33,6 @@ public class StartUI extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_ui);
-        EmojiManager.install(new IosEmojiProvider()); // This line needs to be executed before any usage of EmojiTextView or EmojiEditText.
         requestNeededPermissions();
     }
 

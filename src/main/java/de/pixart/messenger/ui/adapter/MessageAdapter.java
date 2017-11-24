@@ -43,7 +43,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.vdurmont.emoji.EmojiManager;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
@@ -76,6 +75,8 @@ import de.pixart.messenger.ui.widget.ClickableMovementMethod;
 import de.pixart.messenger.ui.widget.CopyTextView;
 import de.pixart.messenger.ui.widget.ListSelectionManager;
 import de.pixart.messenger.utils.CryptoHelper;
+import de.pixart.messenger.utils.EmojiWrapper;
+import de.pixart.messenger.utils.Emoticons;
 import de.pixart.messenger.utils.GeoHelper;
 import de.pixart.messenger.utils.Patterns;
 import de.pixart.messenger.utils.StylingHelper;
@@ -361,9 +362,9 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.VISIBLE);
         Spannable span = new SpannableString(body);
-        float size = EmojiManager.isEmoji(body) ? 3.0f : 2.0f;
+        float size = Emoticons.isEmoji(body) ? 3.0f : 2.0f;
         span.setSpan(new RelativeSizeSpan(size), 0, body.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        viewHolder.messageBody.setText(span);
+        viewHolder.messageBody.setText(EmojiWrapper.transform(span));
     }
 
     private void displayXmppMessage(final ViewHolder viewHolder, final String body) {
@@ -525,13 +526,19 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                     body.setSpan(new StyleSpan(Typeface.BOLD), matcher.start(), matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }
+            Matcher matcher = Emoticons.generatePattern(body).matcher(body);
+            while (matcher.find()) {
+                if (matcher.start() < matcher.end()) {
+                    body.setSpan(new RelativeSizeSpan(1.5f), matcher.start(), matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+            }
             StylingHelper.format(body, viewHolder.messageBody.getCurrentTextColor());
             Linkify.addLinks(body, XMPP_PATTERN, "xmpp");
             Linkify.addLinks(body, Patterns.AUTOLINK_WEB_URL, "http", WEBURL_MATCH_FILTER, WEBURL_TRANSFORM_FILTER);
             Linkify.addLinks(body, GeoHelper.GEO_URI, "geo");
             FixedURLSpan.fix(body);
             viewHolder.messageBody.setAutoLinkMask(0);
-            viewHolder.messageBody.setText(body);
+            viewHolder.messageBody.setText(EmojiWrapper.transform(body));
             viewHolder.messageBody.setTextIsSelectable(true);
             viewHolder.messageBody.setMovementMethod(ClickableMovementMethod.getInstance());
             listSelectionManager.onUpdate(viewHolder.messageBody, message);
@@ -919,7 +926,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             if (message.isGeoUri()) {
                 displayLocationMessage(viewHolder, message);
             } else if (message.bodyIsOnlyEmojis() && message.getType() != Message.TYPE_PRIVATE) {
-                displayEmojiMessage(viewHolder, message.getBody().replaceAll("\\s", ""));
+                displayEmojiMessage(viewHolder, message.getBody().trim());
             } else if (message.isXmppUri()) {
                 displayXmppMessage(viewHolder, message.getBody().trim());
             } else if (message.treatAsDownloadable()) {

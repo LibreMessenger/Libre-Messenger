@@ -5,8 +5,6 @@ import android.database.Cursor;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
 
-import com.vdurmont.emoji.EmojiManager;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
@@ -20,6 +18,7 @@ import de.pixart.messenger.crypto.axolotl.FingerprintStatus;
 import de.pixart.messenger.http.AesGcmURLStreamHandler;
 import de.pixart.messenger.ui.adapter.MessageAdapter;
 import de.pixart.messenger.utils.CryptoHelper;
+import de.pixart.messenger.utils.Emoticons;
 import de.pixart.messenger.utils.GeoHelper;
 import de.pixart.messenger.utils.MimeUtils;
 import de.pixart.messenger.utils.UIHelper;
@@ -742,7 +741,7 @@ public class Message extends AbstractEntity {
 
     public synchronized boolean bodyIsOnlyEmojis() {
         if (isEmojisOnly == null) {
-            isEmojisOnly = EmojiManager.isOnlyEmojis(body.replaceAll("\\s", ""));
+            isEmojisOnly = Emoticons.isOnlyEmoji(body.replaceAll("\\s", ""));
         }
         return isEmojisOnly;
     }

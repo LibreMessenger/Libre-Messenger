@@ -41,7 +41,7 @@
                 android:layout_toRightOf="@+id/conversation_image"
                 android:paddingLeft="8dp">
 
-                <com.vanniktech.emoji.EmojiTextView
+                <TextView
                     android:id="@+id/conversation_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -89,7 +89,7 @@
                             android:layout_height="?attr/IconSize"
                             android:layout_marginRight="?attr/TextSeparation"/>/>
 
-                        <com.vanniktech.emoji.EmojiTextView
+                        <TextView
                             android:id="@+id/conversation_lastmsg"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

@@ -29,6 +29,7 @@ import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.Transferable;
 import de.pixart.messenger.ui.ConversationActivity;
 import de.pixart.messenger.ui.XmppActivity;
+import de.pixart.messenger.utils.EmojiWrapper;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 
@@ -82,7 +83,7 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
         }
         ViewHolder viewHolder = ViewHolder.get(view);
         if (conversation.getMode() == Conversation.MODE_SINGLE || activity.useSubjectToIdentifyConference()) {
-            viewHolder.name.setText(conversation.getName());
+            viewHolder.name.setText(EmojiWrapper.transform(conversation.getName()));
         } else {
             viewHolder.name.setText(conversation.getJid().toBareJid().toString());
         }
@@ -142,7 +143,7 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
 
             final Pair<String, Boolean> preview = UIHelper.getMessagePreview(activity, message);
             if (showPreviewText) {
-                viewHolder.lastMessage.setText(preview.first);
+                viewHolder.lastMessage.setText(EmojiWrapper.transform(preview.first));
             } else {
                 viewHolder.lastMessageIcon.setContentDescription(preview.first);
             }

@@ -1,10 +1,11 @@
-package de.pixart.messenger.ui;
+package de.pixart.messenger.ui.widget;
 
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.text.emoji.widget.EmojiEditText;
 import android.support.v13.view.inputmethod.EditorInfoCompat;
 import android.support.v13.view.inputmethod.InputConnectionCompat;
 import android.support.v13.view.inputmethod.InputContentInfoCompat;
@@ -15,11 +16,10 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
-import android.widget.EditText;
 
 import de.pixart.messenger.Config;
 
-public class EditMessage extends EditText {
+public class EditMessage extends EmojiEditText {
 
     private static final InputFilter SPAN_FILTER = new InputFilter() {
 
