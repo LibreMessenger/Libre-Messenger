@@ -1,2 +1,0 @@
-configurations.create("default")
-artifacts.add("default", file('httpcore-4.0.1.jar'))
