@@ -34,6 +34,7 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
     private static final float ACTIVE_ALPHA = 1.0f;
     protected XmppActivity activity;
     protected boolean showDynamicTags = false;
+    private OnTagClickedListener mOnTagClickedListener = null;
     protected int color = 0;
     protected boolean offline = false;
     private View.OnClickListener onTagTvClick = new View.OnClickListener() {
@@ -46,7 +47,6 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
             }
         }
     };
-    private OnTagClickedListener mOnTagClickedListener = null;
 
     public ListItemAdapter(XmppActivity activity, List<ListItem> objects) {
         super(activity, 0, objects);
@@ -66,34 +66,32 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
         if (view == null) {
             view = inflater.inflate(R.layout.contact, parent, false);
         }
-        TextView tvName = view.findViewById(R.id.contact_display_name);
-        TextView tvJid = view.findViewById(R.id.contact_jid);
-        ImageView picture = view.findViewById(R.id.contact_photo);
-        FlowLayout tagLayout = view.findViewById(R.id.tags);
+
+        ViewHolder viewHolder = ViewHolder.get(view);
 
         List<ListItem.Tag> tags = item.getTags(activity);
 
         if (tags.size() == 0 || !this.showDynamicTags) {
-            tagLayout.setVisibility(View.GONE);
+            viewHolder.tags.setVisibility(View.GONE);
         } else {
-            tagLayout.setVisibility(View.VISIBLE);
-            tagLayout.removeAllViewsInLayout();
+            viewHolder.tags.setVisibility(View.VISIBLE);
+            viewHolder.tags.removeAllViewsInLayout();
             for (ListItem.Tag tag : tags) {
-                TextView tv = (TextView) inflater.inflate(R.layout.list_item_tag, tagLayout, false);
+                TextView tv = (TextView) inflater.inflate(R.layout.list_item_tag, viewHolder.tags, false);
                 tv.setText(tag.getName());
                 tv.setBackgroundColor(tag.getColor());
                 tv.setOnClickListener(this.onTagTvClick);
-                tagLayout.addView(tv);
+                viewHolder.tags.addView(tv);
             }
         }
         final String jid = item.getDisplayJid();
         if (jid != null) {
-            tvJid.setVisibility(View.VISIBLE);
-            tvJid.setText(jid);
+            viewHolder.jid.setVisibility(View.VISIBLE);
+            viewHolder.jid.setText(jid);
         } else {
-            tvJid.setVisibility(View.GONE);
+            viewHolder.jid.setVisibility(View.GONE);
         }
-        tvName.setText(item.getDisplayName());
+        viewHolder.name.setText(item.getDisplayName());
         if (tags.size() != 0) {
             for (ListItem.Tag tag : tags) {
                 offline = tag.getOffline() == 1;
@@ -101,23 +99,23 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
             }
         }
         if (offline) {
-            tvName.setTextColor(ContextCompat.getColor(activity, R.color.black87));
-            tvName.setAlpha(INACTIVE_ALPHA);
-            tvJid.setAlpha(INACTIVE_ALPHA);
-            picture.setAlpha(INACTIVE_ALPHA);
-            tagLayout.setAlpha(INACTIVE_ALPHA);
+            viewHolder.name.setTextColor(ContextCompat.getColor(activity, R.color.black87));
+            viewHolder.name.setAlpha(INACTIVE_ALPHA);
+            viewHolder.jid.setAlpha(INACTIVE_ALPHA);
+            viewHolder.avatar.setAlpha(INACTIVE_ALPHA);
+            viewHolder.tags.setAlpha(INACTIVE_ALPHA);
         } else {
             if (ShowPresenceColoredNames()) {
-                tvName.setTextColor(color);
+                viewHolder.name.setTextColor(color);
             } else {
-                tvName.setTextColor(ContextCompat.getColor(activity, R.color.black87));
+                viewHolder.name.setTextColor(ContextCompat.getColor(activity, R.color.black87));
             }
-            tvName.setAlpha(ACTIVE_ALPHA);
-            tvJid.setAlpha(ACTIVE_ALPHA);
-            picture.setAlpha(ACTIVE_ALPHA);
-            tagLayout.setAlpha(ACTIVE_ALPHA);
+            viewHolder.name.setAlpha(ACTIVE_ALPHA);
+            viewHolder.jid.setAlpha(ACTIVE_ALPHA);
+            viewHolder.avatar.setAlpha(ACTIVE_ALPHA);
+            viewHolder.tags.setAlpha(ACTIVE_ALPHA);
         }
-        loadAvatar(item, picture);
+        loadAvatar(item, viewHolder.avatar);
         return view;
     }
 
@@ -212,6 +210,31 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
             return bitmapWorkerTaskReference.get();
         }
     }
+
+    private static class ViewHolder {
+        private TextView name;
+        private TextView jid;
+        private ImageView avatar;
+        private FlowLayout tags;
+
+        private ViewHolder() {
+        }
+
+        public static ViewHolder get(View layout) {
+            ViewHolder viewHolder = (ViewHolder) layout.getTag();
+            if (viewHolder == null) {
+                viewHolder = new ViewHolder();
+
+                viewHolder.name = layout.findViewById(R.id.contact_display_name);
+                viewHolder.jid = layout.findViewById(R.id.contact_jid);
+                viewHolder.avatar = layout.findViewById(R.id.contact_photo);
+                viewHolder.tags = layout.findViewById(R.id.tags);
+                layout.setTag(viewHolder);
+            }
+            return viewHolder;
+        }
+    }
+
 
     public boolean ShowPresenceColoredNames() {
         return getPreferences().getBoolean("presence_colored_names", activity.getResources().getBoolean(R.bool.presence_colored_names));
