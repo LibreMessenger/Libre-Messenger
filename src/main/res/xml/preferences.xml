@@ -221,6 +221,11 @@
             android:title="@string/pref_broadcast_last_activity"
             android:summary="@string/pref_broadcast_last_activity_summary" />
         <CheckBoxPreference
+            android:defaultValue="@bool/warn_unencrypted_chat"
+            android:key="warn_unencrypted_chat"
+            android:title="@string/pref_warn_unencrypted_chat"
+            android:summary="@string/pref_warn_unencrypted_chat_summary"/>
+        <CheckBoxPreference
             android:defaultValue="@bool/send_crashreport"
             android:key="crashreport"
             android:summary="@string/pref_send_crash_summary"

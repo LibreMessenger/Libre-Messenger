@@ -3456,6 +3456,10 @@ public class XmppConnectionService extends Service {
         return getBooleanPreference("show_connection_options", R.bool.show_connection_options);
     }
 
+    public boolean warnUnecryptedChat() {
+        return getBooleanPreference(SettingsActivity.WARN_UNENCRYPTED_CHAT, R.bool.warn_unencrypted_chat);
+    }
+
     public boolean broadcastLastActivity() {
         return getBooleanPreference(SettingsActivity.BROADCAST_LAST_ACTIVITY, R.bool.last_activity);
     }
