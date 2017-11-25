@@ -16,6 +16,6 @@
         android:color="@color/grey500">
     </stroke>
     <solid
-        android:color="@color/realwhite">
+        android:color="@color/lightwhite">
     </solid>
 </shape>

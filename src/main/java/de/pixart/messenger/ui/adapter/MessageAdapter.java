@@ -955,6 +955,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             } else {
                 viewHolder.message_box.setBackgroundResource(R.drawable.message_bubble_received_lightred);
                 viewHolder.encryption.setVisibility(View.VISIBLE);
+                viewHolder.encryption.setTextColor(activity.getWarningTextColor());
                 if (omemoEncryption && !message.isTrusted()) {
                     viewHolder.encryption.setText(R.string.not_trusted);
                 } else {
