@@ -14,6 +14,7 @@ import android.widget.TextView;
 import java.lang.ref.WeakReference;
 import java.util.Locale;
 
+import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.ui.adapter.MessageAdapter;
@@ -21,7 +22,7 @@ import de.pixart.messenger.utils.WeakReferenceSet;
 
 public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener, Runnable {
 
-    private static final int REFRESH_INTERVAL = 250;
+    private static final int REFRESH_INTERVAL = Config.REFRESH_UI_INTERVAL;
     private static final Object LOCK = new Object();
     private static MediaPlayer player = null;
     private static Message currentlyPlayingMessage = null;
