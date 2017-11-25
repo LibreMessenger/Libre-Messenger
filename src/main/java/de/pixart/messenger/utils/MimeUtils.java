@@ -509,6 +509,9 @@ public final class MimeUtils {
         String mimeType;
         try {
             mimeType = context.getContentResolver().getType(uri);
+            if (mimeType != null && mimeType.equals("application/octet-stream")) {
+                mimeType = null;
+            }
         } catch (Throwable throwable) {
             mimeType = null;
         }
