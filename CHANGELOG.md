@@ -1,6 +1,6 @@
 ### Changelog
 
-#### Version 1.20.0 (not released yet)
+#### Version 1.20.0
 * reworked AppUpdater and show a notification if there is an update available
 * some UI and performance improvements
 * add french and spanish translations
@@ -9,7 +9,8 @@
 * always open URLs in new tab
 * bring back quick share (default off) and return to previous app after sharing
 * send and show read markers in private, non-anonymous groups
-* warn if chat is unencrypted and switch to OMEMO if available after pressing OK
+* warn if chat is unencrypted and switch to OMEMO if available after pressing OK (warning can be disabled in settings)
+* support sending and receiving opus file
 * bug fixes
 
 
