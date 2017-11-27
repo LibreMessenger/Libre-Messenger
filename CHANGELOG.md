@@ -1,5 +1,8 @@
 ### Changelog
 
+#### Version 1.20.1
+* bug fixes
+
 #### Version 1.20.0
 * reworked AppUpdater and show a notification if there is an update available
 * some UI and performance improvements
