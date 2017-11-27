@@ -1163,14 +1163,20 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                 && !conversation.isBlocked()
                 && conversation.isWithStranger()) {
             showSnackbar(R.string.received_message_from_stranger, R.string.block, mBlockClickListener);
-        } else if (activity.xmppConnectionService.warnUnecryptedChat() && (conversation.getNextEncryption() == Message.ENCRYPTION_NONE
-                && ((mode == Conversation.MODE_SINGLE)
-                && ((Config.supportOmemo() && conversation.getAccount().getAxolotlService().isConversationAxolotlCapable(conversation))
-                || (Config.supportOpenPgp() && account.isPgpDecryptionServiceConnected()) || Config.supportOtr()))
-                || ((mode == Conversation.MODE_MULTI && conversation.getMucOptions().membersOnly() && conversation.getMucOptions().nonanonymous())
-                && (Config.supportOmemo() && conversation.getAccount().getAxolotlService().isConversationAxolotlCapable(conversation)
-                || (Config.supportOpenPgp() && account.isPgpDecryptionServiceConnected()))))) {
-            showSnackbar(R.string.conversation_unencrypted_hint, R.string.ok, mHideUnencryptionHint, null);
+        } else if (activity.xmppConnectionService.warnUnecryptedChat()) {
+            if ((mode == Conversation.MODE_SINGLE) && (conversation.getNextEncryption() == Message.ENCRYPTION_NONE &&
+                    ((Config.supportOmemo() && conversation.getAccount().getAxolotlService().isConversationAxolotlCapable(conversation)) ||
+                            (Config.supportOpenPgp() && account.isPgpDecryptionServiceConnected()) ||
+                            Config.supportOtr()))) {
+                showSnackbar(R.string.conversation_unencrypted_hint, R.string.ok, mHideUnencryptionHint, null);
+            } else if ((mode == Conversation.MODE_MULTI && conversation.getMucOptions().membersOnly() && conversation.getMucOptions().nonanonymous()) &&
+                    (conversation.getNextEncryption() == Message.ENCRYPTION_NONE &&
+                            ((Config.supportOmemo() && conversation.getAccount().getAxolotlService().isConversationAxolotlCapable(conversation)) ||
+                                    (Config.supportOpenPgp() && account.isPgpDecryptionServiceConnected())))) {
+                showSnackbar(R.string.conversation_unencrypted_hint, R.string.ok, mHideUnencryptionHint, null);
+            } else {
+                hideSnackbar();
+            }
         } else {
             hideSnackbar();
         }
