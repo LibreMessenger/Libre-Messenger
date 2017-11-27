@@ -671,9 +671,9 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                                     Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": removed " + jid + " from crypto targets of " + conversation.getName());
                                     conversation.setAcceptedCryptoTargets(cryptoTargets);
                                     mXmppConnectionService.updateConversation(conversation);
-                                } else if (isNew && user.getRealJid() != null && account.getAxolotlService().hasEmptyDeviceList(user.getRealJid())) {
-                                    account.getAxolotlService().fetchDeviceIds(user.getRealJid());
                                 }
+                            } else if (isNew && user.getRealJid() != null && account.getAxolotlService().hasEmptyDeviceList(user.getRealJid())) {
+                                account.getAxolotlService().fetchDeviceIds(user.getRealJid());
                             }
                         }
                     }
