@@ -336,11 +336,11 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
             mXmppConnectionService.getMessageArchiveService().processFinLegacy(fin, original.getFrom());
             return;
         }
-        final boolean mamlegacy = original.hasChild("result", Namespace.MAM_LEGACY);
-        final Element result = original.findChild("result", mamlegacy ? Namespace.MAM_LEGACY : Namespace.MAM);
+        final boolean mamLegacy = original.hasChild("result", Namespace.MAM_LEGACY);
+        final Element result = original.findChild("result", mamLegacy ? Namespace.MAM_LEGACY : Namespace.MAM);
         final MessageArchiveService.Query query = result == null ? null : mXmppConnectionService.getMessageArchiveService().findQuery(result.getAttribute("queryid"));
         if (query != null && query.validFrom(original.getFrom())) {
-            Pair<MessagePacket, Long> f = original.getForwardedMessagePacket("result", mamlegacy ? Namespace.MAM_LEGACY : Namespace.MAM);
+            Pair<MessagePacket, Long> f = original.getForwardedMessagePacket("result", mamLegacy ? Namespace.MAM_LEGACY : Namespace.MAM);
             if (f == null) {
                 return;
             }
@@ -714,7 +714,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                             if (message.addReadByMarker(readByMarker)) {
                                 Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": added read by (" + readByMarker.getRealJid() + ") to message '" + message.getBody() + "'");
                                 mXmppConnectionService.updateMessage(message);
-                                mXmppConnectionService.markMessage(message, Message.STATUS_SEND_DISPLAYED);
+                                mXmppConnectionService.markMessage(account, from.toBareJid(), id, Message.STATUS_SEND_DISPLAYED);
                             }
                         }
                     }

@@ -1,7 +1,7 @@
 package de.pixart.messenger.xmpp.jingle;
 
 public interface OnTransportConnected {
-    void failed();
+    public void failed();
 
-    void established();
+    public void established();
 }

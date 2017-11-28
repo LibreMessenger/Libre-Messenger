@@ -172,11 +172,11 @@ public abstract class XmppActivity extends Activity {
     abstract protected void refreshUiReal();
 
     protected interface OnValueEdited {
-        void onValueEdited(String value);
+        public void onValueEdited(String value);
     }
 
     public interface OnPresenceSelected {
-        void onPresenceSelected();
+        public void onPresenceSelected();
     }
 
     protected ServiceConnection mConnection = new ServiceConnection() {

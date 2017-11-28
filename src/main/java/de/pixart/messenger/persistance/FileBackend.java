@@ -545,7 +545,7 @@ public class FileBackend {
     }
 
     public Uri getTakePhotoUri() {
-        File file = new File(getTakeFromCameraPath() + "IMG_" + fileDateFormat.format(new Date()) + ".jpg");
+        File file = new File(getTakeFromCameraPath() + "IMG_" + this.fileDateFormat.format(new Date()) + ".jpg");
         file.getParentFile().mkdirs();
         return getUriForFile(mXmppConnectionService, file);
     }
@@ -577,7 +577,7 @@ public class FileBackend {
     }
 
     public Uri getTakeVideoUri() {
-        File file = new File(getTakeFromCameraPath() + "VID_" + fileDateFormat.format(new Date()) + ".mp4");
+        File file = new File(getTakeFromCameraPath() + "VID_" + this.fileDateFormat.format(new Date()) + ".mp4");
         file.getParentFile().mkdirs();
         return getUriForFile(mXmppConnectionService, file);
     }

@@ -175,7 +175,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
     @Override
     public int getItemViewType(int position) {
-        return getItemViewType(getItem(position));
+        return this.getItemViewType(getItem(position));
     }
 
     public int getMessageTextColor(boolean onDark, boolean primary) {
@@ -198,6 +198,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         if (viewHolder.edit_indicator != null) {
             if (message.edited()) {
                 viewHolder.edit_indicator.setVisibility(View.VISIBLE);
+                viewHolder.edit_indicator.setAlpha(0.7f);
             } else {
                 viewHolder.edit_indicator.setVisibility(View.GONE);
             }
@@ -459,10 +460,9 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     }
 
     private void displayTextMessage(final ViewHolder viewHolder, final Message message, boolean darkBackground, int type) {
-        if (viewHolder.download_button != null) {
-            viewHolder.download_button.setVisibility(View.GONE);
-        }
+        viewHolder.download_button.setVisibility(View.GONE);
         viewHolder.image.setVisibility(View.GONE);
+        viewHolder.audioPlayer.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.VISIBLE);
         viewHolder.messageBody.setTextColor(this.getMessageTextColor(darkBackground, true));
         viewHolder.messageBody.setLinkTextColor(this.getMessageTextColor(darkBackground, true));
@@ -750,7 +750,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     }
 
     @Override
-    public View getView(int position, View unused, ViewGroup parent) {
+    public View getView(int position, View view, ViewGroup parent) {
         final Message message = getItem(position);
         final boolean omemoEncryption = message.getEncryption() == Message.ENCRYPTION_AXOLOTL;
         final boolean isInValidSession = message.isValidInSession() && (!omemoEncryption || message.isTrusted());
@@ -758,60 +758,62 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         final Account account = conversation.getAccount();
         final int type = getItemViewType(position);
         ViewHolder viewHolder;
-        View view;
-        viewHolder = new ViewHolder();
-        switch (type) {
-            case DATE_SEPARATOR:
-                view = activity.getLayoutInflater().inflate(R.layout.message_date_bubble, parent, false);
-                viewHolder.status_message = view.findViewById(R.id.status_message);
-                break;
-            case SENT:
-                view = activity.getLayoutInflater().inflate(R.layout.message_sent, parent, false);
-                viewHolder.message_box = view.findViewById(R.id.message_box);
-                viewHolder.contact_picture = view.findViewById(R.id.message_photo);
-                viewHolder.audioPlayer = view.findViewById(R.id.audio_player);
-                viewHolder.download_button = view.findViewById(R.id.download_button);
-                viewHolder.resend_button = view.findViewById(R.id.resend_button);
-                viewHolder.indicator = view.findViewById(R.id.security_indicator);
-                viewHolder.edit_indicator = view.findViewById(R.id.edit_indicator);
-                viewHolder.image = view.findViewById(R.id.message_image);
-                viewHolder.messageBody = view.findViewById(R.id.message_body);
-                viewHolder.time = view.findViewById(R.id.message_time);
-                viewHolder.indicatorReceived = view.findViewById(R.id.indicator_received);
-                viewHolder.indicatorRead = view.findViewById(R.id.indicator_read);
-                break;
-            case RECEIVED:
-                view = activity.getLayoutInflater().inflate(R.layout.message_received, parent, false);
-                viewHolder.message_box = view.findViewById(R.id.message_box);
-                viewHolder.contact_picture = view.findViewById(R.id.message_photo);
-                viewHolder.audioPlayer = view.findViewById(R.id.audio_player);
-                viewHolder.download_button = view.findViewById(R.id.download_button);
-                viewHolder.indicator = view.findViewById(R.id.security_indicator);
-                viewHolder.edit_indicator = view.findViewById(R.id.edit_indicator);
-                viewHolder.image = view.findViewById(R.id.message_image);
-                viewHolder.messageBody = view.findViewById(R.id.message_body);
-                viewHolder.time = view.findViewById(R.id.message_time);
-                viewHolder.indicatorReceived = view.findViewById(R.id.indicator_received);
-                viewHolder.encryption = view.findViewById(R.id.message_encryption);
-                break;
-            case STATUS:
-                view = activity.getLayoutInflater().inflate(R.layout.message_status, parent, false);
-                viewHolder.contact_picture = view.findViewById(R.id.message_photo);
-                viewHolder.status_message = view.findViewById(R.id.status_message);
-                viewHolder.load_more_messages = view.findViewById(R.id.load_more_messages);
-                break;
-            default:
-                throw new AssertionError("Unknown view type");
+        if (view == null) {
+            viewHolder = new ViewHolder();
+            switch (type) {
+                case DATE_SEPARATOR:
+                    view = activity.getLayoutInflater().inflate(R.layout.message_date_bubble, parent, false);
+                    viewHolder.status_message = view.findViewById(R.id.status_message);
+                    break;
+                case SENT:
+                    view = activity.getLayoutInflater().inflate(R.layout.message_sent, parent, false);
+                    viewHolder.message_box = view.findViewById(R.id.message_box);
+                    viewHolder.contact_picture = view.findViewById(R.id.message_photo);
+                    viewHolder.audioPlayer = view.findViewById(R.id.audio_player);
+                    viewHolder.download_button = view.findViewById(R.id.download_button);
+                    viewHolder.resend_button = view.findViewById(R.id.resend_button);
+                    viewHolder.indicator = view.findViewById(R.id.security_indicator);
+                    viewHolder.edit_indicator = view.findViewById(R.id.edit_indicator);
+                    viewHolder.image = view.findViewById(R.id.message_image);
+                    viewHolder.messageBody = view.findViewById(R.id.message_body);
+                    viewHolder.time = view.findViewById(R.id.message_time);
+                    viewHolder.indicatorReceived = view.findViewById(R.id.indicator_received);
+                    viewHolder.indicatorRead = view.findViewById(R.id.indicator_read);
+                    break;
+                case RECEIVED:
+                    view = activity.getLayoutInflater().inflate(R.layout.message_received, parent, false);
+                    viewHolder.message_box = view.findViewById(R.id.message_box);
+                    viewHolder.contact_picture = view.findViewById(R.id.message_photo);
+                    viewHolder.audioPlayer = view.findViewById(R.id.audio_player);
+                    viewHolder.download_button = view.findViewById(R.id.download_button);
+                    viewHolder.indicator = view.findViewById(R.id.security_indicator);
+                    viewHolder.edit_indicator = view.findViewById(R.id.edit_indicator);
+                    viewHolder.image = view.findViewById(R.id.message_image);
+                    viewHolder.messageBody = view.findViewById(R.id.message_body);
+                    viewHolder.time = view.findViewById(R.id.message_time);
+                    viewHolder.indicatorReceived = view.findViewById(R.id.indicator_received);
+                    viewHolder.encryption = view.findViewById(R.id.message_encryption);
+                    break;
+                case STATUS:
+                    view = activity.getLayoutInflater().inflate(R.layout.message_status, parent, false);
+                    viewHolder.contact_picture = view.findViewById(R.id.message_photo);
+                    viewHolder.status_message = view.findViewById(R.id.status_message);
+                    viewHolder.load_more_messages = view.findViewById(R.id.load_more_messages);
+                    break;
+                default:
+                    throw new AssertionError("Unknown view type");
+                }
+            if (viewHolder.messageBody != null) {
+                listSelectionManager.onCreate(viewHolder.messageBody, new MessageBodyActionModeCallback(viewHolder.messageBody));
+                viewHolder.messageBody.setCopyHandler(this);
+            }
+            view.setTag(viewHolder);
+        } else {
+      	    viewHolder = (ViewHolder) view.getTag();
+            if (viewHolder == null) {
+                return view;
+            }
         }
-        if (viewHolder.messageBody != null) {
-            listSelectionManager.onCreate(viewHolder.messageBody, new MessageBodyActionModeCallback(viewHolder.messageBody));
-            viewHolder.messageBody.setCopyHandler(this);
-        }
-        view.setTag(viewHolder);
-        if (viewHolder == null) {
-            return view;
-        }
-
 
         boolean darkBackground = false; // default: (type == SENT && (!isInValidSession || !mUseWhiteBackground));
 
@@ -839,9 +841,12 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 viewHolder.load_more_messages.setVisibility(View.GONE);
                 viewHolder.status_message.setText(message.getBody());
                 boolean showAvatar;
-                if (conversation.getMode() == Conversation.MODE_MULTI && (message.getCounterpart() != null || message.getTrueCounterpart() != null || (message.getCounterparts() != null && message.getCounterparts().size() > 0))) {
+                if (conversation.getMode() == Conversation.MODE_SINGLE) {
                     showAvatar = true;
-                    loadAvatar(message, viewHolder.contact_picture, activity.getPixel(32));
+                    loadAvatar(message,viewHolder.contact_picture,activity.getPixel(32));
+                } else if (message.getCounterpart() != null || message.getTrueCounterpart() != null || (message.getCounterparts() != null && message.getCounterparts().size() > 0)) {
+                    showAvatar = true;
+                    loadAvatar(message,viewHolder.contact_picture,activity.getPixel(32));
                 } else {
                     showAvatar = false;
                 }
@@ -1024,7 +1029,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     }
 
     public interface OnQuoteListener {
-        void onQuote(String text);
+        public void onQuote(String text);
     }
 
     private class MessageBodyActionModeCallback implements ActionMode.Callback {

@@ -236,10 +236,7 @@ public class UIHelper {
                 return new Pair<>(getFileDescriptionString(context, message), true);
             }
         } else {
-            String body = message.getBody();
-            if (body.length() > 256) {
-                body = body.substring(0, 256);
-            }
+            final String body = message.getBody();
             if (body.startsWith(Message.ME_COMMAND)) {
                 return new Pair<>(body.replaceAll("^" + Message.ME_COMMAND,
                         UIHelper.getMessageDisplayName(message) + " "), false);
@@ -520,9 +517,9 @@ public class UIHelper {
             field.setAccessible(true);
             Object menuPopupHelper = field.get(attachFilePopup);
             Class<?> cls = Class.forName("com.android.internal.view.menu.MenuPopupHelper");
-            Method method = cls.getDeclaredMethod("setForceShowIcon", boolean.class);
+            Method method = cls.getDeclaredMethod("setForceShowIcon", new Class[]{boolean.class});
             method.setAccessible(true);
-            method.invoke(menuPopupHelper, true);
+            method.invoke(menuPopupHelper, new Object[]{true});
             return true;
         } catch (Exception e) {
             return false;

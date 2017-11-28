@@ -57,6 +57,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Blockable;
 import de.pixart.messenger.entities.Contact;
@@ -604,8 +605,6 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                             if (message.getEncryption() == Message.ENCRYPTION_PGP
                                     || message.getEncryption() == Message.ENCRYPTION_DECRYPTED) {
                                 fingerprint = "pgp";
-                            } else if (message.getEncryption() == Message.ENCRYPTION_OTR) {
-                                fingerprint = "otr";
                             } else {
                                 fingerprint = message.getFingerprint();
                             }
@@ -625,6 +624,8 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                         if (message.getEncryption() == Message.ENCRYPTION_PGP
                                 || message.getEncryption() == Message.ENCRYPTION_DECRYPTED) {
                             fingerprint = "pgp";
+                        } else if (message.getEncryption() == Message.ENCRYPTION_OTR) {
+                            fingerprint = "otr";
                         } else {
                             fingerprint = message.getFingerprint();
                         }
@@ -1164,14 +1165,15 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                 && conversation.isWithStranger()) {
             showSnackbar(R.string.received_message_from_stranger, R.string.block, mBlockClickListener);
         } else if (activity.xmppConnectionService.warnUnecryptedChat()) {
+            AxolotlService axolotlService = account.getAxolotlService();
             if ((mode == Conversation.MODE_SINGLE) && (conversation.getNextEncryption() == Message.ENCRYPTION_NONE &&
-                    ((Config.supportOmemo() && conversation.getAccount().getAxolotlService().isConversationAxolotlCapable(conversation)) ||
+                    ((Config.supportOmemo() && axolotlService != null && conversation.getAccount().getAxolotlService().isConversationAxolotlCapable(conversation)) ||
                             (Config.supportOpenPgp() && account.isPgpDecryptionServiceConnected()) ||
                             Config.supportOtr()))) {
                 showSnackbar(R.string.conversation_unencrypted_hint, R.string.ok, mHideUnencryptionHint, null);
             } else if ((mode == Conversation.MODE_MULTI && conversation.getMucOptions().membersOnly() && conversation.getMucOptions().nonanonymous()) &&
                     (conversation.getNextEncryption() == Message.ENCRYPTION_NONE &&
-                            ((Config.supportOmemo() && conversation.getAccount().getAxolotlService().isConversationAxolotlCapable(conversation)) ||
+                            ((Config.supportOmemo() && axolotlService != null && conversation.getAccount().getAxolotlService().isConversationAxolotlCapable(conversation)) ||
                                     (Config.supportOpenPgp() && account.isPgpDecryptionServiceConnected())))) {
                 showSnackbar(R.string.conversation_unencrypted_hint, R.string.ok, mHideUnencryptionHint, null);
             } else {
@@ -1204,6 +1206,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     }
 
     protected void messageSent() {
+        mSendingPgpMessage.set(false);
         mEditMessage.setText("");
         if (conversation.setCorrectingMessage(null)) {
             mEditMessage.append(conversation.getDraftMessage());
@@ -1743,7 +1746,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                                  final Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == ConversationActivity.REQUEST_DECRYPT_PGP) {
-                activity.getSelectedConversation().getAccount().getPgpDecryptionService().continueDecryption(true);
+                activity.getSelectedConversation().getAccount().getPgpDecryptionService().continueDecryption(data);
             } else if (requestCode == ConversationActivity.REQUEST_TRUST_KEYS_TEXT) {
                 final String body = mEditMessage.getText().toString();
                 Message message = new Message(conversation, body, conversation.getNextEncryption());
