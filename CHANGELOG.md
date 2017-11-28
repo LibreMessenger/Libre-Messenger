@@ -1,5 +1,8 @@
 ### Changelog
 
+#### Version 1.20.2
+* bug fixes
+
 #### Version 1.20.1
 * bug fixes
 
