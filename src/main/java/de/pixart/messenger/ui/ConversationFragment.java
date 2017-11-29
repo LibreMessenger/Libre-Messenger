@@ -87,6 +87,8 @@ import de.pixart.messenger.xmpp.XmppConnection;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 import de.pixart.messenger.xmpp.jid.Jid;
 
+import static de.pixart.messenger.xmpp.Patches.ENCRYPTION_EXCEPTIONS;
+
 public class ConversationFragment extends Fragment implements EditMessage.KeyboardListener {
 
     final protected List<Message> messageList = new ArrayList<>();
@@ -1171,12 +1173,22 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                     ((Config.supportOmemo() && axolotlService != null && conversation.getAccount().getAxolotlService().isConversationAxolotlCapable(conversation)) ||
                             (Config.supportOpenPgp() && account.isPgpDecryptionServiceConnected()) ||
                             Config.supportOtr()))) {
-                showSnackbar(R.string.conversation_unencrypted_hint, R.string.ok, mHideUnencryptionHint, null);
+                if (ENCRYPTION_EXCEPTIONS.contains(conversation.getJid().toString()) || conversation.getJid().toString().equals(account.getJid().getDomainpart())) {
+                    Log.d(Config.LOGTAG, "Don't show unenctrypted warning because " + conversation.getJid().toString() + " is on exception list");
+                    hideSnackbar();
+                } else {
+                    showSnackbar(R.string.conversation_unencrypted_hint, R.string.ok, mHideUnencryptionHint, null);
+                }
             } else if ((mode == Conversation.MODE_MULTI && conversation.getMucOptions().membersOnly() && conversation.getMucOptions().nonanonymous()) &&
                     (conversation.getNextEncryption() == Message.ENCRYPTION_NONE &&
                             ((Config.supportOmemo() && axolotlService != null && conversation.getAccount().getAxolotlService().isConversationAxolotlCapable(conversation)) ||
                                     (Config.supportOpenPgp() && account.isPgpDecryptionServiceConnected())))) {
-                showSnackbar(R.string.conversation_unencrypted_hint, R.string.ok, mHideUnencryptionHint, null);
+                if (ENCRYPTION_EXCEPTIONS.contains(conversation.getJid().toString()) || conversation.getJid().toString().equals(account.getJid().getDomainpart())) {
+                    Log.d(Config.LOGTAG, "Don't show unenctrypted warning because " + conversation.getJid().toString() + " is on exception list");
+                    hideSnackbar();
+                } else {
+                    showSnackbar(R.string.conversation_unencrypted_hint, R.string.ok, mHideUnencryptionHint, null);
+                }
             } else {
                 hideSnackbar();
             }
