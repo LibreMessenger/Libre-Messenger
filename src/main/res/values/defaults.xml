@@ -102,5 +102,6 @@
     <bool name="validate_hostname">false</bool>
     <bool name="show_foreground_service">true</bool>
     <bool name="warn_unencrypted_chat">true</bool>
+    <bool name="use_bundled_emoji">true</bool>
 </resources>
 

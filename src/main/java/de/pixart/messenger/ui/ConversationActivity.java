@@ -88,6 +88,7 @@ import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
 import de.timroes.android.listview.EnhancedListView;
 
+import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
 import static de.pixart.messenger.ui.ShowFullscreenMessageActivity.getMimeType;
 
 public class ConversationActivity extends XmppActivity
@@ -210,7 +211,7 @@ public class ConversationActivity extends XmppActivity
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new EmojiService(this).init();
+        new EmojiService(this).init(useBundledEmoji());
         if (savedInstanceState != null) {
             mOpenConversation = savedInstanceState.getString(STATE_OPEN_CONVERSATION, null);
             mPanelOpen = savedInstanceState.getBoolean(STATE_PANEL_OPEN, true);
@@ -2098,6 +2099,10 @@ public class ConversationActivity extends XmppActivity
 
     public boolean useWhiteBackground() {
         return getPreferences().getBoolean("use_white_background", getResources().getBoolean(R.bool.use_white_background));
+    }
+
+    public boolean useBundledEmoji() {
+        return getPreferences().getBoolean(USE_BUNDLED_EMOJIS, getResources().getBoolean(R.bool.use_bundled_emoji));
     }
 
     protected boolean trustKeysIfNeeded(int requestCode) {

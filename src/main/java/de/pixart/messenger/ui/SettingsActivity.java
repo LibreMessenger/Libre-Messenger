@@ -47,6 +47,7 @@ public class SettingsActivity extends XmppActivity implements
     public static final String THEME = "theme";
     public static final String SHOW_DYNAMIC_TAGS = "show_dynamic_tags";
     public static final String SHOW_FOREGROUND_SERVICE = "show_foreground_service";
+    public static final String USE_BUNDLED_EMOJIS = "use_bundled_emoji";
 
     public static final int REQUEST_WRITE_LOGS = 0xbf8701;
     private SettingsFragment mSettingsFragment;

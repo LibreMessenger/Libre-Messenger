@@ -458,8 +458,7 @@ public abstract class XmppActivity extends Activity {
     }
 
     protected SharedPreferences getPreferences() {
-        return PreferenceManager
-                .getDefaultSharedPreferences(getApplicationContext());
+        return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     }
 
     public boolean useSubjectToIdentifyConference() {
