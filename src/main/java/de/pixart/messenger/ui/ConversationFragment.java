@@ -318,6 +318,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         public void onClick(View v) {
             if (Config.supportOmemo() && conversation.getAccount().getAxolotlService().isConversationAxolotlCapable(conversation)) {
                 conversation.setNextEncryption(Message.ENCRYPTION_AXOLOTL);
+                activity.xmppConnectionService.updateConversation(conversation);
                 activity.refreshUi();
             }
             hideSnackbar();
