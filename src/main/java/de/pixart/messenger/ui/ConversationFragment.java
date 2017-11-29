@@ -1184,7 +1184,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                             ((Config.supportOmemo() && axolotlService != null && conversation.getAccount().getAxolotlService().isConversationAxolotlCapable(conversation)) ||
                                     (Config.supportOpenPgp() && account.isPgpDecryptionServiceConnected())))) {
                 if (ENCRYPTION_EXCEPTIONS.contains(conversation.getJid().toString()) || conversation.getJid().toString().equals(account.getJid().getDomainpart())) {
-                    Log.d(Config.LOGTAG, "Don't show unenctrypted warning because " + conversation.getJid().toString() + " is on exception list");
+                    Log.d(Config.LOGTAG, "Don't show unencrypted warning because " + conversation.getJid().toString() + " is on exception list");
                     hideSnackbar();
                 } else {
                     showSnackbar(R.string.conversation_unencrypted_hint, R.string.ok, mHideUnencryptionHint, null);
