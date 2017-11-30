@@ -282,6 +282,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             });
         } else if (!error && type == SENT) {
             viewHolder.resend_button.setVisibility(View.GONE);
+            viewHolder.time.setTextColor(this.getMessageTextColor(darkBackground, false));
         } else {
             viewHolder.time.setTextColor(this.getMessageTextColor(darkBackground, false));
         }
