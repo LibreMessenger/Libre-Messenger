@@ -47,6 +47,11 @@
         <item name="attr/ic_attach_photo">@drawable/ic_attach_photo</item>
         <item name="attr/ic_attach_video">@drawable/ic_attach_video</item>
         <item name="attr/ic_attach_record">@drawable/ic_attach_record</item>
+
+        <item name="attr/ic_file_apk">@drawable/ic_file_grey600_48dp</item>
+        <item name="attr/ic_file_pdf">@drawable/ic_file_pdf_grey600_48dp</item>
+        <item name="attr/ic_file_vcard">@drawable/ic_account_card_details_grey600_48dp</item>
+        <item name="attr/ic_file_calendar">@drawable/ic_calendar_grey600_48dp</item>
     </style>
 
     <style name="ConversationsTheme.LargerText" parent="ConversationsTheme">

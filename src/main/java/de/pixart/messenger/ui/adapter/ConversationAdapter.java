@@ -123,10 +123,28 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
             activity.loadBitmap(message, viewHolder.lastImage);
         } else {
             final boolean showPreviewText;
+            final String mimeType = message.getMimeType();
             if (message.getType() == Message.TYPE_FILE && fileAvailable) {
                 if (message.getFileParams().runtime > 0) {
                     showPreviewText = false;
                     viewHolder.lastMessageIcon.setImageResource(activity.getThemeResource(R.attr.ic_attach_record, R.drawable.ic_attach_record));
+                } else if (mimeType != null) {
+                    if (mimeType.contains("pdf")) {
+                        showPreviewText = false;
+                        viewHolder.lastMessageIcon.setImageResource(activity.getThemeResource(R.attr.ic_file_pdf, R.drawable.ic_file_pdf_grey600_48dp));
+                    } else if (mimeType.contains("vcard")) {
+                        showPreviewText = false;
+                        viewHolder.lastMessageIcon.setImageResource(activity.getThemeResource(R.attr.ic_file_vcard, R.drawable.ic_account_card_details_grey600_48dp));
+                    } else if (mimeType.contains("calendar")) {
+                        showPreviewText = false;
+                        viewHolder.lastMessageIcon.setImageResource(activity.getThemeResource(R.attr.ic_file_calendar, R.drawable.ic_calendar_grey600_48dp));
+                    } else if (mimeType.equals("application/vnd.android.package-archive")) {
+                        showPreviewText = false;
+                        viewHolder.lastMessageIcon.setImageResource(activity.getThemeResource(R.attr.ic_file_apk, R.drawable.ic_file_grey600_48dp));
+                    } else {
+                        showPreviewText = true;
+                        viewHolder.lastMessageIcon.setImageResource(activity.getThemeResource(R.attr.ic_attach_document, R.drawable.ic_attach_document));
+                    }
                 } else {
                     showPreviewText = true;
                     viewHolder.lastMessageIcon.setImageResource(activity.getThemeResource(R.attr.ic_attach_document, R.drawable.ic_attach_document));
