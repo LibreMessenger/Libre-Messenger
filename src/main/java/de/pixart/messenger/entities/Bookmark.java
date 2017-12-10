@@ -87,7 +87,7 @@ public class Bookmark extends Element implements ListItem {
         for (Element element : getChildren()) {
             if (element.getName().equals("group") && element.getContent() != null) {
                 String group = element.getContent();
-                tags.add(new Tag(group, UIHelper.getColorForName(group), 0));
+                tags.add(new Tag(group, UIHelper.getColorForName(group, true), 0));
             }
         }
         return tags;
