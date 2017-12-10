@@ -386,7 +386,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             this.mSelectedUser = user;
             String name;
             final Contact contact = user.getContact();
-            if (contact != null) {
+            if (contact != null && contact.showInRoster()) {
                 name = contact.getDisplayName();
             } else if (user.getRealJid() != null){
                 name = user.getRealJid().toBareJid().toString();
@@ -618,7 +618,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             final Contact contact = user.getContact();
             View view = inflater.inflate(R.layout.contact, membersView, false);
             this.setListItemBackgroundOnView(view);
-            if (contact != null) {
+            if (contact != null && contact.showInRoster()) {
                 view.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
