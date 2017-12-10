@@ -353,6 +353,10 @@ public class MessageArchiveService implements OnAdvancedStreamFeaturesLoaded {
             }
         }
 
+        public boolean safeToExtractTrueCounterpart() {
+            return muc() && !isLegacy();
+        }
+
         public Query next(String reference) {
             Query query = page(reference);
             query.pagingOrder = PagingOrder.NORMAL;
