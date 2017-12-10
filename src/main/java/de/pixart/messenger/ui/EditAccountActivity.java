@@ -807,7 +807,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 
     private void publishOpenPGPPublicKey(Account account) {
         if (EditAccountActivity.this.hasPgp()) {
-            announcePgp(account, null, onOpenPGPKeyPublished);
+            announcePgp(account, null, null, onOpenPGPKeyPublished);
         } else {
             this.showInstallPgpDialog();
         }

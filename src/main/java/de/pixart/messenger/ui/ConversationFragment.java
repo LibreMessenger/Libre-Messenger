@@ -1174,7 +1174,6 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                             (Config.supportOpenPgp() && account.isPgpDecryptionServiceConnected()) ||
                             Config.supportOtr()))) {
                 if (ENCRYPTION_EXCEPTIONS.contains(conversation.getJid().toString()) || conversation.getJid().toString().equals(account.getJid().getDomainpart())) {
-                    Log.d(Config.LOGTAG, "Don't show unenctrypted warning because " + conversation.getJid().toString() + " is on exception list");
                     hideSnackbar();
                 } else {
                     showSnackbar(R.string.conversation_unencrypted_hint, R.string.ok, mHideUnencryptionHint, null);
@@ -1534,7 +1533,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
             return;
         }
         if (conversation.getAccount().getPgpSignature() == null) {
-            activity.announcePgp(conversation.getAccount(), conversation, activity.onOpenPGPKeyPublished);
+            activity.announcePgp(conversation.getAccount(), conversation, null, activity.onOpenPGPKeyPublished);
             return;
         }
         if (!mSendingPgpMessage.compareAndSet(false, true)) {
