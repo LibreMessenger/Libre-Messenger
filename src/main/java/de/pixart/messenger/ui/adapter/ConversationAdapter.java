@@ -115,88 +115,75 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
         }
 
         final boolean fileAvailable = message.getTransferable() == null || message.getTransferable().getStatus() != Transferable.STATUS_DELETED;
-        if (message.getFileParams().width > 0 && fileAvailable) {
-            viewHolder.sender.setVisibility(View.GONE);
-            viewHolder.lastMessage.setVisibility(View.GONE);
-            viewHolder.lastMessageIcon.setVisibility(View.GONE);
-            viewHolder.lastImage.setVisibility(View.VISIBLE);
-            activity.loadBitmap(message, viewHolder.lastImage);
-        } else {
-            final boolean showPreviewText;
-            final String mimeType = message.getMimeType();
-            if (message.getType() == Message.TYPE_FILE && fileAvailable) {
-                if (message.getFileParams().runtime > 0) {
-                    showPreviewText = false;
-                    viewHolder.lastMessageIcon.setImageResource(activity.getThemeResource(R.attr.ic_attach_record, R.drawable.ic_attach_record));
-                } else if (mimeType != null) {
-                    if (mimeType.contains("pdf")) {
-                        showPreviewText = false;
-                        viewHolder.lastMessageIcon.setImageResource(activity.getThemeResource(R.attr.ic_file_pdf, R.drawable.ic_file_pdf_grey600_48dp));
-                    } else if (mimeType.contains("vcard")) {
-                        showPreviewText = false;
-                        viewHolder.lastMessageIcon.setImageResource(activity.getThemeResource(R.attr.ic_file_vcard, R.drawable.ic_account_card_details_grey600_48dp));
-                    } else if (mimeType.contains("calendar")) {
-                        showPreviewText = false;
-                        viewHolder.lastMessageIcon.setImageResource(activity.getThemeResource(R.attr.ic_file_calendar, R.drawable.ic_calendar_grey600_48dp));
-                    } else if (mimeType.equals("application/vnd.android.package-archive")) {
-                        showPreviewText = false;
-                        viewHolder.lastMessageIcon.setImageResource(activity.getThemeResource(R.attr.ic_file_apk, R.drawable.ic_file_grey600_48dp));
-                    } else {
-                        showPreviewText = true;
-                        viewHolder.lastMessageIcon.setImageResource(activity.getThemeResource(R.attr.ic_attach_document, R.drawable.ic_attach_document));
-                    }
-                } else {
-                    showPreviewText = true;
-                    viewHolder.lastMessageIcon.setImageResource(activity.getThemeResource(R.attr.ic_attach_document, R.drawable.ic_attach_document));
-                }
-                viewHolder.lastMessageIcon.setVisibility(View.VISIBLE);
-            } else if (message.isGeoUri()) {
+        final boolean showPreviewText;
+        if (fileAvailable && (message.isFileOrImage() || message.treatAsDownloadable() || message.isGeoUri())) {
+            final int imageResource;
+            if (message.isGeoUri()) {
+                imageResource = activity.getThemeResource(R.attr.ic_attach_location, R.drawable.ic_attach_location);
                 showPreviewText = false;
-                viewHolder.lastMessageIcon.setImageResource(activity.getThemeResource(R.attr.ic_attach_location, R.drawable.ic_attach_location));
-                viewHolder.lastMessageIcon.setVisibility(View.VISIBLE);
             } else {
-                showPreviewText = true;
-                viewHolder.lastMessageIcon.setVisibility(View.GONE);
-            }
-
-            final Pair<String, Boolean> preview = UIHelper.getMessagePreview(activity, message);
-            if (showPreviewText) {
-                viewHolder.lastMessage.setText(EmojiWrapper.transform(preview.first));
-            } else {
-                viewHolder.lastMessageIcon.setContentDescription(preview.first);
-            }
-            viewHolder.lastMessage.setVisibility(showPreviewText ? View.VISIBLE : View.GONE);
-            viewHolder.lastImage.setVisibility(View.GONE);
-            if (preview.second) {
-                if (conversation.isRead()) {
-                    viewHolder.lastMessage.setTypeface(null, Typeface.ITALIC);
-                    viewHolder.sender.setTypeface(null, Typeface.NORMAL);
-                } else {
-                    viewHolder.lastMessage.setTypeface(null, Typeface.BOLD_ITALIC);
-                    viewHolder.sender.setTypeface(null, Typeface.BOLD);
-                }
-            } else {
-                if (conversation.isRead()) {
-                    viewHolder.lastMessage.setTypeface(null, Typeface.NORMAL);
-                    viewHolder.sender.setTypeface(null, Typeface.NORMAL);
-                } else {
-                    viewHolder.lastMessage.setTypeface(null, Typeface.BOLD);
-                    viewHolder.sender.setTypeface(null, Typeface.BOLD);
+                final String mime = message.getMimeType();
+                switch (mime == null ? "" : mime.split("/")[0]) {
+                    case "image":
+                        imageResource = activity.getThemeResource(R.attr.ic_attach_photo, R.drawable.ic_attach_photo);
+                        showPreviewText = false;
+                        break;
+                    case "video":
+                        imageResource = activity.getThemeResource(R.attr.ic_attach_video, R.drawable.ic_attach_video);
+                        showPreviewText = false;
+                        break;
+                    case "audio":
+                        imageResource = activity.getThemeResource(R.attr.ic_attach_record, R.drawable.ic_attach_record);
+                        showPreviewText = false;
+                        break;
+                    default:
+                        imageResource = activity.getThemeResource(R.attr.ic_attach_document, R.drawable.ic_attach_document);
+                        showPreviewText = true;
+                        break;
                 }
             }
-            if (message.getStatus() == Message.STATUS_RECEIVED) {
-                if (conversation.getMode() == Conversation.MODE_MULTI) {
-                    viewHolder.sender.setVisibility(View.VISIBLE);
-                    viewHolder.sender.setText(UIHelper.getMessageDisplayName(message).split("\\s+")[0]+':');
-                } else {
-                    viewHolder.sender.setVisibility(View.GONE);
-                }
-            } else if (message.getType() != Message.TYPE_STATUS) {
+            viewHolder.lastMessageIcon.setImageResource(imageResource);
+            viewHolder.lastMessageIcon.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.lastMessageIcon.setVisibility(View.GONE);
+            showPreviewText = true;
+        }
+        final Pair<String, Boolean> preview = UIHelper.getMessagePreview(activity, message);
+        if (showPreviewText) {
+            viewHolder.lastMessage.setText(EmojiWrapper.transform(preview.first));
+        } else {
+            viewHolder.lastMessageIcon.setContentDescription(preview.first);
+        }
+        viewHolder.lastMessage.setVisibility(showPreviewText ? View.VISIBLE : View.GONE);
+        if (preview.second) {
+            if (conversation.isRead()) {
+                viewHolder.lastMessage.setTypeface(null, Typeface.ITALIC);
+                viewHolder.sender.setTypeface(null, Typeface.NORMAL);
+            } else {
+                viewHolder.lastMessage.setTypeface(null, Typeface.BOLD_ITALIC);
+                viewHolder.sender.setTypeface(null, Typeface.BOLD);
+            }
+        } else {
+            if (conversation.isRead()) {
+                viewHolder.lastMessage.setTypeface(null, Typeface.NORMAL);
+                viewHolder.sender.setTypeface(null, Typeface.NORMAL);
+            } else {
+                viewHolder.lastMessage.setTypeface(null, Typeface.BOLD);
+                viewHolder.sender.setTypeface(null, Typeface.BOLD);
+            }
+        }
+        if (message.getStatus() == Message.STATUS_RECEIVED) {
+            if (conversation.getMode() == Conversation.MODE_MULTI) {
                 viewHolder.sender.setVisibility(View.VISIBLE);
-                viewHolder.sender.setText(activity.getString(R.string.me)+':');
+                viewHolder.sender.setText(UIHelper.getMessageDisplayName(message).split("\\s+")[0] + ':');
             } else {
                 viewHolder.sender.setVisibility(View.GONE);
             }
+        } else if (message.getType() != Message.TYPE_STATUS) {
+            viewHolder.sender.setVisibility(View.VISIBLE);
+            viewHolder.sender.setText(activity.getString(R.string.me) + ':');
+        } else {
+            viewHolder.sender.setVisibility(View.GONE);
         }
 
         long muted_till = conversation.getLongAttribute(Conversation.ATTRIBUTE_MUTED_TILL, 0);
@@ -315,7 +302,6 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
         private ImageView lastMessageIcon;
         private TextView timestamp;
         private TextView sender;
-        private ImageView lastImage;
         private ImageView notificationIcon;
         private TextView unreadCount;
         private TextView failedCount;
@@ -337,7 +323,6 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
                 viewHolder.timestamp = layout.findViewById(R.id.conversation_lastupdate);
                 viewHolder.avatar = layout.findViewById(R.id.conversation_image);
                 viewHolder.sender = layout.findViewById(R.id.sender_name);
-                viewHolder.lastImage = layout.findViewById(R.id.conversation_lastimage);
                 viewHolder.notificationIcon = layout.findViewById(R.id.notification_status);
                 viewHolder.unreadCount = layout.findViewById(R.id.conversation_unread);
                 viewHolder.failedCount = layout.findViewById(R.id.conversation_failed);
