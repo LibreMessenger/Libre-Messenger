@@ -79,6 +79,8 @@ import de.pixart.messenger.xmpp.XmppConnection;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
 
+import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
+
 public class StartConversationActivity extends XmppActivity implements OnRosterUpdate, OnUpdateBlocklist {
 
     private final int REQUEST_SYNC_CONTACTS = 0x3b28cf;
@@ -270,7 +272,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new EmojiService(this).init();
+        new EmojiService(this).init(useBundledEmoji());
         setContentView(R.layout.activity_start_conversation);
         mViewPager = findViewById(R.id.start_conversation_view_pager);
         ActionBar actionBar = getActionBar();
@@ -1189,5 +1191,9 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
             }
             return false;
         }
+    }
+
+    public boolean useBundledEmoji() {
+        return getPreferences().getBoolean(USE_BUNDLED_EMOJIS, getResources().getBoolean(R.bool.use_bundled_emoji));
     }
 }
