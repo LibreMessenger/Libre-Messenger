@@ -8,6 +8,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import java.util.Arrays;
+import java.util.List;
 
 import de.pixart.messenger.persistance.DatabaseBackend;
 import de.pixart.messenger.utils.XmppUri;
@@ -30,9 +31,9 @@ public class UriHandlerActivity extends Activity {
     private void handleUri(Uri uri) {
         final Intent intent;
         final XmppUri xmppUri = new XmppUri(uri);
-        final int numAccounts = DatabaseBackend.getInstance(this).getAccountJids().size();
+        final List<Jid> accounts = DatabaseBackend.getInstance(this).getAccountJids();
 
-        if (numAccounts == 0) {
+        if (accounts.size() == 0) {
             intent = new Intent(getApplicationContext(), WelcomeActivity.class);
             startActivity(intent);
             return;
@@ -52,6 +53,11 @@ public class UriHandlerActivity extends Activity {
                 intent.setType("text/plain");
                 intent.putExtra(Intent.EXTRA_TEXT, body);
             }
+        } else if (accounts.contains(xmppUri.getJid())) {
+            intent = new Intent(getApplicationContext(), EditAccountActivity.class);
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.putExtra("jid", xmppUri.getJid().toBareJid().toString());
+            intent.setData(uri);
         } else {
             intent = new Intent(getApplicationContext(), StartConversationActivity.class);
             intent.setAction(Intent.ACTION_VIEW);
@@ -63,7 +69,7 @@ public class UriHandlerActivity extends Activity {
     }
 
     private void handleIntent(Intent data) {
-        if (data == null) {
+        if (data == null || data.getAction() == null) {
             finish();
             return;
         }

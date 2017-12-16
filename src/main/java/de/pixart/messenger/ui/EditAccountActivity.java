@@ -287,6 +287,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     private String mSavedInstanceAccount;
     private boolean mSavedInstanceInit = false;
     private Button mClearDevicesButton;
+    private XmppUri pendingUri = null;
 
     public void refreshUiReal() {
         invalidateOptionsMenu();
@@ -419,11 +420,16 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 
     @Override
     protected void processFingerprintVerification(XmppUri uri) {
+        processFingerprintVerification(uri, true);
+    }
+
+
+    protected void processFingerprintVerification(XmppUri uri, boolean showWarningToast) {
         if (mAccount != null && mAccount.getJid().toBareJid().equals(uri.getJid()) && uri.hasFingerprints()) {
             if (xmppConnectionService.verifyFingerprints(mAccount,uri.getFingerprints())) {
                 Toast.makeText(this,R.string.verified_fingerprints,Toast.LENGTH_SHORT).show();
             }
-        } else {
+        } else if (showWarningToast) {
             Toast.makeText(this,R.string.invalid_barcode,Toast.LENGTH_SHORT).show();
         }
     }
@@ -672,6 +678,14 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             } catch (final InvalidJidException | NullPointerException ignored) {
                 this.jidToEdit = null;
             }
+            if (jidToEdit != null && getIntent().getData() != null) {
+                final XmppUri uri = new XmppUri(getIntent().getData());
+                if (xmppConnectionServiceBound) {
+                    processFingerprintVerification(uri, false);
+                } else {
+                    this.pendingUri = uri;
+                }
+            }
             boolean init = getIntent().getBooleanExtra("init", false);
             this.mInitMode = init || this.jidToEdit == null;
             this.messageFingerprint = getIntent().getStringExtra("fingerprint");
@@ -697,6 +711,18 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         this.mShowOptions = useTor || preferences.getBoolean("show_connection_options", false);
         mHostname.setHint(useTor ? R.string.hostname_or_onion : R.string.hostname_example);
         this.mNamePort.setVisibility(mShowOptions ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        if (intent != null && intent.getData() != null) {
+            final XmppUri uri = new XmppUri(intent.getData());
+            if (xmppConnectionServiceBound) {
+                processFingerprintVerification(uri, false);
+            } else {
+                this.pendingUri = uri;
+            }
+        }
     }
 
     @Override
@@ -734,7 +760,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 }
             }
             if (mPendingFingerprintVerificationUri != null) {
-                processFingerprintVerification(mPendingFingerprintVerificationUri);
+                processFingerprintVerification(mPendingFingerprintVerificationUri, false);
                 mPendingFingerprintVerificationUri = null;
             }
             updateAccountInformation(init);
@@ -753,6 +779,10 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                     R.layout.simple_list_item,
                     xmppConnectionService.getKnownHosts());
             this.mAccountJid.setAdapter(mKnownHostsAdapter);
+        }
+        if (pendingUri != null) {
+            processFingerprintVerification(pendingUri, false);
+            pendingUri = null;
         }
         updateSaveButton();
         invalidateOptionsMenu();
