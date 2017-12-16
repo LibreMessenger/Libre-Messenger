@@ -33,10 +33,13 @@ import android.support.text.emoji.EmojiCompat;
 public class EmojiWrapper {
 
     public static CharSequence transform(CharSequence input) {
-        final CharSequence charSequence;
-        if (EmojiCompat.get().getLoadState() == EmojiCompat.LOAD_STATE_SUCCEEDED) {
-            return EmojiCompat.get().process(input);
-        } else {
+        try {
+            if (EmojiCompat.get().getLoadState() == EmojiCompat.LOAD_STATE_SUCCEEDED) {
+                return EmojiCompat.get().process(input);
+            } else {
+                return input;
+            }
+        } catch (IllegalStateException e) {
             return input;
         }
     }

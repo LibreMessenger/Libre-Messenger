@@ -72,6 +72,7 @@ import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.ListItem;
 import de.pixart.messenger.entities.Presence;
+import de.pixart.messenger.services.EmojiService;
 import de.pixart.messenger.services.XmppConnectionService.OnRosterUpdate;
 import de.pixart.messenger.ui.adapter.KnownHostsAdapter;
 import de.pixart.messenger.ui.adapter.ListItemAdapter;
@@ -272,6 +273,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new EmojiService(this).init();
         setContentView(R.layout.activity_start_conversation);
         mViewPager = findViewById(R.id.start_conversation_view_pager);
         ActionBar actionBar = getActionBar();
