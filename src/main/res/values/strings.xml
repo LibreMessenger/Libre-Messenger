@@ -746,4 +746,5 @@
     <string name="pref_warn_unencrypted_chat_summary">If message encryption is available, you should use it. If you don\'t use message encryption, show a warning message inside the chat.</string>
     <string name="pref_use_bundled_emoji">Use integrated emojis</string>
     <string name="pref_use_bundled_emoji_summary">Use the integrated emoji library instead of using your devices ones. Changes will be available after reopening the app.</string>
+    <string name="invalid_muc_nick">Invalid nickname</string>
 </resources>
