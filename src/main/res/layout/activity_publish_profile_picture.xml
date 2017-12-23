@@ -88,14 +88,6 @@
                     android:textAlignment="center" />
 
                 <TextView
-                    android:id="@+id/account"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black87"
-                    android:textSize="?attr/TextSizeHeadline"
-                    android:visibility="gone" />
-
-                <TextView
                     android:id="@+id/hint_or_warning"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

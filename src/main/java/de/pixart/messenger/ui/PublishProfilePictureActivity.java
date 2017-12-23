@@ -6,12 +6,12 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -98,18 +98,13 @@ public class PublishProfilePictureActivity extends XmppActivity implements XmppC
         this.avatar = findViewById(R.id.account_image);
         this.cancelButton = findViewById(R.id.cancel_button);
         this.publishButton = findViewById(R.id.publish_button);
-        this.accountTextView = findViewById(R.id.account);
         this.hintOrWarning = findViewById(R.id.hint_or_warning);
         this.secondaryHint = findViewById(R.id.secondary_hint);
-        this.publishButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (avatarUri != null) {
-                    publishing = true;
-                    togglePublishButton(false, R.string.publishing);
-                    xmppConnectionService.publishAvatar(account, avatarUri, avatarPublication);
-                }
+        this.publishButton.setOnClickListener(v -> {
+            if (avatarUri != null) {
+                publishing = true;
+                togglePublishButton(false,R.string.publishing);
+                xmppConnectionService.publishAvatar(account, avatarUri, avatarPublication);
             }
         });
         this.cancelButton.setOnClickListener(v -> {
@@ -127,7 +122,6 @@ public class PublishProfilePictureActivity extends XmppActivity implements XmppC
             if (hasStoragePermission(REQUEST_CHOOSE_FILE)) {
                 chooseAvatar(false);
             }
-
         });
         this.defaultUri = PhoneHelper.getProfilePictureUri(getApplicationContext());
     }
@@ -141,7 +135,7 @@ public class PublishProfilePictureActivity extends XmppActivity implements XmppC
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         if (grantResults.length > 0)
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (requestCode == REQUEST_CHOOSE_FILE_AND_CROP) {
@@ -238,14 +232,6 @@ public class PublishProfilePictureActivity extends XmppActivity implements XmppC
         } else {
             loadImageIntoPreview(avatarUri);
         }
-        String account;
-        if (Config.DOMAIN_LOCK != null) {
-            account = this.account.getJid().getLocalpart();
-        } else {
-            account = this.account.getJid().toBareJid().toString();
-        }
-        this.accountTextView.setText(account);
-
     }
 
     @Override

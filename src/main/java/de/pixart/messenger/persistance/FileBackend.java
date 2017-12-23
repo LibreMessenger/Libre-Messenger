@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
@@ -512,16 +513,20 @@ public class FileBackend {
     private void drawOverlay(Bitmap bitmap, int resource, float factor) {
         Bitmap overlay = BitmapFactory.decodeResource(mXmppConnectionService.getResources(), resource);
         Canvas canvas = new Canvas(bitmap);
-        Paint paint = new Paint();
-        paint.setAntiAlias(true);
-        paint.setFilterBitmap(true);
-        paint.setDither(true);
         float targetSize = Math.min(canvas.getWidth(), canvas.getHeight()) * factor;
         Log.d(Config.LOGTAG, "target size overlay: " + targetSize + " overlay bitmap size was " + overlay.getHeight());
         float left = (canvas.getWidth() - targetSize) / 2.0f;
         float top = (canvas.getHeight() - targetSize) / 2.0f;
         RectF dst = new RectF(left, top, left + targetSize - 1, top + targetSize - 1);
-        canvas.drawBitmap(overlay, null, dst, paint);
+        canvas.drawBitmap(overlay, null, dst, createAntiAliasingPaint());
+    }
+
+    private static Paint createAntiAliasingPaint() {
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setFilterBitmap(true);
+        paint.setDither(true);
+        return paint;
     }
 
     private Bitmap getVideoPreview(File file, int size) {
@@ -583,30 +588,63 @@ public class FileBackend {
     }
 
 
-    public Avatar getPepAvatar(Uri image, int size, Bitmap.CompressFormat format) {
-        try {
-            Avatar avatar = new Avatar();
-            Bitmap bm = cropCenterSquare(image, size);
-            if (bm == null) {
-                return null;
+    private static boolean hasAlpha(final Bitmap bitmap) {
+        for (int x = 0; x < bitmap.getWidth(); ++x) {
+            for (int y = 0; y < bitmap.getWidth(); ++y) {
+                if (Color.alpha(bitmap.getPixel(x, y)) < 255) {
+                    return true;
+                }
             }
+        }
+        return false;
+    }
+
+    public Avatar getPepAvatar(Uri image, int size, Bitmap.CompressFormat format) {
+        Bitmap bm = cropCenterSquare(image, size);
+        if (bm == null) {
+            return null;
+        }
+        if (hasAlpha(bm)) {
+            Log.d(Config.LOGTAG, "alpha in avatar detected; uploading as PNG");
+            bm.recycle();
+            bm = cropCenterSquare(image, 96);
+            return getPepAvatar(bm, Bitmap.CompressFormat.PNG, 100);
+        }
+        return getPepAvatar(bm, format, 100);
+    }
+
+    private Avatar getPepAvatar(Bitmap bitmap, Bitmap.CompressFormat format, int quality) {
+        try {
             ByteArrayOutputStream mByteArrayOutputStream = new ByteArrayOutputStream();
-            Base64OutputStream mBase64OutputStream = new Base64OutputStream(
-                    mByteArrayOutputStream, Base64.DEFAULT);
+            Base64OutputStream mBase64OutputStream = new Base64OutputStream(mByteArrayOutputStream, Base64.DEFAULT);
             MessageDigest digest = MessageDigest.getInstance("SHA-1");
-            DigestOutputStream mDigestOutputStream = new DigestOutputStream(
-                    mBase64OutputStream, digest);
-            if (!bm.compress(format, 75, mDigestOutputStream)) {
+            DigestOutputStream mDigestOutputStream = new DigestOutputStream(mBase64OutputStream, digest);
+            if (!bitmap.compress(format, quality, mDigestOutputStream)) {
                 return null;
             }
             mDigestOutputStream.flush();
             mDigestOutputStream.close();
+            long chars = mByteArrayOutputStream.size();
+            if (format != Bitmap.CompressFormat.PNG && quality >= 50 && chars >= Config.AVATAR_CHAR_LIMIT) {
+                int q = quality - 2;
+                Log.d(Config.LOGTAG, "avatar char length was " + chars + " reducing quality to " + q);
+                return getPepAvatar(bitmap, format, q);
+            }
+            Log.d(Config.LOGTAG, "settled on char length " + chars + " with quality=" + quality);
+            final Avatar avatar = new Avatar();
             avatar.sha1sum = CryptoHelper.bytesToHex(digest.digest());
             avatar.image = new String(mByteArrayOutputStream.toByteArray());
+            if (format.equals(Bitmap.CompressFormat.WEBP)) {
+                avatar.type = "image/webp";
+            } else if (format.equals(Bitmap.CompressFormat.JPEG)) {
+                avatar.type = "image/jpeg";
+            } else if (format.equals(Bitmap.CompressFormat.PNG)) {
+                avatar.type = "image/png";
+            }
+            avatar.width = bitmap.getWidth();
+            avatar.height = bitmap.getHeight();
             return avatar;
-        } catch (NoSuchAlgorithmException e) {
-            return null;
-        } catch (IOException e) {
+        } catch (Exception e) {
             return null;
         }
     }
@@ -758,7 +796,7 @@ public class FileBackend {
             RectF targetRect = new RectF(left, top, left + scaledWidth, top + scaledHeight);
             Bitmap dest = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(dest);
-            canvas.drawBitmap(source, null, targetRect, null);
+            canvas.drawBitmap(source, null, targetRect, createAntiAliasingPaint());
             if (source.isRecycled()) {
                 source.recycle();
             }
@@ -786,8 +824,8 @@ public class FileBackend {
 
         Bitmap output = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
-        canvas.drawBitmap(input, null, target, null);
-        if (input != null && !input.isRecycled()) {
+        canvas.drawBitmap(input, null, target, createAntiAliasingPaint());
+        if (!input.isRecycled()) {
             input.recycle();
         }
         return output;
