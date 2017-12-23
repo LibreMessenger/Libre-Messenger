@@ -1,5 +1,6 @@
 package de.pixart.messenger.utils;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
@@ -13,8 +14,10 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Message;
+import de.pixart.messenger.ui.ShowLocationActivity;
 
 public class GeoHelper {
+
     public static Pattern GEO_URI = Pattern.compile("geo:([\\-0-9.]+),([\\-0-9.]+)(?:,([\\-0-9.]+))?(?:\\?(.*))?", Pattern.CASE_INSENSITIVE);
 
     public static String MapPreviewUri(Message message) {
@@ -39,7 +42,7 @@ public class GeoHelper {
         return "https://xmpp.pix-art.de/staticmap/staticmap.php?center=" + latitude + "," + longitude + "&size=500x500&markers=" + latitude + "," + longitude + "&zoom= " + Config.DEFAULT_ZOOM;
     }
 
-    public static ArrayList<Intent> createGeoIntentsFromMessage(Message message) {
+    public static ArrayList<Intent> createGeoIntentsFromMessage(Message message, Context context) {
         final ArrayList<Intent> intents = new ArrayList<>();
         Matcher matcher = GEO_URI.matcher(message.getBody());
         if (!matcher.matches()) {
@@ -71,7 +74,7 @@ public class GeoHelper {
             label = "";
         }
 
-        Intent locationPluginIntent = new Intent("de.pixart.messenger.location.show");
+        Intent locationPluginIntent = new Intent(context, ShowLocationActivity.class);
         locationPluginIntent.putExtra("latitude", latitude);
         locationPluginIntent.putExtra("longitude", longitude);
         if (message.getStatus() != Message.STATUS_RECEIVED) {
@@ -91,10 +94,6 @@ public class GeoHelper {
         Intent geoIntent = new Intent(Intent.ACTION_VIEW);
         geoIntent.setData(Uri.parse("geo:" + String.valueOf(latitude) + "," + String.valueOf(longitude) + "?q=" + String.valueOf(latitude) + "," + String.valueOf(longitude) + label));
         intents.add(geoIntent);
-
-        Intent httpIntent = new Intent(Intent.ACTION_VIEW);
-        httpIntent.setData(Uri.parse("https://maps.google.com/maps?q=loc:" + String.valueOf(latitude) + "," + String.valueOf(longitude) + label));
-        intents.add(httpIntent);
         return intents;
     }
 }

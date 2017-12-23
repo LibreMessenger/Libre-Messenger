@@ -976,12 +976,6 @@ public class ConversationActivity extends XmppActivity
         }
         PopupMenu attachFilePopup = new PopupMenu(this, menuAttachFile);
         attachFilePopup.inflate(R.menu.attachment_choices);
-        if (new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION).resolveActivity(getPackageManager()) == null) {
-            attachFilePopup.getMenu().findItem(R.id.attach_record_voice).setVisible(false);
-        }
-        if (new Intent("de.pixart.messenger.location.request").resolveActivity(getPackageManager()) == null) {
-            attachFilePopup.getMenu().findItem(R.id.attach_location).setVisible(false);
-        }
         attachFilePopup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
             @Override
