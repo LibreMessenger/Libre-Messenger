@@ -56,35 +56,28 @@ public class PublishProfilePictureActivity extends XmppActivity {
 
         @Override
         public void success(Avatar object) {
-            runOnUiThread(new Runnable() {
-
-                @Override
-                public void run() {
-                    if (mInitialAccountSetup) {
-                        Intent intent = new Intent(getApplicationContext(),
-                                StartConversationActivity.class);
-                        intent.putExtra("init", true);
-                        startActivity(intent);
-                    }
-                    Toast.makeText(PublishProfilePictureActivity.this,
-                            R.string.avatar_has_been_published,
-                            Toast.LENGTH_SHORT).show();
-                    finish();
+            runOnUiThread(() -> {
+                if (mInitialAccountSetup) {
+                    Intent intent = new Intent(getApplicationContext(),
+                            StartConversationActivity.class);
+                    intent.putExtra("init", true);
+                    startActivity(intent);
                 }
+                Toast.makeText(PublishProfilePictureActivity.this,
+                        R.string.avatar_has_been_published,
+                        Toast.LENGTH_SHORT).show();
+                finish();
             });
         }
 
         @Override
         public void error(final int errorCode, Avatar object) {
-            runOnUiThread(new Runnable() {
-
-                @Override
-                public void run() {
-                    hintOrWarning.setText(errorCode);
-                    hintOrWarning.setTextColor(getWarningTextColor());
-                    publishButton.setText(R.string.publish);
-                    enablePublishButton();
-                }
+            runOnUiThread(() -> {
+                hintOrWarning.setText(errorCode);
+                hintOrWarning.setTextColor(getWarningTextColor());
+                hintOrWarning.setVisibility(View.VISIBLE);
+                publishButton.setText(R.string.publish);
+                enablePublishButton();
             });
 
         }
@@ -116,30 +109,22 @@ public class PublishProfilePictureActivity extends XmppActivity {
                 }
             }
         });
-        this.cancelButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (mInitialAccountSetup) {
-                    Intent intent = new Intent(getApplicationContext(),
-                            StartConversationActivity.class);
-                    if (xmppConnectionService != null && xmppConnectionService.getAccounts().size() == 1) {
-                        intent.putExtra("init", true);
-                    }
-                    startActivity(intent);
+        this.cancelButton.setOnClickListener(v -> {
+            if (mInitialAccountSetup) {
+                Intent intent = new Intent(getApplicationContext(),
+                        StartConversationActivity.class);
+                if (xmppConnectionService != null && xmppConnectionService.getAccounts().size() == 1) {
+                    intent.putExtra("init", true);
                 }
-                finish();
+                startActivity(intent);
             }
+            finish();
         });
-        this.avatar.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (hasStoragePermission(REQUEST_CHOOSE_FILE)) {
-                    chooseAvatar(false);
-                }
-
+        this.avatar.setOnClickListener(v -> {
+            if (hasStoragePermission(REQUEST_CHOOSE_FILE)) {
+                chooseAvatar(false);
             }
+
         });
         this.defaultUri = PhoneHelper.getProfilePictureUri(getApplicationContext());
     }
@@ -238,18 +223,16 @@ public class PublishProfilePictureActivity extends XmppActivity {
                 this.support = this.account.getXmppConnection().getFeatures().pep();
             }
             if (this.avatarUri == null) {
-                if (this.account.getAvatar() != null
-                        || this.defaultUri == null) {
+                if (this.account.getAvatar() != null || this.defaultUri == null) {
                     this.avatar.setImageBitmap(avatarService().get(account, getPixel(Config.AVATAR_SIZE)));
                     if (this.defaultUri != null) {
-                        this.avatar
-                                .setOnLongClickListener(this.backToDefaultListener);
+                        this.avatar.setOnLongClickListener(this.backToDefaultListener);
                     } else {
                         this.secondaryHint.setVisibility(View.INVISIBLE);
                     }
                     if (!support) {
-                        this.hintOrWarning
-                                .setTextColor(getWarningTextColor());
+                        this.hintOrWarning.setVisibility(View.VISIBLE);
+                        this.hintOrWarning.setTextColor(getWarningTextColor());
                         if (account.getStatus() == Account.State.ONLINE) {
                             this.hintOrWarning.setText(R.string.error_publish_avatar_no_server_support);
                         } else {
@@ -295,19 +278,19 @@ public class PublishProfilePictureActivity extends XmppActivity {
 
         if (bm == null) {
             disablePublishButton();
+            this.hintOrWarning.setVisibility(View.VISIBLE);
             this.hintOrWarning.setTextColor(getWarningTextColor());
-            this.hintOrWarning
-                    .setText(R.string.error_publish_avatar_converting);
+            this.hintOrWarning.setText(R.string.error_publish_avatar_converting);
             return;
         }
         this.avatar.setImageBitmap(bm);
         if (support) {
             enablePublishButton();
             this.publishButton.setText(R.string.publish);
-            this.hintOrWarning.setText(R.string.publish_avatar_explanation);
-            this.hintOrWarning.setTextColor(getPrimaryTextColor());
+            this.hintOrWarning.setVisibility(View.INVISIBLE);
         } else {
             disablePublishButton();
+            this.hintOrWarning.setVisibility(View.VISIBLE);
             this.hintOrWarning.setTextColor(getWarningTextColor());
             if (account.getStatus() == Account.State.ONLINE) {
                 this.hintOrWarning.setText(R.string.error_publish_avatar_no_server_support);

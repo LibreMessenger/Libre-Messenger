@@ -101,7 +101,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:minLines="3"
-                    android:text="@string/publish_avatar_explanation"
                     android:textColor="@color/black87"
                     android:textSize="?attr/TextSizeBody"
                     android:textAlignment="center"
