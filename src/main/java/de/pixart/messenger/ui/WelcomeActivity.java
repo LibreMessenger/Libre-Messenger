@@ -38,9 +38,11 @@ import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.persistance.DatabaseBackend;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.utils.EncryptDecryptFile;
+import de.pixart.messenger.utils.XmppUri;
 
 public class WelcomeActivity extends XmppActivity {
 
+    public static final String EXTRA_INVITEE = "eu.siacs.conversations.invitee";
     boolean importSuccessful = false;
 
     @Override
@@ -97,28 +99,24 @@ public class WelcomeActivity extends XmppActivity {
         });
 
         final Button createAccount = findViewById(R.id.create_account);
-        createAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(WelcomeActivity.this, MagicCreateActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(intent);
-            }
+        createAccount.setOnClickListener(v -> {
+            final Intent intent = new Intent(WelcomeActivity.this, MagicCreateActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            addInvitee(intent);
+            startActivity(intent);
         });
         final Button useOwnProvider = findViewById(R.id.use_existing_account);
-        useOwnProvider.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                List<Account> accounts = xmppConnectionService.getAccounts();
-                Intent intent = new Intent(WelcomeActivity.this, EditAccountActivity.class);
-                if (accounts.size() == 1) {
-                    intent.putExtra("jid", accounts.get(0).getJid().toBareJid().toString());
-                    intent.putExtra("init", true);
-                } else if (accounts.size() >= 1) {
-                    intent = new Intent(WelcomeActivity.this, ManageAccountActivity.class);
-                }
-                startActivity(intent);
+        useOwnProvider.setOnClickListener(v -> {
+            List<Account> accounts = xmppConnectionService.getAccounts();
+            Intent intent = new Intent(WelcomeActivity.this, EditAccountActivity.class);
+            if (accounts.size() == 1) {
+                intent.putExtra("jid", accounts.get(0).getJid().toBareJid().toString());
+                intent.putExtra("init", true);
+            } else if (accounts.size() >= 1) {
+                intent = new Intent(WelcomeActivity.this, ManageAccountActivity.class);
             }
+            addInvitee(intent);
+            startActivity(intent);
         });
 
     }
@@ -314,4 +312,19 @@ public class WelcomeActivity extends XmppActivity {
         }
     }
 
+    public void addInvitee(Intent intent) {
+        addInvitee(intent, getIntent());
+    }
+
+    public static void addInvitee(Intent intent, XmppUri uri) {
+        if (uri.isJidValid()) {
+            intent.putExtra(EXTRA_INVITEE, uri.getJid().toString());
+        }
+    }
+
+    public static void addInvitee(Intent to, Intent from) {
+        if (from != null && from.hasExtra(EXTRA_INVITEE)) {
+            to.putExtra(EXTRA_INVITEE, from.getStringExtra(EXTRA_INVITEE));
+        }
+    }
 }
