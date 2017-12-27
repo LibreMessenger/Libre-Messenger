@@ -1,5 +1,12 @@
 ### Changelog
 
+#### Version 1.20.3
+* show icon instead of image preview in conversation overview
+* fixed loop when trying to decrypt with YubiKey
+* Removed NFC support
+* Fixed OMEMO device list no being announced
+* bug fixes
+
 #### Version 1.20.2
 * bug fixes
 
