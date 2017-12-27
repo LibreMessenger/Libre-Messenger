@@ -369,6 +369,7 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
                         replaceToast(getString(R.string.preparing_file));
                         ShareWithActivity.this.xmppConnectionService
                                 .attachFileToConversation(conversation, share.uris.get(0), attachFileCallback);
+                        finish();
                     }
                 }
             };
