@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context="ui.ShowLocationActivity">
 
-    <fragment
-
-        android:name="com.google.android.gms.maps.MapFragment"
-        android:id="@+id/map_fragment"
+    <WebView
+        android:id="@+id/webView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        map:mapType="normal"
-        map:uiCompass="true"
-        map:uiRotateGestures="false"
-        map:uiScrollGestures="true"
-        map:uiTiltGestures="false"
-        map:uiZoomControls="false"
-        map:uiZoomGestures="true"
-        tools:ignore="MissingPrefix" />
-
+        android:layout_height="match_parent">
+    </WebView>
 </RelativeLayout>

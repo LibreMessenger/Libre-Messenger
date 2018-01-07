@@ -78,6 +78,9 @@ public final class Config {
     public static final int IMAGE_QUALITY = 75;
 
     public static final int DEFAULT_ZOOM = 15; //for locations
+    public final static long LOCATION_FIX_TIME_DELTA = 1000 * 10; // ms
+    public final static float LOCATION_FIX_SPACE_DELTA = 10; // m
+    public final static int LOCATION_FIX_SIGNIFICANT_TIME_DELTA = 1000 * 60 * 2; // ms
 
     public static final int MESSAGE_MERGE_WINDOW = 20;
 

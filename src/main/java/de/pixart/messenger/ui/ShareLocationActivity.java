@@ -1,263 +1,235 @@
 package de.pixart.messenger.ui;
 
-import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
+import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Locale;
 
-import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.utils.LocationHelper;
 
-public class ShareLocationActivity extends Activity implements OnMapReadyCallback,
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+public class ShareLocationActivity extends LocationActivity implements LocationListener {
 
-    private GoogleMap mGoogleMap;
-    private GoogleApiClient mGoogleApiClient;
-    private LocationRequest mLocationRequest;
+    LocationManager locationManager;
     private Location mLastLocation;
     private Button mCancelButton;
     private Button mShareButton;
+    private String mLocationName;
     private RelativeLayout mSnackbar;
-    private RelativeLayout mLocationInfo;
-    private TextView mSnackbarLocation;
-    private TextView mSnackbarAction;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_share_locaction);
         if (getActionBar() != null) {
             getActionBar().setHomeButtonEnabled(true);
             getActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        setContentView(R.layout.activity_share_locaction);
-        MapFragment fragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map_fragment);
-        fragment.getMapAsync(this);
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+        mLocationName = getString(R.string.me);
+
         mCancelButton = findViewById(R.id.cancel_button);
-        mCancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setResult(RESULT_CANCELED);
+        mCancelButton.setOnClickListener(view -> {
+            setResult(RESULT_CANCELED);
+            finish();
+        });
+
+        mShareButton = findViewById(R.id.share_button);
+        mShareButton.setOnClickListener(view -> {
+            if (mLastLocation != null) {
+                Intent result = new Intent();
+                result.putExtra("latitude", mLastLocation.getLatitude());
+                result.putExtra("longitude", mLastLocation.getLongitude());
+                result.putExtra("altitude", mLastLocation.getAltitude());
+                result.putExtra("accuracy", (int) mLastLocation.getAccuracy());
+                setResult(RESULT_OK, result);
                 finish();
             }
         });
-        mShareButton = findViewById(R.id.share_button);
-        mShareButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mLastLocation != null) {
-                    Intent result = new Intent();
-                    result.putExtra("latitude", mLastLocation.getLatitude());
-                    result.putExtra("longitude", mLastLocation.getLongitude());
-                    result.putExtra("altitude", mLastLocation.getAltitude());
-                    result.putExtra("accuracy", (int) mLastLocation.getAccuracy());
-                    setResult(RESULT_OK, result);
-                    finish();
-                }
-            }
-        });
+
         mSnackbar = findViewById(R.id.snackbar);
-        mLocationInfo = findViewById(R.id.snackbar_location);
-        mSnackbarLocation = findViewById(R.id.snackbar_location_message);
-        mSnackbarAction = findViewById(R.id.snackbar_action);
-        mSnackbarAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-            }
-        });
+        TextView snackbarAction = findViewById(R.id.snackbar_action);
+        snackbarAction.setOnClickListener(view -> startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)));
+
+        requestLocationUpdates();
+    }
+
+    @Override
+    protected void gotoLoc() throws UnsupportedOperationException {
+        new getAddressAsync(this).execute();
+    }
+
+    @Override
+    protected void setmLastLocation(Location location) {
+        this.mLastLocation = location;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        this.mLastLocation = null;
         if (isLocationEnabled()) {
             this.mSnackbar.setVisibility(View.GONE);
         } else {
             this.mSnackbar.setVisibility(View.VISIBLE);
         }
-        mShareButton.setEnabled(false);
-        mShareButton.setTextColor(0x8a000000);
-        mShareButton.setText(R.string.locating);
-        mGoogleApiClient.connect();
+        setShareButtonEnabled(false);
     }
 
     @Override
-    protected void onPause() {
-        mGoogleApiClient.disconnect();
-        super.onPause();
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        this.mGoogleMap = googleMap;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                    || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                this.mGoogleMap.setBuildingsEnabled(true);
-                this.mGoogleMap.setMyLocationEnabled(true);
-            }
-        } else {
-            this.mGoogleMap.setBuildingsEnabled(true);
-            this.mGoogleMap.setMyLocationEnabled(true);
+    public void onLocationChanged(final Location location) {
+        if (LocationHelper.isBetterLocation(location, this.mLastLocation)) {
+            setShareButtonEnabled(true);
+            this.mLastLocation = location;
+            gotoLoc();
         }
     }
 
-    private void centerOnLocation(LatLng location) {
-        this.mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, Config.DEFAULT_ZOOM));
-    }
-
     @Override
-    public void onConnected(Bundle bundle) {
-        mLocationRequest = LocationRequest.create();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(1000);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                    || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-            }
-        } else {
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-        }
+    public void onStatusChanged(final String provider, final int status, final Bundle extras) {
 
     }
 
     @Override
-    public void onConnectionSuspended(int i) {
+    public void onProviderEnabled(final String provider) {
 
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
+    public void onProviderDisabled(final String provider) {
 
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        double longitude = location.getLongitude();
-        double latitude = location.getLatitude();
-
-        if (this.mLastLocation == null) {
-            centerOnLocation(new LatLng(location.getLatitude(), location.getLongitude()));
-            this.mShareButton.setEnabled(true);
-            this.mShareButton.setTextColor(0xde000000);
-            this.mShareButton.setText(R.string.share);
-        }
-        this.mLastLocation = location;
-        if (latitude != 0 && longitude != 0) {
-            Double[] lat_long = new Double[]{latitude, longitude};
-            new ReverseGeocodingTask(getBaseContext()).execute(lat_long);
-        }
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     private boolean isLocationEnabledKitkat() {
         try {
-            int locationMode = Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE);
+            final int locationMode = Settings.Secure.getInt(getContentResolver(), Settings.Secure.LOCATION_MODE);
             return locationMode != Settings.Secure.LOCATION_MODE_OFF;
-        } catch (Settings.SettingNotFoundException e) {
+        } catch (final Settings.SettingNotFoundException e) {
             return false;
         }
     }
 
     @SuppressWarnings("deprecation")
     private boolean isLocationEnabledLegacy() {
-        String locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+        final String locationProviders = Settings.Secure.getString(getContentResolver(),
+                Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
         return !TextUtils.isEmpty(locationProviders);
     }
 
     private boolean isLocationEnabled() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
             return isLocationEnabledKitkat();
         } else {
             return isLocationEnabledLegacy();
         }
     }
 
-    private class ReverseGeocodingTask extends AsyncTask<Double, Void, String> {
-        Context mContext;
-
-        public ReverseGeocodingTask(Context context) {
-            super();
-            mContext = context;
+    private void setShareButtonEnabled(final boolean enabled) {
+        if (enabled) {
+            this.mShareButton.setEnabled(true);
+            this.mShareButton.setTextColor(0xff2e4272);
+            this.mShareButton.setText(R.string.share);
+        } else {
+            this.mShareButton.setEnabled(false);
+            this.mShareButton.setTextColor(0x8a000000);
+            this.mShareButton.setText(R.string.locating);
+            showLocation(null, null);
         }
+    }
 
-        @Override
-        protected String doInBackground(Double... params) {
-            Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
-
-            double latitude = params[0];
-            double longitude = params[1];
-
-            List<Address> addresses = null;
-            String address = "";
-
+    private static String getAddress(Context context, Location location) {
+        double longitude = location.getLongitude();
+        double latitude = location.getLatitude();
+        String address = "";
+        if (latitude != 0 && longitude != 0) {
+            Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
             try {
-                addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            } catch (IOException e) {
+                List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
+                if (addresses != null && addresses.size() > 0) {
+                    Address Address = addresses.get(0);
+                    StringBuilder strAddress = new StringBuilder("");
+
+                    if (Address.getAddressLine(0).length() > 0) {
+                        strAddress.append(Address.getAddressLine(0));
+                    }
+                    address = strAddress.toString().replace(", ", "<br>");
+                }
+            } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+        return address;
+    }
 
-            if (addresses != null && addresses.size() > 0) {
-                Address Address = addresses.get(0);
-                StringBuilder strAddress = new StringBuilder("");
+    private class getAddressAsync extends AsyncTask<Void, Void, Void> {
+        String address = null;
 
-                if (Address.getAddressLine(0).length() > 0) {
-                    strAddress.append(Address.getAddressLine(0));
-                }
-                address = strAddress.toString().replace(", ", "\n");
-            }
+        private WeakReference<ShareLocationActivity> activityReference;
 
-            return address;
-
+        getAddressAsync(ShareLocationActivity context) {
+            activityReference = new WeakReference<>(context);
         }
 
         @Override
-        protected void onPostExecute(String address) {
-            // Setting address of the touched Position
-            if (address.length() > 0) {
-                mLocationInfo.setVisibility(View.VISIBLE);
-                mSnackbarLocation.setText(address);
-                Log.d(Config.LOGTAG, "Location: Address = " + address);
-            }
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showLocation(mLastLocation, null);
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            address = getAddress(ShareLocationActivity.this, mLastLocation);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            showLocation(mLastLocation, address);
+        }
+    }
+
+    private void showLocation (@Nullable Location location, @Nullable String address) {
+        if (location == null && TextUtils.isEmpty(address)) { // no location and no address available
+            final WebView webView = findViewById(R.id.webView);
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.loadUrl("file:///android_asset/map.html");
+        } else if (location != null && TextUtils.isEmpty(address)) { // location but no address available
+            String LocationName = "<b>" + mLocationName + "</b>";
+            final WebView webView = findViewById(R.id.webView);
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.loadUrl("file:///android_asset/map.html?lat=" + mLastLocation.getLatitude() + "&lon=" + mLastLocation.getLongitude() + "&name=" + LocationName);
+        } else if (location != null && !TextUtils.isEmpty(address)) { // location and address available
+            String LocationName = "<b>" + mLocationName + "</b><br>" + address;
+            final WebView webView = findViewById(R.id.webView);
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.loadUrl("file:///android_asset/map.html?lat=" + mLastLocation.getLatitude() + "&lon=" + mLastLocation.getLongitude() + "&name=" + LocationName);
         }
     }
 }
