@@ -71,7 +71,8 @@ public class ShareLocationActivity extends LocationActivity implements LocationL
         mSnackbar = findViewById(R.id.snackbar);
         TextView snackbarAction = findViewById(R.id.snackbar_action);
         snackbarAction.setOnClickListener(view -> startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)));
-
+        showLocation(null, null);
+        setShareButtonEnabled(false);
         requestLocationUpdates();
     }
 
@@ -95,6 +96,7 @@ public class ShareLocationActivity extends LocationActivity implements LocationL
         super.onResume();
         if (isLocationEnabled()) {
             this.mSnackbar.setVisibility(View.GONE);
+            showLocation(null, null);
         } else {
             this.mSnackbar.setVisibility(View.VISIBLE);
         }
@@ -159,7 +161,6 @@ public class ShareLocationActivity extends LocationActivity implements LocationL
             this.mShareButton.setEnabled(false);
             this.mShareButton.setTextColor(0x8a000000);
             this.mShareButton.setText(R.string.locating);
-            showLocation(null, null);
         }
     }
 
