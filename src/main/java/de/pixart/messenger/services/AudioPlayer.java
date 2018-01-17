@@ -5,7 +5,9 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -17,6 +19,7 @@ import java.util.Locale;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Message;
+import de.pixart.messenger.ui.ConversationActivity;
 import de.pixart.messenger.ui.adapter.MessageAdapter;
 import de.pixart.messenger.utils.WeakReferenceSet;
 
@@ -24,15 +27,17 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
 
     private static final int REFRESH_INTERVAL = Config.REFRESH_UI_INTERVAL;
     private static final Object LOCK = new Object();
-    private static MediaPlayer player = null;
+    public static MediaPlayer player = null;
     private static Message currentlyPlayingMessage = null;
     private final MessageAdapter messageAdapter;
+    private ConversationActivity activity;
     private final WeakReferenceSet<RelativeLayout> audioPlayerLayouts = new WeakReferenceSet<>();
 
     private final Handler handler = new Handler();
 
-    public AudioPlayer(MessageAdapter adapter) {
+    public AudioPlayer(MessageAdapter adapter, ConversationActivity activity) {
         this.messageAdapter = adapter;
+        this.activity = activity;
         synchronized (AudioPlayer.LOCK) {
             if (AudioPlayer.player != null) {
                 AudioPlayer.player.setOnCompletionListener(this);
@@ -80,6 +85,7 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
             viewHolder.runtime.setText(formatTime(message.getFileParams().runtime));
             viewHolder.progress.setProgress(0);
             viewHolder.progress.setEnabled(false);
+            ScreenOff();
             return false;
         }
     }
@@ -110,7 +116,9 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
             viewHolder.progress.setEnabled(false);
             player.pause();
             viewHolder.playPause.setImageResource(viewHolder.darkBackground ? R.drawable.ic_play_arrow_white_36dp : R.drawable.ic_play_arrow_black_36dp);
+            ScreenOff();
         } else {
+            ScreenOn();
             viewHolder.progress.setEnabled(true);
             player.start();
             this.stopRefresher(true);
@@ -122,6 +130,7 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
     private boolean play(ViewHolder viewHolder, Message message) {
         AudioPlayer.player = new MediaPlayer();
         try {
+            ScreenOn();
             AudioPlayer.currentlyPlayingMessage = message;
             AudioPlayer.player.setDataSource(messageAdapter.getFileBackend().getFile(message).getAbsolutePath());
             AudioPlayer.player.setOnCompletionListener(this);
@@ -131,6 +140,7 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
             viewHolder.playPause.setImageResource(viewHolder.darkBackground ? R.drawable.ic_pause_white_36dp : R.drawable.ic_pause_black_36dp);
             return true;
         } catch (Exception e) {
+            ScreenOff();
             AudioPlayer.currentlyPlayingMessage = null;
             return false;
         }
@@ -152,6 +162,7 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
         }
         AudioPlayer.player.release();
         AudioPlayer.player = null;
+        ScreenOff();
         resetPlayerUi();
     }
 
@@ -173,6 +184,7 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
         }
         viewHolder.progress.setProgress(0);
         viewHolder.progress.setEnabled(false);
+        ScreenOff();
     }
 
     @Override
@@ -277,5 +289,15 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
         public void setDarkBackground(boolean darkBackground) {
             this.darkBackground = darkBackground;
         }
+    }
+
+    private void ScreenOn() {
+        Log.d(Config.LOGTAG, "Audio Player is keeping screen on");
+        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    private void ScreenOff() {
+        Log.d(Config.LOGTAG, "Audio Player finished keeping screen on");
+        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 }

@@ -139,12 +139,12 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     private boolean mIndicateReceived = false;
     private OnQuoteListener onQuoteListener;
     private final ListSelectionManager listSelectionManager = new ListSelectionManager();
-    private final AudioPlayer audioPlayer;
+    public final AudioPlayer audioPlayer;
     private boolean mUseWhiteBackground = false;
 
     public MessageAdapter(ConversationActivity activity, List<Message> messages) {
         super(activity, 0, messages);
-        this.audioPlayer = new AudioPlayer(this);
+        this.audioPlayer = new AudioPlayer(this, activity);
         this.activity = activity;
         metrics = getContext().getResources().getDisplayMetrics();
         updatePreferences();
