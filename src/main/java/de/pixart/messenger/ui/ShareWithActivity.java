@@ -8,9 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -116,13 +113,10 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
 
         @Override
         public void error(final int errorCode, Message object) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    replaceToast(getString(errorCode));
-                    if (attachmentCounter.decrementAndGet() <= 0) {
-                        finish();
-                    }
+            runOnUiThread(() -> {
+                replaceToast(getString(errorCode));
+                if (attachmentCounter.decrementAndGet() <= 0) {
+                    finish();
                 }
             });
         }
@@ -187,13 +181,7 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
         mListView = findViewById(R.id.choose_conversation_list);
         mAdapter = new ConversationAdapter(this, this.mConversations);
         mListView.setAdapter(mAdapter);
-        mListView.setOnItemClickListener(new OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-                share(mConversations.get(position));
-            }
-        });
+        mListView.setOnItemClickListener((arg0, arg1, position, arg3) -> share(mConversations.get(position)));
 
         if (savedInstanceState != null) {
             SharingIsRunning = savedInstanceState.getBoolean(STATE_SHARING_IS_RUNNING, false);
@@ -351,26 +339,20 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
             return;
         }
         if (share.uris.size() != 0) {
-            OnPresenceSelected callback = new OnPresenceSelected() {
-                @Override
-                public void onPresenceSelected() {
-                    attachmentCounter.set(share.uris.size());
-                    if (share.image) {
-                        Log.d(Config.LOGTAG, "ShareWithActivity share() image " + share.uris.size() + " uri(s) " + share.uris.toString());
-                        share.multiple = share.uris.size() > 1;
-                        replaceToast(getString(share.multiple ? R.string.preparing_images : R.string.preparing_image));
-                        for (Iterator<Uri> i = share.uris.iterator(); i.hasNext(); i.remove()) {
-                            ShareWithActivity.this.xmppConnectionService
-                                    .attachImageToConversation(conversation, i.next(),
-                                            attachFileCallback);
-                        }
-                    } else {
-                        Log.d(Config.LOGTAG, "ShareWithActivity share() file " + share.uris.size() + " uri(s) " + share.uris.toString());
-                        replaceToast(getString(R.string.preparing_file));
-                        ShareWithActivity.this.xmppConnectionService
-                                .attachFileToConversation(conversation, share.uris.get(0), attachFileCallback);
-                        finish();
+            OnPresenceSelected callback = () -> {
+                attachmentCounter.set(share.uris.size());
+                if (share.image) {
+                    Log.d(Config.LOGTAG, "ShareWithActivity share() image " + share.uris.size() + " uri(s) " + share.uris.toString());
+                    share.multiple = share.uris.size() > 1;
+                    replaceToast(getString(share.multiple ? R.string.preparing_images : R.string.preparing_image));
+                    for (Iterator<Uri> i = share.uris.iterator(); i.hasNext(); i.remove()) {
+                        ShareWithActivity.this.xmppConnectionService.attachImageToConversation(conversation, i.next(), attachFileCallback);
                     }
+                } else {
+                    Log.d(Config.LOGTAG, "ShareWithActivity share() file " + share.uris.size() + " uri(s) " + share.uris.toString());
+                    replaceToast(getString(R.string.preparing_file));
+                    ShareWithActivity.this.xmppConnectionService.attachFileToConversation(conversation, share.uris.get(0), attachFileCallback);
+                    finish();
                 }
             };
             if (account.httpUploadAvailable()
@@ -395,22 +377,14 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
                         @Override
                         public void success(final Message message) {
                             message.setEncryption(Message.ENCRYPTION_DECRYPTED);
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    finishAndSend(message);
-                                }
-                            });
+                            runOnUiThread(() -> finishAndSend(message));
                         }
 
                         @Override
                         public void error(final int errorCode, Message object) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    replaceToast(getString(errorCode));
-                                    finish();
-                                }
+                            runOnUiThread(() -> {
+                                replaceToast(getString(errorCode));
+                                finish();
                             });
                         }
 
@@ -445,17 +419,14 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
                     callback.onPresenceSelected();
                 }
             } else {
-                final OnPresenceSelected callback = new OnPresenceSelected() {
-                    @Override
-                    public void onPresenceSelected() {
-                        Message message = new Message(conversation, share.text, conversation.getNextEncryption());
-                        if (conversation.getNextEncryption() == Message.ENCRYPTION_OTR) {
-                            message.setCounterpart(conversation.getNextCounterpart());
-                        }
-                        xmppConnectionService.sendMessage(message);
-                        replaceToast(getString(R.string.shared_text_with_x, conversation.getName()));
-                        switchToConversation(message.getConversation());
+                final OnPresenceSelected callback = () -> {
+                    Message message = new Message(conversation, share.text, conversation.getNextEncryption());
+                    if (conversation.getNextEncryption() == Message.ENCRYPTION_OTR) {
+                        message.setCounterpart(conversation.getNextCounterpart());
                     }
+                    xmppConnectionService.sendMessage(message);
+                    replaceToast(getString(R.string.shared_text_with_x, conversation.getName()));
+                    switchToConversation(message.getConversation());
                 };
                 if (conversation.getNextEncryption() == Message.ENCRYPTION_OTR) {
                     selectPresence(conversation, callback);
