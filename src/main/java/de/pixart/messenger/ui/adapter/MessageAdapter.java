@@ -839,13 +839,10 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             return view;
         } else if (type == STATUS) {
             if ("LOAD_MORE".equals(message.getBody())) {
+                viewHolder.status_message.setVisibility(View.GONE);
+                viewHolder.contact_picture.setVisibility(View.GONE);
                 viewHolder.load_more_messages.setVisibility(View.VISIBLE);
-                viewHolder.load_more_messages.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        loadMoreMessages(message.getConversation());
-                    }
-                });
+                viewHolder.load_more_messages.setOnClickListener(v -> loadMoreMessages(message.getConversation()));
             } else {
                 viewHolder.status_message.setVisibility(View.VISIBLE);
                 viewHolder.load_more_messages.setVisibility(View.GONE);
