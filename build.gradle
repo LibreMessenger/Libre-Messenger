@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.1'
     }
 }
 
@@ -57,9 +57,9 @@ dependencies {
     compile 'jetty:javax.servlet:5.1.12'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
+    compile 'com.android.support:multidex:1.0.2'
     compile "com.android.support:support-v13:$supportLibVersion"
     compile "com.android.support:appcompat-v7:$supportLibVersion"
-    compile 'com.android.support:multidex:1.0.1'
     compile "com.android.support:support-v4:$supportLibVersion"
     compile "com.android.support:support-emoji:$supportLibVersion"
     compile "com.android.support:support-emoji-bundled:$supportLibVersion"
@@ -82,10 +82,6 @@ android {
     buildToolsVersion "26.0.2"
 
     defaultConfig {
-        jackOptions {
-            enabled true
-        }
-
         minSdkVersion 16
         targetSdkVersion 25
 
@@ -99,6 +95,8 @@ android {
         buildConfigField("Integer[]", "XMPP_Ports", "{61000, 65000}")
         buildConfigField("String", "DOMAIN_LOCK", '"pix-art.de"')
         buildConfigField("String", "UPDATE_URL", '"https://xmpp.pix-art.de/Pix-Art_Messenger/update/"')
+
+        dimension "distribution"
     }
 
     dexOptions {
@@ -113,6 +111,8 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    flavorDimensions("distribution")
+
     productFlavors {
         standardPush
         standard
@@ -122,6 +122,8 @@ android {
             buildConfigField("String", "DOMAIN_LOCK", "null")
             buildConfigField("String", "UPDATE_URL", '"https://xmpp.pix-art.de/Pix-Art_Messenger/update/open/"')
             applicationId "de.pixart.openmessenger"
+
+            dimension "distribution"
         }
     }
     if (project.hasProperty('mStoreFile') &&
