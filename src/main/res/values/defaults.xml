@@ -8,7 +8,7 @@
     <string name="type_web" translatable="false">Web browser</string>
     <string name="type_console" translatable="false">Console</string>
     <string name="pref_about_message" translatable="false"><b>Pix-Art Messenger</b>
-			\n\nCopyright © 2014-2017 Christian Schneppe
+			\n\nCopyright © 2014-2018 Christian Schneppe
 			\n\nhttp://jabber.pix-art.de
 			\n\nThis program is free software: you can redistribute it and/or modify
 			it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
 			\n\nhttps://www.bouncycastle.org\n(The MIT License (MIT))
 			\n\nhttps://www.gnu.org/software/libidn\n(Apache License, Version 2.0)
 			\n\nhttps://github.com/ge0rg/MemorizingTrustManager\n(The MIT License (MIT))
-			\n\nhttps://github.com/rtreffer/minidns\n(WTFPL)
+			\n\nhttps://github.com/MiniDNS/minidns\n(WTFPL)
 			\n\nhttps://github.com/open-keychain/openkeychain-api-lib\n(Apache License, Version 2.0)
 			\n\nhttps://github.com/jitsi/otr4j\n(LGPL-3.0)
 			\n\nhttps://developer.android.com/tools/support-library\n(Apache License, Version 2.0)
@@ -37,9 +37,7 @@
 			\n\nhttps://github.com/WhisperSystems/libaxolotl-java\n(GPLv3)
 			\n\nhttps://github.com/vinc3m1/RoundedImageView\n(Apache License, Version 2.0)
 			\n\nhttps://github.com/jdamcd/android-crop\n(Apache License, Version 2.0)
-			\n\nhttps://github.com/jaydeepw/audio-wife\n(The MIT License (MIT))
 		    \n\nhttps://github.com/google/gson\n(Apache License, Version 2.0)
-		    \n\nhttps://github.com/google/gcm\n(Apache License, Version 2.0)
 		    \n\nhttp://hc.apache.org/httpcomponents-client\n(Apache License, Version 2.0)
 		    \n\nhttp://hc.apache.org/httpcomponents-core\n(Apache License, Version 2.0)
 			\n\nhttps://github.com/bumptech/glide\n(BSD, The MIT License (MIT) and Apache License, Version 2.0)
@@ -48,9 +46,10 @@
             \n\nhttps://github.com/mangstadt/ez-vcard\n(FreeBSD)
             \n\nhttps://github.com/googlesamples/easypermissions\n(Apache License, Version 2.0)
             \n\nhttps://github.com/blazsolar/FlowLayout\n(Apache License, Version 2.0)
-            \n\nhttps://github.com/vanniktech/Emoji\n(Apache License, Version 2.0)
             \n\nhttps://github.com/ypresto/android-transcoder\n(Apache License, Version 2.0)
             \n\nhttp://www.eclipse.org/jetty/\n(Apache License, Version 2.0 and Eclipse Public License 1.0)
+            \n\nhttp://leafletjs.com/\n(BSD 2-Clause)
+            \n\nhttps://www.openstreetmap.org/\n(Open Database License)
 	</string>
     <string name="default_resource" translatable="false">Phone</string>
     <bool name="portrait_only">true</bool>
