@@ -18,15 +18,15 @@
   <string name="title_activity_manage_accounts">Gestionar Cuentas</string>
   <string name="title_activity_settings">Ajustes</string>
   <string name="title_activity_conference_details">Detalles de Conversación</string>
-  <string name="title_activity_contact_details">Detalles del Contacto</string>
+  <string name="title_activity_contact_details">Detalles del contacto</string>
   <string name="title_activity_sharewith">Compartir con Conversación</string>
-  <string name="title_activity_start_conversation">Nueva Conversación</string>
+  <string name="title_activity_start_conversation">Comenzar conversación</string>
   <string name="title_activity_choose_contact">Elegir contacto</string>
-  <string name="title_activity_block_list">Lista contactos bloqueados</string>
-  <string name="just_now">ahora</string>
+  <string name="title_activity_block_list">Lista de contactos bloqueados</string>
+  <string name="just_now">ahora mismo</string>
   <string name="minute_ago">hace 1 min</string>
   <string name="minutes_ago">hace %d min</string>
-  <string name="unread_conversations">conversaciones por leer</string>
+  <string name="unread_conversations">conversaciones no leídas</string>
   <string name="sending">enviando…</string>
   <string name="message_decrypting">Descifrando mensaje. Por favor, espera...</string>
   <string name="pgp_message">Mensaje cifrado con OpenPGP</string>
@@ -50,7 +50,7 @@
   <string name="invite_contact">Invitar a contacto</string>
   <string name="contacts">Contactos</string>
   <string name="cancel">Cancelar</string>
-  <string name="set">Establecer</string>
+  <string name="set">Aplicar</string>
   <string name="add">Añadir</string>
   <string name="edit">Editar</string>
   <string name="delete">Eliminar</string>
@@ -107,7 +107,7 @@
   <string name="pref_accept_files_mobileroaming">Aceptar archivos en conexiones roaming</string>
   <string name="pref_accept_files_summary_mobileroaming">Cuando se conecta a la red móvil por roaming acepta automáticamente el descargo de archivos más pequeños que…</string>
   <string name="pref_attachments">Adjuntos</string>
-  <string name="pref_notification_settings">Notificaciones</string>
+  <string name="pref_notification_settings">Notificación</string>
   <string name="pref_notifications">Notificaciones</string>
   <string name="pref_notifications_summary">Notificar cuando llega un nuevo mensaje</string>
   <string name="pref_vibrate">Vibrar</string>
@@ -599,7 +599,7 @@
   <string name="InviteText">Hola,\n\n%s te ha invitado a una conversación con Pix-Art Messenger. Si eres usuario de Android, pruébalo y haz clic en el siguiente enlace...</string>
   <string name="pref_broadcast_last_activity">Informar de tu última interacción</string>
   <string name="pref_broadcast_last_activity_summary">Informar a tus contactos cuando usas Pix-Art Messenger</string>
-  <string name="invite_user">Invitar a Pix-Art mensajería libre (XMPP)</string>
+  <string name="invite_user">Invitar a Pix-Art Messenger</string>
   <string name="request_permissions_message">Pix-Art Messenger le pedirá que conceda algunos permisos. Es importante que permitas que todos estos permisos usen todas las características de este mensajero. Si usted niega cualquiera de estos permisos, la aplicación se cerrará sola.</string>
   <string name="request_permissions_message_again">Usted ha negado uno o todos los permisos requeridos para Pix-Art Messenger. ¿Desea ir a la configuración para permitir estos permisos? Si rechaza uno de estos permisos, la aplicación se cerrará.</string>
   <string name="unable_to_connect_to_keychain">No se ha podido conectar a OpenKeychain</string>
@@ -700,7 +700,7 @@
   <string name="block_stranger">Bloquear desconocido</string>
   <string name="block_entire_domain">Bloquear el dominio completo</string>
   <string name="pref_use_auto_rotate_summary">Girar imágenes y videos en pantalla completa para ajustarse al tamaño de la pantalla</string>
-  <string name="pref_use_auto_rotate">Girar medios en pantalla completa</string>
+  <string name="pref_use_auto_rotate">Girar multimedia en pantalla completa</string>
   <string name="pref_use_tor">Conectar via Tor</string>
   <string name="pref_use_tor_summary">Todas las conexiones se realizan a través de la red TOR. Requiere Orbot</string>
   <string name="pref_connection_options">Conexión</string>
@@ -738,9 +738,14 @@
   <string name="no_application_found_to_open_link">No se ha encontrado aplicación para abrir la página web</string>
   <string name="contacts_have_read_up_to_this_point">%s han leído hasta este punto</string>
   <string name="contact_has_read_up_to_this_point">%s ha leído hasta este punto</string>
+  <string name="contacts_and_n_more_have_read_up_to_this_point">%1$s y %2$d más han leído hasta este punto</string>
   <string name="pref_return_to_previous">Compartir rápido</string>
   <string name="pref_return_to_previous_summary">Después de compartir, vuelve inmediatamente a la aplicación anterior en lugar de abrir el chat</string>
   <string name="conversation_unencrypted_hint">Este chat no está cifrado, por razones de seguridad, debes activar el cifrado de mensajes mediante el icono de bloqueo. El cifrado preferible es OMEMO.</string>
   <string name="pref_warn_unencrypted_chat">Avisar si el chat no está cifrado</string>
   <string name="pref_warn_unencrypted_chat_summary">Si el cifrado de mensajes está disponible, debe utilizarlo. Si no está utilizando el cifrado de mensajes, muestre una advertencia en el chat.</string>
+  <string name="pref_use_bundled_emoji">Usar emojis integrados</string>
+  <string name="pref_use_bundled_emoji_summary">Utilice la librería emoji integrada en lugar de utilizar la de su dispositivo. Los cambios estarán disponibles después de volver a abrir la aplicación.</string>
+  <string name="invalid_muc_nick">Apodo inválido</string>
+  <string name="title_activity_share_via_account">Compartir a través de cuenta</string>
 </resources>
