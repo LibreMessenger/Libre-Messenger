@@ -1,5 +1,11 @@
 ### Changelog
 
+#### Version 1.21.0
+* replaced google maps location service with open street map services via leaflet
+* let screen on while playing audio files
+* add Turkish translations
+* bug fixes
+
 #### Version 1.20.3
 * show icon instead of image preview in conversation overview
 * fixed loop when trying to decrypt with YubiKey
