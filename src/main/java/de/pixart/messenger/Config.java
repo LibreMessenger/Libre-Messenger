@@ -98,8 +98,8 @@ public final class Config {
     public static final int MAX_STORAGE_MESSAGE_CHARS = 1024 * 1024 * 1024;
 
     public static final boolean ExportLogs = true; // automatically export logs
-    public static final int ExportLogs_Hour = 4; //valid values from 0 to 23
-    public static final int ExportLogs_Minute = 0; //valid values from 0 to 59
+    public static final int ExportLogs_Hour = 4; //Time - hours: valid values from 0 to 23
+    public static final int ExportLogs_Minute = 0; //Time - minutes: valid values from 0 to 59
 
     public static final boolean DISABLE_PROXY_LOOKUP = false; //useful to debug ibb
     public static final boolean DISABLE_HTTP_UPLOAD = false;
