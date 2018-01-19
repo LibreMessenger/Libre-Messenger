@@ -42,6 +42,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
@@ -86,7 +87,6 @@ import de.pixart.messenger.xmpp.XmppConnection;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
-import de.timroes.android.listview.EnhancedListView;
 
 import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
 import static de.pixart.messenger.ui.ShowFullscreenMessageActivity.getMimeType;
@@ -139,7 +139,7 @@ public class ConversationActivity extends XmppActivity
     private List<Conversation> conversationList = new ArrayList<>();
     private Conversation swipedConversation = null;
     private Conversation mSelectedConversation = null;
-    private EnhancedListView listView;
+    private ListView listView;
     public ConversationFragment mConversationFragment;
 
     private ArrayAdapter<Conversation> listAdapter;
@@ -269,76 +269,6 @@ public class ConversationActivity extends XmppActivity
             }
         });
 
-        listView.setDismissCallback(new EnhancedListView.OnDismissCallback() {
-
-            @Override
-            public EnhancedListView.Undoable onDismiss(final EnhancedListView enhancedListView, final int position) {
-
-                final int index = listView.getFirstVisiblePosition();
-                View v = listView.getChildAt(0);
-                final int top = (v == null) ? 0 : (v.getTop() - listView.getPaddingTop());
-
-                try {
-                    swipedConversation = listAdapter.getItem(position);
-                } catch (IndexOutOfBoundsException e) {
-                    return null;
-                }
-                listAdapter.remove(swipedConversation);
-                xmppConnectionService.markRead(swipedConversation);
-
-                final boolean formerlySelected = (getSelectedConversation() == swipedConversation);
-                if (position == 0 && listAdapter.getCount() == 0) {
-                    endConversation(swipedConversation, false, true);
-                    return null;
-                } else if (formerlySelected) {
-                    setSelectedConversation(listAdapter.getItem(0));
-                    ConversationActivity.this.mConversationFragment
-                            .reInit(getSelectedConversation());
-                }
-
-                return new EnhancedListView.Undoable() {
-
-                    @Override
-                    public void undo() {
-                        listAdapter.insert(swipedConversation, position);
-                        if (formerlySelected) {
-                            setSelectedConversation(swipedConversation);
-                            ConversationActivity.this.mConversationFragment
-                                    .reInit(getSelectedConversation());
-                        }
-                        swipedConversation = null;
-                        listView.setSelectionFromTop(index + (listView.getChildCount() < position ? 1 : 0), top);
-                    }
-
-                    @Override
-                    public void discard() {
-                        if (!swipedConversation.isRead()
-                                && swipedConversation.getMode() == Conversation.MODE_SINGLE) {
-                            swipedConversation = null;
-                            return;
-                        }
-                        endConversation(swipedConversation, false, false);
-                        swipedConversation = null;
-                    }
-
-                    @Override
-                    public String getTitle() {
-                        if (swipedConversation.getMode() == Conversation.MODE_MULTI) {
-                            return getResources().getString(R.string.title_undo_swipe_out_muc);
-                        } else {
-                            return getResources().getString(R.string.title_undo_swipe_out_conversation);
-                        }
-                    }
-                };
-            }
-        });
-        //listView.enableSwipeToDismiss();
-        listView.setSwipingLayout(R.id.swipeable_item);
-        listView.setUndoStyle(EnhancedListView.UndoStyle.SINGLE_POPUP);
-        listView.setUndoHideDelay(10000);
-        listView.setRequireTouchBeforeDismiss(false);
-        listView.setSwipeDirection(EnhancedListView.SwipeDirection.START); // swipe to left to close conversation
-
         mContentView = findViewById(R.id.content_view_spl);
         if (mContentView == null) {
             mContentView = findViewById(R.id.content_view_ll);
@@ -364,7 +294,6 @@ public class ConversationActivity extends XmppActivity
                 @Override
                 public void onPanelClosed(View arg0) {
                     mShouldPanelBeOpen.set(false);
-                    listView.discardUndo();
                     openConversation();
                 }
 
@@ -1280,7 +1209,6 @@ public class ConversationActivity extends XmppActivity
 
     @Override
     public void onPause() {
-        listView.discardUndo();
         super.onPause();
         this.mActivityPaused = true;
     }
@@ -2036,8 +1964,6 @@ public class ConversationActivity extends XmppActivity
         if (swipedConversation != null) {
             if (swipedConversation.isRead()) {
                 conversationList.remove(swipedConversation);
-            } else {
-                listView.discardUndo();
             }
         }
         listAdapter.notifyDataSetChanged();
