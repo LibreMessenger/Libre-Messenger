@@ -286,12 +286,14 @@ public class FileBackend {
     public boolean useFileAsIs(Uri uri) {
         String path = getOriginalPath(uri);
         if (path == null) {
+            Log.d(Config.LOGTAG, "File path = null");
             return false;
         }
         if (path.contains(getDirectoryName("null", true))) {
-            Log.d(Config.LOGTAG, "File " + path + " is in our directory, sending as is");
+            Log.d(Config.LOGTAG, "File " + path + " is in our directory");
             return true;
         }
+        Log.d(Config.LOGTAG, "File " + path + " is not in our directory");
         return false;
     }
 
