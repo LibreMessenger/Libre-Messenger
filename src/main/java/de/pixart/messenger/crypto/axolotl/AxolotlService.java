@@ -55,6 +55,7 @@ import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
 import de.pixart.messenger.xmpp.pep.PublishOptions;
 import de.pixart.messenger.xmpp.stanzas.IqPacket;
+import de.pixart.messenger.xmpp.stanzas.MessagePacket;
 
 public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
 
@@ -83,6 +84,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
     private boolean pepBroken = false;
     private int lastDeviceListNotificationHash = 0;
     private AtomicBoolean changeAccessMode = new AtomicBoolean(false);
+    private Set<XmppAxolotlSession> postponedSessions = new HashSet<>(); //sessions stored here will receive after mam catchup treatment
 
     @Override
     public void onAdvancedStreamFeaturesAvailable(Account account) {
@@ -1241,6 +1243,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
             Log.w(Config.LOGTAG, getLogprefix(account) + "Failed to encrypt message: " + e.getMessage());
             return null;
         }
+        //TODO: fix this for MUC PMs - Don't encrypt to all participants
         if (!buildHeader(axolotlMessage, message.getConversation())) {
             return null;
         }
@@ -1333,9 +1336,36 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
     }
 
     private void postPreKeyMessageHandling(final XmppAxolotlSession session, int preKeyId, final boolean postpone) {
-        Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": postPreKeyMessageHandling() preKeyId=" + preKeyId + ", postpone=" + Boolean.toString(postpone));
-        //TODO: do not republish if we already removed this preKeyId
-        publishBundlesIfNeeded(false, false);
+        if (postpone) {
+            postponedSessions.add(session);
+        } else {
+            //TODO: do not republish if we already removed this preKeyId
+            publishBundlesIfNeeded(false, false);
+            completeSession(session);
+        }
+    }
+
+    public void processPostponed() {
+        if (postponedSessions.size() > 0) {
+            publishBundlesIfNeeded(false, false);
+        }
+        Iterator<XmppAxolotlSession> iterator = postponedSessions.iterator();
+        while (iterator.hasNext()) {
+            completeSession(iterator.next());
+            iterator.remove();
+        }
+    }
+
+    private void completeSession(XmppAxolotlSession session) {
+        final XmppAxolotlMessage axolotlMessage = new XmppAxolotlMessage(account.getJid().toBareJid(), getOwnDeviceId());
+        axolotlMessage.addDevice(session);
+        try {
+            Jid jid = Jid.fromString(session.getRemoteAddress().getName());
+            MessagePacket packet = mXmppConnectionService.getMessageGenerator().generateKeyTransportMessage(jid, axolotlMessage);
+            mXmppConnectionService.sendMessagePacket(account, packet);
+        } catch (InvalidJidException e) {
+            throw new Error("Remote addresses are created from jid and should convert back to jid", e);
+        }
     }
 
     public XmppAxolotlMessage.XmppAxolotlKeyTransportMessage processReceivingKeyTransportMessage(XmppAxolotlMessage message, final boolean postponePreKeyMessageHandling) {

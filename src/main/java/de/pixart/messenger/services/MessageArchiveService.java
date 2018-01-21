@@ -221,6 +221,17 @@ public class MessageArchiveService implements OnAdvancedStreamFeaturesLoaded {
         }
     }
 
+    public boolean inCatchup(Account account) {
+        synchronized (this.queries) {
+            for (Query query : queries) {
+                if (query.account == account && query.isCatchup() && query.getWith() == null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public boolean queryInProgress(Conversation conversation, XmppConnectionService.OnMoreMessagesLoaded callback) {
         synchronized (this.queries) {
             for (Query query : queries) {
@@ -267,6 +278,7 @@ public class MessageArchiveService implements OnAdvancedStreamFeaturesLoaded {
             if (query.isCatchup() && query.getActualMessageCount() > 0) {
                 mXmppConnectionService.getNotificationService().finishBacklog(true,query.getAccount());
             }
+            query.account.getAxolotlService().processPostponed();
         } else {
             final Query nextQuery;
             if (query.getPagingOrder() == PagingOrder.NORMAL) {

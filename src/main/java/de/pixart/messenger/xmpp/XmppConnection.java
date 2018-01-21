@@ -1711,6 +1711,10 @@ public class XmppConnection implements Runnable {
             return hasDiscoFeature(account.getServer(), "urn:xmpp:reporting:reason:spam:0");
         }
 
+        public boolean flexibleOfflineMessageRetrieval() {
+            return hasDiscoFeature(account.getServer(), Namespace.FLEXIBLE_OFFLINE_MESSAGE_RETRIEVAL);
+        }
+
         public boolean register() {
             return hasDiscoFeature(account.getServer(), Namespace.REGISTER);
         }
