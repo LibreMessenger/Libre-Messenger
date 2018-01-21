@@ -1,11 +1,14 @@
 package de.pixart.messenger.utils;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -40,6 +43,7 @@ public class Resolver {
 
     private static XmppConnectionService SERVICE = null;
 
+
     public static void init(XmppConnectionService service) {
         Resolver.SERVICE = service;
         DNSClient.removeDNSServerLookupMechanism(AndroidUsingExec.INSTANCE);
@@ -50,7 +54,6 @@ public class Resolver {
     public static List<Result> resolve(String domain) throws NetworkIsUnreachableException {
         List<Result> results = new ArrayList<>();
         HashSet<String> messages = new HashSet<>();
-
         try {
             results.addAll(resolveSrv(domain, true));
         } catch (MultipleIoException e) {
@@ -173,6 +176,41 @@ public class Resolver {
     }
 
     public static class Result implements Comparable<Result> {
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Result result = (Result) o;
+
+            if (port != result.port) return false;
+            if (directTls != result.directTls) return false;
+            if (authenticated != result.authenticated) return false;
+            if (priority != result.priority) return false;
+            if (ip != null ? !ip.equals(result.ip) : result.ip != null) return false;
+            return hostname != null ? hostname.equals(result.hostname) : result.hostname == null;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = ip != null ? ip.hashCode() : 0;
+            result = 31 * result + (hostname != null ? hostname.hashCode() : 0);
+            result = 31 * result + port;
+            result = 31 * result + (directTls ? 1 : 0);
+            result = 31 * result + (authenticated ? 1 : 0);
+            result = 31 * result + priority;
+            return result;
+        }
+
+        public static final String DOMAIN = "domain";
+
+        public static final String IP = "ip";
+        public static final String HOSTNAME = "hostname";
+        public static final String PORT = "port";
+        public static final String PRIORITY = "priority";
+        public static final String DIRECT_TLS = "directTls";
+        public static final String AUTHENTICATED = "authenticated";
+
         private InetAddress ip;
         private DNSName hostname;
         private int port = 5222;
@@ -254,6 +292,32 @@ public class Resolver {
 
         public static Result createDefault(DNSName hostname) {
             return createDefault(hostname, null);
+        }
+
+        public static Result fromCursor(Cursor cursor) {
+            final Result result = new Result();
+            try {
+                result.ip = InetAddress.getByAddress(cursor.getBlob(cursor.getColumnIndex(IP)));
+            } catch (UnknownHostException e) {
+                result.ip = null;
+            }
+            result.hostname = DNSName.from(cursor.getString(cursor.getColumnIndex(HOSTNAME)));
+            result.port = cursor.getInt(cursor.getColumnIndex(PORT));
+            result.priority = cursor.getInt(cursor.getColumnIndex(PRIORITY));
+            result.authenticated = cursor.getInt(cursor.getColumnIndex(AUTHENTICATED)) > 0;
+            result.directTls = cursor.getInt(cursor.getColumnIndex(DIRECT_TLS)) > 0;
+            return result;
+        }
+
+        public ContentValues toContentValues() {
+            final ContentValues contentValues = new ContentValues();
+            contentValues.put(IP, ip.getAddress());
+            contentValues.put(HOSTNAME, hostname.toString());
+            contentValues.put(PORT, port);
+            contentValues.put(PRIORITY, priority);
+            contentValues.put(DIRECT_TLS, directTls ? 1 : 0);
+            contentValues.put(AUTHENTICATED, authenticated ? 1 : 0);
+            return contentValues;
         }
     }
 

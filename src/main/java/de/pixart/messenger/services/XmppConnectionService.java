@@ -1085,10 +1085,6 @@ public class XmppConnectionService extends Service {
         Log.d(Config.LOGTAG, "restoring accounts...");
         this.accounts = databaseBackend.getAccounts();
 
-        if (databaseBackend.startTimeCountExceedsThreshold()) {
-            Log.d(Config.LOGTAG, "number of restarts exceeds threshold.");
-        }
-
         final SharedPreferences.Editor editor = getPreferences().edit();
         if (this.accounts.size() == 0 && Arrays.asList("Sony", "Sony Ericsson").contains(Build.MANUFACTURER)) {
             editor.putBoolean(SettingsActivity.SHOW_FOREGROUND_SERVICE, true);
@@ -1199,7 +1195,6 @@ public class XmppConnectionService extends Service {
 
     private void logoutAndSave(boolean stop) {
         int activeAccounts = 0;
-        databaseBackend.clearStartTimeCounter(true); // regular swipes don't count towards restart counter
         for (final Account account : accounts) {
             if (account.getStatus() != Account.State.DISABLED) {
                 activeAccounts++;
