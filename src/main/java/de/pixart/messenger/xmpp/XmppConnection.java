@@ -1517,9 +1517,7 @@ public class XmppConnection implements Runnable {
                 final Socket currentSocket = this.socket;
                 final CountDownLatch streamCountDownLatch = this.mStreamCountDownLatch;
                 try {
-                    for (int i = 0; i <= 10 && !currentTagWriter.finished() && !currentSocket.isClosed(); ++i) {
-                        Thread.sleep(100);
-                    }
+                    currentTagWriter.await(1, TimeUnit.SECONDS);
                     Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": closing stream");
                     currentTagWriter.writeTag(Tag.end("stream:stream"));
                     if (streamCountDownLatch != null) {
@@ -1539,14 +1537,6 @@ public class XmppConnection implements Runnable {
             } else {
                 forceCloseSocket();
             }
-        }
-    }
-
-    private static void uninterruptedSleep(int time) {
-        try {
-            Thread.sleep(time);
-        } catch (InterruptedException e) {
-            //ignore
         }
     }
 
