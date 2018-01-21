@@ -1,6 +1,7 @@
 package de.pixart.messenger.ui;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -33,6 +34,7 @@ import java.io.InputStream;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.utils.ExifHelper;
 
 import static de.pixart.messenger.persistance.FileBackend.close;
@@ -70,16 +72,22 @@ public class ShowFullscreenMessageActivity extends Activity {
             @Override
             public void onClick(View v) {
                 mVideo.reset();
-                shareWith(mFileUri);
+                shareWith(mFile);
             }
         });
     }
 
-    private void shareWith(Uri mFileUri) {
+    private void shareWith(File mFile) {
         Intent share = new Intent(Intent.ACTION_SEND);
-        share.setType(getMimeType(mFileUri.toString()));
-        share.putExtra(Intent.EXTRA_STREAM, Uri.parse(mFileUri.toString()));
+        share.setType(getMimeType(mFile.toString()));
+        share.putExtra(Intent.EXTRA_STREAM, FileBackend.getUriForFile(this, mFile));
         startActivity(Intent.createChooser(share, getString(R.string.share_with)));
+        try {
+            startActivity(Intent.createChooser(share, getText(R.string.share_with)));
+        } catch (ActivityNotFoundException e) {
+            //This should happen only on faulty androids because normally chooser is always available
+            Toast.makeText(this, R.string.no_application_found_to_open_file, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public static String getMimeType(String path) {
