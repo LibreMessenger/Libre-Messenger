@@ -88,6 +88,7 @@ public abstract class XmppActivity extends Activity {
     protected static final int REQUEST_INVITE_TO_CONVERSATION = 0x0102;
     protected static final int REQUEST_CHOOSE_PGP_ID = 0x0103;
     protected static final int REQUEST_BATTERY_OP = 0x13849ff;
+    protected static final int REQUEST_UNKNOWN_SOURCE_OP = 0x14958ff;
 
     public static final String EXTRA_ACCOUNT = "account";
 

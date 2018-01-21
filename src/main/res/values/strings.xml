@@ -541,6 +541,9 @@
     <string name="battery_optimizations_enabled">Battery optimizations enabled</string>
     <string name="battery_optimizations_enabled_explained">Your device is doing some heavy battery optimizations on Pix-Art Messenger that might lead to delayed notifications or even message loss.\nIt is recommended to disable those.</string>
     <string name="battery_optimizations_enabled_dialog">Your device is doing some heavy battery optimizations on Pix-Art Messenger that might lead to delayed notifications or even message loss.\n\nYou will now be asked to disable those.</string>
+    <string name="install_from_unknown_sources_disabled">Install from unknown sources disabled</string>
+    <string name="install_from_unknown_sources_disabled_explained">Your device is configured to not allow app installs from unknown sources, which causes problems with the in app updater.\nIt is recommended to allow installs from unknown sources.</string>
+    <string name="install_from_unknown_sources_disabled_dialog">Your device is configured to not allow app installs from unknown sources except from Google PlayStore. This will cause problems with the in app updater.\n\nYou will now be asked to allow app installs from unknown sources.</string>
     <string name="disable">Disable</string>
     <string name="selection_too_large">The selected area is too large</string>
     <string name="cancel_update">Cancel update?</string>
@@ -577,6 +580,7 @@
     <string name="presence_dnd">Busy</string>
     <string name="secure_password_generated">A secure password has been generated</string>
     <string name="device_does_not_support_battery_op">Your device does not support opting out of battery optimization</string>
+    <string name="device_does_not_support_unknown_source_op">Your device does not support allowing app installs from unknown source</string>
     <string name="share">Share</string>
     <string name="share_location">Share location</string>
     <string name="location_sharing_disabled">Location sharing is disabled in settings</string>
