@@ -65,6 +65,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/account_settings_example_jabber_id"
                         android:inputType="textEmailAddress"
+                        android:imeOptions="actionNext"
                         android:textColor="@color/black87"
                         android:textColorHint="@color/black54"
                         android:textSize="?attr/TextSizeBody" />
