@@ -11,6 +11,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/snackbar"
+        android:layout_below="@+id/messagehint"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:background="@color/grey200"
@@ -104,6 +105,28 @@
             android:textColor="@color/white"
             android:textSize="?attr/TextSizeBody"
             android:textStyle="bold" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/messagehint"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/date_bubble"
+        android:minHeight="48dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/messagehint_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="24dp"
+            android:textColor="@color/realgreen"
+            android:textSize="?attr/TextSizeBody" />
     </RelativeLayout>
 
 </RelativeLayout>

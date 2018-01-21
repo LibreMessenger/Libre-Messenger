@@ -97,6 +97,8 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     private EditMessage mEditMessage;
     private ImageButton mSendButton;
     private RelativeLayout snackbar;
+    private RelativeLayout messagehint;
+    private TextView messagehint_message;
     private TextView snackbarMessage;
     private TextView snackbarAction;
     private Toast messageLoaderToast;
@@ -531,14 +533,20 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         final boolean multi = conversation.getMode() == Conversation.MODE_MULTI;
         if (conversation.getCorrectingMessage() != null) {
             this.mEditMessage.setHint(R.string.send_corrected_message);
+            hideMessageHint();
         } else if (multi && conversation.getNextCounterpart() != null) {
             this.mEditMessage.setHint(getString(
                     R.string.send_private_message_to,
                     conversation.getNextCounterpart().getResourcepart()));
+            showMessageHint(getString(
+                    R.string.send_private_message_to,
+                    conversation.getNextCounterpart().getResourcepart()));
         } else if (multi && !conversation.getMucOptions().participating()) {
             this.mEditMessage.setHint(R.string.you_are_not_participating);
+            hideMessageHint();
         } else {
             this.mEditMessage.setHint(UIHelper.getMessageHint(activity, conversation));
+            hideMessageHint();
             getActivity().invalidateOptionsMenu();
         }
     }
@@ -583,6 +591,9 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         snackbar = view.findViewById(R.id.snackbar);
         snackbarMessage = view.findViewById(R.id.snackbar_message);
         snackbarAction = view.findViewById(R.id.snackbar_action);
+
+        messagehint = view.findViewById(R.id.messagehint);
+        messagehint_message = view.findViewById(R.id.messagehint_message);
 
         messagesView = view.findViewById(R.id.messages_view);
         messagesView.setOnScrollListener(mOnScrollListener);
@@ -1508,6 +1519,15 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
     protected void hideSnackbar() {
         snackbar.setVisibility(View.GONE);
+    }
+
+    protected void showMessageHint(final String message) {
+        messagehint.setVisibility(View.VISIBLE);
+        messagehint_message.setText(message);
+    }
+
+    protected void hideMessageHint() {
+        messagehint.setVisibility(View.GONE);
     }
 
     protected void sendPlainTextMessage(Message message) {
