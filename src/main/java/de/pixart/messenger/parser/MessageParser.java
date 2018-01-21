@@ -30,6 +30,7 @@ import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.entities.ReadByMarker;
+import de.pixart.messenger.entities.ReceiptRequest;
 import de.pixart.messenger.entities.ServiceDiscoveryResult;
 import de.pixart.messenger.http.HttpConnectionManager;
 import de.pixart.messenger.services.MessageArchiveService;
@@ -560,8 +561,13 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                             extractChatState(mXmppConnectionService.find(account, counterpart.toBareJid()), isTypeGroupChat, packet);
                             mXmppConnectionService.updateMessage(replacedMessage, uuid);
                             mXmppConnectionService.getNotificationService().updateNotification(false);
-                            if (mXmppConnectionService.confirmMessages() && (replacedMessage.trusted() || replacedMessage.getType() == Message.TYPE_PRIVATE) && remoteMsgId != null && !isForwarded && !isTypeGroupChat) {
-                                sendMessageReceipts(account, packet);
+                            if (mXmppConnectionService.confirmMessages()
+                                    && replacedMessage.getStatus() == Message.STATUS_RECEIVED
+                                    && (replacedMessage.trusted() || replacedMessage.getType() == Message.TYPE_PRIVATE)
+                                    && remoteMsgId != null
+                                    && (!isForwarded || query != null)
+                                    && !isTypeGroupChat) {
+                                processMessageReceipts(account, packet, query);
                             }
                             if (replacedMessage.getEncryption() == Message.ENCRYPTION_PGP) {
                                 conversation.getAccount().getPgpDecryptionService().discard(replacedMessage);
@@ -633,8 +639,13 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                 mXmppConnectionService.updateConversationUi();
             }
 
-            if (mXmppConnectionService.confirmMessages() && (message.trusted() || message.getType() == Message.TYPE_PRIVATE) && remoteMsgId != null && !isForwarded && !isTypeGroupChat) {
-                sendMessageReceipts(account, packet);
+            if (mXmppConnectionService.confirmMessages()
+                    && message.getStatus() == Message.STATUS_RECEIVED
+                    && (message.trusted() || message.getType() == Message.TYPE_PRIVATE)
+                    && remoteMsgId != null
+                    && (!isForwarded || query != null)
+                    && !isTypeGroupChat) {
+                processMessageReceipts(account, packet, query);
             }
 
             if (message.getStatus() == Message.STATUS_RECEIVED
@@ -721,8 +732,15 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
         if (received == null) {
             received = packet.findChild("received", "urn:xmpp:receipts");
         }
-        if (received != null && !packet.fromAccount(account)) {
-            mXmppConnectionService.markMessage(account, from.toBareJid(), received.getAttribute("id"), Message.STATUS_SEND_RECEIVED);
+        if (received != null) {
+            String id = received.getAttribute("id");
+            if (packet.fromAccount(account)) {
+                if (query != null && id != null && packet.getTo() != null) {
+                    query.pendingReceiptRequests.remove(new ReceiptRequest(packet.getTo(), id));
+                }
+            } else {
+                mXmppConnectionService.markMessage(account, from.toBareJid(), received.getAttribute("id"), Message.STATUS_SEND_RECEIVED);
+            }
         }
         Element displayed = packet.findChild("displayed", "urn:xmpp:chat-markers:0");
         if (displayed != null) {
@@ -788,20 +806,28 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
         return result != null ? result : fallback;
     }
 
-    private void sendMessageReceipts(Account account, MessagePacket packet) {
-        ArrayList<String> receiptsNamespaces = new ArrayList<>();
-        if (packet.hasChild("markable", "urn:xmpp:chat-markers:0")) {
-            receiptsNamespaces.add("urn:xmpp:chat-markers:0");
-        }
-        if (packet.hasChild("request", "urn:xmpp:receipts")) {
-            receiptsNamespaces.add("urn:xmpp:receipts");
-        }
-        if (receiptsNamespaces.size() > 0) {
-            MessagePacket receipt = mXmppConnectionService.getMessageGenerator().received(account,
-                    packet,
-                    receiptsNamespaces,
-                    packet.getType());
-            mXmppConnectionService.sendMessagePacket(account, receipt);
+    private void processMessageReceipts(Account account, MessagePacket packet, MessageArchiveService.Query query) {
+        final boolean markable = packet.hasChild("markable", "urn:xmpp:chat-markers:0");
+        final boolean request = packet.hasChild("request", "urn:xmpp:receipts");
+        if (query == null) {
+            final ArrayList<String> receiptsNamespaces = new ArrayList<>();
+            if (markable) {
+                receiptsNamespaces.add("urn:xmpp:chat-markers:0");
+            }
+            if (request) {
+                receiptsNamespaces.add("urn:xmpp:receipts");
+            }
+            if (receiptsNamespaces.size() > 0) {
+                MessagePacket receipt = mXmppConnectionService.getMessageGenerator().received(account,
+                        packet,
+                        receiptsNamespaces,
+                        packet.getType());
+                mXmppConnectionService.sendMessagePacket(account, receipt);
+            }
+        } else {
+            if (request) {
+                query.pendingReceiptRequests.add(new ReceiptRequest(packet.getFrom(), packet.getId()));
+            }
         }
     }
 
