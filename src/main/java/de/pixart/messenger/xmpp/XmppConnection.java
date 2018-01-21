@@ -38,6 +38,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
@@ -149,6 +151,8 @@ public class XmppConnection implements Runnable {
     private SaslMechanism saslMechanism;
     private URL redirectionUrl = null;
     private String verifiedHostname = null;
+    private Thread mThread;
+ 	private CountDownLatch mStreamCountDownLatch;
 
     private class MyKeyManager implements X509KeyManager {
         @Override
@@ -236,7 +240,8 @@ public class XmppConnection implements Runnable {
 
     protected void changeStatus(final Account.State nextStatus) {
         synchronized (this) {
-            if (Thread.currentThread().isInterrupted()) {
+            this.mThread = Thread.currentThread();
+            if (this.mThread.isInterrupted()) {
                 Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": not changing status to " + nextStatus + " because thread was interrupted");
                 return;
             }
@@ -541,6 +546,8 @@ public class XmppConnection implements Runnable {
     }
 
     private void processStream() throws XmlPullParserException, IOException, NoSuchAlgorithmException {
+        final CountDownLatch streamCountDownLatch = new CountDownLatch(1);
+        this.mStreamCountDownLatch = streamCountDownLatch;
         Tag nextTag = tagReader.readTag();
         while (nextTag != null && !nextTag.isEnd("stream")) {
             if (nextTag.isStart("error")) {
@@ -709,6 +716,9 @@ public class XmppConnection implements Runnable {
                 processPresence(nextTag);
             }
             nextTag = tagReader.readTag();
+        }
+        if (nextTag != null && nextTag.isEnd("stream")) {
+            streamCountDownLatch.countDown();
         }
     }
 
@@ -1490,7 +1500,9 @@ public class XmppConnection implements Runnable {
     }
 
     public void interrupt() {
-        Thread.currentThread().interrupt();
+        if (this.mThread != null) {
+            this.mThread.interrupt();
+        }
     }
 
     public void disconnect(final boolean force) {
@@ -1499,28 +1511,30 @@ public class XmppConnection implements Runnable {
         if (force) {
             forceCloseSocket();
         } else {
-            if (tagWriter.isActive()) {
-                tagWriter.finish();
-                final Socket currentSocket = socket;
+            final TagWriter currentTagWriter = this.tagWriter;
+            if (currentTagWriter.isActive()) {
+                currentTagWriter.finish();
+                final Socket currentSocket = this.socket;
+                final CountDownLatch streamCountDownLatch = this.mStreamCountDownLatch;
                 try {
-                    for (int i = 0; i <= 10 && !tagWriter.finished() && !currentSocket.isClosed(); ++i) {
-                        uninterruptedSleep(100);
+                    for (int i = 0; i <= 10 && !currentTagWriter.finished() && !currentSocket.isClosed(); ++i) {
+                        Thread.sleep(100);
                     }
                     Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": closing stream");
-                    tagWriter.writeTag(Tag.end("stream:stream"));
-                    for (int i = 0; i <= 20 && !currentSocket.isClosed(); ++i) {
-                        uninterruptedSleep(100);
+                    currentTagWriter.writeTag(Tag.end("stream:stream"));
+                    if (streamCountDownLatch != null) {
+                        if (streamCountDownLatch.await(1, TimeUnit.SECONDS)) {
+                            Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": remote ended stream");
+                        } else {
+                            Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": remote has not closed socket. force closing");
+                        }
                     }
-                    if (currentSocket.isClosed()) {
-                        Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": remote closed socket");
-                    } else {
-                        Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": remote has not closed socket. force closing");
-                    }
+                } catch (InterruptedException e) {
+                    Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": interrupted while gracefully closing stream");
                 } catch (final IOException e) {
                     Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": io exception during disconnect (" + e.getMessage() + ")");
                 } finally {
                     FileBackend.close(currentSocket);
-                    forceCloseSocket();
                 }
             } else {
                 forceCloseSocket();

@@ -26,7 +26,9 @@ public class TagWriter {
                 try {
                     AbstractStanza output = writeQueue.take();
                     outputStream.write(output.toString());
-                    outputStream.flush();
+                    if (writeQueue.size() == 0) {
+                        outputStream.flush();
+                    }
                 } catch (Exception e) {
                     return;
                 }
