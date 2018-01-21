@@ -59,6 +59,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import de.pixart.messenger.BuildConfig;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
@@ -481,6 +482,11 @@ public class ConversationActivity extends XmppActivity
             menuInviteContact.setVisible(false);
             menuAttach.setVisible(false);
             menuClearHistory.setVisible(false);
+            if (installedFromFDroid()) {
+                menuUpdater.setVisible(false);
+            } else {
+                menuUpdater.setVisible(true);
+            }
         } else {
             menuAdd.setVisible(!isConversationsOverviewHideable());
             //hide settings, accounts and updater in all menus except in main window
@@ -514,6 +520,14 @@ public class ConversationActivity extends XmppActivity
             new Handler().post(addOmemoDebuggerRunnable);
         }
         return super.onCreateOptionsMenu(menu);
+    }
+
+    private boolean installedFromFDroid() {
+        final PackageManager packageManager = this.getPackageManager();
+        final String packageID = BuildConfig.APPLICATION_ID;
+        final String installedFrom = packageManager.getInstallerPackageName(packageID);
+        Log.d(Config.LOGTAG, "Messenger installed from " + installedFrom);
+        return installedFrom != null && installedFrom.contains("fdroid");
     }
 
     private Runnable addOmemoDebuggerRunnable = new Runnable() {
@@ -1360,8 +1374,11 @@ public class ConversationActivity extends XmppActivity
 
         if (xmppConnectionService.getAccounts().size() != 0) {
             if (xmppConnectionService.hasInternetConnection()) {
-                if (xmppConnectionService.isWIFI() || (xmppConnectionService.isMobile() && !xmppConnectionService.isMobileRoaming()))
-                    AppUpdate();
+                if (xmppConnectionService.isWIFI() || (xmppConnectionService.isMobile() && !xmppConnectionService.isMobileRoaming())) {
+                    if (!installedFromFDroid()) {
+                        AppUpdate();
+                    }
+                }
             }
         }
 
