@@ -747,4 +747,5 @@
     <string name="pref_use_bundled_emoji_summary">Use the integrated emoji library instead of using your devices ones. Changes will be available after reopening the app.</string>
     <string name="invalid_muc_nick">Invalid nickname</string>
     <string name="title_activity_share_via_account">Share via account</string>
+    <string name="private_messages_are_disabled">Private messages are disabled</string>
 </resources>

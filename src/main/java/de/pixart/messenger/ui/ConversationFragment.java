@@ -77,7 +77,6 @@ import de.pixart.messenger.ui.XmppActivity.OnPresenceSelected;
 import de.pixart.messenger.ui.XmppActivity.OnValueEdited;
 import de.pixart.messenger.ui.adapter.MessageAdapter;
 import de.pixart.messenger.ui.adapter.MessageAdapter.OnContactPictureClicked;
-import de.pixart.messenger.ui.adapter.MessageAdapter.OnContactPictureLongClicked;
 import de.pixart.messenger.ui.widget.EditMessage;
 import de.pixart.messenger.utils.MessageUtils;
 import de.pixart.messenger.utils.NickValidityChecker;
@@ -638,34 +637,28 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                 }
             }
         });
-        messageListAdapter
-                .setOnContactPictureLongClicked(new OnContactPictureLongClicked() {
-
-                    @Override
-                    public void onContactPictureLongClicked(Message message) {
-                        if (message.getStatus() <= Message.STATUS_RECEIVED) {
-                            if (message.getConversation().getMode() == Conversation.MODE_MULTI) {
-                                Jid user = message.getCounterpart();
-                                if (user != null && !user.isBareJid()) {
-                                    if (message.getConversation().getMucOptions().isUserInRoom(user)) {
-                                        privateMessageWith(user);
-                                    } else {
-                                        Toast.makeText(activity, activity.getString(R.string.user_has_left_conference, user.getResourcepart()), Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            }
+        messageListAdapter.setOnContactPictureLongClicked(message -> {
+            if (message.getStatus() <= Message.STATUS_RECEIVED) {
+                if (message.getConversation().getMode() == Conversation.MODE_MULTI) {
+                    final MucOptions mucOptions = conversation.getMucOptions();
+                    if (!mucOptions.allowPm()) {
+                        Toast.makeText(activity, R.string.private_messages_are_disabled, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Jid user = message.getCounterpart();
+                    if (user != null && !user.isBareJid()) {
+                        if (mucOptions.isUserInRoom(user)) {
+                            privateMessageWith(user);
                         } else {
-                            activity.showQrCode();
+                            Toast.makeText(activity, activity.getString(R.string.user_has_left_conference, user.getResourcepart()), Toast.LENGTH_SHORT).show();
                         }
                     }
-                });
-        messageListAdapter.setOnQuoteListener(new MessageAdapter.OnQuoteListener() {
-
-            @Override
-            public void onQuote(String text) {
-                quoteText(text);
+                }
+            } else {
+                activity.showQrCode();
             }
         });
+        messageListAdapter.setOnQuoteListener(text -> quoteText(text));
         messagesView.setAdapter(messageListAdapter);
 
         registerForContextMenu(messagesView);
