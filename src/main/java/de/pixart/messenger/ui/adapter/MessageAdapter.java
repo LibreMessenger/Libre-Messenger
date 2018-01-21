@@ -33,6 +33,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -144,10 +145,18 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
     public MessageAdapter(ConversationActivity activity, List<Message> messages) {
         super(activity, 0, messages);
-        this.audioPlayer = new AudioPlayer(this, activity);
+        this.audioPlayer = new AudioPlayer(this);
         this.activity = activity;
         metrics = getContext().getResources().getDisplayMetrics();
         updatePreferences();
+    }
+
+    public void flagScreenOn() {
+        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    public void flagScreenOff() {
+        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     public void setOnContactPictureClicked(OnContactPictureClicked listener) {
