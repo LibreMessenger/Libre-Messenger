@@ -339,6 +339,17 @@ public class IqGenerator extends AbstractGenerator {
         return packet;
     }
 
+    public IqPacket destroyConference(Conversation conference) {
+        IqPacket packet = new IqPacket(IqPacket.TYPE.SET);
+        packet.setTo(conference.getJid().toBareJid());
+        packet.setFrom(conference.getAccount().getJid());
+        final Element query = packet.addChild("query", "http://jabber.org/protocol/muc#owner");
+        final Element destroy = query.addChild("destroy");
+        destroy.setAttribute("jid", conference.getJid().toBareJid().toString());
+        Log.d(Config.LOGTAG, "Destroy: " + packet.toString());
+        return packet;
+    }
+
     public IqPacket requestHttpUploadSlot(Jid host, DownloadableFile file, String mime) {
         IqPacket packet = new IqPacket(IqPacket.TYPE.GET);
         packet.setTo(host);

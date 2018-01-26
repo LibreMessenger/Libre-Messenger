@@ -96,6 +96,7 @@ public class ConversationActivity extends XmppActivity
         implements OnAccountUpdate, OnConversationUpdate, OnRosterUpdate, OnUpdateBlocklist, XmppConnectionService.OnShowErrorToast, View.OnClickListener {
 
     public static final String ACTION_VIEW_CONVERSATION = "de.pixart.messenger.VIEW";
+    public static final String ACTION_DESTROY_MUC = "de.pixart.messenger.DESTROY_MUC";
     public static final String CONVERSATION = "conversationUuid";
     public static final String EXTRA_DOWNLOAD_UUID = "de.pixart.messenger.download_uuid";
     public static final String TEXT = "text";
@@ -1204,6 +1205,15 @@ public class ConversationActivity extends XmppActivity
             } else {
                 setIntent(intent);
             }
+        } else if (intent != null && ACTION_DESTROY_MUC.equals(intent.getAction())) {
+            final Bundle extras = intent.getExtras();
+            if (extras != null && extras.containsKey("MUC_UUID")) {
+                Log.d(Config.LOGTAG, "Get " + intent.getAction() + " intent for " + extras.getString("MUC_UUID"));
+                Conversation conversation = xmppConnectionService.findConversationByUuid(extras.getString("MUC_UUID"));
+                ConversationActivity.this.xmppConnectionService.clearConversationHistory(conversation);
+                xmppConnectionService.destroyMuc(conversation);
+                endConversation(conversation);
+            }
         }
     }
 
@@ -1292,8 +1302,9 @@ public class ConversationActivity extends XmppActivity
     void onBackendConnected() {
         this.xmppConnectionService.getNotificationService().setIsInForeground(true);
         updateConversationList();
+        final Intent intent = getIntent();
+        final Bundle extras = intent.getExtras();
 
-        Bundle extras = getIntent().getExtras();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (extras != null && extras.containsKey(PREF_FIRST_START)) {
                 FirstStartTime = extras.getLong(PREF_FIRST_START);
@@ -1321,13 +1332,13 @@ public class ConversationActivity extends XmppActivity
             editor.putLong(PREF_FIRST_START, FirstStartTime);
             editor.commit();
             // restart
-            Intent intent = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+            Intent restartintent = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
+            restartintent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            restartintent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(restartintent);
             System.exit(0);
         }
-        final Intent intent = getIntent();
+
         if (xmppConnectionService.getAccounts().size() == 0) {
             if (mRedirected.compareAndSet(false, true)) {
                 if (Config.X509_VERIFICATION) {

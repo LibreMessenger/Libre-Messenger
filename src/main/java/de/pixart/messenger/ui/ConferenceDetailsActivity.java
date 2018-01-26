@@ -5,8 +5,10 @@ import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -52,6 +54,27 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             inviteToConversation(mConversation);
         }
     };
+    private OnClickListener destroyListener = new OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            final AlertDialog.Builder DestroyMucDialog = new AlertDialog.Builder(ConferenceDetailsActivity.this);
+            DestroyMucDialog.setNegativeButton(getString(R.string.cancel), null);
+            DestroyMucDialog.setTitle(getString(R.string.action_destroy_muc));
+            DestroyMucDialog.setMessage(getString(R.string.destroy_muc_text, mConversation.getName()));
+            DestroyMucDialog.setPositiveButton(getString(R.string.delete), (dialogInterface, i) -> {
+                Intent intent = new Intent(xmppConnectionService, ConversationActivity.class);
+                intent.setAction(ConversationActivity.ACTION_DESTROY_MUC);
+                intent.putExtra("MUC_UUID", mConversation.getUuid());
+                Log.d(Config.LOGTAG, "Sending DESTROY intent for " + mConversation.getName());
+                startActivity(intent);
+                deleteBookmark();
+                finish();
+            });
+            DestroyMucDialog.create().show();
+        }
+    };
+
     private TextView ConferenceName;
     private TextView mYourNick;
     private ImageView mYourPhoto;
@@ -68,6 +91,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
     private ImageButton mChangeConferenceSettingsButton;
     private ImageButton mNotifyStatusButton;
     private Button mInviteButton;
+    private Button mDestroyButton;
     private String uuid = null;
     private User mSelectedUser = null;
 
@@ -264,6 +288,9 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         mInviteButton = findViewById(R.id.invite);
         mInviteButton.setVisibility(View.GONE);
         mInviteButton.setOnClickListener(inviteListener);
+        mDestroyButton = findViewById(R.id.destroy);
+        mDestroyButton.setVisibility(View.GONE);
+        mDestroyButton.setOnClickListener(destroyListener);
         mConferenceType = findViewById(R.id.muc_conference_type);
         if (getActionBar() != null) {
             getActionBar().setHomeButtonEnabled(true);
@@ -604,8 +631,10 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                 mConferenceInfoMam.setText(R.string.server_info_unavailable);
             }
             if (self.getAffiliation().ranks(MucOptions.Affiliation.OWNER)) {
+                mDestroyButton.setVisibility(View.VISIBLE);
                 mChangeConferenceSettingsButton.setVisibility(View.VISIBLE);
             } else {
+                mDestroyButton.setVisibility(View.GONE);
                 mChangeConferenceSettingsButton.setVisibility(View.GONE);
             }
         } else {

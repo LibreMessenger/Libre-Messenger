@@ -3,7 +3,6 @@ package de.pixart.messenger.services;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.AlarmManager;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -105,6 +104,7 @@ import de.pixart.messenger.parser.MessageParser;
 import de.pixart.messenger.parser.PresenceParser;
 import de.pixart.messenger.persistance.DatabaseBackend;
 import de.pixart.messenger.persistance.FileBackend;
+import de.pixart.messenger.ui.ConversationActivity;
 import de.pixart.messenger.ui.SettingsActivity;
 import de.pixart.messenger.ui.UiCallback;
 import de.pixart.messenger.utils.ConversationsFileObserver;
@@ -174,8 +174,8 @@ public class XmppConnectionService extends Service {
     private ReplacingSerialSingleThreadExecutor mContactMergerExecutor = new ReplacingSerialSingleThreadExecutor(true);
     private WakeLock wakeLock;
     private long mLastActivity = 0;
-    private NotificationManager mNotifyManager;
-    AbstractConnectionManager mAbstractConnectionManager;
+    ConversationActivity mConversationActivity;
+
 
     private ContentObserver contactObserver = new ContentObserver(null) {
         @Override
@@ -2414,9 +2414,9 @@ public class XmppConnectionService extends Service {
         account.pendingConferenceLeaves.remove(conversation);
         if (account.getStatus() == Account.State.ONLINE) {
 
-            // disabled for testing strange MUC leaves
-            // sendPresencePacket(account, mPresenceGenerator.leave(conversation.getMucOptions()));
-            //
+            //disabled for testing strange MUC leaves
+            sendPresencePacket(account, mPresenceGenerator.leave(conversation.getMucOptions()));
+
             conversation.resetMucOptions();
             if (onConferenceJoined != null) {
                 conversation.getMucOptions().flagNoAutoPushConfiguration();
@@ -2888,6 +2888,32 @@ public class XmppConnectionService extends Service {
                 } else {
                     callback.onRoleChangeFailed(nick, R.string.could_not_change_role);
                 }
+            }
+        });
+    }
+
+    public void destroyMuc(Conversation mSelectedConversation) {
+        destroyConference(mSelectedConversation, new XmppConnectionService.OnDestroyMuc() {
+            @Override
+            public void OnDestroyMucSuccessful() {
+                Log.d(Config.LOGTAG, "Destroy succeed");
+            }
+
+            @Override
+            public void OnDestroyMucFailed(int resId) {
+                Log.d(Config.LOGTAG, "Destroy failed");
+                showErrorToastInUi(resId);
+            }
+        });
+    }
+
+    public void destroyConference(final Conversation conference, final OnDestroyMuc callback) {
+        IqPacket request = this.mIqGenerator.destroyConference(conference);
+        sendIqPacket(conference.getAccount(), request, (account, packet) -> {
+            if (packet.getType() == IqPacket.TYPE.RESULT) {
+                callback.OnDestroyMucSuccessful();
+            } else {
+                callback.OnDestroyMucFailed(R.string.failed);
             }
         });
     }
@@ -4257,6 +4283,12 @@ public class XmppConnectionService extends Service {
         void onRoleChangedSuccessful(String nick);
 
         void onRoleChangeFailed(String nick, int resid);
+    }
+
+    public interface OnDestroyMuc {
+        void OnDestroyMucSuccessful();
+
+        void OnDestroyMucFailed(int resId);
     }
 
     public interface OnConversationUpdate {

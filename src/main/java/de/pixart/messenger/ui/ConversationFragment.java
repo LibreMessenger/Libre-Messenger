@@ -1145,8 +1145,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                     showSnackbar(R.string.conference_kicked, R.string.join, joinMuc);
                     break;
                 case UNKNOWN:
-                    activity.xmppConnectionService.joinMuc(conversation);
-                    //showSnackbar(R.string.conference_unknown_error, R.string.try_again, joinMuc);
+                    showSnackbar(R.string.conference_unknown_error, R.string.leave, leaveMuc);
                     break;
                 case INVALID_NICK:
                     showSnackbar(R.string.invalid_muc_nick, R.string.edit, clickToMuc);
