@@ -2892,11 +2892,12 @@ public class XmppConnectionService extends Service {
         });
     }
 
-    public void destroyMuc(Conversation mSelectedConversation) {
+    public void destroyMuc(final Conversation mSelectedConversation) {
         destroyConference(mSelectedConversation, new XmppConnectionService.OnDestroyMuc() {
             @Override
-            public void OnDestroyMucSuccessful() {
+            public void OnDestroyMucSuccessful(int resId) {
                 Log.d(Config.LOGTAG, "Destroy succeed");
+                showErrorToastInUi(resId);
             }
 
             @Override
@@ -2911,9 +2912,9 @@ public class XmppConnectionService extends Service {
         IqPacket request = this.mIqGenerator.destroyConference(conference);
         sendIqPacket(conference.getAccount(), request, (account, packet) -> {
             if (packet.getType() == IqPacket.TYPE.RESULT) {
-                callback.OnDestroyMucSuccessful();
+                callback.OnDestroyMucSuccessful(R.string.destroy_muc_succeed);
             } else {
-                callback.OnDestroyMucFailed(R.string.failed);
+                callback.OnDestroyMucFailed(R.string.destroy_muc_failed);
             }
         });
     }
@@ -4286,7 +4287,7 @@ public class XmppConnectionService extends Service {
     }
 
     public interface OnDestroyMuc {
-        void OnDestroyMucSuccessful();
+        void OnDestroyMucSuccessful(int resId);
 
         void OnDestroyMucFailed(int resId);
     }

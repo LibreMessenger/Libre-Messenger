@@ -60,7 +60,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         public void onClick(View v) {
             final AlertDialog.Builder DestroyMucDialog = new AlertDialog.Builder(ConferenceDetailsActivity.this);
             DestroyMucDialog.setNegativeButton(getString(R.string.cancel), null);
-            DestroyMucDialog.setTitle(getString(R.string.action_destroy_muc));
+            DestroyMucDialog.setTitle(getString(R.string.destroy_muc));
             DestroyMucDialog.setMessage(getString(R.string.destroy_muc_text, mConversation.getName()));
             DestroyMucDialog.setPositiveButton(getString(R.string.delete), (dialogInterface, i) -> {
                 Intent intent = new Intent(xmppConnectionService, ConversationActivity.class);

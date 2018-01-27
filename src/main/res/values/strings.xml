@@ -752,8 +752,9 @@
     <string name="invalid_muc_nick">Invalid nickname</string>
     <string name="title_activity_share_via_account">Share via account</string>
     <string name="private_messages_are_disabled">Private messages are disabled</string>
-    <string name="destroy_muc">Delete conference</string>
+    <string name="destroy_muc">Destroy group chat</string>
     <string name="conference_unknown_error">You are no longer in this group chat</string>
-    <string name="action_destroy_muc">Destroy group chat</string>
     <string name="destroy_muc_text">Would you like to destroy the group chat %s? This will remove this group chat permanently.</string>
+    <string name="destroy_muc_succeed">Group chat successfully destroyed</string>
+    <string name="destroy_muc_failed">Group chat could not be destroyed</string>
 </resources>
