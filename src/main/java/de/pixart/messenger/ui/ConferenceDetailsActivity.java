@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -291,6 +292,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         mDestroyButton = findViewById(R.id.destroy);
         mDestroyButton.setVisibility(View.GONE);
         mDestroyButton.setOnClickListener(destroyListener);
+        mDestroyButton.getBackground().setColorFilter(getWarningButtonColor(), PorterDuff.Mode.MULTIPLY);
         mConferenceType = findViewById(R.id.muc_conference_type);
         if (getActionBar() != null) {
             getActionBar().setHomeButtonEnabled(true);
