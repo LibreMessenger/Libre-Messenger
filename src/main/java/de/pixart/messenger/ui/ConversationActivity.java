@@ -1790,6 +1790,7 @@ public class ConversationActivity extends XmppActivity
         }
         final Toast prepareFileToast = Toast.makeText(getApplicationContext(), getText(R.string.preparing_file), Toast.LENGTH_LONG);
         prepareFileToast.show();
+        delegateUriPermissionsToService(uri);
         xmppConnectionService.attachFileToConversation(conversation, uri, new UiInformableCallback<Message>() {
             @Override
             public void inform(final String text) {
@@ -1839,6 +1840,7 @@ public class ConversationActivity extends XmppActivity
         }
         final Toast prepareFileToast = Toast.makeText(getApplicationContext(), getText(R.string.preparing_image), Toast.LENGTH_LONG);
         prepareFileToast.show();
+        delegateUriPermissionsToService(uri);
         xmppConnectionService.attachImageToConversation(conversation, uri,
                 new UiCallback<Message>() {
 
@@ -1872,6 +1874,7 @@ public class ConversationActivity extends XmppActivity
         }
         final Toast prepareFileToast = Toast.makeText(getApplicationContext(), getText(R.string.preparing_image), Toast.LENGTH_LONG);
         prepareFileToast.show();
+        delegateUriPermissionsToService(uri);
         xmppConnectionService.attachImageToConversation(conversation, uri,
                 new UiCallback<Message>() {
 
