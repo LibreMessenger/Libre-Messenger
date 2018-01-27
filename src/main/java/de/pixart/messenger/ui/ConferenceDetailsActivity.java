@@ -419,6 +419,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             getMenuInflater().inflate(R.menu.muc_details_context, menu);
             final User user = (User) tag;
             final User self = mConversation.getMucOptions().getSelf();
+            final Jid jid = user.getFullJid();
             this.mSelectedUser = user;
             String name;
             final Contact contact = user.getContact();
@@ -432,6 +433,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             menu.setHeaderTitle(name);
             if (user.getRealJid() != null) {
                 MenuItem highlightInMuc = menu.findItem(R.id.highlight_in_muc);
+                MenuItem sendPrivateMessage = menu.findItem(R.id.send_private_message);
                 MenuItem startConversation = menu.findItem(R.id.start_conversation);
                 MenuItem giveMembership = menu.findItem(R.id.give_membership);
                 MenuItem removeMembership = menu.findItem(R.id.remove_membership);
@@ -444,6 +446,13 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                 startConversation.setVisible(true);
                 if (user.getRole() == MucOptions.Role.NONE) {
                     invite.setVisible(true);
+                }
+                if (jid != null && !jid.isBareJid()) {
+                    if (mConversation.getMucOptions().isUserInRoom(jid)) {
+                        sendPrivateMessage.setVisible(true);
+                    } else {
+                        sendPrivateMessage.setVisible(false);
+                    }
                 }
                 if (self.getAffiliation().ranks(MucOptions.Affiliation.ADMIN) &&
                         self.getAffiliation().outranks(user.getAffiliation())) {
@@ -479,6 +488,13 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             case R.id.highlight_in_muc:
                 highlightInMuc(mConversation, mSelectedUser.getName());
                 return true;
+            case R.id.send_private_message:
+                if (mConversation.getMucOptions().allowPm()) {
+                    privateMsgInMuc(mConversation, mSelectedUser.getName());
+                } else {
+                    Toast.makeText(this, R.string.private_messages_are_disabled, Toast.LENGTH_SHORT).show();
+                }
+                return true;
             case R.id.start_conversation:
                 startConversation(mSelectedUser);
                 return true;
@@ -501,13 +517,6 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                 xmppConnectionService.changeAffiliationInConference(mConversation, jid, MucOptions.Affiliation.OUTCAST, this);
                 if (mSelectedUser.getRole() != MucOptions.Role.NONE) {
                     xmppConnectionService.changeRoleInConference(mConversation, mSelectedUser.getName(), MucOptions.Role.NONE, this);
-                }
-                return true;
-            case R.id.send_private_message:
-                if (mConversation.getMucOptions().allowPm()) {
-                    privateMsgInMuc(mConversation, mSelectedUser.getName());
-                } else {
-                    Toast.makeText(this, R.string.private_messages_are_disabled, Toast.LENGTH_SHORT).show();
                 }
                 return true;
             case R.id.invite:
