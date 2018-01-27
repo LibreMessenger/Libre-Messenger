@@ -581,6 +581,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                                     && replacedMessage.getStatus() == Message.STATUS_RECEIVED
                                     && (replacedMessage.trusted() || replacedMessage.getType() == Message.TYPE_PRIVATE)
                                     && remoteMsgId != null
+                                    && !selfAddressed
                                     && !isTypeGroupChat) {
                                 processMessageReceipts(account, packet, query);
                             }
@@ -658,6 +659,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                     && message.getStatus() == Message.STATUS_RECEIVED
                     && (message.trusted() || message.getType() == Message.TYPE_PRIVATE)
                     && remoteMsgId != null
+                    && !selfAddressed
                     && !isTypeGroupChat) {
                 processMessageReceipts(account, packet, query);
             }
@@ -783,11 +785,8 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
         if (displayed != null) {
             final String id = displayed.getAttribute("id");
             final Jid sender = displayed.getAttributeAsJid("sender");
-            if (packet.fromAccount(account)) {
-                Conversation conversation = mXmppConnectionService.find(account, counterpart.toBareJid());
-                if (conversation != null && (query == null || query.isCatchup())) {
-                    mXmppConnectionService.markRead(conversation);
-                }
+            if (packet.fromAccount(account) && !selfAddressed) {
+                dismissNotification(account, counterpart, query);
             } else if (isTypeGroupChat) {
                 Conversation conversation = mXmppConnectionService.find(account, counterpart.toBareJid());
                 if (conversation != null && id != null && sender != null) {
@@ -820,6 +819,9 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                     mXmppConnectionService.markMessage(message, Message.STATUS_SEND_DISPLAYED);
                     message = message.prev();
                 }
+                if (displayedMessage != null && selfAddressed) {
+                    dismissNotification(account, counterpart, query);
+                }
             }
         }
 
@@ -834,6 +836,13 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
             if (contact.setPresenceName(nick)) {
                 mXmppConnectionService.getAvatarService().clear(contact);
             }
+        }
+    }
+
+    private void dismissNotification(Account account, Jid counterpart, MessageArchiveService.Query query) {
+        Conversation conversation = mXmppConnectionService.find(account, counterpart.toBareJid());
+        if (conversation != null && (query == null || query.isCatchup())) {
+            mXmppConnectionService.markRead(conversation); //TODO only mark messages read that are older than timestamp
         }
     }
 
