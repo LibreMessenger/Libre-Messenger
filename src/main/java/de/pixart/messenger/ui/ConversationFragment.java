@@ -1155,6 +1155,9 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                     hideSnackbar();
                     break;
             }
+        } else if ((mode == Conversation.MODE_MULTI
+                && !conversation.getMucOptions().participating())) {
+            showSnackbar(R.string.no_write_access_in_public_muc, R.string.ok, clickToMuc);
         } else if (account.hasPendingPgpIntent(conversation)) {
             showSnackbar(R.string.openpgp_messages_found, R.string.decrypt, clickToDecryptListener);
         } else if (mode == Conversation.MODE_SINGLE
