@@ -31,13 +31,19 @@ public abstract class LocationActivity extends Activity implements LocationListe
             } catch (final UnsupportedOperationException ignored) {
             }
         }
-
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, Config.LOCATION_FIX_TIME_DELTA, Config.LOCATION_FIX_SPACE_DELTA, this);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Config.LOCATION_FIX_TIME_DELTA, Config.LOCATION_FIX_SPACE_DELTA, this);
-
+        if (locationManager.getAllProviders().contains(LocationManager.NETWORK_PROVIDER)
+                && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, Config.LOCATION_FIX_TIME_DELTA, Config.LOCATION_FIX_SPACE_DELTA, this);
+        }
+        if (locationManager.getAllProviders().contains(LocationManager.GPS_PROVIDER)
+                && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Config.LOCATION_FIX_TIME_DELTA, Config.LOCATION_FIX_SPACE_DELTA, this);
+        }
         // If something else is also querying for location more frequently than we are, the battery is already being
         // drained. Go ahead and use the existing locations as often as we can get them.
-        locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 0, this);
+        if (locationManager.getAllProviders().contains(LocationManager.PASSIVE_PROVIDER)) {
+            locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 0, this);
+        }
     }
 
     protected void pauseLocationUpdates() {
