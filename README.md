@@ -16,8 +16,11 @@ Alternativ kannst du das IzzySoft F-Droid Repo installieren: https://android.izz
 
 #### Ich habe Probleme, was soll ich tun?
 Am einfachsten ist es, wenn du unserer Support-Gruppe beitrittst, dort werden deine Probleme mit Sicherheit schnell gelöst. 
+
 [support@room.pix-art.de](https://jabber.pix-art.de/j/suport@room.pix-art.de?join) 
+
 oder scanne den QR-Code:
+
 ![support-group-qr-code](art/qr-code_suport_small.png)
 
 Solltest du dort nicht weiter kommen kannst du hier ein Issue erstellen, in welchem du dein Problem genau beschreibst und welche Schritte erforderlich sind, um zu dem Problem zu gelangen. 
