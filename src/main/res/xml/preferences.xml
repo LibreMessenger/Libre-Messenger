@@ -247,7 +247,8 @@
         android:icon="@drawable/ic_settings_black_24dp"
         android:key="expert"
         android:title="@string/pref_expert_options">
-        <PreferenceCategory android:title="@string/pref_general">
+        <PreferenceCategory android:title="@string/pref_general"
+            android:key="general">
             <ListPreference
                 android:defaultValue="@string/default_resource"
                 android:entries="@array/resources"
@@ -260,6 +261,14 @@
                 android:key="show_foreground_service"
                 android:summary="@string/pref_show_foreground_service_summary"
                 android:title="@string/pref_show_foreground_service"/>
+            <PreferenceScreen
+                android:key="huawei"
+                android:summary="@string/huawei_protected_apps_summary"
+                android:title="@string/huawei_protected_apps">
+                <intent
+                    android:targetClass="com.huawei.systemmanager.optimize.process.ProtectActivity"
+                    android:targetPackage="com.huawei.systemmanager" />
+            </PreferenceScreen>
         </PreferenceCategory>
         <PreferenceCategory android:title="@string/pref_ui_options">
             <CheckBoxPreference

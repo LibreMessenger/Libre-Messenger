@@ -759,4 +759,6 @@
     <string name="destroy_muc_failed">Group chat could not be destroyed</string>
     <string name="no_write_access_in_public_muc">You are not participating this group chat and have no write access at the moment.\nPlease go to the group chat details by pressing <b>OK</b> and send a private message to a moderator, administator or owner by long clicking one of the members name at the top of the list to ask for write access.</string>
     <string name="snooze">Snooze</string>
+    <string name="huawei_protected_apps">Protected Apps</string>
+    <string name="huawei_protected_apps_summary">To keep receiving notifications, even when the screen is turned off, you need to add Conversations to the list of protected apps.</string>
 </resources>

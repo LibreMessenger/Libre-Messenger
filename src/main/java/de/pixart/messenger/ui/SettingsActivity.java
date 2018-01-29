@@ -90,6 +90,15 @@ public class SettingsActivity extends XmppActivity implements
             }
         }
 
+        //this feature is only available on Huawei Android 6.
+        PreferenceScreen huaweiPreferenceScreen = (PreferenceScreen) mSettingsFragment.findPreference("huawei");
+        Intent intent = huaweiPreferenceScreen.getIntent();
+        //remove when Api version is above M (Version 6.0) or if the intent is not callable
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M || !isCallable(intent)) {
+            PreferenceCategory generalCategory = (PreferenceCategory) mSettingsFragment.findPreference("general");
+            generalCategory.removePreference(huaweiPreferenceScreen);
+        }
+
         if (BuildConfig.FLAVOR != "open") {
             PreferenceCategory connectionOptions = (PreferenceCategory) mSettingsFragment.findPreference("connection_options");
             PreferenceScreen expert = (PreferenceScreen) mSettingsFragment.findPreference("expert");
@@ -179,6 +188,10 @@ public class SettingsActivity extends XmppActivity implements
                 return true;
             }
         });
+    }
+
+    private boolean isCallable(Intent intent) {
+        return getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).size() > 0;
     }
 
     private void deleteOmemoIdentities() {
