@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
@@ -70,6 +71,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
 import de.duenndns.ssl.MemorizingTrustManager;
+import de.pixart.messenger.BuildConfig;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.PgpDecryptionService;
@@ -4252,6 +4254,22 @@ public class XmppConnectionService extends Service {
             final PendingIntent ScheduleExportIntent = PendingIntent.getBroadcast(this, AlarmReceiver.SCHEDULE_ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             ((AlarmManager) this.getSystemService(ALARM_SERVICE)).cancel(ScheduleExportIntent);
         }
+    }
+
+    public boolean installedFromFDroid() {
+        final PackageManager packageManager = this.getPackageManager();
+        final String packageID = BuildConfig.APPLICATION_ID;
+        final String installedFrom = packageManager.getInstallerPackageName(packageID);
+        Log.d(Config.LOGTAG, "Messenger installed from " + installedFrom);
+        return installedFrom != null && installedFrom.contains("org.fdroid.fdroid");
+    }
+
+    public boolean installedFromPlayStore() {
+        final PackageManager packageManager = this.getPackageManager();
+        final String packageID = BuildConfig.APPLICATION_ID;
+        final String installedFrom = packageManager.getInstallerPackageName(packageID);
+        Log.d(Config.LOGTAG, "Messenger installed from " + installedFrom);
+        return installedFrom != null && installedFrom.contains("com.android.venedig");
     }
 
     public ShortcutService getShortcutService() {

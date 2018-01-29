@@ -483,7 +483,7 @@ public class ConversationActivity extends XmppActivity
             menuInviteContact.setVisible(false);
             menuAttach.setVisible(false);
             menuClearHistory.setVisible(false);
-            if (installedFromFDroid()) {
+            if (xmppConnectionService.installedFromFDroid()) {
                 menuUpdater.setVisible(false);
             } else {
                 menuUpdater.setVisible(true);
@@ -521,14 +521,6 @@ public class ConversationActivity extends XmppActivity
             new Handler().post(addOmemoDebuggerRunnable);
         }
         return super.onCreateOptionsMenu(menu);
-    }
-
-    private boolean installedFromFDroid() {
-        final PackageManager packageManager = this.getPackageManager();
-        final String packageID = BuildConfig.APPLICATION_ID;
-        final String installedFrom = packageManager.getInstallerPackageName(packageID);
-        Log.d(Config.LOGTAG, "Messenger installed from " + installedFrom);
-        return installedFrom != null && installedFrom.contains("fdroid");
     }
 
     private Runnable addOmemoDebuggerRunnable = new Runnable() {
@@ -1386,7 +1378,7 @@ public class ConversationActivity extends XmppActivity
         if (xmppConnectionService.getAccounts().size() != 0) {
             if (xmppConnectionService.hasInternetConnection()) {
                 if (xmppConnectionService.isWIFI() || (xmppConnectionService.isMobile() && !xmppConnectionService.isMobileRoaming())) {
-                    if (!installedFromFDroid()) {
+                    if (!xmppConnectionService.installedFromFDroid()) {
                         AppUpdate();
                     }
                 }
@@ -1432,10 +1424,11 @@ public class ConversationActivity extends XmppActivity
 
         if (!ExceptionHelper.checkForCrash(this, this.xmppConnectionService) && !mRedirected.get()) {
             openBatteryOptimizationDialogIfNeeded();
+            if (!xmppConnectionService.installedFromFDroid() && !xmppConnectionService.installedFromPlayStore()) {
+                openInstallFromUnknownSourcesDialogIfNeeded();
+            }
         }
-        if (!installedFromFDroid()) {
-            openInstallFromUnknownSourcesDialogIfNeeded();
-        }
+
         if (isConversationsOverviewVisable() && isConversationsOverviewHideable()) {
             xmppConnectionService.getNotificationService().setOpenConversation(null);
         } else {

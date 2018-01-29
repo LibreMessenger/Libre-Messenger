@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -33,9 +34,11 @@ import java.util.List;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.persistance.FileBackend;
+import de.pixart.messenger.services.XmppConnectionService;
 
 public class UpdaterActivity extends Activity {
 
+    XmppConnectionService xmppConnectionService;
     static final private String FileName = "update.apk";
     String appURI = "";
     String changelog = "";
@@ -88,8 +91,22 @@ public class UpdaterActivity extends Activity {
                             //ask for permissions on devices >= SDK 23
                             if (isStoragePermissionGranted() && isNetworkAvailable(getApplicationContext())) {
                                 //start downloading the file using the download manager
-                                DownloadFromUrl(appURI, FileName);
-                                Toast.makeText(getApplicationContext(), getText(R.string.download_started), Toast.LENGTH_LONG).show();
+                                if (xmppConnectionService.installedFromPlayStore()) {
+                                    Uri uri = Uri.parse("market://details?id=de.pixart.openmessenger");
+                                    Intent marketIntent = new Intent(Intent.ACTION_VIEW, uri);
+                                    PackageManager manager = getApplicationContext().getPackageManager();
+                                    List<ResolveInfo> infos = manager.queryIntentActivities(marketIntent, 0);
+                                    if (infos.size() > 0) {
+                                        startActivity(marketIntent);
+                                    } else {
+                                        uri = Uri.parse("https://jabber.pix-art.de/");
+                                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+                                        startActivity(browserIntent);
+                                    }
+                                } else {
+                                    DownloadFromUrl(appURI, FileName);
+                                    Toast.makeText(getApplicationContext(), getText(R.string.download_started), Toast.LENGTH_LONG).show();
+                                }
                             } else {
                                 Log.d(Config.LOGTAG, "AppUpdater: failed - has storage permissions " + isStoragePermissionGranted() + " and internet " + isNetworkAvailable(getApplicationContext()));
                             }
