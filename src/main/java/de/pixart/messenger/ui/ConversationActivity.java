@@ -1708,8 +1708,15 @@ public class ConversationActivity extends XmppActivity
         boolean installFromUnknownSource = false;
         int isUnknownAllowed = 0;
         if (Build.VERSION.SDK_INT >= 26) {
-            installFromUnknownSource = packageManager.canRequestPackageInstalls();
-        } else if (Build.VERSION.SDK_INT >= 17) {
+            /*
+            * On Android 8 with applications targeting lower versions,
+            * it's impossible to check unknown sources enabled: using old APIs will always return true
+            * and using the new one will always return false,
+            * so in order to avoid a stuck dialog that can't be bypassed we will assume true.
+            */
+            installFromUnknownSource = this.getApplicationInfo().targetSdkVersion < Build.VERSION_CODES.O
+                    || packageManager.canRequestPackageInstalls();
+        } else if (Build.VERSION.SDK_INT >= 17 && Build.VERSION.SDK_INT < 26) {
             try {
                 isUnknownAllowed = Settings.Global.getInt(this.getApplicationContext().getContentResolver(), Settings.Global.INSTALL_NON_MARKET_APPS);
             } catch (Settings.SettingNotFoundException e) {
@@ -1726,7 +1733,7 @@ public class ConversationActivity extends XmppActivity
             }
             installFromUnknownSource = isUnknownAllowed == 1;
         }
-        Log.d(Config.LOGTAG, "Install from unknown sources for Android SDK " + Build.VERSION.SDK_INT + " allowd: " + installFromUnknownSource);
+        Log.d(Config.LOGTAG, "Install from unknown sources for Android SDK " + Build.VERSION.SDK_INT + " allowed: " + installFromUnknownSource);
 
         if (!installFromUnknownSource) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
