@@ -95,7 +95,7 @@ public class HttpDownloadConnection implements Transferable {
                 extension = lastPart;
             }
             String filename = fileDateFormat.format(new Date(message.getTimeSent())) + "_" + message.getUuid().substring(0, 4);
-            message.setRelativeFilePath(filename + "." + extension);
+            message.setRelativeFilePath(filename + (extension != null ? ("." + extension) : ""));
             this.file = mXmppConnectionService.getFileBackend().getFile(message, false);
             final String reference = mUrl.getRef();
             if (reference != null && AesGcmURLStreamHandler.IV_KEY.matcher(reference).matches()) {

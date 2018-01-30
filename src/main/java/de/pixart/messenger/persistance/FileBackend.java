@@ -123,20 +123,11 @@ public class FileBackend {
         return getFile(message, true);
     }
 
-    public DownloadableFile getFile(Message message, boolean decrypted) {
-        final boolean encrypted = !decrypted
-                && (message.getEncryption() == Message.ENCRYPTION_PGP
-                || message.getEncryption() == Message.ENCRYPTION_DECRYPTED);
+    public DownloadableFile getFileForPath(String path, String mime) {
         final DownloadableFile file;
-        String path = message.getRelativeFilePath();
-        if (path == null) {
-            String filename = fileDateFormat.format(new Date(message.getTimeSent())) + "_" + message.getUuid().substring(0, 4);
-            path = filename;
-        }
         if (path.startsWith("/")) {
             file = new DownloadableFile(path);
         } else {
-            String mime = message.getMimeType();
             if (mime != null && mime.startsWith("image")) {
                 file = new DownloadableFile(getConversationsDirectory("Images", true) + path);
             } else if (mime != null && mime.startsWith("video")) {
@@ -147,6 +138,18 @@ public class FileBackend {
                 file = new DownloadableFile(getConversationsDirectory("Files", true) + path);
             }
         }
+        return file;
+    }
+
+    public DownloadableFile getFile(Message message, boolean decrypted) {
+        final boolean encrypted = !decrypted
+                && (message.getEncryption() == Message.ENCRYPTION_PGP
+                || message.getEncryption() == Message.ENCRYPTION_DECRYPTED);
+        String path = message.getRelativeFilePath();
+        if (path == null) {
+            path = message.getUuid();
+        }
+        final DownloadableFile file = getFileForPath(path, message.getMimeType());
         if (encrypted) {
             return new DownloadableFile(getConversationsDirectory("Files", true) + file.getName() + ".pgp");
         } else {
