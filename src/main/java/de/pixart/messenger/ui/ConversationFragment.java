@@ -437,7 +437,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         public boolean onLongClick(View v) {
             final String body = mEditMessage.getText().toString();
             if (body.length() == 0) {
-                mEditMessage.getText().insert(0, "/me ");
+                mEditMessage.getText().insert(0, Message.ME_COMMAND + " ");
             }
             return true;
         }

@@ -71,7 +71,7 @@ public class Message extends AbstractEntity {
     public static final String ERROR_MESSAGE = "errorMsg";
     public static final String READ_BY_MARKERS = "readByMarkers";
     public static final String MARKABLE = "markable";
-    public static final String ME_COMMAND = "/me ";
+    public static final String ME_COMMAND = "/me";
 
 
     public boolean markable = false;

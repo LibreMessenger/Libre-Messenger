@@ -492,7 +492,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             SpannableStringBuilder body = message.getMergedBody();
             boolean hasMeCommand = message.hasMeCommand();
             if (hasMeCommand) {
-                body = body.replace(0, Message.ME_COMMAND.length(), nick + " ");
+                body = body.replace(0, Message.ME_COMMAND.length(), nick);
             }
             if (body.length() > Config.MAX_DISPLAY_MESSAGE_CHARS) {
                 body = new SpannableStringBuilder(body, 0, Config.MAX_DISPLAY_MESSAGE_CHARS);
