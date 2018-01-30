@@ -229,7 +229,9 @@ public class HttpUploadConnection implements Transferable {
             if (connection != null) {
                 connection.disconnect();
             }
-            wakeLock.release();
+            if (wakeLock.isHeld()) {
+                wakeLock.release();
+            }
         }
     }
 }
