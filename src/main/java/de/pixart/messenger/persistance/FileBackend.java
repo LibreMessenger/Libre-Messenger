@@ -147,7 +147,7 @@ public class FileBackend {
                 || message.getEncryption() == Message.ENCRYPTION_DECRYPTED);
         String path = message.getRelativeFilePath();
         if (path == null) {
-            path = message.getUuid();
+            path = fileDateFormat.format(new Date(message.getTimeSent())) + "_" + message.getUuid().substring(0, 4);
         }
         final DownloadableFile file = getFileForPath(path, message.getMimeType());
         if (encrypted) {
