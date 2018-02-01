@@ -1,4 +1,5 @@
-<manifest package="net.ypresto.androidtranscoder">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="net.ypresto.androidtranscoder">
 
     <application />
 
