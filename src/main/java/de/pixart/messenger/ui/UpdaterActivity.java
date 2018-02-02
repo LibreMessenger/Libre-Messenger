@@ -1,8 +1,8 @@
 package de.pixart.messenger.ui;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,39 +11,37 @@ import android.content.pm.ResolveInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.PowerManager;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.util.ByteArrayBuffer;
-
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.persistance.FileBackend;
-import de.pixart.messenger.services.XmppConnectionService;
 
-public class UpdaterActivity extends Activity {
-
-    XmppConnectionService xmppConnectionService;
+public class UpdaterActivity extends XmppActivity {
     static final private String FileName = "update.apk";
+
     String appURI = "";
     String changelog = "";
     Integer filesize = 0;
-
+    ProgressDialog mProgressDialog;
+    DownloadTask downloadTask;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +50,25 @@ public class UpdaterActivity extends Activity {
         setContentView(R.layout.activity_updater);
         TextView textView = findViewById(R.id.updater);
         textView.setText(R.string.update_info);
+
+        mProgressDialog = new ProgressDialog(UpdaterActivity.this) {
+            //show warning on back pressed
+            @Override
+            public void onBackPressed() {
+                showCancelDialog();
+            }
+        };
+        mProgressDialog.setMessage(getString(R.string.download_started));
+        mProgressDialog.setProgressNumberFormat (null);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.setCanceledOnTouchOutside(false);
+    }
+
+    @Override
+    protected void refreshUiReal() {
+        //ignored
     }
 
     @Override
@@ -83,51 +100,46 @@ public class UpdaterActivity extends Activity {
             //oh yeah we do need an upgrade, let the user know send an alert message
             AlertDialog.Builder builder = new AlertDialog.Builder(UpdaterActivity.this);
             builder.setCancelable(false);
+            //open link to changelog
+            //if the user agrees to upgrade
             builder.setMessage(getString(R.string.install_update))
-                    .setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
-                        //if the user agrees to upgrade
-                        public void onClick(DialogInterface dialog, int id) {
-                            Log.d(Config.LOGTAG, "AppUpdater: downloading " + FileName + " from " + appURI);
-                            //ask for permissions on devices >= SDK 23
-                            if (isStoragePermissionGranted() && isNetworkAvailable(getApplicationContext())) {
-                                //start downloading the file using the download manager
-                                if (xmppConnectionService.installedFromPlayStore()) {
-                                    Uri uri = Uri.parse("market://details?id=de.pixart.openmessenger");
-                                    Intent marketIntent = new Intent(Intent.ACTION_VIEW, uri);
-                                    PackageManager manager = getApplicationContext().getPackageManager();
-                                    List<ResolveInfo> infos = manager.queryIntentActivities(marketIntent, 0);
-                                    if (infos.size() > 0) {
-                                        startActivity(marketIntent);
-                                    } else {
-                                        uri = Uri.parse("https://jabber.pix-art.de/");
-                                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
-                                        startActivity(browserIntent);
-                                    }
+                    .setPositiveButton(R.string.update, (dialog, id) -> {
+                        Log.d(Config.LOGTAG, "AppUpdater: downloading " + FileName + " from " + appURI);
+                        //ask for permissions on devices >= SDK 23
+                        if (isStoragePermissionGranted() && isNetworkAvailable(getApplicationContext())) {
+                            //start downloading the file using the download manager
+                            if (xmppConnectionService.installedFromPlayStore()) {
+                                Uri uri = Uri.parse("market://details?id=de.pixart.openmessenger");
+                                Intent marketIntent = new Intent(Intent.ACTION_VIEW, uri);
+                                PackageManager manager = getApplicationContext().getPackageManager();
+                                List<ResolveInfo> infos = manager.queryIntentActivities(marketIntent, 0);
+                                if (infos.size() > 0) {
+                                    startActivity(marketIntent);
                                 } else {
-                                    DownloadFromUrl(appURI, FileName);
-                                    Toast.makeText(getApplicationContext(), getText(R.string.download_started), Toast.LENGTH_LONG).show();
+                                    uri = Uri.parse("https://jabber.pix-art.de/");
+                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+                                    startActivity(browserIntent);
                                 }
                             } else {
-                                Log.d(Config.LOGTAG, "AppUpdater: failed - has storage permissions " + isStoragePermissionGranted() + " and internet " + isNetworkAvailable(getApplicationContext()));
+                                Toast.makeText(getApplicationContext(), getText(R.string.download_started), Toast.LENGTH_LONG).show();
+                                downloadTask = new DownloadTask(UpdaterActivity.this) {};
+                                downloadTask.execute(appURI);
                             }
+                        } else {
+                            Log.d(Config.LOGTAG, "AppUpdater: failed - has storage permissions " + isStoragePermissionGranted() + " and internet " + isNetworkAvailable(getApplicationContext()));
                         }
                     })
-                    .setNeutralButton(R.string.changelog, new DialogInterface.OnClickListener() {
-                        //open link to changelog
-                        public void onClick(DialogInterface dialog, int id) {
-                            Uri uri = Uri.parse("https://github.com/kriztan/Conversations/blob/master/CHANGELOG.md"); // missing 'http://' will cause crashed
-                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
-                            //restart updater to show dialog again after coming back after opening changelog
-                            recreate();
-                        }
+                    .setNeutralButton(R.string.changelog, (dialog, id) -> {
+                        Uri uri = Uri.parse("https://github.com/kriztan/Conversations/blob/master/CHANGELOG.md"); // missing 'http://' will cause crashed
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        //restart updater to show dialog again after coming back after opening changelog
+                        recreate();
                     })
-                    .setNegativeButton(R.string.remind_later, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User cancelled the dialog
-                            UpdaterActivity.this.finish();
-                        }
+                    .setNegativeButton(R.string.remind_later, (dialog, id) -> {
+                        // User cancelled the dialog
+                        UpdaterActivity.this.finish();
                     });
             //show the alert message
             builder.create().show();
@@ -135,6 +147,11 @@ public class UpdaterActivity extends Activity {
             Toast.makeText(getApplicationContext(), getText(R.string.failed), Toast.LENGTH_LONG).show();
             UpdaterActivity.this.finish();
         }
+    }
+
+    @Override
+    void onBackendConnected() {
+        //ignored
     }
 
     @Override
@@ -152,70 +169,128 @@ public class UpdaterActivity extends Activity {
         super.onRestoreInstanceState(savedInstanceState);
     }
 
-    public void DownloadFromUrl(final String DownloadUrl, final String FileName) {
-        final Thread thread = new Thread(new Runnable() {
+    private class DownloadTask extends AsyncTask<String, Integer, String> {
 
-            @Override
-            public void run() {
-                try {
-                    File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + FileBackend.getDirectoryName("Update", false));
+        private Context context;
 
-                    URL url = new URL(DownloadUrl);
-                    File file = new File(dir, FileName);
-                    Log.d(Config.LOGTAG, "AppUpdater: save file to " + file.toString());
+        private PowerManager.WakeLock mWakeLock;
+        private long startTime = 0;
+        File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + FileBackend.getDirectoryName("Update", false));
+        File file = new File(dir, FileName);
+        public DownloadTask(Context context) {
+            this.context = context;
+        }
 
-                    long startTime = System.currentTimeMillis();
-                    Log.d(Config.LOGTAG, "AppUpdater: download update from url: " + url + " to file name: " + file.toString());
-
-                    // Open a connection to that URL.
-                    URLConnection connection = url.openConnection();
-
-                    //Define InputStreams to read from the URLConnection.
-                    InputStream is = connection.getInputStream();
-                    BufferedInputStream bis = new BufferedInputStream(is);
-
-                    //Read file size
-                    List values = connection.getHeaderFields().get("content-Length");
-                    if (values != null && !values.isEmpty()) {
-                        String sLength = (String) values.get(0);
-                        if (sLength != null) {
-                            filesize = Integer.parseInt(sLength);
-                        }
-                    }
-                    //Read bytes to the Buffer until there is nothing more to read(-1).
-                    ByteArrayBuffer baf = new ByteArrayBuffer(5000);
-                    int current = 0;
-                    while ((current = bis.read()) != -1) {
-                        baf.append((byte) current);
-                    }
-
-                    // Convert the Bytes read to a String.
-                    FileOutputStream fos = new FileOutputStream(file);
-                    fos.write(baf.toByteArray());
-                    fos.flush();
-                    fos.close();
-                    Log.d(Config.LOGTAG, "AppUpdater: download ready in" + ((System.currentTimeMillis() - startTime) / 1000) + " sec");
-
-                    //start the installation of the latest localVersion
-                    Intent installIntent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
-                    installIntent.setDataAndType(FileBackend.getUriForFile(UpdaterActivity.this, file), "application/vnd.android.package-archive");
-                    installIntent.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
-                    installIntent.putExtra(Intent.EXTRA_RETURN_RESULT, true);
-                    installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    installIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    startActivity(installIntent);
-                    UpdaterActivity.this.finish();
-
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    Log.d(Config.LOGTAG, "AppUpdater: Error: " + e);
-                }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            startTime = System.currentTimeMillis();
+            // take CPU lock to prevent CPU from going off if the user
+            // presses the power button during download
+            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            if (pm != null) {
+                mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, getClass().getName());
+                mWakeLock.acquire();
             }
-        });
-        thread.start();
-    }
+            mProgressDialog.show();
+        }
 
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+            super.onProgressUpdate(progress);
+            // if we get here, length is known, now set indeterminate to false
+            mProgressDialog.setIndeterminate(false);
+            mProgressDialog.setMax(100);
+            mProgressDialog.setProgress(progress[0]);
+        }
+
+        @Override
+        protected String doInBackground(String... sUrl) {
+            InputStream is = null;
+            OutputStream os = null;
+            HttpURLConnection connection = null;
+            try {
+                Log.d(Config.LOGTAG, "AppUpdater: save file to " + file.toString());
+                Log.d(Config.LOGTAG, "AppUpdater: download update from url: " + sUrl[0] + " to file name: " + file.toString());
+
+                URL url = new URL(sUrl[0]);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.connect();
+
+                // expect HTTP 200 OK, so we don't mistakenly save error report
+                // instead of the file
+                if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                    Toast.makeText(getApplicationContext(), getText(R.string.failed), Toast.LENGTH_LONG).show();
+                    return connection.getResponseCode() + ": " + connection.getResponseMessage();
+                }
+
+                // this will be useful to display download percentage
+                // might be -1: server did not report the length
+                int fileLength = connection.getContentLength();
+
+                // download the file
+                is = connection.getInputStream();
+                os = new FileOutputStream(file);
+
+                byte data[] = new byte[4096];
+                long total = 0;
+                int count;
+                while ((count = is.read(data)) != -1) {
+                    // allow canceling with back button
+                    if (isCancelled()) {
+                        is.close();
+                        return "canceled";
+                    }
+                    total += count;
+                    // publishing the progress....
+                    if (fileLength > 0) // only if total length is known
+                        publishProgress((int) (total * 100 / fileLength));
+                    os.write(data, 0, count);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.toString();
+            } finally {
+                try {
+                    if (os != null)
+                        os.close();
+                    if (is != null)
+                        is.close();
+                } catch (IOException ignored) {
+                }
+
+                if (connection != null)
+                    connection.disconnect();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (mWakeLock.isHeld()) {
+                mWakeLock.release();
+            }
+            mProgressDialog.dismiss();
+            if (result != null) {
+                Toast.makeText(getApplicationContext(), getString(R.string.failed), Toast.LENGTH_LONG).show();
+                Log.d(Config.LOGTAG, "AppUpdater: failed with " + result);
+                UpdaterActivity.this.finish();
+            } else {
+                Log.d(Config.LOGTAG, "AppUpdater: download ready in " + ((System.currentTimeMillis() - startTime) / 1000) + " sec");
+
+                //start the installation of the latest localVersion
+                Intent installIntent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+                installIntent.setDataAndType(FileBackend.getUriForFile(UpdaterActivity.this, file), "application/vnd.android.package-archive");
+                installIntent.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
+                installIntent.putExtra(Intent.EXTRA_RETURN_RESULT, true);
+                installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                installIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                startActivity(installIntent);
+                UpdaterActivity.this.finish();
+            }
+        }
+
+    }
     //check for internet connection
     private boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -250,20 +325,45 @@ public class UpdaterActivity extends Activity {
     //show warning on back pressed
     @Override
     public void onBackPressed() {
+        showCancelDialog();
+    }
+
+    private void showCancelDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.cancel_update)
                 .setCancelable(false)
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
                     public void onClick(DialogInterface dialog, int id) {
+                        if (!downloadTask.getStatus().equals(AsyncTask.Status.FINISHED)) {
+                            downloadTask.cancel(true);
+                        }
+                        if (mProgressDialog.isShowing()) {
+                            mProgressDialog.dismiss();
+                        }
                         UpdaterActivity.this.finish();
                     }
                 })
-                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
+                .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel());
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (!downloadTask.getStatus().equals(AsyncTask.Status.FINISHED)) {
+            downloadTask.cancel(true);
+        }
+        UpdaterActivity.this.finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (!downloadTask.getStatus().equals(AsyncTask.Status.FINISHED)) {
+            downloadTask.cancel(true);
+        }
+        UpdaterActivity.this.finish();
     }
 }
