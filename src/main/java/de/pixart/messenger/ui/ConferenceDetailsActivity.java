@@ -459,20 +459,20 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                 if (self.getAffiliation().ranks(MucOptions.Affiliation.ADMIN) &&
                         self.getAffiliation().outranks(user.getAffiliation())) {
                     if (mAdvancedMode) {
-                        if (user.getAffiliation() == MucOptions.Affiliation.NONE) {
-                            giveMembership.setVisible(true);
+                        if (user.getAffiliation() != MucOptions.Affiliation.ADMIN) {
+                            giveAdminPrivileges.setVisible(true);
                         } else {
-                            removeMembership.setVisible(true);
+                            removeAdminPrivileges.setVisible(true);
                         }
-                        banFromConference.setVisible(true);
                     } else {
                         removeFromRoom.setVisible(true);
                     }
-                    if (user.getAffiliation() != MucOptions.Affiliation.ADMIN) {
-                        giveAdminPrivileges.setVisible(true);
+                    if (user.getAffiliation() == MucOptions.Affiliation.NONE) {
+                        giveMembership.setVisible(true);
                     } else {
-                        removeAdminPrivileges.setVisible(true);
+                        removeMembership.setVisible(true);
                     }
+                    banFromConference.setVisible(true);
                 }
             } else {
                 MenuItem sendPrivateMessage = menu.findItem(R.id.send_private_message);
