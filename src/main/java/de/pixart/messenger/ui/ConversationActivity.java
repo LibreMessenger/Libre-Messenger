@@ -59,7 +59,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import de.pixart.messenger.BuildConfig;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
@@ -168,6 +167,7 @@ public class ConversationActivity extends XmppActivity
     public void showConversationsOverview() {
         if (mConversationFragment != null) {
             mConversationFragment.stopScrolling();
+            mConversationFragment.hideSearchField();
         }
         if (mContentView instanceof SlidingPaneLayout) {
             SlidingPaneLayout mSlidingPaneLayout = (SlidingPaneLayout) mContentView;
@@ -291,6 +291,7 @@ public class ConversationActivity extends XmppActivity
                         xmppConnectionService.getNotificationService().setOpenConversation(null);
                     }
                     closeContextMenu();
+                    mConversationFragment.hideSearchField();
                 }
 
                 @Override
@@ -475,6 +476,7 @@ public class ConversationActivity extends XmppActivity
         final MenuItem menuInviteContact = menu.findItem(R.id.action_invite);
         final MenuItem menuUpdater = menu.findItem(R.id.action_check_updates);
         final MenuItem menuInviteUser = menu.findItem(R.id.action_invite_user);
+        final MenuItem menuSearchHistory = menu.findItem(R.id.action_search_history);
 
         if (isConversationsOverviewVisable() && isConversationsOverviewHideable()) {
             menuArchiveChat.setVisible(false);
@@ -483,6 +485,7 @@ public class ConversationActivity extends XmppActivity
             menuInviteContact.setVisible(false);
             menuAttach.setVisible(false);
             menuClearHistory.setVisible(false);
+            menuSearchHistory.setVisible(false);
             if (xmppConnectionService.installedFromFDroid()) {
                 menuUpdater.setVisible(false);
             } else {
@@ -835,6 +838,9 @@ public class ConversationActivity extends XmppActivity
                 case R.id.action_unblock:
                     BlockContactDialog.show(this, getSelectedConversation());
                     break;
+                case R.id.action_search_history:
+                    mConversationFragment.showSearchField();
+                    break;
                 default:
                     break;
             }
@@ -1067,7 +1073,9 @@ public class ConversationActivity extends XmppActivity
 
     @Override
     public void onBackPressed() {
-        if (!isConversationsOverviewVisable()) {
+        if (!isConversationsOverviewVisable() && mConversationFragment.isSearchFieldVisible()) {
+            mConversationFragment.hideSearchField();
+        } else if (!isConversationsOverviewVisable()) {
             showConversationsOverview();
         } else {
             super.onBackPressed();

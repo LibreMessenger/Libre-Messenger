@@ -16,6 +16,7 @@ import android.support.v13.view.inputmethod.InputConnectionCompat;
 import android.support.v13.view.inputmethod.InputContentInfoCompat;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Pair;
 import android.view.ContextMenu;
@@ -34,6 +35,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.PopupMenu;
@@ -93,11 +95,17 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     protected Conversation conversation;
     protected ListView messagesView;
     protected MessageAdapter messageListAdapter;
+    protected Message lastHistoryMessage = null;
     private EditMessage mEditMessage;
     private ImageButton mSendButton;
     private RelativeLayout snackbar;
     private RelativeLayout messagehint;
     private TextView messagehint_message;
+    private RelativeLayout textsend;
+    private RelativeLayout searchfield;
+    private EditText searchfield_input;
+    private ImageButton searchUp;
+    private ImageButton searchDown;
     private TextView snackbarMessage;
     private TextView snackbarAction;
     private Toast messageLoaderToast;
@@ -595,6 +603,13 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
         messagehint = view.findViewById(R.id.messagehint);
         messagehint_message = view.findViewById(R.id.messagehint_message);
+
+        textsend = view.findViewById(R.id.textsend);
+
+        searchfield = view.findViewById(R.id.searchfield);
+        searchfield_input = view.findViewById(R.id.searchfield_input);
+        searchUp = view.findViewById(R.id.search_up);
+        searchDown = view.findViewById(R.id.search_down);
 
         messagesView = view.findViewById(R.id.messages_view);
         messagesView.setOnScrollListener(mOnScrollListener);
@@ -1531,6 +1546,79 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         messagehint.setVisibility(View.GONE);
     }
 
+    protected void showSearchField() {
+        textsend.setVisibility(View.GONE);
+        searchfield.setVisibility(View.VISIBLE);
+        searchfield_input.addTextChangedListener(mSearchTextWatcher);
+        searchfield_input.requestFocus();
+        final InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.showSoftInput(searchfield_input, InputMethodManager.SHOW_IMPLICIT);
+        }
+    }
+
+    protected void hideSearchField() {
+        textsend.setVisibility(View.VISIBLE);
+        searchfield.setVisibility(View.GONE);
+        if (activity != null) {
+            final InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(searchfield_input.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+            }
+        }
+        searchfield_input.setText("");
+    }
+
+    protected boolean isSearchFieldVisible() {
+        return searchfield.getVisibility() == View.VISIBLE;
+    }
+
+    private TextWatcher mSearchTextWatcher = new TextWatcher() {
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            String query = editable.toString().trim();
+
+            if ((!query.isEmpty() || !query.contains("")) && query.length() >= 3) {
+                searchUp.setVisibility(View.VISIBLE);
+                searchDown.setVisibility(View.VISIBLE);
+                Message found = searchHistory(query);
+                if (found != null) {
+                    searchUp.setVisibility(View.VISIBLE);
+                    searchDown.setVisibility(View.VISIBLE);
+                } else {
+                    searchUp.setVisibility(View.GONE);
+                    searchDown.setVisibility(View.GONE);
+                }
+                searchUp.setEnabled(found != null);
+                searchDown.setEnabled(found != null);
+                View.OnClickListener upDownListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String searchQuery = searchfield_input.getText().toString().trim();
+                        if (!searchQuery.isEmpty() || !searchQuery.contains("")) {
+                            searchHistory(searchQuery, view.getId() == R.id.search_up);
+                        }
+
+                    }
+                };
+                searchUp.setOnClickListener(upDownListener);
+                searchDown.setOnClickListener(upDownListener);
+            } else {
+                searchUp.setVisibility(View.GONE);
+                searchDown.setVisibility(View.GONE);
+            }
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+    };
+
     protected void sendPlainTextMessage(Message message) {
         ConversationActivity activity = (ConversationActivity) getActivity();
         activity.xmppConnectionService.sendMessage(message);
@@ -1786,6 +1874,79 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                 conversation.getAccount().getPgpDecryptionService().giveUpCurrentDecryption();
             }
         }
+    }
+
+    public Message searchHistory(String query) {
+        return searchHistory(query, null);
+    }
+
+    public Message searchHistory(String query, Boolean ascendingSearch) {
+        return searchHistory(query, lastHistoryMessage, ascendingSearch);
+    }
+
+    /**
+     * Search through history from message basis either ascending or descending
+     *
+     * @param query           search term
+     * @param basis           message to start from. If null, start from last recent message
+     * @param ascendingSearch do we want to ascend or descend in our search?
+     *                        If this is null, ascend to first match and return.
+     * @return match or null
+     */
+    public Message searchHistory(String query, Message basis, Boolean ascendingSearch) {
+        int entryIndex;
+        Message message;
+        lastHistoryMessage = basis;
+        if (messageList.size() == 0) {
+            return null;
+        }
+        if (basis == null) {
+            entryIndex = messageList.size() - 1;
+        } else {
+            int in = getIndexOf(basis.getUuid(), messageList);
+            entryIndex = (in != -1 ? in : messageList.size() - 1);
+        }
+
+        int firstMatchIndex = entryIndex;
+        boolean entryIndexWasMatch = true;
+        do {
+            message = messageList.get(firstMatchIndex);
+            if (message.getType() == Message.TYPE_TEXT && messageContainsQuery(message, query)) {
+                lastHistoryMessage = message;
+                break;
+            }
+            entryIndexWasMatch = false;
+            firstMatchIndex = (messageList.size() + firstMatchIndex - 1) % messageList.size();
+        } while (entryIndex != firstMatchIndex);
+
+        if (!entryIndexWasMatch && entryIndex == firstMatchIndex) {
+            //No matches
+            return null;
+        }
+
+        if (ascendingSearch != null) {
+            int direction = ascendingSearch ? -1 : 1;
+            int nextMatchIndex = firstMatchIndex;
+            do {
+                nextMatchIndex = (messageList.size() + nextMatchIndex + direction) % messageList.size();
+                message = messageList.get(nextMatchIndex);
+                if (message.getType() == Message.TYPE_TEXT && messageContainsQuery(message, query)) {
+                    lastHistoryMessage = message;
+                    break;
+                }
+            } while (nextMatchIndex != entryIndex);
+        }
+
+        if (lastHistoryMessage != null) {
+            int pos = getIndexOf(lastHistoryMessage.getUuid(), messageList);
+            setScrollPosition(new Pair<>(pos, pos));
+            messagesView.setSelection(pos);
+        }
+        return lastHistoryMessage;
+    }
+
+    private boolean messageContainsQuery(Message m, String q) {
+        return m != null && m.getMergedBody().toString().toLowerCase().contains(q.toLowerCase());
     }
 
     enum SendButtonAction {
