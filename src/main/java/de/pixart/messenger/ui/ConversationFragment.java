@@ -103,7 +103,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     private TextView messagehint_message;
     private RelativeLayout textsend;
     private RelativeLayout searchfield;
-    private EditText searchfield_input;
+    public EditText searchfield_input;
     private ImageButton searchUp;
     private ImageButton searchDown;
     private TextView snackbarMessage;
@@ -1616,6 +1616,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
+            activity.refreshUi();
         }
     };
 
