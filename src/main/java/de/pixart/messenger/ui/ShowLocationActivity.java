@@ -1,18 +1,15 @@
 package de.pixart.messenger.ui;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -59,15 +56,7 @@ public class ShowLocationActivity extends Activity {
             this.location.setLatitude(latitude);
             this.location.setLongitude(longitude);
         }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                    || checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                markAndCenterOnLocation(location);
-            }
-        } else {
-            markAndCenterOnLocation(location);
-        }
+        markAndCenterOnLocation(location);
     }
 
     private void markAndCenterOnLocation(final Location location) {
