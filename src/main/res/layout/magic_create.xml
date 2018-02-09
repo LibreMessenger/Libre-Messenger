@@ -43,7 +43,7 @@
                 android:textColor="@color/black87"
                 android:textSize="?attr/TextSizeBody" />
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
