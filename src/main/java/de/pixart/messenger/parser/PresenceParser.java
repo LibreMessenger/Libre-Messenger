@@ -72,6 +72,7 @@ public class PresenceParser extends AbstractParser implements
                                 mXmppConnectionService.getAvatarService().clear(mucOptions);
                             }
                             mucOptions.setSelf(user);
+                            mXmppConnectionService.persistSelfNick(user);
                             invokeRenameListener(mucOptions, true);
                         }
                         boolean isNew = mucOptions.updateUser(user);
