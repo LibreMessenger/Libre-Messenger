@@ -43,8 +43,7 @@ dependencies {
     standardPushCompile 'com.google.android.gms:play-services-gcm:11.8.0'
     compile 'org.sufficientlysecure:openpgp-api:10.0'
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
-    compile 'org.bouncycastle:bcprov-jdk15on:1.56'
-    compile 'org.bouncycastle:bcmail-jdk15on:1.56'
+    compile 'org.bouncycastle:bcmail-jdk15on:1.58'
     compile 'org.jitsi:org.otr4j:0.22'
     compile 'org.gnu.inet:libidn:1.15'
     compile 'com.google.zxing:core:3.3.0'
@@ -77,8 +76,8 @@ ext {
 
 android {
 
-    compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
 
     defaultConfig {
         minSdkVersion 16
@@ -90,9 +89,6 @@ android {
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"
         multiDexEnabled true
-        buildConfigField("String", "XMPP_IP", '"185.26.156.37"')
-        buildConfigField("Integer[]", "XMPP_Ports", "{61000, 65000}")
-        buildConfigField("String", "DOMAIN_LOCK", '"pix-art.de"')
         buildConfigField("String", "UPDATE_URL", '"https://xmpp.pix-art.de/Pix-Art_Messenger/update/"')
 
         dimension "distribution"
@@ -116,9 +112,6 @@ android {
         standardPush
         standard
         open {
-            buildConfigField("String", "XMPP_IP", "null")
-            buildConfigField("Integer[]", "XMPP_Ports", "null")
-            buildConfigField("String", "DOMAIN_LOCK", "null")
             buildConfigField("String", "UPDATE_URL", '"https://xmpp.pix-art.de/Pix-Art_Messenger/update/open/"')
             applicationId "de.pixart.openmessenger"
 
