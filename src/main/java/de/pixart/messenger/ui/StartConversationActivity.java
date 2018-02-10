@@ -361,7 +361,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
             return;
         }
         Conversation conversation = xmppConnectionService.findOrCreateConversation(bookmark.getAccount(), jid, true, true, true);
-        conversation.setBookmark(bookmark);
+        bookmark.setConversation(conversation);
         if (!bookmark.autojoin() && getPreferences().getBoolean("autojoin", getResources().getBoolean(R.bool.autojoin))) {
             bookmark.setAutojoin(true);
             xmppConnectionService.pushBookmarks(bookmark.getAccount());
@@ -412,7 +412,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                bookmark.unregisterConversation();
+                bookmark.setConversation(null);
                 Account account = bookmark.getAccount();
                 account.getBookmarks().remove(bookmark);
                 xmppConnectionService.pushBookmarks(account);
@@ -517,7 +517,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
                                 xmppConnectionService.pushBookmarks(account);
                                 final Conversation conversation = xmppConnectionService
                                         .findOrCreateConversation(account, conferenceJid, true, true, true);
-                                conversation.setBookmark(bookmark);
+                                bookmark.setConversation(conversation);
                                 dialog.dismiss();
                                 mCurrentDialog = null;
                                 switchToConversation(conversation);
