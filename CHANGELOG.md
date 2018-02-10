@@ -1,5 +1,17 @@
 ### Changelog
 
+#### Version 1.21.1 (not yet released)
+* don't use integrated updater if Messenger is installed from F-Droid
+* check if app installs from unknown sources are allowed, if not open settings to allow this
+* show hint in chatview if private message is activated
+* send delivery receipts after MAM catchup
+* reduce number of wake locks
+* add possibility to destroy group chats
+* show progress dialog while downloading update with internal updater
+* implemented message search
+* improved self chat
+* bug fixes
+
 #### Version 1.21.0
 * replaced google maps location service with open street map services via leaflet
 * let screen on while playing audio files
