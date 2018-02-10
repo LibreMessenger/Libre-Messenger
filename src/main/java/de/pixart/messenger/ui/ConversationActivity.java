@@ -1286,17 +1286,22 @@ public class ConversationActivity extends XmppActivity
         mPostponedActivityResult = null;
     }
 
-    private void redirectToStartConversationActivity() {
+    private void redirectToStartConversationActivity(boolean noAnimation) {
         Account pendingAccount = xmppConnectionService.getPendingAccount();
         if (pendingAccount == null) {
             Intent startConversationActivity = new Intent(this, StartConversationActivity.class);
+            startConversationActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            if (noAnimation) {
+                startConversationActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            }
             startConversationActivity.putExtra("init", true);
             startActivity(startConversationActivity);
+            if (noAnimation) {
+                overridePendingTransition(0, 0);
+            }
         } else {
             switchToAccount(pendingAccount, true);
-            return;
         }
-        finish();
     }
 
     @Override
@@ -1346,21 +1351,24 @@ public class ConversationActivity extends XmppActivity
                     Intent redirectionIntent = new Intent(this, ManageAccountActivity.class);
                     redirectionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     startActivity(redirectionIntent);
+                    overridePendingTransition(0, 0);
                 } else if (Config.MAGIC_CREATE_DOMAIN != null) {
                     Log.d(Config.LOGTAG, "First start time: " + FirstStartTime);
                     Intent redirectionIntent = new Intent(this, WelcomeActivity.class);
                     redirectionIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     startActivity(redirectionIntent);
+                    overridePendingTransition(0, 0);
                 } else {
                     Intent editAccount = new Intent(this, EditAccountActivity.class);
                     editAccount.putExtra("init", true);
                     editAccount.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
                     startActivity(editAccount);
+                    overridePendingTransition(0, 0);
                 }
             }
         } else if (conversationList.size() <= 0) {
             if (mRedirected.compareAndSet(false, true)) {
-                redirectToStartConversationActivity();
+                redirectToStartConversationActivity(true);
             }
         } else if (selectConversationByUuid(mOpenConversation)) {
             if (mPanelOpen) {
@@ -2172,7 +2180,7 @@ public class ConversationActivity extends XmppActivity
             }
         } else {
             if (!isStopping() && mRedirected.compareAndSet(false, true)) {
-                redirectToStartConversationActivity();
+                redirectToStartConversationActivity(false);
             }
             Log.d(Config.LOGTAG, "not updating conversations fragment because conversations list size was 0");
         }
