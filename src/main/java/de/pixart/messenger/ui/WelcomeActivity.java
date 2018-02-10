@@ -2,6 +2,7 @@ package de.pixart.messenger.ui;
 
 import android.Manifest;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -333,5 +334,12 @@ public class WelcomeActivity extends XmppActivity {
         if (from != null && from.hasExtra(EXTRA_INVITEE)) {
             to.putExtra(EXTRA_INVITEE, from.getStringExtra(EXTRA_INVITEE));
         }
+    }
+
+    public static void launch(Activity activity) {
+        Intent intent = new Intent(activity, WelcomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        activity.startActivity(intent);
+        activity.overridePendingTransition(0, 0);
     }
 }
