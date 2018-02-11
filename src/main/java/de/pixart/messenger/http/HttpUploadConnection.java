@@ -145,11 +145,11 @@ public class HttpUploadConnection implements Transferable {
                                     }
                                 }
                             }
+                            if (!canceled) {
+                                new Thread(this::upload).start();
+                            }
+                            return;
                         }
-                        if (!canceled) {
-                            new Thread(this::upload).start();
-                        }
-                        return;
                     } catch (MalformedURLException e) {
                         //fall through
                     }
