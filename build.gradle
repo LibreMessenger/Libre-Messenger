@@ -47,7 +47,6 @@ dependencies {
     compile 'org.jitsi:org.otr4j:0.22'
     compile 'org.gnu.inet:libidn:1.15'
     compile 'com.google.zxing:core:3.3.0'
-    compile 'com.google.zxing:android-integration:3.3.0'
     compile 'de.measite.minidns:minidns-hla:0.2.4'
     compile 'me.leolin:ShortcutBadger:1.1.21@aar'
     compile 'com.kyleduo.switchbutton:library:1.2.8'
@@ -83,8 +82,8 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
 
-        versionCode 213
-        versionName "1.21.0"
+        versionCode 215
+        versionName "1.21.1"
 
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"
