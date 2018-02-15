@@ -3,7 +3,9 @@
 
 Pix-Art Messenger ist eine Kopie der offiziellen Android-App [Conversations](https://github.com/siacs/Conversations) mit einigen Änderungen, insbesondere zur Verbesserung der Benutzerfreundlichkeit, um den Umstieg von oftmals vorinstallierten Messengern zu erleichtern.
 
-[Download](https://xmpp.pix-art.de/Pix-Art_Messenger/)
+<a href="https://play.google.com/store/apps/details?id=de.pixart.messenger">
+    <img src="https://conversations.im/images/en-play-badge.png" alt="Google Play">
+</a>
 
 Alternativ kannst du das IzzySoft F-Droid Repo installieren: https://android.izzysoft.de/repo, darin ist unser Messenger ebenfalls enthalten.
 
