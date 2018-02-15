@@ -15,9 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
-
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
 
@@ -29,6 +26,8 @@ import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.ui.widget.Switch;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.XmppUri;
+import de.pixart.messenger.utils.zxing.IntentIntegrator;
+import de.pixart.messenger.utils.zxing.IntentResult;
 
 public abstract class OmemoActivity extends XmppActivity {
 
