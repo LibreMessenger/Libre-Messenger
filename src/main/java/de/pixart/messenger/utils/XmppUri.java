@@ -17,6 +17,7 @@ public class XmppUri {
     protected String fingerprint;
     protected List<Fingerprint> fingerprints = new ArrayList<>();
     private String body;
+    private String name;
     private String action;
     protected boolean safeSource = true;
     public static final String OMEMO_URI_PARAM = "omemo-sid-";
@@ -93,7 +94,8 @@ public class XmppUri {
                 }
             }
             this.fingerprints = parseFingerprints(uri.getQuery());
-            this.body = parseBody(uri.getQuery());
+            this.body = parseParameter("body", uri.getQuery());
+            this.name = parseParameter("name", uri.getQuery());
         } else if ("imto".equalsIgnoreCase(scheme)) {
             // sample: imto://xmpp/foo@bar.com
             try {
@@ -138,12 +140,12 @@ public class XmppUri {
         return fingerprints;
     }
 
-    protected String parseBody(String query) {
-        for(String pair : query == null ? new String[0] : query.split(";")) {
-            final String[] parts = pair.split("=",2);
-            if (parts.length == 2 && "body".equals(parts[0].toLowerCase(Locale.US))) {
+    protected String parseParameter(String key, String query) {
+        for (String pair : query == null ? new String[0] : query.split(";")) {
+            final String[] parts = pair.split("=", 2);
+            if (parts.length == 2 && key.equals(parts[0].toLowerCase(Locale.US))) {
                 try {
-                    return URLDecoder.decode(parts[1],"UTF-8");
+                    return URLDecoder.decode(parts[1], "UTF-8");
                 } catch (UnsupportedEncodingException e) {
                     return null;
                 }
@@ -189,6 +191,10 @@ public class XmppUri {
 
     public String getBody() {
         return body;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public List<Fingerprint> getFingerprints() {
