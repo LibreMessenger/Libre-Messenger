@@ -47,6 +47,7 @@ import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -74,6 +75,10 @@ public class FileBackend {
     public static final String FILE_PROVIDER = ".files";
 
     private XmppConnectionService mXmppConnectionService;
+
+    private static final List<String> BLACKLISTED_PATH_ELEMENTS = Arrays.asList(
+            "org.mozilla.firefox"
+    );
 
     public FileBackend(XmppConnectionService service) {
         this.mXmppConnectionService = service;
@@ -265,7 +270,7 @@ public class FileBackend {
 
     public boolean useImageAsIs(Uri uri) {
         String path = getOriginalPath(uri);
-        if (path == null) {
+        if (path == null || isPathBlacklisted(path)) {
             return false;
         }
         File file = new File(path);
@@ -297,6 +302,15 @@ public class FileBackend {
             return true;
         }
         Log.d(Config.LOGTAG, "File " + path + " is not in our directory");
+        return false;
+    }
+
+    public static boolean isPathBlacklisted(String path) {
+        for (String element : BLACKLISTED_PATH_ELEMENTS) {
+            if (path.contains(element)) {
+                return true;
+            }
+        }
         return false;
     }
 
