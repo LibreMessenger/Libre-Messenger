@@ -30,7 +30,9 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,8 +40,8 @@ import java.util.logging.Logger;
 public class MemorizingActivity extends Activity
         implements OnClickListener, OnCancelListener {
 
+    public static final String THEME = "theme";
     private final static Logger LOGGER = Logger.getLogger(MemorizingActivity.class.getName());
-
     int decisionId;
 
     AlertDialog dialog;
@@ -47,6 +49,7 @@ public class MemorizingActivity extends Activity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         LOGGER.log(Level.FINE, "onCreate");
+        setTheme(findTheme());
         super.onCreate(savedInstanceState);
     }
 
@@ -79,6 +82,14 @@ public class MemorizingActivity extends Activity
         LOGGER.log(Level.FINE, "Sending decision: " + decision);
         MemorizingTrustManager.interactResult(decisionId, decision);
         finish();
+    }
+
+    protected int findTheme() {
+        return getPreferences().getString(THEME, getResources().getString(R.string.theme)).equals("dark") ? R.style.ConversationsTheme_Dark : R.style.ConversationsTheme;
+    }
+
+    protected SharedPreferences getPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     }
 
     // react on AlertDialog button press
