@@ -66,6 +66,6 @@
     <item
         android:id="@+id/action_search_history"
         android:icon="?attr/icon_search"
-        android:showAsAction="always"
+        android:showAsAction="ifRoom"
         android:title="@string/search" />
 </menu>
