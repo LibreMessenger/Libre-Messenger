@@ -43,7 +43,7 @@ import de.pixart.messenger.utils.XmppUri;
 
 public class WelcomeActivity extends XmppActivity {
 
-    public static final String EXTRA_INVITEE = "eu.siacs.conversations.invitee";
+    public static final String EXTRA_INVITE_URI = "eu.siacs.conversations.invite_uri";
     boolean importSuccessful = false;
 
     @Override
@@ -110,7 +110,7 @@ public class WelcomeActivity extends XmppActivity {
         createAccount.setOnClickListener(v -> {
             final Intent intent = new Intent(WelcomeActivity.this, MagicCreateActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            addInvitee(intent);
+            addInviteUri(intent);
             startActivity(intent);
         });
         final Button useOwnProvider = findViewById(R.id.use_existing_account);
@@ -123,7 +123,7 @@ public class WelcomeActivity extends XmppActivity {
             } else if (accounts.size() >= 1) {
                 intent = new Intent(WelcomeActivity.this, ManageAccountActivity.class);
             }
-            addInvitee(intent);
+            addInviteUri(intent);
             startActivity(intent);
         });
 
@@ -320,19 +320,19 @@ public class WelcomeActivity extends XmppActivity {
         }
     }
 
-    public void addInvitee(Intent intent) {
-        addInvitee(intent, getIntent());
+    public void addInviteUri(Intent intent) {
+        addInviteUri(intent, getIntent());
     }
 
-    public static void addInvitee(Intent intent, XmppUri uri) {
+    public static void addInviteUri(Intent intent, XmppUri uri) {
         if (uri.isJidValid()) {
-            intent.putExtra(EXTRA_INVITEE, uri.getJid().toString());
+            intent.putExtra(EXTRA_INVITE_URI, uri.toString());
         }
     }
 
-    public static void addInvitee(Intent to, Intent from) {
-        if (from != null && from.hasExtra(EXTRA_INVITEE)) {
-            to.putExtra(EXTRA_INVITEE, from.getStringExtra(EXTRA_INVITEE));
+    public static void addInviteUri(Intent to, Intent from) {
+        if (from != null && from.hasExtra(EXTRA_INVITE_URI)) {
+            to.putExtra(EXTRA_INVITE_URI, from.getStringExtra(EXTRA_INVITE_URI));
         }
     }
 
