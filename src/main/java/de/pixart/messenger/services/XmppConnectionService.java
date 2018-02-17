@@ -4291,7 +4291,7 @@ public class XmppConnectionService extends Service {
         final String packageID = BuildConfig.APPLICATION_ID;
         final String installedFrom = packageManager.getInstallerPackageName(packageID);
         Log.d(Config.LOGTAG, "Messenger installed from " + installedFrom);
-        return installedFrom != null && installedFrom.contains("com.android.venedig");
+        return installedFrom != null && installedFrom.contains("com.android.vending");
     }
 
     public ShortcutService getShortcutService() {
