@@ -40,6 +40,7 @@ public class UpdaterActivity extends XmppActivity {
     String appURI = "";
     String changelog = "";
     Integer filesize = 0;
+    boolean playstore = false;
     ProgressDialog mProgressDialog;
     DownloadTask downloadTask;
     @Override
@@ -87,6 +88,11 @@ public class UpdaterActivity extends XmppActivity {
                 Toast.makeText(getApplicationContext(), getText(R.string.failed), Toast.LENGTH_LONG).show();
                 UpdaterActivity.this.finish();
             }
+            try {
+                playstore = getIntent().getBooleanExtra("playstore", false);
+            } catch (Exception e) {
+                playstore = false;
+            }
             //delete old downloaded localVersion files
             File dir = new File(FileBackend.getConversationsDirectory("Update", false));
             if (dir.isDirectory()) {
@@ -108,8 +114,8 @@ public class UpdaterActivity extends XmppActivity {
                         //ask for permissions on devices >= SDK 23
                         if (isStoragePermissionGranted() && isNetworkAvailable(getApplicationContext())) {
                             //start downloading the file using the download manager
-                            if (xmppConnectionService.installedFromPlayStore()) {
-                                Uri uri = Uri.parse("market://details?id=de.pixart.openmessenger");
+                            if (playstore) {
+                                Uri uri = Uri.parse("market://details?id=de.pixart.messenger");
                                 Intent marketIntent = new Intent(Intent.ACTION_VIEW, uri);
                                 PackageManager manager = getApplicationContext().getPackageManager();
                                 List<ResolveInfo> infos = manager.queryIntentActivities(marketIntent, 0);
@@ -352,7 +358,7 @@ public class UpdaterActivity extends XmppActivity {
     @Override
     public void onPause() {
         super.onPause();
-        if (!downloadTask.getStatus().equals(AsyncTask.Status.FINISHED)) {
+        if (downloadTask != null && !downloadTask.getStatus().equals(AsyncTask.Status.FINISHED)) {
             downloadTask.cancel(true);
         }
         UpdaterActivity.this.finish();
@@ -361,7 +367,7 @@ public class UpdaterActivity extends XmppActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if (!downloadTask.getStatus().equals(AsyncTask.Status.FINISHED)) {
+        if (downloadTask != null && !downloadTask.getStatus().equals(AsyncTask.Status.FINISHED)) {
             downloadTask.cancel(true);
         }
         UpdaterActivity.this.finish();

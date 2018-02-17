@@ -320,7 +320,7 @@ public class ConversationActivity extends XmppActivity
         return false;
     }
 
-    protected void AppUpdate() {
+    protected void AppUpdate(boolean PlayStore) {
         String PREFS_NAME = "UpdateTimeStamp";
         SharedPreferences UpdateTimeStamp = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         long lastUpdateTime = UpdateTimeStamp.getLong("lastUpdateTime", 0);
@@ -329,11 +329,15 @@ public class ConversationActivity extends XmppActivity
             lastUpdateTime = System.currentTimeMillis();
             SharedPreferences.Editor editor = UpdateTimeStamp.edit();
             editor.putLong("lastUpdateTime", lastUpdateTime);
-            editor.commit();
+            editor.apply();
             Log.d(Config.LOGTAG, "AppUpdater: CurrentTime: " + lastUpdateTime);
-            UpdateService task = new UpdateService(this);
-            task.executeOnExecutor(UpdateService.THREAD_POOL_EXECUTOR, "false");
-            Log.d(Config.LOGTAG, "AppUpdater started");
+            if (!installFromUnknownSourceAllowed() && !PlayStore) {
+                openInstallFromUnknownSourcesDialogIfNeeded();
+            } else {
+                UpdateService task = new UpdateService(this, PlayStore);
+                task.executeOnExecutor(UpdateService.THREAD_POOL_EXECUTOR, "false");
+                Log.d(Config.LOGTAG, "AppUpdater started");
+            }
         } else {
             Log.d(Config.LOGTAG, "AppUpdater stopped");
             return;
@@ -1396,7 +1400,7 @@ public class ConversationActivity extends XmppActivity
             if (xmppConnectionService.hasInternetConnection()) {
                 if (xmppConnectionService.isWIFI() || (xmppConnectionService.isMobile() && !xmppConnectionService.isMobileRoaming())) {
                     if (!xmppConnectionService.installedFromFDroid()) {
-                        AppUpdate();
+                        AppUpdate(xmppConnectionService.installedFromPlayStore());
                     }
                 }
             }
@@ -1441,9 +1445,6 @@ public class ConversationActivity extends XmppActivity
 
         if (!ExceptionHelper.checkForCrash(this, this.xmppConnectionService) && !mRedirected.get()) {
             openBatteryOptimizationDialogIfNeeded();
-            if (!xmppConnectionService.installedFromFDroid() && !xmppConnectionService.installedFromPlayStore()) {
-                openInstallFromUnknownSourcesDialogIfNeeded();
-            }
         }
 
         if (isConversationsOverviewVisable() && isConversationsOverviewHideable()) {
@@ -1709,62 +1710,6 @@ public class ConversationActivity extends XmppActivity
                     }
                 });
             }
-            builder.create().show();
-        }
-    }
-
-    private void openInstallFromUnknownSourcesDialogIfNeeded() {
-        final PackageManager packageManager = this.getPackageManager();
-        boolean installFromUnknownSource = false;
-        int isUnknownAllowed = 0;
-        if (Build.VERSION.SDK_INT >= 26) {
-            /*
-            * On Android 8 with applications targeting lower versions,
-            * it's impossible to check unknown sources enabled: using old APIs will always return true
-            * and using the new one will always return false,
-            * so in order to avoid a stuck dialog that can't be bypassed we will assume true.
-            */
-            installFromUnknownSource = this.getApplicationInfo().targetSdkVersion < Build.VERSION_CODES.O
-                    || packageManager.canRequestPackageInstalls();
-        } else if (Build.VERSION.SDK_INT >= 17 && Build.VERSION.SDK_INT < 26) {
-            try {
-                isUnknownAllowed = Settings.Global.getInt(this.getApplicationContext().getContentResolver(), Settings.Global.INSTALL_NON_MARKET_APPS);
-            } catch (Settings.SettingNotFoundException e) {
-                isUnknownAllowed = 0;
-                e.printStackTrace();
-            }
-            installFromUnknownSource = isUnknownAllowed == 1;
-        } else {
-            try {
-                isUnknownAllowed = Settings.Secure.getInt(this.getApplicationContext().getContentResolver(), Settings.Secure.INSTALL_NON_MARKET_APPS);
-            } catch (Settings.SettingNotFoundException e) {
-                isUnknownAllowed = 0;
-                e.printStackTrace();
-            }
-            installFromUnknownSource = isUnknownAllowed == 1;
-        }
-        Log.d(Config.LOGTAG, "Install from unknown sources for Android SDK " + Build.VERSION.SDK_INT + " allowed: " + installFromUnknownSource);
-
-        if (!installFromUnknownSource) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(R.string.install_from_unknown_sources_disabled);
-            builder.setMessage(R.string.install_from_unknown_sources_disabled_dialog);
-            builder.setPositiveButton(R.string.next, (dialog, which) -> {
-                Intent intent = null;
-                if (android.os.Build.VERSION.SDK_INT >= 26) {
-                    intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
-                    Uri uri = Uri.parse("package:" + getPackageName());
-                    intent.setData(uri);
-                } else {
-                    intent = new Intent(Settings.ACTION_SECURITY_SETTINGS);
-                }
-                Log.d(Config.LOGTAG, "Allow install from unknown sources for Android SDK " + Build.VERSION.SDK_INT + " intent " + intent.toString());
-                try {
-                    startActivityForResult(intent, REQUEST_UNKNOWN_SOURCE_OP);
-                } catch (ActivityNotFoundException e) {
-                    Toast.makeText(ConversationActivity.this, R.string.device_does_not_support_battery_op, Toast.LENGTH_SHORT).show();
-                }
-            });
             builder.create().show();
         }
     }

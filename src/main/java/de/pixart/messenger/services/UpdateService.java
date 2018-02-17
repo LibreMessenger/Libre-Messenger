@@ -33,9 +33,11 @@ public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapp
     }
 
     private Context context;
+    private boolean playstore;
 
-    public UpdateService(Context context) {
+    public UpdateService(Context context, boolean PlayStore) {
         this.context = context;
+        this.playstore = PlayStore;
     }
 
     public class Wrapper
@@ -93,10 +95,11 @@ public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapp
                 if (checkVersion(version, ownVersion) >= 1) {
                     Log.d(Config.LOGTAG, "AppUpdater: Version " + ownVersion + " should be updated to " + version);
                     UpdateAvailable = true;
-                    showNotification(url, changelog, version, filesize);
+                    showNotification(url, changelog, version, filesize, playstore);
                 } else {
                     Log.d(Config.LOGTAG, "AppUpdater: Version " + ownVersion + " is up to date");
                     UpdateAvailable = false;
+                    showNotification(url, changelog, version, filesize, playstore);
                 }
             }
         } catch (JSONException e) {
@@ -141,11 +144,12 @@ public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapp
         });
     }
 
-    private void showNotification(String url, String changelog, String version, String filesize) {
+    private void showNotification(String url, String changelog, String version, String filesize, boolean playstore) {
         Intent intent = new Intent(context, UpdaterActivity.class);
         intent.putExtra("update", "PixArtMessenger_UpdateService");
         intent.putExtra("url", url);
         intent.putExtra("changelog", changelog);
+        intent.putExtra("playstore", playstore);
         PendingIntent pi = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
