@@ -99,7 +99,6 @@ public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapp
                 } else {
                     Log.d(Config.LOGTAG, "AppUpdater: Version " + ownVersion + " is up to date");
                     UpdateAvailable = false;
-                    showNotification(url, changelog, version, filesize, playstore);
                 }
             }
         } catch (JSONException e) {
