@@ -1,6 +1,9 @@
 ### Changelog
 
-#### Version 1.21.1 (not yet released)
+#### Version 1.21.2
+* bug fixes
+
+#### Version 1.21.1
 * don't use integrated updater if Messenger is installed from F-Droid
 * check if app installs from unknown sources are allowed, if not open settings to allow this
 * show hint in chatview if private message is activated
