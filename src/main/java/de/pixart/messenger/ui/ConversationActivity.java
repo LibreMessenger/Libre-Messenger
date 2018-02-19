@@ -321,6 +321,9 @@ public class ConversationActivity extends XmppActivity
     }
 
     protected void AppUpdate(boolean PlayStore) {
+        if (PlayStore) {
+            return;
+        }
         String PREFS_NAME = "UpdateTimeStamp";
         SharedPreferences UpdateTimeStamp = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         long lastUpdateTime = UpdateTimeStamp.getLong("lastUpdateTime", 0);
