@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.xml.Element;
 
 public class Data extends Element {
@@ -15,7 +16,7 @@ public class Data extends Element {
 
     public Data() {
         super("x");
-        this.setAttribute("xmlns", "jabber:x:data");
+        this.setAttribute("xmlns", Namespace.DATA);
     }
 
     public List<Field> getFields() {
