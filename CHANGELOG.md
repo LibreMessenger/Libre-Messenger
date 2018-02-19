@@ -1,5 +1,10 @@
 ### Changelog
 
+#### Version 1.21.3
+* small self messages improvement
+* small notification improvement
+* bug fixes
+
 #### Version 1.21.2
 * bug fixes
 
