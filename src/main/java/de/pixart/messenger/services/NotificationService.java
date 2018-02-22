@@ -815,8 +815,10 @@ public class NotificationService {
                 mXmppConnectionService.getString(R.string.try_again),
                 createTryAgainIntent());
         mBuilder.setDeleteIntent(createDismissErrorIntent());
-        mBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+        mBuilder.setVisibility(NotificationCompat.VISIBILITY_PRIVATE);
         mBuilder.setSmallIcon(R.drawable.ic_warning_white_24dp);
+        mBuilder.setLocalOnly(true);
+        mBuilder.setPriority(NotificationCompat.PRIORITY_LOW);
         if (errors.size() == 1) {
             Intent intent = new Intent(mXmppConnectionService, EditAccountActivity.class);
             Account mAccount = mXmppConnectionService.getAccounts().get(0);
@@ -832,7 +834,6 @@ public class NotificationService {
                     new Intent(mXmppConnectionService, ManageAccountActivity.class),
                     PendingIntent.FLAG_UPDATE_CURRENT));
         }
-
         notificationManager.notify(ERROR_NOTIFICATION_ID, mBuilder.build());
     }
 
