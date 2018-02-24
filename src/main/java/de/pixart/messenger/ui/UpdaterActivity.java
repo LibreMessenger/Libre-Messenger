@@ -136,7 +136,7 @@ public class UpdaterActivity extends XmppActivity {
                         }
                     })
                     .setNeutralButton(R.string.changelog, (dialog, id) -> {
-                        Uri uri = Uri.parse("https://github.com/kriztan/Conversations/blob/master/CHANGELOG.md"); // missing 'http://' will cause crashed
+                        Uri uri = Uri.parse(Config.CHANGELOG_URL); // missing 'http://' will cause crashed
                         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
