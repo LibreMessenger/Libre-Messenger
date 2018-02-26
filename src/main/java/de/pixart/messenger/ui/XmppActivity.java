@@ -396,11 +396,16 @@ public abstract class XmppActivity extends Activity {
                 }
                 break;
             case R.id.action_accounts:
-                final Intent intent = new Intent(getApplicationContext(), EditAccountActivity.class);
-                Account mAccount = xmppConnectionService.getAccounts().get(0);
-                intent.putExtra("jid", mAccount.getJid().toBareJid().toString());
-                intent.putExtra("init", false);
-                startActivity(intent);
+                if (xmppConnectionService.getAccounts().size() == 1 && !xmppConnectionService.multipleAccounts()) {
+                    final Intent intent = new Intent(getApplicationContext(), EditAccountActivity.class);
+                    Account mAccount = xmppConnectionService.getAccounts().get(0);
+                    intent.putExtra("jid", mAccount.getJid().toBareJid().toString());
+                    intent.putExtra("init", false);
+                    startActivity(intent);
+                } else {
+                    final Intent intent = new Intent(getApplicationContext(), ManageAccountActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case android.R.id.home:
                 finish();

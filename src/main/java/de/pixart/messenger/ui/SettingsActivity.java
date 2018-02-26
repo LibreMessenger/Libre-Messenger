@@ -2,6 +2,7 @@ package de.pixart.messenger.ui;
 
 import android.app.AlertDialog;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,11 +10,16 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.security.KeyStoreException;
@@ -24,7 +30,6 @@ import java.util.List;
 import java.util.Locale;
 
 import de.duenndns.ssl.MemorizingTrustManager;
-import de.pixart.messenger.BuildConfig;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
@@ -48,9 +53,13 @@ public class SettingsActivity extends XmppActivity implements
     public static final String SHOW_DYNAMIC_TAGS = "show_dynamic_tags";
     public static final String SHOW_FOREGROUND_SERVICE = "show_foreground_service";
     public static final String USE_BUNDLED_EMOJIS = "use_bundled_emoji";
+    public static final String USE_MULTI_ACCOUNTS = "use_multi_accounts";
 
     public static final int REQUEST_WRITE_LOGS = 0xbf8701;
     private SettingsFragment mSettingsFragment;
+
+    Preference multiAccountPreference;
+    boolean isMultiAccountChecked = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +81,10 @@ public class SettingsActivity extends XmppActivity implements
     public void onStart() {
         super.onStart();
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+
+        multiAccountPreference = mSettingsFragment.findPreference("enable_multi_accounts");
+        isMultiAccountChecked = ((CheckBoxPreference) multiAccountPreference).isChecked();
+
         ListPreference resources = (ListPreference) mSettingsFragment.findPreference("resource");
         if (resources != null) {
             ArrayList<CharSequence> entries = new ArrayList<>(Arrays.asList(resources.getEntries()));
@@ -101,13 +114,10 @@ public class SettingsActivity extends XmppActivity implements
             }
         }
 
-
-        if (BuildConfig.FLAVOR != "open") {
-            PreferenceCategory connectionOptions = (PreferenceCategory) mSettingsFragment.findPreference("connection_options");
-            PreferenceScreen expert = (PreferenceScreen) mSettingsFragment.findPreference("expert");
-            if (connectionOptions != null) {
-                expert.removePreference(connectionOptions);
-            }
+        PreferenceCategory connectionOptions = (PreferenceCategory) mSettingsFragment.findPreference("connection_options");
+        PreferenceScreen expert = (PreferenceScreen) mSettingsFragment.findPreference("expert");
+        if (connectionOptions != null) {
+            expert.removePreference(connectionOptions);
         }
 
         final Preference removeCertsPreference = mSettingsFragment.findPreference("remove_trusted_certificates");
@@ -191,6 +201,33 @@ public class SettingsActivity extends XmppActivity implements
                 return true;
             }
         });
+
+        final Preference enableMultiAccountsPreference = mSettingsFragment.findPreference("enable_multi_accounts");
+        Log.d(Config.LOGTAG, "Multi account checkbox checked: " + isMultiAccountChecked);
+        if (isMultiAccountChecked) {
+            enableMultiAccountsPreference.setEnabled(false);
+            /*
+            if (xmppConnectionServiceBound) { // todo doesn't work --> it seems the service is never bound
+                final List<Account> accounts = xmppConnectionService.getAccounts();
+                Log.d(Config.LOGTAG, "Disabled multi account: Number of accounts " + accounts.size());
+                if (accounts.size() > 1) {
+                    Log.d(Config.LOGTAG, "Disabled multi account not possible because you have more than one account");
+                    enableMultiAccountsPreference.setEnabled(false);
+                } else {
+                    Log.d(Config.LOGTAG, "Disabled multi account possible because you have one account");
+                    enableMultiAccountsPreference.setEnabled(true);
+                }
+            } else {
+                enableMultiAccountsPreference.setEnabled(false);
+            }
+            */
+        } else {
+            enableMultiAccountsPreference.setEnabled(true);
+            enableMultiAccountsPreference.setOnPreferenceClickListener(preference -> {
+                enableMultiAccounts();
+                return true;
+            });
+        }
     }
 
     private boolean isCallable(final Intent i) {
@@ -245,6 +282,75 @@ public class SettingsActivity extends XmppActivity implements
         dialog.show();
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
     }
+
+    private void enableMultiAccounts() {
+        if (!isMultiAccountChecked) {
+            multiAccountPreference.setEnabled(true);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setCancelable(false);
+            builder.setTitle(R.string.pref_enable_multi_accounts_title);
+            builder.setMessage(R.string.pref_enable_multi_accounts_summary);
+            builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
+                ((CheckBoxPreference) multiAccountPreference).setChecked(false);
+            });
+            builder.setPositiveButton(R.string.enter_password, (dialog, which) -> {
+                ((CheckBoxPreference) multiAccountPreference).setChecked(false);
+                enterPasswordDialog();
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+    }
+
+    public void enterPasswordDialog() {
+        LayoutInflater li = LayoutInflater.from(this);
+        View promptsView = li.inflate(R.layout.password, null);
+
+        final Preference preference = mSettingsFragment.findPreference("enable_multi_accounts");
+
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setView(promptsView);
+        final EditText password = promptsView.findViewById(R.id.password);
+        final EditText confirm_password = promptsView.findViewById(R.id.confirm_password);
+        confirm_password.setVisibility(View.VISIBLE);
+        alertDialogBuilder.setTitle(R.string.enter_password);
+        alertDialogBuilder.setMessage(R.string.enter_password);
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton(R.string.ok,
+                        (dialog, id) -> {
+                            final String pw1 = password.getText().toString();
+                            final String pw2 = confirm_password.getText().toString();
+                            if (!pw1.equals(pw2)) {
+                                ((CheckBoxPreference) preference).setChecked(false);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setTitle(R.string.error);
+                                builder.setMessage(R.string.passwords_do_not_match);
+                                builder.setNegativeButton(R.string.cancel, null);
+                                builder.setPositiveButton(R.string.try_again, (dialog12, id12) -> enterPasswordDialog());
+                                builder.create().show();
+                            } else if (pw1.trim().isEmpty()) {
+                                ((CheckBoxPreference) preference).setChecked(false);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                                builder.setTitle(R.string.error);
+                                builder.setMessage(R.string.password_should_not_be_empty);
+                                builder.setNegativeButton(R.string.cancel, null);
+                                builder.setPositiveButton(R.string.try_again, (dialog1, id1) -> enterPasswordDialog());
+                                builder.create().show();
+                            } else {
+                                ((CheckBoxPreference) preference).setChecked(true);
+                                SharedPreferences multiaccount_prefs = getApplicationContext().getSharedPreferences(USE_MULTI_ACCOUNTS, Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = multiaccount_prefs.edit();
+                                editor.putString("BackupPW", pw1);
+                                editor.commit();
+                            }
+                        })
+                .setNegativeButton(R.string.cancel, null);
+        alertDialogBuilder.create().show();
+
+    }
+
+
 
     @Override
     public void onStop() {

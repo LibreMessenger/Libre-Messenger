@@ -761,4 +761,6 @@
     <string name="snooze">Snooze</string>
     <string name="huawei_protected_apps">Protected Apps</string>
     <string name="huawei_protected_apps_summary">To keep receiving notifications, even when the screen is turned off, you need to add Pix-Art Messenger to the list of protected apps.</string>
+    <string name="pref_enable_multi_accounts_title">Enable multiple accounts</string>
+    <string name="pref_enable_multi_accounts_summary">You want to use multiple accounts, so you have to set a password for daily backups.</string>
 </resources>

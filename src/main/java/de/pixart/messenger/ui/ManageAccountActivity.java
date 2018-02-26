@@ -3,8 +3,6 @@ package de.pixart.messenger.ui;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.security.KeyChain;
@@ -164,10 +162,7 @@ public class ManageAccountActivity extends XmppActivity implements OnAccountUpda
         if (Config.X509_VERIFICATION) {
             addAccount.setVisible(false);
             addAccountWithCertificate.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        } else {
-            addAccount.setVisible(!Config.SINGLE_ACCOUNT);
         }
-        addAccountWithCertificate.setVisible(!Config.SINGLE_ACCOUNT);
         return true;
     }
 

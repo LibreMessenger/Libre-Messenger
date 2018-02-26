@@ -47,7 +47,6 @@ public final class Config {
     public static final Integer[] XMPP_Ports = null; //BuildConfig.XMPP_Ports; // set to null means disable
     public static final String DOMAIN_LOCK = null; //BuildConfig.DOMAIN_LOCK; //only allow account creation for this domain
     public static final String MAGIC_CREATE_DOMAIN = "pix-art.de";
-    public static final boolean SINGLE_ACCOUNT = true; //set to true to allow only one account
     public static final boolean DISALLOW_REGISTRATION_IN_UI = false; //hide the register checkbox
 
     public static final boolean ALLOW_NON_TLS_CONNECTIONS = false; //very dangerous. you should have a good reason to set this to true

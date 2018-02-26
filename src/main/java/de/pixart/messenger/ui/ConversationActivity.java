@@ -484,7 +484,14 @@ public class ConversationActivity extends XmppActivity
         final MenuItem menuUpdater = menu.findItem(R.id.action_check_updates);
         final MenuItem menuInviteUser = menu.findItem(R.id.action_invite_user);
         final MenuItem menuSearchHistory = menu.findItem(R.id.action_search_history);
-
+        final MenuItem menuActionAccounts = menu.findItem(R.id.action_accounts);
+        if (xmppConnectionServiceBound) {
+            if (xmppConnectionService.getAccounts().size() == 1 && !xmppConnectionService.multipleAccounts()) {
+                menuActionAccounts.setTitle(R.string.mgmt_account_edit);
+            } else {
+                menuActionAccounts.setTitle(R.string.action_accounts);
+            }
+        }
         if (isConversationsOverviewVisable() && isConversationsOverviewHideable()) {
             menuArchiveChat.setVisible(false);
             menuArchiveMuc.setVisible(false);

@@ -3560,6 +3560,10 @@ public class XmppConnectionService extends Service {
         return getBooleanPreference(SettingsActivity.BROADCAST_LAST_ACTIVITY, R.bool.last_activity);
     }
 
+    public boolean multipleAccounts() {
+        return getBooleanPreference("enable_multi_accounts", R.bool.enable_multi_accounts);
+    }
+
     public int unreadCount() {
         int count = 0;
         for (Conversation conversation : getConversations()) {

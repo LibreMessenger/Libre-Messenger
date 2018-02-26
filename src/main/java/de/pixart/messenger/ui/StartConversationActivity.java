@@ -598,6 +598,12 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
         MenuItem menuCreateContact = menu.findItem(R.id.action_create_contact);
         MenuItem menuCreateConference = menu.findItem(R.id.action_conference);
         MenuItem menuHideOffline = menu.findItem(R.id.action_hide_offline);
+        final MenuItem menuActionAccounts = menu.findItem(R.id.action_accounts);
+        if (xmppConnectionService.getAccounts().size() == 1 && !xmppConnectionService.multipleAccounts()) {
+            menuActionAccounts.setTitle(R.string.mgmt_account_edit);
+        } else {
+            menuActionAccounts.setTitle(R.string.action_accounts);
+        }
         menuHideOffline.setChecked(this.mHideOfflineContacts);
         mMenuSearchView = menu.findItem(R.id.action_search);
         mMenuSearchView.setOnActionExpandListener(mOnActionExpandListener);
