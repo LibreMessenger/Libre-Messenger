@@ -50,6 +50,8 @@ public final class Config {
     public static final boolean SINGLE_ACCOUNT = true; //set to true to allow only one account
     public static final boolean DISALLOW_REGISTRATION_IN_UI = false; //hide the register checkbox
 
+    public static final boolean USE_RANDOM_RESOURCE_ON_EVERY_BIND = false;
+
     public static final boolean ALLOW_NON_TLS_CONNECTIONS = false; //very dangerous. you should have a good reason to set this to true
 
     public static final boolean FORCE_ORBOT = false; // always use TOR
