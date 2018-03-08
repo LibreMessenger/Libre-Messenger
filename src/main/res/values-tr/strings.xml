@@ -260,12 +260,12 @@
   <string name="enable">Etkinleştir</string>
   <string name="conference_requires_password">Grup sohbeti için şifre gerekiyor</string>
   <string name="enter_password">Şifreyi girin</string>
-  <string name="request_presence_updates">Lütfen öncelikle iletişim bilgilerinizden durum güncellemeleri isteğinde bulunun.\n\n<small>Bu, alıcı(lar) ınızın hangi müşteriyi kullandığını belirlemek için kullanılacaktır</string>
+  <string name="request_presence_updates">Lütfen öncelikle iletişim bilgilerinizden durum güncellemeleri isteğinde bulunun.\n\n<small>Bu, alıcı(lar) ınızın hangi müşteriyi kullandığını belirlemek için kullanılacaktır</small></string>
   <string name="request_now">Şimdi isteyin</string>
   <string name="delete_fingerprint">Parmak izini sil</string>
   <string name="sure_delete_fingerprint">Bu parmak izini silmek istediğinizden emin misiniz?</string>
   <string name="ignore">Yoksay</string>
-  <string name="without_mutual_presence_updates"><b> Uyarı: </ b> Karşılıklı durum güncellemeleri olmadan göndermek, beklenmedik sorunlara neden olabilir. \ n \ n <small> Durum aboneliklerinizi doğrulamak için iletişim bilgilerine gidin. </ small></string>
+  <string name="without_mutual_presence_updates"><b>Uyarı:</b> Karşılıklı durum güncellemeleri olmadan göndermek, beklenmedik sorunlara neden olabilir.\n\n<small> Durum aboneliklerinizi doğrulamak için iletişim bilgilerine gidin.</small></string>
   <string name="pref_security_settings">Güvenlik ve veri koruması</string>
   <string name="pref_allow_message_correction">İleti düzeltmeye izin ver</string>
   <string name="pref_allow_message_correction_summary">Kişilerinizin iletilerini geriye dönük olarak düzenlemelerine izin ver</string>
@@ -757,7 +757,7 @@
   <string name="destroy_muc_text">%s grubunu gerçekten silmek istiyor musunuz? Grup sohbeti kalıcı olarak silinecektir.</string>
   <string name="destroy_muc_succeed">Grup sohbeti başarıyla silindi</string>
   <string name="destroy_muc_failed">Grup sohbeti silinemedi</string>
-  <string name="no_write_access_in_public_muc">Bu grup sohbetine katılmazsınız ve şu an için bir yazma erişiminiz yok.\nLütfen <b> Tamam </ b> tuşuna basarak grup sohbeti ayrıntılarına gidin ve bir kişiye uzun tıklayarak bir moderatör, yönetici ya da sahibine özel mesaj gönderin. yazma erişimi istemek için listenin başında üyelerin adını yazın.</string>
+  <string name="no_write_access_in_public_muc">Bu grup sohbetine katılmazsınız ve şu an için bir yazma erişiminiz yok.\nLütfen<b>Tamam</b> tuşuna basarak grup sohbeti ayrıntılarına gidin ve bir kişiye uzun tıklayarak bir moderatör, yönetici ya da sahibine özel mesaj gönderin. yazma erişimi istemek için listenin başında üyelerin adını yazın.</string>
   <string name="snooze">Ertele</string>
   <string name="huawei_protected_apps">Korunan uygulamalar</string>
   <string name="huawei_protected_apps_summary">Bildirim almaya devam etmek için, ekran kapalı olduğunda bile, korunan uygulamalar listesine Pix-Art Messenger\'ı eklemeniz gerekir.</string>
