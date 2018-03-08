@@ -745,20 +745,23 @@ public class NotificationService {
         String status;
         Account mAccount = null;
         Log.d(Config.LOGTAG, "Accounts size " + accounts.size());
-        if (accounts.size() > 0) {
+        if (accounts.size() == 1) {
             mAccount = accounts.get(0);
             if (mAccount.getStatus() == Account.State.ONLINE) {
-                status = mXmppConnectionService.getString(R.string.account_status_online);
+                status = "(" + mXmppConnectionService.getString(R.string.account_status_online) + ")";
             } else if (mAccount.getStatus() == Account.State.CONNECTING) {
-                status = mXmppConnectionService.getString(R.string.account_status_connecting);
+                status = "(" + mXmppConnectionService.getString(R.string.account_status_connecting) + ")";
             } else {
-                status = mXmppConnectionService.getString(R.string.account_status_offline);
+                status = "(" + mXmppConnectionService.getString(R.string.account_status_offline) + ")";
             }
+        } else if (accounts.size() > 1) {
+            status = ""; // todo: status for multiple accounts???
         } else {
-            status = mXmppConnectionService.getString(R.string.account_status_offline);
+            status = "(" + mXmppConnectionService.getString(R.string.account_status_offline) + ")";
         }
+        status = " " + status;
         Log.d(Config.LOGTAG, "Status: " + status);
-        mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.conversations_foreground_service) + " (" + status + ")");
+        mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.conversations_foreground_service) + status);
         if (Config.SHOW_CONNECTED_ACCOUNTS) {
             int enabled = 0;
             int connected = 0;
@@ -777,8 +780,10 @@ public class NotificationService {
         mBuilder.setContentIntent(createOpenConversationsIntent());
         mBuilder.setWhen(0);
         mBuilder.setPriority(Config.SHOW_CONNECTED_ACCOUNTS ? NotificationCompat.PRIORITY_DEFAULT : NotificationCompat.PRIORITY_MIN);
-        if (accounts.size() > 0 && mAccount.getStatus() == Account.State.ONLINE) {
+        if (accounts.size() == 1 && accounts.get(0).getStatus() == Account.State.ONLINE) {
             mBuilder.setSmallIcon(R.drawable.ic_link_white_24dp);
+        } else if (accounts.size() > 1) {
+            mBuilder.setSmallIcon(R.drawable.ic_link_white_24dp); // todo: status for multiple accounts???
         } else {
             mBuilder.setSmallIcon(R.drawable.ic_unlink_white_24dp);
         }

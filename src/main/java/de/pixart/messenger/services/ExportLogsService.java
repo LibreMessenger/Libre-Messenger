@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.preference.PreferenceManager;
+import android.support.annotation.BoolRes;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -37,6 +38,8 @@ import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.utils.EncryptDecryptFile;
 import de.pixart.messenger.xmpp.jid.Jid;
 
+import static de.pixart.messenger.ui.SettingsActivity.USE_MULTI_ACCOUNTS;
+
 public class ExportLogsService extends Service {
 
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -49,6 +52,7 @@ public class ExportLogsService extends Service {
     boolean ReadableLogsEnabled = false;
     private WakeLock wakeLock;
     private PowerManager pm;
+    XmppConnectionService mXmppConnectionService;
 
     @Override
     public void onCreate() {
@@ -178,6 +182,7 @@ public class ExportLogsService extends Service {
 
     public void ExportDatabase() throws IOException {
         Account mAccount = mAccounts.get(0);
+        String EncryptionKey = null;
         // Get hold of the db:
         FileInputStream InputFile = new FileInputStream(this.getDatabasePath(DatabaseBackend.DATABASE_NAME));
         // Set the output folder on the SDcard
@@ -195,7 +200,18 @@ public class ExportLogsService extends Service {
         // Set the output file stream up:
         FileOutputStream OutputFile = new FileOutputStream(directory.getPath() + "/database.db.crypt");
 
-        String EncryptionKey = mAccount.getPassword(); //get account password
+        if (mAccounts.size() == 1 && !multipleAccounts()) {
+            EncryptionKey = mAccount.getPassword(); //get account password
+        } else {
+            SharedPreferences multiaccount_prefs = getApplicationContext().getSharedPreferences(USE_MULTI_ACCOUNTS, Context.MODE_PRIVATE);
+            String password = multiaccount_prefs.getString("BackupPW", null);
+            if (password == null) {
+                Log.d(Config.LOGTAG, "Database exporter: failed to write encryted backup to sdcard because of missing password");
+                return;
+            }
+            EncryptionKey = password; //get previously set backup password
+        }
+        Log.d(Config.LOGTAG, "Database exporter: encrypt backup with password " + EncryptionKey);
 
         // encrypt database from the input file to the output file
         try {
@@ -215,5 +231,17 @@ public class ExportLogsService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    public SharedPreferences getPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+    }
+
+    public boolean getBooleanPreference(String name, @BoolRes int res) {
+        return getPreferences().getBoolean(name, getResources().getBoolean(res));
+    }
+
+    public boolean multipleAccounts() {
+        return getBooleanPreference("enable_multi_accounts", R.bool.confirm_messages);
     }
 }

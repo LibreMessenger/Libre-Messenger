@@ -269,6 +269,11 @@
                     android:targetClass="com.huawei.systemmanager.optimize.process.ProtectActivity"
                     android:targetPackage="com.huawei.systemmanager" />
             </PreferenceScreen>
+            <CheckBoxPreference
+                android:defaultValue="@bool/enable_multi_accounts"
+                android:key="enable_multi_accounts"
+                android:title="@string/pref_enable_multi_accounts_title"
+                android:summary="@string/pref_enable_multi_accounts_summary" />
         </PreferenceCategory>
         <PreferenceCategory android:title="@string/pref_ui_options">
             <CheckBoxPreference
