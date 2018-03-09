@@ -211,7 +211,6 @@ public class ExportLogsService extends Service {
             }
             EncryptionKey = password; //get previously set backup password
         }
-        Log.d(Config.LOGTAG, "Database exporter: encrypt backup with password " + EncryptionKey);
 
         // encrypt database from the input file to the output file
         try {
