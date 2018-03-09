@@ -3,7 +3,7 @@ package de.pixart.messenger.ui;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
+import android.support.v7.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
@@ -276,7 +276,7 @@ public abstract class XmppActivity extends AppCompatActivity {
     }
 
     public void showInstallPgpDialog() {
-        Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.openkeychain_required));
         builder.setIconAttribute(android.R.attr.alertDialogIcon);
         builder.setMessage(getText(R.string.openkeychain_required_long));

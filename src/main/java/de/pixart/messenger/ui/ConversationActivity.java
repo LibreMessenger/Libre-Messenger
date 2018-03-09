@@ -2,7 +2,7 @@ package de.pixart.messenger.ui;
 
 import android.annotation.SuppressLint;
 import android.support.v7.app.ActionBar;
-import android.app.AlertDialog;
+import android.support.v7.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;

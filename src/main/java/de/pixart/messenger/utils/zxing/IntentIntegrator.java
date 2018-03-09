@@ -17,7 +17,7 @@
 package de.pixart.messenger.utils.zxing;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.support.v7.app.AlertDialog;
 import android.app.Fragment;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;

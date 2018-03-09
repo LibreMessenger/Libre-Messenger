@@ -1,6 +1,6 @@
 package de.pixart.messenger.ui;
 
-import android.app.AlertDialog;
+import android.support.v7.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
@@ -1280,7 +1280,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 if (mFetchingMamPrefsToast != null) {
                     mFetchingMamPrefsToast.cancel();
                 }
-                AlertDialog.Builder builder = new Builder(EditAccountActivity.this);
+                Builder builder = new Builder(EditAccountActivity.this);
                 builder.setTitle(R.string.server_side_mam_prefs);
                 String defaultAttr = prefs.getAttribute("default");
                 final List<String> defaults = Arrays.asList("never", "roster", "always");
