@@ -21,7 +21,7 @@
             android:padding="@dimen/infocard_padding"
             android:orientation="vertical">
 
-            <android.support.text.emoji.widget.EmojiEditText
+            <android.support.text.emoji.widget.EmojiAppCompatEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
