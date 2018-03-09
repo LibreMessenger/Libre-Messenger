@@ -1,7 +1,7 @@
 package de.pixart.messenger.ui;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar;
+import android.support.v7.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.PendingIntent;
@@ -18,7 +18,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
-import android.media.ExifInterface;
+import android.support.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -250,7 +250,7 @@ public class ConversationActivity extends XmppActivity
         this.listAdapter = new ConversationAdapter(this, conversationList);
         listView.setAdapter(this.listAdapter);
 
-        final ActionBar actionBar = getActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
         }
@@ -364,7 +364,7 @@ public class ConversationActivity extends XmppActivity
     }
 
     private void updateActionBarTitle(boolean titleShouldBeName) {
-        final ActionBar ab = getActionBar();
+        final ActionBar ab = getSupportActionBar();
         final Conversation conversation = getSelectedConversation();
         if (ab != null) {
             if (titleShouldBeName && conversation != null) {

@@ -53,5 +53,5 @@
     <attr name="ic_file_pdf" format="reference" />
     <attr name="ic_file_vcard" format="reference" />
     <attr name="ic_file_calendar" format="reference" />
-
+    
 </resources>

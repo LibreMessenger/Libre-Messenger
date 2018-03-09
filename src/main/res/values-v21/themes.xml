@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="ConversationsTheme" parent="@android:style/Theme.Material.Light.DarkActionBar">
-        <item name="android:colorPrimary">@color/primary</item>
-        <item name="android:colorPrimaryDark">@color/primary_dark</item>
-        <item name="android:colorAccent">@color/accent</item>
-        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
+    <style name="ConversationsTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
 
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:actionModeBackground">@color/accent</item>
@@ -16,8 +16,17 @@
         <item name="TextSizeHeadline">18sp</item>
         <item name="TextSeparation">5sp</item>
 
+        <!--<item type="reference" name="infocard_border">@drawable/infocard_border</item>-->
+        <item name="divider">@color/black12</item>
+
         <item name="color_text_primary">@color/black87</item>
         <item name="color_text_secondary">@color/black54</item>
+
+        <!--<item name="color_background_primary">@color/grey50</item>-->
+        <!--<item name="color_background_secondary">@color/grey200</item>-->
+
+        <!--<item name="unread_count">@color/unreadcountlight</item>-->
+        <!--<item name="conversations_overview_background">@color/primary700</item>-->
 
         <item name="dialog_horizontal_padding">24dp</item>
         <item name="dialog_vertical_padding">16dp</item>
@@ -53,5 +62,4 @@
         <item name="ic_attach_record">@drawable/ic_attach_record</item>
 
     </style>
-
 </resources>
