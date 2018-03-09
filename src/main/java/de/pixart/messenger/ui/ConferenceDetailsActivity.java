@@ -1,6 +1,5 @@
 package de.pixart.messenger.ui;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -9,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -294,9 +294,9 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         mDestroyButton.setOnClickListener(destroyListener);
         mDestroyButton.getBackground().setColorFilter(getWarningButtonColor(), PorterDuff.Mode.MULTIPLY);
         mConferenceType = findViewById(R.id.muc_conference_type);
-        if (getActionBar() != null) {
-            getActionBar().setHomeButtonEnabled(true);
-            getActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         mEditNickButton.setOnClickListener(new OnClickListener() {
 
@@ -600,17 +600,19 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         } else {
             account = mConversation.getAccount().getJid().toBareJid().toString();
         }
-        if (getActionBar() != null) {
-            final ActionBar ab = getActionBar();
-            ab.setCustomView(R.layout.ab_title);
-            ab.setDisplayShowCustomEnabled(true);
-            TextView abtitle = findViewById(android.R.id.text1);
-            TextView absubtitle = findViewById(android.R.id.text2);
-            abtitle.setText(mConversation.getName());
-            abtitle.setSelected(true);
-            abtitle.setClickable(false);
-            absubtitle.setVisibility(View.GONE);
-            absubtitle.setClickable(false);
+        if (getSupportActionBar() != null) {
+            final ActionBar ab = getSupportActionBar();
+            if (ab != null) {
+                ab.setCustomView(R.layout.ab_title);
+                ab.setDisplayShowCustomEnabled(true);
+                TextView abtitle = findViewById(android.R.id.text1);
+                TextView absubtitle = findViewById(android.R.id.text2);
+                abtitle.setText(mConversation.getName());
+                abtitle.setSelected(true);
+                abtitle.setClickable(false);
+                absubtitle.setVisibility(View.GONE);
+                absubtitle.setClickable(false);
+            }
         }
         ConferenceName.setText(mConversation.getName());
         mAccountJid.setText(getString(R.string.using_account, account));

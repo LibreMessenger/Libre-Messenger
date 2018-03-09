@@ -1,6 +1,5 @@
 package de.pixart.messenger.ui;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,6 +13,7 @@ import android.provider.ContactsContract.CommonDataKinds;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Intents;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -288,9 +288,9 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
         keysWrapper = findViewById(R.id.keys_wrapper);
         tags = findViewById(R.id.tags);
         mShowInactiveDevicesButton = findViewById(R.id.show_inactive_devices);
-        if (getActionBar() != null) {
-            getActionBar().setHomeButtonEnabled(true);
-            getActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         mShowInactiveDevicesButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -409,17 +409,19 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             mNotifyStatusButton.setImageResource(R.drawable.ic_notifications_grey600_24dp);
             mNotifyStatusText.setText(R.string.notify_on_all_messages);
         }
-        if (getActionBar() != null) {
-            final ActionBar ab = getActionBar();
-            ab.setCustomView(R.layout.ab_title);
-            ab.setDisplayShowCustomEnabled(true);
-            TextView abtitle = findViewById(android.R.id.text1);
-            TextView absubtitle = findViewById(android.R.id.text2);
-            abtitle.setText(contact.getDisplayName());
-            abtitle.setSelected(true);
-            abtitle.setClickable(false);
-            absubtitle.setVisibility(View.GONE);
-            absubtitle.setClickable(false);
+        if (getSupportActionBar() != null) {
+            final ActionBar ab = getSupportActionBar();
+            if (ab != null) {
+                ab.setCustomView(R.layout.ab_title);
+                ab.setDisplayShowCustomEnabled(true);
+                TextView abtitle = findViewById(android.R.id.text1);
+                TextView absubtitle = findViewById(android.R.id.text2);
+                abtitle.setText(contact.getDisplayName());
+                abtitle.setSelected(true);
+                abtitle.setClickable(false);
+                absubtitle.setVisibility(View.GONE);
+                absubtitle.setClickable(false);
+            }
         }
 
         invalidateOptionsMenu();

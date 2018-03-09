@@ -1,7 +1,7 @@
 package de.pixart.messenger.ui;
 
-import android.app.ActionBar;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -31,7 +31,7 @@ public class ShareViaAccountActivity extends XmppActivity {
             accountList.clear();
             accountList.addAll(xmppConnectionService.getAccounts());
         }
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(this.accountList.size() > 0);
             actionBar.setDisplayHomeAsUpEnabled(this.accountList.size() > 0);

@@ -6,10 +6,11 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import de.pixart.messenger.Config;
 
-public abstract class LocationActivity extends Activity implements LocationListener {
+public abstract class LocationActivity extends AppCompatActivity implements LocationListener {
     private LocationManager locationManager;
 
     @Override
