@@ -49,7 +49,7 @@ public class MemorizingActivity extends Activity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         LOGGER.log(Level.FINE, "onCreate");
-        setTheme(findTheme());
+//        setTheme(findTheme());
         super.onCreate(savedInstanceState);
     }
 
@@ -84,9 +84,9 @@ public class MemorizingActivity extends Activity
         finish();
     }
 
-    protected int findTheme() {
-        return getPreferences().getString(THEME, getResources().getString(R.string.theme)).equals("dark") ? R.style.ConversationsTheme_Dark : R.style.ConversationsTheme;
-    }
+//    protected int findTheme() {
+//        return getPreferences().getString(THEME, getResources().getString(R.string.theme)).equals("dark") ? R.style.ConversationsTheme_Dark : R.style.ConversationsTheme;
+//    }
 
     protected SharedPreferences getPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
