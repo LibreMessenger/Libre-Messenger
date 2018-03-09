@@ -86,4 +86,8 @@
         <item name="TextSizeHeadline">18sp</item>
     </style>
 
+    <style name="ConversationsTheme.NoActionBar.FullScreen" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
 </resources>

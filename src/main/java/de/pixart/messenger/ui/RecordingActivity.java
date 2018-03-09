@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -24,7 +25,7 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.persistance.FileBackend;
 
-public class RecordingActivity extends Activity implements View.OnClickListener {
+public class RecordingActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView mTimerTextView;
     private Button mCancelButton;
