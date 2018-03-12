@@ -65,6 +65,14 @@
             android:key="quiet_hours"
             android:summary="@string/pref_quiet_hours_summary"
             android:title="@string/title_pref_quiet_hours">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetClass="de.pixart.messenger.ui.SettingsActivity"
+                android:targetPackage="de.pixart.messenger">
+                <extra
+                    android:name="page"
+                    android:value="quiet_hours" />
+            </intent>
             <CheckBoxPreference
                 android:defaultValue="@bool/enable_quiet_hours"
                 android:key="enable_quiet_hours"
@@ -247,6 +255,14 @@
         android:icon="@drawable/ic_settings_black_24dp"
         android:key="expert"
         android:title="@string/pref_expert_options">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="de.pixart.messenger.ui.SettingsActivity"
+            android:targetPackage="de.pixart.messenger">
+            <extra
+                android:name="page"
+                android:value="expert" />
+        </intent>
         <PreferenceCategory android:title="@string/pref_general"
             android:key="general">
             <ListPreference
