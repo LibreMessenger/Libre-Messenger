@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import de.duenndns.ssl.MemorizingTrustManager;
+import de.pixart.messenger.services.MemorizingTrustManager;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;

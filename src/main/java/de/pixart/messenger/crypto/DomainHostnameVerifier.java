@@ -1,4 +1,4 @@
-package de.duenndns.ssl;
+package de.pixart.messenger.crypto;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
