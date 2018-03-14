@@ -518,11 +518,7 @@ public class ConversationActivity extends XmppActivity
                     menuArchiveChat.setVisible(false);
                 }
                 if (this.getSelectedConversation().getNextEncryption() != Message.ENCRYPTION_NONE) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        menuSecure.setIcon(R.drawable.ic_lock_white_24dp);
-                    } else {
-                        menuSecure.setIcon(R.drawable.ic_action_secure);
-                    }
+                    menuSecure.setIcon(R.drawable.ic_lock_white_24dp);
                 }
                 if (this.getSelectedConversation().getMode() == Conversation.MODE_MULTI) {
                     menuAttach.setVisible(getSelectedConversation().getAccount().httpUploadAvailable() && getSelectedConversation().getMucOptions().participating());
