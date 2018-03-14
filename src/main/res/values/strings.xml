@@ -428,8 +428,6 @@
     <string name="no_application_found_to_display_location">No application found to display location</string>
     <string name="location">Location</string>
     <string name="received_location">Received location</string>
-    <string name="title_undo_swipe_out_conversation">Conversation closed</string>
-    <string name="title_undo_swipe_out_muc">Left group chat</string>
     <string name="pref_dont_trust_system_cas_title">Don’t trust system CAs</string>
     <string name="pref_dont_trust_system_cas_summary">All certificates must be manually approved</string>
     <string name="pref_remove_trusted_certificates_title">Remove certificates</string>
@@ -460,7 +458,6 @@
     <string name="download_failed_server_not_found">Download failed: Server not found</string>
     <string name="download_failed_file_not_found">Download failed: File not found</string>
     <string name="download_failed_could_not_connect">Download failed: Could not connect to host</string>
-    <string name="elv_undo">undo</string>
     <string name="download_failed_could_not_write_file">Download failed: Could not write file</string>
     <string name="pref_use_white_background">Use white background</string>
     <string name="pref_use_white_background_summary">Show sent messages as black text on a white background</string>
