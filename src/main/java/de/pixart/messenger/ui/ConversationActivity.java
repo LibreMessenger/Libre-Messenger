@@ -1,8 +1,6 @@
 package de.pixart.messenger.ui;
 
 import android.annotation.SuppressLint;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
@@ -18,16 +16,17 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
-import android.support.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.media.ExifInterface;
 import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v4.widget.SlidingPaneLayout.PanelSlideListener;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
@@ -350,12 +349,9 @@ public class ConversationActivity extends XmppActivity
     @Override
     public void switchToConversation(Conversation conversation) {
         setSelectedConversation(conversation);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ConversationActivity.this.mConversationFragment.reInit(getSelectedConversation());
-                openConversation();
-            }
+        runOnUiThread(() -> {
+            ConversationActivity.this.mConversationFragment.reInit(getSelectedConversation());
+            openConversation();
         });
     }
 
@@ -481,6 +477,8 @@ public class ConversationActivity extends XmppActivity
         final MenuItem menuClearHistory = menu.findItem(R.id.action_clear_history);
         final MenuItem menuAdd = menu.findItem(R.id.action_add);
         final MenuItem menuInviteContact = menu.findItem(R.id.action_invite);
+        final MenuItem menuAttachSoundRecorder = menu.findItem(R.id.attach_record_voice);
+        final MenuItem menuAttachLocation = menu.findItem(R.id.attach_location);
         final MenuItem menuUpdater = menu.findItem(R.id.action_check_updates);
         final MenuItem menuInviteUser = menu.findItem(R.id.action_invite_user);
         final MenuItem menuSearchHistory = menu.findItem(R.id.action_search_history);
@@ -498,6 +496,8 @@ public class ConversationActivity extends XmppActivity
             menuSecure.setVisible(false);
             menuInviteContact.setVisible(false);
             menuAttach.setVisible(false);
+            menuAttachLocation.setVisible(false);
+            menuAttachSoundRecorder.setVisible(false);
             menuClearHistory.setVisible(false);
             menuSearchHistory.setVisible(false);
             if (xmppConnectionService.installedFromFDroid()) {
@@ -528,133 +528,119 @@ public class ConversationActivity extends XmppActivity
                     menuSecure.setVisible(Config.multipleEncryptionChoices());
                     menuInviteContact.setVisible(xmppConnectionService != null && xmppConnectionService.findConferenceServer(getSelectedConversation().getAccount()) != null);
                 }
+                menuAttachLocation.setVisible(true);
+                menuAttachSoundRecorder.setVisible(true);
+                configureEncryptionMenu(getSelectedConversation(), menu);
             }
-        }
-        if (Config.supportOmemo()) {
-            new Handler().post(addOmemoDebuggerRunnable);
         }
         return super.onCreateOptionsMenu(menu);
     }
 
-    private Runnable addOmemoDebuggerRunnable = new Runnable() {
-        @Override
-        public void run() {
-            View view = findViewById(R.id.action_security);
-            if (view != null) {
-                view.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        return v.getId() == R.id.action_security && quickOmemoDebugger(getSelectedConversation());
-                    }
-                });
-            }
+    private static void configureEncryptionMenu(Conversation conversation, Menu menu) {
+        MenuItem otr = menu.findItem(R.id.encryption_choice_otr);
+        MenuItem none = menu.findItem(R.id.encryption_choice_none);
+        MenuItem pgp = menu.findItem(R.id.encryption_choice_pgp);
+        MenuItem axolotl = menu.findItem(R.id.encryption_choice_axolotl);
+        pgp.setVisible(Config.supportOpenPgp());
+        none.setVisible(Config.supportUnencrypted() || conversation.getMode() == Conversation.MODE_MULTI);
+        otr.setVisible(Config.supportOtr());
+        axolotl.setVisible(Config.supportOmemo());
+        if (conversation.getMode() == Conversation.MODE_MULTI) {
+            otr.setVisible(false);
         }
-    };
-
-    private boolean quickOmemoDebugger(Conversation c) {
-        if (c != null) {
-            boolean single = c.getMode() == Conversation.MODE_SINGLE;
-            AxolotlService axolotlService = c.getAccount().getAxolotlService();
-            Pair<AxolotlService.AxolotlCapability, Jid> capabilityJidPair = axolotlService.isConversationAxolotlCapableDetailed(c);
-            switch (capabilityJidPair.first) {
-                case MISSING_PRESENCE:
-                    Toast.makeText(ConversationActivity.this, single ? getString(R.string.missing_presence_subscription) : getString(R.string.missing_presence_subscription_with_x, capabilityJidPair.second.toBareJid().toString()), Toast.LENGTH_SHORT).show();
-                    return true;
-                case MISSING_KEYS:
-                    Toast.makeText(ConversationActivity.this, single ? getString(R.string.missing_omemo_keys) : getString(R.string.missing_keys_from_x, capabilityJidPair.second.toBareJid().toString()), Toast.LENGTH_SHORT).show();
-                    return true;
-                case WRONG_CONFIGURATION:
-                    Toast.makeText(ConversationActivity.this, R.string.wrong_conference_configuration, Toast.LENGTH_SHORT).show();
-                    return true;
-                case NO_MEMBERS:
-                    Toast.makeText(ConversationActivity.this, R.string.this_conference_has_no_members, Toast.LENGTH_SHORT).show();
-                    return true;
-            }
+        if (!conversation.getAccount().getAxolotlService().isConversationAxolotlCapable(conversation)) {
+            axolotl.setEnabled(false);
         }
-        return false;
+        switch (conversation.getNextEncryption()) {
+            case Message.ENCRYPTION_NONE:
+                none.setChecked(true);
+                break;
+            case Message.ENCRYPTION_OTR:
+                otr.setChecked(true);
+                break;
+            case Message.ENCRYPTION_PGP:
+                pgp.setChecked(true);
+                break;
+            case Message.ENCRYPTION_AXOLOTL:
+                axolotl.setChecked(true);
+                break;
+            default:
+                none.setChecked(true);
+                break;
+        }
     }
 
     protected void selectPresenceToAttachFile(final int attachmentChoice, final int encryption) {
         final Conversation conversation = getSelectedConversation();
         final Account account = conversation.getAccount();
-        final OnPresenceSelected callback = new OnPresenceSelected() {
-
-            @Override
-            public void onPresenceSelected() {
-                final Intent intent = new Intent();
-                boolean chooser = false;
-                String fallbackPackageId = null;
-                switch (attachmentChoice) {
-                    case ATTACHMENT_CHOICE_CHOOSE_IMAGE:
-                        intent.setAction(Intent.ACTION_GET_CONTENT);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                        }
-                        intent.setType("image/*");
-                        chooser = true;
-                        break;
-                    case ATTACHMENT_CHOICE_CHOOSE_VIDEO:
-                        chooser = true;
-                        intent.setType("video/*");
-                        intent.addCategory(Intent.CATEGORY_OPENABLE);
-                        intent.setAction(Intent.ACTION_GET_CONTENT);
-                        break;
-                    case ATTACHMENT_CHOICE_TAKE_FROM_CAMERA:
-                        AlertDialog.Builder builder = new AlertDialog.Builder(ConversationActivity.this);
-                        builder.setTitle(getString(R.string.attach_take_from_camera));
-                        builder.setNegativeButton(getString(R.string.action_take_photo),
-                                new OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Uri uri = xmppConnectionService.getFileBackend().getTakePhotoUri();
-                                        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                                        intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-                                        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                                        mPendingPhotoUris.clear();
-                                        mPendingPhotoUris.add(uri);
-                                        startActivityForResult(intent, attachmentChoice);
-                                    }
-                                });
-                        builder.setPositiveButton(getString(R.string.action_take_video),
-                                new OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Uri uri = xmppConnectionService.getFileBackend().getTakeVideoUri();
-                                        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                        intent.setAction(MediaStore.ACTION_VIDEO_CAPTURE);
-                                        mPendingFileUris.clear();
-                                        mPendingFileUris.add(uri);
-                                        startActivityForResult(intent, attachmentChoice);
-                                    }
-                                });
-                        builder.create().show();
-                        break;
-                    case ATTACHMENT_CHOICE_CHOOSE_FILE:
-                        chooser = true;
-                        intent.setType("*/*");
-                        intent.addCategory(Intent.CATEGORY_OPENABLE);
-                        intent.setAction(Intent.ACTION_GET_CONTENT);
-                        break;
-                    case ATTACHMENT_CHOICE_RECORD_VOICE:
-                        startActivityForResult(new Intent(getApplicationContext(), RecordingActivity.class), attachmentChoice);
-                        break;
-                    case ATTACHMENT_CHOICE_LOCATION:
-                        startActivityForResult(new Intent(getApplicationContext(), ShareLocationActivity.class), attachmentChoice);
-                        break;
-                }
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    Log.d(Config.LOGTAG, "Attachment: " + attachmentChoice);
-                    if (chooser) {
-                        startActivityForResult(
-                                Intent.createChooser(intent, getString(R.string.perform_action_with)),
-                                attachmentChoice);
-                    } else {
-                        startActivityForResult(intent, attachmentChoice);
+        final OnPresenceSelected callback = () -> {
+            final Intent intent = new Intent();
+            boolean chooser = false;
+            String fallbackPackageId = null;
+            switch (attachmentChoice) {
+                case ATTACHMENT_CHOICE_CHOOSE_IMAGE:
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                     }
-                } else if (fallbackPackageId != null) {
-                    startActivity(getInstallApkIntent(fallbackPackageId));
+                    intent.setType("image/*");
+                    chooser = true;
+                    break;
+                case ATTACHMENT_CHOICE_CHOOSE_VIDEO:
+                    chooser = true;
+                    intent.setType("video/*");
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    break;
+                case ATTACHMENT_CHOICE_TAKE_FROM_CAMERA:
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ConversationActivity.this);
+                    builder.setTitle(getString(R.string.attach_take_from_camera));
+                    builder.setNegativeButton(getString(R.string.action_take_photo),
+                            (dialog, which) -> {
+                                Uri uri = xmppConnectionService.getFileBackend().getTakePhotoUri();
+                                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+                                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                                mPendingPhotoUris.clear();
+                                mPendingPhotoUris.add(uri);
+                                startActivityForResult(intent, attachmentChoice);
+                            });
+                    builder.setPositiveButton(getString(R.string.action_take_video),
+                            (dialog, which) -> {
+                                Uri uri = xmppConnectionService.getFileBackend().getTakeVideoUri();
+                                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                intent.setAction(MediaStore.ACTION_VIDEO_CAPTURE);
+                                mPendingFileUris.clear();
+                                mPendingFileUris.add(uri);
+                                startActivityForResult(intent, attachmentChoice);
+                            });
+                    builder.create().show();
+                    break;
+                case ATTACHMENT_CHOICE_CHOOSE_FILE:
+                    chooser = true;
+                    intent.setType("*/*");
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    break;
+                case ATTACHMENT_CHOICE_RECORD_VOICE:
+                    startActivityForResult(new Intent(getApplicationContext(), RecordingActivity.class), attachmentChoice);
+                    break;
+                case ATTACHMENT_CHOICE_LOCATION:
+                    startActivityForResult(new Intent(getApplicationContext(), ShareLocationActivity.class), attachmentChoice);
+                    break;
+            }
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                Log.d(Config.LOGTAG, "Attachment: " + attachmentChoice);
+                if (chooser) {
+                    startActivityForResult(
+                            Intent.createChooser(intent, getString(R.string.perform_action_with)),
+                            attachmentChoice);
+                } else {
+                    startActivityForResult(intent, attachmentChoice);
                 }
+            } else if (fallbackPackageId != null) {
+                startActivity(getInstallApkIntent(fallbackPackageId));
             }
         };
         if ((account.httpUploadAvailable() || attachmentChoice == ATTACHMENT_CHOICE_LOCATION) && encryption != Message.ENCRYPTION_OTR) {
@@ -813,8 +799,26 @@ public class ConversationActivity extends XmppActivity
             return true;
         } else if (getSelectedConversation() != null) {
             switch (item.getItemId()) {
-                case R.id.action_attach_file:
-                    attachFileDialog();
+                case R.id.encryption_choice_axolotl:
+                case R.id.encryption_choice_otr:
+                case R.id.encryption_choice_pgp:
+                case R.id.encryption_choice_none:
+                    handleEncryptionSelection(item);
+                    break;
+                case R.id.attach_choose_picture:
+                    attachFile(ATTACHMENT_CHOICE_CHOOSE_IMAGE);
+                    break;
+                case R.id.attach_take_picture:
+                    attachFile(ATTACHMENT_CHOICE_TAKE_FROM_CAMERA);
+                    break;
+                case R.id.attach_choose_file:
+                    attachFile(ATTACHMENT_CHOICE_CHOOSE_FILE);
+                    break;
+                case R.id.attach_record_voice:
+                    attachFile(ATTACHMENT_CHOICE_RECORD_VOICE);
+                    break;
+                case R.id.attach_location:
+                    attachFile(ATTACHMENT_CHOICE_LOCATION);
                     break;
                 case R.id.action_archive_chat:
                     this.endConversation(getSelectedConversation());
@@ -835,9 +839,6 @@ public class ConversationActivity extends XmppActivity
                     break;
                 case R.id.action_invite:
                     inviteToConversation(getSelectedConversation());
-                    break;
-                case R.id.action_security:
-                    selectEncryptionDialog(getSelectedConversation());
                     break;
                 case R.id.action_clear_history:
                     clearHistoryDialog(getSelectedConversation());
@@ -889,10 +890,8 @@ public class ConversationActivity extends XmppActivity
     protected void clearHistoryDialog(final Conversation conversation) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.clear_conversation_history));
-        View dialogView = getLayoutInflater().inflate(
-                R.layout.dialog_clear_history, null);
-        final CheckBox endConversationCheckBox = dialogView
-                .findViewById(R.id.end_conversation_checkbox);
+        final View dialogView = getLayoutInflater().inflate(R.layout.dialog_clear_history, null);
+        final CheckBox endConversationCheckBox = dialogView.findViewById(R.id.end_conversation_checkbox);
         if (conversation.getMode() == Conversation.MODE_SINGLE) {
             endConversationCheckBox.setVisibility(View.VISIBLE);
             endConversationCheckBox.setChecked(true);
@@ -900,63 +899,21 @@ public class ConversationActivity extends XmppActivity
         builder.setView(dialogView);
         builder.setNegativeButton(getString(R.string.cancel), null);
         builder.setPositiveButton(getString(R.string.delete_messages),
-                new OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ConversationActivity.this.xmppConnectionService.clearConversationHistory(conversation);
-                        if (conversation.getMode() == Conversation.MODE_SINGLE) {
-                            if (endConversationCheckBox.isChecked()) {
-                                endConversation(conversation);
-                            } else {
-                                updateConversationList();
-                                ConversationActivity.this.mConversationFragment.updateMessages();
-                            }
+                (dialog, which) -> {
+                    ConversationActivity.this.xmppConnectionService.clearConversationHistory(conversation);
+                    if (conversation.getMode() == Conversation.MODE_SINGLE) {
+                        if (endConversationCheckBox.isChecked()) {
+                            endConversation(conversation);
                         } else {
                             updateConversationList();
                             ConversationActivity.this.mConversationFragment.updateMessages();
                         }
+                    } else {
+                        updateConversationList();
+                        ConversationActivity.this.mConversationFragment.updateMessages();
                     }
                 });
         builder.create().show();
-    }
-
-    protected void attachFileDialog() {
-        View menuAttachFile = findViewById(R.id.action_attach_file);
-        if (menuAttachFile == null) {
-            return;
-        }
-        PopupMenu attachFilePopup = new PopupMenu(this, menuAttachFile);
-        attachFilePopup.inflate(R.menu.attachment_choices);
-        attachFilePopup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.attach_choose_picture:
-                        attachFile(ATTACHMENT_CHOICE_CHOOSE_IMAGE);
-                        break;
-                    case R.id.attach_take_picture:
-                        attachFile(ATTACHMENT_CHOICE_TAKE_FROM_CAMERA);
-                        break;
-                    case R.id.attach_choose_video:
-                        attachFile(ATTACHMENT_CHOICE_CHOOSE_VIDEO);
-                        break;
-                    case R.id.attach_choose_file:
-                        attachFile(ATTACHMENT_CHOICE_CHOOSE_FILE);
-                        break;
-                    case R.id.attach_record_voice:
-                        attachFile(ATTACHMENT_CHOICE_RECORD_VOICE);
-                        break;
-                    case R.id.attach_location:
-                        attachFile(ATTACHMENT_CHOICE_LOCATION);
-                        break;
-                }
-                return false;
-            }
-        });
-        UIHelper.showIconsInPopup(attachFilePopup);
-        attachFilePopup.show();
     }
 
     public void verifyOtrSessionDialog(final Conversation conversation, View view) {
@@ -994,91 +951,47 @@ public class ConversationActivity extends XmppActivity
         popup.show();
     }
 
-    protected void selectEncryptionDialog(final Conversation conversation) {
-        View menuItemView = findViewById(R.id.action_security);
-        if (menuItemView == null) {
+    private void handleEncryptionSelection(MenuItem item) {
+        Conversation conversation = getSelectedConversation();
+        if (conversation == null) {
             return;
         }
-        PopupMenu popup = new PopupMenu(this, menuItemView);
-        final ConversationFragment fragment = (ConversationFragment) getFragmentManager()
-                .findFragmentByTag("conversation");
-        if (fragment != null) {
-            popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()) {
-                        case R.id.encryption_choice_none:
-                            conversation.setNextEncryption(Message.ENCRYPTION_NONE);
-                            item.setChecked(true);
-                            break;
-                        case R.id.encryption_choice_otr:
-                            conversation.setNextEncryption(Message.ENCRYPTION_OTR);
-                            item.setChecked(true);
-                            break;
-                        case R.id.encryption_choice_pgp:
-                            if (hasPgp()) {
-                                if (conversation.getAccount().getPgpSignature() != null) {
-                                    conversation.setNextEncryption(Message.ENCRYPTION_PGP);
-                                    item.setChecked(true);
-                                } else {
-                                    announcePgp(conversation.getAccount(), conversation, null, onOpenPGPKeyPublished);
-                                }
-                            } else {
-                                showInstallPgpDialog();
-                            }
-                            break;
-                        case R.id.encryption_choice_axolotl:
-                            Log.d(Config.LOGTAG, AxolotlService.getLogprefix(conversation.getAccount())
-                                    + "Enabled axolotl for Contact " + conversation.getContact().getJid());
-                            conversation.setNextEncryption(Message.ENCRYPTION_AXOLOTL);
-                            item.setChecked(true);
-                            break;
-                        default:
-                            conversation.setNextEncryption(Message.ENCRYPTION_NONE);
-                            break;
+        final ConversationFragment fragment = (ConversationFragment) getFragmentManager().findFragmentByTag("conversation");
+        switch (item.getItemId()) {
+            case R.id.encryption_choice_none:
+                conversation.setNextEncryption(Message.ENCRYPTION_NONE);
+                item.setChecked(true);
+                break;
+            case R.id.encryption_choice_otr:
+                conversation.setNextEncryption(Message.ENCRYPTION_OTR);
+                item.setChecked(true);
+                break;
+            case R.id.encryption_choice_pgp:
+                if (hasPgp()) {
+                    if (conversation.getAccount().getPgpSignature() != null) {
+                        conversation.setNextEncryption(Message.ENCRYPTION_PGP);
+                        item.setChecked(true);
+                    } else {
+                        announcePgp(conversation.getAccount(), conversation, null, onOpenPGPKeyPublished);
                     }
-                    xmppConnectionService.updateConversation(conversation);
-                    fragment.updateChatMsgHint();
-                    invalidateOptionsMenu();
-                    refreshUi();
-                    return true;
+                } else {
+                    showInstallPgpDialog();
                 }
-            });
-            popup.inflate(R.menu.encryption_choices);
-            MenuItem otr = popup.getMenu().findItem(R.id.encryption_choice_otr);
-            MenuItem none = popup.getMenu().findItem(R.id.encryption_choice_none);
-            MenuItem pgp = popup.getMenu().findItem(R.id.encryption_choice_pgp);
-            MenuItem axolotl = popup.getMenu().findItem(R.id.encryption_choice_axolotl);
-            pgp.setVisible(Config.supportOpenPgp());
-            none.setVisible(Config.supportUnencrypted() || conversation.getMode() == Conversation.MODE_MULTI);
-            otr.setVisible(Config.supportOtr());
-            axolotl.setVisible(Config.supportOmemo());
-            if (conversation.getMode() == Conversation.MODE_MULTI) {
-                otr.setVisible(false);
-            }
-            if (!conversation.getAccount().getAxolotlService().isConversationAxolotlCapable(conversation)) {
-                axolotl.setEnabled(false);
-            }
-            switch (conversation.getNextEncryption()) {
-                case Message.ENCRYPTION_NONE:
-                    none.setChecked(true);
-                    break;
-                case Message.ENCRYPTION_OTR:
-                    otr.setChecked(true);
-                    break;
-                case Message.ENCRYPTION_PGP:
-                    pgp.setChecked(true);
-                    break;
-                case Message.ENCRYPTION_AXOLOTL:
-                    axolotl.setChecked(true);
-                    break;
-                default:
-                    none.setChecked(true);
-                    break;
-            }
-            popup.show();
+                break;
+            case R.id.encryption_choice_axolotl:
+                Log.d(Config.LOGTAG, AxolotlService.getLogprefix(conversation.getAccount())
+                        + "Enabled axolotl for Contact " + conversation.getContact().getJid());
+                conversation.setNextEncryption(Message.ENCRYPTION_AXOLOTL);
+                item.setChecked(true);
+                break;
+            default:
+                conversation.setNextEncryption(Message.ENCRYPTION_NONE);
+                break;
         }
+        xmppConnectionService.updateConversation(conversation);
+        fragment.updateChatMsgHint();
+        invalidateOptionsMenu();
+        refreshUi();
     }
 
     @Override
@@ -1256,7 +1169,6 @@ public class ConversationActivity extends XmppActivity
             recreate();
         }
         this.mActivityPaused = false;
-
         if (!isConversationsOverviewVisable() || !isConversationsOverviewHideable()) {
             sendReadMarkerIfNecessary(getSelectedConversation());
         }
