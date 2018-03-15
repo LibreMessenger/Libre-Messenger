@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import de.pixart.messenger.R;
@@ -21,20 +20,15 @@ public class ChangePasswordActivity extends XmppActivity implements XmppConnecti
             if (mAccount != null) {
                 final String currentPassword = mCurrentPassword.getText().toString();
                 final String newPassword = mNewPassword.getText().toString();
-                final String newPasswordConfirm = mNewPasswordConfirm.getText().toString();
                 if (!mAccount.isOptionSet(Account.OPTION_MAGIC_CREATE) && !currentPassword.equals(mAccount.getPassword())) {
                     mCurrentPassword.requestFocus();
                     mCurrentPassword.setError(getString(R.string.account_status_unauthorized));
-                } else if (!newPassword.equals(newPasswordConfirm)) {
-                    mNewPasswordConfirm.requestFocus();
-                    mNewPasswordConfirm.setError(getString(R.string.passwords_do_not_match));
                 } else if (newPassword.trim().isEmpty()) {
                     mNewPassword.requestFocus();
                     mNewPassword.setError(getString(R.string.password_should_not_be_empty));
                 } else {
                     mCurrentPassword.setError(null);
                     mNewPassword.setError(null);
-                    mNewPasswordConfirm.setError(null);
                     xmppConnectionService.updateAccountPasswordOnServer(mAccount, newPassword, ChangePasswordActivity.this);
                     mChangePasswordButton.setEnabled(false);
                     mChangePasswordButton.setTextColor(getSecondaryTextColor());
@@ -43,20 +37,16 @@ public class ChangePasswordActivity extends XmppActivity implements XmppConnecti
             }
         }
     };
-    private TextView mCurrentPasswordLabel;
     private EditText mCurrentPassword;
     private EditText mNewPassword;
-    private EditText mNewPasswordConfirm;
     private Account mAccount;
 
     @Override
     void onBackendConnected() {
         this.mAccount = extractAccount(getIntent());
         if (this.mAccount != null && this.mAccount.isOptionSet(Account.OPTION_MAGIC_CREATE)) {
-            this.mCurrentPasswordLabel.setVisibility(View.GONE);
             this.mCurrentPassword.setVisibility(View.GONE);
         } else {
-            this.mCurrentPasswordLabel.setVisibility(View.VISIBLE);
             this.mCurrentPassword.setVisibility(View.VISIBLE);
         }
     }
@@ -74,10 +64,8 @@ public class ChangePasswordActivity extends XmppActivity implements XmppConnecti
         });
         this.mChangePasswordButton = findViewById(R.id.right_button);
         this.mChangePasswordButton.setOnClickListener(this.mOnChangePasswordButtonClicked);
-        this.mCurrentPasswordLabel = findViewById(R.id.current_password_label);
         this.mCurrentPassword = findViewById(R.id.current_password);
         this.mNewPassword = findViewById(R.id.new_password);
-        this.mNewPasswordConfirm = findViewById(R.id.new_password_confirm);
     }
 
     @Override

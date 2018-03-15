@@ -1,6 +1,5 @@
 package de.pixart.messenger.ui;
 
-import android.support.v7.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
@@ -10,11 +9,14 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.security.KeyChain;
 import android.security.KeyChainAliasCallback;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -73,7 +75,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     private static final int REQUEST_DATA_SAVER = 0x37af244;
     private AutoCompleteTextView mAccountJid;
     private EditText mPassword;
-    private EditText mPasswordConfirm;
     private CheckBox mRegisterNew;
     private Button mCancelButton;
     private Button mSaveButton;
@@ -100,7 +101,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     private TextView mOwnFingerprintDesc;
     private TextView mOtrFingerprintDesc;
  	private TextView getmPgpFingerprintDesc;
-    private TextView mAccountJidLabel;
+    private TextInputLayout mPasswordToggle;
     private ImageView mAvatar;
     private RelativeLayout mOtrFingerprintBox;
     private RelativeLayout mAxolotlFingerprintBox;
@@ -129,7 +130,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         @Override
         public void onClick(final View v) {
             final String password = mPassword.getText().toString();
-            final String passwordConfirm = mPasswordConfirm.getText().toString();
             final boolean wasDisabled = mAccount != null && mAccount.getStatus() == Account.State.DISABLED;
 
             if (!mInitMode && passwordChangedInMagicCreateMode()) {
@@ -222,11 +222,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 if (XmppConnection.errorMessage != null) {
                     Toast.makeText(EditAccountActivity.this, XmppConnection.errorMessage, Toast.LENGTH_LONG).show();
                 }
-                if (!password.equals(passwordConfirm)) {
-                    mPasswordConfirm.setError(getString(R.string.passwords_do_not_match));
-                    mPasswordConfirm.requestFocus();
-                    return;
-                }
             }
             if (mAccount != null) {
                 if (mInitMode && mAccount.isOptionSet(Account.OPTION_MAGIC_CREATE)) {
@@ -240,7 +235,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 } else {
                     mAccountJid.setError(null);
                 }
-                mPasswordConfirm.setError(null);
                 mAccount.setPassword(password);
                 mAccount.setOption(Account.OPTION_REGISTER, registerNewAccount);
                 if (!xmppConnectionService.updateAccount(mAccount)) {
@@ -288,6 +282,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     private boolean mSavedInstanceInit = false;
     private Button mClearDevicesButton;
     private XmppUri pendingUri = null;
+    private boolean mUseTor;
 
     public void refreshUiReal() {
         invalidateOptionsMenu();
@@ -370,6 +365,24 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 
         }
     };
+
+    private View.OnFocusChangeListener mEditTextFocusListener = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View view, boolean b) {
+            EditText et = (EditText) view;
+            if (b) {
+                int resId = mUsernameMode ? R.string.username : R.string.account_settings_example_jabber_id;
+                if (view.getId() == R.id.hostname) {
+                    resId = mUseTor ? R.string.hostname_or_onion : R.string.hostname_example;
+                }
+                final int res = resId;
+                new Handler().postDelayed(() -> et.setHint(res), 500);
+            } else {
+                et.setHint(null);
+            }
+        }
+    };
+
 
     private final OnClickListener mAvatarClickListener = new OnClickListener() {
         @Override
@@ -529,10 +542,10 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         setContentView(R.layout.activity_edit_account);
         this.mAccountJid = findViewById(R.id.account_jid);
         this.mAccountJid.addTextChangedListener(this.mTextWatcher);
-        this.mAccountJidLabel = findViewById(R.id.account_jid_label);
+        this.mAccountJid.setOnFocusChangeListener(this.mEditTextFocusListener);
         this.mPassword = findViewById(R.id.account_password);
         this.mPassword.addTextChangedListener(this.mTextWatcher);
-        this.mPasswordConfirm = findViewById(R.id.account_password_confirm);
+        this.mPasswordToggle = findViewById(R.id.text_input_password_toggle);
         this.mAvatar = findViewById(R.id.avater);
         this.mAvatar.setOnClickListener(this.mAvatarClickListener);
         this.mRegisterNew = findViewById(R.id.account_register_new);
@@ -569,6 +582,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         this.mNamePort = findViewById(R.id.name_port);
         this.mHostname = findViewById(R.id.hostname);
         this.mHostname.addTextChangedListener(mTextWatcher);
+        this.mHostname.setOnFocusChangeListener(mEditTextFocusListener);
         this.mClearDevicesButton = findViewById(R.id.clear_devices);
         this.mClearDevicesButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -589,13 +603,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         }
         final OnCheckedChangeListener OnCheckedShowConfirmPassword = new OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(final CompoundButton buttonView,
-                                         final boolean isChecked) {
-                if (isChecked) {
-                    mPasswordConfirm.setVisibility(View.VISIBLE);
-                } else {
-                    mPasswordConfirm.setVisibility(View.GONE);
-                }
+            public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
                 updateSaveButton();
             }
         };
@@ -704,9 +712,8 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             }
         }
         SharedPreferences preferences = getPreferences();
-        boolean useTor = Config.FORCE_ORBOT || preferences.getBoolean("use_tor", false);
-        this.mShowOptions = useTor || preferences.getBoolean("show_connection_options", false);
-        mHostname.setHint(useTor ? R.string.hostname_or_onion : R.string.hostname_example);
+        mUseTor = Config.FORCE_ORBOT || preferences.getBoolean("use_tor", false);
+        this.mShowOptions = mUseTor || preferences.getBoolean("show_connection_options", false);
         this.mNamePort.setVisibility(mShowOptions ? View.VISIBLE : View.GONE);
     }
 
@@ -769,7 +776,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             this.mCancelButton.setTextColor(getSecondaryTextColor());
         }
         if (mUsernameMode) {
-            this.mAccountJidLabel.setText(R.string.username);
             this.mAccountJid.setHint(R.string.username_hint);
         } else {
             final KnownHostsAdapter mKnownHostsAdapter = new KnownHostsAdapter(this,
@@ -911,6 +917,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         this.mAccountJid.setEnabled(editable);
         this.mAccountJid.setFocusable(editable);
         this.mAccountJid.setFocusableInTouchMode(editable);
+        this.mPasswordToggle.setPasswordVisibilityToggleEnabled(editable);
 
         if (!mInitMode) {
             this.mAvatar.setVisibility(View.VISIBLE);
@@ -922,7 +929,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         if (this.mAccount.isOptionSet(Account.OPTION_REGISTER)) {
             this.mRegisterNew.setVisibility(View.VISIBLE);
             this.mRegisterNew.setChecked(true);
-            this.mPasswordConfirm.setText(this.mAccount.getPassword());
         } else {
             this.mRegisterNew.setVisibility(View.GONE);
             this.mRegisterNew.setChecked(false);

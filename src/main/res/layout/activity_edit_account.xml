@@ -51,42 +51,40 @@
                     android:layout_below="@+id/avater"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/account_jid_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/account_settings_jabber_id"
-                        android:textColor="@color/black87"
-                        android:textSize="?attr/TextSizeBody" />
-
-                    <AutoCompleteTextView
-                        android:id="@+id/account_jid"
+                    <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/account_settings_example_jabber_id"
-                        android:inputType="textEmailAddress"
-                        android:imeOptions="actionNext"
-                        android:textColor="@color/black87"
-                        android:textColorHint="@color/black54"
-                        android:textSize="?attr/TextSizeBody" />
+                        android:hint="@string/account_settings_jabber_id">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/account_settings_password"
-                        android:textColor="@color/black87"
-                        android:textSize="?attr/TextSizeBody" />
+                        <AutoCompleteTextView
+                            android:id="@+id/account_jid"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionNext"
+                            android:inputType="textEmailAddress"
+                            android:textColor="?attr/color_text_primary"
+                            android:textColorHint="?attr/color_text_secondary"
+                            android:textSize="?attr/TextSizeBody" />
+                    </android.support.design.widget.TextInputLayout>
 
-                    <EditText
-                        android:id="@+id/account_password"
+                    <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/password"
-                        android:inputType="textPassword"
-                        android:textColor="@color/black87"
-                        android:textColorHint="@color/black54"
-                        android:textSize="?attr/TextSizeBody" />
+                        android:id="@+id/text_input_password_toggle"
+                        app:passwordToggleDrawable="@drawable/visibility_toggle_drawable"
+                        app:passwordToggleEnabled="true"
+                        app:passwordToggleTint="?attr/color_text_secondary">
+
+                        <android.support.design.widget.TextInputEditText
+                            android:id="@+id/account_password"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="@string/password"
+                            android:inputType="textPassword"
+                            android:textColor="@color/black87"
+                            android:textColorHint="@color/black54"
+                            android:textSize="?attr/TextSizeBody" />
+                    </android.support.design.widget.TextInputLayout>
 
                     <LinearLayout
                         android:id="@+id/name_port"
@@ -102,23 +100,20 @@
                             android:layout_weight="0.8"
                             android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/textView"
-                                android:layout_width="wrap_content"
+                            <android.support.design.widget.TextInputLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="@string/account_settings_hostname"
-                                android:textColor="@color/black87"
-                                android:textSize="?attr/TextSizeBody" />
+                                android:hint="@string/account_settings_hostname">
 
-                            <EditText
-                                android:id="@+id/hostname"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:hint="@string/hostname_or_onion"
-                                android:inputType="textNoSuggestions"
-                                android:textColor="@color/black87"
-                                android:textColorHint="@color/black54"
-                                android:textSize="?attr/TextSizeBody" />
+                                <EditText
+                                    android:id="@+id/hostname"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="textNoSuggestions"
+                                    android:textColor="?attr/color_text_primary"
+                                    android:textColorHint="?attr/color_text_secondary"
+                                    android:textSize="?attr/TextSizeBody" />
+                            </android.support.design.widget.TextInputLayout>
                         </LinearLayout>
 
                         <LinearLayout
@@ -127,22 +122,21 @@
                             android:layout_weight="0.2"
                             android:orientation="vertical">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/account_settings_port"
-                                android:textColor="@color/black87"
-                                android:textSize="?attr/TextSizeBody" />
-
-                            <EditText
-                                android:id="@+id/port"
+                            <android.support.design.widget.TextInputLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:inputType="number"
-                                android:maxLength="5"
-                                android:textColor="@color/black87"
-                                android:textColorHint="@color/black54"
-                                android:textSize="?attr/TextSizeBody" />
+                                android:hint="@string/account_settings_port">
+
+                                <EditText
+                                    android:id="@+id/port"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:inputType="number"
+                                    android:maxLength="5"
+                                    android:textColor="?attr/color_text_primary"
+                                    android:textColorHint="?attr/color_text_secondary"
+                                    android:textSize="?attr/TextSizeBody" />
+                            </android.support.design.widget.TextInputLayout>
                         </LinearLayout>
                     </LinearLayout>
 
