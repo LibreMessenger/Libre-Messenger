@@ -52,6 +52,7 @@
                     android:orientation="vertical">
 
                     <android.support.design.widget.TextInputLayout
+                        android:id="@+id/account_jid_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/account_settings_jabber_id">
@@ -68,9 +69,9 @@
                     </android.support.design.widget.TextInputLayout>
 
                     <android.support.design.widget.TextInputLayout
+                        android:id="@+id/account_password_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:id="@+id/text_input_password_toggle"
                         app:passwordToggleDrawable="@drawable/visibility_toggle_drawable"
                         app:passwordToggleEnabled="true"
                         app:passwordToggleTint="?attr/color_text_secondary">
@@ -101,6 +102,7 @@
                             android:orientation="vertical">
 
                             <android.support.design.widget.TextInputLayout
+                                android:id="@+id/hostname_layout"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="@string/account_settings_hostname">
@@ -123,6 +125,7 @@
                             android:orientation="vertical">
 
                             <android.support.design.widget.TextInputLayout
+                                android:id="@+id/port_layout"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:hint="@string/account_settings_port">

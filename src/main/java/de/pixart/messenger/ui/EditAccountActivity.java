@@ -74,7 +74,9 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 
     private static final int REQUEST_DATA_SAVER = 0x37af244;
     private AutoCompleteTextView mAccountJid;
+    private TextInputLayout mAccountJidLayout;
     private EditText mPassword;
+    private TextInputLayout mPasswordLayout;
     private CheckBox mRegisterNew;
     private Button mCancelButton;
     private Button mSaveButton;
@@ -101,7 +103,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     private TextView mOwnFingerprintDesc;
     private TextView mOtrFingerprintDesc;
  	private TextView getmPgpFingerprintDesc;
-    private TextInputLayout mPasswordToggle;
     private ImageView mAvatar;
     private RelativeLayout mOtrFingerprintBox;
     private RelativeLayout mAxolotlFingerprintBox;
@@ -113,7 +114,9 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     private LinearLayout keysCard;
     private LinearLayout mNamePort;
     private EditText mHostname;
+    private TextInputLayout mHostnameLayout;
     private EditText mPort;
+    private TextInputLayout mPortLayout;
     private AlertDialog mCaptchaDialog = null;
 
     private Jid jidToEdit;
@@ -148,7 +151,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             }
             final boolean registerNewAccount = mRegisterNew.isChecked() && !Config.DISALLOW_REGISTRATION_IN_UI;
             if (mUsernameMode && mAccountJid.getText().toString().contains("@")) {
-                mAccountJid.setError(getString(R.string.invalid_username));
+                mAccountJidLayout.setError(getString(R.string.invalid_username));
                 mAccountJid.requestFocus();
                 return;
             }
@@ -177,9 +180,9 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 }
             } catch (final InvalidJidException e) {
                 if (mUsernameMode) {
-                    mAccountJid.setError(getString(R.string.invalid_username));
+                    mAccountJidLayout.setError(getString(R.string.invalid_username));
                 } else {
-                    mAccountJid.setError(getString(R.string.invalid_jid));
+                    mAccountJidLayout.setError(getString(R.string.invalid_jid));
                 }
                 mAccountJid.requestFocus();
                 return;
@@ -190,20 +193,20 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 hostname = mHostname.getText().toString().replaceAll("\\s", "");
                 final String port = mPort.getText().toString().replaceAll("\\s", "");
                 if (hostname.contains(" ")) {
-                    mHostname.setError(getString(R.string.not_valid_hostname));
+                    mHostnameLayout.setError(getString(R.string.not_valid_hostname));
                     mHostname.requestFocus();
                     return;
                 }
                 try {
                     numericPort = Integer.parseInt(port);
                     if (numericPort < 0 || numericPort > 65535) {
-                        mPort.setError(getString(R.string.not_a_valid_port));
+                        mPortLayout.setError(getString(R.string.not_a_valid_port));
                         mPort.requestFocus();
                         return;
                     }
 
                 } catch (NumberFormatException e) {
-                    mPort.setError(getString(R.string.not_a_valid_port));
+                    mPortLayout.setError(getString(R.string.not_a_valid_port));
                     mPort.requestFocus();
                     return;
                 }
@@ -211,9 +214,9 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 
             if (jid.isDomainJid()) {
                 if (mUsernameMode) {
-                    mAccountJid.setError(getString(R.string.invalid_username));
+                    mAccountJidLayout.setError(getString(R.string.invalid_username));
                 } else {
-                    mAccountJid.setError(getString(R.string.invalid_jid));
+                    mAccountJidLayout.setError(getString(R.string.invalid_jid));
                 }
                 mAccountJid.requestFocus();
                 return;
@@ -231,9 +234,9 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 mAccount.setPort(numericPort);
                 mAccount.setHostname(hostname);
                 if (XmppConnection.errorMessage != null) {
-                    mAccountJid.setError(XmppConnection.errorMessage);
+                    mAccountJidLayout.setError(XmppConnection.errorMessage);
                 } else {
-                    mAccountJid.setError(null);
+                    mAccountJidLayout.setError(null);
                 }
                 mAccount.setPassword(password);
                 mAccount.setOption(Account.OPTION_REGISTER, registerNewAccount);
@@ -243,7 +246,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 }
             } else {
                 if (xmppConnectionService.findAccountByJid(jid) != null) {
-                    mAccountJid.setError(getString(R.string.account_already_exists));
+                    mAccountJidLayout.setError(getString(R.string.account_already_exists));
                     mAccountJid.requestFocus();
                     return;
                 }
@@ -255,8 +258,8 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 mAccount.setOption(Account.OPTION_REGISTER, registerNewAccount);
                 xmppConnectionService.createAccount(mAccount);
             }
-            mHostname.setError(null);
-            mPort.setError(null);
+            mHostnameLayout.setError(null);
+            mPortLayout.setError(null);
             if (mAccount.isEnabled()
                     && !registerNewAccount
                     && !mInitMode) {
@@ -543,9 +546,10 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         this.mAccountJid = findViewById(R.id.account_jid);
         this.mAccountJid.addTextChangedListener(this.mTextWatcher);
         this.mAccountJid.setOnFocusChangeListener(this.mEditTextFocusListener);
+        this.mAccountJidLayout = (TextInputLayout) findViewById(R.id.account_jid_layout);
         this.mPassword = findViewById(R.id.account_password);
         this.mPassword.addTextChangedListener(this.mTextWatcher);
-        this.mPasswordToggle = findViewById(R.id.text_input_password_toggle);
+        this.mPasswordLayout = (TextInputLayout) findViewById(R.id.account_password_layout);
         this.mAvatar = findViewById(R.id.avater);
         this.mAvatar.setOnClickListener(this.mAvatarClickListener);
         this.mRegisterNew = findViewById(R.id.account_register_new);
@@ -583,6 +587,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         this.mHostname = findViewById(R.id.hostname);
         this.mHostname.addTextChangedListener(mTextWatcher);
         this.mHostname.setOnFocusChangeListener(mEditTextFocusListener);
+        this.mHostnameLayout = (TextInputLayout)findViewById(R.id.hostname_layout);
         this.mClearDevicesButton = findViewById(R.id.clear_devices);
         this.mClearDevicesButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -593,6 +598,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         this.mPort = findViewById(R.id.port);
         this.mPort.setText("5222");
         this.mPort.addTextChangedListener(mTextWatcher);
+        this.mPortLayout = (TextInputLayout)findViewById(R.id.port_layout);
         this.mSaveButton = findViewById(R.id.save_button);
         this.mCancelButton = findViewById(R.id.cancel_button);
         this.mSaveButton.setOnClickListener(this.mSaveButtonClickListener);
@@ -917,7 +923,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         this.mAccountJid.setEnabled(editable);
         this.mAccountJid.setFocusable(editable);
         this.mAccountJid.setFocusableInTouchMode(editable);
-        this.mPasswordToggle.setPasswordVisibilityToggleEnabled(editable);
+        this.mPasswordLayout.setPasswordVisibilityToggleEnabled(editable);
 
         if (!mInitMode) {
             this.mAvatar.setVisibility(View.VISIBLE);
@@ -1094,24 +1100,24 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             }
         } else {
             if (this.mAccount.errorStatus()) {
-                final EditText errorTextField;
+                final TextInputLayout errorLayout;
                 if (this.mAccount.getStatus() == Account.State.UNAUTHORIZED) {
-                    errorTextField = this.mPassword;
+                    errorLayout = this.mPasswordLayout;
                 } else if (mShowOptions
                         && this.mAccount.getStatus() == Account.State.SERVER_NOT_FOUND
                         && this.mHostname.getText().length() > 0) {
-                    errorTextField = this.mHostname;
+                    errorLayout = this.mHostnameLayout;
                 } else {
-                    errorTextField = this.mAccountJid;
+                    errorLayout = this.mAccountJidLayout;
                 }
-                errorTextField.setError(getString(this.mAccount.getStatus().getReadableId()));
+                errorLayout.setError(getString(this.mAccount.getStatus().getReadableId()));
                 if (init || !accountInfoEdited()) {
-                    errorTextField.requestFocus();
+                    errorLayout.requestFocus();
                 }
             } else {
-                this.mAccountJid.setError(null);
-                this.mPassword.setError(null);
-                this.mHostname.setError(null);
+                this.mAccountJidLayout.setError(null);
+                this.mPasswordLayout.setError(null);
+                this.mHostnameLayout.setError(null);
             }
             this.mStats.setVisibility(View.GONE);
         }
