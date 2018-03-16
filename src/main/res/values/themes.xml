@@ -9,8 +9,8 @@
         <item name="color_text_primary">@color/black87</item>
         <item name="color_text_secondary">@color/black54</item>
 
-        <!--<item name="color_background_primary">@color/grey50</item>-->
-        <!--<item name="color_background_secondary">@color/grey200</item>-->
+        <item name="color_background_primary">@color/grey50</item>
+        <item name="color_background_secondary">@color/grey200</item>
 
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:actionModeBackground">@color/accent</item>

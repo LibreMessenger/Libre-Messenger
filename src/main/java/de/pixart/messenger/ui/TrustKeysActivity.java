@@ -1,6 +1,7 @@
 package de.pixart.messenger.ui;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
@@ -9,10 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.whispersystems.libsignal.IdentityKey;
@@ -29,6 +27,8 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.crypto.axolotl.FingerprintStatus;
+import de.pixart.messenger.databinding.ActivityTrustKeysBinding;
+import de.pixart.messenger.databinding.KeysCardBinding;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.utils.CryptoHelper;
@@ -43,21 +43,13 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
 
     private Account mAccount;
     private Conversation mConversation;
-    private TextView keyErrorMessage;
-    private LinearLayout keyErrorMessageCard;
-    private TextView ownKeysTitle;
-    private LinearLayout ownKeys;
-    private LinearLayout ownKeysCard;
-    private LinearLayout foreignKeys;
-    private Button mSaveButton;
-    private Button mCancelButton;
 
     private AtomicBoolean mUseCameraHintShown = new AtomicBoolean(false);
 
     private AxolotlService.FetchStatus lastFetchReport = AxolotlService.FetchStatus.SUCCESS;
 
     private final Map<String, Boolean> ownKeysToTrust = new HashMap<>();
-    private final Map<Jid, Map<String, Boolean>> foreignKeysToTrust = new HashMap<>();
+    private final Map<Jid,Map<String, Boolean>> foreignKeysToTrust = new HashMap<>();
 
     private final OnClickListener mSaveButtonListener = new OnClickListener() {
         @Override
@@ -74,9 +66,8 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
             finish();
         }
     };
-
-    private XmppUri mPendingFingerprintVerificationUri = null;
     private Toast mUseCameraHintToast = null;
+    private ActivityTrustKeysBinding binding;
 
     @Override
     protected void refreshUiReal() {
@@ -87,9 +78,9 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trust_keys);
+        this.binding = DataBindingUtil.setContentView(this,R.layout.activity_trust_keys);
         this.contactJids = new ArrayList<>();
-        for (String jid : getIntent().getStringArrayExtra("contacts")) {
+        for(String jid : getIntent().getStringArrayExtra("contacts")) {
             try {
                 this.contactJids.add(Jid.fromString(jid));
             } catch (InvalidJidException e) {
@@ -97,16 +88,8 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
             }
         }
 
-        keyErrorMessageCard = findViewById(R.id.key_error_message_card);
-        keyErrorMessage = findViewById(R.id.key_error_message);
-        ownKeysTitle = findViewById(R.id.own_keys_title);
-        ownKeys = findViewById(R.id.own_keys_details);
-        ownKeysCard = findViewById(R.id.own_keys_card);
-        foreignKeys = findViewById(R.id.foreign_keys);
-        mCancelButton = findViewById(R.id.cancel_button);
-        mCancelButton.setOnClickListener(mCancelButtonListener);
-        mSaveButton = findViewById(R.id.save_button);
-        mSaveButton.setOnClickListener(mSaveButtonListener);
+        binding.cancelButton.setOnClickListener(mCancelButtonListener);
+        binding.saveButton.setOnClickListener(mSaveButtonListener);
 
 
         if (getSupportActionBar() != null) {
@@ -115,7 +98,7 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
         }
 
         if (savedInstanceState != null) {
-            mUseCameraHintShown.set(savedInstanceState.getBoolean("camera_hint_shown", false));
+            mUseCameraHintShown.set(savedInstanceState.getBoolean("camera_hint_shown",false));
         }
     }
 
@@ -187,13 +170,13 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
 
     private void populateView() {
         setTitle(getString(R.string.trust_omemo_fingerprints));
-        ownKeys.removeAllViews();
-        foreignKeys.removeAllViews();
+        binding.ownKeysDetails.removeAllViews();
+        binding.foreignKeys.removeAllViews();
         boolean hasOwnKeys = false;
         boolean hasForeignKeys = false;
-        for (final String fingerprint : ownKeysToTrust.keySet()) {
+        for(final String fingerprint : ownKeysToTrust.keySet()) {
             hasOwnKeys = true;
-            addFingerprintRowWithListeners(ownKeys, mAccount, fingerprint, false,
+            addFingerprintRowWithListeners(binding.ownKeysDetails, mAccount, fingerprint, false,
                     FingerprintStatus.createActive(ownKeysToTrust.get(fingerprint)), false, false,
                     new CompoundButton.OnCheckedChangeListener() {
                         @Override
@@ -208,84 +191,74 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
         synchronized (this.foreignKeysToTrust) {
             for (Map.Entry<Jid, Map<String, Boolean>> entry : foreignKeysToTrust.entrySet()) {
                 hasForeignKeys = true;
-                final LinearLayout layout = (LinearLayout) getLayoutInflater().inflate(R.layout.keys_card, foreignKeys, false);
+                KeysCardBinding keysCardBinding =  DataBindingUtil.inflate(getLayoutInflater(),R.layout.keys_card, binding.foreignKeys,false);
+                //final LinearLayout layout = (LinearLayout) getLayoutInflater().inflate(R.layout.keys_card, foreignKeys, false);
                 final Jid jid = entry.getKey();
-                final TextView header = layout.findViewById(R.id.foreign_keys_title);
-                final LinearLayout keysContainer = layout.findViewById(R.id.foreign_keys_details);
-                final TextView informNoKeys = layout.findViewById(R.id.no_keys_to_accept);
-                header.setText(jid.toString());
-                header.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        switchToContactDetails(mAccount.getRoster().getContact(jid));
-                    }
-                });
+                keysCardBinding.foreignKeysTitle.setText(jid.toString());
+                keysCardBinding.foreignKeysTitle.setOnClickListener(v -> switchToContactDetails(mAccount.getRoster().getContact(jid)));
                 final Map<String, Boolean> fingerprints = entry.getValue();
                 for (final String fingerprint : fingerprints.keySet()) {
-                    addFingerprintRowWithListeners(keysContainer, mAccount, fingerprint, false,
+                    addFingerprintRowWithListeners(keysCardBinding.foreignKeysDetails, mAccount, fingerprint, false,
                             FingerprintStatus.createActive(fingerprints.get(fingerprint)), false, false,
-                            new CompoundButton.OnCheckedChangeListener() {
-                                @Override
-                                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                                    fingerprints.put(fingerprint, isChecked);
-                                    lockOrUnlockAsNeeded();
-                                }
+                            (buttonView, isChecked) -> {
+                                fingerprints.put(fingerprint, isChecked);
+                                lockOrUnlockAsNeeded();
                             }
                     );
                 }
                 if (fingerprints.size() == 0) {
-                    informNoKeys.setVisibility(View.VISIBLE);
+                    keysCardBinding.noKeysToAccept.setVisibility(View.VISIBLE);
                     if (hasNoOtherTrustedKeys(jid)) {
                         if (!mAccount.getRoster().getContact(jid).mutualPresenceSubscription()) {
-                            informNoKeys.setText(R.string.error_no_keys_to_trust_presence);
+                            keysCardBinding.noKeysToAccept.setText(R.string.error_no_keys_to_trust_presence);
                         } else {
-                            informNoKeys.setText(R.string.error_no_keys_to_trust_server_error);
+                            keysCardBinding.noKeysToAccept.setText(R.string.error_no_keys_to_trust_server_error);
                         }
                     } else {
-                        informNoKeys.setText(getString(R.string.no_keys_just_confirm, mAccount.getRoster().getContact(jid).getDisplayName()));
+                        keysCardBinding.noKeysToAccept.setText(getString(R.string.no_keys_just_confirm, mAccount.getRoster().getContact(jid).getDisplayName()));
                     }
                 } else {
-                    informNoKeys.setVisibility(View.GONE);
+                    keysCardBinding.noKeysToAccept.setVisibility(View.GONE);
                 }
-                foreignKeys.addView(layout);
+                binding.foreignKeys.addView(keysCardBinding.foreignKeysCard);
             }
         }
 
-        if ((hasOwnKeys || foreignActuallyHasKeys()) && mUseCameraHintShown.compareAndSet(false, true)) {
+        if ((hasOwnKeys || foreignActuallyHasKeys()) && mUseCameraHintShown.compareAndSet(false,true)) {
             showCameraToast();
         }
 
-        ownKeysTitle.setText(mAccount.getJid().toBareJid().toString());
-        ownKeysCard.setVisibility(hasOwnKeys ? View.VISIBLE : View.GONE);
-        foreignKeys.setVisibility(hasForeignKeys ? View.VISIBLE : View.GONE);
-        if (hasPendingKeyFetches()) {
+        binding.ownKeysTitle.setText(mAccount.getJid().toBareJid().toString());
+        binding.ownKeysCard.setVisibility(hasOwnKeys ? View.VISIBLE : View.GONE);
+        binding.foreignKeys.setVisibility(hasForeignKeys ? View.VISIBLE : View.GONE);
+        if(hasPendingKeyFetches()) {
             setFetching();
             lock();
         } else {
             if (!hasForeignKeys && hasNoOtherTrustedKeys()) {
-                keyErrorMessageCard.setVisibility(View.VISIBLE);
+                binding.keyErrorMessageCard.setVisibility(View.VISIBLE);
                 if (lastFetchReport == AxolotlService.FetchStatus.ERROR
                         || mAccount.getAxolotlService().fetchMapHasErrors(contactJids)) {
                     if (anyWithoutMutualPresenceSubscription(contactJids)) {
-                        keyErrorMessage.setText(R.string.error_no_keys_to_trust_presence);
+                        binding.keyErrorMessage.setText(R.string.error_no_keys_to_trust_presence);
                     } else {
-                        keyErrorMessage.setText(R.string.error_no_keys_to_trust_server_error);
+                        binding.keyErrorMessage.setText(R.string.error_no_keys_to_trust_server_error);
                     }
                 } else {
-                    keyErrorMessage.setText(R.string.error_no_keys_to_trust);
+                    binding.keyErrorMessage.setText(R.string.error_no_keys_to_trust);
                 }
-                ownKeys.removeAllViews();
-                ownKeysCard.setVisibility(View.GONE);
-                foreignKeys.removeAllViews();
-                foreignKeys.setVisibility(View.GONE);
+                binding.ownKeysDetails.removeAllViews();
+                binding.ownKeysCard.setVisibility(View.GONE);
+                binding.foreignKeys.removeAllViews();
+                binding.foreignKeys.setVisibility(View.GONE);
             }
             lockOrUnlockAsNeeded();
             setDone();
         }
     }
 
-    private boolean anyWithoutMutualPresenceSubscription(List<Jid> contactJids) {
-        for (Jid jid : contactJids) {
+    private boolean anyWithoutMutualPresenceSubscription(List<Jid> contactJids){
+        for(Jid jid : contactJids) {
             if (!mAccount.getRoster().getContact(jid).mutualPresenceSubscription()) {
                 return true;
             }
@@ -309,9 +282,9 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
         ownKeysToTrust.clear();
         AxolotlService service = this.mAccount.getAxolotlService();
         Set<IdentityKey> ownKeysSet = service.getKeysWithTrust(FingerprintStatus.createActiveUndecided());
-        for (final IdentityKey identityKey : ownKeysSet) {
+        for(final IdentityKey identityKey : ownKeysSet) {
             final String fingerprint = CryptoHelper.bytesToHex(identityKey.getPublicKey().serialize());
-            if (!ownKeysToTrust.containsKey(fingerprint)) {
+            if(!ownKeysToTrust.containsKey(fingerprint)) {
                 ownKeysToTrust.put(fingerprint, false);
             }
         }
@@ -380,7 +353,7 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
                     }
                     switch (report) {
                         case ERROR:
-                            Toast.makeText(TrustKeysActivity.this, R.string.error_fetching_omemo_key, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(TrustKeysActivity.this,R.string.error_fetching_omemo_key,Toast.LENGTH_SHORT).show();
                             break;
                         case SUCCESS_TRUSTED:
                             Toast.makeText(TrustKeysActivity.this,R.string.blindly_trusted_omemo_keys,Toast.LENGTH_LONG).show();
@@ -416,7 +389,7 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
     }
 
     private void commitTrusts() {
-        for (final String fingerprint : ownKeysToTrust.keySet()) {
+        for(final String fingerprint :ownKeysToTrust.keySet()) {
             mAccount.getAxolotlService().setFingerprintTrust(
                     fingerprint,
                     FingerprintStatus.createActive(ownKeysToTrust.get(fingerprint)));
@@ -443,13 +416,13 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
     }
 
     private void unlock() {
-        mSaveButton.setEnabled(true);
-        mSaveButton.setTextColor(getPrimaryTextColor());
+        binding.saveButton.setEnabled(true);
+        binding.saveButton.setTextColor(getPrimaryTextColor());
     }
 
     private void lock() {
-        mSaveButton.setEnabled(false);
-        mSaveButton.setTextColor(getSecondaryTextColor());
+        binding.saveButton.setEnabled(false);
+        binding.saveButton.setTextColor(getSecondaryTextColor());
     }
 
     private void lockOrUnlockAsNeeded() {
@@ -467,10 +440,10 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
     }
 
     private void setDone() {
-        mSaveButton.setText(getString(R.string.done));
+        binding.saveButton.setText(getString(R.string.done));
     }
 
     private void setFetching() {
-        mSaveButton.setText(getString(R.string.fetching_keys));
+        binding.saveButton.setText(getString(R.string.fetching_keys));
     }
 }

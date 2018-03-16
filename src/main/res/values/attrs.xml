@@ -7,6 +7,10 @@
     <attr name="TextSeparation" format="dimension"/>
     <attr name="IconSize" format="dimension" />
 
+    <attr name="color_background_secondary" format="reference|color" />
+    <attr name="color_background_primary" format="reference|color" />
+    <attr name="color_warning" format="reference|color"/>
+
     <attr name="color_text_primary" format="reference|color" />
     <attr name="color_text_secondary" format="reference|color" />
 
