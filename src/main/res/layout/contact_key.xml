@@ -63,7 +63,7 @@
                 android:id="@+id/button_remove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="?android:selectableItemBackground"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="@dimen/image_button_padding"
                 android:src="?attr/icon_remove"
                 android:layout_marginRight="16dp"

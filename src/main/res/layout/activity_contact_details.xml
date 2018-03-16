@@ -209,7 +209,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_gravity="center_horizontal"
-                        android:background="?android:selectableItemBackground"
+                        android:background="?attr/selectableItemBackgroundBorderless"
                         android:padding="@dimen/image_button_padding"
                         android:src="@drawable/ic_notifications_grey600_24dp" />
                 </RelativeLayout>
