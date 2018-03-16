@@ -1,6 +1,5 @@
 package de.pixart.messenger.ui;
 
-import android.support.v7.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,6 +8,8 @@ import android.content.IntentSender.SendIntentException;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -83,10 +84,10 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
     private TextView mFullJid;
     private TextView mAccountJid;
     private LinearLayout membersView;
-    private LinearLayout mMoreDetails;
+    private CardView mMoreDetails;
     private RelativeLayout mMucSettings;
     private TextView mConferenceType;
-    private LinearLayout mConferenceInfoTable;
+    private CardView mConferenceInfoTable;
     private TextView mConferenceInfoMam;
     private TextView mNotifyStatusText;
     private ImageButton mChangeConferenceSettingsButton;
@@ -298,25 +299,15 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        mEditNickButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                quickEdit(mConversation.getMucOptions().getActualNick(),
-                        0,
-                        new OnValueEdited() {
-
-                            @Override
-                            public String onValueEdited(String value) {
-                                if (xmppConnectionService.renameInMuc(mConversation, value, renameCallback)) {
-                                    return null;
-                                } else {
-                                    return getString(R.string.invalid_username);
-                                }
-                            }
-                        });
-            }
-        });
+        mEditNickButton.setOnClickListener(v -> quickEdit(mConversation.getMucOptions().getActualNick(),
+                0,
+                value -> {
+                    if (xmppConnectionService.renameInMuc(mConversation, value, renameCallback)) {
+                        return null;
+                    } else {
+                        return getString(R.string.invalid_username);
+                    }
+                }));
         this.mAdvancedMode = getPreferences().getBoolean("advanced_muc_mode", false);
         this.mConferenceInfoTable = findViewById(R.id.muc_info_more);
         this.mConferenceInfoTable.setVisibility(this.mAdvancedMode ? View.VISIBLE : View.GONE);

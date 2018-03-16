@@ -14,6 +14,7 @@ import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Intents;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -123,7 +124,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
     private Button mShowInactiveDevicesButton;
     private QuickContactBadge badge;
     private LinearLayout keys;
-    private LinearLayout keysWrapper;
+    private CardView keysWrapper;
     private FlowLayout tags;
     private boolean showDynamicTags = false;
     private boolean showLastSeen = false;
@@ -292,12 +293,9 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        mShowInactiveDevicesButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showInactiveOmemo = !showInactiveOmemo;
-                populateView();
-            }
+        mShowInactiveDevicesButton.setOnClickListener(v -> {
+            showInactiveOmemo = !showInactiveOmemo;
+            populateView();
         });
         this.mNotifyStatusButton = findViewById(R.id.notification_status_button);
         this.mNotifyStatusButton.setOnClickListener(this.mNotifyStatusClickListener);
