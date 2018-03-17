@@ -11,7 +11,6 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_alignParentLeft="true"
-        android:src="@drawable/ic_profile"
         app:riv_border_width="1dp"
         app:riv_border_color="@color/grey500"
         app:riv_corner_radius="28dp" />
@@ -22,23 +21,21 @@
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/contact_photo"
         android:orientation="vertical"
-        android:paddingLeft="8dp">
+        android:paddingLeft="16dp">
 
         <android.support.text.emoji.widget.EmojiTextView
             android:id="@+id/contact_display_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeHeadline" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
         <TextView
             android:id="@+id/contact_jid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody" />
+            android:textAppearance="@style/TextAppearance.Conversations.Body1.Secondary" />
 
         <com.wefika.flowlayout.FlowLayout
             android:id="@+id/tags"

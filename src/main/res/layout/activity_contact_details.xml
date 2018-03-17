@@ -73,11 +73,9 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:text="@string/account_settings_example_jabber_id"
-                            android:textColor="?attr/color_text_primary"
                             android:textIsSelectable="true"
-                            android:textSize="?attr/TextSizeHeadline"
-                            android:textStyle="bold"
-                            android:visibility="gone" />
+                            android:visibility="gone"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
                         <com.wefika.flowlayout.FlowLayout
                             android:id="@+id/tags"
@@ -96,8 +94,7 @@
                             android:layout_gravity="center_horizontal"
                             android:layout_marginBottom="4dp"
                             android:layout_marginTop="4dp"
-                            android:textColor="?attr/color_text_primary"
-                            android:textSize="?attr/TextSizeBody" />
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
                         <android.support.text.emoji.widget.EmojiTextView
                             android:id="@+id/status_message"
@@ -107,9 +104,7 @@
                             android:layout_marginBottom="4dp"
                             android:layout_marginTop="4dp"
                             android:gravity="center_horizontal"
-                            android:textColor="?attr/color_text_primary"
-                            android:textSize="?attr/TextSizeBody"
-                            android:textStyle="italic" />
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
                         <android.support.text.emoji.widget.EmojiTextView
                             android:id="@+id/resource"
@@ -143,8 +138,7 @@
                             android:layout_below="@+id/add_contact_button"
                             android:layout_marginTop="4dp"
                             android:text="@string/send_presence_updates"
-                            android:textColor="?attr/color_text_primary"
-                            android:textSize="?attr/TextSizeBody" />
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
                         <CheckBox
                             android:id="@+id/details_receive_presence"
@@ -154,8 +148,7 @@
                             android:layout_alignParentStart="true"
                             android:layout_below="@+id/details_send_presence"
                             android:text="@string/receive_presence_updates"
-                            android:textColor="?attr/color_text_primary"
-                            android:textSize="?attr/TextSizeBody" />
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
                     </LinearLayout>
 
@@ -167,9 +160,8 @@
                         android:layout_below="@+id/details_jidbox"
                         android:layout_marginTop="32dp"
                         android:text="@string/using_account"
-                        android:textColor="@color/black54"
-                        android:textSize="?attr/TextSizeInfo"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
 

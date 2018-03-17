@@ -979,6 +979,8 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
             super.onViewCreated(view, savedInstanceState);
             registerForContextMenu(getListView());
             getListView().setFastScrollEnabled(true);
+            getListView().setDivider(null);
+            getListView().setDividerHeight(0);
         }
 
         @Override
