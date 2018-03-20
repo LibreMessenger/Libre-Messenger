@@ -1,8 +1,8 @@
 package de.pixart.messenger.ui.adapter;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 
 import de.pixart.messenger.R;
+import de.pixart.messenger.databinding.ContactBinding;
 import de.pixart.messenger.entities.ListItem;
 import de.pixart.messenger.ui.SettingsActivity;
 import de.pixart.messenger.ui.XmppActivity;
@@ -60,14 +61,16 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
 
     @Override
     public View getView(int position, View view, ViewGroup parent) {
-        LayoutInflater inflater = (LayoutInflater) getContext()
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = activity.getLayoutInflater();
         ListItem item = getItem(position);
+        ViewHolder viewHolder;
         if (view == null) {
-            view = inflater.inflate(R.layout.contact, parent, false);
+            ContactBinding binding = DataBindingUtil.inflate(inflater, R.layout.contact, parent, false);
+            viewHolder = ViewHolder.get(binding);
+            view = binding.getRoot();
+        } else {
+            viewHolder = (ViewHolder) view.getTag();
         }
-
-        ViewHolder viewHolder = ViewHolder.get(view);
 
         List<ListItem.Tag> tags = item.getTags(activity);
 
@@ -137,7 +140,8 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
 
         @Override
         protected Bitmap doInBackground(ListItem... params) {
-            return activity.avatarService().get(params[0], activity.getPixel(48), isCancelled());
+            this.item = params[0];
+            return activity.avatarService().get(this.item, activity.getPixel(56), isCancelled());
         }
 
         @Override
@@ -221,17 +225,13 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
         private ViewHolder() {
         }
 
-        public static ViewHolder get(View layout) {
-            ViewHolder viewHolder = (ViewHolder) layout.getTag();
-            if (viewHolder == null) {
-                viewHolder = new ViewHolder();
-
-                viewHolder.name = layout.findViewById(R.id.contact_display_name);
-                viewHolder.jid = layout.findViewById(R.id.contact_jid);
-                viewHolder.avatar = layout.findViewById(R.id.contact_photo);
-                viewHolder.tags = layout.findViewById(R.id.tags);
-                layout.setTag(viewHolder);
-            }
+        public static ViewHolder get(ContactBinding binding) {
+            ViewHolder viewHolder = new ViewHolder();
+            viewHolder.name = binding.contactDisplayName;
+            viewHolder.jid = binding.contactJid;
+            viewHolder.avatar = binding.contactPhoto;
+            viewHolder.tags = binding.tags;
+            binding.getRoot().setTag(viewHolder);
             return viewHolder;
         }
     }
