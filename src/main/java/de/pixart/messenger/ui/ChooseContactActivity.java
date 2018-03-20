@@ -207,7 +207,7 @@ public class ChooseContactActivity extends AbstractSearchableListItemActivity {
         EnterJidDialog dialog = new EnterJidDialog(
                 this, mKnownHosts, mActivatedAccounts,
                 getString(R.string.enter_contact), getString(R.string.select),
-                null, getIntent().getStringExtra(EXTRA_ACCOUNT), true
+                null, getIntent().getStringExtra(EXTRA_ACCOUNT), true, xmppConnectionService.multipleAccounts()
         );
 
         dialog.setOnEnterJidDialogPositiveListener(new EnterJidDialog.OnEnterJidDialogPositiveListener() {

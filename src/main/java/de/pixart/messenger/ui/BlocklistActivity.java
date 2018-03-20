@@ -86,7 +86,7 @@ public class BlocklistActivity extends AbstractSearchableListItemActivity implem
         EnterJidDialog dialog = new EnterJidDialog(
                 this, mKnownHosts, null,
                 getString(R.string.block_jabber_id), getString(R.string.block),
-                null, account.getJid().toBareJid().toString(), true
+                null, account.getJid().toBareJid().toString(), true, xmppConnectionService.multipleAccounts()
         );
 
         dialog.setOnEnterJidDialogPositiveListener(new EnterJidDialog.OnEnterJidDialogPositiveListener() {

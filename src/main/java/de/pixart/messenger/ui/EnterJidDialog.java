@@ -1,8 +1,8 @@
 package de.pixart.messenger.ui;
 
-import android.support.v7.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -42,13 +42,14 @@ public class EnterJidDialog {
     public EnterJidDialog(
             final Context context, List<String> knownHosts, final List<String> activatedAccounts,
             final String title, final String positiveButton,
-            final String prefilledJid, final String account, boolean allowEditJid
+            final String prefilledJid, final String account, boolean allowEditJid, boolean multipleAccounts
     ) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title);
-        View dialogView = LayoutInflater.from(context).inflate(R.layout.enter_jid_dialog, null);
+        final View dialogView = LayoutInflater.from(context).inflate(R.layout.enter_jid_dialog, null);
         final TextView jabberIdDesc = dialogView.findViewById(R.id.jabber_id);
         jabberIdDesc.setText(R.string.account_settings_jabber_id);
+        final TextView yourAccount = dialogView.findViewById(R.id.your_account);
         final Spinner spinner = dialogView.findViewById(R.id.account);
         final AutoCompleteTextView jid = dialogView.findViewById(R.id.jid);
         jid.setAdapter(new KnownHostsAdapter(context, R.layout.simple_list_item, knownHosts));
@@ -63,6 +64,14 @@ public class EnterJidDialog {
         }
 
         jid.setHint(R.string.account_settings_example_jabber_id);
+
+        if (multipleAccounts) {
+            yourAccount.setVisibility(View.VISIBLE);
+            spinner.setVisibility(View.VISIBLE);
+        } else {
+            yourAccount.setVisibility(View.GONE);
+            spinner.setVisibility(View.GONE);
+        }
 
         if (account == null) {
             StartConversationActivity.populateAccountSpinner(context, activatedAccounts, spinner);
@@ -130,4 +139,6 @@ public class EnterJidDialog {
         this.dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(this.dialogOnClick);
         return this.dialog;
     }
+
+
 }

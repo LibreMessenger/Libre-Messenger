@@ -530,6 +530,12 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
         binding.detailsContactBadge.setImageBitmap(avatarService().get(contact, getPixel(Config.AVATAR_SIZE)));
         binding.detailsContactBadge.setOnClickListener(this.onBadgeClick);
 
+        if (xmppConnectionService.multipleAccounts()) {
+            binding.detailsAccount.setVisibility(View.VISIBLE);
+        } else {
+            binding.detailsAccount.setVisibility(View.GONE);
+        }
+
         binding.detailsContactKeys.removeAllViews();
         boolean hasKeys = false;
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);

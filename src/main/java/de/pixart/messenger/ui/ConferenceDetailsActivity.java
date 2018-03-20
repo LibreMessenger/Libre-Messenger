@@ -617,6 +617,11 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         }
         ConferenceName.setText(mConversation.getName());
         mAccountJid.setText(getString(R.string.using_account, account));
+        if (xmppConnectionService.multipleAccounts()) {
+            mAccountJid.setVisibility(View.VISIBLE);
+        } else {
+            mAccountJid.setVisibility(View.GONE);
+        }
         mYourPhoto.setImageBitmap(avatarService().get(mConversation.getAccount(), getPixel(48)));
         setTitle(mConversation.getName());
         mFullJid.setText(mConversation.getJid().toBareJid().toString());
