@@ -10,9 +10,11 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -57,6 +59,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.databinding.ActivityStartConversationBinding;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Bookmark;
 import de.pixart.messenger.entities.Contact;
@@ -81,7 +84,6 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
     private final int REQUEST_CREATE_CONFERENCE = 0x39da;
     public int conference_context_id;
     public int contact_context_id;
-    private ViewPager mViewPager;
     private ListPagerAdapter mListPagerAdapter;
     private List<ListItem> contacts = new ArrayList<>();
     private ListItemAdapter mContactsAdapter;
@@ -125,7 +127,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
 
         @Override
         public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-            mViewPager.setCurrentItem(tab.getPosition());
+            binding.startConversationViewPager.setCurrentItem(tab.getPosition());
             onTabChanged();
         }
 
@@ -196,6 +198,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
     private String mInitialJid;
     private Pair<Integer, Intent> mPostponedActivityResult;
     private Toast mToast;
+    private ActivityStartConversationBinding binding;
     private UiCallback<Conversation> mAdhocConferenceCallback = new UiCallback<Conversation>() {
         @Override
         public void success(final Conversation conversation) {
@@ -253,8 +256,14 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         new EmojiService(this).init(useBundledEmoji());
-        setContentView(R.layout.activity_start_conversation);
-        mViewPager = findViewById(R.id.start_conversation_view_pager);
+        this.binding = DataBindingUtil.setContentView(this, R.layout.activity_start_conversation);
+        this.binding.fab.setOnClickListener((v) -> {
+            if (getSupportActionBar().getSelectedNavigationIndex() == 0) {
+                showCreateContactDialog(null, null);
+            } else {
+                showCreateConferenceDialog();
+            }
+        });
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
@@ -263,9 +272,9 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
         actionBar.addTab(mContactsTab);
         actionBar.addTab(mConferencesTab);
 
-        mViewPager.setOnPageChangeListener(mOnPageChangeListener);
+        binding.startConversationViewPager.setOnPageChangeListener(mOnPageChangeListener);
         mListPagerAdapter = new ListPagerAdapter(getSupportFragmentManager());
-        mViewPager.setAdapter(mListPagerAdapter);
+        binding.startConversationViewPager.setAdapter(mListPagerAdapter);
 
         mConferenceAdapter = new ListItemAdapter(this, conferences);
         mContactsAdapter = new ListItemAdapter(this, contacts);
@@ -591,8 +600,6 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.start_conversation, menu);
-        MenuItem menuCreateContact = menu.findItem(R.id.action_create_contact);
-        MenuItem menuCreateConference = menu.findItem(R.id.action_conference);
         MenuItem menuHideOffline = menu.findItem(R.id.action_hide_offline);
         final MenuItem menuActionAccounts = menu.findItem(R.id.action_accounts);
         if (xmppConnectionService.getAccounts().size() == 1 && !xmppConnectionService.multipleAccounts()) {
@@ -607,11 +614,6 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
         mSearchEditText = mSearchView.findViewById(R.id.search_field);
         mSearchEditText.addTextChangedListener(mSearchTextWatcher);
         mSearchEditText.setOnEditorActionListener(mSearchDone);
-        if (getSupportActionBar().getSelectedNavigationIndex() == 0) {
-            menuCreateConference.setVisible(false);
-        } else {
-            menuCreateContact.setVisible(false);
-        }
         if (mInitialJid != null) {
             MenuItemCompat.expandActionView(mMenuSearchView);
             mSearchEditText.append(mInitialJid);
@@ -623,14 +625,8 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_create_contact:
-                showCreateContactDialog(null, null);
-                return true;
             case R.id.action_join_conference:
                 showJoinConferenceDialog(null);
-                return true;
-            case R.id.action_create_conference:
-                showCreateConferenceDialog();
                 return true;
             case R.id.action_scan_qr_code:
                 Intent intent = new Intent(this, UriHandlerActivity.class);
@@ -940,6 +936,13 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
     }
 
     private void onTabChanged() {
+        @DrawableRes final int fabDrawable;
+        if (getSupportActionBar().getSelectedNavigationIndex() == 0) {
+            fabDrawable = R.drawable.ic_person_add_white_24dp;
+        } else {
+            fabDrawable = R.drawable.ic_group_add_white_24dp;
+        }
+        binding.fab.setImageResource(fabDrawable);
         invalidateOptionsMenu();
     }
 
