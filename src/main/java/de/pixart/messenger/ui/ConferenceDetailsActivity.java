@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.content.res.Resources;
+import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
@@ -41,6 +42,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.PgpEngine;
+import de.pixart.messenger.databinding.ContactBinding;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Bookmark;
 import de.pixart.messenger.entities.Contact;
@@ -669,56 +671,44 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             mNotifyStatusText.setText(R.string.notify_only_when_highlighted);
         }
 
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         membersView.removeAllViews();
+        if (inflater == null) {
+            return;
+        }
         final ArrayList<User> users = mucOptions.getUsers();
         Collections.sort(users);
         for (final User user : users) {
+            ContactBinding binding = DataBindingUtil.inflate(inflater, R.layout.contact, membersView, false);
             final Contact contact = user.getContact();
-            View view = inflater.inflate(R.layout.contact, membersView, false);
-            this.setListItemBackgroundOnView(view);
+            final String name = user.getName();
+            this.setListItemBackgroundOnView(binding.getRoot());
             if (contact != null && contact.showInRoster()) {
-                view.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        switchToContactDetails(contact);
-                    }
-                });
+                binding.getRoot().setOnClickListener((OnClickListener) view -> switchToContactDetails(contact));
             }
-            registerForContextMenu(view);
-            view.setTag(user);
-            TextView tvDisplayName = view.findViewById(R.id.contact_display_name);
-            TextView tvKey = view.findViewById(R.id.key);
-            TextView tvStatus = view.findViewById(R.id.contact_jid);
+            registerForContextMenu(binding.getRoot());
+            binding.getRoot().setTag(user);
             if (mAdvancedMode && user.getPgpKeyId() != 0) {
-                tvKey.setVisibility(View.VISIBLE);
-                tvKey.setOnClickListener(new OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        viewPgpKey(user);
-                    }
-                });
-                tvKey.setText(OpenPgpUtils.convertKeyIdToHex(user.getPgpKeyId()));
+                binding.key.setVisibility(View.VISIBLE);
+                binding.key.setOnClickListener(v -> viewPgpKey(user));
+                binding.key.setText(OpenPgpUtils.convertKeyIdToHex(user.getPgpKeyId()));
             }
-            String name = user.getName();
             if (contact != null) {
-                tvDisplayName.setText(contact.getDisplayName());
-                tvStatus.setText((name != null ? name + " \u2022 " : "") + getStatus(user));
+                binding.contactDisplayName.setText(contact.getDisplayName());
+                binding.contactJid.setText((name != null ? name + " \u2022 " : "") + getStatus(user));
             } else {
-                tvDisplayName.setText(name == null ? "" : name);
-                tvStatus.setText(getStatus(user));
+                binding.contactDisplayName.setText(name == null ? "" : name);
+                binding.contactJid.setText(getStatus(user));
 
             }
-            ImageView iv = view.findViewById(R.id.contact_photo);
-            loadAvatar(user, iv);
+            loadAvatar(user, binding.contactPhoto);
             if (user.getRole() == MucOptions.Role.NONE) {
-                tvDisplayName.setAlpha(INACTIVE_ALPHA);
-                tvKey.setAlpha(INACTIVE_ALPHA);
-                tvStatus.setAlpha(INACTIVE_ALPHA);
-                iv.setAlpha(INACTIVE_ALPHA);
+                binding.contactDisplayName.setAlpha(INACTIVE_ALPHA);
+                binding.key.setAlpha(INACTIVE_ALPHA);
+                binding.contactJid.setAlpha(INACTIVE_ALPHA);
+                binding.contactPhoto.setAlpha(INACTIVE_ALPHA);
             }
-            membersView.addView(view);
+            membersView.addView(binding.getRoot());
             if (mConversation.getMucOptions().canInvite()) {
                 mInviteButton.setVisibility(View.VISIBLE);
             } else {
