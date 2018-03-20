@@ -2,16 +2,14 @@ package de.pixart.messenger.ui;
 
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.SwitchCompat;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +21,7 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.axolotl.FingerprintStatus;
 import de.pixart.messenger.crypto.axolotl.XmppAxolotlSession;
+import de.pixart.messenger.databinding.ContactKeyBinding;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.XmppUri;
@@ -128,88 +127,81 @@ public abstract class OmemoActivity extends XmppActivity {
                                                   CompoundButton.OnCheckedChangeListener
                                                           onCheckedChangeListener) {
 
-        View view = getLayoutInflater().inflate(R.layout.contact_key, keys, false);
-        TextView key = view.findViewById(R.id.key);
-        TextView keyType = view.findViewById(R.id.key_type);
-        ImageButton enableUndecided = view.findViewById(R.id.button_enable_device);
+        ContactKeyBinding binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.contact_key, keys, true);
         if (Config.X509_VERIFICATION && status.getTrust() == FingerprintStatus.Trust.VERIFIED_X509) {
-            key.setOnClickListener(v -> showX509Certificate(account, fingerprint));
-            keyType.setOnClickListener(v -> showX509Certificate(account, fingerprint));
+            binding.key.setOnClickListener(v -> showX509Certificate(account, fingerprint));
+            binding.keyType.setOnClickListener(v -> showX509Certificate(account, fingerprint));
         }
-        SwitchCompat trustToggle = view.findViewById(R.id.tgl_trust);
-        ImageView verifiedFingerprintSymbol = view.findViewById(R.id.verified_fingerprint);
-        trustToggle.setVisibility(View.VISIBLE);
-        registerForContextMenu(view);
-        view.setTag(R.id.TAG_ACCOUNT, account);
-        view.setTag(R.id.TAG_FINGERPRINT, fingerprint);
-        view.setTag(R.id.TAG_FINGERPRINT_STATUS, status);
+        binding.tglTrust.setVisibility(View.VISIBLE);
+        registerForContextMenu(binding.getRoot());
+        binding.getRoot().setTag(R.id.TAG_ACCOUNT, account);
+        binding.getRoot().setTag(R.id.TAG_FINGERPRINT, fingerprint);
+        binding.getRoot().setTag(R.id.TAG_FINGERPRINT_STATUS, status);
         boolean x509 = Config.X509_VERIFICATION && status.getTrust() == FingerprintStatus.Trust.VERIFIED_X509;
         final View.OnClickListener toast;
-        trustToggle.setChecked(status.isTrusted());
+        binding.tglTrust.setChecked(status.isTrusted());
 
         if (status.isActive()) {
-            key.setTextColor(getPrimaryTextColor());
-            keyType.setTextColor(getSecondaryTextColor());
+            binding.key.setTextColor(getPrimaryTextColor());
+            binding.keyType.setTextColor(getSecondaryTextColor());
             if (status.isVerified()) {
-                verifiedFingerprintSymbol.setVisibility(View.VISIBLE);
-                verifiedFingerprintSymbol.setAlpha(1.0f);
-                trustToggle.setVisibility(View.GONE);
-                verifiedFingerprintSymbol.setOnClickListener(v -> replaceToast(getString(R.string.this_device_has_been_verified), false));
+                binding.verifiedFingerprint.setVisibility(View.VISIBLE);
+                binding.verifiedFingerprint.setAlpha(1.0f);
+                binding.tglTrust.setVisibility(View.GONE);
+                binding.verifiedFingerprint.setOnClickListener(v -> replaceToast(getString(R.string.this_device_has_been_verified), false));
                 toast = null;
             } else {
-                verifiedFingerprintSymbol.setVisibility(View.GONE);
-                trustToggle.setVisibility(View.VISIBLE);
-                trustToggle.setOnCheckedChangeListener(onCheckedChangeListener);
+                binding.verifiedFingerprint.setVisibility(View.GONE);
+                binding.tglTrust.setVisibility(View.VISIBLE);
+                binding.tglTrust.setOnCheckedChangeListener(onCheckedChangeListener);
                 if (status.getTrust() == FingerprintStatus.Trust.UNDECIDED && undecidedNeedEnablement) {
-                    enableUndecided.setVisibility(View.VISIBLE);
-                    enableUndecided.setOnClickListener(v -> {
+                    binding.buttonEnableDevice.setVisibility(View.VISIBLE);
+                    binding.buttonEnableDevice.setOnClickListener(v -> {
                         account.getAxolotlService().setFingerprintTrust(fingerprint, FingerprintStatus.createActive(false));
-                        enableUndecided.setVisibility(View.GONE);
-                        trustToggle.setVisibility(View.VISIBLE);
+                        binding.buttonEnableDevice.setVisibility(View.GONE);
+                        binding.tglTrust.setVisibility(View.VISIBLE);
                     });
-                    trustToggle.setVisibility(View.GONE);
+                    binding.tglTrust.setVisibility(View.GONE);
                 } else {
-                    trustToggle.setOnClickListener(null);
-                    trustToggle.setEnabled(true);
+                    binding.tglTrust.setOnClickListener(null);
+                    binding.tglTrust.setEnabled(true);
                 }
                 toast = v -> hideToast();
             }
         } else {
-            key.setTextColor(getTertiaryTextColor());
-            keyType.setTextColor(getTertiaryTextColor());
+            binding.key.setTextColor(getTertiaryTextColor());
+            binding.keyType.setTextColor(getTertiaryTextColor());
             toast = v -> replaceToast(getString(R.string.this_device_is_no_longer_in_use), false);
             if (status.isVerified()) {
-                trustToggle.setVisibility(View.GONE);
-                verifiedFingerprintSymbol.setVisibility(View.VISIBLE);
-                verifiedFingerprintSymbol.setAlpha(0.4368f);
-                verifiedFingerprintSymbol.setOnClickListener(toast);
+                binding.tglTrust.setVisibility(View.GONE);
+                binding.verifiedFingerprint.setVisibility(View.VISIBLE);
+                binding.verifiedFingerprint.setAlpha(0.4368f);
+                binding.verifiedFingerprint.setOnClickListener(toast);
             } else {
-                trustToggle.setVisibility(View.VISIBLE);
-                verifiedFingerprintSymbol.setVisibility(View.GONE);
-                trustToggle.setOnClickListener(null);
-                trustToggle.setEnabled(false);
-                trustToggle.setOnClickListener(toast);
+                binding.tglTrust.setVisibility(View.VISIBLE);
+                binding.verifiedFingerprint.setVisibility(View.GONE);
+                binding.tglTrust.setOnClickListener(null);
+                binding.tglTrust.setEnabled(false);
+                binding.tglTrust.setOnClickListener(toast);
             }
         }
 
-        view.setOnClickListener(toast);
-        key.setOnClickListener(toast);
-        keyType.setOnClickListener(toast);
+        binding.getRoot().setOnClickListener(toast);
+        binding.key.setOnClickListener(toast);
+        binding.keyType.setOnClickListener(toast);
         if (showTag) {
-            keyType.setText(getString(x509 ? R.string.omemo_fingerprint_x509 : R.string.omemo_fingerprint));
+            binding.keyType.setText(getString(x509 ? R.string.omemo_fingerprint_x509 : R.string.omemo_fingerprint));
         } else {
-            keyType.setVisibility(View.GONE);
+            binding.keyType.setVisibility(View.GONE);
         }
         if (highlight) {
-            keyType.setTextColor(ContextCompat.getColor(this, R.color.accent));
-            keyType.setText(getString(x509 ? R.string.omemo_fingerprint_x509_selected_message : R.string.omemo_fingerprint_selected_message));
+            binding.keyType.setTextColor(ContextCompat.getColor(this, R.color.accent));
+            binding.keyType.setText(getString(x509 ? R.string.omemo_fingerprint_x509_selected_message : R.string.omemo_fingerprint_selected_message));
         } else {
-            keyType.setText(getString(x509 ? R.string.omemo_fingerprint_x509 : R.string.omemo_fingerprint));
+            binding.keyType.setText(getString(x509 ? R.string.omemo_fingerprint_x509 : R.string.omemo_fingerprint));
         }
 
-        key.setText(CryptoHelper.prettifyFingerprint(fingerprint.substring(2)));
-
-        keys.addView(view);
+        binding.key.setText(CryptoHelper.prettifyFingerprint(fingerprint.substring(2)));
     }
 
     public void showPurgeKeyDialog(final Account account, final String fingerprint) {
