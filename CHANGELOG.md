@@ -1,5 +1,11 @@
 ### Changelog
 
+#### Version 1.22.0
+* integrated expert option to enable multiple account
+* some UI improvements
+* improved MAM support
+* bug fixes 
+
 #### Version 1.21.3
 * small self messages improvement
 * small notification improvement
