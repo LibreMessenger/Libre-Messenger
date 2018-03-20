@@ -11,114 +11,104 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="fill_parent"
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:background="@drawable/infocard_border"
-            android:orientation="vertical"
-            android:padding="@dimen/infocard_padding">
+            android:orientation="vertical">
 
-            <android.support.text.emoji.widget.EmojiTextView
-                android:id="@+id/conference_name"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/conference_subject"
-                android:textColor="@color/black87"
-                android:textIsSelectable="false"
-                android:textSize="?attr/TextSizeHeadline"
-                android:textStyle="bold"
-                android:paddingBottom="5dp"
-                android:textAlignment="center"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true" />
+                android:orientation="vertical"
+                android:padding="@dimen/card_padding_regular">
 
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/muc_settings">
+                <android.support.text.emoji.widget.EmojiTextView
+                    android:id="@+id/conference_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="5dp"
+                    android:text="@string/conference_subject"
+                    android:textAlignment="center"
+                    android:textColor="@color/black87"
+                    android:textIsSelectable="false"
+                    android:textSize="?attr/TextSizeHeadline"
+                    android:textStyle="bold" />
+
+                <RelativeLayout
+                    android:id="@+id/muc_settings"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/muc_conference_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/change_conference_button"
+                        android:text="@string/private_conference"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+                    <ImageButton
+                        android:id="@+id/change_conference_button"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_horizontal"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="@dimen/image_button_padding"
+                        android:src="?attr/icon_settings" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/notification_status_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/notification_status_button"
+                        android:text="@string/notify_on_all_messages"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+                    <ImageButton
+                        android:id="@+id/notification_status_button"
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_horizontal"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="@dimen/image_button_padding"
+                        android:src="@drawable/ic_notifications_grey600_24dp" />
+                </RelativeLayout>
 
                 <TextView
-                    android:id="@+id/muc_conference_type"
+                    android:id="@+id/muc_jabberid"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/change_conference_button"
-                    android:text="@string/private_conference"
-                    android:textColor="@color/black87"
-                    android:textSize="?attr/TextSizeBody" />
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/account_settings_example_jabber_id"
+                    android:textIsSelectable="true"
+                    android:visibility="gone"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
 
-                <ImageButton
-                    android:id="@+id/change_conference_button"
-                    style="?android:attr/buttonStyleSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center_horizontal"
-                    android:background="?android:selectableItemBackground"
-                    android:padding="@dimen/image_button_padding"
-                    android:src="?attr/icon_settings" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/notification_status_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/notify_on_all_messages"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/black87"
-                    android:textSize="?attr/TextSizeBody"
-                    android:layout_alignParentLeft="true"
-                    android:layout_toLeftOf="@+id/notification_status_button" />
-
-                <ImageButton
-                    android:id="@+id/notification_status_button"
-                    style="?android:attr/buttonStyleSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="?android:selectableItemBackground"
-                    android:padding="@dimen/image_button_padding"
-                    android:src="@drawable/ic_notifications_grey600_24dp" />
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/details_account"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginTop="32dp"
-                android:text="@string/using_account"
-                android:textColor="@color/black54"
-                android:textSize="?attr/TextSizeInfo"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/muc_jabberid"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="@string/account_settings_example_jabber_id"
-                android:textColor="@color/black87"
-                android:textSize="?attr/TextSizeHeadline"
-                android:textStyle="bold"
-                android:textIsSelectable="true"
-                android:visibility="gone" />
-        </LinearLayout>
-
-        <LinearLayout
+        <android.support.v7.widget.CardView
             android:id="@+id/muc_more_details"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -126,141 +116,149 @@
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:background="@drawable/infocard_border"
-            android:orientation="vertical"
-            android:padding="@dimen/infocard_padding">
-
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp">
-
-                <com.makeramen.roundedimageview.RoundedImageView
-                    android:id="@+id/your_photo"
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    android:layout_alignParentEnd="false"
-                    android:layout_alignParentLeft="true"
-                    android:padding="1dp"
-                    android:src="@drawable/ic_profile"
-                    app:riv_corner_radius="36dp"
-                    app:riv_border_width="1dp"
-                    app:riv_border_color="@color/grey500"
-                    android:layout_alignParentRight="false" />
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@+id/your_photo"
-                    android:orientation="vertical"
-                    android:paddingLeft="8dp">
-
-                    <android.support.text.emoji.widget.EmojiTextView
-                        android:id="@+id/muc_your_nick"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:textColor="@color/black87"
-                        android:textSize="?attr/TextSizeHeadline" />
-
-                    <TextView
-                        android:id="@+id/muc_role"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:textColor="@color/black87"
-                        android:textSize="?attr/TextSizeBody" />
-                </LinearLayout>
-
-                <ImageButton
-                    android:id="@+id/edit_nick_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="?android:selectableItemBackground"
-                    android:padding="@dimen/image_button_padding"
-                    android:src="?attr/icon_edit_dark" />
-            </RelativeLayout>
+            android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/muc_members"
-                android:layout_width="fill_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:divider="?android:dividerHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:showDividers="middle">
+                android:padding="@dimen/card_padding_list">
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="32dp">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/your_photo"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_alignParentEnd="false"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentRight="false"
+                        android:padding="1dp"
+                        app:riv_border_color="@color/grey500"
+                        app:riv_border_width="1dp"
+                        app:riv_corner_radius="36dp" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/your_photo"
+                        android:orientation="vertical"
+                        android:paddingLeft="@dimen/avatar_item_distance">
+
+                        <android.support.text.emoji.widget.EmojiTextView
+                            android:id="@+id/muc_your_nick"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+
+                        <TextView
+                            android:id="@+id/muc_role"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:textAppearance="@style/TextAppearance.Conversations.Body1.Secondary" />
+                    </LinearLayout>
+
+                    <ImageButton
+                        android:id="@+id/edit_nick_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="@dimen/image_button_padding"
+                        android:src="?attr/icon_edit_dark" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/muc_members"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:divider="?android:dividerHorizontal"
+                    android:orientation="vertical"
+                    android:showDividers="middle"></LinearLayout>
+
+                <Button
+                    android:id="@+id/invite"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/invite_contact" />
+
+                <Button
+                    android:id="@+id/destroy"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/destroy_muc" />
             </LinearLayout>
+        </android.support.v7.widget.CardView>
 
-            <Button
-                android:id="@+id/invite"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="24dp"
-                android:text="@string/invite_contact" />
-
-            <Button
-                android:id="@+id/destroy"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="24dp"
-                android:text="@string/destroy_muc" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
+        <android.support.v7.widget.CardView
+            android:id="@+id/muc_info_more"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:background="@drawable/infocard_border"
             android:orientation="vertical"
-            android:padding="@dimen/infocard_padding"
-            android:id="@+id/muc_info_more"
-            android:shrinkColumns="0"
-            android:stretchColumns="1"
             android:visibility="gone">
 
 
-            <TableLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:stretchColumns="1">
+                android:orientation="vertical"
+                android:padding="@dimen/card_padding_list">
 
-                <TableRow
-                    android:layout_width="fill_parent"
-                    android:layout_height="match_parent">
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stretchColumns="1">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/server_info_mam"
-                        android:textColor="@color/black87"
-                        android:textSize="?attr/TextSizeBody"
-                        android:singleLine="true"
-                        android:ellipsize="end" />
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="match_parent">
 
-                    <TextView
-                        android:id="@+id/muc_info_mam"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:paddingLeft="4dp"
-                        android:textColor="@color/black87"
-                        android:textSize="?attr/TextSizeBody" />
-                </TableRow>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:singleLine="true"
+                            android:text="@string/server_info_mam"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
-            </TableLayout>
-        </LinearLayout>
+                        <TextView
+                            android:id="@+id/muc_info_mam"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:paddingLeft="4dp"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                    </TableRow>
+                </TableLayout>
 
+                <TextView
+                    android:id="@+id/details_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="32dp"
+                    android:text="@string/using_account"
+                    android:visibility="gone"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
     </LinearLayout>
 </ScrollView>

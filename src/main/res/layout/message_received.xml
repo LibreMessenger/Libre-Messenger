@@ -16,7 +16,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_profile"
         app:riv_border_width="1dip"
         app:riv_border_color="@color/grey500"
         app:riv_corner_radius="24dp" />

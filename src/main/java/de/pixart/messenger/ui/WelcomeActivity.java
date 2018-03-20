@@ -1,9 +1,7 @@
 package de.pixart.messenger.ui;
 
 import android.Manifest;
-import android.app.ActionBar;
-import android.app.Activity;
-import android.app.AlertDialog;
+import android.support.v7.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +11,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,7 +79,7 @@ public class WelcomeActivity extends XmppActivity {
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome);
-        final ActionBar ab = getActionBar();
+        final ActionBar ab = getSupportActionBar();
         if (ab != null) {
             ab.setDisplayShowHomeEnabled(false);
             ab.setDisplayHomeAsUpEnabled(false);
@@ -336,7 +336,7 @@ public class WelcomeActivity extends XmppActivity {
         }
     }
 
-    public static void launch(Activity activity) {
+    public static void launch(AppCompatActivity activity) {
         Intent intent = new Intent(activity, WelcomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
         activity.startActivity(intent);

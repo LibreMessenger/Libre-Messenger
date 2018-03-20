@@ -3,9 +3,7 @@ package de.pixart.messenger.ui;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.ActionBar;
-import android.app.Activity;
-import android.app.AlertDialog;
+import android.support.v7.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
@@ -39,6 +37,8 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -83,7 +83,7 @@ import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
 
-public abstract class XmppActivity extends Activity {
+public abstract class XmppActivity extends AppCompatActivity {
 
     protected static final int REQUEST_ANNOUNCE_PGP = 0x0101;
     protected static final int REQUEST_INVITE_TO_CONVERSATION = 0x0102;
@@ -276,7 +276,7 @@ public abstract class XmppActivity extends Activity {
     }
 
     public void showInstallPgpDialog() {
-        Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.openkeychain_required));
         builder.setIconAttribute(android.R.attr.alertDialogIcon);
         builder.setMessage(getText(R.string.openkeychain_required_long));
@@ -437,7 +437,7 @@ public abstract class XmppActivity extends Activity {
         setTheme(this.mTheme);
         this.mUsingEnterKey = usingEnterKey();
         mUseSubject = getPreferences().getBoolean("use_subject", getResources().getBoolean(R.bool.use_subject));
-        final ActionBar ab = getActionBar();
+        final ActionBar ab = getSupportActionBar();
         if (ab != null) {
             ab.setDisplayHomeAsUpEnabled(true);
         }
@@ -565,8 +565,7 @@ public abstract class XmppActivity extends Activity {
     }
 
     protected void inviteToConversation(Conversation conversation) {
-        Intent intent = new Intent(getApplicationContext(),
-                ChooseContactActivity.class);
+        Intent intent = new Intent(this, ChooseContactActivity.class);
         List<String> contacts = new ArrayList<>();
         if (conversation.getMode() == Conversation.MODE_MULTI) {
             for (MucOptions.User user : conversation.getMucOptions().getUsers(false)) {

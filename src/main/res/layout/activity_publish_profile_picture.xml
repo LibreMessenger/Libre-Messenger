@@ -31,7 +31,7 @@
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:background="@drawable/infocard_border"
-                android:padding="@dimen/infocard_padding">
+                android:padding="@dimen/card_padding_regular">
 
                 <LinearLayout
                     android:id="@+id/account_image_wrapper"

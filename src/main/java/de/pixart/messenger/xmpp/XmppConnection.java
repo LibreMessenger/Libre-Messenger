@@ -50,8 +50,8 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.X509KeyManager;
 import javax.net.ssl.X509TrustManager;
 
-import de.duenndns.ssl.DomainHostnameVerifier;
-import de.duenndns.ssl.MemorizingTrustManager;
+import de.pixart.messenger.crypto.DomainHostnameVerifier;
+import de.pixart.messenger.services.MemorizingTrustManager;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.crypto.XmppDomainVerifier;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;

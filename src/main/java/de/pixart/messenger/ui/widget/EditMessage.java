@@ -5,7 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.text.emoji.widget.EmojiEditText;
+import android.support.text.emoji.widget.EmojiAppCompatEditText;
 import android.support.v13.view.inputmethod.EditorInfoCompat;
 import android.support.v13.view.inputmethod.InputConnectionCompat;
 import android.support.v13.view.inputmethod.InputContentInfoCompat;
@@ -19,15 +19,9 @@ import android.view.inputmethod.InputConnection;
 
 import de.pixart.messenger.Config;
 
-public class EditMessage extends EmojiEditText {
+public class EditMessage extends EmojiAppCompatEditText {
 
-    private static final InputFilter SPAN_FILTER = new InputFilter() {
-
-        @Override
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            return source instanceof Spanned ? source.toString() : source;
-        }
-    };
+    private static final InputFilter SPAN_FILTER = (source, start, end, dest, dstart, dend) -> source instanceof Spanned ? source.toString() : source;
     protected Handler mTypingHandler = new Handler();
     protected KeyboardListener keyboardListener;
 

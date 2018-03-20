@@ -1,14 +1,21 @@
 package de.pixart.messenger.ui;
 
-import android.app.ActionBar;
-import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
+import android.content.res.Resources;
+import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -26,13 +33,16 @@ import android.widget.Toast;
 
 import org.openintents.openpgp.util.OpenPgpUtils;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.PgpEngine;
+import de.pixart.messenger.databinding.ContactBinding;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Bookmark;
 import de.pixart.messenger.entities.Contact;
@@ -42,6 +52,7 @@ import de.pixart.messenger.entities.MucOptions.User;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.services.XmppConnectionService.OnConversationUpdate;
 import de.pixart.messenger.services.XmppConnectionService.OnMucRosterUpdate;
+import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.jid.Jid;
 
 public class ConferenceDetailsActivity extends XmppActivity implements OnConversationUpdate, OnMucRosterUpdate, XmppConnectionService.OnAffiliationChanged, XmppConnectionService.OnRoleChanged, XmppConnectionService.OnConfigurationPushed {
@@ -83,10 +94,10 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
     private TextView mFullJid;
     private TextView mAccountJid;
     private LinearLayout membersView;
-    private LinearLayout mMoreDetails;
+    private CardView mMoreDetails;
     private RelativeLayout mMucSettings;
     private TextView mConferenceType;
-    private LinearLayout mConferenceInfoTable;
+    private CardView mConferenceInfoTable;
     private TextView mConferenceInfoMam;
     private TextView mNotifyStatusText;
     private ImageButton mChangeConferenceSettingsButton;
@@ -294,29 +305,19 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         mDestroyButton.setOnClickListener(destroyListener);
         mDestroyButton.getBackground().setColorFilter(getWarningButtonColor(), PorterDuff.Mode.MULTIPLY);
         mConferenceType = findViewById(R.id.muc_conference_type);
-        if (getActionBar() != null) {
-            getActionBar().setHomeButtonEnabled(true);
-            getActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        mEditNickButton.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                quickEdit(mConversation.getMucOptions().getActualNick(),
-                        0,
-                        new OnValueEdited() {
-
-                            @Override
-                            public String onValueEdited(String value) {
-                                if (xmppConnectionService.renameInMuc(mConversation, value, renameCallback)) {
-                                    return null;
-                                } else {
-                                    return getString(R.string.invalid_username);
-                                }
-                            }
-                        });
-            }
-        });
+        mEditNickButton.setOnClickListener(v -> quickEdit(mConversation.getMucOptions().getActualNick(),
+                0,
+                value -> {
+                    if (xmppConnectionService.renameInMuc(mConversation, value, renameCallback)) {
+                        return null;
+                    } else {
+                        return getString(R.string.invalid_username);
+                    }
+                }));
         this.mAdvancedMode = getPreferences().getBoolean("advanced_muc_mode", false);
         this.mConferenceInfoTable = findViewById(R.id.muc_info_more);
         this.mConferenceInfoTable.setVisibility(this.mAdvancedMode ? View.VISIBLE : View.GONE);
@@ -600,17 +601,19 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         } else {
             account = mConversation.getAccount().getJid().toBareJid().toString();
         }
-        if (getActionBar() != null) {
-            final ActionBar ab = getActionBar();
-            ab.setCustomView(R.layout.ab_title);
-            ab.setDisplayShowCustomEnabled(true);
-            TextView abtitle = findViewById(android.R.id.text1);
-            TextView absubtitle = findViewById(android.R.id.text2);
-            abtitle.setText(mConversation.getName());
-            abtitle.setSelected(true);
-            abtitle.setClickable(false);
-            absubtitle.setVisibility(View.GONE);
-            absubtitle.setClickable(false);
+        if (getSupportActionBar() != null) {
+            final ActionBar ab = getSupportActionBar();
+            if (ab != null) {
+                ab.setCustomView(R.layout.ab_title);
+                ab.setDisplayShowCustomEnabled(true);
+                TextView abtitle = findViewById(android.R.id.text1);
+                TextView absubtitle = findViewById(android.R.id.text2);
+                abtitle.setText(mConversation.getName());
+                abtitle.setSelected(true);
+                abtitle.setClickable(false);
+                absubtitle.setVisibility(View.GONE);
+                absubtitle.setClickable(false);
+            }
         }
         ConferenceName.setText(mConversation.getName());
         mAccountJid.setText(getString(R.string.using_account, account));
@@ -668,56 +671,44 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             mNotifyStatusText.setText(R.string.notify_only_when_highlighted);
         }
 
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         membersView.removeAllViews();
+        if (inflater == null) {
+            return;
+        }
         final ArrayList<User> users = mucOptions.getUsers();
         Collections.sort(users);
         for (final User user : users) {
+            ContactBinding binding = DataBindingUtil.inflate(inflater, R.layout.contact, membersView, false);
             final Contact contact = user.getContact();
-            View view = inflater.inflate(R.layout.contact, membersView, false);
-            this.setListItemBackgroundOnView(view);
+            final String name = user.getName();
+            this.setListItemBackgroundOnView(binding.getRoot());
             if (contact != null && contact.showInRoster()) {
-                view.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        switchToContactDetails(contact);
-                    }
-                });
+                binding.getRoot().setOnClickListener((OnClickListener) view -> switchToContactDetails(contact));
             }
-            registerForContextMenu(view);
-            view.setTag(user);
-            TextView tvDisplayName = view.findViewById(R.id.contact_display_name);
-            TextView tvKey = view.findViewById(R.id.key);
-            TextView tvStatus = view.findViewById(R.id.contact_jid);
+            registerForContextMenu(binding.getRoot());
+            binding.getRoot().setTag(user);
             if (mAdvancedMode && user.getPgpKeyId() != 0) {
-                tvKey.setVisibility(View.VISIBLE);
-                tvKey.setOnClickListener(new OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        viewPgpKey(user);
-                    }
-                });
-                tvKey.setText(OpenPgpUtils.convertKeyIdToHex(user.getPgpKeyId()));
+                binding.key.setVisibility(View.VISIBLE);
+                binding.key.setOnClickListener(v -> viewPgpKey(user));
+                binding.key.setText(OpenPgpUtils.convertKeyIdToHex(user.getPgpKeyId()));
             }
-            String name = user.getName();
             if (contact != null) {
-                tvDisplayName.setText(contact.getDisplayName());
-                tvStatus.setText((name != null ? name + " \u2022 " : "") + getStatus(user));
+                binding.contactDisplayName.setText(contact.getDisplayName());
+                binding.contactJid.setText((name != null ? name + " \u2022 " : "") + getStatus(user));
             } else {
-                tvDisplayName.setText(name == null ? "" : name);
-                tvStatus.setText(getStatus(user));
+                binding.contactDisplayName.setText(name == null ? "" : name);
+                binding.contactJid.setText(getStatus(user));
 
             }
-            ImageView iv = view.findViewById(R.id.contact_photo);
-            iv.setImageBitmap(avatarService().get(user, getPixel(48), false));
+            loadAvatar(user, binding.contactPhoto);
             if (user.getRole() == MucOptions.Role.NONE) {
-                tvDisplayName.setAlpha(INACTIVE_ALPHA);
-                tvKey.setAlpha(INACTIVE_ALPHA);
-                tvStatus.setAlpha(INACTIVE_ALPHA);
-                iv.setAlpha(INACTIVE_ALPHA);
+                binding.contactDisplayName.setAlpha(INACTIVE_ALPHA);
+                binding.key.setAlpha(INACTIVE_ALPHA);
+                binding.contactJid.setAlpha(INACTIVE_ALPHA);
+                binding.contactPhoto.setAlpha(INACTIVE_ALPHA);
             }
-            membersView.addView(view);
+            membersView.addView(binding.getRoot());
             if (mConversation.getMucOptions().canInvite()) {
                 mInviteButton.setVisibility(View.VISIBLE);
             } else {
@@ -780,11 +771,95 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
     }
 
     private void displayToast(final String msg) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(ConferenceDetailsActivity.this, msg, Toast.LENGTH_SHORT).show();
+        runOnUiThread(() -> Toast.makeText(ConferenceDetailsActivity.this, msg, Toast.LENGTH_SHORT).show());
+    }
+
+    public static boolean cancelPotentialWork(User user, ImageView imageView) {
+        final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
+
+        if (bitmapWorkerTask != null) {
+            final User old = bitmapWorkerTask.o;
+            if (old == null || user != old) {
+                bitmapWorkerTask.cancel(true);
+            } else {
+                return false;
             }
-        });
+        }
+        return true;
+    }
+
+    private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
+        if (imageView != null) {
+            final Drawable drawable = imageView.getDrawable();
+            if (drawable instanceof AsyncDrawable) {
+                final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
+                return asyncDrawable.getBitmapWorkerTask();
+            }
+        }
+        return null;
+    }
+
+    public void loadAvatar(User user, ImageView imageView) {
+        if (cancelPotentialWork(user, imageView)) {
+            final Bitmap bm = avatarService().get(user, getPixel(48), true);
+            if (bm != null) {
+                cancelPotentialWork(user, imageView);
+                imageView.setImageBitmap(bm);
+                imageView.setBackgroundColor(0x00000000);
+            } else {
+                String seed = user.getRealJid() != null ? user.getRealJid().toBareJid().toString() : null;
+                imageView.setBackgroundColor(UIHelper.getColorForName(seed == null ? user.getName() : seed));
+                imageView.setImageDrawable(null);
+                final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+                final AsyncDrawable asyncDrawable = new AsyncDrawable(getResources(), null, task);
+                imageView.setImageDrawable(asyncDrawable);
+                try {
+                    task.execute(user);
+                } catch (final RejectedExecutionException ignored) {
+                }
+            }
+        }
+    }
+
+    static class AsyncDrawable extends BitmapDrawable {
+        private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
+
+        public AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
+            super(res, bitmap);
+            bitmapWorkerTaskReference = new WeakReference<>(bitmapWorkerTask);
+        }
+
+        public BitmapWorkerTask getBitmapWorkerTask() {
+            return bitmapWorkerTaskReference.get();
+        }
+    }
+
+    class BitmapWorkerTask extends AsyncTask<User, Void, Bitmap> {
+        private final WeakReference<ImageView> imageViewReference;
+        private User o = null;
+
+        private BitmapWorkerTask(ImageView imageView) {
+            imageViewReference = new WeakReference<>(imageView);
+        }
+
+        @Override
+        protected Bitmap doInBackground(User... params) {
+            this.o = params[0];
+            if (imageViewReference.get() == null) {
+                return null;
+            }
+            return avatarService().get(this.o, getPixel(48), isCancelled());
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (bitmap != null && !isCancelled()) {
+                final ImageView imageView = imageViewReference.get();
+                if (imageView != null) {
+                    imageView.setImageBitmap(bitmap);
+                    imageView.setBackgroundColor(0x00000000);
+                }
+            }
+        }
     }
 }

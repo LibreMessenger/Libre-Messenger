@@ -357,7 +357,8 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
 
         @Override
         protected Bitmap doInBackground(Conversation... params) {
-            return activity.avatarService().get(params[0], activity.getPixel(56));
+            this.conversation = params[0];
+            return activity.avatarService().get(this.conversation, activity.getPixel(56), isCancelled());
         }
 
         @Override

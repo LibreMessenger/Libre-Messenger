@@ -1,3 +1,2 @@
-include ':libs:MemorizingTrustManager'
 include ':libs:android-transcoder'
 rootProject.name = 'Pix-Art Messenger'

@@ -1,11 +1,10 @@
 package de.pixart.messenger.ui;
 
-import android.app.ActionBar;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.databinding.DataBindingUtil;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,22 +13,18 @@ import android.provider.ContactsContract.CommonDataKinds;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Intents;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.QuickContactBadge;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.wefika.flowlayout.FlowLayout;
 
 import org.openintents.openpgp.util.OpenPgpUtils;
 
@@ -51,6 +46,7 @@ import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.utils.XmppUri;
+import de.pixart.messenger.databinding.ActivityContactDetailsBinding;
 import de.pixart.messenger.xmpp.OnKeyStatusUpdated;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.XmppConnection;
@@ -109,22 +105,11 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             }
         }
     };
+
+    ActivityContactDetailsBinding binding;
+
     private Jid accountJid;
-    private TextView lastseen;
     private Jid contactJid;
-    private TextView contactDisplayName;
-    private TextView contactJidTv;
-    private TextView accountJidTv;
-    private TextView statusMessage;
-    private TextView resource;
-    private CheckBox send;
-    private CheckBox receive;
-    private Button addContactButton;
-    private Button mShowInactiveDevicesButton;
-    private QuickContactBadge badge;
-    private LinearLayout keys;
-    private LinearLayout keysWrapper;
-    private FlowLayout tags;
     private boolean showDynamicTags = false;
     private boolean showLastSeen = false;
     private boolean showInactiveOmemo = false;
@@ -272,32 +257,15 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             }
         }
         this.messageFingerprint = getIntent().getStringExtra("fingerprint");
-        setContentView(R.layout.activity_contact_details);
 
-        contactDisplayName = findViewById(R.id.contact_display_name);
-        contactJidTv = findViewById(R.id.details_contactjid);
-        accountJidTv = findViewById(R.id.details_account);
-        lastseen = findViewById(R.id.details_lastseen);
-        statusMessage = findViewById(R.id.status_message);
-        resource = findViewById(R.id.resource);
-        send = findViewById(R.id.details_send_presence);
-        receive = findViewById(R.id.details_receive_presence);
-        badge = findViewById(R.id.details_contact_badge);
-        addContactButton = findViewById(R.id.add_contact_button);
-        keys = findViewById(R.id.details_contact_keys);
-        keysWrapper = findViewById(R.id.keys_wrapper);
-        tags = findViewById(R.id.tags);
-        mShowInactiveDevicesButton = findViewById(R.id.show_inactive_devices);
-        if (getActionBar() != null) {
-            getActionBar().setHomeButtonEnabled(true);
-            getActionBar().setDisplayHomeAsUpEnabled(true);
+        this.binding = DataBindingUtil.setContentView(this, R.layout.activity_contact_details);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        mShowInactiveDevicesButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showInactiveOmemo = !showInactiveOmemo;
-                populateView();
-            }
+        binding.showInactiveDevices.setOnClickListener(v -> {
+            showInactiveOmemo = !showInactiveOmemo;
+            populateView();
         });
         this.mNotifyStatusButton = findViewById(R.id.notification_status_button);
         this.mNotifyStatusButton.setOnClickListener(this.mNotifyStatusClickListener);
@@ -409,34 +377,39 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             mNotifyStatusButton.setImageResource(R.drawable.ic_notifications_grey600_24dp);
             mNotifyStatusText.setText(R.string.notify_on_all_messages);
         }
-        if (getActionBar() != null) {
-            final ActionBar ab = getActionBar();
-            ab.setCustomView(R.layout.ab_title);
-            ab.setDisplayShowCustomEnabled(true);
-            TextView abtitle = findViewById(android.R.id.text1);
-            TextView absubtitle = findViewById(android.R.id.text2);
-            abtitle.setText(contact.getDisplayName());
-            abtitle.setSelected(true);
-            abtitle.setClickable(false);
-            absubtitle.setVisibility(View.GONE);
-            absubtitle.setClickable(false);
+        if (getSupportActionBar() != null) {
+            final ActionBar ab = getSupportActionBar();
+            if (ab != null) {
+                ab.setCustomView(R.layout.ab_title);
+                ab.setDisplayShowCustomEnabled(true);
+                TextView abtitle = findViewById(android.R.id.text1);
+                TextView absubtitle = findViewById(android.R.id.text2);
+                abtitle.setText(contact.getDisplayName());
+                abtitle.setSelected(true);
+                abtitle.setClickable(false);
+                absubtitle.setVisibility(View.GONE);
+                absubtitle.setClickable(false);
+            }
         }
 
         invalidateOptionsMenu();
         setTitle(contact.getDisplayName());
         if (contact.getServer().toString().toLowerCase().equals(accountJid.getDomainpart().toLowerCase())) {
-            contactDisplayName.setText(contact.getDisplayName());
+            binding.contactDisplayName.setText(contact.getDisplayName());
         } else {
-            contactDisplayName.setText(contact.getDisplayJid());
+            binding.contactDisplayName.setText(contact.getDisplayJid());
         }
         if (contact.showInRoster()) {
-            send.setVisibility(View.VISIBLE);
-            receive.setVisibility(View.VISIBLE);
-            addContactButton.setVisibility(View.VISIBLE);
-            addContactButton.setText(getString(R.string.action_delete_contact));
-            addContactButton.getBackground().setColorFilter(getWarningButtonColor(), PorterDuff.Mode.MULTIPLY);
+            binding.detailsSendPresence.setVisibility(View.VISIBLE);
+            binding.detailsReceivePresence.setVisibility(View.VISIBLE);
+            binding.addContactButton.setVisibility(View.VISIBLE);
+            binding.addContactButton.setText(getString(R.string.action_delete_contact));
+            binding.addContactButton.getBackground().setColorFilter(getWarningButtonColor(), PorterDuff.Mode.MULTIPLY);
+            binding.detailsSendPresence.setOnCheckedChangeListener(null);
+            binding.detailsReceivePresence.setOnCheckedChangeListener(null);
+
             final AlertDialog.Builder deleteFromRosterDialog = new AlertDialog.Builder(ContactDetailsActivity.this);
-            addContactButton.setOnClickListener(new OnClickListener() {
+            binding.addContactButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     deleteFromRosterDialog.setNegativeButton(getString(R.string.cancel), null);
@@ -448,15 +421,15 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
                                     removeFromRoster).create().show();
                 }
             });
-            send.setOnCheckedChangeListener(null);
-            receive.setOnCheckedChangeListener(null);
+            binding.detailsSendPresence.setOnCheckedChangeListener(null);
+            binding.detailsReceivePresence.setOnCheckedChangeListener(null);
 
             List<String> statusMessages = contact.getPresences().getStatusMessages();
             if (statusMessages.size() == 0) {
-                statusMessage.setVisibility(View.GONE);
+                binding.statusMessage.setVisibility(View.GONE);
             } else {
                 StringBuilder builder = new StringBuilder();
-                statusMessage.setVisibility(View.VISIBLE);
+                binding.statusMessage.setVisibility(View.VISIBLE);
                 int s = statusMessages.size();
                 for (int i = 0; i < s; ++i) {
                     if (s > 1) {
@@ -467,85 +440,85 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
                         builder.append("\n");
                     }
                 }
-                statusMessage.setText(builder);
+                binding.statusMessage.setText(builder);
             }
 
             String resources = contact.getPresences().getMostAvailableResource();
             if (resources.length() == 0) {
-                resource.setVisibility(View.GONE);
+                binding.resource.setVisibility(View.GONE);
             } else {
-                resource.setVisibility(View.VISIBLE);
-                resource.setText(resources);
+                binding.resource.setVisibility(View.VISIBLE);
+                binding.resource.setText(resources);
             }
 
             if (contact.getOption(Contact.Options.FROM)) {
-                send.setText(R.string.send_presence_updates);
-                send.setChecked(true);
+                binding.detailsSendPresence.setText(R.string.send_presence_updates);
+                binding.detailsSendPresence.setChecked(true);
             } else if (contact.getOption(Contact.Options.PENDING_SUBSCRIPTION_REQUEST)) {
-                send.setChecked(false);
-                send.setText(R.string.send_presence_updates);
+                binding.detailsSendPresence.setChecked(false);
+                binding.detailsSendPresence.setText(R.string.send_presence_updates);
             } else {
-                send.setText(R.string.preemptively_grant);
+                binding.detailsSendPresence.setText(R.string.preemptively_grant);
                 if (contact.getOption(Contact.Options.PREEMPTIVE_GRANT)) {
-                    send.setChecked(true);
+                    binding.detailsSendPresence.setChecked(true);
                 } else {
-                    send.setChecked(false);
+                    binding.detailsSendPresence.setChecked(false);
                 }
             }
             if (contact.getOption(Contact.Options.TO)) {
-                receive.setText(R.string.receive_presence_updates);
-                receive.setChecked(true);
+                binding.detailsReceivePresence.setText(R.string.receive_presence_updates);
+                binding.detailsReceivePresence.setChecked(true);
             } else {
-                receive.setText(R.string.ask_for_presence_updates);
+                binding.detailsReceivePresence.setText(R.string.ask_for_presence_updates);
                 if (contact.getOption(Contact.Options.ASKING)) {
-                    receive.setChecked(true);
+                    binding.detailsReceivePresence.setChecked(true);
                 } else {
-                    receive.setChecked(false);
+                    binding.detailsReceivePresence.setChecked(false);
                 }
             }
             if (contact.getAccount().isOnlineAndConnected()) {
-                receive.setEnabled(true);
-                send.setEnabled(true);
+                binding.detailsReceivePresence.setEnabled(true);
+                binding.detailsSendPresence.setEnabled(true);
             } else {
-                receive.setEnabled(false);
-                send.setEnabled(false);
+                binding.detailsReceivePresence.setEnabled(false);
+                binding.detailsSendPresence.setEnabled(false);
             }
-            send.setOnCheckedChangeListener(this.mOnSendCheckedChange);
-            receive.setOnCheckedChangeListener(this.mOnReceiveCheckedChange);
+            binding.detailsSendPresence.setOnCheckedChangeListener(this.mOnSendCheckedChange);
+            binding.detailsReceivePresence.setOnCheckedChangeListener(this.mOnReceiveCheckedChange);
         } else {
-            addContactButton.setVisibility(View.VISIBLE);
-            addContactButton.setText(getString(R.string.add_contact));
-            addContactButton.getBackground().clearColorFilter();
-            addContactButton.setOnClickListener(new OnClickListener() {
+            binding.addContactButton.setVisibility(View.VISIBLE);
+            binding.addContactButton.setText(getString(R.string.add_contact));
+            binding.addContactButton.getBackground().clearColorFilter();
+            binding.addContactButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     showAddToRosterDialog(contact);
                 }
             });
-            send.setVisibility(View.GONE);
-            receive.setVisibility(View.GONE);
-            statusMessage.setVisibility(View.GONE);
+            binding.detailsSendPresence.setVisibility(View.GONE);
+            binding.detailsReceivePresence.setVisibility(View.GONE);
+            binding.statusMessage.setVisibility(View.GONE);
         }
 
         if (contact.isBlocked() && !this.showDynamicTags) {
-            lastseen.setVisibility(View.VISIBLE);
-            lastseen.setText(R.string.contact_blocked);
+            binding.detailsLastseen.setVisibility(View.VISIBLE);
+            binding.detailsLastseen.setText(R.string.contact_blocked);
         } else {
             if (showLastSeen
                     && contact.getLastseen() > 0
                     && contact.getPresences().allOrNonSupport(Namespace.IDLE)) {
-                lastseen.setVisibility(View.VISIBLE);
-                lastseen.setText(UIHelper.lastseen(getApplicationContext(), contact.isActive(), contact.getLastseen()));
+                binding.detailsLastseen.setVisibility(View.VISIBLE);
+                binding.detailsLastseen.setText(UIHelper.lastseen(getApplicationContext(), contact.isActive(), contact.getLastseen()));
             } else {
-                lastseen.setVisibility(View.GONE);
+                binding.detailsLastseen.setVisibility(View.GONE);
             }
         }
 
         if (contact.getPresences().size() > 1) {
-            contactJidTv.setText(contact.getDisplayJid() + " ("
+            binding.detailsContactjid.setText(contact.getDisplayJid() + " ("
                     + contact.getPresences().size() + ")");
         } else {
-            contactJidTv.setText(contact.getDisplayJid());
+            binding.detailsContactjid.setText(contact.getDisplayJid());
         }
         String account;
         if (Config.DOMAIN_LOCK != null) {
@@ -553,17 +526,17 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
         } else {
             account = contact.getAccount().getJid().toBareJid().toString();
         }
-        accountJidTv.setText(getString(R.string.using_account, account));
-        badge.setImageBitmap(avatarService().get(contact, getPixel(Config.AVATAR_SIZE)));
-        badge.setOnClickListener(this.onBadgeClick);
+        binding.detailsAccount.setText(getString(R.string.using_account, account));
+        binding.detailsContactBadge.setImageBitmap(avatarService().get(contact, getPixel(Config.AVATAR_SIZE)));
+        binding.detailsContactBadge.setOnClickListener(this.onBadgeClick);
 
-        keys.removeAllViews();
+        binding.detailsContactKeys.removeAllViews();
         boolean hasKeys = false;
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (Config.supportOtr()) {
             for (final String otrFingerprint : contact.getOtrFingerprints()) {
                 hasKeys = true;
-                View view = inflater.inflate(R.layout.contact_key, keys, false);
+                View view = inflater.inflate(R.layout.contact_key, binding.detailsContactKeys, false);
                 TextView key = view.findViewById(R.id.key);
                 TextView keyType = view.findViewById(R.id.key_type);
                 ImageButton removeButton = view
@@ -576,7 +549,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
                 } else {
                     keyType.setText(R.string.otr_fingerprint);
                 }
-                keys.addView(view);
+                binding.detailsContactKeys.addView(view);
                 removeButton.setOnClickListener(new OnClickListener() {
 
                     @Override
@@ -603,21 +576,21 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
                 }
                 if (!trust.isCompromised()) {
                     boolean highlight = session.getFingerprint().equals(messageFingerprint);
-                    addFingerprintRow(keys, session, highlight);
+                    addFingerprintRow(binding.detailsContactKeys, session, highlight);
                 }
             }
             if (showsInactive || skippedInactive) {
-                mShowInactiveDevicesButton.setText(showsInactive ? R.string.hide_inactive_devices : R.string.show_inactive_devices);
-                mShowInactiveDevicesButton.setVisibility(View.VISIBLE);
+                binding.showInactiveDevices.setText(showsInactive ? R.string.hide_inactive_devices : R.string.show_inactive_devices);
+                binding.showInactiveDevices.setVisibility(View.VISIBLE);
             } else {
-                mShowInactiveDevicesButton.setVisibility(View.GONE);
+                binding.showInactiveDevices.setVisibility(View.GONE);
             }
         } else {
-            mShowInactiveDevicesButton.setVisibility(View.GONE);
+            binding.showInactiveDevices.setVisibility(View.GONE);
         }
         if (Config.supportOpenPgp() && contact.getPgpKeyId() != 0) {
             hasKeys = true;
-            View view = inflater.inflate(R.layout.contact_key, keys, false);
+            View view = inflater.inflate(R.layout.contact_key, binding.detailsContactKeys, false);
             TextView key = view.findViewById(R.id.key);
             TextView keyType = view.findViewById(R.id.key_type);
             keyType.setText(R.string.openpgp_key_id);
@@ -635,21 +608,21 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             view.setOnClickListener(openKey);
             key.setOnClickListener(openKey);
             keyType.setOnClickListener(openKey);
-            keys.addView(view);
+            binding.detailsContactKeys.addView(view);
         }
-        keysWrapper.setVisibility(hasKeys ? View.VISIBLE : View.GONE);
+        binding.keysWrapper.setVisibility(hasKeys ? View.VISIBLE : View.GONE);
 
         List<ListItem.Tag> tagList = contact.getTags(this);
         if (tagList.size() == 0 || !this.showDynamicTags) {
-            tags.setVisibility(View.GONE);
+            binding.tags.setVisibility(View.GONE);
         } else {
-            tags.setVisibility(View.VISIBLE);
-            tags.removeAllViewsInLayout();
+            binding.tags.setVisibility(View.VISIBLE);
+            binding.tags.removeAllViewsInLayout();
             for (final ListItem.Tag tag : tagList) {
-                final TextView tv = (TextView) inflater.inflate(R.layout.list_item_tag, tags, false);
+                final TextView tv = (TextView) inflater.inflate(R.layout.list_item_tag, binding.tags, false);
                 tv.setText(tag.getName());
                 tv.setBackgroundColor(tag.getColor());
-                tags.addView(tv);
+                binding.tags.addView(tv);
             }
         }
     }

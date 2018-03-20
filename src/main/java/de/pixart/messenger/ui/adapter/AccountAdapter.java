@@ -134,7 +134,8 @@ public class AccountAdapter extends ArrayAdapter<Account> {
 
         @Override
         protected Bitmap doInBackground(Account... params) {
-            return activity.avatarService().get(params[0], activity.getPixel(56), isCancelled());
+            this.account = params[0];
+            return activity.avatarService().get(this.account, activity.getPixel(56), isCancelled());
         }
 
         @Override

@@ -1,71 +1,116 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_add"
         android:icon="?attr/icon_new"
         android:orderInCategory="10"
-        android:showAsAction="always"
+        app:showAsAction="always"
         android:title="@string/action_add" />
     <item
         android:id="@+id/action_security"
         android:icon="?attr/icon_not_secure"
         android:orderInCategory="20"
-        android:showAsAction="always"
-        android:title="@string/action_secure" />
+        app:showAsAction="always"
+        android:title="@string/action_secure" >
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/encryption_choice_none"
+                    android:title="@string/encryption_choice_unencrypted" />
+                <item
+                    android:id="@+id/encryption_choice_axolotl"
+                    android:title="@string/encryption_choice_omemo" />
+                <item
+                    android:id="@+id/encryption_choice_otr"
+                    android:title="@string/encryption_choice_otr" />
+                <item
+                    android:id="@+id/encryption_choice_pgp"
+                    android:title="@string/encryption_choice_pgp" />
+            </group>
+        </menu>
+    </item>
     <item
         android:id="@+id/action_attach_file"
         android:icon="?attr/icon_new_attachment"
         android:orderInCategory="30"
-        android:showAsAction="always"
-        android:title="@string/attach_file" />
+        app:showAsAction="always"
+        android:title="@string/attach_file" >
+        <menu>
+
+            <item
+                android:id="@+id/attach_choose_file"
+                android:icon="?attr/ic_attach_document"
+                android:title="@string/choose_file" />
+
+            <item
+                android:id="@+id/attach_choose_picture"
+                android:icon="?attr/ic_attach_photo"
+                android:title="@string/attach_choose_picture" />
+
+            <item
+                android:id="@+id/attach_take_picture"
+                android:icon="?attr/ic_attach_camera"
+                android:title="@string/attach_take_from_camera" />
+            <item
+                android:id="@+id/attach_record_voice"
+                android:icon="?attr/ic_attach_record"
+                android:title="@string/attach_record_voice" />
+
+            <item
+                android:id="@+id/attach_location"
+                android:icon="?attr/ic_attach_location"
+                android:title="@string/send_location" />
+        </menu>
+    </item>
     <item
         android:id="@+id/action_invite"
         android:orderInCategory="45"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/invite_contact" />
     <item
         android:id="@+id/action_clear_history"
         android:orderInCategory="50"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/action_clear_history" />
     <item
         android:id="@+id/action_archive_chat"
         android:orderInCategory="60"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/action_end_conversation" />
     <item
         android:id="@+id/action_archive_muc"
         android:orderInCategory="60"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/action_end_conversation_muc" />
     <item
         android:id="@+id/action_accounts"
         android:orderInCategory="90"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/mgmt_account_edit" />
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/action_settings" />
     <item
         android:id="@+id/action_invite_user"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/invite_user" />
     <item
         android:id="@+id/action_create_issue"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/create_issue" />
     <item
         android:id="@+id/action_check_updates"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        app:showAsAction="never"
         android:title="@string/action_check_update" />
     <item
         android:id="@+id/action_search_history"
         android:icon="?attr/icon_search"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/search" />
 </menu>
