@@ -122,12 +122,6 @@ public class SettingsActivity extends XmppActivity implements
             }
         }
 
-        PreferenceCategory connectionOptions = (PreferenceCategory) mSettingsFragment.findPreference("connection_options");
-        PreferenceScreen expert = (PreferenceScreen) mSettingsFragment.findPreference("expert");
-        if (connectionOptions != null) {
-            expert.removePreference(connectionOptions);
-        }
-
         final Preference removeCertsPreference = mSettingsFragment.findPreference("remove_trusted_certificates");
         if (removeCertsPreference != null) {
             removeCertsPreference.setOnPreferenceClickListener(preference -> {
