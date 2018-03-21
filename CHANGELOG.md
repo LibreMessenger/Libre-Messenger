@@ -1,5 +1,9 @@
 ### Changelog
 
+#### Version 1.22.1
+* show extended/TOR connection options in expert settings
+* bug fixes
+
 #### Version 1.22.0
 * integrated expert option to enable multiple account
 * some UI improvements
