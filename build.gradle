@@ -92,7 +92,8 @@ android {
         applicationId "de.pixart.messenger"
         multiDexEnabled true
         buildConfigField("String", "UPDATE_URL", '"https://xmpp.pix-art.de/Pix-Art_Messenger/update/"')
-
+        resValue "string", "applicationId", applicationId
+        resValue "string", "app_name", "Pix-Art Messenger"
         dimension "distribution"
     }
 
@@ -120,7 +121,8 @@ android {
         open {
             buildConfigField("String", "UPDATE_URL", '"https://xmpp.pix-art.de/Pix-Art_Messenger/update/open/"')
             applicationId "de.pixart.openmessenger"
-
+            resValue "string", "applicationId", applicationId
+            resValue "string", "app_name", "Pix-Art Messenger"
             dimension "distribution"
         }
     }

@@ -68,7 +68,7 @@
             <intent
                 android:action="android.intent.action.VIEW"
                 android:targetClass="de.pixart.messenger.ui.SettingsActivity"
-                android:targetPackage="de.pixart.messenger">
+                android:targetPackage="@string/applicationId">
                 <extra
                     android:name="page"
                     android:value="quiet_hours" />
@@ -258,7 +258,7 @@
         <intent
             android:action="android.intent.action.VIEW"
             android:targetClass="de.pixart.messenger.ui.SettingsActivity"
-            android:targetPackage="de.pixart.messenger">
+            android:targetPackage="@string/applicationId">
             <extra
                 android:name="page"
                 android:value="expert" />
