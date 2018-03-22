@@ -473,6 +473,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.join_conference);
         final View dialogView = getLayoutInflater().inflate(R.layout.join_conference_dialog, null);
+        final TextView yourAccount = dialogView.findViewById(R.id.your_account);
         final Spinner spinner = dialogView.findViewById(R.id.account);
         final AutoCompleteTextView jid = dialogView.findViewById(R.id.jid);
         final TextView jabberIdDesc = dialogView.findViewById(R.id.jabber_id);
@@ -481,6 +482,13 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
         jid.setAdapter(new KnownHostsAdapter(this, R.layout.simple_list_item, mKnownConferenceHosts));
         if (prefilledJid != null) {
             jid.append(prefilledJid);
+        }
+        if (xmppConnectionService.multipleAccounts()) {
+            yourAccount.setVisibility(View.VISIBLE);
+            spinner.setVisibility(View.VISIBLE);
+        } else {
+            yourAccount.setVisibility(View.GONE);
+            spinner.setVisibility(View.GONE);
         }
         populateAccountSpinner(this, mActivatedAccounts, spinner);
         final Checkable bookmarkCheckBox = (CheckBox) dialogView
@@ -545,9 +553,17 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.create_conference);
         final View dialogView = getLayoutInflater().inflate(R.layout.create_conference_dialog, null);
+        final TextView yourAccount = dialogView.findViewById(R.id.your_account);
         final Spinner spinner = dialogView.findViewById(R.id.account);
         final EditText subject = dialogView.findViewById(R.id.subject);
         populateAccountSpinner(this, mActivatedAccounts, spinner);
+        if (xmppConnectionService.multipleAccounts()) {
+            yourAccount.setVisibility(View.VISIBLE);
+            spinner.setVisibility(View.VISIBLE);
+        } else {
+            yourAccount.setVisibility(View.GONE);
+            spinner.setVisibility(View.GONE);
+        }
         builder.setView(dialogView);
         builder.setPositiveButton(R.string.choose_participants, new OnClickListener() {
             @Override
