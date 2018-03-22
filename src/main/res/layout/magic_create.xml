@@ -43,13 +43,12 @@
                 android:textColor="@color/black87"
                 android:textSize="?attr/TextSizeBody" />
 
-            <AutoCompleteTextView
+            <EditText
                 android:id="@+id/username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:hint="@string/username_hint"
-                android:inputType="textNoSuggestions"
                 android:textSize="?attr/TextSizeBody" />
 
             <TextView

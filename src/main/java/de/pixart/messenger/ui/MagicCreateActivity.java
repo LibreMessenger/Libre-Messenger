@@ -6,25 +6,23 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.security.SecureRandom;
-import java.util.List;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
-import de.pixart.messenger.ui.adapter.KnownHostsAdapter;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
 
 public class MagicCreateActivity extends XmppActivity implements TextWatcher {
 
     private TextView mFullJidDisplay;
-    private AutoCompleteTextView mUsername;
+    private EditText mUsername;
     private SecureRandom mRandom;
 
     private static final String CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456780+-/#$!?";
@@ -55,11 +53,9 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
         super.onCreate(savedInstanceState);
-        List<String> knownHosts = null;
         setContentView(R.layout.magic_create);
         mFullJidDisplay = findViewById(R.id.full_jid);
         mUsername = findViewById(R.id.username);
-        mUsername.setAdapter(new KnownHostsAdapter(this, R.layout.simple_list_item, knownHosts));
         mRandom = new SecureRandom();
         Button next = findViewById(R.id.create_account);
         next.setOnClickListener(v -> {
