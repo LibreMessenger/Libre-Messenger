@@ -1,7 +1,6 @@
 package de.pixart.messenger.ui;
 
 import android.app.Activity;
-import android.support.v7.app.AlertDialog;
 import android.app.Fragment;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
@@ -14,6 +13,7 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v13.view.inputmethod.InputConnectionCompat;
 import android.support.v13.view.inputmethod.InputContentInfoCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -81,6 +81,7 @@ import de.pixart.messenger.ui.adapter.MessageAdapter;
 import de.pixart.messenger.ui.widget.EditMessage;
 import de.pixart.messenger.utils.MessageUtils;
 import de.pixart.messenger.utils.NickValidityChecker;
+import de.pixart.messenger.utils.SendButtonAction;
 import de.pixart.messenger.utils.StylingHelper;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.XmppConnection;
@@ -407,16 +408,10 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                 SendButtonAction action = (SendButtonAction) tag;
                 switch (action) {
                     case TAKE_FROM_CAMERA:
-                        activity.attachFile(ConversationActivity.ATTACHMENT_CHOICE_TAKE_FROM_CAMERA);
-                        break;
                     case SEND_LOCATION:
-                        activity.attachFile(ConversationActivity.ATTACHMENT_CHOICE_LOCATION);
-                        break;
                     case RECORD_VOICE:
-                        activity.attachFile(ConversationActivity.ATTACHMENT_CHOICE_RECORD_VOICE);
-                        break;
                     case CHOOSE_PICTURE:
-                        activity.attachFile(ConversationActivity.ATTACHMENT_CHOICE_CHOOSE_IMAGE);
+                        activity.attachFile(action.toChoice());
                         break;
                     case CANCEL:
                         if (conversation != null) {
@@ -1381,26 +1376,14 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                 } else {
                     String setting = activity.getPreferences().getString("quick_action", activity.getResources().getString(R.string.quick_action));
                     if (!setting.equals("none") && UIHelper.receivedLocationQuestion(conversation.getLatestMessage())) {
-                        setting = "location";
-                    } else if (setting.equals("recent")) {
-                        setting = activity.getPreferences().getString("recently_used_quick_action", "text");
-                    }
-                    switch (setting) {
-                        case "photo":
-                            action = SendButtonAction.TAKE_FROM_CAMERA;
-                            break;
-                        case "location":
-                            action = SendButtonAction.SEND_LOCATION;
-                            break;
-                        case "voice":
-                            action = SendButtonAction.RECORD_VOICE;
-                            break;
-                        case "picture":
-                            action = SendButtonAction.CHOOSE_PICTURE;
-                            break;
-                        default:
-                            action = SendButtonAction.TEXT;
-                            break;
+                        action = SendButtonAction.SEND_LOCATION;
+                    } else {
+                        if (setting.equals("recent")) {
+                            setting = activity.getPreferences().getString(ConversationActivity.RECENTLY_USED_QUICK_ACTION, SendButtonAction.TEXT.toString());
+                            action = SendButtonAction.valueOfOrDefault(setting, SendButtonAction.TEXT);
+                        } else {
+                            action = SendButtonAction.valueOfOrDefault(setting, SendButtonAction.TEXT);
+                        }
                     }
                 }
             } else {
@@ -1854,8 +1837,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode,
-                                 final Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, final Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == ConversationActivity.REQUEST_DECRYPT_PGP) {
                 activity.getSelectedConversation().getAccount().getPgpDecryptionService().continueDecryption(data);
@@ -1946,17 +1928,5 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
     private boolean messageContainsQuery(Message m, String q) {
         return m != null && m.getMergedBody().toString().toLowerCase().contains(q.toLowerCase());
-    }
-
-    enum SendButtonAction {
-        TEXT, TAKE_FROM_CAMERA, SEND_LOCATION, RECORD_VOICE, CANCEL, CHOOSE_PICTURE;
-
-        public static SendButtonAction valueOfOrDefault(String setting, SendButtonAction text) {
-            try {
-                return valueOf(setting);
-            } catch (IllegalArgumentException e) {
-                return TEXT;
-            }
-        }
     }
 }

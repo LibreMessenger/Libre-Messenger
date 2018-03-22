@@ -80,6 +80,7 @@ import de.pixart.messenger.services.XmppConnectionService.OnRosterUpdate;
 import de.pixart.messenger.ui.adapter.ConversationAdapter;
 import de.pixart.messenger.utils.ExceptionHelper;
 import de.pixart.messenger.utils.FileUtils;
+import de.pixart.messenger.utils.SendButtonAction;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.XmppConnection;
@@ -97,6 +98,7 @@ public class ConversationActivity extends XmppActivity
     public static final String ACTION_DESTROY_MUC = "de.pixart.messenger.DESTROY_MUC";
     public static final String CONVERSATION = "conversationUuid";
     public static final String EXTRA_DOWNLOAD_UUID = "de.pixart.messenger.download_uuid";
+    public static final String RECENTLY_USED_QUICK_ACTION = "recently_used_quick_action";
     public static final String TEXT = "text";
     public static final String NICK = "nick";
     public static final String PRIVATE_MESSAGE = "pm";
@@ -678,19 +680,12 @@ public class ConversationActivity extends XmppActivity
                 return;
             }
         }
-        switch (attachmentChoice) {
-            case ATTACHMENT_CHOICE_LOCATION:
-                getPreferences().edit().putString("recently_used_quick_action", "location").apply();
-                break;
-            case ATTACHMENT_CHOICE_RECORD_VOICE:
-                getPreferences().edit().putString("recently_used_quick_action", "voice").apply();
-                break;
-            case ATTACHMENT_CHOICE_TAKE_FROM_CAMERA:
-                getPreferences().edit().putString("recently_used_quick_action", "photo").apply();
-                break;
-            case ATTACHMENT_CHOICE_CHOOSE_IMAGE:
-                getPreferences().edit().putString("recently_used_quick_action", "picture").apply();
-                break;
+        try {
+            getPreferences().edit()
+                    .putString(RECENTLY_USED_QUICK_ACTION, SendButtonAction.of(attachmentChoice).toString())
+                    .apply();
+        } catch (IllegalArgumentException e) {
+            //just do not save
         }
         final Conversation conversation = getSelectedConversation();
         final int encryption = conversation.getNextEncryption();
@@ -806,19 +801,11 @@ public class ConversationActivity extends XmppActivity
                     handleEncryptionSelection(item);
                     break;
                 case R.id.attach_choose_picture:
-                    attachFile(ATTACHMENT_CHOICE_CHOOSE_IMAGE);
-                    break;
                 case R.id.attach_take_picture:
-                    attachFile(ATTACHMENT_CHOICE_TAKE_FROM_CAMERA);
-                    break;
                 case R.id.attach_choose_file:
-                    attachFile(ATTACHMENT_CHOICE_CHOOSE_FILE);
-                    break;
                 case R.id.attach_record_voice:
-                    attachFile(ATTACHMENT_CHOICE_RECORD_VOICE);
-                    break;
                 case R.id.attach_location:
-                    attachFile(ATTACHMENT_CHOICE_LOCATION);
+                    handleAttachmentSelection(item);
                     break;
                 case R.id.action_archive_chat:
                     this.endConversation(getSelectedConversation());
@@ -898,22 +885,36 @@ public class ConversationActivity extends XmppActivity
         }
         builder.setView(dialogView);
         builder.setNegativeButton(getString(R.string.cancel), null);
-        builder.setPositiveButton(getString(R.string.delete_messages),
-                (dialog, which) -> {
-                    ConversationActivity.this.xmppConnectionService.clearConversationHistory(conversation);
-                    if (conversation.getMode() == Conversation.MODE_SINGLE) {
-                        if (endConversationCheckBox.isChecked()) {
-                            endConversation(conversation);
-                        } else {
-                            updateConversationList();
-                            ConversationActivity.this.mConversationFragment.updateMessages();
-                        }
-                    } else {
-                        updateConversationList();
-                        ConversationActivity.this.mConversationFragment.updateMessages();
-                    }
-                });
+        builder.setPositiveButton(getString(R.string.delete_messages), (dialog, which) -> {
+            ConversationActivity.this.xmppConnectionService.clearConversationHistory(conversation);
+            if (endConversationCheckBox.isChecked()) {
+                endConversation(conversation);
+            } else {
+                updateConversationList();
+                ConversationActivity.this.mConversationFragment.updateMessages();
+            }
+        });
         builder.create().show();
+    }
+
+    private void handleAttachmentSelection(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.attach_choose_picture:
+                attachFile(ATTACHMENT_CHOICE_CHOOSE_IMAGE);
+                break;
+            case R.id.attach_take_picture:
+                attachFile(ATTACHMENT_CHOICE_TAKE_FROM_CAMERA);
+                break;
+            case R.id.attach_choose_file:
+                attachFile(ATTACHMENT_CHOICE_CHOOSE_FILE);
+                break;
+            case R.id.attach_record_voice:
+                attachFile(ATTACHMENT_CHOICE_RECORD_VOICE);
+                break;
+            case R.id.attach_location:
+                attachFile(ATTACHMENT_CHOICE_LOCATION);
+                break;
+        }
     }
 
     public void verifyOtrSessionDialog(final Conversation conversation, View view) {
@@ -1667,22 +1668,12 @@ public class ConversationActivity extends XmppActivity
             @Override
             public void inform(final String text) {
                 hidePrepareFileToast(prepareFileToast);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        replaceToast(text);
-                    }
-                });
+                runOnUiThread(() -> replaceToast(text));
             }
 
             @Override
             public void success(Message message) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        hideToast();
-                    }
-                });
+                runOnUiThread(() -> hideToast());
                 hidePrepareFileToast(prepareFileToast);
                 xmppConnectionService.sendMessage(message);
             }
@@ -1690,12 +1681,7 @@ public class ConversationActivity extends XmppActivity
             @Override
             public void error(final int errorCode, Message message) {
                 hidePrepareFileToast(prepareFileToast);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        replaceToast(getString(errorCode));
-                    }
-                });
+                runOnUiThread(() -> replaceToast(getString(errorCode)));
 
             }
 
@@ -1901,13 +1887,7 @@ public class ConversationActivity extends XmppActivity
 
     private void hidePrepareFileToast(final Toast prepareFileToast) {
         if (prepareFileToast != null) {
-            runOnUiThread(new Runnable() {
-
-                @Override
-                public void run() {
-                    prepareFileToast.cancel();
-                }
-            });
+            runOnUiThread(() -> prepareFileToast.cancel());
         }
     }
 
@@ -2067,12 +2047,7 @@ public class ConversationActivity extends XmppActivity
 
     @Override
     public void onShowErrorToast(final int resId) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(ConversationActivity.this, resId, Toast.LENGTH_SHORT).show();
-            }
-        });
+        runOnUiThread(() -> Toast.makeText(ConversationActivity.this, resId, Toast.LENGTH_SHORT).show());
     }
 
     public boolean highlightSelectedConversations() {
