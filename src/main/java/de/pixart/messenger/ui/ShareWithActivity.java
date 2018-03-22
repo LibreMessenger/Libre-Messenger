@@ -26,6 +26,7 @@ import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.services.EmojiService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.adapter.ConversationAdapter;
+import de.pixart.messenger.ui.util.PresenceSelector;
 import de.pixart.messenger.xmpp.XmppConnection;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
@@ -339,7 +340,7 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
             return;
         }
         if (share.uris.size() != 0) {
-            OnPresenceSelected callback = () -> {
+            PresenceSelector.OnPresenceSelected callback = () -> {
                 attachmentCounter.set(share.uris.size());
                 if (share.image) {
                     Log.d(Config.LOGTAG, "ShareWithActivity share() image " + share.uris.size() + " uri(s) " + share.uris.toString());
@@ -370,7 +371,7 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
             }
         } else {
             if (mReturnToPrevious && this.share.text != null && !this.share.text.isEmpty()) {
-                final OnPresenceSelected callback = new OnPresenceSelected() {
+                final PresenceSelector.OnPresenceSelected callback = new PresenceSelector.OnPresenceSelected() {
                     private void finishAndSend(Message message) {
                         xmppConnectionService.sendMessage(message);
                         replaceToast(getString(R.string.shared_text_with_x, conversation.getName()));
@@ -423,7 +424,7 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
                     callback.onPresenceSelected();
                 }
             } else {
-                final OnPresenceSelected callback = () -> {
+                final PresenceSelector.OnPresenceSelected callback = () -> {
                     Message message = new Message(conversation, share.text, conversation.getNextEncryption());
                     if (conversation.getNextEncryption() == Message.ENCRYPTION_OTR) {
                         message.setCounterpart(conversation.getNextCounterpart());

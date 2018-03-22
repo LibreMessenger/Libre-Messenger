@@ -594,7 +594,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
             @Override
             public void onClick(View v) {
-                activity.startDownloadable(message);
+                activity.mConversationFragment.startDownloadable(message);
             }
         });
     }

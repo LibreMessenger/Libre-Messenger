@@ -27,12 +27,12 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package de.pixart.messenger.utils;
+package de.pixart.messenger.ui.util;
 
-import static de.pixart.messenger.ui.ConversationActivity.ATTACHMENT_CHOICE_CHOOSE_IMAGE;
-import static de.pixart.messenger.ui.ConversationActivity.ATTACHMENT_CHOICE_LOCATION;
-import static de.pixart.messenger.ui.ConversationActivity.ATTACHMENT_CHOICE_RECORD_VOICE;
-import static de.pixart.messenger.ui.ConversationActivity.ATTACHMENT_CHOICE_TAKE_FROM_CAMERA;
+import static de.pixart.messenger.ui.ConversationFragment.ATTACHMENT_CHOICE_CHOOSE_IMAGE;
+import static de.pixart.messenger.ui.ConversationFragment.ATTACHMENT_CHOICE_LOCATION;
+import static de.pixart.messenger.ui.ConversationFragment.ATTACHMENT_CHOICE_RECORD_VOICE;
+import static de.pixart.messenger.ui.ConversationFragment.ATTACHMENT_CHOICE_TAKE_FROM_CAMERA;
 
 public enum SendButtonAction {
     TEXT, TAKE_FROM_CAMERA, SEND_LOCATION, RECORD_VOICE, CANCEL, CHOOSE_PICTURE;

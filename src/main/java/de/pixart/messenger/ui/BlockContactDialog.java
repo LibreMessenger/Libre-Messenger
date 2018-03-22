@@ -18,8 +18,7 @@ import de.pixart.messenger.entities.Blockable;
 import de.pixart.messenger.entities.Conversation;
 
 public final class BlockContactDialog {
-    public static void show(final XmppActivity xmppActivity,
-                            final Blockable blockable) {
+    public static void show(final XmppActivity xmppActivity, final Blockable blockable) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(xmppActivity);
         final boolean isBlocked = blockable.isBlocked();
         builder.setNegativeButton(R.string.cancel, null);

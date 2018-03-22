@@ -3,7 +3,6 @@ package de.pixart.messenger.ui;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.support.v7.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
@@ -38,6 +37,7 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.DisplayMetrics;
@@ -75,9 +75,9 @@ import de.pixart.messenger.services.BarcodeProvider;
 import de.pixart.messenger.services.UpdateService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.services.XmppConnectionService.XmppConnectionBinder;
+import de.pixart.messenger.ui.util.PresenceSelector;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.ExceptionHelper;
-import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.OnKeyStatusUpdated;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
@@ -833,9 +833,9 @@ public abstract class XmppActivity extends AppCompatActivity {
         }
     }
 
-    public void selectPresence(final Conversation conversation,
-                               final OnPresenceSelected listener) {
+    public void selectPresence(final Conversation conversation, final PresenceSelector.OnPresenceSelected listener) {
         final Contact contact = conversation.getContact();
+
         if (conversation.hasValidOtrSession()) {
             SessionID id = conversation.getOtrSession().getSessionID();
             Jid jid;
@@ -857,7 +857,7 @@ public abstract class XmppActivity extends AppCompatActivity {
                     showAskForPresenceDialog(contact);
                 } else if (!contact.getOption(Contact.Options.TO)
                         || !contact.getOption(Contact.Options.FROM)) {
-                    warnMutalPresenceSubscription(conversation, listener);
+                    PresenceSelector.warnMutualPresenceSubscription(this, conversation, listener);
                 } else {
                     conversation.setNextCounterpart(null);
                     listener.onPresenceSelected();
@@ -871,7 +871,7 @@ public abstract class XmppActivity extends AppCompatActivity {
                 }
                 listener.onPresenceSelected();
             } else {
-                showPresenceSelectionDialog(presences, conversation, listener);
+                PresenceSelector.showPresenceSelectionDialog(this, conversation, listener);
             }
         }
     }
@@ -895,16 +895,16 @@ public abstract class XmppActivity extends AppCompatActivity {
             String name = resourceNameMap.get(resource);
             if (type != null) {
                 if (Collections.frequency(resourceTypeMap.values(), type) == 1) {
-                    readableIdentities[i] = UIHelper.tranlasteType(this, type);
+                    readableIdentities[i] = PresenceSelector.translateType(this, type);
                 } else if (name != null) {
                     if (Collections.frequency(resourceNameMap.values(), name) == 1
                             || CryptoHelper.UUID_PATTERN.matcher(resource).matches()) {
-                        readableIdentities[i] = UIHelper.tranlasteType(this, type) + "  (" + name + ")";
+                        readableIdentities[i] = PresenceSelector.translateType(this, type) + "  (" + name + ")";
                     } else {
-                        readableIdentities[i] = UIHelper.tranlasteType(this, type) + " (" + name + " / " + resource + ")";
+                        readableIdentities[i] = PresenceSelector.translateType(this, type) + " (" + name + " / " + resource + ")";
                     }
                 } else {
-                    readableIdentities[i] = UIHelper.tranlasteType(this, type) + " (" + resource + ")";
+                    readableIdentities[i] = PresenceSelector.translateType(this, type) + " (" + resource + ")";
                 }
             } else {
                 readableIdentities[i] = resource;
