@@ -1,9 +1,11 @@
 package de.pixart.messenger.ui.widget;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.text.emoji.widget.EmojiAppCompatEditText;
 import android.support.v13.view.inputmethod.EditorInfoCompat;
@@ -11,6 +13,7 @@ import android.support.v13.view.inputmethod.InputConnectionCompat;
 import android.support.v13.view.inputmethod.InputContentInfoCompat;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.text.Spanned;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
@@ -18,6 +21,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 
 import de.pixart.messenger.Config;
+import de.pixart.messenger.R;
 
 public class EditMessage extends EmojiAppCompatEditText {
 
@@ -140,6 +144,23 @@ public class EditMessage extends EmojiAppCompatEditText {
             });
         } else {
             return ic;
+        }
+    }
+
+    public void refreshIme() {
+        SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(getContext());
+        final boolean usingEnterKey = p.getBoolean("display_enter_key", getResources().getBoolean(R.bool.display_enter_key));
+        final boolean enterIsSend = p.getBoolean("enter_is_send", getResources().getBoolean(R.bool.enter_is_send));
+
+        if (usingEnterKey && enterIsSend) {
+            setInputType(getInputType() & (~InputType.TYPE_TEXT_FLAG_MULTI_LINE));
+            setInputType(getInputType() & (~InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE));
+        } else if (usingEnterKey) {
+            setInputType(getInputType() | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+            setInputType(getInputType() & (~InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE));
+        } else {
+            setInputType(getInputType() | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+            setInputType(getInputType() | InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE);
         }
     }
 

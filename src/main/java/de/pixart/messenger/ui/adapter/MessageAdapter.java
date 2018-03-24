@@ -493,7 +493,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             final String nick = UIHelper.getMessageDisplayName(message);
             SpannableStringBuilder body = message.getMergedBody();
             boolean hasMeCommand = message.hasMeCommand();
-            String searchQuery = activity.mConversationFragment.searchfield_input.getText().toString().toLowerCase().trim();
+            String searchQuery = activity.mConversationFragment.binding.searchfieldInput.getText().toString().toLowerCase().trim();
             if (((!searchQuery.isEmpty() || !searchQuery.contains("")) && searchQuery.length() >= 3) && body.toString().toLowerCase().contains(searchQuery)) {
                 int ofe = body.toString().toLowerCase().indexOf(searchQuery, 0);
                 for (int ofs = 0; ofs < body.length() && ofe != -1; ofs = ofe + 1) {

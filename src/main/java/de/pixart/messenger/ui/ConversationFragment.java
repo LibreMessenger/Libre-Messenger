@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.content.pm.PackageManager;
+import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -23,7 +24,6 @@ import android.support.v13.view.inputmethod.InputConnectionCompat;
 import android.support.v13.view.inputmethod.InputContentInfoCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Pair;
@@ -45,14 +45,10 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
@@ -78,6 +74,7 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.crypto.axolotl.FingerprintStatus;
+import de.pixart.messenger.databinding.FragmentConversationBinding;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Blockable;
 import de.pixart.messenger.entities.Contact;
@@ -136,24 +133,12 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
     final protected List<Message> messageList = new ArrayList<>();
     final private List<Uri> mPendingImageUris = new ArrayList<>();
-    public EditText searchfield_input;
     public Uri mPendingEditorContent = null;
     protected Conversation conversation;
-    protected ListView messagesView;
+    public FragmentConversationBinding binding;
     protected MessageAdapter messageListAdapter;
     protected Message lastHistoryMessage = null;
     SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd. MMM yyyy", Locale.getDefault());
-    private EditMessage mEditMessage;
-    private ImageButton mSendButton;
-    private RelativeLayout snackbar;
-    private RelativeLayout messagehint;
-    private TextView messagehint_message;
-    private RelativeLayout textsend;
-    private RelativeLayout searchfield;
-    private ImageButton searchUp;
-    private ImageButton searchDown;
-    private TextView snackbarMessage;
-    private TextView snackbarAction;
     private Toast messageLoaderToast;
     private ActivityResult postponedActivityResult = null;
     private ConversationActivity activity;
@@ -229,7 +214,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                                 return;
                             }
                             activity.runOnUiThread(() -> {
-                                final int oldPosition = messagesView.getFirstVisiblePosition();
+                                final int oldPosition = binding.messagesView.getFirstVisiblePosition();
                                 Message message = null;
                                 int childPos;
                                 for (childPos = 0; childPos + oldPosition < messageList.size(); ++childPos) {
@@ -239,7 +224,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                                     }
                                 }
                                 final String uuid = message != null ? message.getUuid() : null;
-                                View v = messagesView.getChildAt(childPos);
+                                View v = binding.messagesView.getChildAt(childPos);
                                 final int pxOffset = (v == null) ? 0 : v.getTop();
                                 ConversationFragment.this.conversation.populateWithMessages(ConversationFragment.this.messageList);
                                 try {
@@ -249,9 +234,9 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                                 }
                                 messageListAdapter.notifyDataSetChanged();
                                 int pos = Math.max(getIndexOf(uuid, messageList), 0);
-                                messagesView.setSmoothScrollbarEnabled(true);
-                                messagesView.setFastScrollEnabled(false);
-                                messagesView.setSelectionFromTop(pos, pxOffset);
+                                binding.messagesView.setSmoothScrollbarEnabled(true);
+                                binding.messagesView.setFastScrollEnabled(false);
+                                binding.messagesView.setSelectionFromTop(pos, pxOffset);
                                 if (messageLoaderToast != null) {
                                     messageLoaderToast.cancel();
                                 }
@@ -427,8 +412,8 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                     case CANCEL:
                         if (conversation != null) {
                             if (conversation.setCorrectingMessage(null)) {
-                                mEditMessage.setText("");
-                                mEditMessage.append(conversation.getDraftMessage());
+                                binding.textinput.setText("");
+                                binding.textinput.append(conversation.getDraftMessage());
                                 conversation.setDraftMessage(null);
                             } else if (conversation.getMode() == Conversation.MODE_MULTI) {
                                 conversation.setNextCounterpart(null);
@@ -449,9 +434,9 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     private View.OnLongClickListener mSendButtonLongListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
-            final String body = mEditMessage.getText().toString();
+            final String body = binding.textinput.getText().toString();
             if (body.length() == 0) {
-                mEditMessage.getText().insert(0, Message.ME_COMMAND + " ");
+                binding.textinput.getText().insert(0, Message.ME_COMMAND + " ");
             }
             return true;
         }
@@ -470,33 +455,33 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
             String query = editable.toString().trim();
 
             if ((!query.isEmpty() || !query.contains("")) && query.length() >= 3) {
-                searchUp.setVisibility(View.VISIBLE);
-                searchDown.setVisibility(View.VISIBLE);
+                binding.searchUp.setVisibility(View.VISIBLE);
+                binding.searchDown.setVisibility(View.VISIBLE);
                 Message found = searchHistory(query);
                 if (found != null) {
-                    searchUp.setVisibility(View.VISIBLE);
-                    searchDown.setVisibility(View.VISIBLE);
+                    binding.searchUp.setVisibility(View.VISIBLE);
+                    binding.searchDown.setVisibility(View.VISIBLE);
                 } else {
-                    searchUp.setVisibility(View.GONE);
-                    searchDown.setVisibility(View.GONE);
+                    binding.searchUp.setVisibility(View.GONE);
+                    binding.searchDown.setVisibility(View.GONE);
                 }
-                searchUp.setEnabled(found != null);
-                searchDown.setEnabled(found != null);
+                binding.searchUp.setEnabled(found != null);
+                binding.searchDown.setEnabled(found != null);
                 View.OnClickListener upDownListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        String searchQuery = searchfield_input.getText().toString().trim();
+                        String searchQuery = binding.searchfieldInput.getText().toString().trim();
                         if (!searchQuery.isEmpty() || !searchQuery.contains("")) {
                             searchHistory(searchQuery, view.getId() == R.id.search_up);
                         }
 
                     }
                 };
-                searchUp.setOnClickListener(upDownListener);
-                searchDown.setOnClickListener(upDownListener);
+                binding.searchUp.setOnClickListener(upDownListener);
+                binding.searchDown.setOnClickListener(upDownListener);
             } else {
-                searchUp.setVisibility(View.GONE);
-                searchDown.setVisibility(View.GONE);
+                binding.searchUp.setVisibility(View.GONE);
+                binding.searchDown.setVisibility(View.GONE);
             }
         }
 
@@ -532,12 +517,12 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     }
 
     public Pair<Integer, Integer> getScrollPosition() {
-        if (this.messagesView.getCount() == 0 ||
-                this.messagesView.getLastVisiblePosition() == this.messagesView.getCount() - 1) {
+        if (this.binding.messagesView.getCount() == 0 ||
+                this.binding.messagesView.getLastVisiblePosition() == this.binding.messagesView.getCount() - 1) {
             return null;
         } else {
-            final int pos = messagesView.getFirstVisiblePosition();
-            final View view = messagesView.getChildAt(0);
+            final int pos = binding.messagesView.getFirstVisiblePosition();
+            final View view = binding.messagesView.getChildAt(0);
             if (view == null) {
                 return null;
             } else {
@@ -548,7 +533,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
     public void setScrollPosition(Pair<Integer, Integer> scrollPosition) {
         if (scrollPosition != null) {
-            this.messagesView.setSelectionFromTop(scrollPosition.first, scrollPosition.second);
+            this.binding.messagesView.setSelectionFromTop(scrollPosition.first, scrollPosition.second);
         }
     }
 
@@ -782,7 +767,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     }
 
     private void sendMessage() {
-        final String body = mEditMessage.getText().toString();
+        final String body = binding.textinput.getText().toString();
         final Conversation conversation = this.conversation;
         if (body.length() == 0 || conversation == null) {
             return;
@@ -854,39 +839,27 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     public void updateChatMsgHint() {
         final boolean multi = conversation.getMode() == Conversation.MODE_MULTI;
         if (conversation.getCorrectingMessage() != null) {
-            this.mEditMessage.setHint(R.string.send_corrected_message);
+            this.binding.textinput.setHint(R.string.send_corrected_message);
             hideMessageHint();
         } else if (multi && conversation.getNextCounterpart() != null) {
-            this.mEditMessage.setHint(getString(
+            this.binding.textinput.setHint(getString(
                     R.string.send_private_message_to,
                     conversation.getNextCounterpart().getResourcepart()));
             showMessageHint(getString(
                     R.string.send_private_message_to,
                     conversation.getNextCounterpart().getResourcepart()));
         } else if (multi && !conversation.getMucOptions().participating()) {
-            this.mEditMessage.setHint(R.string.you_are_not_participating);
+            this.binding.textinput.setHint(R.string.you_are_not_participating);
             hideMessageHint();
         } else {
-            this.mEditMessage.setHint(UIHelper.getMessageHint(getActivity(), conversation));
+            this.binding.textinput.setHint(UIHelper.getMessageHint(getActivity(), conversation));
             hideMessageHint();
             getActivity().invalidateOptionsMenu();
         }
     }
 
     public void setupIme() {
-        ;
-        if (activity != null) {
-            if (activity.usingEnterKey() && activity.enterIsSend()) {
-                mEditMessage.setInputType(mEditMessage.getInputType() & (~InputType.TYPE_TEXT_FLAG_MULTI_LINE));
-                mEditMessage.setInputType(mEditMessage.getInputType() & (~InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE));
-            } else if (activity.usingEnterKey()) {
-                mEditMessage.setInputType(mEditMessage.getInputType() | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-                mEditMessage.setInputType(mEditMessage.getInputType() & (~InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE));
-            } else {
-                mEditMessage.setInputType(mEditMessage.getInputType() | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-                mEditMessage.setInputType(mEditMessage.getInputType() | InputType.TYPE_TEXT_VARIATION_SHORT_MESSAGE);
-            }
-        }
+        this.binding.textinput.refreshIme();
     }
 
     private void handleActivityResult(ActivityResult activityResult) {
@@ -903,7 +876,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                 conversation.getAccount().getPgpDecryptionService().continueDecryption(data);
                 break;
             case REQUEST_TRUST_KEYS_TEXT:
-                final String body = mEditMessage.getText().toString();
+                final String body = binding.textinput.getText().toString();
                 Message message = new Message(conversation, body, conversation.getNextEncryption());
                 sendAxolotlMessage(message);
                 break;
@@ -1016,39 +989,18 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_conversation, container, false);
-        view.setOnClickListener(null);
-        mEditMessage = view.findViewById(R.id.textinput);
-        mEditMessage.setOnClickListener(v -> {
-            if (activity != null) {
-                activity.hideConversationsOverview();
-            }
-        });
-        mEditMessage.addTextChangedListener(new StylingHelper.MessageEditorStyler(mEditMessage));
-        mEditMessage.setOnEditorActionListener(mEditorActionListener);
-        mEditMessage.setRichContentListener(new String[]{"image/*"}, mEditorContentListener);
+        this.binding = DataBindingUtil.inflate(inflater,R.layout.fragment_conversation,container,false);
+        binding.getRoot().setOnClickListener(null); //TODO why the fuck did we do this?
 
-        mSendButton = view.findViewById(R.id.textSendButton);
-        mSendButton.setOnClickListener(this.mSendButtonListener);
-        mSendButton.setOnLongClickListener(this.mSendButtonLongListener);
+        binding.textinput.addTextChangedListener(new StylingHelper.MessageEditorStyler(binding.textinput));
+        binding.textinput.setOnEditorActionListener(mEditorActionListener);
+        binding.textinput.setRichContentListener(new String[]{"image/*"}, mEditorContentListener);
 
-        snackbar = view.findViewById(R.id.snackbar);
-        snackbarMessage = view.findViewById(R.id.snackbar_message);
-        snackbarAction = view.findViewById(R.id.snackbar_action);
+        binding.textSendButton.setOnClickListener(this.mSendButtonListener);
+        binding.textSendButton.setOnLongClickListener(this.mSendButtonLongListener);
 
-        messagehint = view.findViewById(R.id.messagehint);
-        messagehint_message = view.findViewById(R.id.messagehint_message);
-
-        textsend = view.findViewById(R.id.textsend);
-
-        searchfield = view.findViewById(R.id.searchfield);
-        searchfield_input = view.findViewById(R.id.searchfield_input);
-        searchUp = view.findViewById(R.id.search_up);
-        searchDown = view.findViewById(R.id.search_down);
-
-        messagesView = view.findViewById(R.id.messages_view);
-        messagesView.setOnScrollListener(mOnScrollListener);
-        messagesView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
+        binding.messagesView.setOnScrollListener(mOnScrollListener);
+        binding.messagesView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
         messageListAdapter = new MessageAdapter((ConversationActivity) getActivity(), this.messageList);
         messageListAdapter.setOnContactPictureClicked(message -> {
             final boolean received = message.getStatus() <= Message.STATUS_RECEIVED;
@@ -1119,18 +1071,18 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
             }
         });
         messageListAdapter.setOnQuoteListener(this::quoteText);
-        messagesView.setAdapter(messageListAdapter);
+        binding.messagesView.setAdapter(messageListAdapter);
 
-        registerForContextMenu(messagesView);
+        registerForContextMenu(binding.messagesView);
 
-        return view;
+        return binding.getRoot();
     }
 
     private void quoteText(String text) {
-        if (mEditMessage.isEnabled()) {
+        if (binding.textinput.isEnabled()) {
             text = text.replaceAll("(\n *){2,}", "\n").replaceAll("(^|\n)", "$1> ").replaceAll("\n$", "");
-            Editable editable = mEditMessage.getEditableText();
-            int position = mEditMessage.getSelectionEnd();
+            Editable editable = binding.textinput.getEditableText();
+            int position = binding.textinput.getSelectionEnd();
             if (position == -1) position = editable.length();
             if (position > 0 && editable.charAt(position - 1) != '\n') {
                 editable.insert(position++, "\n");
@@ -1141,12 +1093,11 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
             if (position < editable.length() && editable.charAt(position) != '\n') {
                 editable.insert(position, "\n");
             }
-            mEditMessage.setSelection(position);
-            mEditMessage.requestFocus();
-            InputMethodManager inputMethodManager = (InputMethodManager) getActivity()
-                    .getSystemService(Context.INPUT_METHOD_SERVICE);
+            binding.textinput.setSelection(position);
+            binding.textinput.requestFocus();
+            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             if (inputMethodManager != null) {
-                inputMethodManager.showSoftInput(mEditMessage, InputMethodManager.SHOW_IMPLICIT);
+                inputMethodManager.showSoftInput(binding.textinput, InputMethodManager.SHOW_IMPLICIT);
             }
         }
     }
@@ -1751,7 +1702,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         if (conversation.setOutgoingChatState(Config.DEFAULT_CHATSTATE)) {
             activity.xmppConnectionService.sendChatState(conversation);
         }
-        this.mEditMessage.setText("");
+        this.binding.textinput.setText("");
         this.conversation.setNextCounterpart(counterpart);
         updateChatMsgHint();
         updateSendButton();
@@ -1763,17 +1714,17 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
             message = message.next();
         }
         this.conversation.setCorrectingMessage(message);
-        final Editable editable = mEditMessage.getText();
+        final Editable editable = binding.textinput.getText();
         this.conversation.setDraftMessage(editable.toString());
-        this.mEditMessage.setText("");
-        this.mEditMessage.append(message.getBody());
+        this.binding.textinput.setText("");
+        this.binding.textinput.append(message.getBody());
 
     }
 
     protected void highlightInConference(String nick) {
-        final Editable editable = mEditMessage.getText();
+        final Editable editable = this.binding.textinput.getText();
         String oldString = editable.toString().trim();
-        final int pos = mEditMessage.getSelectionStart();
+        final int pos = this.binding.textinput.getSelectionStart();
         if (oldString.isEmpty() || pos == 0) {
             editable.insert(0, nick + ": ");
         } else {
@@ -1790,7 +1741,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                 }
                 editable.insert(pos, (Character.isWhitespace(before) ? "" : " ") + nick + (Character.isWhitespace(after) ? "" : " "));
                 if (Character.isWhitespace(after)) {
-                    mEditMessage.setSelection(mEditMessage.getSelectionStart() + 1);
+                    this.binding.textinput.setSelection(this.binding.textinput.getSelectionStart() + 1);
                 }
             }
         }
@@ -1804,7 +1755,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
             messageListAdapter.stopAudioPlayer();
         }
         if (this.conversation != null) {
-            final String msg = mEditMessage.getText().toString();
+            final String msg = this.binding.textinput.getText().toString();
             if (this.conversation.setNextMessage(msg)) {
                 this.activity.xmppConnectionService.updateConversation(this.conversation);
             }
@@ -1826,7 +1777,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         }
         setupIme();
         if (this.conversation != null) {
-            final String msg = mEditMessage.getText().toString();
+            final String msg = this.binding.textinput.getText().toString();
             if (this.conversation.setNextMessage(msg)) {
                 activity.xmppConnectionService.updateConversation(conversation);
             }
@@ -1838,16 +1789,16 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         }
 
         if (activity != null) {
-            this.mSendButton.setContentDescription(activity.getString(R.string.send_message_to_x, conversation.getName()));
+            this.binding.textSendButton.setContentDescription(activity.getString(R.string.send_message_to_x, conversation.getName()));
         }
 
         this.conversation = conversation;
-        this.mEditMessage.setKeyboardListener(null);
-        this.mEditMessage.setText("");
-        this.mEditMessage.append(this.conversation.getNextMessage());
-        this.mEditMessage.setKeyboardListener(this);
+        this.binding.textinput.setKeyboardListener(null);
+        this.binding.textinput.setText("");
+        this.binding.textinput.append(this.conversation.getNextMessage());
+        this.binding.textinput.setKeyboardListener(this);
         messageListAdapter.updatePreferences();
-        this.messagesView.setAdapter(messageListAdapter);
+        this.binding.messagesView.setAdapter(messageListAdapter);
         updateMessages();
         this.conversation.messagesLoaded.set(true);
         synchronized (this.messageList) {
@@ -1860,7 +1811,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                 int i = getIndexOf(first.getUuid(), this.messageList);
                 pos = i < 0 ? bottom : i;
             }
-            messagesView.setSelection(pos);
+            this.binding.messagesView.setSelection(pos);
             return pos == bottom;
         }
     }
@@ -2014,26 +1965,23 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
     protected void messageSent() {
         mSendingPgpMessage.set(false);
-        mEditMessage.setText("");
+        this.binding.textinput.setText("");
         if (conversation.setCorrectingMessage(null)) {
-            mEditMessage.append(conversation.getDraftMessage());
+            this.binding.textinput.append(conversation.getDraftMessage());
             conversation.setDraftMessage(null);
         }
-        if (conversation.setNextMessage(mEditMessage.getText().toString())) {
+        if (conversation.setNextMessage(this.binding.textinput.getText().toString())) {
             activity.xmppConnectionService.updateConversation(conversation);
         }
         updateChatMsgHint();
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                int size = messageList.size();
-                messagesView.setSelection(size - 1);
-            }
+        new Handler().post(() -> {
+            int size = messageList.size();
+            this.binding.messagesView.setSelection(size - 1);
         });
     }
 
     public void setFocusOnInputField() {
-        mEditMessage.requestFocus();
+        this.binding.textinput.requestFocus();
     }
 
     public void doneSendingPgpMessage() {
@@ -2042,16 +1990,16 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
     private void updateEditablity() {
         boolean canWrite = this.conversation.getMode() == Conversation.MODE_SINGLE || this.conversation.getMucOptions().participating() || this.conversation.getNextCounterpart() != null;
-        this.mEditMessage.setFocusable(canWrite);
-        this.mEditMessage.setFocusableInTouchMode(canWrite);
-        this.mSendButton.setEnabled(canWrite);
-        this.mEditMessage.setCursorVisible(canWrite);
+        this.binding.textinput.setFocusable(canWrite);
+        this.binding.textinput.setFocusableInTouchMode(canWrite);
+        this.binding.textSendButton.setEnabled(canWrite);
+        this.binding.textinput.setCursorVisible(canWrite);
     }
 
     public void updateSendButton() {
         final Conversation c = this.conversation;
         final Presence.Status status;
-        final String text = this.mEditMessage == null ? "" : this.mEditMessage.getText().toString();
+        final String text = this.binding.textinput == null ? "" : this.binding.textinput.getText().toString();
         final SendButtonAction action = SendButtonTool.getAction(getActivity(), c, text);
         if (activity.useSendButtonToIndicateStatus() && c.getAccount().getStatus() == Account.State.ONLINE) {
             if (activity.xmppConnectionService != null && activity.xmppConnectionService.getMessageArchiveService().isCatchingUp(c)) {
@@ -2064,8 +2012,8 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         } else {
             status = Presence.Status.OFFLINE;
         }
-        this.mSendButton.setTag(action);
-        this.mSendButton.setImageResource(SendButtonTool.getSendButtonImageResource(getActivity(), action, status));
+        this.binding.textSendButton.setTag(action);
+        this.binding.textSendButton.setImageResource(SendButtonTool.getSendButtonImageResource(getActivity(), action, status));
     }
 
     protected void updateStatusMessages() {
@@ -2142,7 +2090,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     public void stopScrolling() {
         long now = SystemClock.uptimeMillis();
         MotionEvent cancel = MotionEvent.obtain(now, now, MotionEvent.ACTION_CANCEL, 0, 0, 0);
-        messagesView.dispatchTouchEvent(cancel);
+        binding.messagesView.dispatchTouchEvent(cancel);
     }
 
     private boolean showLoadMoreMessages(final Conversation c) {
@@ -2165,56 +2113,56 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     }
 
     protected void showSnackbar(final int message, final int action, final OnClickListener clickListener, final View.OnLongClickListener longClickListener) {
-        snackbar.setVisibility(View.VISIBLE);
-        snackbar.setOnClickListener(null);
-        snackbarMessage.setText(message);
-        snackbarMessage.setOnClickListener(null);
-        snackbarAction.setVisibility(clickListener == null ? View.GONE : View.VISIBLE);
+        this.binding.snackbar.setVisibility(View.VISIBLE);
+        this.binding.snackbar.setOnClickListener(null);
+        this.binding.snackbarMessage.setText(message);
+        this.binding.snackbarMessage.setOnClickListener(null);
+        this.binding.snackbarAction.setVisibility(clickListener == null ? View.GONE : View.VISIBLE);
         if (action != 0) {
-            snackbarAction.setText(action);
+            this.binding.snackbarAction.setText(action);
         }
-        snackbarAction.setOnClickListener(clickListener);
-        snackbarAction.setOnLongClickListener(longClickListener);
+        this.binding.snackbarAction.setOnClickListener(clickListener);
+        this.binding.snackbarAction.setOnLongClickListener(longClickListener);
     }
 
     protected void hideSnackbar() {
-        snackbar.setVisibility(View.GONE);
+        this.binding.snackbar.setVisibility(View.GONE);
     }
 
     protected void showMessageHint(final String message) {
-        messagehint.setVisibility(View.VISIBLE);
-        messagehint_message.setText(message);
+        this.binding.messagehint.setVisibility(View.VISIBLE);
+        this.binding.messagehintMessage.setText(message);
     }
 
     protected void hideMessageHint() {
-        messagehint.setVisibility(View.GONE);
+        this.binding.messagehint.setVisibility(View.GONE);
     }
 
     protected void showSearchField() {
-        textsend.setVisibility(View.GONE);
-        searchfield.setVisibility(View.VISIBLE);
-        searchfield_input.addTextChangedListener(mSearchTextWatcher);
-        searchfield_input.requestFocus();
+        this.binding.textsend.setVisibility(View.GONE);
+        this.binding.searchfield.setVisibility(View.VISIBLE);
+        this.binding.searchfieldInput.addTextChangedListener(mSearchTextWatcher);
+        this.binding.searchfieldInput.requestFocus();
         final InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
-            imm.showSoftInput(searchfield_input, InputMethodManager.SHOW_IMPLICIT);
+            imm.showSoftInput(this.binding.searchfieldInput, InputMethodManager.SHOW_IMPLICIT);
         }
     }
 
     protected void hideSearchField() {
-        textsend.setVisibility(View.VISIBLE);
-        searchfield.setVisibility(View.GONE);
+        this.binding.textsend.setVisibility(View.VISIBLE);
+        this.binding.searchfield.setVisibility(View.GONE);
         if (activity != null) {
             final InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
             if (imm != null) {
-                imm.hideSoftInputFromWindow(searchfield_input.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+                imm.hideSoftInputFromWindow(this.binding.searchfieldInput.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
             }
         }
-        searchfield_input.setText("");
+        this.binding.searchfieldInput.setText("");
     }
 
     protected boolean isSearchFieldVisible() {
-        return searchfield.getVisibility() == View.VISIBLE;
+        return this.binding.searchfield.getVisibility() == View.VISIBLE;
     }
 
     protected void sendPlainTextMessage(Message message) {
@@ -2361,11 +2309,11 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         if (text == null) {
             return;
         }
-        String previous = this.mEditMessage.getText().toString();
+        String previous = this.binding.textinput.getText().toString();
         if (previous.length() != 0 && !previous.endsWith(" ")) {
             text = " " + text;
         }
-        this.mEditMessage.append(text);
+        this.binding.textinput.append(text);
     }
 
     @Override
@@ -2426,8 +2374,8 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         } else {
             lastCompletionLength = 0;
             completionIndex = 0;
-            final String content = mEditMessage.getText().toString();
-            lastCompletionCursor = mEditMessage.getSelectionEnd();
+            final String content = this.binding.textinput.getText().toString();
+            lastCompletionCursor = this.binding.textinput.getSelectionEnd();
             int start = lastCompletionCursor > 0 ? content.lastIndexOf(" ", lastCompletionCursor - 1) + 1 : 0;
             firstWord = start == 0;
             incomplete = content.substring(start, lastCompletionCursor);
@@ -2442,12 +2390,12 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         Collections.sort(completions);
         if (completions.size() > completionIndex) {
             String completion = completions.get(completionIndex).substring(incomplete.length());
-            mEditMessage.getEditableText().delete(lastCompletionCursor, lastCompletionCursor + lastCompletionLength);
-            mEditMessage.getEditableText().insert(lastCompletionCursor, completion);
+            this.binding.textinput.getEditableText().delete(lastCompletionCursor, lastCompletionCursor + lastCompletionLength);
+            this.binding.textinput.getEditableText().insert(lastCompletionCursor, completion);
             lastCompletionLength = completion.length();
         } else {
             completionIndex = -1;
-            mEditMessage.getEditableText().delete(lastCompletionCursor, lastCompletionCursor + lastCompletionLength);
+            this.binding.textinput.getEditableText().delete(lastCompletionCursor, lastCompletionCursor + lastCompletionLength);
             lastCompletionLength = 0;
         }
         return true;
@@ -2517,7 +2465,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         if (lastHistoryMessage != null) {
             int pos = getIndexOf(lastHistoryMessage.getUuid(), messageList);
             setScrollPosition(new Pair<>(pos, pos));
-            messagesView.setSelection(pos);
+            this.binding.messagesView.setSelection(pos);
         }
         return lastHistoryMessage;
     }

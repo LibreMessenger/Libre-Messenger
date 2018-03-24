@@ -1,190 +1,191 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/grey200"
-    android:clickable="false">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ListView
-        android:id="@+id/messages_view"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/snackbar"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:background="@color/grey200"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:listSelector="@android:color/transparent"
-        android:stackFromBottom="true"
-        android:transcriptMode="normal"
-        tools:listitem="@layout/message_sent">
-    </ListView>
-
-    <RelativeLayout
+    <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:id="@+id/input">
+        android:layout_height="match_parent"
+        android:background="@color/grey200"
+        android:clickable="false">
 
-        <RelativeLayout
-            android:id="@+id/searchfield"
+        <ListView
+            android:id="@+id/messages_view"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@color/grey500"
-            android:minHeight="50dp"
-            android:layout_marginTop="2dp"
+            android:layout_above="@+id/snackbar"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@color/grey200"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:listSelector="@android:color/transparent"
+            android:stackFromBottom="true"
+            android:transcriptMode="normal"
+            tools:listitem="@layout/message_sent"></ListView>
+
+        <RelativeLayout
+            android:id="@+id/input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true">
+
+            <RelativeLayout
+                android:id="@+id/searchfield"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:background="@color/grey500"
+                android:minHeight="50dp"
+                android:visibility="gone">
+
+                <EditText
+                    android:id="@+id/searchfield_input"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/button_bar"
+                    android:hint="@string/search"
+                    android:maxLines="4"
+                    android:minHeight="48dp"
+                    android:minLines="1"
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="12dp"
+                    android:singleLine="false"
+                    android:textColor="@color/realwhite"
+                    android:textColorHint="@color/white" />
+
+                <LinearLayout
+                    android:id="@+id/button_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true">
+
+                    <ImageButton
+                        android:id="@+id/search_up"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:layout_width="32dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_keyboard_arrow_up_white_24dp"
+                        android:visibility="gone" />
+
+                    <ImageButton
+                        android:id="@+id/search_down"
+                        style="?android:attr/borderlessButtonStyle"
+                        android:layout_width="32dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_keyboard_arrow_down_white_24dp"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/textsend"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:background="@color/grey200"
+                android:clickable="true"
+                android:paddingBottom="2dp"
+                android:paddingLeft="2dp"
+                android:paddingTop="2dp">
+
+                <de.pixart.messenger.ui.widget.EditMessage
+                    android:id="@+id/textinput"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@+id/textSendButton"
+                    android:background="@color/grey50"
+                    android:ems="10"
+                    android:imeOptions="flagNoExtractUi|actionSend"
+                    android:inputType="textShortMessage|textMultiLine|textCapSentences"
+                    android:maxLines="6"
+                    android:minHeight="48dp"
+                    android:minLines="1"
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="12dp"
+                    android:singleLine="false"
+                    android:textColor="@color/black87">
+
+                </de.pixart.messenger.ui.widget.EditMessage>
+
+                <ImageButton
+                    android:id="@+id/textSendButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@color/grey200"
+                    android:contentDescription="@string/send_message"
+                    android:src="@drawable/ic_send_text_offline" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/snackbar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/input"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/snackbar"
+            android:minHeight="48dp"
             android:visibility="gone">
 
-            <EditText
-                android:id="@+id/searchfield_input"
+            <TextView
+                android:id="@+id/snackbar_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/button_bar"
-                android:hint="@string/search"
-                android:maxLines="4"
-                android:minHeight="48dp"
-                android:minLines="1"
-                android:paddingBottom="12dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="12dp"
-                android:singleLine="false"
-                android:textColor="@color/realwhite"
-                android:textColorHint="@color/white" />
+                android:layout_toLeftOf="@+id/snackbar_action"
+                android:paddingLeft="24dp"
+                android:textColor="@color/white70"
+                android:textSize="?attr/TextSizeBody" />
 
-            <LinearLayout
-                android:id="@+id/button_bar"
+            <TextView
+                android:id="@+id/snackbar_action"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true">
-
-                <ImageButton
-                    android:id="@+id/search_up"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="32dp"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_keyboard_arrow_up_white_24dp"
-                    android:visibility="gone"/>
-
-                <ImageButton
-                    android:id="@+id/search_down"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="32dp"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_keyboard_arrow_down_white_24dp"
-                    android:visibility="gone"/>
-            </LinearLayout>
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingBottom="16dp"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp"
+                android:paddingTop="16dp"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="?attr/TextSizeBody"
+                android:textStyle="bold" />
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/textsend"
+            android:id="@+id/messagehint"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:background="@color/grey200"
-            android:clickable="true"
-            android:paddingBottom="2dp"
-            android:paddingLeft="2dp"
-            android:paddingTop="2dp">
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/date_bubble"
+            android:minHeight="48dp"
+            android:visibility="gone">
 
-            <de.pixart.messenger.ui.widget.EditMessage
-                android:id="@+id/textinput"
+            <TextView
+                android:id="@+id/messagehint_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_toLeftOf="@+id/textSendButton"
-                android:background="@color/grey50"
-                android:ems="10"
-                android:imeOptions="flagNoExtractUi|actionSend"
-                android:inputType="textShortMessage|textMultiLine|textCapSentences"
-                android:maxLines="6"
-                android:minHeight="48dp"
-                android:minLines="1"
-                android:paddingBottom="12dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="12dp"
-                android:singleLine="false"
-                android:textColor="@color/black87">
-
-            </de.pixart.messenger.ui.widget.EditMessage>
-
-            <ImageButton
-                android:id="@+id/textSendButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:background="@color/grey200"
-                android:contentDescription="@string/send_message"
-                android:src="@drawable/ic_send_text_offline" />
+                android:paddingLeft="24dp"
+                android:textColor="@color/realgreen"
+                android:textSize="?attr/TextSizeBody" />
         </RelativeLayout>
+
     </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/snackbar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/input"
-        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@drawable/snackbar"
-        android:minHeight="48dp"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/snackbar_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/snackbar_action"
-            android:paddingLeft="24dp"
-            android:textColor="@color/white70"
-            android:textSize="?attr/TextSizeBody" />
-
-        <TextView
-            android:id="@+id/snackbar_action"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:paddingBottom="16dp"
-            android:paddingLeft="24dp"
-            android:paddingRight="24dp"
-            android:paddingTop="16dp"
-            android:textAllCaps="true"
-            android:textColor="@color/white"
-            android:textSize="?attr/TextSizeBody"
-            android:textStyle="bold" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/messagehint"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@drawable/date_bubble"
-        android:minHeight="48dp"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/messagehint_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:paddingLeft="24dp"
-            android:textColor="@color/realgreen"
-            android:textSize="?attr/TextSizeBody" />
-    </RelativeLayout>
-
-</RelativeLayout>
+</layout>
