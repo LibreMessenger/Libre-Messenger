@@ -1488,7 +1488,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 this.activity.onConversationArchived(conversation);
             } else {
                 activity.onConversationsListItemUpdated();
-                updateMessages();
+                refresh();
             }
         });
         builder.create().show();
@@ -1633,7 +1633,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         if (activity.xmppConnectionService.getFileBackend().deleteFile(message)) {
             message.setTransferable(new TransferablePlaceholder(Transferable.STATUS_DELETED));
             activity.onConversationsListItemUpdated();
-            updateMessages();
+            refresh();
         }
     }
 
@@ -1656,7 +1656,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 Toast.makeText(activity, R.string.file_deleted, Toast.LENGTH_SHORT).show();
                 message.setTransferable(new TransferablePlaceholder(Transferable.STATUS_DELETED));
                 activity.onConversationsListItemUpdated();
-                updateMessages();
+                refresh();
                 return;
             }
         }
@@ -1701,7 +1701,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     private void retryDecryption(Message message) {
         message.setEncryption(Message.ENCRYPTION_PGP);
         activity.onConversationsListItemUpdated();
-        updateMessages();
+        refresh();
         conversation.getAccount().getPgpDecryptionService().decrypt(message, false);
     }
 
@@ -1847,7 +1847,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 activity.onBackPressed();
             }
         });
-        updateMessages();
+        refresh();
         this.conversation.messagesLoaded.set(true);
         synchronized (this.messageList) {
             final Message first = conversation.getFirstUnreadMessage();
@@ -1990,11 +1990,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         }
     }
 
-    public void updateMessages() {
+    @Override
+    public void refresh() {
         synchronized (this.messageList) {
-            if (getView() == null) {
-                return;
-            }
             if (this.conversation != null) {
                 conversation.populateWithMessages(ConversationFragment.this.messageList);
                 updateSnackBar(conversation);
@@ -2548,11 +2546,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         if (activityResult != null) {
             handleActivityResult(activityResult);
         }
-    }
-
-    @Override
-    void refresh() {
-
     }
 
     public void clearPending() {

@@ -51,14 +51,17 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.databinding.ActivityConversationsBinding;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.services.EmojiService;
+import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.interfaces.OnConversationArchived;
 import de.pixart.messenger.ui.interfaces.OnConversationRead;
 import de.pixart.messenger.ui.interfaces.OnConversationSelected;
 import de.pixart.messenger.ui.interfaces.OnConversationsListItemUpdated;
+import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 
 import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
 
-public class ConversationsMainActivity extends XmppActivity implements OnConversationSelected, OnConversationArchived, OnConversationsListItemUpdated, OnConversationRead {
+public class ConversationsMainActivity extends XmppActivity implements OnConversationSelected, OnConversationArchived, OnConversationsListItemUpdated, OnConversationRead, XmppConnectionService.OnAccountUpdate, XmppConnectionService.OnConversationUpdate, XmppConnectionService.OnRosterUpdate, OnUpdateBlocklist, XmppConnectionService.OnShowErrorToast {
+
 
     //secondary fragment (when holding the conversation, must be initialized before refreshing the overview fragment
     private static final @IdRes
@@ -182,7 +185,6 @@ public class ConversationsMainActivity extends XmppActivity implements OnConvers
             transaction.replace(R.id.main_fragment, new ConversationsOverviewFragment());
         }
 
-        //TODO, do this in backendConnected so we can actually decide what to display
         if (binding.secondaryFragment != null) {
             transaction.replace(R.id.secondary_fragment, new ConversationFragment());
         }
@@ -261,5 +263,30 @@ public class ConversationsMainActivity extends XmppActivity implements OnConvers
     @Override
     public void onConversationRead(Conversation conversation) {
         Log.d(Config.LOGTAG, "read event for " + conversation.getName() + " received");
+    }
+
+    @Override
+    public void onAccountUpdate() {
+        this.refreshUi();
+    }
+
+    @Override
+    public void onConversationUpdate() {
+        this.refreshUi();
+    }
+
+    @Override
+    public void onRosterUpdate() {
+        this.refreshUi();
+    }
+
+    @Override
+    public void OnUpdateBlocklist(OnUpdateBlocklist.Status status) {
+        this.refreshUi();
+    }
+
+    @Override
+    public void onShowErrorToast(int resId) {
+        runOnUiThread(() -> Toast.makeText(this, resId, Toast.LENGTH_SHORT).show());
     }
 }

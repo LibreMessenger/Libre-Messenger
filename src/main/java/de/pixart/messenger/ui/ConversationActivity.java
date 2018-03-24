@@ -942,7 +942,7 @@ public class ConversationActivity extends XmppActivity
             if (getSelectedConversation() == null) {
                 reInitLatestConversation();
             } else {
-                ConversationActivity.this.mConversationFragment.updateMessages();
+                ConversationActivity.this.mConversationFragment.refresh();
                 updateActionBarTitle();
                 invalidateOptionsMenu();
             }
