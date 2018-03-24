@@ -46,6 +46,7 @@ import de.pixart.messenger.databinding.FragmentConversationsOverviewBinding;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.ui.adapter.ConversationAdapter;
 import de.pixart.messenger.ui.interfaces.OnConversationSelected;
+import de.pixart.messenger.ui.util.PendingItem;
 
 public class ConversationsOverviewFragment extends XmppFragment {
 
@@ -53,6 +54,8 @@ public class ConversationsOverviewFragment extends XmppFragment {
     private FragmentConversationsOverviewBinding binding;
     private ConversationAdapter conversationsAdapter;
     private XmppActivity activity;
+
+    private final PendingItem<Conversation> swipedConversation = new PendingItem<>();
 
     @Override
     public void onAttach(Activity activity) {

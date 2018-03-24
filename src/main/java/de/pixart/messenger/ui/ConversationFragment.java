@@ -2,6 +2,7 @@ package de.pixart.messenger.ui;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -2557,6 +2558,15 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     public void clearPending() {
         if (postponedActivityResult.pop() != null) {
             Log.d(Config.LOGTAG, "cleared pending intent with unhandled result left");
+        }
+    }
+
+    public static Conversation getConversation(Activity activity) {
+        Fragment fragment = activity.getFragmentManager().findFragmentById(R.id.secondary_fragment);
+        if (fragment != null && fragment instanceof ConversationFragment) {
+            return ((ConversationFragment) fragment).getConversation();
+        } else {
+            return null;
         }
     }
 

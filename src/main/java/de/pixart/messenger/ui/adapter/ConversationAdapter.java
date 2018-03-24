@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,12 +23,13 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 
+import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.Transferable;
-import de.pixart.messenger.ui.ConversationActivity;
+import de.pixart.messenger.ui.ConversationFragment;
 import de.pixart.messenger.ui.XmppActivity;
 import de.pixart.messenger.utils.EmojiWrapper;
 import de.pixart.messenger.utils.UIHelper;
@@ -36,6 +38,7 @@ import de.pixart.messenger.xmpp.chatstate.ChatState;
 public class ConversationAdapter extends ArrayAdapter<Conversation> {
 
     private XmppActivity activity;
+    private Conversation selectedConversation = null;
 
     public ConversationAdapter(XmppActivity activity,
                                List<Conversation> conversations) {
@@ -75,10 +78,9 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
             view = inflater.inflate(R.layout.conversation_list_row, parent, false);
         }
         Conversation conversation = getItem(position);
-        if (this.activity instanceof ConversationActivity) {
+        if (this.activity instanceof XmppActivity) {
             View swipeableItem = view.findViewById(R.id.swipeable_item);
-            ConversationActivity a = (ConversationActivity) this.activity;
-            int c = a.highlightSelectedConversations() && conversation == a.getSelectedConversation() ? a.getSecondaryBackgroundColor() : a.getPrimaryBackgroundColor();
+            int c = conversation == selectedConversation ? this.activity.getSecondaryBackgroundColor() : this.activity.getPrimaryBackgroundColor();
             swipeableItem.setBackgroundColor(c);
         }
         ViewHolder viewHolder = ViewHolder.get(view);
@@ -294,6 +296,16 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
                 }
             }
         }
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        this.selectedConversation = ConversationFragment.getConversation(activity);
+        Log.d(Config.LOGTAG, "notify data set changed");
+        if (this.selectedConversation == null) {
+            Log.d(Config.LOGTAG, "selected conversation is null");
+        }
+        super.notifyDataSetChanged();
     }
 
     public static class ViewHolder {
