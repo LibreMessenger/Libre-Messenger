@@ -44,7 +44,7 @@ public class StartUI extends AppCompatActivity
         if (EasyPermissions.hasPermissions(this, perms)) {
             // Already have permission, start ConversationsActivity
             Log.d(Config.LOGTAG, "All permissions granted, starting " + getString(R.string.app_name) + "(" + FirstStartTime + ")");
-            Intent intent = new Intent(this, ConversationActivity.class);
+            Intent intent = new Intent(this, ConversationsMainActivity.class);
             intent.putExtra(PREF_FIRST_START, FirstStartTime);
             startActivity(intent);
             finish();

@@ -1,14 +1,8 @@
-<android.support.v4.widget.SlidingPaneLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/content_view_spl"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:layout_weight="1"
-        android:layout_height="match_parent"
-        android:background="@color/grey50"
-        android:orientation="vertical">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <ListView
             android:id="@+id/list"
@@ -17,14 +11,13 @@
             android:background="@color/grey50"
             android:divider="@color/black12"
             android:dividerHeight="1dp" />
-    </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/selected_conversation"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical">
-    </LinearLayout>
-
-</android.support.v4.widget.SlidingPaneLayout>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="16dp"
+            android:src="?attr/icon_new" />
+    </FrameLayout>
+</layout>

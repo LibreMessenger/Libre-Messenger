@@ -2,13 +2,13 @@ package de.pixart.messenger.ui;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
@@ -18,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.media.ExifInterface;
 import android.support.v13.view.inputmethod.InputConnectionCompat;
@@ -91,9 +92,11 @@ import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.services.MessageArchiveService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.adapter.MessageAdapter;
+import de.pixart.messenger.ui.interfaces.OnSwipeTouchListener;
 import de.pixart.messenger.ui.util.ActivityResult;
 import de.pixart.messenger.ui.util.AttachmentTool;
 import de.pixart.messenger.ui.util.ConversationMenuConfigurator;
+import de.pixart.messenger.ui.util.PendingItem;
 import de.pixart.messenger.ui.util.PresenceSelector;
 import de.pixart.messenger.ui.util.SendButtonAction;
 import de.pixart.messenger.ui.util.SendButtonTool;
@@ -112,7 +115,7 @@ import static de.pixart.messenger.ui.XmppActivity.REQUEST_ANNOUNCE_PGP;
 import static de.pixart.messenger.ui.XmppActivity.REQUEST_CHOOSE_PGP_ID;
 import static de.pixart.messenger.xmpp.Patches.ENCRYPTION_EXCEPTIONS;
 
-public class ConversationFragment extends Fragment implements EditMessage.KeyboardListener {
+public class ConversationFragment extends XmppFragment implements EditMessage.KeyboardListener {
 
     public static final int REQUEST_SEND_MESSAGE = 0x0201;
     public static final int REQUEST_DECRYPT_PGP = 0x0202;
@@ -130,18 +133,21 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     public static final int ATTACHMENT_CHOICE_INVALID = 0x0399;
 
     public static final String RECENTLY_USED_QUICK_ACTION = "recently_used_quick_action";
+    public static final String STATE_CONVERSATION_UUID = ConversationFragment.class.getName() + ".uuid";
+	public static final String STATE_SCROLL_POSITION = ConversationFragment.class.getName() + ".scroll_position";
 
     final protected List<Message> messageList = new ArrayList<>();
     final private List<Uri> mPendingImageUris = new ArrayList<>();
     public Uri mPendingEditorContent = null;
-    protected Conversation conversation;
-    public FragmentConversationBinding binding;
+    private final PendingItem<ActivityResult> postponedActivityResult = new PendingItem<>();
+	private final PendingItem<String> pendingConversationsUuid = new PendingItem<>();
     protected MessageAdapter messageListAdapter;
+    private Conversation conversation;
+	public FragmentConversationBinding binding;
     protected Message lastHistoryMessage = null;
     SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd. MMM yyyy", Locale.getDefault());
     private Toast messageLoaderToast;
-    private ActivityResult postponedActivityResult = null;
-    private ConversationActivity activity;
+    private ConversationsMainActivity activity;
     protected OnClickListener clickToVerify = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -162,7 +168,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
         @Override
         public void onClick(View v) {
-            activity.endConversation(conversation);
+            activity.onConversationArchived(conversation);
         }
     };
     private OnClickListener joinMuc = new OnClickListener() {
@@ -904,6 +910,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                 }
                 break;
             case ATTACHMENT_CHOICE_TAKE_FROM_CAMERA:
+                //TODO save photo uri
                 final List<Uri> PhotoUris = AttachmentTool.extractUriFromIntent(data);
                 for (Iterator<Uri> i = PhotoUris.iterator(); i.hasNext(); i.remove()) {
                     Log.d(Config.LOGTAG, "ConversationsActivity.onActivityResult() - attaching image to conversations. TAKE_FROM_CAMERA");
@@ -918,7 +925,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                         attachFileToConversation(conversation, i.next());
                     }
                 };
-                if (conversation == null || conversation.getMode() == Conversation.MODE_MULTI || FileBackend.allFilesUnderSize(getActivity(), fileUris, activity.getMaxHttpUploadSize(conversation))) {
+                if (conversation == null || conversation.getMode() == Conversation.MODE_MULTI || FileBackend.allFilesUnderSize(getActivity(), fileUris, getMaxHttpUploadSize(conversation))) {
                     callback.onPresenceSelected();
                 } else {
                     activity.selectPresence(conversation, callback);
@@ -949,7 +956,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         if (activity != null && activity.xmppConnectionService != null) {
             handleActivityResult(activityResult);
         } else {
-            this.postponedActivityResult = activityResult;
+            this.postponedActivityResult.push(activityResult);
         }
     }
 
@@ -958,13 +965,14 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     }
 
     @Override
-    public void onAttach(Context context) {
-        if (context instanceof ConversationActivity) {
-            this.activity = (ConversationActivity) context;
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        Log.d(Config.LOGTAG, "onAttach()");
+        if (activity instanceof ConversationsMainActivity) {
+            this.activity = (ConversationsMainActivity) activity;
         } else {
             throw new IllegalStateException("Trying to attach fragment to activity that is not the ConversationActivity");
         }
-        super.onAttach(context);
     }
 
     @Override
@@ -1001,7 +1009,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
         binding.messagesView.setOnScrollListener(mOnScrollListener);
         binding.messagesView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
-        messageListAdapter = new MessageAdapter((ConversationActivity) getActivity(), this.messageList);
+        messageListAdapter = new MessageAdapter((XmppActivity) getActivity(), this.messageList);
         messageListAdapter.setOnContactPictureClicked(message -> {
             final boolean received = message.getStatus() <= Message.STATUS_RECEIVED;
             if (received) {
@@ -1074,7 +1082,6 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         binding.messagesView.setAdapter(messageListAdapter);
 
         registerForContextMenu(binding.messagesView);
-
         return binding.getRoot();
     }
 
@@ -1253,7 +1260,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                 handleAttachmentSelection(item);
                 break;
             case R.id.action_archive_chat:
-                activity.endConversation(conversation);
+                activity.onConversationArchived(conversation);
                 break;
             case R.id.action_archive_muc:
                 getActivity().runOnUiThread(() -> {
@@ -1262,7 +1269,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                     builder.setMessage(getString(R.string.leave_conference_warning));
                     builder.setNegativeButton(getString(R.string.cancel), null);
                     builder.setPositiveButton(getString(R.string.action_end_conversation_muc),
-                            (dialog, which) -> activity.endConversation(conversation));
+                            (dialog, which) -> activity.onConversationArchived(conversation));
                     builder.create().show();
                 });
                 break;
@@ -1312,7 +1319,6 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         if (conversation == null) {
             return;
         }
-        final ConversationFragment fragment = (ConversationFragment) getFragmentManager().findFragmentByTag("conversation");
         switch (item.getItemId()) {
             case R.id.encryption_choice_none:
                 conversation.setNextEncryption(Message.ENCRYPTION_NONE);
@@ -1345,7 +1351,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
                 break;
         }
         activity.xmppConnectionService.updateConversation(conversation);
-        fragment.updateChatMsgHint();
+        updateChatMsgHint();
         getActivity().invalidateOptionsMenu();
         activity.refreshUi();
     }
@@ -1384,7 +1390,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
                                 @Override
                                 public void userInputRequried(PendingIntent pi, Contact contact) {
-                                    activity.runIntent(pi, attachmentChoice);
+                                    startPendingIntent(pi, attachmentChoice);
                                 }
 
                                 @Override
@@ -1478,9 +1484,9 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         builder.setPositiveButton(getString(R.string.delete_messages), (dialog, which) -> {
             this.activity.xmppConnectionService.clearConversationHistory(conversation);
             if (endConversationCheckBox.isChecked()) {
-                this.activity.endConversation(conversation);
+                this.activity.onConversationArchived(conversation);
             } else {
-                activity.updateConversationList();
+                activity.onConversationsListItemUpdated();
                 updateMessages();
             }
         });
@@ -1625,7 +1631,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     private void deleteFile(Message message) {
         if (activity.xmppConnectionService.getFileBackend().deleteFile(message)) {
             message.setTransferable(new TransferablePlaceholder(Transferable.STATUS_DELETED));
-            activity.updateConversationList();
+            activity.onConversationsListItemUpdated();
             updateMessages();
         }
     }
@@ -1648,7 +1654,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
             } else {
                 Toast.makeText(activity, R.string.file_deleted, Toast.LENGTH_SHORT).show();
                 message.setTransferable(new TransferablePlaceholder(Transferable.STATUS_DELETED));
-                activity.updateConversationList();
+                activity.onConversationsListItemUpdated();
                 updateMessages();
                 return;
             }
@@ -1693,7 +1699,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
     private void retryDecryption(Message message) {
         message.setEncryption(Message.ENCRYPTION_PGP);
-        activity.updateConversationList();
+        activity.onConversationsListItemUpdated();
         updateMessages();
         conversation.getAccount().getPgpDecryptionService().decrypt(message, false);
     }
@@ -1748,6 +1754,32 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (conversation != null) {
+            outState.putString(STATE_CONVERSATION_UUID, conversation.getUuid());
+        }
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState == null) {
+            return;
+        }
+        String uuid = savedInstanceState.getString(STATE_CONVERSATION_UUID);
+        if (uuid != null) {
+            this.pendingConversationsUuid.push(uuid);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        reInit(conversation);
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
         final Activity activity = getActivity();
@@ -1772,9 +1804,17 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     }
 
     public boolean reInit(Conversation conversation) {
+        Log.d(Config.LOGTAG, "reInit()");
         if (conversation == null) {
+            Log.d(Config.LOGTAG, "conversation was null :(");
             return false;
         }
+        if (this.activity == null) {
+            Log.d(Config.LOGTAG, "activity was null");
+            this.conversation = conversation;
+            return false;
+        }
+
         setupIme();
         if (this.conversation != null) {
             final String msg = this.binding.textinput.getText().toString();
@@ -1799,6 +1839,13 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         this.binding.textinput.setKeyboardListener(this);
         messageListAdapter.updatePreferences();
         this.binding.messagesView.setAdapter(messageListAdapter);
+        this.binding.messagesView.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+            @Override
+            public void onSwipeRight() {
+                Log.d(Config.LOGTAG, "Swipe right detected");
+                activity.onBackPressed();
+            }
+        });
         updateMessages();
         this.conversation.messagesLoaded.set(true);
         synchronized (this.messageList) {
@@ -1947,15 +1994,14 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
             if (getView() == null) {
                 return;
             }
-            final ConversationActivity activity = (ConversationActivity) getActivity();
             if (this.conversation != null) {
                 conversation.populateWithMessages(ConversationFragment.this.messageList);
                 updateSnackBar(conversation);
                 updateStatusMessages();
                 this.messageListAdapter.notifyDataSetChanged();
                 updateChatMsgHint();
-                if (!activity.isConversationsOverviewVisable() || !activity.isConversationsOverviewHideable()) {
-                    activity.sendReadMarkerIfNecessary(conversation);
+                if (activity != null) {
+                    activity.onConversationRead(this.conversation);
                 }
                 updateSendButton();
                 updateEditablity();
@@ -1988,6 +2034,11 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         mSendingPgpMessage.set(false);
     }
 
+    public long getMaxHttpUploadSize(Conversation conversation) {
+        final XmppConnection connection = conversation.getAccount().getXmppConnection();
+        return connection == null ? -1 : connection.getFeatures().getMaxHttpUploadSize();
+    }
+
     private void updateEditablity() {
         boolean canWrite = this.conversation.getMode() == Conversation.MODE_SINGLE || this.conversation.getMucOptions().participating() || this.conversation.getNextCounterpart() != null;
         this.binding.textinput.setFocusable(canWrite);
@@ -1997,11 +2048,12 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     }
 
     public void updateSendButton() {
+        boolean useSendButtonToIndicateStatus = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("send_button_status", getResources().getBoolean(R.bool.send_button_status));
         final Conversation c = this.conversation;
         final Presence.Status status;
         final String text = this.binding.textinput == null ? "" : this.binding.textinput.getText().toString();
         final SendButtonAction action = SendButtonTool.getAction(getActivity(), c, text);
-        if (activity.useSendButtonToIndicateStatus() && c.getAccount().getStatus() == Account.State.ONLINE) {
+        if (useSendButtonToIndicateStatus && c.getAccount().getStatus() == Account.State.ONLINE) {
             if (activity.xmppConnectionService != null && activity.xmppConnectionService.getMessageArchiveService().isCatchingUp(c)) {
                 status = Presence.Status.OFFLINE;
             } else if (c.getMode() == Conversation.MODE_SINGLE) {
@@ -2166,13 +2218,11 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     }
 
     protected void sendPlainTextMessage(Message message) {
-        ConversationActivity activity = (ConversationActivity) getActivity();
         activity.xmppConnectionService.sendMessage(message);
         messageSent();
     }
 
     protected void sendPgpMessage(final Message message) {
-        final ConversationActivity activity = (ConversationActivity) getActivity();
         final XmppConnectionService xmppService = activity.xmppConnectionService;
         final Contact contact = message.getConversation().getContact();
         if (!activity.hasPgp()) {
@@ -2193,7 +2243,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
                             @Override
                             public void userInputRequried(PendingIntent pi, Contact contact) {
-                                activity.runIntent(pi, REQUEST_ENCRYPT_MESSAGE);
+                                startPendingIntent(pi, REQUEST_ENCRYPT_MESSAGE);
                             }
 
                             @Override
@@ -2251,7 +2301,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
                     @Override
                     public void userInputRequried(PendingIntent pi, Message message) {
-                        activity.runIntent(pi, REQUEST_SEND_MESSAGE);
+                        startPendingIntent(pi, REQUEST_SEND_MESSAGE);
                     }
 
                     @Override
@@ -2288,9 +2338,7 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
     }
 
     protected void sendAxolotlMessage(final Message message) {
-        final ConversationActivity activity = (ConversationActivity) getActivity();
-        final XmppConnectionService xmppService = activity.xmppConnectionService;
-        xmppService.sendMessage(message);
+        activity.xmppConnectionService.sendMessage(message);
         messageSent();
     }
 
@@ -2318,7 +2366,9 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
 
     @Override
     public boolean onEnterPressed() {
-        if (activity.enterIsSend()) {
+        SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        final boolean enterIsSend = p.getBoolean("enter_is_send", getResources().getBoolean(R.bool.enter_is_send));
+        if (enterIsSend) {
             sendMessage();
             return true;
         } else {
@@ -2336,7 +2386,6 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         if (broadcastLastActivity) {
             activity.xmppConnectionService.sendPresence(conversation.getAccount(), false); //send new presence but don't include idle because we are not
         }
-        activity.hideConversationsOverview();
         updateSendButton();
     }
 
@@ -2474,17 +2523,44 @@ public class ConversationFragment extends Fragment implements EditMessage.Keyboa
         return m != null && m.getMergedBody().toString().toLowerCase().contains(q.toLowerCase());
     }
 
-    public void onBackendConnected() {
-        if (postponedActivityResult != null) {
-            handleActivityResult(postponedActivityResult);
+    private void startPendingIntent(PendingIntent pendingIntent, int requestCode) {
+        try {
+            getActivity().startIntentSenderForResult(pendingIntent.getIntentSender(), requestCode, null, 0, 0, 0);
+        } catch (final SendIntentException ignored) {
         }
-        postponedActivityResult = null;
+    }
+
+    @Override
+    public void onBackendConnected() {
+        Log.d(Config.LOGTAG, "ConversationFragment.onBackendConnected()");
+        String uuid = pendingConversationsUuid.pop();
+        if (uuid != null) {
+            Conversation conversation = activity.xmppConnectionService.findConversationByUuid(uuid);
+            if (conversation == null) {
+                Log.d(Config.LOGTAG, "unable to restore activity");
+                clearPending();
+                return;
+            }
+            reInit(conversation);
+        }
+        ActivityResult activityResult = postponedActivityResult.pop();
+        if (activityResult != null) {
+            handleActivityResult(activityResult);
+        }
+    }
+
+    @Override
+    void refresh() {
+
     }
 
     public void clearPending() {
-        if (postponedActivityResult != null) {
+        if (postponedActivityResult.pop() != null) {
             Log.d(Config.LOGTAG, "cleared pending intent with unhandled result left");
         }
-        postponedActivityResult = null;
+    }
+
+    public Conversation getConversation() {
+        return conversation;
     }
 }

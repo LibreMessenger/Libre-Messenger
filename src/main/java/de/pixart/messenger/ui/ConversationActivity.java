@@ -2,11 +2,9 @@ package de.pixart.messenger.ui;
 
 import android.annotation.SuppressLint;
 import android.app.FragmentTransaction;
-import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender.SendIntentException;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -31,12 +29,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.PopupMenu;
-import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import net.java.otr4j.session.SessionStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +53,6 @@ import de.pixart.messenger.ui.adapter.ConversationAdapter;
 import de.pixart.messenger.utils.ExceptionHelper;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
-import de.pixart.messenger.xmpp.XmppConnection;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
@@ -165,6 +158,7 @@ public class ConversationActivity extends XmppActivity
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -186,7 +180,7 @@ public class ConversationActivity extends XmppActivity
 
         this.mConversationFragment = new ConversationFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.selected_conversation, this.mConversationFragment, "conversation");
+        //transaction.replace(R.id.selected_conversation, this.mConversationFragment, "conversation");
         transaction.commit();
 
         listView = findViewById(R.id.list);
@@ -214,9 +208,9 @@ public class ConversationActivity extends XmppActivity
             }
         });
 
-        mContentView = findViewById(R.id.content_view_spl);
+        //mContentView = findViewById(R.id.content_view_spl);
         if (mContentView == null) {
-            mContentView = findViewById(R.id.content_view_ll);
+            //mContentView = findViewById(R.id.content_view_ll);
         }
         if (mContentView instanceof SlidingPaneLayout) {
             SlidingPaneLayout mSlidingPaneLayout = (SlidingPaneLayout) mContentView;
@@ -250,6 +244,10 @@ public class ConversationActivity extends XmppActivity
                 }
             });
         }
+    }
+
+    public boolean useBundledEmoji() {
+        return getPreferences().getBoolean(USE_BUNDLED_EMOJIS, getResources().getBoolean(R.bool.use_bundled_emoji));
     }
 
     private boolean isPackageInstalled(String targetPackage) {
@@ -452,41 +450,6 @@ public class ConversationActivity extends XmppActivity
                 }
             }
         }
-    }
-
-    public void verifyOtrSessionDialog(final Conversation conversation, View view) {
-        if (!conversation.hasValidOtrSession() || conversation.getOtrSession().getSessionStatus() != SessionStatus.ENCRYPTED) {
-            Toast.makeText(this, R.string.otr_session_not_started, Toast.LENGTH_LONG).show();
-            return;
-        }
-        if (view == null) {
-            return;
-        }
-        PopupMenu popup = new PopupMenu(this, view);
-        popup.inflate(R.menu.verification_choices);
-        popup.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                Intent intent = new Intent(ConversationActivity.this, VerifyOTRActivity.class);
-                intent.setAction(VerifyOTRActivity.ACTION_VERIFY_CONTACT);
-                intent.putExtra("contact", conversation.getContact().getJid().toBareJid().toString());
-                intent.putExtra(EXTRA_ACCOUNT, conversation.getAccount().getJid().toBareJid().toString());
-                switch (menuItem.getItemId()) {
-                    case R.id.scan_fingerprint:
-                        intent.putExtra("mode", VerifyOTRActivity.MODE_SCAN_FINGERPRINT);
-                        break;
-                    case R.id.ask_question:
-                        intent.putExtra("mode", VerifyOTRActivity.MODE_ASK_QUESTION);
-                        break;
-                    case R.id.manual_verification:
-                        intent.putExtra("mode", VerifyOTRActivity.MODE_MANUAL_VERIFICATION);
-                        break;
-                }
-                startActivity(intent);
-                return true;
-            }
-        });
-        popup.show();
     }
 
     @Override
@@ -914,11 +877,6 @@ public class ConversationActivity extends XmppActivity
         }
     }
 
-    public long getMaxHttpUploadSize(Conversation conversation) {
-        final XmppConnection connection = conversation.getAccount().getXmppConnection();
-        return connection == null ? -1 : connection.getFeatures().getMaxHttpUploadSize();
-    }
-
     private String getBatteryOptimizationPreferenceKey() {
         @SuppressLint("HardwareIds") String device = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         return "show_battery_optimization" + (device == null ? "" : device);
@@ -974,30 +932,6 @@ public class ConversationActivity extends XmppActivity
         listAdapter.notifyDataSetChanged();
     }
 
-    public void runIntent(PendingIntent pi, int requestCode) {
-        try {
-            this.startIntentSenderForResult(pi.getIntentSender(), requestCode,
-                    null, 0, 0, 0);
-        } catch (final SendIntentException ignored) {
-        }
-    }
-
-    public boolean useSendButtonToIndicateStatus() {
-        return getPreferences().getBoolean("send_button_status", getResources().getBoolean(R.bool.send_button_status));
-    }
-
-    public boolean indicateReceived() {
-        return getPreferences().getBoolean("indicate_received", getResources().getBoolean(R.bool.indicate_received));
-    }
-
-    public boolean useWhiteBackground() {
-        return getPreferences().getBoolean("use_white_background", getResources().getBoolean(R.bool.use_white_background));
-    }
-
-    public boolean useBundledEmoji() {
-        return getPreferences().getBoolean(USE_BUNDLED_EMOJIS, getResources().getBoolean(R.bool.use_bundled_emoji));
-    }
-
     @Override
     protected void refreshUiReal() {
         updateConversationList();
@@ -1040,10 +974,6 @@ public class ConversationActivity extends XmppActivity
         this.refreshUi();
     }
 
-    public boolean enterIsSend() {
-        return getPreferences().getBoolean("enter_is_send", getResources().getBoolean(R.bool.enter_is_send));
-    }
-
     @Override
     public void onShowErrorToast(final int resId) {
         runOnUiThread(() -> Toast.makeText(ConversationActivity.this, resId, Toast.LENGTH_SHORT).show());
@@ -1066,4 +996,6 @@ public class ConversationActivity extends XmppActivity
             startActivity(intent);
         }
     }
+
+
 }

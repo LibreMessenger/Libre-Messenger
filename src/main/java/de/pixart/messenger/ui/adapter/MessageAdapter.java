@@ -2,6 +2,7 @@ package de.pixart.messenger.ui.adapter;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
@@ -12,6 +13,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.annotation.ColorInt;
 import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
@@ -68,8 +70,9 @@ import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.services.AudioPlayer;
 import de.pixart.messenger.services.MessageArchiveService;
 import de.pixart.messenger.services.NotificationService;
-import de.pixart.messenger.ui.ConversationActivity;
+import de.pixart.messenger.ui.ConversationFragment;
 import de.pixart.messenger.ui.ShowFullscreenMessageActivity;
+import de.pixart.messenger.ui.XmppActivity;
 import de.pixart.messenger.ui.text.DividerSpan;
 import de.pixart.messenger.ui.text.FixedURLSpan;
 import de.pixart.messenger.ui.text.QuoteSpan;
@@ -87,6 +90,8 @@ import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xmpp.mam.MamReference;
 
 public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextView.CopyHandler {
+
+    ConversationFragment mConversationFragment;
 
     private static final int SENT = 0;
     private static final int RECEIVED = 1;
@@ -131,7 +136,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
     };
 
-    private final ConversationActivity activity;
+    private final XmppActivity activity;
 
     private DisplayMetrics metrics;
 
@@ -144,7 +149,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     public final AudioPlayer audioPlayer;
     private boolean mUseWhiteBackground = false;
 
-    public MessageAdapter(ConversationActivity activity, List<Message> messages) {
+    public MessageAdapter(XmppActivity activity, List<Message> messages) {
         super(activity, 0, messages);
         this.audioPlayer = new AudioPlayer(this);
         this.activity = activity;
@@ -296,7 +301,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
                 @Override
                 public void onClick(View v) {
-                    activity.mConversationFragment.resendMessage(mMessage);
+                    mConversationFragment.resendMessage(mMessage);
                 }
             });
         } else if (!error && type == SENT) {
@@ -493,16 +498,18 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             final String nick = UIHelper.getMessageDisplayName(message);
             SpannableStringBuilder body = message.getMergedBody();
             boolean hasMeCommand = message.hasMeCommand();
-            String searchQuery = activity.mConversationFragment.binding.searchfieldInput.getText().toString().toLowerCase().trim();
-            if (((!searchQuery.isEmpty() || !searchQuery.contains("")) && searchQuery.length() >= 3) && body.toString().toLowerCase().contains(searchQuery)) {
-                int ofe = body.toString().toLowerCase().indexOf(searchQuery, 0);
-                for (int ofs = 0; ofs < body.length() && ofe != -1; ofs = ofe + 1) {
-                    ofe = body.toString().toLowerCase().indexOf(searchQuery, ofs);
-                    if (ofe == -1) {
-                        break;
-                    } else {
-                        body.setSpan(new StyleSpan(Typeface.BOLD), ofe, ofe + searchQuery.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        body.setSpan(new BackgroundColorSpan(0xFFFFFF00), ofe, ofe + searchQuery.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            if (mConversationFragment != null) {
+                String searchQuery = mConversationFragment.binding.searchfieldInput.getText().toString().toLowerCase().trim();
+                if (((!searchQuery.isEmpty() || !searchQuery.contains("")) && searchQuery.length() >= 3) && body.toString().toLowerCase().contains(searchQuery)) {
+                    int ofe = body.toString().toLowerCase().indexOf(searchQuery, 0);
+                    for (int ofs = 0; ofs < body.length() && ofe != -1; ofs = ofe + 1) {
+                        ofe = body.toString().toLowerCase().indexOf(searchQuery, ofs);
+                        if (ofe == -1) {
+                            break;
+                        } else {
+                            body.setSpan(new StyleSpan(Typeface.BOLD), ofe, ofe + searchQuery.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            body.setSpan(new BackgroundColorSpan(0xFFFFFF00), ofe, ofe + searchQuery.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        }
                     }
                 }
             }
@@ -594,7 +601,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
             @Override
             public void onClick(View v) {
-                activity.mConversationFragment.startDownloadable(message);
+                mConversationFragment.startDownloadable(message);
             }
         });
     }
@@ -1171,8 +1178,9 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     }
 
     public void updatePreferences() {
-        this.mIndicateReceived = activity.indicateReceived();
-        this.mUseWhiteBackground = activity.useWhiteBackground();
+        SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(activity);
+        this.mIndicateReceived = p.getBoolean("indicate_received", activity.getResources().getBoolean(R.bool.indicate_received));
+        this.mUseWhiteBackground = p.getBoolean("use_white_background", activity.getResources().getBoolean(R.bool.use_white_background));
     }
 
     public TextView getMessageBody(View view) {
