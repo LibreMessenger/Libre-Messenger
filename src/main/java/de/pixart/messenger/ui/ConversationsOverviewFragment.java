@@ -30,6 +30,7 @@
 package de.pixart.messenger.ui;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.util.Log;
@@ -113,5 +114,17 @@ public class ConversationsOverviewFragment extends XmppFragment {
     void refresh() {
         this.activity.xmppConnectionService.populateWithOrderedConversations(this.conversations);
         this.conversationsAdapter.notifyDataSetChanged();
+    }
+
+    public static Conversation getSuggestion(Activity activity) {
+        Fragment fragment = activity.getFragmentManager().findFragmentById(R.id.main_fragment);
+        if (fragment != null && fragment instanceof ConversationsOverviewFragment) {
+            List<Conversation> conversations = ((ConversationsOverviewFragment) fragment).conversations;
+            if (conversations.size() > 0) {
+                return conversations.get(0);
+            }
+        }
+        return null;
+
     }
 }

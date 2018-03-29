@@ -1,17 +1,18 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <FrameLayout
-        android:background="?attr/color_background_primary"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="?attr/color_background_primary">
 
         <ListView
             android:id="@+id/list"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="@color/grey50"
-            android:divider="@color/black12"
-            android:dividerHeight="1dp" />
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp" />
+
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"

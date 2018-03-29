@@ -27,9 +27,9 @@
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 android:layout_alignParentLeft="true"
-                android:scaleType="centerCrop"
                 android:background="@drawable/message_border"
                 android:padding="1dp"
+                android:scaleType="centerCrop"
                 app:riv_border_color="@color/grey500"
                 app:riv_border_width="1dp"
                 app:riv_corner_radius="28dp" />
@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toRightOf="@+id/conversation_image"
-                android:paddingLeft="8dp">
+                android:paddingLeft="@dimen/avatar_item_distance">
 
                 <TextView
                     android:id="@+id/conversation_name"
@@ -47,10 +47,10 @@
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@+id/conversation_lastwrapper"
                     android:layout_toLeftOf="@+id/conversation_failed"
-                    android:paddingRight="4dp"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:paddingRight="4dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                     android:textColor="@color/black87"
                     android:textSize="?attr/TextSizeHeadline" />
 
@@ -71,7 +71,7 @@
                         android:gravity="center_vertical"
                         android:minHeight="?attr/IconSize"
                         android:text="@string/me"
-                        android:textColor="@color/primary"
+                        android:textAppearance="@style/TextAppearance.Conversations.Body1.Secondary"
                         android:visibility="visible" />
 
                     <LinearLayout
@@ -87,19 +87,18 @@
                             android:id="@+id/conversation_lastmsg_img"
                             android:layout_width="?attr/IconSize"
                             android:layout_height="?attr/IconSize"
-                            android:layout_marginRight="?attr/TextSeparation"/>/>
+                            android:layout_marginRight="?attr/TextSeparation" />/>
 
                         <TextView
                             android:id="@+id/conversation_lastmsg"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:ellipsize="end"
                             android:gravity="center_vertical"
+                            android:maxLines="1"
                             android:minHeight="?attr/IconSize"
                             android:scrollHorizontally="false"
-                            android:maxLines="1"
-                            android:ellipsize="end"
-                            android:textColor="@color/black87"
-                            android:textSize="?attr/TextSizeBody" />
+                            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -107,8 +106,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="false"
-                        android:layout_centerVertical="true"
                         android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
                         android:orientation="horizontal">
 
                         <ImageView
@@ -144,45 +143,45 @@
 
                 <TextView
                     android:id="@+id/conversation_unread"
-                    android:layout_toLeftOf="@+id/conversation_lastupdate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBaseline="@+id/conversation_name"
+                    android:layout_margin="1dp"
+                    android:layout_toLeftOf="@+id/conversation_lastupdate"
+                    android:background="@drawable/rounded_rectangle_primary"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
                     android:text="100"
                     android:textColor="@color/grey50"
                     android:textSize="?attr/TextSizeBody"
-                    android:background="@drawable/rounded_rectangle_primary"
-                    android:visibility="gone"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="4dp"
-                    android:paddingBottom="2dp"
-                    android:layout_margin="1dp" />
+                    android:visibility="gone" />
+
                 <TextView
                     android:id="@+id/conversation_failed"
-                    android:layout_toLeftOf="@+id/conversation_unread"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBaseline="@+id/conversation_name"
+                    android:layout_margin="1dp"
+                    android:layout_toLeftOf="@+id/conversation_unread"
+                    android:background="@drawable/rounded_rectangle_red"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
                     android:text="100"
                     android:textColor="@color/grey50"
                     android:textSize="?attr/TextSizeBody"
-                    android:background="@drawable/rounded_rectangle_red"
-                    android:visibility="gone"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="4dp"
-                    android:paddingBottom="2dp"
-                    android:layout_margin="1dp" />
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/conversation_lastupdate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
                     android:layout_alignBaseline="@+id/conversation_name"
-                    android:paddingLeft="4dp"
+                    android:layout_alignParentRight="true"
                     android:gravity="right"
-                    android:textColor="@color/black54"
-                    android:textSize="?attr/TextSizeInfo" />
+                    android:paddingLeft="4dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
             </RelativeLayout>
         </RelativeLayout>
     </FrameLayout>
