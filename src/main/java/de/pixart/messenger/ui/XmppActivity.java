@@ -502,27 +502,25 @@ public abstract class XmppActivity extends AppCompatActivity {
     }
 
     private void switchToConversation(Conversation conversation, String text, String nick, boolean pm, boolean newTask) {
-        Intent viewConversationIntent = new Intent(this,
-                ConversationActivity.class);
-        viewConversationIntent.setAction(ConversationActivity.ACTION_VIEW_CONVERSATION);
-        viewConversationIntent.putExtra(ConversationActivity.CONVERSATION,
-                conversation.getUuid());
+        Intent intent = new Intent(this, ConversationActivity.class);
+        intent.setAction(ConversationActivity.ACTION_VIEW_CONVERSATION);
+        intent.putExtra(ConversationActivity.EXTRA_CONVERSATION, conversation.getUuid());
         if (text != null) {
-            viewConversationIntent.putExtra(ConversationActivity.TEXT, text);
+            intent.putExtra(ConversationActivity.EXTRA_TEXT, text);
         }
         if (nick != null) {
-            viewConversationIntent.putExtra(ConversationActivity.NICK, nick);
-            viewConversationIntent.putExtra(ConversationActivity.PRIVATE_MESSAGE, pm);
+            intent.putExtra(ConversationActivity.EXTRA_NICK, nick);
+            intent.putExtra(ConversationActivity.EXTRA_IS_PRIVATE_MESSAGE, pm);
         }
         if (newTask) {
-            viewConversationIntent.setFlags(viewConversationIntent.getFlags()
+            intent.setFlags(intent.getFlags()
                     | Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         } else {
-            viewConversationIntent.setFlags(viewConversationIntent.getFlags()
+            intent.setFlags(intent.getFlags()
                     | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }
-        startActivity(viewConversationIntent);
+        startActivity(intent);
         finish();
     }
 
@@ -962,14 +960,6 @@ public abstract class XmppActivity extends AppCompatActivity {
 
     public int getOnlineColor() {
         return this.mColorGreen;
-    }
-
-    public int getPrimaryBackgroundColor() {
-        return this.mPrimaryBackgroundColor;
-    }
-
-    public int getSecondaryBackgroundColor() {
-        return this.mSecondaryBackgroundColor;
     }
 
     public int getPixel(int dp) {

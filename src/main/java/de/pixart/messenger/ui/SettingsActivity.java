@@ -36,6 +36,7 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.services.ExportLogsService;
 import de.pixart.messenger.services.MemorizingTrustManager;
+import de.pixart.messenger.ui.util.Color;
 import de.pixart.messenger.xmpp.XmppConnection;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
@@ -76,6 +77,8 @@ public class SettingsActivity extends XmppActivity implements
 
         this.mTheme = findTheme();
         setTheme(this.mTheme);
+
+        getWindow().getDecorView().setBackgroundColor(Color.get(this, R.attr.color_background_primary));
     }
 
     @Override

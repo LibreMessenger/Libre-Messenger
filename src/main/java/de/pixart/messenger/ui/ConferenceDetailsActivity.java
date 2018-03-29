@@ -76,7 +76,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             DestroyMucDialog.setMessage(getString(R.string.destroy_muc_text, mConversation.getName()));
             DestroyMucDialog.setPositiveButton(getString(R.string.delete), (dialogInterface, i) -> {
                 Intent intent = new Intent(xmppConnectionService, ConversationActivity.class);
-                intent.setAction(ConversationActivity.ACTION_DESTROY_MUC);
+                intent.setAction(ConversationLegacyActivity.ACTION_DESTROY_MUC);
                 intent.putExtra("MUC_UUID", mConversation.getUuid());
                 Log.d(Config.LOGTAG, "Sending DESTROY intent for " + mConversation.getName());
                 startActivity(intent);

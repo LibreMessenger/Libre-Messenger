@@ -77,7 +77,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.ConversationsMainActivity"
+            android:name=".ui.ConversationActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:minWidth="300dp"

@@ -148,7 +148,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     protected Message lastHistoryMessage = null;
     SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd. MMM yyyy", Locale.getDefault());
     private Toast messageLoaderToast;
-    private ConversationsMainActivity activity;
+    private ConversationActivity activity;
     protected OnClickListener clickToVerify = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -968,9 +968,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        Log.d(Config.LOGTAG, "onAttach()");
-        if (activity instanceof ConversationsMainActivity) {
-            this.activity = (ConversationsMainActivity) activity;
+        Log.d(Config.LOGTAG, "ConversationFragment.onAttach()");
+        if (activity instanceof ConversationActivity) {
+            this.activity = (ConversationActivity) activity;
         } else {
             throw new IllegalStateException("Trying to attach fragment to activity that is not the ConversationActivity");
         }
@@ -1764,6 +1764,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        Log.d(Config.LOGTAG, "ConversationFragment.onActivityCreated()");
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState == null) {
             return;

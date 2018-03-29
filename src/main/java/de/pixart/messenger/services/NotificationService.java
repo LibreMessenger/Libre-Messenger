@@ -627,7 +627,7 @@ public class NotificationService {
     private PendingIntent createContentIntent(final String conversationUuid, final String downloadMessageUuid) {
         final Intent viewConversationIntent = new Intent(mXmppConnectionService, ConversationActivity.class);
         viewConversationIntent.setAction(ConversationActivity.ACTION_VIEW_CONVERSATION);
-        viewConversationIntent.putExtra(ConversationActivity.CONVERSATION, conversationUuid);
+        viewConversationIntent.putExtra(ConversationActivity.EXTRA_CONVERSATION, conversationUuid);
         if (downloadMessageUuid != null) {
             viewConversationIntent.putExtra(ConversationActivity.EXTRA_DOWNLOAD_UUID, downloadMessageUuid);
             return PendingIntent.getActivity(mXmppConnectionService,
