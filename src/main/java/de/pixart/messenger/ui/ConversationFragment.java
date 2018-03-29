@@ -169,6 +169,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 
         @Override
         public void onClick(View v) {
+            activity.xmppConnectionService.archiveConversation(conversation);
             activity.onConversationArchived(conversation);
         }
     };
@@ -1267,16 +1268,20 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 handleAttachmentSelection(item);
                 break;
             case R.id.action_archive_chat:
+                activity.xmppConnectionService.archiveConversation(conversation);
                 activity.onConversationArchived(conversation);
                 break;
             case R.id.action_archive_muc:
-                getActivity().runOnUiThread(() -> {
+                activity.runOnUiThread(() -> {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle(getString(R.string.action_end_conversation_muc));
                     builder.setMessage(getString(R.string.leave_conference_warning));
                     builder.setNegativeButton(getString(R.string.cancel), null);
                     builder.setPositiveButton(getString(R.string.action_end_conversation_muc),
-                            (dialog, which) -> activity.onConversationArchived(conversation));
+                            (dialog, which) -> {
+                                activity.xmppConnectionService.archiveConversation(conversation);
+                                activity.onConversationArchived(conversation);
+                            });
                     builder.create().show();
                 });
                 break;
@@ -1491,6 +1496,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         builder.setPositiveButton(getString(R.string.delete_messages), (dialog, which) -> {
             this.activity.xmppConnectionService.clearConversationHistory(conversation);
             if (endConversationCheckBox.isChecked()) {
+                this.activity.xmppConnectionService.archiveConversation(conversation);
                 this.activity.onConversationArchived(conversation);
             } else {
                 activity.onConversationsListItemUpdated();
@@ -1584,6 +1590,10 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     @Override
     public void onResume() {
         new Handler().post(() -> {
+            final Activity activity = getActivity();
+            if (activity == null) {
+                return;
+            }
             getActivity().invalidateOptionsMenu();
         });
         super.onResume();

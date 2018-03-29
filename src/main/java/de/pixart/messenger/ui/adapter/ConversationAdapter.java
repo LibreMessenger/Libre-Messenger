@@ -10,7 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +22,6 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 
-import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Message;
@@ -301,10 +299,6 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
     @Override
     public void notifyDataSetChanged() {
         this.selectedConversation = ConversationFragment.getConversation(activity);
-        Log.d(Config.LOGTAG, "notify data set changed");
-        if (this.selectedConversation == null) {
-            Log.d(Config.LOGTAG, "selected conversation is null");
-        }
         super.notifyDataSetChanged();
     }
 
