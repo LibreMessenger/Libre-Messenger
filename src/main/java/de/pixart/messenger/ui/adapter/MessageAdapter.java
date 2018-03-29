@@ -34,7 +34,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
@@ -93,12 +92,12 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
     ConversationFragment mConversationFragment;
 
+    public static final String DATE_SEPARATOR_BODY = "DATE_SEPARATOR";
     private static final int SENT = 0;
     private static final int RECEIVED = 1;
     private static final int STATUS = 2;
-    private static final int DATE_SEPARATOR = 3;
 
-    public static final String DATE_SEPARATOR_BODY = "DATE_SEPARATOR";
+    private static final int DATE_SEPARATOR = 3;
 
     private static final Pattern XMPP_PATTERN = Pattern
             .compile("xmpp\\:(?:(?:["
@@ -137,17 +136,14 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     };
 
     private final XmppActivity activity;
-
-    private DisplayMetrics metrics;
-
-    private OnContactPictureClicked mOnContactPictureClickedListener;
-    private OnContactPictureLongClicked mOnContactPictureLongClickedListener;
-
-    private boolean mIndicateReceived = false;
-    private OnQuoteListener onQuoteListener;
     private final ListSelectionManager listSelectionManager = new ListSelectionManager();
     public final AudioPlayer audioPlayer;
+    private DisplayMetrics metrics;
+    private OnContactPictureClicked mOnContactPictureClickedListener;
+    private OnContactPictureLongClicked mOnContactPictureLongClickedListener;
+    private boolean mIndicateReceived = false;
     private boolean mUseWhiteBackground = false;
+    private OnQuoteListener onQuoteListener;
 
     public MessageAdapter(XmppActivity activity, List<Message> messages) {
         super(activity, 0, messages);
@@ -155,6 +151,31 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         this.activity = activity;
         metrics = getContext().getResources().getDisplayMetrics();
         updatePreferences();
+    }
+
+    public static boolean cancelPotentialWork(Message message, ImageView imageView) {
+        final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
+
+        if (bitmapWorkerTask != null) {
+            final Message oldMessage = bitmapWorkerTask.message;
+            if (oldMessage == null || message != oldMessage) {
+                bitmapWorkerTask.cancel(true);
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
+        if (imageView != null) {
+            final Drawable drawable = imageView.getDrawable();
+            if (drawable instanceof AsyncDrawable) {
+                final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
+                return asyncDrawable.getBitmapWorkerTask();
+            }
+        }
+        return null;
     }
 
     public void flagScreenOn() {
@@ -402,14 +423,10 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.download_button.setVisibility(View.VISIBLE);
         viewHolder.download_button.setText(add_contact);
         viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_account_card_details_grey600_48dp, 0, 0, 0);
-        viewHolder.download_button.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(body));
-                activity.startActivity(intent);
-            }
+        viewHolder.download_button.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(body));
+            activity.startActivity(intent);
         });
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.GONE);
@@ -597,13 +614,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.download_button.setVisibility(View.VISIBLE);
         viewHolder.download_button.setText(text);
         viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_download_grey600_48dp, 0, 0, 0);
-        viewHolder.download_button.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                mConversationFragment.startDownloadable(message);
-            }
-        });
+        viewHolder.download_button.setOnClickListener(v -> ConversationFragment.downloadFile(activity, message));
     }
 
     private void displayOpenableMessage(ViewHolder viewHolder, final Message message) {
@@ -636,13 +647,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message)));
             }
         }
-        viewHolder.download_button.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                openDownloadable(message);
-            }
-        });
+        viewHolder.download_button.setOnClickListener(v -> openDownloadable(message));
     }
 
     private void showAPK(final Message message, ViewHolder viewHolder) {
@@ -696,13 +701,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(scaledW, scaledH);
         layoutParams.setMargins(0, (int) (metrics.density * 4), 0, (int) (metrics.density * 4));
         viewHolder.image.setLayoutParams(layoutParams);
-        viewHolder.image.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                showLocation(message);
-            }
-        });
+        viewHolder.image.setOnClickListener(v -> showLocation(message));
         Glide
                 .with(activity)
                 .load(Uri.parse(url))
@@ -717,13 +716,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.download_button.setVisibility(View.GONE);
         viewHolder.download_button.setText(R.string.show_location);
         viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_map_marker_grey600_48dp, 0, 0, 0);
-        viewHolder.download_button.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                showLocation(message);
-            }
-        });
+        viewHolder.download_button.setOnClickListener(v -> showLocation(message));
 
     }
 
@@ -763,13 +756,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         layoutParams.setMargins(0, (int) (metrics.density * 4), 0, (int) (metrics.density * 4));
         viewHolder.image.setLayoutParams(layoutParams);
         activity.loadBitmap(message, viewHolder.image);
-        viewHolder.image.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                openDownloadable(message);
-            }
-        });
+        viewHolder.image.setOnClickListener(v -> openDownloadable(message));
     }
 
     private void loadMoreMessages(Conversation conversation) {
@@ -901,29 +888,21 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
 
         viewHolder.contact_picture
-                .setOnClickListener(new OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        if (MessageAdapter.this.mOnContactPictureClickedListener != null) {
-                            MessageAdapter.this.mOnContactPictureClickedListener
-                                    .onContactPictureClicked(message);
-                        }
-
+                .setOnClickListener(v -> {
+                    if (MessageAdapter.this.mOnContactPictureClickedListener != null) {
+                        MessageAdapter.this.mOnContactPictureClickedListener
+                                .onContactPictureClicked(message);
                     }
+
                 });
         viewHolder.contact_picture
-                .setOnLongClickListener(new OnLongClickListener() {
-
-                    @Override
-                    public boolean onLongClick(View v) {
-                        if (MessageAdapter.this.mOnContactPictureLongClickedListener != null) {
-                            MessageAdapter.this.mOnContactPictureLongClickedListener
-                                    .onContactPictureLongClicked(message);
-                            return true;
-                        } else {
-                            return false;
-                        }
+                .setOnLongClickListener(v -> {
+                    if (MessageAdapter.this.mOnContactPictureLongClickedListener != null) {
+                        MessageAdapter.this.mOnContactPictureLongClickedListener
+                                .onContactPictureLongClicked(message);
+                        return true;
+                    } else {
+                        return false;
                     }
                 });
 
@@ -1066,55 +1045,6 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         audioPlayer.stop();
     }
 
-    public interface OnQuoteListener {
-        public void onQuote(String text);
-    }
-
-    private class MessageBodyActionModeCallback implements ActionMode.Callback {
-
-        private final TextView textView;
-
-        public MessageBodyActionModeCallback(TextView textView) {
-            this.textView = textView;
-        }
-
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            if (onQuoteListener != null) {
-                int quoteResId = activity.getThemeResource(R.attr.icon_quote, R.drawable.ic_action_reply);
-                // 3rd item is placed after "copy" item
-                menu.add(0, android.R.id.button1, 3, R.string.quote).setIcon(quoteResId)
-                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-            }
-            return false;
-        }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            return false;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            if (item.getItemId() == android.R.id.button1) {
-                int start = textView.getSelectionStart();
-                int end = textView.getSelectionEnd();
-                if (end > start) {
-                    String text = transformText(textView.getText(), start, end, false);
-                    if (onQuoteListener != null) {
-                        onQuoteListener.onQuote(text);
-                    }
-                    mode.finish();
-                }
-                return true;
-            }
-            return false;
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {}
-    }
-
     public void openDownloadable(Message message) {
         DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
         if (!file.exists()) {
@@ -1183,70 +1113,6 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         this.mUseWhiteBackground = p.getBoolean("use_white_background", activity.getResources().getBoolean(R.bool.use_white_background));
     }
 
-    public TextView getMessageBody(View view) {
-        final Object tag = view.getTag();
-        if (tag instanceof ViewHolder) {
-            final ViewHolder viewHolder = (ViewHolder) tag;
-            return viewHolder.messageBody;
-        }
-        return null;
-    }
-
-    public interface OnContactPictureClicked {
-        void onContactPictureClicked(Message message);
-    }
-
-    public interface OnContactPictureLongClicked {
-        void onContactPictureLongClicked(Message message);
-    }
-
-    private static class ViewHolder {
-
-        protected LinearLayout message_box;
-        protected Button download_button;
-        protected Button resend_button;
-        protected ImageView image;
-        protected ImageView indicator;
-        protected ImageView indicatorReceived;
-        protected ImageView indicatorRead;
-        protected TextView time;
-        protected CopyTextView messageBody;
-        protected ImageView contact_picture;
-        protected TextView status_message;
-        protected TextView encryption;
-        public Button load_more_messages;
-        public ImageView edit_indicator;
-        public RelativeLayout audioPlayer;
-    }
-
-    class BitmapWorkerTask extends AsyncTask<Message, Void, Bitmap> {
-        private final WeakReference<ImageView> imageViewReference;
-        private Message message = null;
-        private final int size;
-
-        public BitmapWorkerTask(ImageView imageView, int size) {
-            imageViewReference = new WeakReference<>(imageView);
-            this.size = size;
-        }
-
-        @Override
-        protected Bitmap doInBackground(Message... params) {
-            this.message = params[0];
-            return activity.avatarService().get(this.message, size, isCancelled());
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap != null && !isCancelled()) {
-                final ImageView imageView = imageViewReference.get();
-                if (imageView != null) {
-                    imageView.setImageBitmap(bitmap);
-                    imageView.setBackgroundColor(0x00000000);
-                }
-            }
-        }
-    }
-
     public void loadAvatar(Message message, ImageView imageView, int size) {
         if (cancelPotentialWork(message, imageView)) {
             final Bitmap bm = activity.avatarService().get(message, size, true);
@@ -1274,29 +1140,35 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
     }
 
-    public static boolean cancelPotentialWork(Message message, ImageView imageView) {
-        final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
-
-        if (bitmapWorkerTask != null) {
-            final Message oldMessage = bitmapWorkerTask.message;
-            if (oldMessage == null || message != oldMessage) {
-                bitmapWorkerTask.cancel(true);
-            } else {
-                return false;
-            }
-        }
-        return true;
+    public interface OnQuoteListener {
+        void onQuote(String text);
     }
 
-    private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
-        if (imageView != null) {
-            final Drawable drawable = imageView.getDrawable();
-            if (drawable instanceof AsyncDrawable) {
-                final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
-                return asyncDrawable.getBitmapWorkerTask();
-            }
-        }
-        return null;
+    public interface OnContactPictureClicked {
+        void onContactPictureClicked(Message message);
+    }
+
+    public interface OnContactPictureLongClicked {
+        void onContactPictureLongClicked(Message message);
+    }
+
+    private static class ViewHolder {
+
+        public Button load_more_messages;
+        public ImageView edit_indicator;
+        public RelativeLayout audioPlayer;
+        protected LinearLayout message_box;
+        protected Button download_button;
+        protected Button resend_button;
+        protected ImageView image;
+        protected ImageView indicator;
+        protected ImageView indicatorReceived;
+        protected ImageView indicatorRead;
+        protected TextView time;
+        protected CopyTextView messageBody;
+        protected ImageView contact_picture;
+        protected TextView status_message;
+        protected TextView encryption;
     }
 
     static class AsyncDrawable extends BitmapDrawable {
@@ -1309,6 +1181,79 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
         public BitmapWorkerTask getBitmapWorkerTask() {
             return bitmapWorkerTaskReference.get();
+        }
+    }
+
+    private class MessageBodyActionModeCallback implements ActionMode.Callback {
+
+        private final TextView textView;
+
+        public MessageBodyActionModeCallback(TextView textView) {
+            this.textView = textView;
+        }
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            if (onQuoteListener != null) {
+                int quoteResId = activity.getThemeResource(R.attr.icon_quote, R.drawable.ic_action_reply);
+                // 3rd item is placed after "copy" item
+                menu.add(0, android.R.id.button1, 3, R.string.quote).setIcon(quoteResId)
+                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            }
+            return false;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            if (item.getItemId() == android.R.id.button1) {
+                int start = textView.getSelectionStart();
+                int end = textView.getSelectionEnd();
+                if (end > start) {
+                    String text = transformText(textView.getText(), start, end, false);
+                    if (onQuoteListener != null) {
+                        onQuoteListener.onQuote(text);
+                    }
+                    mode.finish();
+                }
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {}
+    }
+
+    class BitmapWorkerTask extends AsyncTask<Message, Void, Bitmap> {
+        private final WeakReference<ImageView> imageViewReference;
+        private final int size;
+        private Message message = null;
+
+        public BitmapWorkerTask(ImageView imageView, int size) {
+            imageViewReference = new WeakReference<>(imageView);
+            this.size = size;
+        }
+
+        @Override
+        protected Bitmap doInBackground(Message... params) {
+            this.message = params[0];
+            return activity.avatarService().get(this.message, size, isCancelled());
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (bitmap != null && !isCancelled()) {
+                final ImageView imageView = imageViewReference.get();
+                if (imageView != null) {
+                    imageView.setImageBitmap(bitmap);
+                    imageView.setBackgroundColor(0x00000000);
+                }
+            }
         }
     }
 }
