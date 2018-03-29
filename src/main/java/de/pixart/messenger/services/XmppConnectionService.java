@@ -1836,6 +1836,19 @@ public class XmppConnectionService extends Service {
         return null;
     }
 
+    public boolean isConversationsListEmpty(final Conversation ignore) {
+        synchronized (this.conversations) {
+            final int size = this.conversations.size();
+            if (size == 0) {
+                return true;
+            } else if (size == 1) {
+                return this.conversations.get(0) == ignore;
+            } else {
+                return false;
+            }
+        }
+    }
+
     public Conversation findOrCreateConversation(Account account, Jid jid, boolean muc, final boolean async) {
         return this.findOrCreateConversation(account, jid, muc, false, async);
     }
@@ -4131,7 +4144,7 @@ public class XmppConnectionService extends Service {
     public Account getPendingAccount() {
         Account pending = null;
         for (Account account : getAccounts()) {
-            if (account.isOptionSet(Account.OPTION_REGISTER)) {
+            if (!account.isOptionSet(Account.OPTION_LOGGED_IN_SUCCESSFULLY)) {
                 pending = account;
             } else {
                 return null;

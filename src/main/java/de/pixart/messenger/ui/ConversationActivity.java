@@ -47,9 +47,12 @@ import android.widget.Toast;
 
 import net.java.otr4j.session.SessionStatus;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.databinding.ActivityConversationsBinding;
+import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.services.EmojiService;
 import de.pixart.messenger.services.XmppConnectionService;
@@ -77,6 +80,7 @@ public class ConversationActivity extends XmppActivity implements OnConversation
     private final PendingItem<Intent> pendingViewIntent = new PendingItem<>();
     private ActivityConversationsBinding binding;
     private boolean mActivityPaused = true;
+    private AtomicBoolean mRedirectInProcess = new AtomicBoolean(false);
 
     private static boolean isViewIntent(Intent i) {
         return i != null && ACTION_VIEW_CONVERSATION.equals(i.getAction()) && i.hasExtra(EXTRA_CONVERSATION);
@@ -98,6 +102,9 @@ public class ConversationActivity extends XmppActivity implements OnConversation
 
     @Override
     void onBackendConnected() {
+        if (performRedirectIfNecessary(true)) {
+            return;
+        }
         for (@IdRes int id : FRAGMENT_ID_NOTIFICATION_ORDER) {
             notifyFragmentOfBackendConnected(id);
         }
@@ -115,6 +122,55 @@ public class ConversationActivity extends XmppActivity implements OnConversation
                 openConversation(conversation, null);
             }
         }
+    }
+
+    private boolean performRedirectIfNecessary(boolean noAnimation) {
+        return performRedirectIfNecessary(null, noAnimation);
+    }
+
+    private boolean performRedirectIfNecessary(final Conversation ignore, final boolean noAnimation) {
+        if (xmppConnectionService == null) {
+            return false;
+        }
+        boolean isConversationsListEmpty = xmppConnectionService.isConversationsListEmpty(ignore);
+        if (isConversationsListEmpty && mRedirectInProcess.compareAndSet(false, true)) {
+            final Intent intent = getRedirectionIntent(noAnimation);
+            runOnUiThread(() -> {
+                startActivity(intent);
+                if (noAnimation) {
+                    overridePendingTransition(0, 0);
+                }
+            });
+        }
+        return mRedirectInProcess.get();
+    }
+
+    private Intent getRedirectionIntent(boolean noAnimation) {
+        Account pendingAccount = xmppConnectionService.getPendingAccount();
+        Intent intent;
+        if (pendingAccount != null) {
+            intent = new Intent(this, EditAccountActivity.class);
+            intent.putExtra("jid", pendingAccount.getJid().toBareJid().toString());
+        } else {
+            if (xmppConnectionService.getAccounts().size() == 0) {
+                if (Config.X509_VERIFICATION) {
+                    intent = new Intent(this, ManageAccountActivity.class);
+                } else if (Config.MAGIC_CREATE_DOMAIN != null) {
+                    intent = new Intent(this, WelcomeActivity.class);
+                    WelcomeActivity.addInviteUri(intent, getIntent());
+                } else {
+                    intent = new Intent(this, EditAccountActivity.class);
+                }
+            } else {
+                intent = new Intent(this, StartConversationActivity.class);
+            }
+        }
+        intent.putExtra("init", true);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        if (noAnimation) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        }
+        return intent;
     }
 
     private void notifyFragmentOfBackendConnected(@IdRes int id) {
@@ -215,6 +271,7 @@ public class ConversationActivity extends XmppActivity implements OnConversation
         if (this.mTheme != theme) {
             recreate();
         }
+        mRedirectInProcess.set(false);
         super.onStart();
     }
 
@@ -341,7 +398,9 @@ public class ConversationActivity extends XmppActivity implements OnConversation
 
     @Override
     public void onConversationArchived(Conversation conversation) {
-        //TODO; check if nothing more left;
+        if (performRedirectIfNecessary(conversation, false)) {
+            return;
+        }
         Fragment mainFragment = getFragmentManager().findFragmentById(R.id.main_fragment);
         if (mainFragment != null && mainFragment instanceof ConversationFragment) {
             getFragmentManager().popBackStack();
@@ -381,6 +440,9 @@ public class ConversationActivity extends XmppActivity implements OnConversation
 
     @Override
     public void onConversationUpdate() {
+        if (performRedirectIfNecessary(false)) {
+            return;
+        }
         this.refreshUi();
     }
 
