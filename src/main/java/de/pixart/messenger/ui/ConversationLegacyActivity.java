@@ -68,7 +68,6 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Conversation;
-import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.services.EmojiService;
@@ -81,8 +80,6 @@ import de.pixart.messenger.ui.adapter.ConversationAdapter;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
-import de.pixart.messenger.xmpp.jid.InvalidJidException;
-import de.pixart.messenger.xmpp.jid.Jid;
 
 import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
 
@@ -227,7 +224,7 @@ public class ConversationLegacyActivity extends XmppActivity
                 if (getSelectedConversation() != conversationList.get(position)) {
                     ConversationLegacyActivity.this.mConversationFragment.stopScrolling();
                     setSelectedConversation(conversationList.get(position));
-                    ConversationLegacyActivity.this.mConversationFragment.reInit(getSelectedConversation());
+                    //ConversationLegacyActivity.this.mConversationFragment.reInit(getSelectedConversation());
                     conversationWasSelectedByKeyboard = false;
                 }
                 hideConversationsOverview();
@@ -319,7 +316,7 @@ public class ConversationLegacyActivity extends XmppActivity
     public void switchToConversation(Conversation conversation) {
         setSelectedConversation(conversation);
         runOnUiThread(() -> {
-            ConversationLegacyActivity.this.mConversationFragment.reInit(getSelectedConversation());
+            //ConversationLegacyActivity.this.mConversationFragment.reInit(getSelectedConversation());
             openConversation();
         });
     }
@@ -466,7 +463,7 @@ public class ConversationLegacyActivity extends XmppActivity
         if (reinit) {
             if (conversationList.size() > 0) {
                 setSelectedConversation(conversationList.get(0));
-                this.mConversationFragment.reInit(getSelectedConversation());
+                //this.mConversationFragment.reInit(getSelectedConversation());
             } else {
                 setSelectedConversation(null);
                 if (mRedirected.compareAndSet(false, true)) {
@@ -591,7 +588,7 @@ public class ConversationLegacyActivity extends XmppActivity
             this.conversationWasSelectedByKeyboard = true;
             this.mConversationFragment.stopScrolling();
             setSelectedConversation(this.conversationList.get(index));
-            this.mConversationFragment.reInit(getSelectedConversation());
+            //this.mConversationFragment.reInit(getSelectedConversation());
             if (index > listView.getLastVisiblePosition() - 1 || index < listView.getFirstVisiblePosition() + 1) {
                 this.listView.setSelection(index);
             }
@@ -830,7 +827,7 @@ public class ConversationLegacyActivity extends XmppActivity
         showConversationsOverview();
         clearPending();
         setSelectedConversation(conversationList.get(0));
-        this.mConversationFragment.reInit(getSelectedConversation());
+        //this.mConversationFragment.reInit(getSelectedConversation());
     }
 
     private void handleViewConversationIntent(final Intent intent) {
@@ -841,7 +838,7 @@ public class ConversationLegacyActivity extends XmppActivity
         final boolean pm = intent.getBooleanExtra(PRIVATE_MESSAGE, false);
         this.mConversationFragment.stopScrolling();
         if (selectConversationByUuid(uuid)) {
-            this.mConversationFragment.reInit(getSelectedConversation());
+            /*this.mConversationFragment.reInit(getSelectedConversation());
             if (nick != null) {
                 if (pm) {
                     Jid jid = getSelectedConversation().getJid();
@@ -868,7 +865,7 @@ public class ConversationLegacyActivity extends XmppActivity
                 if (message != null) {
                     //startDownloadable(message);
                 }
-            }
+            }*/
         } else {
             mUnprocessedNewIntent = false;
 
