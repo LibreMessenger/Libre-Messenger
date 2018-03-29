@@ -1811,16 +1811,16 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         }
     }
 
-    public boolean reInit(Conversation conversation) {
+    public void reInit(Conversation conversation) {
         Log.d(Config.LOGTAG, "reInit()");
         if (conversation == null) {
             Log.d(Config.LOGTAG, "conversation was null :(");
-            return false;
+            return;
         }
         if (this.activity == null) {
             Log.d(Config.LOGTAG, "activity was null");
             this.conversation = conversation;
-            return false;
+            return;
         }
 
         setupIme();
@@ -1847,6 +1847,10 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         this.binding.textinput.setKeyboardListener(this);
         messageListAdapter.updatePreferences();
         this.binding.messagesView.setAdapter(messageListAdapter);
+        refresh(false);
+        refresh();
+        this.conversation.messagesLoaded.set(true);
+        final boolean isAtBottom;
         this.binding.messagesView.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
             @Override
             public void onSwipeRight() {
@@ -1854,8 +1858,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 activity.onBackPressed();
             }
         });
-        refresh();
-        this.conversation.messagesLoaded.set(true);
         synchronized (this.messageList) {
             final Message first = conversation.getFirstUnreadMessage();
             final int bottom = Math.max(0, this.messageList.size() - 1);
@@ -1867,7 +1869,10 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 pos = i < 0 ? bottom : i;
             }
             this.binding.messagesView.setSelection(pos);
-            return pos == bottom;
+            isAtBottom = pos == bottom;
+        }
+        if (activity != null) {
+            activity.onConversationRead(this.conversation);
         }
     }
 
@@ -1999,6 +2004,11 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 
     @Override
     public void refresh() {
+        this.refresh(true);
+    }
+
+
+    private void refresh(boolean notifyConversationRead) {
         synchronized (this.messageList) {
             if (this.conversation != null) {
                 conversation.populateWithMessages(ConversationFragment.this.messageList);
@@ -2006,7 +2016,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 updateStatusMessages();
                 this.messageListAdapter.notifyDataSetChanged();
                 updateChatMsgHint();
-                if (activity != null) {
+                if (notifyConversationRead && activity != null) {
                     activity.onConversationRead(this.conversation);
                 }
                 updateSendButton();
