@@ -52,11 +52,22 @@ import de.pixart.messenger.ui.util.PendingItem;
 public class ConversationsOverviewFragment extends XmppFragment {
 
     private final List<Conversation> conversations = new ArrayList<>();
+    private final PendingItem<Conversation> swipedConversation = new PendingItem<>();
     private FragmentConversationsOverviewBinding binding;
     private ConversationAdapter conversationsAdapter;
     private XmppActivity activity;
 
-    private final PendingItem<Conversation> swipedConversation = new PendingItem<>();
+    public static Conversation getSuggestion(Activity activity) {
+        Fragment fragment = activity.getFragmentManager().findFragmentById(R.id.main_fragment);
+        if (fragment != null && fragment instanceof ConversationsOverviewFragment) {
+            List<Conversation> conversations = ((ConversationsOverviewFragment) fragment).conversations;
+            if (conversations.size() > 0) {
+                return conversations.get(0);
+            }
+        }
+        return null;
+
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -67,6 +78,12 @@ public class ConversationsOverviewFragment extends XmppFragment {
         } else {
             throw new IllegalStateException("Trying to attach fragment to activity that is not an XmppActivity");
         }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        this.activity = null;
     }
 
     @Override
@@ -114,17 +131,5 @@ public class ConversationsOverviewFragment extends XmppFragment {
     void refresh() {
         this.activity.xmppConnectionService.populateWithOrderedConversations(this.conversations);
         this.conversationsAdapter.notifyDataSetChanged();
-    }
-
-    public static Conversation getSuggestion(Activity activity) {
-        Fragment fragment = activity.getFragmentManager().findFragmentById(R.id.main_fragment);
-        if (fragment != null && fragment instanceof ConversationsOverviewFragment) {
-            List<Conversation> conversations = ((ConversationsOverviewFragment) fragment).conversations;
-            if (conversations.size() > 0) {
-                return conversations.get(0);
-            }
-        }
-        return null;
-
     }
 }
