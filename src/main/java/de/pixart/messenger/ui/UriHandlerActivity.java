@@ -1,5 +1,6 @@
 package de.pixart.messenger.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
@@ -100,5 +101,12 @@ public class UriHandlerActivity extends AppCompatActivity {
 
         finish();
         super.onActivityResult(requestCode, requestCode, intent);
+    }
+
+    public static void scan(Activity activity) {
+        Intent intent = new Intent(activity, UriHandlerActivity.class);
+        intent.setAction(UriHandlerActivity.ACTION_SCAN_QR_CODE);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        activity.startActivity(intent);
     }
 }
