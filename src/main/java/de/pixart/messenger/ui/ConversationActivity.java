@@ -63,6 +63,7 @@ import de.pixart.messenger.ui.interfaces.OnConversationsListItemUpdated;
 import de.pixart.messenger.ui.util.PendingItem;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 
+import static de.pixart.messenger.ui.ConversationFragment.REQUEST_DECRYPT_PGP;
 import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
 
 public class ConversationActivity extends XmppActivity implements OnConversationSelected, OnConversationArchived, OnConversationsListItemUpdated, OnConversationRead, XmppConnectionService.OnAccountUpdate, XmppConnectionService.OnConversationUpdate, XmppConnectionService.OnRosterUpdate, OnUpdateBlocklist, XmppConnectionService.OnShowErrorToast {
@@ -196,6 +197,40 @@ public class ConversationActivity extends XmppActivity implements OnConversation
         }
         openConversation(conversation, intent.getExtras());
         return true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, final Intent data) {
+        Log.d(Config.LOGTAG, "on activity result");
+        if (resultCode == RESULT_OK) {
+            handlePositiveActivityResult(requestCode, data);
+        } else {
+            handleNegativeActivityResult(requestCode);
+        }
+    }
+
+    private void handleNegativeActivityResult(int requestCode) {
+        switch (requestCode) {
+            case REQUEST_DECRYPT_PGP:
+                Conversation conversation = ConversationFragment.getConversationReliable(this);
+                if (conversation == null) {
+                    break;
+                }
+                conversation.getAccount().getPgpDecryptionService().giveUpCurrentDecryption();
+                break;
+        }
+    }
+
+    private void handlePositiveActivityResult(int requestCode, final Intent data) {
+        switch (requestCode) {
+            case REQUEST_DECRYPT_PGP:
+                Conversation conversation = ConversationFragment.getConversationReliable(this);
+                if (conversation == null) {
+                    break;
+                }
+                conversation.getAccount().getPgpDecryptionService().continueDecryption(data);
+                break;
+        }
     }
 
     @Override
