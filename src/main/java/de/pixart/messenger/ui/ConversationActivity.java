@@ -29,13 +29,22 @@
 
 package de.pixart.messenger.ui;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
+import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.annotation.IdRes;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
@@ -43,10 +52,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import net.java.otr4j.session.SessionStatus;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.pixart.messenger.Config;
@@ -54,14 +65,20 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.databinding.ActivityConversationsBinding;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Conversation;
+import de.pixart.messenger.entities.MucOptions;
+import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.services.EmojiService;
+import de.pixart.messenger.services.UpdateService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.interfaces.OnConversationArchived;
 import de.pixart.messenger.ui.interfaces.OnConversationRead;
 import de.pixart.messenger.ui.interfaces.OnConversationSelected;
 import de.pixart.messenger.ui.interfaces.OnConversationsListItemUpdated;
 import de.pixart.messenger.ui.util.PendingItem;
+import de.pixart.messenger.utils.ExceptionHelper;
+import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
+import de.pixart.messenger.xmpp.chatstate.ChatState;
 
 import static de.pixart.messenger.ui.ConversationFragment.REQUEST_DECRYPT_PGP;
 import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
@@ -74,6 +91,12 @@ public class ConversationActivity extends XmppActivity implements OnConversation
     public static final String EXTRA_TEXT = "text";
     public static final String EXTRA_NICK = "nick";
     public static final String EXTRA_IS_PRIVATE_MESSAGE = "pm";
+    public static final String ACTION_DESTROY_MUC = "de.pixart.messenger.DESTROY_MUC";
+
+    private boolean showLastSeen = false;
+
+    long FirstStartTime = -1;
+    String PREF_FIRST_START = "FirstStart";
 
     //secondary fragment (when holding the conversation, must be initialized before refreshing the overview fragment
     private static final @IdRes
@@ -107,6 +130,19 @@ public class ConversationActivity extends XmppActivity implements OnConversation
             return;
         }
         xmppConnectionService.getNotificationService().setIsInForeground(true);
+
+        final Intent FirstStartIntent = getIntent();
+        final Bundle extras = FirstStartIntent.getExtras();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (extras != null && extras.containsKey(PREF_FIRST_START)) {
+                FirstStartTime = extras.getLong(PREF_FIRST_START);
+                Log.d(Config.LOGTAG, "Get first start time from StartUI: " + FirstStartTime);
+            }
+        } else {
+            FirstStartTime = System.currentTimeMillis();
+            Log.d(Config.LOGTAG, "Device is running Android < SDK 23, no restart required: " + FirstStartTime);
+        }
+
         Intent intent = pendingViewIntent.pop();
         if (intent != null) {
             if (processViewIntent(intent)) {
@@ -117,6 +153,33 @@ public class ConversationActivity extends XmppActivity implements OnConversation
                 return;
             }
         }
+
+        if (FirstStartTime == 0) {
+            Log.d(Config.LOGTAG, "First start time: " + FirstStartTime + ", restarting App");
+            //write first start timestamp to file
+            FirstStartTime = System.currentTimeMillis();
+            SharedPreferences FirstStart = getApplicationContext().getSharedPreferences(PREF_FIRST_START, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = FirstStart.edit();
+            editor.putLong(PREF_FIRST_START, FirstStartTime);
+            editor.commit();
+            // restart
+            Intent restartintent = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
+            restartintent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            restartintent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(restartintent);
+            System.exit(0);
+        }
+
+        if (xmppConnectionService.getAccounts().size() != 0) {
+            if (xmppConnectionService.hasInternetConnection()) {
+                if (xmppConnectionService.isWIFI() || (xmppConnectionService.isMobile() && !xmppConnectionService.isMobileRoaming())) {
+                    if (!xmppConnectionService.installedFromFDroid()) {
+                        AppUpdate(xmppConnectionService.installedFromPlayStore());
+                    }
+                }
+            }
+        }
+
         for (@IdRes int id : FRAGMENT_ID_NOTIFICATION_ORDER) {
             notifyFragmentOfBackendConnected(id);
         }
@@ -127,6 +190,7 @@ public class ConversationActivity extends XmppActivity implements OnConversation
                 openConversation(conversation, null);
             }
         }
+        showDialogsIfMainIsOverview();
     }
 
     private boolean performRedirectIfNecessary(boolean noAnimation) {
@@ -178,6 +242,61 @@ public class ConversationActivity extends XmppActivity implements OnConversation
         return intent;
     }
 
+    private void showDialogsIfMainIsOverview() {
+        Fragment fragment = getFragmentManager().findFragmentById(R.id.main_fragment);
+        if (fragment != null && fragment instanceof ConversationsOverviewFragment) {
+            if (ExceptionHelper.checkForCrash(this, this.xmppConnectionService)) {
+                return;
+            }
+            openBatteryOptimizationDialogIfNeeded();
+        }
+    }
+
+    private String getBatteryOptimizationPreferenceKey() {
+        @SuppressLint("HardwareIds") String device = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        return "show_battery_optimization" + (device == null ? "" : device);
+    }
+
+    private void setNeverAskForBatteryOptimizationsAgain() {
+        getPreferences().edit().putBoolean(getBatteryOptimizationPreferenceKey(), false).apply();
+    }
+
+    private void openBatteryOptimizationDialogIfNeeded() {
+        if (hasAccountWithoutPush()
+                && isOptimizingBattery()
+                && getPreferences().getBoolean(getBatteryOptimizationPreferenceKey(), true)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.battery_optimizations_enabled);
+            builder.setMessage(R.string.battery_optimizations_enabled_dialog);
+            builder.setPositiveButton(R.string.next, (dialog, which) -> {
+                Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                Uri uri = Uri.parse("package:" + getPackageName());
+                intent.setData(uri);
+                try {
+                    startActivityForResult(intent, REQUEST_BATTERY_OP);
+                } catch (ActivityNotFoundException e) {
+                    Toast.makeText(this, R.string.device_does_not_support_battery_op, Toast.LENGTH_SHORT).show();
+                }
+            });
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                builder.setOnDismissListener(dialog -> setNeverAskForBatteryOptimizationsAgain());
+            }
+            AlertDialog dialog = builder.create();
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();
+        }
+    }
+
+    private boolean hasAccountWithoutPush() {
+        for (Account account : xmppConnectionService.getAccounts()) {
+            if (account.getStatus() == Account.State.ONLINE && !xmppConnectionService.getPushManagementService().available(account)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     private void notifyFragmentOfBackendConnected(@IdRes int id) {
         final Fragment fragment = getFragmentManager().findFragmentById(id);
         if (fragment != null && fragment instanceof XmppFragment) {
@@ -222,6 +341,9 @@ public class ConversationActivity extends XmppActivity implements OnConversation
                 }
                 conversation.getAccount().getPgpDecryptionService().giveUpCurrentDecryption();
                 break;
+            case REQUEST_BATTERY_OP:
+                setNeverAskForBatteryOptimizationsAgain();
+                break;
         }
     }
 
@@ -243,6 +365,7 @@ public class ConversationActivity extends XmppActivity implements OnConversation
         new EmojiService(this).init(useBundledEmoji());
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_conversations);
         this.getFragmentManager().addOnBackStackChangedListener(this::invalidateActionBarTitle);
+        this.getFragmentManager().addOnBackStackChangedListener(this::showDialogsIfMainIsOverview);
         this.initializeFragments();
         this.invalidateActionBarTitle();
         final Intent intent = getIntent();
@@ -321,6 +444,8 @@ public class ConversationActivity extends XmppActivity implements OnConversation
             recreate();
         }
         mRedirectInProcess.set(false);
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        this.showLastSeen = preferences.getBoolean("last_activity", false);
         super.onStart();
     }
 
@@ -332,7 +457,21 @@ public class ConversationActivity extends XmppActivity implements OnConversation
             } else {
                 pendingViewIntent.push(intent);
             }
+        } else if (intent != null && ACTION_DESTROY_MUC.equals(intent.getAction())) {
+            final Bundle extras = intent.getExtras();
+            if (extras != null && extras.containsKey("MUC_UUID")) {
+                Log.d(Config.LOGTAG, "Get " + intent.getAction() + " intent for " + extras.getString("MUC_UUID"));
+                Conversation conversation = xmppConnectionService.findConversationByUuid(extras.getString("MUC_UUID"));
+                ConversationActivity.this.xmppConnectionService.clearConversationHistory(conversation);
+                xmppConnectionService.destroyMuc(conversation);
+                endConversation(conversation);
+            }
         }
+    }
+
+    public void endConversation(Conversation conversation) {
+        xmppConnectionService.archiveConversation(conversation);
+        onConversationArchived(conversation);
     }
 
     @Override
@@ -396,12 +535,139 @@ public class ConversationActivity extends XmppActivity implements OnConversation
             if (mainFragment != null && mainFragment instanceof ConversationFragment) {
                 final Conversation conversation = ((ConversationFragment) mainFragment).getConversation();
                 if (conversation != null) {
-                    actionBar.setTitle(conversation.getName());
                     actionBar.setDisplayHomeAsUpEnabled(true);
+                    View view = getLayoutInflater().inflate(R.layout.ab_title, null);
+                    getSupportActionBar().setCustomView(view);
+                    actionBar.setDisplayShowTitleEnabled(false);
+                    actionBar.setDisplayShowCustomEnabled(true);
+                    TextView abtitle = findViewById(android.R.id.text1);
+                    TextView absubtitle = findViewById(android.R.id.text2);
+                    abtitle.setText(conversation.getName());
+                    abtitle.setOnClickListener(view1 -> {
+                        if (conversation.getMode() == Conversation.MODE_SINGLE) {
+                            switchToContactDetails(conversation.getContact());
+                        } else if (conversation.getMode() == Conversation.MODE_MULTI) {
+                            Intent intent = new Intent(ConversationActivity.this, ConferenceDetailsActivity.class);
+                            intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
+                            intent.putExtra("uuid", conversation.getUuid());
+                            startActivity(intent);
+                        }
+                    });
+                    abtitle.setSelected(true);
+                    if (conversation.getMode() == Conversation.MODE_SINGLE && !conversation.withSelf()) {
+                        ChatState state = conversation.getIncomingChatState();
+                        if (conversation.getContact().getShownStatus() == Presence.Status.OFFLINE) {
+                            absubtitle.setText(getString(R.string.account_status_offline));
+                            absubtitle.setSelected(true);
+                            absubtitle.setOnClickListener(view12 -> {
+                                if (conversation.getMode() == Conversation.MODE_SINGLE) {
+                                    switchToContactDetails(conversation.getContact());
+                                } else if (conversation.getMode() == Conversation.MODE_MULTI) {
+                                    Intent intent = new Intent(ConversationActivity.this, ConferenceDetailsActivity.class);
+                                    intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
+                                    intent.putExtra("uuid", conversation.getUuid());
+                                    startActivity(intent);
+                                }
+                            });
+                        } else {
+                            if (state == ChatState.COMPOSING) {
+                                absubtitle.setText(getString(R.string.is_typing));
+                                absubtitle.setTypeface(null, Typeface.BOLD_ITALIC);
+                                absubtitle.setSelected(true);
+                                absubtitle.setOnClickListener(view13 -> {
+                                    if (conversation.getMode() == Conversation.MODE_SINGLE) {
+                                        switchToContactDetails(conversation.getContact());
+                                    } else if (conversation.getMode() == Conversation.MODE_MULTI) {
+                                        Intent intent = new Intent(ConversationActivity.this, ConferenceDetailsActivity.class);
+                                        intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
+                                        intent.putExtra("uuid", conversation.getUuid());
+                                        startActivity(intent);
+                                    }
+                                });
+                            } else {
+                                if (showLastSeen && conversation.getContact().getLastseen() > 0) {
+                                    absubtitle.setText(UIHelper.lastseen(getApplicationContext(), conversation.getContact().isActive(), conversation.getContact().getLastseen()));
+                                } else {
+                                    absubtitle.setText(getString(R.string.account_status_online));
+                                }
+                                absubtitle.setSelected(true);
+                                absubtitle.setOnClickListener(view14 -> {
+                                    if (conversation.getMode() == Conversation.MODE_SINGLE) {
+                                        switchToContactDetails(conversation.getContact());
+                                    } else if (conversation.getMode() == Conversation.MODE_MULTI) {
+                                        Intent intent = new Intent(ConversationActivity.this, ConferenceDetailsActivity.class);
+                                        intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
+                                        intent.putExtra("uuid", conversation.getUuid());
+                                        startActivity(intent);
+                                    }
+                                });
+                            }
+                        }
+                    } else {
+                        if (conversation.getParticipants() != null) {
+                            ChatState state = ChatState.COMPOSING;
+                            List<MucOptions.User> userWithChatStates = conversation.getMucOptions().getUsersWithChatState(state, 5);
+                            if (userWithChatStates.size() == 0) {
+                                state = ChatState.PAUSED;
+                                userWithChatStates = conversation.getMucOptions().getUsersWithChatState(state, 5);
+                            }
+                            List<MucOptions.User> users = conversation.getMucOptions().getUsers(true);
+                            if (state == ChatState.COMPOSING) {
+                                if (userWithChatStates.size() > 0) {
+                                    if (userWithChatStates.size() == 1) {
+                                        MucOptions.User user = userWithChatStates.get(0);
+                                        absubtitle.setText(getString(R.string.contact_is_typing, UIHelper.getDisplayName(user)));
+                                    } else {
+                                        StringBuilder builder = new StringBuilder();
+                                        for (MucOptions.User user : userWithChatStates) {
+                                            if (builder.length() != 0) {
+                                                builder.append(", ");
+                                            }
+                                            builder.append(UIHelper.getDisplayName(user));
+                                        }
+                                        absubtitle.setText(getString(R.string.contacts_are_typing, builder.toString()));
+                                    }
+                                }
+                            } else {
+                                if (users.size() == 1) {
+                                    absubtitle.setText(getString(R.string.one_participant));
+                                } else {
+                                    absubtitle.setText(getString(R.string.more_participants, users.size()));
+                                }
+                            }
+                            absubtitle.setSelected(true);
+                            absubtitle.setOnClickListener(view15 -> {
+                                if (conversation.getMode() == Conversation.MODE_SINGLE) {
+                                    switchToContactDetails(conversation.getContact());
+                                } else if (conversation.getMode() == Conversation.MODE_MULTI) {
+                                    Intent intent = new Intent(ConversationActivity.this, ConferenceDetailsActivity.class);
+                                    intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
+                                    intent.putExtra("uuid", conversation.getUuid());
+                                    startActivity(intent);
+                                }
+                            });
+                        } else {
+                            absubtitle.setText(R.string.no_participants);
+                            abtitle.setSelected(true);
+                            absubtitle.setOnClickListener(view16 -> {
+                                if (conversation.getMode() == Conversation.MODE_SINGLE) {
+                                    switchToContactDetails(conversation.getContact());
+                                } else if (conversation.getMode() == Conversation.MODE_MULTI) {
+                                    Intent intent = new Intent(ConversationActivity.this, ConferenceDetailsActivity.class);
+                                    intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
+                                    intent.putExtra("uuid", conversation.getUuid());
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+                    }
                     return;
                 }
             }
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayShowCustomEnabled(false);
             actionBar.setTitle(R.string.app_name);
+            actionBar.setSubtitle(null);
             actionBar.setDisplayHomeAsUpEnabled(false);
         }
     }
@@ -508,5 +774,32 @@ public class ConversationActivity extends XmppActivity implements OnConversation
     @Override
     public void onShowErrorToast(int resId) {
         runOnUiThread(() -> Toast.makeText(this, resId, Toast.LENGTH_SHORT).show());
+    }
+
+    protected void AppUpdate(boolean PlayStore) {
+        if (PlayStore) {
+            return;
+        }
+        String PREFS_NAME = "UpdateTimeStamp";
+        SharedPreferences UpdateTimeStamp = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        long lastUpdateTime = UpdateTimeStamp.getLong("lastUpdateTime", 0);
+        Log.d(Config.LOGTAG, "AppUpdater: LastUpdateTime: " + lastUpdateTime);
+        if ((lastUpdateTime + (Config.UPDATE_CHECK_TIMER * 1000)) < System.currentTimeMillis()) {
+            lastUpdateTime = System.currentTimeMillis();
+            SharedPreferences.Editor editor = UpdateTimeStamp.edit();
+            editor.putLong("lastUpdateTime", lastUpdateTime);
+            editor.apply();
+            Log.d(Config.LOGTAG, "AppUpdater: CurrentTime: " + lastUpdateTime);
+            if (!installFromUnknownSourceAllowed() && !PlayStore) {
+                openInstallFromUnknownSourcesDialogIfNeeded();
+            } else {
+                UpdateService task = new UpdateService(this, PlayStore);
+                task.executeOnExecutor(UpdateService.THREAD_POOL_EXECUTOR, "false");
+                Log.d(Config.LOGTAG, "AppUpdater started");
+            }
+        } else {
+            Log.d(Config.LOGTAG, "AppUpdater stopped");
+            return;
+        }
     }
 }
