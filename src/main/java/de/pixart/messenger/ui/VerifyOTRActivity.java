@@ -1,10 +1,10 @@
 package de.pixart.messenger.ui;
 
-import android.support.v7.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -23,8 +23,6 @@ import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.XmppUri;
-import de.pixart.messenger.utils.zxing.IntentIntegrator;
-import de.pixart.messenger.utils.zxing.IntentResult;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
 
@@ -208,7 +206,8 @@ public class VerifyOTRActivity extends XmppActivity implements XmppConnectionSer
             }
             this.mode = intent.getIntExtra("mode", MODE_MANUAL_VERIFICATION);
             if (this.mode == MODE_SCAN_FINGERPRINT) {
-                new IntentIntegrator(this).initiateScan();
+                // todo
+                // new IntentIntegrator(this).initiateScan();
                 return false;
             }
             return true;
@@ -219,7 +218,8 @@ public class VerifyOTRActivity extends XmppActivity implements XmppConnectionSer
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if ((requestCode & 0xFFFF) == IntentIntegrator.REQUEST_CODE) {
+        // todo
+        /*if ((requestCode & 0xFFFF) == IntentIntegrator.REQUEST_CODE) {
             IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
             if (scanResult != null && scanResult.getFormatName() != null) {
                 String data = scanResult.getContents();
@@ -233,7 +233,7 @@ public class VerifyOTRActivity extends XmppActivity implements XmppConnectionSer
             } else {
                 finish();
             }
-        }
+        }*/
         super.onActivityResult(requestCode, requestCode, intent);
     }
 

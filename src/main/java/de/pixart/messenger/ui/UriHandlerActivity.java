@@ -1,26 +1,71 @@
 package de.pixart.messenger.ui;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
-import java.util.Arrays;
 import java.util.List;
 
+import de.pixart.messenger.R;
 import de.pixart.messenger.persistance.DatabaseBackend;
 import de.pixart.messenger.utils.XmppUri;
-import de.pixart.messenger.utils.zxing.IntentIntegrator;
-import de.pixart.messenger.utils.zxing.IntentResult;
 import de.pixart.messenger.xmpp.jid.Jid;
 
 public class UriHandlerActivity extends AppCompatActivity {
+
     public static final String ACTION_SCAN_QR_CODE = "scan_qr_code";
+    private static final int REQUEST_SCAN_QR_CODE = 0x1234;
+    private static final int REQUEST_CAMERA_PERMISSIONS_TO_SCAN = 0x6789;
+
+    private boolean handled = false;
+
+    public static void scan(Activity activity) {
+        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            Intent intent = new Intent(activity, UriHandlerActivity.class);
+            intent.setAction(UriHandlerActivity.ACTION_SCAN_QR_CODE);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            activity.startActivity(intent);
+        } else {
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSIONS_TO_SCAN);
+        }
+    }
+
+    public static void onRequestPermissionResult(Activity activity, int requestCode, int[] grantResults) {
+        if (requestCode != REQUEST_CAMERA_PERMISSIONS_TO_SCAN) {
+            return;
+        }
+        if (grantResults.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                scan(activity);
+            } else {
+                Toast.makeText(activity, R.string.qr_code_scanner_needs_access_to_camera, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.handled = savedInstanceState != null && savedInstanceState.getBoolean("handled", false);
+    }
 
     @Override
     public void onStart() {
         super.onStart();
         handleIntent(getIntent());
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putBoolean("handled", this.handled);
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
@@ -31,7 +76,7 @@ public class UriHandlerActivity extends AppCompatActivity {
     private void handleUri(Uri uri) {
         final Intent intent;
         final XmppUri xmppUri = new XmppUri(uri);
-        final List<Jid> accounts = DatabaseBackend.getInstance(this).getAccountJids();
+        final List<Jid> accounts = DatabaseBackend.getInstance(this).getAccountJids(); //TODO only look at enabled accounts
 
         if (accounts.size() == 0) {
             intent = new Intent(getApplicationContext(), WelcomeActivity.class);
@@ -70,10 +115,15 @@ public class UriHandlerActivity extends AppCompatActivity {
     }
 
     private void handleIntent(Intent data) {
+        if (handled) {
+            return;
+        }
         if (data == null || data.getAction() == null) {
             finish();
             return;
         }
+
+        handled = true;
 
         switch (data.getAction()) {
             case Intent.ACTION_VIEW:
@@ -81,7 +131,8 @@ public class UriHandlerActivity extends AppCompatActivity {
                 handleUri(data.getData());
                 break;
             case ACTION_SCAN_QR_CODE:
-                new IntentIntegrator(this).initiateScan(Arrays.asList("AZTEC", "QR_CODE"));
+                Intent intent = new Intent(this, ScanActivity.class);
+                startActivityForResult(intent, REQUEST_SCAN_QR_CODE);
                 return;
         }
 
@@ -90,23 +141,14 @@ public class UriHandlerActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if ((requestCode & 0xFFFF) == IntentIntegrator.REQUEST_CODE) {
-            IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-
-            if (scanResult != null && scanResult.getFormatName() != null) {
-                String data = scanResult.getContents();
-                handleUri(Uri.parse(data));
+        super.onActivityResult(requestCode, requestCode, intent);
+        if (requestCode == REQUEST_SCAN_QR_CODE && resultCode == RESULT_OK) {
+            String result = intent.getStringExtra(ScanActivity.INTENT_EXTRA_RESULT);
+            if (result != null) {
+                Uri uri = Uri.parse(result);
+                handleUri(uri);
             }
         }
-
         finish();
-        super.onActivityResult(requestCode, requestCode, intent);
-    }
-
-    public static void scan(Activity activity) {
-        Intent intent = new Intent(activity, UriHandlerActivity.class);
-        intent.setAction(UriHandlerActivity.ACTION_SCAN_QR_CODE);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        activity.startActivity(intent);
     }
 }

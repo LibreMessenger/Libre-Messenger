@@ -26,4 +26,11 @@
     <color name="away">#ffff9800</color>
     <color name="notavailable">#fff44336</color>
     <color name="warning_button">#fff5d9d9</color>
+
+    <!-- scanner -->
+    <color name="scan_mask">#60000000</color>
+    <color name="scan_laser">#cc0000</color>
+    <color name="scan_dot">#ff6600</color>
+    <color name="scan_result_view">#b0000000</color>
+    <color name="scan_result_dots">#c099cc00</color>
 </resources>

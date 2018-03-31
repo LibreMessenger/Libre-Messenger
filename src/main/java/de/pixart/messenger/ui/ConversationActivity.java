@@ -312,6 +312,7 @@ public class ConversationActivity extends XmppActivity implements OnConversation
     }
 
     private boolean processViewIntent(Intent intent) {
+        Log.d(Config.LOGTAG,"process view intent");
         String uuid = intent.getStringExtra(EXTRA_CONVERSATION);
         Conversation conversation = uuid != null ? xmppConnectionService.findConversationByUuid(uuid) : null;
         if (conversation == null) {
@@ -323,8 +324,12 @@ public class ConversationActivity extends XmppActivity implements OnConversation
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        UriHandlerActivity.onRequestPermissionResult(this, requestCode, grantResults);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, final Intent data) {
-        Log.d(Config.LOGTAG, "on activity result");
         if (resultCode == RESULT_OK) {
             handlePositiveActivityResult(requestCode, data);
         } else {
@@ -368,7 +373,12 @@ public class ConversationActivity extends XmppActivity implements OnConversation
         this.getFragmentManager().addOnBackStackChangedListener(this::showDialogsIfMainIsOverview);
         this.initializeFragments();
         this.invalidateActionBarTitle();
-        final Intent intent = getIntent();
+        final Intent intent;
+        if (savedInstanceState == null) {
+            intent = getIntent();
+        } else {
+            intent = savedInstanceState.getParcelable("intent");
+        }
         if (isViewIntent(intent)) {
             pendingViewIntent.push(intent);
             setIntent(createLauncherIntent(this));
@@ -448,6 +458,12 @@ public class ConversationActivity extends XmppActivity implements OnConversation
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putParcelable("intent", getIntent());
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override

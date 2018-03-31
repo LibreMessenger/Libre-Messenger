@@ -16,7 +16,6 @@ import android.widget.Toast;
 import org.whispersystems.libsignal.IdentityKey;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +32,6 @@ import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.XmppUri;
-import de.pixart.messenger.utils.zxing.IntentIntegrator;
 import de.pixart.messenger.xmpp.OnKeyStatusUpdated;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
@@ -130,7 +128,7 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
                 if (hasPendingKeyFetches()) {
                     Toast.makeText(this, R.string.please_wait_for_keys_to_be_fetched, Toast.LENGTH_SHORT).show();
                 } else {
-                    new IntentIntegrator(this).initiateScan(Arrays.asList("AZTEC","QR_CODE"));
+                    //new IntentIntegrator(this).initiateScan(Arrays.asList("AZTEC","QR_CODE"));
                     return true;
                 }
         }

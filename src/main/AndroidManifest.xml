@@ -19,6 +19,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission
         android:name="android.permission.READ_PHONE_STATE"
         tools:node="remove" />
@@ -82,11 +83,16 @@
             android:launchMode="singleTask"
             android:minWidth="300dp"
             android:minHeight="300dp"
-            android:windowSoftInputMode="stateHidden"></activity>
+            android:windowSoftInputMode="stateHidden">
+        </activity>
+        <activity
+            android:name=".ui.ScanActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ConversationsTheme.FullScreen"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".ui.UriHandlerActivity"
-            android:label="@string/title_activity_start_conversation"
-            android:launchMode="singleTop">
+            android:label="@string/title_activity_start_conversation">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

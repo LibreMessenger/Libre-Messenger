@@ -144,7 +144,10 @@ public class ConversationsOverviewFragment extends XmppFragment {
     @Override
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
-        bundle.putParcelable(STATE_SCROLL_POSITION, getScrollState());
+        ScrollState scrollState = getScrollState();
+        if (scrollState != null) {
+            bundle.putParcelable(STATE_SCROLL_POSITION, scrollState);
+        }
     }
 
     private ScrollState getScrollState() {

@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.security.cert.X509Certificate;
-import java.util.Arrays;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
@@ -25,8 +24,6 @@ import de.pixart.messenger.databinding.ContactKeyBinding;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.XmppUri;
-import de.pixart.messenger.utils.zxing.IntentIntegrator;
-import de.pixart.messenger.utils.zxing.IntentResult;
 
 public abstract class OmemoActivity extends XmppActivity {
 
@@ -74,7 +71,7 @@ public abstract class OmemoActivity extends XmppActivity {
                 copyOmemoFingerprint(mSelectedFingerprint);
                 break;
             case R.id.verify_scan:
-                new IntentIntegrator(this).initiateScan(Arrays.asList("AZTEC","QR_CODE"));
+                //new IntentIntegrator(this).initiateScan(Arrays.asList("AZTEC","QR_CODE"));
                 break;
         }
         return true;
@@ -82,7 +79,7 @@ public abstract class OmemoActivity extends XmppActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        /*IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         if (scanResult != null && scanResult.getFormatName() != null) {
             String data = scanResult.getContents();
             XmppUri uri = new XmppUri(data);
@@ -91,7 +88,7 @@ public abstract class OmemoActivity extends XmppActivity {
             } else {
                 this.mPendingFingerprintVerificationUri =uri;
             }
-        }
+        }*/
     }
 
     protected abstract void processFingerprintVerification(XmppUri uri);
