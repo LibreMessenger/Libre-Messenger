@@ -24,7 +24,7 @@
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/account_image"
         android:orientation="vertical"
-        android:paddingLeft="8dp">
+        android:paddingLeft="@dimen/avatar_item_distance">
 
         <TextView
             android:id="@+id/account_jid"
@@ -32,17 +32,14 @@
             android:layout_height="wrap_content"
             android:scrollHorizontally="false"
             android:singleLine="true"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeHeadline" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
         <TextView
             android:id="@+id/account_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/account_status_unknown"
-            android:textColor="@color/black54"
-            android:textSize="?attr/TextSizeBody"
-            android:textStyle="bold" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
     </LinearLayout>
 
 </RelativeLayout>

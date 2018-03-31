@@ -21,6 +21,7 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.ui.XmppActivity;
+import de.pixart.messenger.ui.util.Color;
 import de.pixart.messenger.utils.UIHelper;
 
 public class AccountAdapter extends ArrayAdapter<Account> {
@@ -56,7 +57,7 @@ public class AccountAdapter extends ArrayAdapter<Account> {
                 break;
             case DISABLED:
             case CONNECTING:
-                statusView.setTextColor(activity.getSecondaryTextColor());
+                statusView.setTextColor(Color.get(activity, android.R.attr.textColorSecondary));
                 break;
             default:
                 statusView.setTextColor(activity.getWarningTextColor());

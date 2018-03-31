@@ -50,9 +50,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:paddingRight="4dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                    android:textColor="@color/black87"
-                    android:textSize="?attr/TextSizeHeadline" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
                 <RelativeLayout
                     android:id="@+id/conversation_lastwrapper"
