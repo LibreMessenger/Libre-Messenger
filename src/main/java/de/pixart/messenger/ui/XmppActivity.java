@@ -72,7 +72,6 @@ import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.Presences;
 import de.pixart.messenger.services.AvatarService;
 import de.pixart.messenger.services.BarcodeProvider;
-import de.pixart.messenger.services.UpdateService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.services.XmppConnectionService.XmppConnectionBinder;
 import de.pixart.messenger.ui.util.PresenceSelector;
@@ -381,19 +380,6 @@ public abstract class XmppActivity extends AppCompatActivity {
                 break;
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
-                break;
-            case R.id.action_check_updates:
-                if (xmppConnectionService.hasInternetConnection()) {
-                    if (!installFromUnknownSourceAllowed() && !xmppConnectionService.installedFromPlayStore()) {
-                        openInstallFromUnknownSourcesDialogIfNeeded();
-                    } else {
-                        UpdateService task = new UpdateService(this, xmppConnectionService.installedFromPlayStore());
-                        task.executeOnExecutor(UpdateService.THREAD_POOL_EXECUTOR, "true");
-                        Log.d(Config.LOGTAG, "AppUpdater started");
-                    }
-                } else {
-                    Toast.makeText(this, R.string.account_status_no_internet, Toast.LENGTH_LONG).show();
-                }
                 break;
             case R.id.action_accounts:
                 if (xmppConnectionService.getAccounts().size() == 1 && !xmppConnectionService.multipleAccounts()) {

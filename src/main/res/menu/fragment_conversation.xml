@@ -98,11 +98,6 @@
         app:showAsAction="never"
         android:title="@string/create_issue" />
     <item
-        android:id="@+id/action_check_updates"
-        android:orderInCategory="100"
-        app:showAsAction="never"
-        android:title="@string/action_check_update" />
-    <item
         android:id="@+id/action_search_history"
         android:icon="?attr/icon_search"
         app:showAsAction="ifRoom"

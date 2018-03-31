@@ -1056,12 +1056,25 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         menuInflater.inflate(R.menu.fragment_conversation, menu);
         final MenuItem menuInviteContact = menu.findItem(R.id.action_invite);
-        final MenuItem menuUpdater = menu.findItem(R.id.action_check_updates);
+        final MenuItem menuNeedHelp = menu.findItem(R.id.action_create_issue);
         final MenuItem menuSearchHistory = menu.findItem(R.id.action_search_history);
+        final MenuItem menuSearchUpdates = menu.findItem(R.id.action_check_updates);
 
         if (conversation != null) {
+            if (conversation.getMode() == Conversation.MODE_MULTI) {
+                menuInviteContact.setVisible(true);
+            } else {
+                menuInviteContact.setVisible(false);
+            }
+            menuNeedHelp.setVisible(true);
+            menuSearchHistory.setVisible(true);
+            menuSearchUpdates.setVisible(false);
             ConversationMenuConfigurator.configureAttachmentMenu(conversation, menu);
             ConversationMenuConfigurator.configureEncryptionMenu(conversation, menu);
+        } else {
+            menuNeedHelp.setVisible(false);
+            menuSearchHistory.setVisible(false);
+            menuSearchUpdates.setVisible(true);
         }
         super.onCreateOptionsMenu(menu, menuInflater);
     }
