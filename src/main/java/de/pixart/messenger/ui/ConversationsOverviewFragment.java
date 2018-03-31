@@ -148,6 +148,9 @@ public class ConversationsOverviewFragment extends XmppFragment {
     }
 
     private ScrollState getScrollState() {
+        if (this.binding == null) {
+            return null;
+        }
         int position = this.binding.list.getFirstVisiblePosition();
         final View view = this.binding.list.getChildAt(0);
         if (view != null) {
