@@ -48,11 +48,15 @@ import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.ui.adapter.ConversationAdapter;
 import de.pixart.messenger.ui.interfaces.OnConversationSelected;
 import de.pixart.messenger.ui.util.PendingItem;
+import de.pixart.messenger.ui.util.ScrollState;
 
 public class ConversationsOverviewFragment extends XmppFragment {
 
+    private static final String STATE_SCROLL_POSITION = ConversationsOverviewFragment.class.getName() + ".scroll_state";
+
     private final List<Conversation> conversations = new ArrayList<>();
     private final PendingItem<Conversation> swipedConversation = new PendingItem<>();
+    private final PendingItem<ScrollState> pendingScrollState = new PendingItem<>();
     private FragmentConversationsOverviewBinding binding;
     private ConversationAdapter conversationsAdapter;
     private XmppActivity activity;
@@ -85,6 +89,15 @@ public class ConversationsOverviewFragment extends XmppFragment {
         }
         return null;
 
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState == null) {
+            return;
+        }
+        pendingScrollState.push(savedInstanceState.getParcelable(STATE_SCROLL_POSITION));
     }
 
     @Override
@@ -125,8 +138,23 @@ public class ConversationsOverviewFragment extends XmppFragment {
 
     @Override
     void onBackendConnected() {
-        Log.d(Config.LOGTAG, "nice!");
         refresh();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+        bundle.putParcelable(STATE_SCROLL_POSITION, getScrollState());
+    }
+
+    private ScrollState getScrollState() {
+        int position = this.binding.list.getFirstVisiblePosition();
+        final View view = this.binding.list.getChildAt(0);
+        if (view != null) {
+            return new ScrollState(position, view.getTop());
+        } else {
+            return new ScrollState(position, 0);
+        }
     }
 
     @Override
@@ -152,5 +180,15 @@ public class ConversationsOverviewFragment extends XmppFragment {
         }
         this.activity.xmppConnectionService.populateWithOrderedConversations(this.conversations);
         this.conversationsAdapter.notifyDataSetChanged();
+        ScrollState scrollState = pendingScrollState.pop();
+        if (scrollState != null) {
+            setScrollPosition(scrollState);
+        }
+    }
+
+    private void setScrollPosition(ScrollState scrollPosition) {
+        if (scrollPosition != null) {
+            this.binding.list.setSelectionFromTop(scrollPosition.position, scrollPosition.offset);
+        }
     }
 }
