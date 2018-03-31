@@ -745,6 +745,8 @@ public class ConversationActivity extends XmppActivity implements OnConversation
     public void onConversationRead(Conversation conversation) {
         if (!mActivityPaused && pendingViewIntent.peek() == null) {
             xmppConnectionService.sendReadMarker(conversation);
+        } else {
+            Log.d(Config.LOGTAG, "ignoring read callback. mActivityPaused=" + Boolean.toString(mActivityPaused));
         }
     }
 

@@ -30,7 +30,6 @@ import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.util.Pair;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Gravity;
@@ -101,6 +100,7 @@ import de.pixart.messenger.ui.util.AttachmentTool;
 import de.pixart.messenger.ui.util.ConversationMenuConfigurator;
 import de.pixart.messenger.ui.util.PendingItem;
 import de.pixart.messenger.ui.util.PresenceSelector;
+import de.pixart.messenger.ui.util.ScrollState;
 import de.pixart.messenger.ui.util.SendButtonAction;
 import de.pixart.messenger.ui.util.SendButtonTool;
 import de.pixart.messenger.ui.widget.EditMessage;
@@ -148,6 +148,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 	private final PendingItem<String> pendingConversationsUuid = new PendingItem<>();
     private final PendingItem<Bundle> pendingExtras = new PendingItem<>();
     private final PendingItem<Uri> pendingTakePhotoUri = new PendingItem<>();
+    private final PendingItem<ScrollState> pendingScrollState = new PendingItem<>();
     protected MessageAdapter messageListAdapter;
     private Conversation conversation;
 	public FragmentConversationBinding binding;
@@ -463,8 +464,41 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     private String incomplete;
     private int lastCompletionCursor;
     private boolean firstWord = false;
-
     private Message mPendingDownloadableMessage;
+
+    public static void downloadFile(Activity activity, Message message) {
+        Fragment fragment = activity.getFragmentManager().findFragmentById(R.id.main_fragment);
+        if (fragment != null && fragment instanceof ConversationFragment) {
+            ((ConversationFragment) fragment).startDownloadable(message);
+            return;
+        }
+        fragment = activity.getFragmentManager().findFragmentById(R.id.secondary_fragment);
+        if (fragment != null && fragment instanceof ConversationFragment) {
+            ((ConversationFragment) fragment).startDownloadable(message);
+        }
+    }
+
+    public static Conversation getConversation(Activity activity) {
+        return getConversation(activity, R.id.secondary_fragment);
+    }
+
+    private static Conversation getConversation(Activity activity, @IdRes int res) {
+        final Fragment fragment = activity.getFragmentManager().findFragmentById(res);
+        if (fragment != null && fragment instanceof ConversationFragment) {
+            return ((ConversationFragment) fragment).getConversation();
+        } else {
+            return null;
+        }
+    }
+
+    public static Conversation getConversationReliable(Activity activity) {
+        final Conversation conversation = getConversation(activity, R.id.secondary_fragment);
+        if (conversation != null) {
+            return conversation;
+        }
+        return getConversation(activity, R.id.main_fragment);
+    }
+
     private TextWatcher mSearchTextWatcher = new TextWatcher() {
 
         @Override
@@ -533,24 +567,39 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         return -1;
     }
 
-    public Pair<Integer, Integer> getScrollPosition() {
-        if (this.binding.messagesView.getCount() == 0 ||
-                this.binding.messagesView.getLastVisiblePosition() == this.binding.messagesView.getCount() - 1) {
+    private ScrollState getScrollPosition(int pos, View view) {
+        final ListView listView = this.binding.messagesView;
+        if (listView.getCount() == 0 || listView.getLastVisiblePosition() == listView.getCount() - 1) {
             return null;
         } else {
-            final int pos = binding.messagesView.getFirstVisiblePosition();
-            final View view = binding.messagesView.getChildAt(0);
+            //final int pos = listView.getFirstVisiblePosition();
+            //final View view = listView.getChildAt(0);
             if (view == null) {
                 return null;
             } else {
-                return new Pair<>(pos, view.getTop());
+                return new ScrollState(pos, view.getTop());
             }
         }
     }
 
-    public void setScrollPosition(Pair<Integer, Integer> scrollPosition) {
+    private ScrollState getScrollPosition() {
+        final ListView listView = this.binding.messagesView;
+        if (listView.getCount() == 0 || listView.getLastVisiblePosition() == listView.getCount() - 1) {
+            return null;
+        } else {
+            final int pos = listView.getFirstVisiblePosition();
+            final View view = listView.getChildAt(0);
+            if (view == null) {
+                return null;
+            } else {
+                return new ScrollState(pos, view.getTop());
+            }
+        }
+    }
+
+    private void setScrollPosition(ScrollState scrollPosition) {
         if (scrollPosition != null) {
-            this.binding.messagesView.setSelectionFromTop(scrollPosition.first, scrollPosition.second);
+            this.binding.messagesView.setSelectionFromTop(scrollPosition.position, scrollPosition.offset);
         }
     }
 
@@ -1634,6 +1683,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             getActivity().invalidateOptionsMenu();
         });
         super.onResume();
+        if (activity != null && this.conversation != null) {
+            activity.onConversationRead(this.conversation);
+        }
     }
 
     private void showErrorMessage(final Message message) {
@@ -1738,18 +1790,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         }
     }
 
-    public static void downloadFile(Activity activity, Message message) {
-        Fragment fragment = activity.getFragmentManager().findFragmentById(R.id.main_fragment);
-        if (fragment != null && fragment instanceof ConversationFragment) {
-            ((ConversationFragment) fragment).startDownloadable(message);
-            return;
-        }
-        fragment = activity.getFragmentManager().findFragmentById(R.id.secondary_fragment);
-        if (fragment != null && fragment instanceof ConversationFragment) {
-            ((ConversationFragment) fragment).startDownloadable(message);
-        }
-    }
-
     private void cancelTransmission(Message message) {
         Transferable transferable = message.getTransferable();
         if (transferable != null) {
@@ -1820,9 +1860,13 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         super.onSaveInstanceState(outState);
         if (conversation != null) {
             outState.putString(STATE_CONVERSATION_UUID, conversation.getUuid());
-            Uri uri = pendingTakePhotoUri.pop();
+            final Uri uri = pendingTakePhotoUri.pop();
             if (uri != null) {
                 outState.putString(STATE_PHOTO_URI, uri.toString());
+            }
+            final ScrollState scrollState = getScrollPosition();
+            if (scrollState != null) {
+                outState.putParcelable(STATE_SCROLL_POSITION, scrollState);
             }
         }
     }
@@ -1840,6 +1884,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             if (takePhotoUri != null) {
                 pendingTakePhotoUri.push(Uri.parse(takePhotoUri));
             }
+            pendingScrollState.push(savedInstanceState.getParcelable(STATE_SCROLL_POSITION));
         }
     }
 
@@ -1917,14 +1962,15 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         if (conversation == null) {
             return false;
         }
+        final boolean hasChanged = this.conversation != null && this.conversation != conversation;
         this.conversation = conversation;
         //once we set the conversation all is good and it will automatically do the right thing in onStart()
         if (this.activity == null || this.binding == null) {
             return false;
         }
-        Log.d(Config.LOGTAG, "reInit(restore=" + Boolean.toString(restore) + ")");
+        Log.d(Config.LOGTAG, "reInit(restore=" + Boolean.toString(restore) + ", hasChanged=" + Boolean.toString(hasChanged) + ")");
         setupIme();
-        if (!restore) {
+        if (!restore && hasChanged) {
             this.conversation.trim();
         }
 
@@ -1934,11 +1980,25 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         this.binding.textinput.append(this.conversation.getNextMessage());
         this.binding.textinput.setKeyboardListener(this);
         messageListAdapter.updatePreferences();
-        this.binding.messagesView.setAdapter(messageListAdapter);
+        if (!restore && hasChanged) {
+            this.binding.messagesView.setAdapter(messageListAdapter);
+        }
         refresh(false);
-        refresh();
         this.conversation.messagesLoaded.set(true);
-        final boolean isAtBottom;
+        if (!restore && hasChanged) {
+            synchronized (this.messageList) {
+                final Message first = conversation.getFirstUnreadMessage();
+                final int bottom = Math.max(0, this.messageList.size() - 1);
+                final int pos;
+                if (first == null) {
+                    pos = bottom;
+                } else {
+                    int i = getIndexOf(first.getUuid(), this.messageList);
+                    pos = i < 0 ? bottom : i;
+                }
+                this.binding.messagesView.setSelection(pos);
+            }
+        }
         this.binding.messagesView.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
             @Override
             public void onSwipeRight() {
@@ -1946,20 +2006,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 activity.onBackPressed();
             }
         });
-        synchronized (this.messageList) {
-            final Message first = conversation.getFirstUnreadMessage();
-            final int bottom = Math.max(0, this.messageList.size() - 1);
-            final int pos;
-            if (first == null) {
-                pos = bottom;
-            } else {
-                int i = getIndexOf(first.getUuid(), this.messageList);
-                pos = i < 0 ? bottom : i;
-            }
-            this.binding.messagesView.setSelection(pos);
-            isAtBottom = pos == bottom;
-        }
-
         activity.onConversationRead(this.conversation);
         //TODO if we only do this when this fragment is running on main it won't *bing* in tablet layout which might be unnecessary since we can *see* it
         activity.xmppConnectionService.getNotificationService().setOpenConversation(this.conversation);
@@ -2649,7 +2695,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 
         if (lastHistoryMessage != null) {
             int pos = getIndexOf(lastHistoryMessage.getUuid(), messageList);
-            setScrollPosition(new Pair<>(pos, pos));
+            setScrollPosition(getScrollPosition(pos, getView()));
             this.binding.messagesView.setSelection(pos);
         }
         return lastHistoryMessage;
@@ -2678,6 +2724,10 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 return;
             }
             reInit(conversation, true);
+            ScrollState scrollState = pendingScrollState.pop();
+            if (scrollState != null) {
+                setScrollPosition(scrollState);
+            }
         }
         ActivityResult activityResult = postponedActivityResult.pop();
         if (activityResult != null) {
@@ -2689,28 +2739,10 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         if (postponedActivityResult.pop() != null) {
             Log.d(Config.LOGTAG, "cleared pending intent with unhandled result left");
         }
+        pendingScrollState.pop();
+        pendingTakePhotoUri.pop();
     }
 
-    public static Conversation getConversation(Activity activity) {
-        return getConversation(activity, R.id.secondary_fragment);
-    }
-
-    private static Conversation getConversation(Activity activity, @IdRes int res) {
-        final Fragment fragment = activity.getFragmentManager().findFragmentById(res);
-        if (fragment != null && fragment instanceof ConversationFragment) {
-            return ((ConversationFragment) fragment).getConversation();
-        } else {
-            return null;
-        }
-    }
-
-    public static Conversation getConversationReliable(Activity activity) {
-        final Conversation conversation = getConversation(activity, R.id.secondary_fragment);
-        if (conversation != null) {
-            return conversation;
-        }
-        return getConversation(activity, R.id.main_fragment);
-    }
 
     public Conversation getConversation() {
         return conversation;
