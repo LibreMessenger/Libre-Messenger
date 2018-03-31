@@ -29,6 +29,7 @@ public abstract class OmemoActivity extends XmppActivity {
 
     private Account mSelectedAccount;
     private String mSelectedFingerprint;
+
     protected XmppUri mPendingFingerprintVerificationUri = null;
 
     @Override
@@ -71,7 +72,7 @@ public abstract class OmemoActivity extends XmppActivity {
                 copyOmemoFingerprint(mSelectedFingerprint);
                 break;
             case R.id.verify_scan:
-                //new IntentIntegrator(this).initiateScan(Arrays.asList("AZTEC","QR_CODE"));
+                ScanActivity.scan(this);
                 break;
         }
         return true;
@@ -79,16 +80,16 @@ public abstract class OmemoActivity extends XmppActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        /*IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        if (scanResult != null && scanResult.getFormatName() != null) {
-            String data = scanResult.getContents();
-            XmppUri uri = new XmppUri(data);
+        super.onActivityResult(requestCode, requestCode, intent);
+        if (requestCode == ScanActivity.REQUEST_SCAN_QR_CODE && resultCode == RESULT_OK) {
+            String result = intent.getStringExtra(ScanActivity.INTENT_EXTRA_RESULT);
+            XmppUri uri = new XmppUri(result == null ? "" : result);
             if (xmppConnectionServiceBound) {
                 processFingerprintVerification(uri);
             } else {
-                this.mPendingFingerprintVerificationUri =uri;
+                this.mPendingFingerprintVerificationUri = uri;
             }
-        }*/
+        }
     }
 
     protected abstract void processFingerprintVerification(XmppUri uri);
@@ -123,7 +124,6 @@ public abstract class OmemoActivity extends XmppActivity {
                                                   boolean undecidedNeedEnablement,
                                                   CompoundButton.OnCheckedChangeListener
                                                           onCheckedChangeListener) {
-
         ContactKeyBinding binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.contact_key, keys, true);
         if (Config.X509_VERIFICATION && status.getTrust() == FingerprintStatus.Trust.VERIFIED_X509) {
             binding.key.setOnClickListener(v -> showX509Certificate(account, fingerprint));
@@ -177,9 +177,7 @@ public abstract class OmemoActivity extends XmppActivity {
             } else {
                 binding.tglTrust.setVisibility(View.VISIBLE);
                 binding.verifiedFingerprint.setVisibility(View.GONE);
-                binding.tglTrust.setOnClickListener(null);
                 binding.tglTrust.setEnabled(false);
-                binding.tglTrust.setOnClickListener(toast);
             }
         }
 
@@ -226,11 +224,11 @@ public abstract class OmemoActivity extends XmppActivity {
     private void showCertificateInformationDialog(Bundle bundle) {
         View view = getLayoutInflater().inflate(R.layout.certificate_information, null);
         final String not_available = getString(R.string.certicate_info_not_available);
-        TextView subject_cn = view.findViewById(R.id.subject_cn);
-        TextView subject_o = view.findViewById(R.id.subject_o);
-        TextView issuer_cn = view.findViewById(R.id.issuer_cn);
-        TextView issuer_o = view.findViewById(R.id.issuer_o);
-        TextView sha1 = view.findViewById(R.id.sha1);
+        TextView subject_cn = (TextView) view.findViewById(R.id.subject_cn);
+        TextView subject_o = (TextView) view.findViewById(R.id.subject_o);
+        TextView issuer_cn = (TextView) view.findViewById(R.id.issuer_cn);
+        TextView issuer_o = (TextView) view.findViewById(R.id.issuer_o);
+        TextView sha1 = (TextView) view.findViewById(R.id.sha1);
 
         subject_cn.setText(bundle.getString("subject_cn", not_available));
         subject_o.setText(bundle.getString("subject_o", not_available));
@@ -243,5 +241,10 @@ public abstract class OmemoActivity extends XmppActivity {
         builder.setView(view);
         builder.setPositiveButton(R.string.ok, null);
         builder.create().show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        ScanActivity.onRequestPermissionResult(this, requestCode, grantResults);
     }
 }

@@ -206,7 +206,7 @@ public class VerifyOTRActivity extends XmppActivity implements XmppConnectionSer
             }
             this.mode = intent.getIntExtra("mode", MODE_MANUAL_VERIFICATION);
             if (this.mode == MODE_SCAN_FINGERPRINT) {
-                // todo
+                // todo scan OTR fingerprint
                 // new IntentIntegrator(this).initiateScan();
                 return false;
             }
@@ -218,7 +218,7 @@ public class VerifyOTRActivity extends XmppActivity implements XmppConnectionSer
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        // todo
+        // todo onActivityResult OTR
         /*if ((requestCode & 0xFFFF) == IntentIntegrator.REQUEST_CODE) {
             IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
             if (scanResult != null && scanResult.getFormatName() != null) {
