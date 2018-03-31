@@ -146,6 +146,10 @@ public class ConversationsOverviewFragment extends XmppFragment {
 
     @Override
     void refresh() {
+        if (this.binding == null || this.activity == null) {
+            Log.d(Config.LOGTAG, "ConversationsOverviewFragment.refresh() skipped updated because view binding or activity was null");
+            return;
+        }
         this.activity.xmppConnectionService.populateWithOrderedConversations(this.conversations);
         this.conversationsAdapter.notifyDataSetChanged();
     }
