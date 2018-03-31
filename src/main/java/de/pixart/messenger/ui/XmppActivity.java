@@ -162,6 +162,8 @@ public abstract class XmppActivity extends AppCompatActivity {
         }
     };
 
+    public boolean mSkipBackgroundBinding = false;
+
     public static boolean cancelPotentialWork(Message message, ImageView imageView) {
         final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
 
@@ -221,7 +223,11 @@ public abstract class XmppActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if (!xmppConnectionServiceBound) {
-            connectToBackend();
+            if (this.mSkipBackgroundBinding) {
+                Log.d(Config.LOGTAG, "skipping background binding");
+            } else {
+                connectToBackend();
+            }
         } else {
             if (!registeredListeners) {
                 this.registerListeners();

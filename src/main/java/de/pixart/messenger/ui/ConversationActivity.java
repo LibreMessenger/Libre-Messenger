@@ -469,7 +469,8 @@ public class ConversationActivity extends XmppActivity implements OnConversation
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putParcelable("intent", getIntent());
+        Intent pendingIntent = pendingViewIntent.pop();
+        savedInstanceState.putParcelable("intent", pendingIntent == null ? pendingIntent : getIntent());
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -477,7 +478,10 @@ public class ConversationActivity extends XmppActivity implements OnConversation
     protected void onStart() {
         final int theme = findTheme();
         if (this.mTheme != theme) {
+            this.mSkipBackgroundBinding = true;
             recreate();
+        } else {
+            this.mSkipBackgroundBinding = false;
         }
         mRedirectInProcess.set(false);
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
