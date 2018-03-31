@@ -401,6 +401,9 @@ public class ConversationActivity extends XmppActivity implements OnConversation
 
     @Override
     public void onConversationSelected(Conversation conversation) {
+        if (ConversationFragment.getConversation(this) == conversation) {
+            Log.d(Config.LOGTAG, "ignore onConversationSelected() because conversation is already open");
+        }
         openConversation(conversation, null);
     }
 
@@ -496,6 +499,7 @@ public class ConversationActivity extends XmppActivity implements OnConversation
                 endConversation(conversation);
             }
         }
+        setIntent(createLauncherIntent(this));
     }
 
     public void endConversation(Conversation conversation) {
