@@ -1,6 +1,5 @@
 package de.pixart.messenger.utils;
 
-import android.support.v7.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -9,6 +8,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -27,7 +27,7 @@ import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.services.XmppConnectionService;
-import de.pixart.messenger.ui.ConversationActivity;
+import de.pixart.messenger.ui.XmppActivity;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
 
@@ -42,10 +42,13 @@ public class ExceptionHelper {
         }
     }
 
-    public static boolean checkForCrash(ConversationActivity activity, final XmppConnectionService service) {
+    public static boolean checkForCrash(XmppActivity activity) {
         try {
-            final SharedPreferences preferences = PreferenceManager
-                    .getDefaultSharedPreferences(activity);
+            final XmppConnectionService service = activity == null ? null : activity.xmppConnectionService;
+            if (service == null) {
+                return false;
+            }
+            final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity);
             boolean crashreport = preferences.getBoolean("crashreport", activity.getResources().getBoolean(R.bool.send_crashreport));
             if (!crashreport || Config.BUG_REPORTS == null) {
                 return false;
