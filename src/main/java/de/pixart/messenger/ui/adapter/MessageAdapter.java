@@ -304,7 +304,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 break;
         }
         if (error && type == SENT) {
-            viewHolder.time.setTextColor(activity.getWarningTextColor());
+            viewHolder.time.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Caption_Waring);
             DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
             if (file.exists()) {
                 if (activity.xmppConnectionService.mHttpConnectionManager.getAutoAcceptFileSize() >= message.getFileParams().size) {
@@ -329,6 +329,11 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             viewHolder.resend_button.setVisibility(View.GONE);
             viewHolder.time.setTextColor(this.getMessageTextColor(darkBackground, false));
         } else {
+            if (darkBackground) {
+                viewHolder.time.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Caption_OnDark);
+            } else {
+                viewHolder.time.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Caption);
+            }
             viewHolder.time.setTextColor(this.getMessageTextColor(darkBackground, false));
         }
         if (message.getEncryption() == Message.ENCRYPTION_NONE) {
@@ -386,8 +391,11 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.VISIBLE);
         viewHolder.messageBody.setText(text);
-        viewHolder.messageBody.setTextColor(getMessageTextColor(darkBackground, false));
-        viewHolder.messageBody.setTypeface(null, Typeface.ITALIC);
+        if (darkBackground) {
+            viewHolder.messageBody.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Body1_Secondary_OnDark);
+        } else {
+            viewHolder.messageBody.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Body1_Secondary);
+        }
         viewHolder.messageBody.setTextIsSelectable(false);
     }
 
@@ -396,10 +404,11 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.audioPlayer.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.VISIBLE);
-        viewHolder.messageBody.setText(getContext().getString(
-                R.string.decryption_failed));
-        viewHolder.messageBody.setTextColor(getMessageTextColor(darkBackground, false));
-        viewHolder.messageBody.setTypeface(null, Typeface.NORMAL);
+        if (darkBackground) {
+            viewHolder.messageBody.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Body1_Secondary_OnDark);
+        } else {
+            viewHolder.messageBody.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Body1_Secondary);
+        }
         viewHolder.messageBody.setTextIsSelectable(false);
     }
 
@@ -507,8 +516,11 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.audioPlayer.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.VISIBLE);
-        viewHolder.messageBody.setTextColor(this.getMessageTextColor(darkBackground, true));
-        viewHolder.messageBody.setLinkTextColor(this.getMessageTextColor(darkBackground, true));
+        if (darkBackground) {
+            viewHolder.messageBody.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Body1_OnDark);
+        } else {
+            viewHolder.messageBody.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Body1);
+        }
         viewHolder.messageBody.setHighlightColor(ContextCompat.getColor(activity, darkBackground ? R.color.grey800 : R.color.grey500));
         viewHolder.messageBody.setTypeface(null, Typeface.NORMAL);
         if (message.getBody() != null) {
@@ -853,7 +865,6 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             } else {
                 viewHolder.status_message.setText(DateUtils.formatDateTime(activity, message.getTimeSent(), DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR));
             }
-            viewHolder.status_message.setTextColor(activity.getSecondaryTextColor());
             return view;
         } else if (type == STATUS) {
             if ("LOAD_MORE".equals(message.getBody())) {

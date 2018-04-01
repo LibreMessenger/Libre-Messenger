@@ -22,8 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="01.01.2017"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeInfo"
+            android:textAppearance="@style/TextAppearance.Conversations.Body1.Secondary"
             android:textStyle="italic" />
     </LinearLayout>
 

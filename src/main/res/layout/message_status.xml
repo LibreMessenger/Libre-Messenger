@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:paddingBottom="5dp"
     android:paddingLeft="8dp"
@@ -14,14 +14,13 @@
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/load_more_messages"
-        android:textColor="@color/accent"
+        android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:text="@string/load_more_messages"
+        android:textColor="@color/accent" />
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/message_photo"
-        android:visibility="gone"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_alignParentLeft="true"
@@ -29,23 +28,22 @@
         android:layout_marginRight="-1.5dp"
         android:padding="0dp"
         android:scaleType="fitXY"
-        app:riv_border_width="1dp"
+        android:visibility="gone"
         app:riv_border_color="@color/grey500"
-        app:riv_corner_radius="16dp"/>
+        app:riv_border_width="1dp"
+        app:riv_corner_radius="16dp" />
 
     <TextView
         android:id="@+id/status_message"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minHeight="32dp"
         android:layout_centerVertical="true"
-        android:gravity="center_vertical"
         android:layout_marginLeft="8dp"
         android:layout_toEndOf="@+id/message_photo"
         android:layout_toRightOf="@+id/message_photo"
+        android:gravity="center_vertical"
+        android:minHeight="32dp"
         android:text="@string/contact_has_read_up_to_this_point"
-        android:textColor="?attr/color_text_secondary"
-        android:textSize="?attr/TextSizeInfo"
-        android:textStyle="italic"/>
+        android:textAppearance="@style/TextAppearance.Conversations.Status"
+        android:visibility="gone" />
 </RelativeLayout>

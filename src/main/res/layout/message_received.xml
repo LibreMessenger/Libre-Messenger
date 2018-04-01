@@ -16,8 +16,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:scaleType="fitXY"
-        app:riv_border_width="1dip"
         app:riv_border_color="@color/grey500"
+        app:riv_border_width="1dip"
         app:riv_corner_radius="24dp" />
 
     <LinearLayout
@@ -25,12 +25,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/message_photo"
-        android:minHeight="48dp"
-        android:longClickable="true"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
-        android:background="@drawable/message_bubble_received_white">
+        android:layout_toRightOf="@+id/message_photo"
+        android:background="@drawable/message_bubble_received_white"
+        android:longClickable="true"
+        android:minHeight="48dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -39,7 +39,7 @@
             android:orientation="vertical"
             android:padding="2dp">
 
-            <include layout="@layout/message_content"/>
+            <include layout="@layout/message_content" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -53,11 +53,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:gravity="center_vertical"
                     android:layout_marginRight="4sp"
-                    android:textColor="@color/white70"
-                    android:textStyle="bold"
-                    android:textSize="?attr/TextSizeInfo" />
+                    android:gravity="center_vertical"
+                    android:textAppearance="@style/TextAppearance.Conversations.Caption"
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/security_indicator"
@@ -84,8 +83,7 @@
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
                     android:text="@string/sending"
-                    android:textColor="@color/primary"
-                    android:textSize="?attr/TextSizeInfo" />
+                    android:textAppearance="@style/TextAppearance.Conversations.Caption" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

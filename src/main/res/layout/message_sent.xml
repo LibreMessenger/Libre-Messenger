@@ -13,26 +13,26 @@
         android:id="@+id/message_photo"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:scaleType="fitXY"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        app:riv_border_width="1dp"
+        android:layout_alignParentRight="true"
+        android:scaleType="fitXY"
         app:riv_border_color="@color/grey500"
+        app:riv_border_width="1dp"
         app:riv_corner_radius="24dp" />
 
     <LinearLayout
         android:id="@+id/message_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minHeight="48dp"
-        android:longClickable="true"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/message_photo"
-        android:layout_toStartOf="@+id/message_photo"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
-        android:background="@drawable/message_bubble_sent_lightblue">
+        android:layout_toLeftOf="@+id/message_photo"
+        android:layout_toStartOf="@+id/message_photo"
+        android:background="@drawable/message_bubble_sent_lightblue"
+        android:longClickable="true"
+        android:minHeight="48dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -41,7 +41,7 @@
             android:orientation="vertical"
             android:padding="2dp">
 
-            <include layout="@layout/message_content"/>
+            <include layout="@layout/message_content" />
 
             <Button
                 android:id="@+id/resend_button"
@@ -64,8 +64,7 @@
                     android:layout_gravity="center_vertical"
                     android:gravity="center_vertical"
                     android:text="@string/sending"
-                    android:textColor="@color/primary"
-                    android:textSize="?attr/TextSizeInfo" />
+                    android:textAppearance="@style/TextAppearance.Conversations.Caption" />
 
                 <ImageView
                     android:id="@+id/security_indicator"
@@ -99,10 +98,10 @@
                     android:layout_width="?attr/TextSizeInfo"
                     android:layout_height="?attr/TextSizeInfo"
                     android:layout_gravity="center_vertical"
-                    android:gravity="center_vertical"
-                    android:src="@drawable/ic_read_indicator"
                     android:layout_marginLeft="-8sp"
-                    android:adjustViewBounds="false" />
+                    android:adjustViewBounds="false"
+                    android:gravity="center_vertical"
+                    android:src="@drawable/ic_read_indicator" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
