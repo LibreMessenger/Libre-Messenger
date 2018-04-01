@@ -45,6 +45,11 @@
             android:key="use_auto_rotate"
             android:summary="@string/pref_use_auto_rotate_summary"
             android:title="@string/pref_use_auto_rotate" />
+        <CheckBoxPreference
+            android:defaultValue="@bool/scroll_to_bottom"
+            android:key="scroll_to_bottom"
+            android:summary="@string/pref_scroll_to_bottom_summary"
+            android:title="@string/pref_scroll_to_bottom" />
     </PreferenceScreen>
     <!--Notifications-->
     <PreferenceScreen

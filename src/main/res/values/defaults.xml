@@ -101,5 +101,6 @@
     <bool name="use_bundled_emoji">true</bool>
     <bool name="enable_multi_accounts">false</bool>
     <bool name="show_qr_code_scan">true</bool>
+    <bool name="scroll_to_bottom">true</bool>
 </resources>
 
