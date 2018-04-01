@@ -305,9 +305,7 @@
                 android:title="@string/pref_blind_trust_before_verification"
                 android:summary="@string/pref_blind_trust_before_verification_summary" />
             <ListPreference
-                android:defaultValue="@integer/automatic_message_deletion"
-                android:entries="@array/automatic_message_deletion"
-                android:entryValues="@array/automatic_message_deletion_values"
+                android:defaultValue="@integer/automatic_message_deletion"/>
                 android:key="automatic_message_deletion"
                 android:summary="@string/pref_automatically_delete_messages_description"
                 android:title="@string/pref_automatically_delete_messages" />

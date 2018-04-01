@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
@@ -36,6 +37,7 @@ import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.services.ExportLogsService;
 import de.pixart.messenger.services.MemorizingTrustManager;
 import de.pixart.messenger.ui.util.Color;
+import de.pixart.messenger.utils.TimeframeUtils;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
 
@@ -118,6 +120,24 @@ public class SettingsActivity extends XmppActivity implements
                     }
                 }
             }
+        }
+
+        ListPreference automaticMessageDeletionList = (ListPreference) mSettingsFragment.findPreference(AUTOMATIC_MESSAGE_DELETION);
+        if (automaticMessageDeletionList != null) {
+            final int[] choices = getResources().getIntArray(R.array.automatic_message_deletion_values);
+            CharSequence[] entries = new CharSequence[choices.length];
+            CharSequence[] entryValues = new CharSequence[choices.length];
+            for (int i = 0; i < choices.length; ++i) {
+                Log.d(Config.LOGTAG, "resolving choice " + choices[i]);
+                entryValues[i] = String.valueOf(choices[i]);
+                if (choices[i] == 0) {
+                    entries[i] = getString(R.string.never);
+                } else {
+                    entries[i] = TimeframeUtils.resolve(this, 1000L * choices[i]);
+                }
+            }
+            automaticMessageDeletionList.setEntries(entries);
+            automaticMessageDeletionList.setEntryValues(entryValues);
         }
 
         final Preference removeCertsPreference = mSettingsFragment.findPreference("remove_trusted_certificates");
