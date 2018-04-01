@@ -657,6 +657,34 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         });
     }
 
+    private void attachPhotoToConversation(Conversation conversation, Uri uri) {
+        if (conversation == null) {
+            return;
+        }
+        final Toast prepareFileToast = Toast.makeText(getActivity(), getText(R.string.preparing_image), Toast.LENGTH_LONG);
+        prepareFileToast.show();
+        activity.delegateUriPermissionsToService(uri);
+        activity.xmppConnectionService.attachImageToConversation(conversation, uri,
+                new UiCallback<Message>() {
+
+                    @Override
+                    public void userInputRequried(PendingIntent pi, Message object) {
+                        hidePrepareFileToast(prepareFileToast);
+                    }
+
+                    @Override
+                    public void success(Message message) {
+                        hidePrepareFileToast(prepareFileToast);
+                    }
+
+                    @Override
+                    public void error(final int error, Message message) {
+                        hidePrepareFileToast(prepareFileToast);
+                        activity.runOnUiThread(() -> activity.replaceToast(getString(error)));
+                    }
+                });
+    }
+
     private void attachImagesToConversation(Conversation conversation, Uri uri) {
         if (conversation == null) {
             return;
@@ -675,13 +703,12 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     @Override
                     public void success(Message message) {
                         hidePrepareFileToast(prepareFileToast);
-                        activity.xmppConnectionService.sendMessage(message);
                     }
 
                     @Override
                     public void error(final int error, Message message) {
                         hidePrepareFileToast(prepareFileToast);
-                        runOnUiThread(() -> activity.replaceToast(getString(error)));
+                        activity.runOnUiThread(() -> activity.replaceToast(getString(error)));
                     }
                 });
     }
@@ -933,7 +960,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             case ATTACHMENT_CHOICE_TAKE_FROM_CAMERA:
                 Uri takePhotoUri = pendingTakePhotoUri.pop();
                 if (takePhotoUri != null) {
-                    attachImageToConversation(conversation, takePhotoUri, false);
+                    attachPhotoToConversation(conversation, takePhotoUri);
                 } else {
                     Log.d(Config.LOGTAG, "lost take photo uri. unable to to attach");
                 }
@@ -1836,7 +1863,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         super.onSaveInstanceState(outState);
         if (conversation != null) {
             outState.putString(STATE_CONVERSATION_UUID, conversation.getUuid());
-            final Uri uri = pendingTakePhotoUri.pop();
+            final Uri uri = pendingTakePhotoUri.peek();
             if (uri != null) {
                 outState.putString(STATE_PHOTO_URI, uri.toString());
             }
@@ -2744,15 +2771,19 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         if (activityResult != null) {
             handleActivityResult(activityResult);
         }
+        clearPending();
     }
 
-    public void clearPending() {
+    private void clearPending() {
         if (postponedActivityResult.pop() != null) {
-            Log.d(Config.LOGTAG, "cleared pending intent with unhandled result left");
+            Log.e(Config.LOGTAG, "cleared pending intent with unhandled result left");
         }
         pendingScrollState.pop();
-        pendingTakePhotoUri.pop();
+        if (pendingTakePhotoUri.pop() != null) {
+            Log.e(Config.LOGTAG, "cleared pending photo uri");
+        }
     }
+
 
 
     public Conversation getConversation() {
