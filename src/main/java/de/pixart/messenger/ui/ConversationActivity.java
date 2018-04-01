@@ -99,6 +99,7 @@ public class ConversationActivity extends XmppActivity implements OnConversation
     public static final String EXTRA_IS_PRIVATE_MESSAGE = "pm";
     public static final String ACTION_DESTROY_MUC = "de.pixart.messenger.DESTROY_MUC";
     public static final int REQUEST_OPEN_MESSAGE = 0x9876;
+    public static final int REQUEST_PLAY_PAUSE = 0x5432;
 
     private boolean showLastSeen = false;
 
@@ -349,6 +350,9 @@ public class ConversationActivity extends XmppActivity implements OnConversation
                     case REQUEST_OPEN_MESSAGE:
                         refreshUiReal();
                         ConversationFragment.openPendingMessage(this);
+                        break;
+                    case REQUEST_PLAY_PAUSE:
+                        ConversationFragment.startStopPending(this);
                         break;
                 }
             }

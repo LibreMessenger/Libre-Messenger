@@ -1,6 +1,7 @@
 package de.pixart.messenger.ui.adapter;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -71,6 +72,7 @@ import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.services.AudioPlayer;
 import de.pixart.messenger.services.MessageArchiveService;
 import de.pixart.messenger.services.NotificationService;
+import de.pixart.messenger.ui.ConversationActivity;
 import de.pixart.messenger.ui.ConversationFragment;
 import de.pixart.messenger.ui.ShowFullscreenMessageActivity;
 import de.pixart.messenger.ui.XmppActivity;
@@ -195,6 +197,10 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     public void setOnContactPictureLongClicked(
             OnContactPictureLongClicked listener) {
         this.mOnContactPictureLongClickedListener = listener;
+    }
+
+    public Activity getActivity() {
+        return activity;
     }
 
     public void setOnQuoteListener(OnQuoteListener listener) {
@@ -1056,6 +1062,10 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
     public void stopAudioPlayer() {
         audioPlayer.stop();
+    }
+
+    public void startStopPending() {
+        audioPlayer.startStopPending();
     }
 
     public void openDownloadable(Message message) {

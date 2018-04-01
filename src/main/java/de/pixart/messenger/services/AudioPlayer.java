@@ -1,9 +1,12 @@
 package de.pixart.messenger.services;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageButton;
@@ -17,7 +20,9 @@ import java.util.Locale;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Message;
+import de.pixart.messenger.ui.ConversationActivity;
 import de.pixart.messenger.ui.adapter.MessageAdapter;
+import de.pixart.messenger.ui.util.PendingItem;
 import de.pixart.messenger.utils.WeakReferenceSet;
 
 public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener, Runnable {
@@ -28,6 +33,8 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
     private static Message currentlyPlayingMessage = null;
     private final MessageAdapter messageAdapter;
     private final WeakReferenceSet<RelativeLayout> audioPlayerLayouts = new WeakReferenceSet<>();
+
+    private final PendingItem<WeakReference<ImageButton>> pendingOnClickView = new PendingItem<>();
 
     private final Handler handler = new Handler();
 
@@ -99,6 +106,11 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
     }
 
     private void startStop(ImageButton playPause) {
+        if (ContextCompat.checkSelfPermission(messageAdapter.getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            pendingOnClickView.push(new WeakReference<>(playPause));
+            ActivityCompat.requestPermissions(messageAdapter.getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, ConversationActivity.REQUEST_PLAY_PAUSE);
+            return;
+        }
         final RelativeLayout audioPlayer = (RelativeLayout) playPause.getParent();
         final ViewHolder viewHolder = ViewHolder.get(audioPlayer);
         final Message message = (Message) audioPlayer.getTag();
@@ -142,6 +154,16 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
             messageAdapter.flagScreenOff();
             AudioPlayer.currentlyPlayingMessage = null;
             return false;
+        }
+    }
+
+    public void startStopPending() {
+        WeakReference<ImageButton> reference = pendingOnClickView.pop();
+        if (reference != null) {
+            ImageButton imageButton = reference.get();
+            if (imageButton != null) {
+                startStop(imageButton);
+            }
         }
     }
 
