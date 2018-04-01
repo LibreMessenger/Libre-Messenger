@@ -1,5 +1,6 @@
 package de.pixart.messenger.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,7 +26,9 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Contact;
+import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.ListItem;
+import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.xmpp.jid.Jid;
 
 public class ChooseContactActivity extends AbstractSearchableListItemActivity {
@@ -246,5 +249,26 @@ public class ChooseContactActivity extends AbstractSearchableListItemActivity {
             }
         }
         this.mKnownHosts = xmppConnectionService.getKnownHosts();
+    }
+
+    public static Intent create(Activity activity, Conversation conversation) {
+        final Intent intent = new Intent(activity, ChooseContactActivity.class);
+        List<String> contacts = new ArrayList<>();
+        if (conversation.getMode() == Conversation.MODE_MULTI) {
+            for (MucOptions.User user : conversation.getMucOptions().getUsers(false)) {
+                Jid jid = user.getRealJid();
+                if (jid != null) {
+                    contacts.add(jid.toBareJid().toString());
+                }
+            }
+        } else {
+            contacts.add(conversation.getJid().toBareJid().toString());
+        }
+        intent.putExtra("filter_contacts", contacts.toArray(new String[contacts.size()]));
+        intent.putExtra("conversation", conversation.getUuid());
+        intent.putExtra("multiple", true);
+        intent.putExtra("show_enter_jid", true);
+        intent.putExtra(EXTRA_ACCOUNT, conversation.getAccount().getJid().toBareJid().toString());
+        return intent;
     }
 }

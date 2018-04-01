@@ -113,6 +113,7 @@ import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
 
 import static de.pixart.messenger.ui.XmppActivity.EXTRA_ACCOUNT;
+import static de.pixart.messenger.ui.XmppActivity.REQUEST_INVITE_TO_CONVERSATION;
 import static de.pixart.messenger.xmpp.Patches.ENCRYPTION_EXCEPTIONS;
 
 public class ConversationFragment extends XmppFragment implements EditMessage.KeyboardListener {
@@ -958,6 +959,15 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 Uri geo = Uri.parse("geo:" + String.valueOf(latitude) + "," + String.valueOf(longitude));
                 attachLocationToConversation(conversation, geo);
                 break;
+            case REQUEST_INVITE_TO_CONVERSATION:
+                XmppActivity.ConferenceInvite invite = XmppActivity.ConferenceInvite.parse(data);
+                if (invite != null) {
+                    if (invite.execute(activity)) {
+                        activity.mToast = Toast.makeText(activity, R.string.creating_conference, Toast.LENGTH_LONG);
+                        activity.mToast.show();
+                    }
+                }
+                break;
         }
     }
 
@@ -1315,7 +1325,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 });
                 break;
             case R.id.action_invite:
-                activity.inviteToConversation(conversation);
+                startActivityForResult(ChooseContactActivity.create(activity, conversation), REQUEST_INVITE_TO_CONVERSATION);
                 break;
             case R.id.action_clear_history:
                 clearHistoryDialog(conversation);
@@ -2725,6 +2735,10 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             if (scrollState != null) {
                 setScrollPosition(scrollState);
             }
+        }
+        ActivityResult activityResult = postponedActivityResult.pop();
+        if (activityResult != null) {
+            handleActivityResult(activityResult);
         }
     }
 
