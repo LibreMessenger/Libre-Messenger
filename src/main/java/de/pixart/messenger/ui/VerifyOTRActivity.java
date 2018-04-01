@@ -378,14 +378,12 @@ public class VerifyOTRActivity extends XmppActivity implements XmppConnectionSer
 
     protected void activateButton(Button button, int text, View.OnClickListener listener) {
         button.setEnabled(true);
-        button.setTextColor(getPrimaryTextColor());
         button.setText(text);
         button.setOnClickListener(listener);
     }
 
     protected void deactivateButton(Button button, int text) {
         button.setEnabled(false);
-        button.setTextColor(getSecondaryTextColor());
         button.setText(text);
         button.setOnClickListener(null);
     }

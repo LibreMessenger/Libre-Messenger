@@ -95,9 +95,6 @@ public abstract class XmppActivity extends AppCompatActivity {
     public boolean xmppConnectionServiceBound = false;
     protected boolean registeredListeners = false;
 
-    protected int mPrimaryTextColor;
-    protected int mSecondaryTextColor;
-    protected int mTertiaryTextColor;
     protected int mPrimaryBackgroundColor;
     protected int mSecondaryBackgroundColor;
     protected int mColorRed;
@@ -413,9 +410,6 @@ public abstract class XmppActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         metrics = getResources().getDisplayMetrics();
         ExceptionHelper.init(getApplicationContext());
-        mPrimaryTextColor = ContextCompat.getColor(this, R.color.black87);
-        mSecondaryTextColor = ContextCompat.getColor(this, R.color.black54);
-        mTertiaryTextColor = ContextCompat.getColor(this, R.color.black12);
         mColorRed = ContextCompat.getColor(this, R.color.red800);
         mColorWarningButton = ContextCompat.getColor(this, R.color.warning_button);
         mColorWhite = ContextCompat.getColor(this, R.color.white70);
@@ -433,6 +427,11 @@ public abstract class XmppActivity extends AppCompatActivity {
             ab.setDisplayHomeAsUpEnabled(true);
         }
     }
+
+    // todo theme
+//    public boolean isDarkTheme() {
+//        return this.mTheme == R.style.ConversationsTheme_Dark;
+//    }
 
     public int getThemeResource(int r_attr_name, int r_drawable_def) {
         int[] attrs = {	r_attr_name };
@@ -906,14 +905,6 @@ public abstract class XmppActivity extends AppCompatActivity {
         }
     }
 
-    public int getSecondaryTextColor() {
-        return this.mSecondaryTextColor;
-    }
-
-    public int getPrimaryTextColor() {
-        return this.mPrimaryTextColor;
-    }
-
     public int getWarningTextColor() {
         return this.mColorRed;
     }
@@ -1010,6 +1001,7 @@ public abstract class XmppActivity extends AppCompatActivity {
     }
 
     protected int findTheme() {
+        Boolean dark = getPreferences().getString(SettingsActivity.THEME, getResources().getString(R.string.theme)).equals("dark");
         Boolean larger = getPreferences().getBoolean("use_larger_font", getResources().getBoolean(R.bool.use_larger_font));
 
         if (larger) {
