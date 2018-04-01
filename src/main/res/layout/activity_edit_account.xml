@@ -180,10 +180,7 @@
                         android:id="@+id/os_optimization_headline"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/battery_optimizations_enabled"
-                        android:textColor="@color/black87"
-                        android:textSize="?attr/TextSizeHeadline"
-                        android:textStyle="bold" />
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
                     <TextView
                         android:id="@+id/os_optimization_body"
@@ -193,8 +190,7 @@
                         android:layout_marginBottom="8dp"
                         android:layout_marginTop="8dp"
                         android:text="@string/battery_optimizations_enabled_explained"
-                        android:textColor="@color/black87"
-                        android:textSize="?attr/TextSizeBody" />
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
                     <Button
                         android:id="@+id/os_optimization_disable"
@@ -654,26 +650,23 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/list_padding"
                         android:text="@string/other_devices"
-                        android:textColor="@color/black87"
-                        android:textSize="?attr/TextSizeHeadline"
-                        android:textStyle="bold" />
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
                     <LinearLayout
                         android:id="@+id/other_device_keys"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:divider="?android:dividerHorizontal"
-                        android:orientation="vertical"
-                        android:showDividers="middle"></LinearLayout>
+                        android:orientation="vertical">
 
-                    <Button
-                        android:id="@+id/clear_devices"
-                        style="?android:attr/borderlessButtonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="@string/clear_other_devices"
-                        android:textColor="@color/accent" />
+                        <Button
+                            android:id="@+id/clear_devices"
+                            style="?android:attr/borderlessButtonStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="@string/clear_other_devices"
+                            android:textColor="@color/accent" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

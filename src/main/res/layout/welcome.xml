@@ -31,27 +31,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/welcome_header"
-                android:textColor="@color/black87"
-                android:textSize="?attr/TextSizeHeadline"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/welcome_text"
-                android:textColor="@color/black87"
-                android:textSize="?attr/TextSizeBody" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <TextView
+                android:id="@id/import_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/import_text"
                 android:textColor="@color/black87"
                 android:textSize="?attr/TextSizeBody"
-                android:visibility="gone"
-                android:id="@id/import_text" />
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/import_database"

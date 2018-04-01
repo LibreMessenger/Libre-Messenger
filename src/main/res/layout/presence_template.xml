@@ -23,8 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/presence_status_message"
-            android:textColor="@color/black87"
-            android:textSize="?attr/TextSizeBody" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 
         <android.support.text.emoji.widget.EmojiTextView
             android:id="@+id/status"
