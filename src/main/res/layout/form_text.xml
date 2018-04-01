@@ -9,14 +9,10 @@
         android:id="@+id/label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black87"
-        android:textSize="?attr/TextSizeBody" />
+        android:textAppearance="@style/TextAppearance.Conversations.Body1"/>
 
     <EditText
         android:id="@+id/field"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black87"
-        android:textColorHint="@color/black54"
-        android:textSize="?attr/TextSizeBody" />
+        android:layout_height="wrap_content"/>
 </LinearLayout>
