@@ -55,8 +55,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="4sp"
                     android:gravity="center_vertical"
-                    android:textAppearance="@style/TextAppearance.Conversations.Caption"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/TextAppearance.Conversations.Caption.OnDark.Bold" />
 
                 <ImageView
                     android:id="@+id/security_indicator"

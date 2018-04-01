@@ -28,6 +28,10 @@
         <item name="android:textColor">@color/white70</item>
     </style>
 
+    <style name="TextAppearance.Conversations.Caption.OnDark.Bold" parent="TextAppearance.Conversations.Caption.OnDark">
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="TextAppearance.Conversations.Caption" parent="TextAppearance.AppCompat.Caption"></style>
 
     <style name="TextAppearance.Conversations.Caption.Waring" parent="TextAppearance.Conversations.Caption">
@@ -35,7 +39,7 @@
     </style>
 
     <style name="TextAppearance.Conversations.Caption.Highlight" parent="TextAppearance.Conversations.Caption">
-        <item name="android:textColor">?android:colorAccent</item>
+        <item name="android:textColor">?colorAccent</item>
     </style>
 
     <style name="TextAppearance.Conversations.Caption.Disabled" parent="TextAppearance.Conversations.Caption">
