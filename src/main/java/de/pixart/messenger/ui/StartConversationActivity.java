@@ -70,6 +70,7 @@ import de.pixart.messenger.services.EmojiService;
 import de.pixart.messenger.services.XmppConnectionService.OnRosterUpdate;
 import de.pixart.messenger.ui.adapter.KnownHostsAdapter;
 import de.pixart.messenger.ui.adapter.ListItemAdapter;
+import de.pixart.messenger.ui.util.DelayedHintHelper;
 import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.XmppConnection;
@@ -478,9 +479,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
         final TextView yourAccount = dialogView.findViewById(R.id.your_account);
         final Spinner spinner = dialogView.findViewById(R.id.account);
         final AutoCompleteTextView jid = dialogView.findViewById(R.id.jid);
-        final TextView jabberIdDesc = dialogView.findViewById(R.id.jabber_id);
-        jabberIdDesc.setText(R.string.conference_address);
-        jid.setHint(R.string.conference_address_example);
+        DelayedHintHelper.setHint(R.string.conference_address_example, jid);
         jid.setAdapter(new KnownHostsAdapter(this, R.layout.simple_list_item, mKnownConferenceHosts));
         if (prefilledJid != null) {
             jid.append(prefilledJid);

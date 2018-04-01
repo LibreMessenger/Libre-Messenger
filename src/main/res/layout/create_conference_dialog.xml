@@ -10,11 +10,10 @@
 
     <TextView
         android:id="@+id/your_account"
-        android:layout_width="wrap_content"
+        style="@style/InputLabel"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/your_account"
-        android:textColor="@color/black87"
-        android:textSize="?attr/TextSizeBody"
         android:visibility="gone" />
 
     <Spinner
@@ -23,22 +22,22 @@
         android:layout_height="wrap_content"
         android:visibility="gone" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/conference_subject"
-        android:textColor="@color/black87"
-        android:textSize="?attr/TextSizeBody" />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
 
-    <EditText
-        android:id="@+id/subject"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/edit_subject_hint"
-        android:inputType="textAutoComplete"
-        android:textColor="@color/black87"
-        android:textColorHint="@color/black54"
-        android:textSize="?attr/TextSizeBody" />
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/subject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/edit_subject_hint"
+            android:nextFocusDown="@+id/subject"
+            android:nextFocusUp="@+id/subject" />
+    </android.support.design.widget.TextInputLayout>
 </LinearLayout>

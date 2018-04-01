@@ -15,6 +15,7 @@ import java.util.List;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.ui.adapter.KnownHostsAdapter;
+import de.pixart.messenger.ui.util.DelayedHintHelper;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
 
@@ -47,8 +48,6 @@ public class EnterJidDialog {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title);
         final View dialogView = LayoutInflater.from(context).inflate(R.layout.enter_jid_dialog, null);
-        final TextView jabberIdDesc = dialogView.findViewById(R.id.jabber_id);
-        jabberIdDesc.setText(R.string.account_settings_jabber_id);
         final TextView yourAccount = dialogView.findViewById(R.id.your_account);
         final Spinner spinner = dialogView.findViewById(R.id.account);
         final AutoCompleteTextView jid = dialogView.findViewById(R.id.jid);
@@ -63,7 +62,7 @@ public class EnterJidDialog {
             }
         }
 
-        jid.setHint(R.string.account_settings_example_jabber_id);
+        DelayedHintHelper.setHint(R.string.account_settings_example_jabber_id, jid);
 
         if (multipleAccounts) {
             yourAccount.setVisibility(View.VISIBLE);
@@ -89,42 +88,35 @@ public class EnterJidDialog {
         builder.setPositiveButton(positiveButton, null);
         this.dialog = builder.create();
 
-        this.dialogOnClick = new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                final Jid accountJid;
-                if (!spinner.isEnabled() && account == null) {
-                    return;
+        this.dialogOnClick = v -> {
+            final Jid accountJid;
+            if (!spinner.isEnabled() && account == null) {
+                return;
+            }
+            try {
+                if (Config.DOMAIN_LOCK != null) {
+                    accountJid = Jid.fromParts((String) spinner.getSelectedItem(), Config.DOMAIN_LOCK, null);
+                } else {
+                    accountJid = Jid.fromString((String) spinner.getSelectedItem());
                 }
-                try {
-                    if (Config.DOMAIN_LOCK != null) {
-                        if (spinner.getSelectedItem().toString().contains("@")) {
-                            accountJid = Jid.fromString((String) spinner.getSelectedItem());
-                        } else {
-                            accountJid = Jid.fromParts(String.valueOf(spinner.getSelectedItem()), Config.DOMAIN_LOCK, null);
-                        }
-                    } else {
-                        accountJid = Jid.fromString((String) spinner.getSelectedItem());
-                    }
-                } catch (final InvalidJidException e) {
-                    return;
-                }
-                final Jid contactJid;
-                try {
-                    contactJid = Jid.fromString(jid.getText().toString());
-                } catch (final InvalidJidException e) {
-                    jid.setError(context.getString(R.string.invalid_jid));
-                    return;
-                }
+            } catch (final InvalidJidException e) {
+                return;
+            }
+            final Jid contactJid;
+            try {
+                contactJid = Jid.fromString(jid.getText().toString());
+            } catch (final InvalidJidException e) {
+                jid.setError(context.getString(R.string.invalid_jid));
+                return;
+            }
 
-                if (listener != null) {
-                    try {
-                        if (listener.onEnterJidDialogPositive(accountJid, contactJid)) {
-                            dialog.dismiss();
-                        }
-                    } catch (JidError error) {
-                        jid.setError(error.toString());
+            if(listener != null) {
+                try {
+                    if(listener.onEnterJidDialogPositive(accountJid, contactJid)) {
+                        dialog.dismiss();
                     }
+                } catch(JidError error) {
+                    jid.setError(error.toString());
                 }
             }
         };

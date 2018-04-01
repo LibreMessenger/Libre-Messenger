@@ -64,10 +64,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:imeOptions="actionNext"
-                                android:inputType="textEmailAddress"
-                                android:textColor="?attr/color_text_primary"
-                                android:textColorHint="?attr/color_text_secondary"
-                                android:textSize="?attr/TextSizeBody" />
+                                android:inputType="textEmailAddress" />
                         </android.support.design.widget.TextInputLayout>
 
                         <android.support.design.widget.TextInputLayout
@@ -83,10 +80,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="@string/password"
-                                android:inputType="textPassword"
-                                android:textColor="@color/black87"
-                                android:textColorHint="@color/black54"
-                                android:textSize="?attr/TextSizeBody" />
+                                android:inputType="textPassword" />
                         </android.support.design.widget.TextInputLayout>
 
                         <LinearLayout
@@ -113,10 +107,7 @@
                                         android:id="@+id/hostname"
                                         android:layout_width="fill_parent"
                                         android:layout_height="wrap_content"
-                                        android:inputType="textNoSuggestions"
-                                        android:textColor="?attr/color_text_primary"
-                                        android:textColorHint="?attr/color_text_secondary"
-                                        android:textSize="?attr/TextSizeBody" />
+                                        android:inputType="textNoSuggestions" />
                                 </android.support.design.widget.TextInputLayout>
                             </LinearLayout>
 
@@ -137,10 +128,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:inputType="number"
-                                        android:maxLength="5"
-                                        android:textColor="?attr/color_text_primary"
-                                        android:textColorHint="?attr/color_text_secondary"
-                                        android:textSize="?attr/TextSizeBody" />
+                                        android:maxLength="5" />
                                 </android.support.design.widget.TextInputLayout>
                             </LinearLayout>
                         </LinearLayout>
@@ -150,9 +138,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:text="@string/register_account"
-                            android:textColor="@color/black87"
-                            android:textSize="?attr/TextSizeBody" />
+                            android:text="@string/register_account" />
 
                         <TextView
                             android:id="@+id/account_confirm_password_desc"
@@ -666,10 +652,10 @@
                         android:id="@+id/other_device_keys_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/list_padding"
                         android:text="@string/other_devices"
                         android:textColor="@color/black87"
                         android:textSize="?attr/TextSizeHeadline"
-                        android:layout_margin="@dimen/list_padding"
                         android:textStyle="bold" />
 
                     <LinearLayout
