@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen
+    android:key="main_screen"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <!--UI-->
     <PreferenceScreen
         android:icon="@drawable/ic_image_black_24dp"
@@ -198,11 +200,6 @@
         android:icon="@drawable/ic_security_black_24dp"
         android:key="security"
         android:title="@string/pref_security_settings">
-        <CheckBoxPreference
-            android:defaultValue="@bool/grant_new_contacts"
-            android:key="grant_new_contacts"
-            android:summary="@string/pref_grant_presence_updates_summary"
-            android:title="@string/pref_grant_presence_updates" />
         <CheckBoxPreference
             android:defaultValue="@bool/confirm_messages"
             android:key="confirm_messages"

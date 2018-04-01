@@ -122,8 +122,6 @@
   <string name="openpgp_error">OpenKeychain reportó un error</string>
   <string name="accept">Aceptar</string>
   <string name="error">Ha ocurrido un error</string>
-  <string name="pref_grant_presence_updates">Suscripción de presencia automática</string>
-  <string name="pref_grant_presence_updates_summary">De forma automática solicitar y conceder la suscripción de presencia de los contactos que has creado</string>
   <string name="your_account">Tu cuenta</string>
   <string name="send_presence_updates">Enviar actualizaciones de presencia</string>
   <string name="receive_presence_updates">Recibir actualizaciones de presencia</string>

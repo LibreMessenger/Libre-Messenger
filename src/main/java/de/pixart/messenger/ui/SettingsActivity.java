@@ -102,6 +102,8 @@ public class SettingsActivity extends XmppActivity implements
             }
         }
 
+        PreferenceScreen mainPreferenceScreen = (PreferenceScreen) mSettingsFragment.findPreference("main_screen");
+
         //this feature is only available on Huawei Android 6.
         PreferenceScreen huaweiPreferenceScreen = (PreferenceScreen) mSettingsFragment.findPreference("huawei");
         if (huaweiPreferenceScreen != null) {
@@ -110,6 +112,11 @@ public class SettingsActivity extends XmppActivity implements
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M || !isCallable(intent)) {
                 PreferenceCategory generalCategory = (PreferenceCategory) mSettingsFragment.findPreference("general");
                 generalCategory.removePreference(huaweiPreferenceScreen);
+                if (generalCategory.getPreferenceCount() == 0) {
+                    if (mainPreferenceScreen != null) {
+                        mainPreferenceScreen.removePreference(generalCategory);
+                    }
+                }
             }
         }
 

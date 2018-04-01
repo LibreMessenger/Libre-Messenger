@@ -88,7 +88,6 @@
   <string name="openpgp_error">Το OpenKeychain ανέφερε κάποιο σφάλμα</string>
   <string name="accept">Αποδοχή</string>
   <string name="error">Έχει συμβεί κάποιο σφάλμα</string>
-  <string name="pref_grant_presence_updates">Χορήγηση ενημερώσεων παρουσίας</string>
   <string name="your_account">Ο λογαριασμός σας</string>
   <string name="send_presence_updates">Αποστολή ενημερώσεων παρουσίας</string>
   <string name="receive_presence_updates">Λήψη ενημερώσεων παρουσίας</string>

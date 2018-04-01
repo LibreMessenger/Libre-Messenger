@@ -122,8 +122,6 @@
   <string name="openpgp_error">Fehler mit OpenKeychain</string>
   <string name="accept">Annehmen</string>
   <string name="error">Ein Fehler ist aufgetreten</string>
-  <string name="pref_grant_presence_updates">Online-Status</string>
-  <string name="pref_grant_presence_updates_summary">Erlaube neu hinzugefügten Kontakten meinen Online-Status zu sehen und frage um Erlaubnis, ihren sehen zu dürfen</string>
   <string name="your_account">Dein Profil</string>
   <string name="send_presence_updates">Online-Status senden</string>
   <string name="receive_presence_updates">Online-Status empfangen</string>

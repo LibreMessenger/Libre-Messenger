@@ -70,7 +70,6 @@
     <string name="picture_compression">auto</string>
     <string name="image_compression">mid</string>
     <string name="video_compression">mid</string>
-    <bool name="grant_new_contacts">true</bool>
     <integer name="automatic_message_deletion">0</integer>
     <bool name="confirm_messages">true</bool>
     <bool name="allow_message_correction">true</bool>

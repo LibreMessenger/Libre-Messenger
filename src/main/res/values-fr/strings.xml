@@ -108,8 +108,6 @@
   <string name="openpgp_error">OpenKeychain a signalé une erreur</string>
   <string name="accept">Accepter</string>
   <string name="error">Une erreur s\'est produite</string>
-  <string name="pref_grant_presence_updates">Autoriser les màj de disponibilité</string>
-  <string name="pref_grant_presence_updates_summary">Accorder et demander par avance les mises à jour de présence aux contacts que vous avez ajoutés</string>
   <string name="your_account">Votre compte</string>
   <string name="send_presence_updates">Envoyer mes màj de disponibilité</string>
   <string name="receive_presence_updates">Recevoir ses màj de disponibilité</string>
