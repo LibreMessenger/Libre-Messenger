@@ -23,6 +23,8 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.media.ExifInterface;
 import android.support.v13.view.inputmethod.InputConnectionCompat;
 import android.support.v13.view.inputmethod.InputContentInfoCompat;
@@ -1435,7 +1437,11 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     }
 
     public void attachFile(final int attachmentChoice) {
-        if (attachmentChoice != ATTACHMENT_CHOICE_LOCATION) {
+        if (attachmentChoice == ATTACHMENT_CHOICE_TAKE_FROM_CAMERA) {
+            if (!hasStorageAndCameraPermission(attachmentChoice)) {
+                return;
+            }
+        } else if (attachmentChoice != ATTACHMENT_CHOICE_LOCATION) {
             if (!Config.ONLY_INTERNAL_STORAGE && !hasStoragePermission(attachmentChoice)) {
                 return;
             }
@@ -1512,9 +1518,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         if (grantResults.length > 0) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (allGranted(grantResults)) {
                 if (requestCode == REQUEST_START_DOWNLOAD) {
                     if (this.mPendingDownloadableMessage != null) {
                         startDownloadable(this.mPendingDownloadableMessage);
@@ -1527,9 +1533,33 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     attachFile(requestCode);
                 }
             } else {
-                getActivity().runOnUiThread(() -> Toast.makeText(getActivity(), R.string.no_permission, Toast.LENGTH_SHORT).show());
+                @StringRes int res;
+                if (Manifest.permission.CAMERA.equals(getFirstDenied(grantResults, permissions))) {
+                    res = R.string.no_camera_permission;
+                } else {
+                    res = R.string.no_storage_permission;
+                }
+                Toast.makeText(getActivity(), res, Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private static boolean allGranted(int[] grantResults) {
+        for (int grantResult : grantResults) {
+            if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static String getFirstDenied(int[] grantResults, String[] permissions) {
+        for (int i = 0; i < grantResults.length; ++i) {
+            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                return permissions[i];
+            }
+        }
+        return null;
     }
 
     public void startDownloadable(Message message) {
@@ -1544,6 +1574,26 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             }
         } else if (message.treatAsDownloadable()) {
             activity.xmppConnectionService.getHttpConnectionManager().createNewDownloadConnection(message, true);
+        }
+    }
+
+    private boolean hasStorageAndCameraPermission(int requestCode) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            List<String> missingPermissions = new ArrayList<>();
+            if (!Config.ONLY_INTERNAL_STORAGE && activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                missingPermissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            }
+            if (activity.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                missingPermissions.add(Manifest.permission.CAMERA);
+            }
+            if (missingPermissions.size() == 0) {
+                return true;
+            } else {
+                requestPermissions(missingPermissions.toArray(new String[missingPermissions.size()]), requestCode);
+                return false;
+            }
+        } else {
+            return true;
         }
     }
 
