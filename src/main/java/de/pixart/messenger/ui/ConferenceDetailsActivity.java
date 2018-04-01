@@ -52,6 +52,7 @@ import de.pixart.messenger.entities.MucOptions.User;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.services.XmppConnectionService.OnConversationUpdate;
 import de.pixart.messenger.services.XmppConnectionService.OnMucRosterUpdate;
+import de.pixart.messenger.utils.TimeframeUtils;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.jid.Jid;
 
@@ -154,44 +155,39 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             } else {
                 choice = new AtomicInteger(mConversation.alwaysNotify() ? 0 : 1);
             }
-            builder.setSingleChoiceItems(choices, choice.get(), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    choice.set(which);
-                }
-            });
+            builder.setSingleChoiceItems(choices, choice.get(), (dialog, which) -> choice.set(which));
             builder.setNegativeButton(R.string.cancel, null);
-            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if (choice.get() == 2) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(ConferenceDetailsActivity.this);
-                        builder.setTitle(R.string.disable_notifications);
-                        final int[] durations = getResources().getIntArray(R.array.mute_options_durations);
-                        builder.setItems(R.array.mute_options_descriptions,
-                                new DialogInterface.OnClickListener() {
-
-                                    @Override
-                                    public void onClick(final DialogInterface dialog, final int which) {
-                                        final long till;
-                                        if (durations[which] == -1) {
-                                            till = Long.MAX_VALUE;
-                                        } else {
-                                            till = System.currentTimeMillis() + (durations[which] * 1000);
-                                        }
-                                        mConversation.setMutedTill(till);
-                                        xmppConnectionService.updateConversation(mConversation);
-                                        updateView();
-                                    }
-                                });
-                        builder.create().show();
-                    } else {
-                        mConversation.setMutedTill(0);
-                        mConversation.setAttribute(Conversation.ATTRIBUTE_ALWAYS_NOTIFY, String.valueOf(choice.get() == 0));
+            builder.setPositiveButton(R.string.ok, (DialogInterface.OnClickListener) (dialog, which) -> {
+                if (choice.get() == 2) {
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(ConferenceDetailsActivity.this);
+                    builder1.setTitle(R.string.disable_notifications);
+                    final int[] durations = getResources().getIntArray(R.array.mute_options_durations);
+                    final CharSequence[] labels = new CharSequence[durations.length];
+                    for (int i = 0; i < durations.length; ++i) {
+                        if (durations[i] == -1) {
+                            labels[i] = getString(R.string.until_further_notice);
+                        } else {
+                            labels[i] = TimeframeUtils.resolve(ConferenceDetailsActivity.this, 1000L * durations[i]);
+                        }
                     }
-                    xmppConnectionService.updateConversation(mConversation);
-                    updateView();
+                    builder1.setItems(labels, (dialog1, which1) -> {
+                        final long till;
+                        if (durations[which1] == -1) {
+                            till = Long.MAX_VALUE;
+                        } else {
+                            till = System.currentTimeMillis() + (durations[which1] * 1000);
+                        }
+                        mConversation.setMutedTill(till);
+                        xmppConnectionService.updateConversation(mConversation);
+                        updateView();
+                    });
+                    builder1.create().show();
+                } else {
+                    mConversation.setMutedTill(0);
+                    mConversation.setAttribute(Conversation.ATTRIBUTE_ALWAYS_NOTIFY, String.valueOf(choice.get() == 0));
                 }
+                xmppConnectionService.updateConversation(mConversation);
+                updateView();
             });
             builder.create().show();
         }
