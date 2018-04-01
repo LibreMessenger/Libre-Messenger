@@ -39,6 +39,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -97,6 +98,7 @@ public class ConversationActivity extends XmppActivity implements OnConversation
     public static final String EXTRA_NICK = "nick";
     public static final String EXTRA_IS_PRIVATE_MESSAGE = "pm";
     public static final String ACTION_DESTROY_MUC = "de.pixart.messenger.DESTROY_MUC";
+    public static final int REQUEST_OPEN_MESSAGE = 0x9876;
 
     private boolean showLastSeen = false;
 
@@ -341,6 +343,16 @@ public class ConversationActivity extends XmppActivity implements OnConversation
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         UriHandlerActivity.onRequestPermissionResult(this, requestCode, grantResults);
+        if (grantResults.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                switch (requestCode) {
+                    case REQUEST_OPEN_MESSAGE:
+                        refreshUiReal();
+                        ConversationFragment.openPendingMessage(this);
+                        break;
+                }
+            }
+        }
     }
 
     @Override
