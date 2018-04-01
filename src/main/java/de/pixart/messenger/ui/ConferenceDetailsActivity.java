@@ -433,9 +433,9 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                 name = user.getName();
             }
             menu.setHeaderTitle(name);
+            MenuItem sendPrivateMessage = menu.findItem(R.id.send_private_message);
+            MenuItem highlightInMuc = menu.findItem(R.id.highlight_in_muc);
             if (user.getRealJid() != null) {
-                MenuItem highlightInMuc = menu.findItem(R.id.highlight_in_muc);
-                MenuItem sendPrivateMessage = menu.findItem(R.id.send_private_message);
                 MenuItem startConversation = menu.findItem(R.id.start_conversation);
                 MenuItem giveMembership = menu.findItem(R.id.give_membership);
                 MenuItem removeMembership = menu.findItem(R.id.remove_membership);
@@ -444,7 +444,6 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                 MenuItem removeFromRoom = menu.findItem(R.id.remove_from_room);
                 MenuItem banFromConference = menu.findItem(R.id.ban_from_conference);
                 MenuItem invite = menu.findItem(R.id.invite);
-                highlightInMuc.setVisible(true);
                 startConversation.setVisible(true);
                 if (user.getRole() == MucOptions.Role.NONE) {
                     invite.setVisible(true);
@@ -475,8 +474,14 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                     banFromConference.setVisible(true);
                 }
             } else {
-                MenuItem sendPrivateMessage = menu.findItem(R.id.send_private_message);
-                sendPrivateMessage.setVisible(user.getRole().ranks(MucOptions.Role.PARTICIPANT));
+                if (jid != null && !jid.isBareJid()) {
+                    if (mConversation.getMucOptions().isUserInRoom(jid)) {
+                        sendPrivateMessage.setVisible(true);
+                    } else {
+                        sendPrivateMessage.setVisible(false);
+                    }
+                }
+                highlightInMuc.setVisible(self.getRole().ranks(MucOptions.Role.PARTICIPANT));
             }
 
         }
