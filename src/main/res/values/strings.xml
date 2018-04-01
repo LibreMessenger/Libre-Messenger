@@ -760,4 +760,6 @@
     <string name="no_camera_permission">Pix-Art Messenger needs access to the camera</string>
     <string name="edit_status_message_title">Edit Status Message</string>
     <string name="edit_status_message">Edit status message</string>
+    <string name="all_accounts_on_this_device">Set for all accounts on this device</string>
+    <string name="change_presence">Manage availability manually</string>
 </resources>
