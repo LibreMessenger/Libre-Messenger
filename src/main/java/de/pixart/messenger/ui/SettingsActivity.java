@@ -11,11 +11,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
@@ -37,7 +36,6 @@ import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.services.ExportLogsService;
 import de.pixart.messenger.services.MemorizingTrustManager;
 import de.pixart.messenger.ui.util.Color;
-import de.pixart.messenger.xmpp.XmppConnection;
 import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
 
@@ -94,16 +92,6 @@ public class SettingsActivity extends XmppActivity implements
         multiAccountPreference = mSettingsFragment.findPreference("enable_multi_accounts");
         if (multiAccountPreference != null) {
             isMultiAccountChecked = ((CheckBoxPreference) multiAccountPreference).isChecked();
-        }
-
-        ListPreference resources = (ListPreference) mSettingsFragment.findPreference("resource");
-        if (resources != null) {
-            ArrayList<CharSequence> entries = new ArrayList<>(Arrays.asList(resources.getEntries()));
-            if (!entries.contains(Build.MODEL)) {
-                entries.add(0, Build.MODEL);
-                resources.setEntries(entries.toArray(new CharSequence[entries.size()]));
-                resources.setEntryValues(entries.toArray(new CharSequence[entries.size()]));
-            }
         }
 
         if (Config.FORCE_ORBOT) {
@@ -303,36 +291,29 @@ public class SettingsActivity extends XmppActivity implements
             }
         }
         final boolean[] checkedItems = new boolean[accounts.size()];
-        builder.setMultiChoiceItems(accounts.toArray(new CharSequence[accounts.size()]), checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                checkedItems[which] = isChecked;
-                final AlertDialog alertDialog = (AlertDialog) dialog;
-                for (boolean item : checkedItems) {
-                    if (item) {
-                        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
-                        return;
-                    }
+        builder.setMultiChoiceItems(accounts.toArray(new CharSequence[accounts.size()]), checkedItems, (dialog, which, isChecked) -> {
+            checkedItems[which] = isChecked;
+            final AlertDialog alertDialog = (AlertDialog) dialog;
+            for (boolean item : checkedItems) {
+                if (item) {
+                    alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
+                    return;
                 }
-                alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
             }
+            alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
         });
         builder.setNegativeButton(R.string.cancel, null);
-        builder.setPositiveButton(R.string.delete_selected_keys, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                for (int i = 0; i < checkedItems.length; ++i) {
-                    if (checkedItems[i]) {
-                        try {
-                            Jid jid = Jid.fromString(accounts.get(i).toString());
-                            Account account = xmppConnectionService.findAccountByJid(jid);
-                            if (account != null) {
-                                account.getAxolotlService().regenerateKeys(true);
-                            }
-                        } catch (InvalidJidException e) {
-                            //
+        builder.setPositiveButton(R.string.delete_selected_keys, (dialog, which) -> {
+            for (int i = 0; i < checkedItems.length; ++i) {
+                if (checkedItems[i]) {
+                    try {
+                        Jid jid = Jid.fromString(accounts.get(i).toString());
+                        Account account = xmppConnectionService.findAccountByJid(jid);
+                        if (account != null) {
+                            account.getAxolotlService().regenerateKeys(true);
                         }
-
+                    } catch (InvalidJidException e) {
+                        //
                     }
                 }
             }
@@ -429,23 +410,7 @@ public class SettingsActivity extends XmppActivity implements
                 TREAT_VIBRATE_AS_SILENT,
                 MANUALLY_CHANGE_PRESENCE,
                 BROADCAST_LAST_ACTIVITY);
-        if (name.equals("resource")) {
-            String resource = preferences.getString("resource", "mobile")
-                    .toLowerCase(Locale.US);
-            if (xmppConnectionServiceBound) {
-                for (Account account : xmppConnectionService.getAccounts()) {
-                    if (account.setResource(resource)) {
-                        if (account.isEnabled()) {
-                            XmppConnection connection = account.getXmppConnection();
-                            if (connection != null) {
-                                connection.resetStreamId();
-                            }
-                            xmppConnectionService.reconnectAccountInBackground(account);
-                        }
-                    }
-                }
-            }
-        } else if (name.equals(SHOW_FOREGROUND_SERVICE)) {
+        if (name.equals(SHOW_FOREGROUND_SERVICE)) {
             xmppConnectionService.toggleForegroundService();
         } else if (resendPresence.contains(name)) {
             if (xmppConnectionServiceBound) {
@@ -474,7 +439,7 @@ public class SettingsActivity extends XmppActivity implements
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (grantResults.length > 0)
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (requestCode == REQUEST_WRITE_LOGS) {
@@ -490,12 +455,7 @@ public class SettingsActivity extends XmppActivity implements
     }
 
     private void displayToast(final String msg) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(SettingsActivity.this, msg, Toast.LENGTH_LONG).show();
-            }
-        });
+        runOnUiThread(() -> Toast.makeText(SettingsActivity.this, msg, Toast.LENGTH_LONG).show());
     }
 
     private void reconnectAccounts() {

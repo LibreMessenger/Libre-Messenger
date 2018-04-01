@@ -98,8 +98,6 @@
   <string name="contact_has_no_pgp_key">Pix-Art Messenger ist nicht in der Lage, deine Nachrichten zu verschlüsseln, weil dein Kontakt seinen Schlüssel nicht preisgibt.\n\n<small>Bitte deinen Kontakt darum, OpenPGP zu installieren.</small> </string>
   <string name="no_pgp_keys">Keine OpenPGP-Schlüssel gefunden</string>
   <string name="pref_general">Allgemeines</string>
-  <string name="pref_xmpp_resource">XMPP-Ressource</string>
-  <string name="pref_xmpp_resource_summary">Der Name, mit dem sich der Client selbst identifiziert</string>
   <string name="pref_accept_files_wifi">Dateien im WLAN annehmen</string>
   <string name="pref_accept_files_summary_wifi">Im WLAN-Netz Dateien automatisch annehmen, die kleiner sind als …</string>
   <string name="pref_accept_files_mobile">Dateien im Mobilen Netz annehmen</string>

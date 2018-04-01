@@ -98,8 +98,6 @@
   <string name="contact_has_no_pgp_key">Pix-Art Messenger no ha podido cifrar tus mensajes porque tu contacto no está anunciando su clave publica.\n\n<small>Por favor, pide a tu contacto que configure OpenPGP.</small></string>
   <string name="no_pgp_keys">Claves OpenPGP no encontradas</string>
   <string name="pref_general">General</string>
-  <string name="pref_xmpp_resource">Recurso</string>
-  <string name="pref_xmpp_resource_summary">El nombre que identifica el cliente que estás utilizando</string>
   <string name="pref_accept_files_wifi">Aceptar archivos en conexiones WiFi</string>
   <string name="pref_accept_files_summary_wifi">Cuando se conecta a wifi acepta automáticamente el descargo de archivos más pequeños que…</string>
   <string name="pref_accept_files_mobile">Aceptar archivos en conexiones de red móvil</string>

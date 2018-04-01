@@ -96,8 +96,6 @@
   <string name="contact_has_no_pgp_key">Pix-Art Messenger ez da zure mezuak enkriptatzeko gai zure kontaktua bere gako publikoa jakinarazten ez dagoelako.\n\n<small>Mesedez eskatu ezaiozu zure kontaktuari openPGP konfigura dezan.</small></string>
   <string name="no_pgp_keys">Ez da OpenPGP gakorik aurkitu</string>
   <string name="pref_general">Orokorrak</string>
-  <string name="pref_xmpp_resource">XMPP baliabidea</string>
-  <string name="pref_xmpp_resource_summary">Bezero honek bere burua aurkezteko erabiltzen duen izena</string>
   <string name="pref_attachments">Eranskinak</string>
   <string name="pref_notification_settings">Jakinarazpena</string>
   <string name="pref_notifications">Jakinarazpenak</string>

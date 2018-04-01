@@ -265,13 +265,6 @@
         </intent>
         <PreferenceCategory android:title="@string/pref_general"
             android:key="general">
-            <ListPreference
-                android:defaultValue="@string/default_resource"
-                android:entries="@array/resources"
-                android:entryValues="@array/resources"
-                android:key="resource"
-                android:summary="@string/pref_xmpp_resource_summary"
-                android:title="@string/pref_xmpp_resource" />
             <CheckBoxPreference
                 android:defaultValue="@bool/show_foreground_service"
                 android:key="show_foreground_service"
