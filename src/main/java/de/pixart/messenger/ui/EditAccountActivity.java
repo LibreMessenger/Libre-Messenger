@@ -1,9 +1,11 @@
 package de.pixart.messenger.ui;
 
+import android.app.Activity;
 import android.app.AlertDialog.Builder;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
@@ -54,6 +56,7 @@ import de.pixart.messenger.crypto.axolotl.XmppAxolotlSession;
 import de.pixart.messenger.databinding.ActivityEditAccountBinding;
 import de.pixart.messenger.databinding.DialogPresenceBinding;
 import de.pixart.messenger.entities.Account;
+import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.entities.PresenceTemplate;
 import de.pixart.messenger.services.BarcodeProvider;
 import de.pixart.messenger.services.XmppConnectionService;
@@ -61,6 +64,7 @@ import de.pixart.messenger.services.XmppConnectionService.OnAccountUpdate;
 import de.pixart.messenger.services.XmppConnectionService.OnCaptchaRequested;
 import de.pixart.messenger.ui.adapter.KnownHostsAdapter;
 import de.pixart.messenger.ui.adapter.PresenceTemplateAdapter;
+import de.pixart.messenger.ui.util.PendingItem;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.utils.XmppUri;
@@ -77,6 +81,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         OnKeyStatusUpdated, OnCaptchaRequested, KeyChainAliasCallback, XmppConnectionService.OnShowErrorToast, XmppConnectionService.OnMamPreferencesFetched {
 
     private static final int REQUEST_DATA_SAVER = 0xf244;
+    private static final int REQUEST_CHANGE_STATUS = 0xee11;
     private TextInputLayout mAccountJidLayout;
     private EditText mPassword;
     private TextInputLayout mPasswordLayout;
@@ -124,6 +129,8 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     private boolean mShowOptions = false;
     private Account mAccount;
     private String messageFingerprint;
+
+    private final PendingItem<PresenceTemplate> mPendingPresenceTemplate = new PendingItem<>();
 
     private boolean mFetchingAvatar = false;
 
@@ -435,6 +442,14 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_BATTERY_OP || requestCode == REQUEST_DATA_SAVER) {
             updateAccountInformation(mAccount == null);
+        }
+        if (requestCode == REQUEST_CHANGE_STATUS) {
+            PresenceTemplate template = mPendingPresenceTemplate.pop();
+            if (template != null && resultCode == Activity.RESULT_OK) {
+                generateSignature(data, template);
+            } else {
+                Log.d(Config.LOGTAG, "pgp result not ok");
+            }
         }
     }
 
@@ -887,19 +902,86 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         boolean manualStatus = sharedPreferences.getBoolean(SettingsActivity.MANUALLY_CHANGE_PRESENCE, getResources().getBoolean(R.bool.manually_change_presence));
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final DialogPresenceBinding binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.dialog_presence, null, false);
+        String current = mAccount.getPresenceStatusMessage();
+        if (current != null && !current.trim().isEmpty()) {
+            binding.statusMessage.append(current);
+        }
+        setAvailabilityRadioButton(mAccount.getPresenceStatus(), binding);
         binding.show.setVisibility(manualStatus ? View.VISIBLE : View.GONE);
         List<PresenceTemplate> templates = xmppConnectionService.getPresenceTemplates(mAccount);
         PresenceTemplateAdapter presenceTemplateAdapter = new PresenceTemplateAdapter(this, R.layout.simple_list_item, templates);
         binding.statusMessage.setAdapter(presenceTemplateAdapter);
         binding.statusMessage.setOnItemClickListener((parent, view, position, id) -> {
             PresenceTemplate template = (PresenceTemplate) parent.getItemAtPosition(position);
-            Log.d(Config.LOGTAG, "selected: " + template.getStatusMessage());
+            setAvailabilityRadioButton(template.getStatus(), binding);
         });
-        builder.setTitle(R.string.change_presence);
+        builder.setTitle(R.string.edit_status_message_title);
         builder.setView(binding.getRoot());
         builder.setNegativeButton(R.string.cancel, null);
-        builder.setPositiveButton(R.string.confirm, null);
+        builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
+            PresenceTemplate template = new PresenceTemplate(getAvailabilityRadioButton(binding), binding.statusMessage.getText().toString().trim());
+            if (mAccount.getPgpId() != 0 && hasPgp()) {
+                generateSignature(null, template);
+            } else {
+                xmppConnectionService.changeStatus(mAccount, template, null);
+            }
+        });
         builder.create().show();
+    }
+
+    private void generateSignature(Intent intent, PresenceTemplate template) {
+        xmppConnectionService.getPgpEngine().generateSignature(intent, mAccount, template.getStatusMessage(), new UiCallback<String>() {
+            @Override
+            public void success(String signature) {
+                xmppConnectionService.changeStatus(mAccount, template, signature);
+            }
+
+            @Override
+            public void error(int errorCode, String object) {
+
+            }
+
+            @Override
+            public void userInputRequried(PendingIntent pi, String object) {
+                mPendingPresenceTemplate.push(template);
+                try {
+                    startIntentSenderForResult(pi.getIntentSender(), REQUEST_CHANGE_STATUS, null, 0, 0, 0);
+                } catch (final IntentSender.SendIntentException ignored) {
+                }
+            }
+        });
+    }
+
+    private static void setAvailabilityRadioButton(Presence.Status status, DialogPresenceBinding binding) {
+        if (status == null) {
+            binding.online.setChecked(true);
+            return;
+        }
+        switch (status) {
+            case DND:
+                binding.dnd.setChecked(true);
+                break;
+            case XA:
+                binding.xa.setChecked(true);
+                break;
+            case AWAY:
+                binding.xa.setChecked(true);
+                break;
+            default:
+                binding.online.setChecked(true);
+        }
+    }
+
+    private static Presence.Status getAvailabilityRadioButton(DialogPresenceBinding binding) {
+        if (binding.dnd.isChecked()) {
+            return Presence.Status.DND;
+        } else if (binding.xa.isChecked()) {
+            return Presence.Status.XA;
+        } else if (binding.away.isChecked()) {
+            return Presence.Status.AWAY;
+        } else {
+            return Presence.Status.ONLINE;
+        }
     }
 
     @Override

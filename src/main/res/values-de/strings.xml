@@ -161,7 +161,6 @@
   <string name="unpublish_pgp">Öffentlichen OpenPGP-Schlüssel verwerfen</string>
   <string name="unpublish_pgp_message">Bist du sicher, dass du deinen öffentlichen OpenPGP-Schlüssel aus deiner Anwesenheitsmitteilung entfernen möchtest?\\nDeine Kontakte können dir dann keine OpenPGP-verschlüsselten Nachrichten senden.</string>
   <string name="openpgp_has_been_published">Öffentlicher OpenPGP-Schlüssel wurde veröffentlicht.</string>
-  <string name="republish_pgp_keys">Deine öffentliche OpenPGP-Schlüssel müssen veröffentlicht werden!</string>
   <string name="mgmt_account_are_you_sure">Bist du dir sicher?</string>
   <string name="mgmt_account_delete_confirm_text">Wenn du dein Profil löschst, gehen alle Gesprächsverläufe verloren</string>
   <string name="attach_record_voice">Sprache aufzeichnen</string>

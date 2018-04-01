@@ -165,7 +165,6 @@
   <string name="unpublish_pgp">Hapus kunci terbuka OpenPGP</string>
   <string name="unpublish_pgp_message">Yakin ingin menghapus kunci terbuka OpenPGP dari pemberitahuan anda?\nkontak anda tidak lagi dapat mengirimkan pesan terenkripsi OpenPGP.</string>
   <string name="openpgp_has_been_published">Kunci terbuka OpenPGP telah ditampilkan.</string>
-  <string name="republish_pgp_keys">Ingatlah untuk menampilkan kembali kunci terbuka OpenPGP anda!</string>
   <string name="mgmt_account_are_you_sure">Apakah kamu yakin?</string>
   <string name="mgmt_account_delete_confirm_text">Jika anda menghapus akun anda, semua riwayat percakapan anda akan hilang</string>
   <string name="attach_record_voice">Rekam suara</string>

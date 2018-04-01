@@ -152,7 +152,6 @@
   <string name="unpublish_pgp">Usuń klucz publiczny OpenPGP</string>
   <string name="unpublish_pgp_message">Czy na pewno chcesz usunąć klucz publiczny OpenPGP ze swojej propagacji obecności?\nTwoje kontakty nie będą już mogły wysyłać Ci wiadomości zaszyfrowanych OpenPGP.</string>
   <string name="openpgp_has_been_published">Klucz publiczny OpenPGP został opublikowany.</string>
-  <string name="republish_pgp_keys">Pamiętaj, by ponownie opublikować swoje klucze publiczne OpenPGP!</string>
   <string name="mgmt_account_are_you_sure">Czy na pewno?</string>
   <string name="mgmt_account_delete_confirm_text">Jeśli usuniesz swoje konto, cała historia wiadomości zostanie stracona.</string>
   <string name="attach_record_voice">Nagraj głos</string>

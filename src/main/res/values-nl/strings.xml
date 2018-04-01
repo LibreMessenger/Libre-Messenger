@@ -153,7 +153,6 @@
   <string name="unpublish_pgp">OpenPGP-publieke sleutel verwijderen</string>
   <string name="unpublish_pgp_message">Weet je zeker dat je je OpenPGP-publieke sleutel uit je aanwezigheidsaankondiging wil verwijderen?\nJe contacten zullen je geen OpenPGP-versleutelde berichten meer kunnen sturen.</string>
   <string name="openpgp_has_been_published">OpenPGP-publieke sleutel is gepubliceerd.</string>
-  <string name="republish_pgp_keys">Vergeet niet je OpenPGP-publieke sleutels opnieuw te publiceren!</string>
   <string name="mgmt_account_are_you_sure">Weet je het zeker?</string>
   <string name="mgmt_account_delete_confirm_text">Als je je account verwijdert, wordt je volledige gespreksgeschiedenis gewist</string>
   <string name="attach_record_voice">Stem opnemen</string>

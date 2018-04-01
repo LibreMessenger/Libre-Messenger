@@ -145,7 +145,6 @@
   <string name="mgmt_account_publish_avatar">Zveřejnit avatar</string>
   <string name="mgmt_account_publish_pgp">Zveřejnit OpenPGP klíč</string>
   <string name="openpgp_has_been_published">Veřejný OpenPGP klíč byl zveřejněn.</string>
-  <string name="republish_pgp_keys">Nezapomeňte znovuzveřejnit své veřejné OpenPGP klíče!</string>
   <string name="mgmt_account_are_you_sure">Jste si jisti?</string>
   <string name="attach_record_voice">Nahrát hlas</string>
   <string name="account_settings_jabber_id">Jabber ID</string>

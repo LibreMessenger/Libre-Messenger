@@ -165,7 +165,6 @@
   <string name="unpublish_pgp">Alisin ang OpenPGP public key</string>
   <string name="unpublish_pgp_message">Sigurado kabang ailisin sa iyong presensyang anunsyo ang OpenPGP public key? Ang iyong mga kontak ay hindi na pwedeng magpadala sayo ng OpenPGP encrypted na mga mensahe.</string>
   <string name="openpgp_has_been_published">Napublish na ang OpenPGP public key.</string>
-  <string name="republish_pgp_keys">Tandaan na i-publish ulit ang iyong OpenPGP public keys!</string>
   <string name="mgmt_account_are_you_sure">Sigurado ka ba?</string>
   <string name="mgmt_account_delete_confirm_text">Kapag dinelete mo ang iyong account, ang lahat na pag-uusap na nangyari sa iyong account ay mawala</string>
   <string name="attach_record_voice">I-rekord ang boses</string>

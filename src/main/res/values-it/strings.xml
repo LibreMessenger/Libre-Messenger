@@ -153,7 +153,6 @@
   <string name="unpublish_pgp">Rimuovi chiave pubblica OpenPGP</string>
   <string name="unpublish_pgp_message">Sei sicuro di volere rimuovere la tua chiave pubblica OpenPGP dalla dichiarazione di presenza?\nI tuoi contatti non potranno più inviarti messaggi cifrati con OpenPGP.</string>
   <string name="openpgp_has_been_published">La chiave pubblica OpenPGP è stata pubblicata.</string>
-  <string name="republish_pgp_keys">Ricorda di ripubblicare le tue chiavi pubbliche OpenPGP!</string>
   <string name="mgmt_account_are_you_sure">Sei sicuro?</string>
   <string name="mgmt_account_delete_confirm_text">Se elimini il tuo account perderai tutta la cronologia delle conversazioni</string>
   <string name="attach_record_voice">Registra la voce</string>
