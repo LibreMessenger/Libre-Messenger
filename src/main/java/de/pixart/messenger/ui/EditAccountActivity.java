@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.security.KeyChain;
 import android.security.KeyChainAliasCallback;
@@ -19,6 +20,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,12 +52,15 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.crypto.axolotl.XmppAxolotlSession;
 import de.pixart.messenger.databinding.ActivityEditAccountBinding;
+import de.pixart.messenger.databinding.DialogPresenceBinding;
 import de.pixart.messenger.entities.Account;
+import de.pixart.messenger.entities.PresenceTemplate;
 import de.pixart.messenger.services.BarcodeProvider;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.services.XmppConnectionService.OnAccountUpdate;
 import de.pixart.messenger.services.XmppConnectionService.OnCaptchaRequested;
 import de.pixart.messenger.ui.adapter.KnownHostsAdapter;
+import de.pixart.messenger.ui.adapter.PresenceTemplateAdapter;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.utils.XmppUri;
@@ -637,7 +642,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             reconnect.setVisible(true);
             announcePGP.setVisible(true);
             mamPrefs.setVisible(mAccount.getXmppConnection().getFeatures().mam());
-            changePresence.setVisible(manuallyChangePresence());
+            changePresence.setVisible(true);
         } else {
             announcePGP.setVisible(false);
             reconnect.setVisible(false);
@@ -878,9 +883,23 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     }
 
     private void changePresence() {
-        Intent intent = new Intent(this, SetPresenceActivity.class);
-        intent.putExtra(SetPresenceActivity.EXTRA_ACCOUNT, mAccount.getJid().toBareJid().toString());
-        startActivity(intent);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean manualStatus = sharedPreferences.getBoolean(SettingsActivity.MANUALLY_CHANGE_PRESENCE, getResources().getBoolean(R.bool.manually_change_presence));
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final DialogPresenceBinding binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.dialog_presence, null, false);
+        binding.show.setVisibility(manualStatus ? View.VISIBLE : View.GONE);
+        List<PresenceTemplate> templates = xmppConnectionService.getPresenceTemplates(mAccount);
+        PresenceTemplateAdapter presenceTemplateAdapter = new PresenceTemplateAdapter(this, R.layout.simple_list_item, templates);
+        binding.statusMessage.setAdapter(presenceTemplateAdapter);
+        binding.statusMessage.setOnItemClickListener((parent, view, position, id) -> {
+            PresenceTemplate template = (PresenceTemplate) parent.getItemAtPosition(position);
+            Log.d(Config.LOGTAG, "selected: " + template.getStatusMessage());
+        });
+        builder.setTitle(R.string.change_presence);
+        builder.setView(binding.getRoot());
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.setPositiveButton(R.string.confirm, null);
+        builder.create().show();
     }
 
     @Override
