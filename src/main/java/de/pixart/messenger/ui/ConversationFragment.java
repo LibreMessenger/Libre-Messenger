@@ -611,12 +611,12 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 
             @Override
             public void success(Message message) {
-                activity.xmppConnectionService.sendMessage(message);
+
             }
 
             @Override
             public void error(int errorCode, Message object) {
-
+                //TODO show possible pgp error
             }
 
             @Override
@@ -644,7 +644,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             public void success(Message message) {
                 runOnUiThread(() -> activity.hideToast());
                 hidePrepareFileToast(prepareFileToast);
-                activity.xmppConnectionService.sendMessage(message);
             }
 
             @Override
@@ -659,35 +658,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 hidePrepareFileToast(prepareFileToast);
             }
         });
-    }
-
-    private void attachPhotoToConversation(Conversation conversation, Uri uri) {
-        if (conversation == null) {
-            return;
-        }
-        final Toast prepareFileToast = Toast.makeText(getActivity(), getText(R.string.preparing_image), Toast.LENGTH_LONG);
-        prepareFileToast.show();
-        activity.delegateUriPermissionsToService(uri);
-        activity.xmppConnectionService.attachImageToConversation(conversation, uri,
-                new UiCallback<Message>() {
-
-                    @Override
-                    public void userInputRequried(PendingIntent pi, Message object) {
-                        hidePrepareFileToast(prepareFileToast);
-                    }
-
-                    @Override
-                    public void success(Message message) {
-                        hidePrepareFileToast(prepareFileToast);
-                        activity.xmppConnectionService.sendMessage(message);
-                    }
-
-                    @Override
-                    public void error(final int error, Message message) {
-                        hidePrepareFileToast(prepareFileToast);
-                        runOnUiThread(() -> activity.replaceToast(getString(error)));
-                    }
-                });
     }
 
     private void attachImagesToConversation(Conversation conversation, Uri uri) {
@@ -816,7 +786,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     @Override
                     public void success(Message message) {
                         hidePrepareFileToast(prepareFileToast);
-                        activity.xmppConnectionService.sendMessage(message);
                     }
 
                     @Override
@@ -2522,8 +2491,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     @Override
                     public void success(Message message) {
                         //TODO the following two call can be made before the callback
-                        message.setEncryption(Message.ENCRYPTION_DECRYPTED);
-                        activity.xmppConnectionService.sendMessage(message);
                         getActivity().runOnUiThread(() -> messageSent());
                     }
 

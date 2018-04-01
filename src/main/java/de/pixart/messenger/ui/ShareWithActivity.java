@@ -72,12 +72,7 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
 
         @Override
         public void inform(final String text) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    replaceToast(text);
-                }
-            });
+            runOnUiThread(() -> replaceToast(text));
         }
 
         @Override
@@ -89,24 +84,21 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
         @Override
         public void success(final Message message) {
             xmppConnectionService.sendMessage(message);
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (attachmentCounter.decrementAndGet() <= 0) {
-                        int resId;
-                        if (share.image && share.multiple) {
-                            resId = R.string.shared_images_with_x;
-                        } else if (share.image) {
-                            resId = R.string.shared_image_with_x;
-                        } else {
-                            resId = R.string.shared_file_with_x;
-                        }
-                        replaceToast(getString(resId, message.getConversation().getName()));
-                        if (mReturnToPrevious) {
-                            finish();
-                        } else {
-                            switchToConversation(message.getConversation());
-                        }
+            runOnUiThread(() -> {
+                if (attachmentCounter.decrementAndGet() <= 0) {
+                    int resId;
+                    if (share.image && share.multiple) {
+                        resId = R.string.shared_images_with_x;
+                    } else if (share.image) {
+                        resId = R.string.shared_image_with_x;
+                    } else {
+                        resId = R.string.shared_file_with_x;
+                    }
+                    replaceToast(getString(resId, message.getConversation().getName()));
+                    if (mReturnToPrevious) {
+                        finish();
+                    } else {
+                        switchToConversation(message.getConversation());
                     }
                 }
             });
@@ -373,7 +365,6 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
             if (mReturnToPrevious && this.share.text != null && !this.share.text.isEmpty()) {
                 final PresenceSelector.OnPresenceSelected callback = new PresenceSelector.OnPresenceSelected() {
                     private void finishAndSend(Message message) {
-                        xmppConnectionService.sendMessage(message);
                         replaceToast(getString(R.string.shared_text_with_x, conversation.getName()));
                         finish();
                     }
@@ -415,6 +406,7 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
                         if (encryption == Message.ENCRYPTION_OTR) {
                             message.setCounterpart(conversation.getNextCounterpart());
                         }
+                        xmppConnectionService.sendMessage(message);
                         finishAndSend(message);
                     }
                 };
