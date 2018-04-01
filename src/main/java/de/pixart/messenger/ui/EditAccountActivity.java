@@ -1014,7 +1014,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         this.binding.accountJid.setEnabled(editable);
         this.binding.accountJid.setFocusable(editable);
         this.binding.accountJid.setFocusableInTouchMode(editable);
-        
+
         if (mAccount.isOptionSet(Account.OPTION_MAGIC_CREATE) || !mAccount.isOptionSet(Account.OPTION_LOGGED_IN_SUCCESSFULLY)) {
             this.binding.accountPasswordLayout.setPasswordVisibilityToggleEnabled(true);
         } else {
