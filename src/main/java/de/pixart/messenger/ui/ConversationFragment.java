@@ -1800,6 +1800,10 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     activity.selectPresence(conversation, () -> {
                         message.setCounterpart(conversation.getNextCounterpart());
                         activity.xmppConnectionService.resendFailedMessages(message);
+                        new Handler().post(() -> {
+                            int size = messageList.size();
+                            this.binding.messagesView.setSelection(size - 1);
+                        });
                     });
                     return;
                 }
@@ -1812,6 +1816,10 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             }
         }
         activity.xmppConnectionService.resendFailedMessages(message);
+        new Handler().post(() -> {
+            int size = messageList.size();
+            this.binding.messagesView.setSelection(size - 1);
+        });
     }
 
     private void copyUrl(Message message) {
