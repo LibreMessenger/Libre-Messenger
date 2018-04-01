@@ -30,6 +30,7 @@
 package de.pixart.messenger.ui;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -46,6 +47,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
@@ -56,6 +58,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import net.java.otr4j.session.SessionStatus;
+
+import org.openintents.openpgp.util.OpenPgpApi;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -74,6 +78,7 @@ import de.pixart.messenger.ui.interfaces.OnConversationArchived;
 import de.pixart.messenger.ui.interfaces.OnConversationRead;
 import de.pixart.messenger.ui.interfaces.OnConversationSelected;
 import de.pixart.messenger.ui.interfaces.OnConversationsListItemUpdated;
+import de.pixart.messenger.ui.util.ActivityResult;
 import de.pixart.messenger.ui.util.PendingItem;
 import de.pixart.messenger.utils.ExceptionHelper;
 import de.pixart.messenger.utils.UIHelper;
@@ -102,6 +107,7 @@ public class ConversationActivity extends XmppActivity implements OnConversation
     private static final @IdRes
     int[] FRAGMENT_ID_NOTIFICATION_ORDER = {R.id.secondary_fragment, R.id.main_fragment};
     private final PendingItem<Intent> pendingViewIntent = new PendingItem<>();
+    private final PendingItem<ActivityResult> postponedActivityResult = new PendingItem<>();
     private ActivityConversationsBinding binding;
     private boolean mActivityPaused = true;
     private AtomicBoolean mRedirectInProcess = new AtomicBoolean(false);
@@ -183,6 +189,12 @@ public class ConversationActivity extends XmppActivity implements OnConversation
         for (@IdRes int id : FRAGMENT_ID_NOTIFICATION_ORDER) {
             notifyFragmentOfBackendConnected(id);
         }
+
+        ActivityResult activityResult = postponedActivityResult.pop();
+        if (activityResult != null) {
+            handleActivityResult(activityResult);
+        }
+
         invalidateActionBarTitle();
         if (binding.secondaryFragment != null && ConversationFragment.getConversation(this) == null) {
             Conversation conversation = ConversationsOverviewFragment.getSuggestion(this);
@@ -327,23 +339,33 @@ public class ConversationActivity extends XmppActivity implements OnConversation
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         UriHandlerActivity.onRequestPermissionResult(this, requestCode, grantResults);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, final Intent data) {
-        if (resultCode == RESULT_OK) {
-            handlePositiveActivityResult(requestCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+        ActivityResult activityResult = ActivityResult.of(requestCode, resultCode, data);
+        if (xmppConnectionService != null) {
+            handleActivityResult(activityResult);
         } else {
-            handleNegativeActivityResult(requestCode);
+            this.postponedActivityResult.push(activityResult);
+        }
+    }
+
+    private void handleActivityResult(ActivityResult activityResult) {
+        if (activityResult.resultCode == Activity.RESULT_OK) {
+            handlePositiveActivityResult(activityResult.requestCode, activityResult.data);
+        } else {
+            handleNegativeActivityResult(activityResult.requestCode);
         }
     }
 
     private void handleNegativeActivityResult(int requestCode) {
+        Conversation conversation = ConversationFragment.getConversationReliable(this);
         switch (requestCode) {
             case REQUEST_DECRYPT_PGP:
-                Conversation conversation = ConversationFragment.getConversationReliable(this);
                 if (conversation == null) {
                     break;
                 }
@@ -356,13 +378,27 @@ public class ConversationActivity extends XmppActivity implements OnConversation
     }
 
     private void handlePositiveActivityResult(int requestCode, final Intent data) {
+        Log.d(Config.LOGTAG, "positive activity result");
+        Conversation conversation = ConversationFragment.getConversationReliable(this);
+        if (conversation == null) {
+            Log.d(Config.LOGTAG, "conversation not found");
+            return;
+        }
         switch (requestCode) {
             case REQUEST_DECRYPT_PGP:
-                Conversation conversation = ConversationFragment.getConversationReliable(this);
-                if (conversation == null) {
-                    break;
-                }
                 conversation.getAccount().getPgpDecryptionService().continueDecryption(data);
+                break;
+            case REQUEST_CHOOSE_PGP_ID:
+                long id = data.getLongExtra(OpenPgpApi.EXTRA_SIGN_KEY_ID, 0);
+                if (id != 0) {
+                    conversation.getAccount().setPgpSignId(id);
+                    announcePgp(conversation.getAccount(), null, null, onOpenPGPKeyPublished);
+                } else {
+                    choosePgpSignId(conversation.getAccount());
+                }
+                break;
+            case REQUEST_ANNOUNCE_PGP:
+                announcePgp(conversation.getAccount(), conversation, data, onOpenPGPKeyPublished);
                 break;
         }
     }
@@ -768,7 +804,6 @@ public class ConversationActivity extends XmppActivity implements OnConversation
                 Conversation suggestion = ConversationsOverviewFragment.getSuggestion(this, conversation);
                 if (suggestion != null) {
                     openConversation(suggestion, null);
-                    return;
                 }
             }
         }

@@ -57,8 +57,6 @@ import android.widget.Toast;
 
 import net.java.otr4j.session.SessionStatus;
 
-import org.openintents.openpgp.util.OpenPgpApi;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -115,8 +113,6 @@ import de.pixart.messenger.xmpp.jid.InvalidJidException;
 import de.pixart.messenger.xmpp.jid.Jid;
 
 import static de.pixart.messenger.ui.XmppActivity.EXTRA_ACCOUNT;
-import static de.pixart.messenger.ui.XmppActivity.REQUEST_ANNOUNCE_PGP;
-import static de.pixart.messenger.ui.XmppActivity.REQUEST_CHOOSE_PGP_ID;
 import static de.pixart.messenger.xmpp.Patches.ENCRYPTION_EXCEPTIONS;
 
 public class ConversationFragment extends XmppFragment implements EditMessage.KeyboardListener {
@@ -916,18 +912,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             case REQUEST_TRUST_KEYS_MENU:
                 int choice = data.getIntExtra("choice", ATTACHMENT_CHOICE_INVALID);
                 selectPresenceToAttachFile(choice);
-                break;
-            case REQUEST_CHOOSE_PGP_ID:
-                long id = data.getLongExtra(OpenPgpApi.EXTRA_SIGN_KEY_ID, 0);
-                if (id != 0) {
-                    conversation.getAccount().setPgpSignId(id);
-                    activity.announcePgp(conversation.getAccount(), null, null, activity.onOpenPGPKeyPublished);
-                } else {
-                    activity.choosePgpSignId(conversation.getAccount());
-                }
-                break;
-            case REQUEST_ANNOUNCE_PGP:
-                activity.announcePgp(conversation.getAccount(), conversation, data, activity.onOpenPGPKeyPublished);
                 break;
             case ATTACHMENT_CHOICE_CHOOSE_IMAGE:
                 List<Uri> imageUris = AttachmentTool.extractUriFromIntent(data);
@@ -2741,10 +2725,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             if (scrollState != null) {
                 setScrollPosition(scrollState);
             }
-        }
-        ActivityResult activityResult = postponedActivityResult.pop();
-        if (activityResult != null) {
-            handleActivityResult(activityResult);
         }
     }
 
