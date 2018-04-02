@@ -32,9 +32,9 @@ import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.generator.MessageGenerator;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
-import de.pixart.messenger.xmpp.jid.InvalidJidException;
-import de.pixart.messenger.xmpp.jid.Jid;
+import de.pixart.messenger.xmpp.jid.OtrJidHelper;
 import de.pixart.messenger.xmpp.stanzas.MessagePacket;
+import rocks.xmpp.addr.Jid;
 
 public class OtrService extends OtrCryptoEngineImpl implements OtrEngineHost {
 
@@ -104,15 +104,15 @@ public class OtrService extends OtrCryptoEngineImpl implements OtrEngineHost {
     @Override
     public void askForSecret(SessionID id, InstanceTag instanceTag, String question) {
         try {
-            final Jid jid = Jid.fromSessionID(id);
+            final Jid jid = OtrJidHelper.fromSessionID(id);
             Conversation conversation = this.mXmppConnectionService.find(this.account, jid);
             if (conversation != null) {
                 conversation.smp().hint = question;
                 conversation.smp().status = Conversation.Smp.STATUS_CONTACT_REQUESTED;
                 mXmppConnectionService.updateConversationUi();
             }
-        } catch (InvalidJidException e) {
-            Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": smp in invalid session " + id.toString());
+        } catch (IllegalArgumentException e) {
+            Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": smp in invalid session " + id.toString());
         }
     }
 
@@ -184,14 +184,14 @@ public class OtrService extends OtrCryptoEngineImpl implements OtrEngineHost {
         packet.setBody(body);
         MessageGenerator.addMessageHints(packet);
         try {
-            Jid jid = Jid.fromSessionID(session);
+            Jid jid = OtrJidHelper.fromSessionID(session);
             Conversation conversation = mXmppConnectionService.find(account, jid);
             if (conversation != null && conversation.setOutgoingChatState(Config.DEFAULT_CHATSTATE)) {
                 if (mXmppConnectionService.sendChatStates()) {
                     packet.addChild(ChatState.toElement(conversation.getOutgoingChatState()));
                 }
             }
-        } catch (final InvalidJidException ignored) {
+        } catch (final IllegalArgumentException ignored) {
 
         }
 
@@ -230,13 +230,13 @@ public class OtrService extends OtrCryptoEngineImpl implements OtrEngineHost {
 
     private void setSmpStatus(SessionID id, int status) {
         try {
-            final Jid jid = Jid.fromSessionID(id);
+            final Jid jid = OtrJidHelper.fromSessionID(id);
             Conversation conversation = this.mXmppConnectionService.find(this.account, jid);
             if (conversation != null) {
                 conversation.smp().status = status;
                 mXmppConnectionService.updateConversationUi();
             }
-        } catch (final InvalidJidException ignored) {
+        } catch (final IllegalArgumentException ignored) {
 
         }
     }
@@ -261,7 +261,7 @@ public class OtrService extends OtrCryptoEngineImpl implements OtrEngineHost {
 
     public void sendOtrErrorMessage(SessionID session, String errorText) {
         try {
-            Jid jid = Jid.fromSessionID(session);
+            Jid jid = OtrJidHelper.fromSessionID(session);
             Conversation conversation = mXmppConnectionService.find(account, jid);
             String id = conversation == null ? null : conversation.getLastReceivedOtrMessageId();
             if (id != null) {
@@ -270,10 +270,10 @@ public class OtrService extends OtrCryptoEngineImpl implements OtrEngineHost {
                 packet.setFrom(account.getJid());
                 mXmppConnectionService.sendMessagePacket(account, packet);
                 Log.d(Config.LOGTAG, packet.toString());
-                Log.d(Config.LOGTAG, account.getJid().toBareJid().toString()
+                Log.d(Config.LOGTAG, account.getJid().asBareJid().toString()
                         + ": unreadable OTR message in " + conversation.getName());
             }
-        } catch (InvalidJidException e) {
+        } catch (IllegalArgumentException e) {
             return;
         }
     }
@@ -287,7 +287,7 @@ public class OtrService extends OtrCryptoEngineImpl implements OtrEngineHost {
     public void verify(SessionID id, String fingerprint, boolean approved) {
         Log.d(Config.LOGTAG, "OtrService.verify(" + id.toString() + "," + fingerprint + "," + String.valueOf(approved) + ")");
         try {
-            final Jid jid = Jid.fromSessionID(id);
+            final Jid jid = OtrJidHelper.fromSessionID(id);
             Conversation conversation = this.mXmppConnectionService.find(this.account, jid);
             if (conversation != null) {
                 if (approved) {
@@ -298,7 +298,7 @@ public class OtrService extends OtrCryptoEngineImpl implements OtrEngineHost {
                 mXmppConnectionService.updateConversationUi();
                 mXmppConnectionService.syncRosterToDisk(conversation.getAccount());
             }
-        } catch (final InvalidJidException ignored) {
+        } catch (final IllegalArgumentException ignored) {
         }
     }
 

@@ -16,7 +16,7 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
-import de.pixart.messenger.xmpp.jid.Jid;
+import rocks.xmpp.addr.Jid;
 
 public class BlocklistActivity extends AbstractSearchableListItemActivity implements OnUpdateBlocklist {
     private List<String> mKnownHosts = new ArrayList<>();
@@ -86,7 +86,7 @@ public class BlocklistActivity extends AbstractSearchableListItemActivity implem
         EnterJidDialog dialog = new EnterJidDialog(
                 this, mKnownHosts, null,
                 getString(R.string.block_jabber_id), getString(R.string.block),
-                null, account.getJid().toBareJid().toString(), true, xmppConnectionService.multipleAccounts()
+                null, account.getJid().asBareJid().toString(), true, xmppConnectionService.multipleAccounts()
         );
 
         dialog.setOnEnterJidDialogPositiveListener(new EnterJidDialog.OnEnterJidDialogPositiveListener() {

@@ -17,3 +17,4 @@
 -dontwarn org.bouncycastle.x509.util.LDAPStoreHelper
 -dontwarn org.bouncycastle.jce.provider.X509LDAPCertStoreSpi
 -dontwarn org.bouncycastle.cert.dane.**
+-dontwarn rocks.xmpp.addr.**

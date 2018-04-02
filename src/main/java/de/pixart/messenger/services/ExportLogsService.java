@@ -36,7 +36,7 @@ import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.persistance.DatabaseBackend;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.utils.EncryptDecryptFile;
-import de.pixart.messenger.xmpp.jid.Jid;
+import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.ui.SettingsActivity.USE_MULTI_ACCOUNTS;
 
@@ -117,7 +117,7 @@ public class ExportLogsService extends Service {
         Jid accountJid = resolveAccountUuid(conversation.getAccountUuid());
         Jid contactJid = conversation.getJid();
 
-        File dir = new File(String.format(DIRECTORY_STRING_FORMAT, accountJid.toBareJid().toString()));
+        File dir = new File(String.format(DIRECTORY_STRING_FORMAT, accountJid.asBareJid().toString()));
         dir.mkdirs();
 
         BufferedWriter bw = null;
@@ -129,7 +129,7 @@ public class ExportLogsService extends Service {
                     String date = simpleDateFormat.format(new Date(message.getTimeSent()));
                     if (bw == null) {
                         bw = new BufferedWriter(new FileWriter(
-                                new File(dir, contactJid.toBareJid().toString() + ".txt")));
+                                new File(dir, contactJid.asBareJid().toString() + ".txt")));
                     }
                     String jid = null;
                     switch (message.getStatus()) {
@@ -139,7 +139,7 @@ public class ExportLogsService extends Service {
                         case Message.STATUS_SEND:
                         case Message.STATUS_SEND_RECEIVED:
                         case Message.STATUS_SEND_DISPLAYED:
-                            jid = accountJid.toBareJid().toString();
+                            jid = accountJid.asBareJid().toString();
                             break;
                     }
                     if (jid != null) {

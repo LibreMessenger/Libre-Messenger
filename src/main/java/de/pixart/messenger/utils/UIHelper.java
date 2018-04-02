@@ -4,10 +4,7 @@ import android.content.Context;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.util.Pair;
-import android.widget.PopupMenu;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.util.Arrays;
@@ -26,7 +23,7 @@ import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.entities.Transferable;
-import de.pixart.messenger.xmpp.jid.Jid;
+import rocks.xmpp.addr.Jid;
 
 public class UIHelper {
 
@@ -474,7 +471,7 @@ public class UIHelper {
                 return conversation.getMucOptions().getSelf().getName();
             } else {
                 final Jid jid = conversation.getAccount().getJid();
-                return jid.hasLocalpart() ? jid.getLocalpart() : jid.toDomainJid().toString();
+                return jid.getLocal() != null ? jid.getLocal() : Jid.ofDomain(jid.getDomain()).toString();
             }
         }
     }
@@ -507,7 +504,7 @@ public class UIHelper {
         if (counterpart == null) {
             return "";
         } else if (!counterpart.isBareJid()) {
-            return counterpart.getResourcepart().trim();
+            return counterpart.getResource().trim();
         } else {
             return counterpart.toString().trim();
         }

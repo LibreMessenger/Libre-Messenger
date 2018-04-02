@@ -9,7 +9,7 @@ import java.util.Locale;
 
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xml.Element;
-import de.pixart.messenger.xmpp.jid.Jid;
+import rocks.xmpp.addr.Jid;
 
 public class Bookmark extends Element implements ListItem {
 
@@ -58,7 +58,7 @@ public class Bookmark extends Element implements ListItem {
             return getBookmarkName().trim();
         } else {
             Jid jid = this.getJid();
-            String name = jid != null ? jid.getLocalpart() : getAttribute("jid");
+            String name = jid != null ? jid.getLocal() : getAttribute("jid");
             return name != null ? name : "";
         }
     }

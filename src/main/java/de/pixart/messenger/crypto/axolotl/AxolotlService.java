@@ -51,11 +51,10 @@ import de.pixart.messenger.utils.SerialSingleThreadExecutor;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.OnAdvancedStreamFeaturesLoaded;
 import de.pixart.messenger.xmpp.OnIqPacketReceived;
-import de.pixart.messenger.xmpp.jid.InvalidJidException;
-import de.pixart.messenger.xmpp.jid.Jid;
 import de.pixart.messenger.xmpp.pep.PublishOptions;
 import de.pixart.messenger.xmpp.stanzas.IqPacket;
 import de.pixart.messenger.xmpp.stanzas.MessagePacket;
+import rocks.xmpp.addr.Jid;
 
 public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
 
@@ -83,8 +82,9 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
     private int numPublishTriesOnEmptyPep = 0;
     private boolean pepBroken = false;
     private int lastDeviceListNotificationHash = 0;
-    private AtomicBoolean changeAccessMode = new AtomicBoolean(false);
     private Set<XmppAxolotlSession> postponedSessions = new HashSet<>(); //sessions stored here will receive after mam catchup treatment
+
+    private AtomicBoolean changeAccessMode = new AtomicBoolean(false);
 
     @Override
     public void onAdvancedStreamFeaturesAvailable(Account account) {
@@ -93,7 +93,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
                 && account.getXmppConnection().getFeatures().pep()) {
             publishBundlesIfNeeded(true, false);
         } else {
-            Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": skipping OMEMO initialization");
+            Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": skipping OMEMO initialization");
         }
     }
 
@@ -101,7 +101,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
         for (Jid jid : jids) {
             if (deviceIds.get(jid) != null) {
                 for (Integer foreignId : this.deviceIds.get(jid)) {
-                    SignalProtocolAddress address = new SignalProtocolAddress(jid.toPreppedString(), foreignId);
+                    SignalProtocolAddress address = new SignalProtocolAddress(jid.toString(), foreignId);
                     if (fetchStatusMap.getAll(address.getName()).containsValue(FetchStatus.ERROR)) {
                         return true;
                     }
@@ -112,15 +112,15 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
     }
 
     public void preVerifyFingerprint(Contact contact, String fingerprint) {
-        axolotlStore.preVerifyFingerprint(contact.getAccount(), contact.getJid().toBareJid().toPreppedString(), fingerprint);
+        axolotlStore.preVerifyFingerprint(contact.getAccount(), contact.getJid().asBareJid().toString(), fingerprint);
     }
 
     public void preVerifyFingerprint(Account account, String fingerprint) {
-        axolotlStore.preVerifyFingerprint(account, account.getJid().toBareJid().toPreppedString(), fingerprint);
+        axolotlStore.preVerifyFingerprint(account, account.getJid().asBareJid().toString(), fingerprint);
     }
 
     public boolean hasVerifiedKeys(String name) {
-        for(XmppAxolotlSession session : this.sessions.getAll(name).values()) {
+        for (XmppAxolotlSession session : this.sessions.getAll(name).values()) {
             if (session.getTrust().isVerified()) {
                 return true;
             }
@@ -201,10 +201,10 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
                         Bundle information = CryptoHelper.extractCertificateInformation(certificate);
                         try {
                             final String cn = information.getString("subject_cn");
-                            final Jid jid = Jid.fromString(bareJid);
+                            final Jid jid = Jid.of(bareJid);
                             Log.d(Config.LOGTAG, "setting common name for " + jid + " to " + cn);
                             account.getRoster().getContact(jid).setCommonName(cn);
-                        } catch (final InvalidJidException ignored) {
+                        } catch (final IllegalArgumentException ignored) {
                             //ignored
                         }
                     }
@@ -214,13 +214,12 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
         }
 
         private void fillMap(SQLiteAxolotlStore store) {
-            List<Integer> deviceIds = store.getSubDeviceSessions(account.getJid().toBareJid().toPreppedString());
-            putDevicesForJid(account.getJid().toBareJid().toPreppedString(), deviceIds, store);
+            List<Integer> deviceIds = store.getSubDeviceSessions(account.getJid().asBareJid().toString());
+            putDevicesForJid(account.getJid().asBareJid().toString(), deviceIds, store);
             for (String address : store.getKnownAddresses()) {
                 deviceIds = store.getSubDeviceSessions(address);
                 putDevicesForJid(address, deviceIds, store);
             }
-
         }
 
         @Override
@@ -247,13 +246,13 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
 
         public void clearErrorFor(Jid jid) {
             synchronized (MAP_LOCK) {
-                Map<Integer, FetchStatus> devices = this.map.get(jid.toBareJid().toPreppedString());
+                Map<Integer, FetchStatus> devices = this.map.get(jid.asBareJid().toString());
                 if (devices == null) {
                     return;
                 }
                 for (Map.Entry<Integer, FetchStatus> entry : devices.entrySet()) {
                     if (entry.getValue() == FetchStatus.ERROR) {
-                        Log.d(Config.LOGTAG, "resetting error for " + jid.toBareJid() + "(" + entry.getKey() + ")");
+                        Log.d(Config.LOGTAG, "resetting error for " + jid.asBareJid() + "(" + entry.getKey() + ")");
                         entry.setValue(FetchStatus.TIMEOUT);
                     }
                 }
@@ -262,7 +261,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
     }
 
     public static String getLogprefix(Account account) {
-        return LOGPREFIX + " (" + account.getJid().toBareJid().toString() + "): ";
+        return LOGPREFIX + " (" + account.getJid().asBareJid().toString() + "): ";
     }
 
     public AxolotlService(Account account, XmppConnectionService connectionService) {
@@ -287,28 +286,28 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
     }
 
     public Set<IdentityKey> getKeysWithTrust(FingerprintStatus status) {
-        return axolotlStore.getContactKeysWithTrust(account.getJid().toBareJid().toPreppedString(), status);
+        return axolotlStore.getContactKeysWithTrust(account.getJid().asBareJid().toString(), status);
     }
 
     public Set<IdentityKey> getKeysWithTrust(FingerprintStatus status, Jid jid) {
-        return axolotlStore.getContactKeysWithTrust(jid.toBareJid().toPreppedString(), status);
+        return axolotlStore.getContactKeysWithTrust(jid.asBareJid().toString(), status);
     }
 
     public Set<IdentityKey> getKeysWithTrust(FingerprintStatus status, List<Jid> jids) {
         Set<IdentityKey> keys = new HashSet<>();
         for (Jid jid : jids) {
-            keys.addAll(axolotlStore.getContactKeysWithTrust(jid.toPreppedString(), status));
+            keys.addAll(axolotlStore.getContactKeysWithTrust(jid.toString(), status));
         }
         return keys;
     }
 
     public long getNumTrustedKeys(Jid jid) {
-        return axolotlStore.getContactNumTrustedKeys(jid.toBareJid().toPreppedString());
+        return axolotlStore.getContactNumTrustedKeys(jid.asBareJid().toString());
     }
 
     public boolean anyTargetHasNoTrustedKeys(List<Jid> jids) {
         for (Jid jid : jids) {
-            if (axolotlStore.getContactNumTrustedKeys(jid.toBareJid().toPreppedString()) == 0) {
+            if (axolotlStore.getContactNumTrustedKeys(jid.asBareJid().toString()) == 0) {
                 return true;
             }
         }
@@ -316,15 +315,16 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
     }
 
     private SignalProtocolAddress getAddressForJid(Jid jid) {
-        return new SignalProtocolAddress(jid.toPreppedString(), 0);
+        return new SignalProtocolAddress(jid.toString(), 0);
     }
 
     public Collection<XmppAxolotlSession> findOwnSessions() {
-        SignalProtocolAddress ownAddress = getAddressForJid(account.getJid().toBareJid());
+        SignalProtocolAddress ownAddress = getAddressForJid(account.getJid().asBareJid());
         ArrayList<XmppAxolotlSession> s = new ArrayList<>(this.sessions.getAll(ownAddress.getName()).values());
         Collections.sort(s);
         return s;
     }
+
 
     public Collection<XmppAxolotlSession> findSessionsForContact(Contact contact) {
         SignalProtocolAddress contactAddress = getAddressForJid(contact.getJid());
@@ -372,12 +372,12 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
     }
 
     public void destroy() {
-        Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": destroying old axolotl service. no longer in use");
+        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": destroying old axolotl service. no longer in use");
         mXmppConnectionService.databaseBackend.wipeAxolotlDb(account);
     }
 
     public AxolotlService makeNew() {
-        Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": make new axolotl service");
+        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": make new axolotl service");
         return new AxolotlService(this.account, this.mXmppConnectionService);
     }
 
@@ -386,19 +386,19 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
     }
 
     public SignalProtocolAddress getOwnAxolotlAddress() {
-        return new SignalProtocolAddress(account.getJid().toBareJid().toPreppedString(),getOwnDeviceId());
+        return new SignalProtocolAddress(account.getJid().asBareJid().toString(), getOwnDeviceId());
     }
 
     public Set<Integer> getOwnDeviceIds() {
-        return this.deviceIds.get(account.getJid().toBareJid());
+        return this.deviceIds.get(account.getJid().asBareJid());
     }
 
     public void registerDevices(final Jid jid, @NonNull final Set<Integer> deviceIds) {
         final int hash = deviceIds.hashCode();
-        final boolean me = jid.toBareJid().equals(account.getJid().toBareJid());
+        final boolean me = jid.asBareJid().equals(account.getJid().asBareJid());
         if (me) {
             if (hash != 0 && hash == this.lastDeviceListNotificationHash) {
-                Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": ignoring duplicate own device id list");
+                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": ignoring duplicate own device id list");
                 return;
             }
             this.lastDeviceListNotificationHash = hash;
@@ -407,10 +407,10 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
         if (me) {
             deviceIds.remove(getOwnDeviceId());
         }
-        Set<Integer> expiredDevices = new HashSet<>(axolotlStore.getSubDeviceSessions(jid.toBareJid().toPreppedString()));
+        Set<Integer> expiredDevices = new HashSet<>(axolotlStore.getSubDeviceSessions(jid.asBareJid().toString()));
         expiredDevices.removeAll(deviceIds);
         for (Integer deviceId : expiredDevices) {
-            SignalProtocolAddress address = new SignalProtocolAddress(jid.toBareJid().toPreppedString(), deviceId);
+            SignalProtocolAddress address = new SignalProtocolAddress(jid.asBareJid().toString(), deviceId);
             XmppAxolotlSession session = sessions.get(address);
             if (session != null && session.getFingerprint() != null) {
                 if (session.getTrust().isActive()) {
@@ -420,11 +420,11 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
         }
         Set<Integer> newDevices = new HashSet<>(deviceIds);
         for (Integer deviceId : newDevices) {
-            SignalProtocolAddress address = new SignalProtocolAddress(jid.toBareJid().toPreppedString(), deviceId);
+            SignalProtocolAddress address = new SignalProtocolAddress(jid.asBareJid().toString(), deviceId);
             XmppAxolotlSession session = sessions.get(address);
             if (session != null && session.getFingerprint() != null) {
                 if (!session.getTrust().isActive()) {
-                    Log.d(Config.LOGTAG,"reactivating device with fingerprint "+session.getFingerprint());
+                    Log.d(Config.LOGTAG, "reactivating device with fingerprint " + session.getFingerprint());
                     session.setTrust(session.getTrust().toActive());
                 }
             }
@@ -435,7 +435,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
             }
             needsPublishing |= this.changeAccessMode.get();
             for (Integer deviceId : deviceIds) {
-                SignalProtocolAddress ownDeviceAddress = new SignalProtocolAddress(jid.toBareJid().toPreppedString(), deviceId);
+                SignalProtocolAddress ownDeviceAddress = new SignalProtocolAddress(jid.asBareJid().toString(), deviceId);
                 if (sessions.get(ownDeviceAddress) == null) {
                     FetchStatus status = fetchStatusMap.get(ownDeviceAddress);
                     if (status == null || status == FetchStatus.TIMEOUT) {
@@ -474,7 +474,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
             Log.d(Config.LOGTAG, getLogprefix(account) + "publishOwnDeviceIdIfNeeded called, but PEP is broken. Ignoring... ");
             return;
         }
-        IqPacket packet = mXmppConnectionService.getIqGenerator().retrieveDeviceIds(account.getJid().toBareJid());
+        IqPacket packet = mXmppConnectionService.getIqGenerator().retrieveDeviceIds(account.getJid().asBareJid());
         mXmppConnectionService.sendIqPacket(account, packet, new OnIqPacketReceived() {
             @Override
             public void onIqPacketReceived(Account account, IqPacket packet) {
@@ -483,8 +483,8 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
                 } else {
                     Element item = mXmppConnectionService.getIqParser().getItem(packet);
                     Set<Integer> deviceIds = mXmppConnectionService.getIqParser().deviceIds(item);
-                    Log.d(Config.LOGTAG,account.getJid().toBareJid()+": retrieved own device list: "+deviceIds);
-                    registerDevices(account.getJid().toBareJid(),deviceIds);
+                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": retrieved own device list: " + deviceIds);
+                    registerDevices(account.getJid().asBareJid(), deviceIds);
                 }
             }
         });
@@ -492,18 +492,18 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
 
     private Set<Integer> getExpiredDevices() {
         Set<Integer> devices = new HashSet<>();
-        for(XmppAxolotlSession session : findOwnSessions()) {
+        for (XmppAxolotlSession session : findOwnSessions()) {
             if (session.getTrust().isActive()) {
                 long diff = System.currentTimeMillis() - session.getTrust().getLastActivation();
                 if (diff > Config.OMEMO_AUTO_EXPIRY) {
-                    long lastMessageDiff = System.currentTimeMillis() - mXmppConnectionService.databaseBackend.getLastTimeFingerprintUsed(account,session.getFingerprint());
-                    long hours = Math.round(lastMessageDiff/(1000*60.0*60.0));
+                    long lastMessageDiff = System.currentTimeMillis() - mXmppConnectionService.databaseBackend.getLastTimeFingerprintUsed(account, session.getFingerprint());
+                    long hours = Math.round(lastMessageDiff / (1000 * 60.0 * 60.0));
                     if (lastMessageDiff > Config.OMEMO_AUTO_EXPIRY) {
                         devices.add(session.getRemoteAddress().getDeviceId());
                         session.setTrust(session.getTrust().toInactive());
-                        Log.d(Config.LOGTAG,account.getJid().toBareJid()+": added own device " + session.getFingerprint() + " to list of expired devices. Last message received "+hours+" hours ago");
+                        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": added own device " + session.getFingerprint() + " to list of expired devices. Last message received " + hours + " hours ago");
                     } else {
-                        Log.d(Config.LOGTAG,account.getJid().toBareJid()+": own device "+session.getFingerprint()+" was active "+hours+" hours ago");
+                        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": own device " + session.getFingerprint() + " was active " + hours + " hours ago");
                     }
                 }
             }
@@ -542,7 +542,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
             public void onIqPacketReceived(Account account, IqPacket packet) {
                 Element error = packet.getType() == IqPacket.TYPE.ERROR ? packet.findChild("error") : null;
                 if (firstAttempt && error != null && error.hasChild("precondition-not-met", Namespace.PUBSUB_ERROR)) {
-                    Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": precondition wasn't met for device list. pushing node configuration");
+                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": precondition wasn't met for device list. pushing node configuration");
                     mXmppConnectionService.pushNodeConfiguration(account, AxolotlService.PEP_DEVICE_LIST, publishOptions, new XmppConnectionService.OnConfigurationPushed() {
                         @Override
                         public void onPushSucceeded() {
@@ -556,8 +556,8 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
                     });
                 } else {
                     if (AxolotlService.this.changeAccessMode.compareAndSet(true, false)) {
-                        Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": done changing access mode");
-                        account.setOption(Account.OPTION_REQUIRES_ACCESS_MODE_CHANGE,false);
+                        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": done changing access mode");
+                        account.setOption(Account.OPTION_REQUIRES_ACCESS_MODE_CHANGE, false);
                         mXmppConnectionService.databaseBackend.updateAccount(account);
                     }
                     if (packet.getType() == IqPacket.TYPE.ERROR) {
@@ -617,14 +617,14 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
             this.changeAccessMode.set(account.isOptionSet(Account.OPTION_REQUIRES_ACCESS_MODE_CHANGE));
         } else {
             if (account.setOption(Account.OPTION_REQUIRES_ACCESS_MODE_CHANGE, true)) {
-                Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": server doesn’t support publish-options. setting for later access mode change");
+                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": server doesn’t support publish-options. setting for later access mode change");
                 mXmppConnectionService.databaseBackend.updateAccount(account);
             }
         }
         if (this.changeAccessMode.get()) {
-            Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": server gained publish-options capabilities. changing access model");
+            Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": server gained publish-options capabilities. changing access model");
         }
-        IqPacket packet = mXmppConnectionService.getIqGenerator().retrieveBundlesForDevice(account.getJid().toBareJid(), getOwnDeviceId());
+        IqPacket packet = mXmppConnectionService.getIqGenerator().retrieveBundlesForDevice(account.getJid().asBareJid(), getOwnDeviceId());
         mXmppConnectionService.sendIqPacket(account, packet, new OnIqPacketReceived() {
             @Override
             public void onIqPacketReceived(Account account, IqPacket packet) {
@@ -753,7 +753,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
             public void onIqPacketReceived(final Account account, IqPacket packet) {
                 Element error = packet.getType() == IqPacket.TYPE.ERROR ? packet.findChild("error") : null;
                 if (firstAttempt && error != null && error.hasChild("precondition-not-met", Namespace.PUBSUB_ERROR)) {
-                    Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": precondition wasn't met for bundle. pushing node configuration");
+                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": precondition wasn't met for bundle. pushing node configuration");
                     final String node = AxolotlService.PEP_BUNDLES + ":" + getOwnDeviceId();
                     mXmppConnectionService.pushNodeConfiguration(account, node, publishOptions, new XmppConnectionService.OnConfigurationPushed() {
                         @Override
@@ -820,7 +820,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
         final List<Jid> jids;
         if (conversation.getMode() == Conversation.MODE_SINGLE) {
             jids = new ArrayList<>();
-            jids.add(conversation.getJid().toBareJid());
+            jids.add(conversation.getJid().asBareJid());
         } else {
             jids = conversation.getMucOptions().getMembers();
         }
@@ -844,7 +844,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
         final SignalProtocolAddress address = session.getRemoteAddress();
         final IdentityKey identityKey = session.getIdentityKey();
         try {
-            IqPacket packet = mXmppConnectionService.getIqGenerator().retrieveVerificationForDevice(Jid.fromString(address.getName()), address.getDeviceId());
+            IqPacket packet = mXmppConnectionService.getIqGenerator().retrieveVerificationForDevice(Jid.of(address.getName()), address.getDeviceId());
             mXmppConnectionService.sendIqPacket(account, packet, new OnIqPacketReceived() {
                 @Override
                 public void onIqPacketReceived(Account account, IqPacket packet) {
@@ -865,10 +865,10 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
                                     Bundle information = CryptoHelper.extractCertificateInformation(verification.first[0]);
                                     try {
                                         final String cn = information.getString("subject_cn");
-                                        final Jid jid = Jid.fromString(address.getName());
+                                        final Jid jid = Jid.of(address.getName());
                                         Log.d(Config.LOGTAG, "setting common name for " + jid + " to " + cn);
                                         account.getRoster().getContact(jid).setCommonName(cn);
-                                    } catch (final InvalidJidException ignored) {
+                                    } catch (final IllegalArgumentException ignored) {
                                         //ignored
                                     }
                                     finishBuildingSessionsFromPEP(address);
@@ -887,7 +887,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
                     finishBuildingSessionsFromPEP(address);
                 }
             });
-        } catch (InvalidJidException e) {
+        } catch (IllegalArgumentException e) {
             fetchStatusMap.put(address, FetchStatus.SUCCESS);
             finishBuildingSessionsFromPEP(address);
         }
@@ -896,7 +896,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
     private final Set<Integer> PREVIOUSLY_REMOVED_FROM_ANNOUNCEMENT = new HashSet<>();
 
     private void finishBuildingSessionsFromPEP(final SignalProtocolAddress address) {
-        SignalProtocolAddress ownAddress = new SignalProtocolAddress(account.getJid().toBareJid().toPreppedString(), 0);
+        SignalProtocolAddress ownAddress = new SignalProtocolAddress(account.getJid().asBareJid().toString(), 0);
         Map<Integer, FetchStatus> own = fetchStatusMap.getAll(ownAddress.getName());
         Map<Integer, FetchStatus> remote = fetchStatusMap.getAll(address.getName());
         if (!own.containsValue(FetchStatus.PENDING) && !remote.containsValue(FetchStatus.PENDING)) {
@@ -919,7 +919,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
                 int id = entry.getKey();
                 if (entry.getValue() == FetchStatus.ERROR && PREVIOUSLY_REMOVED_FROM_ANNOUNCEMENT.add(id) && ownDeviceIds.remove(id)) {
                     publish = true;
-                    Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": error fetching own device with id " + id + ". removing from announcement");
+                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": error fetching own device with id " + id + ". removing from announcement");
                 }
             }
             if (publish) {
@@ -951,14 +951,14 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
                 if (callback != null) {
                     callbacks.add(callback);
                 }
-                Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": fetching device ids for " + jid + " already running. adding callback");
+                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": fetching device ids for " + jid + " already running. adding callback");
             } else {
                 callbacks = new ArrayList<>();
                 if (callback != null) {
                     callbacks.add(callback);
                 }
                 this.fetchDeviceIdsMap.put(jid, callbacks);
-                Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": fetching device ids for " + jid);
+                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": fetching device ids for " + jid);
                 IqPacket packet = mXmppConnectionService.getIqGenerator().retrieveDeviceIds(jid);
                 mXmppConnectionService.sendIqPacket(account, packet, new OnIqPacketReceived() {
                     @Override
@@ -1016,7 +1016,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
 
         try {
             IqPacket bundlesPacket = mXmppConnectionService.getIqGenerator().retrieveBundlesForDevice(
-                    Jid.fromString(address.getName()), address.getDeviceId());
+                    Jid.of(address.getName()), address.getDeviceId());
             Log.d(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Retrieving bundle: " + bundlesPacket);
             mXmppConnectionService.sendIqPacket(account, bundlesPacket, new OnIqPacketReceived() {
 
@@ -1082,7 +1082,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
                     }
                 }
             });
-        } catch (InvalidJidException e) {
+        } catch (IllegalArgumentException e) {
             Log.e(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Got address with invalid jid: " + address.getName());
         }
     }
@@ -1093,7 +1093,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
             Log.d(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Finding devices without session for " + jid);
             if (deviceIds.get(jid) != null) {
                 for (Integer foreignId : this.deviceIds.get(jid)) {
-                    SignalProtocolAddress address = new SignalProtocolAddress(jid.toPreppedString(), foreignId);
+                    SignalProtocolAddress address = new SignalProtocolAddress(jid.toString(), foreignId);
                     if (sessions.get(address) == null) {
                         IdentityKey identityKey = axolotlStore.loadSession(address).getSessionState().getRemoteIdentityKey();
                         if (identityKey != null) {
@@ -1115,9 +1115,9 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
                 Log.w(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Have no target devices in PEP!");
             }
         }
-        if (deviceIds.get(account.getJid().toBareJid()) != null) {
-            for (Integer ownId : this.deviceIds.get(account.getJid().toBareJid())) {
-                SignalProtocolAddress address = new SignalProtocolAddress(account.getJid().toBareJid().toPreppedString(), ownId);
+        if (deviceIds.get(account.getJid().asBareJid()) != null) {
+            for (Integer ownId : this.deviceIds.get(account.getJid().asBareJid())) {
+                SignalProtocolAddress address = new SignalProtocolAddress(account.getJid().asBareJid().toString(), ownId);
                 if (sessions.get(address) == null) {
                     IdentityKey identityKey = axolotlStore.loadSession(address).getSessionState().getRemoteIdentityKey();
                     if (identityKey != null) {
@@ -1125,7 +1125,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
                         XmppAxolotlSession session = new XmppAxolotlSession(account, axolotlStore, address, identityKey);
                         sessions.put(address, session);
                     } else {
-                        Log.d(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Found device " + account.getJid().toBareJid() + ":" + ownId);
+                        Log.d(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Found device " + account.getJid().asBareJid() + ":" + ownId);
                         if (fetchStatusMap.get(address) != FetchStatus.ERROR) {
                             addresses.add(address);
                         } else {
@@ -1147,7 +1147,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
                 iterator.remove();
             }
         }
-        Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": createSessionsIfNeeded() - jids with empty device list: " + jidsWithEmptyDeviceList);
+        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": createSessionsIfNeeded() - jids with empty device list: " + jidsWithEmptyDeviceList);
         if (jidsWithEmptyDeviceList.size() > 0) {
             fetchDeviceIds(jidsWithEmptyDeviceList, new OnMultipleDeviceIdFetched() {
                 @Override
@@ -1200,13 +1200,13 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
     }
 
     public boolean hasPendingKeyFetches(Account account, List<Jid> jids) {
-        SignalProtocolAddress ownAddress = new SignalProtocolAddress(account.getJid().toBareJid().toPreppedString(), 0);
+        SignalProtocolAddress ownAddress = new SignalProtocolAddress(account.getJid().asBareJid().toString(), 0);
         if (fetchStatusMap.getAll(ownAddress.getName()).containsValue(FetchStatus.PENDING)) {
             return true;
         }
         synchronized (this.fetchDeviceIdsMap) {
             for (Jid jid : jids) {
-                SignalProtocolAddress foreignAddress = new SignalProtocolAddress(jid.toBareJid().toPreppedString(), 0);
+                SignalProtocolAddress foreignAddress = new SignalProtocolAddress(jid.asBareJid().toString(), 0);
                 if (fetchStatusMap.getAll(foreignAddress.getName()).containsValue(FetchStatus.PENDING) || this.fetchDeviceIdsMap.containsKey(jid)) {
                     return true;
                 }
@@ -1244,7 +1244,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
             return false;
         }
         sessions.addAll(findOwnSessions());
-        for (XmppAxolotlSession session : sessions) {
+        for(XmppAxolotlSession session : sessions) {
             axolotlMessage.addDevice(session);
         }
         return true;
@@ -1252,7 +1252,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
 
     @Nullable
     public XmppAxolotlMessage encrypt(Message message) {
-        final XmppAxolotlMessage axolotlMessage = new XmppAxolotlMessage(account.getJid().toBareJid(), getOwnDeviceId());
+        final XmppAxolotlMessage axolotlMessage = new XmppAxolotlMessage(account.getJid().asBareJid(), getOwnDeviceId());
         final String content;
         if (message.hasFileOnRemoteHost()) {
             content = message.getFileParams().url.toString();
@@ -1265,6 +1265,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
             Log.w(Config.LOGTAG, getLogprefix(account) + "Failed to encrypt message: " + e.getMessage());
             return null;
         }
+
         final boolean success;
         if (message.getType() == Message.TYPE_PRIVATE) {
             success = buildHeader(axolotlMessage, message.getTrueCounterpart());
@@ -1295,7 +1296,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                final XmppAxolotlMessage axolotlMessage = new XmppAxolotlMessage(account.getJid().toBareJid(), getOwnDeviceId());
+                final XmppAxolotlMessage axolotlMessage = new XmppAxolotlMessage(account.getJid().asBareJid(), getOwnDeviceId());
                 if (buildHeader(axolotlMessage, conversation)) {
                     onMessageCreatedCallback.run(axolotlMessage);
                 } else {
@@ -1324,7 +1325,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
     }
 
     private XmppAxolotlSession getReceivingSession(XmppAxolotlMessage message) {
-        SignalProtocolAddress senderAddress = new SignalProtocolAddress(message.getFrom().toPreppedString(),
+        SignalProtocolAddress senderAddress = new SignalProtocolAddress(message.getFrom().toString(),
                 message.getSenderDeviceId());
         XmppAxolotlSession session = sessions.get(senderAddress);
         if (session == null) {
@@ -1348,7 +1349,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
                 postPreKeyMessageHandling(session, preKeyId, postponePreKeyMessageHandling);
             }
         } catch (CryptoFailedException e) {
-            Log.w(Config.LOGTAG, getLogprefix(account) + "Failed to decrypt message from "+message.getFrom()+": " + e.getMessage());
+            Log.w(Config.LOGTAG, getLogprefix(account) + "Failed to decrypt message from " + message.getFrom() + ": " + e.getMessage());
         }
 
         if (session.isFresh() && plaintextMessage != null) {
@@ -1380,16 +1381,17 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
     }
 
     private void completeSession(XmppAxolotlSession session) {
-        final XmppAxolotlMessage axolotlMessage = new XmppAxolotlMessage(account.getJid().toBareJid(), getOwnDeviceId());
+        final XmppAxolotlMessage axolotlMessage = new XmppAxolotlMessage(account.getJid().asBareJid(), getOwnDeviceId());
         axolotlMessage.addDevice(session);
         try {
-            Jid jid = Jid.fromString(session.getRemoteAddress().getName());
+            Jid jid = Jid.of(session.getRemoteAddress().getName());
             MessagePacket packet = mXmppConnectionService.getMessageGenerator().generateKeyTransportMessage(jid, axolotlMessage);
             mXmppConnectionService.sendMessagePacket(account, packet);
-        } catch (InvalidJidException e) {
+        } catch (IllegalArgumentException e) {
             throw new Error("Remote addresses are created from jid and should convert back to jid", e);
         }
     }
+
 
     public XmppAxolotlMessage.XmppAxolotlKeyTransportMessage processReceivingKeyTransportMessage(XmppAxolotlMessage message, final boolean postponePreKeyMessageHandling) {
         XmppAxolotlMessage.XmppAxolotlKeyTransportMessage keyTransportMessage;
@@ -1402,7 +1404,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
                 postPreKeyMessageHandling(session, preKeyId, postponePreKeyMessageHandling);
             }
         } catch (CryptoFailedException e) {
-            Log.d(Config.LOGTAG,"could not decrypt keyTransport message "+e.getMessage());
+            Log.d(Config.LOGTAG, "could not decrypt keyTransport message " + e.getMessage());
             keyTransportMessage = null;
         }
 
@@ -1420,7 +1422,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
             if (session.getIdentityKey() != null) {
                 verifySessionWithPEP(session);
             } else {
-                Log.e(Config.LOGTAG, account.getJid().toBareJid() + ": identity key was empty after reloading for x509 verification");
+                Log.e(Config.LOGTAG, account.getJid().asBareJid() + ": identity key was empty after reloading for x509 verification");
             }
         }
     }

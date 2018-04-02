@@ -16,8 +16,7 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.ui.adapter.KnownHostsAdapter;
 import de.pixart.messenger.ui.util.DelayedHintHelper;
-import de.pixart.messenger.xmpp.jid.InvalidJidException;
-import de.pixart.messenger.xmpp.jid.Jid;
+import rocks.xmpp.addr.Jid;
 
 public class EnterJidDialog {
     public interface OnEnterJidDialogPositiveListener {
@@ -95,17 +94,17 @@ public class EnterJidDialog {
             }
             try {
                 if (Config.DOMAIN_LOCK != null) {
-                    accountJid = Jid.fromParts((String) spinner.getSelectedItem(), Config.DOMAIN_LOCK, null);
+                    accountJid = Jid.of((String) spinner.getSelectedItem(), Config.DOMAIN_LOCK, null);
                 } else {
-                    accountJid = Jid.fromString((String) spinner.getSelectedItem());
+                    accountJid = Jid.of((String) spinner.getSelectedItem());
                 }
-            } catch (final InvalidJidException e) {
+            } catch (final IllegalArgumentException  e) {
                 return;
             }
             final Jid contactJid;
             try {
-                contactJid = Jid.fromString(jid.getText().toString());
-            } catch (final InvalidJidException e) {
+                contactJid = Jid.of(jid.getText().toString());
+            } catch (final IllegalArgumentException  e) {
                 jid.setError(context.getString(R.string.invalid_jid));
                 return;
             }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.pixart.messenger.xml.Element;
-import de.pixart.messenger.xmpp.jid.Jid;
+import rocks.xmpp.addr.Jid;
 
 public class JingleCandidate {
 

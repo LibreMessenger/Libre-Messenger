@@ -20,8 +20,8 @@ import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
-import de.pixart.messenger.xmpp.jid.Jid;
 import de.pixart.messenger.xmpp.stanzas.MessagePacket;
+import rocks.xmpp.addr.Jid;
 
 public class MessageGenerator extends AbstractGenerator {
     public static final String OTR_FALLBACK_MESSAGE = "I would like to start a private (OTR encrypted) conversation but your client doesn’t seem to support that";
@@ -51,7 +51,7 @@ public class MessageGenerator extends AbstractGenerator {
                 packet.addChild("request", "urn:xmpp:receipts");
             }
         } else {
-            packet.setTo(message.getCounterpart().toBareJid());
+            packet.setTo(message.getCounterpart().asBareJid());
             packet.setType(MessagePacket.TYPE_GROUPCHAT);
         }
         if (conversation.isSingleOrPrivateAndNonAnonymous() && message.getType() != Message.TYPE_PRIVATE) {
@@ -171,7 +171,7 @@ public class MessageGenerator extends AbstractGenerator {
         final Account account = conversation.getAccount();
         MessagePacket packet = new MessagePacket();
         packet.setType(conversation.getMode() == Conversation.MODE_MULTI ? MessagePacket.TYPE_GROUPCHAT : MessagePacket.TYPE_CHAT);
-        packet.setTo(conversation.getJid().toBareJid());
+        packet.setTo(conversation.getJid().asBareJid());
         packet.setFrom(account.getJid());
         packet.addChild(ChatState.toElement(conversation.getOutgoingChatState()));
         packet.addChild("no-store", "urn:xmpp:hints");
@@ -182,12 +182,12 @@ public class MessageGenerator extends AbstractGenerator {
     public MessagePacket confirm(final Account account, final Jid to, final String id, final Jid counterpart, final boolean groupChat) {
         MessagePacket packet = new MessagePacket();
         packet.setType(groupChat ? MessagePacket.TYPE_GROUPCHAT : MessagePacket.TYPE_CHAT);
-        packet.setTo(groupChat ? to.toBareJid() : to);
+        packet.setTo(groupChat ? to.asBareJid() : to);
         packet.setFrom(account.getJid());
         Element displayed = packet.addChild("displayed", "urn:xmpp:chat-markers:0");
         displayed.setAttribute("id", id);
         if (groupChat && counterpart != null) {
-            displayed.setAttribute("sender", counterpart.toPreppedString());
+            displayed.setAttribute("sender", counterpart.toString());
         }
         packet.addChild("store", "urn:xmpp:hints");
         return packet;
@@ -196,11 +196,11 @@ public class MessageGenerator extends AbstractGenerator {
     public MessagePacket conferenceSubject(Conversation conversation, String subject) {
         MessagePacket packet = new MessagePacket();
         packet.setType(MessagePacket.TYPE_GROUPCHAT);
-        packet.setTo(conversation.getJid().toBareJid());
+        packet.setTo(conversation.getJid().asBareJid());
         Element subjectChild = new Element("subject");
         subjectChild.setContent(subject);
         packet.addChild(subjectChild);
-        packet.setFrom(conversation.getAccount().getJid().toBareJid());
+        packet.setFrom(conversation.getAccount().getJid().asBareJid());
         return packet;
     }
 
@@ -210,7 +210,7 @@ public class MessageGenerator extends AbstractGenerator {
         packet.setTo(contact);
         packet.setFrom(conversation.getAccount().getJid());
         Element x = packet.addChild("x", "jabber:x:conference");
-        x.setAttribute("jid", conversation.getJid().toBareJid().toString());
+        x.setAttribute("jid", conversation.getJid().asBareJid().toString());
         String password = conversation.getMucOptions().getPassword();
         if (password != null) {
             x.setAttribute("password", password);
@@ -220,12 +220,12 @@ public class MessageGenerator extends AbstractGenerator {
 
     public MessagePacket invite(Conversation conversation, Jid contact) {
         MessagePacket packet = new MessagePacket();
-        packet.setTo(conversation.getJid().toBareJid());
+        packet.setTo(conversation.getJid().asBareJid());
         packet.setFrom(conversation.getAccount().getJid());
         Element x = new Element("x");
         x.setAttribute("xmlns", "http://jabber.org/protocol/muc#user");
         Element invite = new Element("invite");
-        invite.setAttribute("to", contact.toBareJid().toString());
+        invite.setAttribute("to", contact.asBareJid().toString());
         x.addChild(invite);
         packet.addChild(x);
         return packet;

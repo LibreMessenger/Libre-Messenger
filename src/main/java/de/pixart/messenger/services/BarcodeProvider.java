@@ -31,7 +31,7 @@ import java.util.Hashtable;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.utils.CryptoHelper;
-import de.pixart.messenger.xmpp.jid.Jid;
+import rocks.xmpp.addr.Jid;
 
 public class BarcodeProvider extends ContentProvider implements ServiceConnection {
 
@@ -98,7 +98,7 @@ public class BarcodeProvider extends ContentProvider implements ServiceConnectio
             if (connectAndWait()) {
                 Log.d(Config.LOGTAG, "connected to background service");
                 try {
-                    Account account = mXmppConnectionService.findAccountByJid(Jid.fromString(jid));
+                    Account account = mXmppConnectionService.findAccountByJid(Jid.of(jid));
                     if (account != null) {
                         String shareableUri = account.getShareableUri();
                         String hash = CryptoHelper.getFingerprint(shareableUri);
@@ -166,7 +166,7 @@ public class BarcodeProvider extends ContentProvider implements ServiceConnectio
 
     public static Uri getUriForAccount(Context context, Account account) {
         final String packageId = context.getPackageName();
-        return Uri.parse("content://" + packageId + AUTHORITY + "/" + account.getJid().toBareJid() + ".png");
+        return Uri.parse("content://" + packageId + AUTHORITY + "/" + account.getJid().asBareJid() + ".png");
     }
 
     public static Bitmap create2dBarcodeBitmap(String input, int size) {

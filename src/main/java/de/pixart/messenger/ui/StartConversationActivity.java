@@ -74,8 +74,7 @@ import de.pixart.messenger.ui.util.DelayedHintHelper;
 import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.XmppConnection;
-import de.pixart.messenger.xmpp.jid.InvalidJidException;
-import de.pixart.messenger.xmpp.jid.Jid;
+import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
 
@@ -264,6 +263,18 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_start_conversation);
         this.binding.fab.setOnClickListener((v) -> {
             if (getSupportActionBar().getSelectedNavigationIndex() == 0) {
+                String searchString = mSearchEditText != null ? mSearchEditText.getText().toString() : null;
+                if (searchString != null && !searchString.trim().isEmpty()) {
+                    try {
+                        Jid jid = Jid.of(searchString);
+                        if (jid.getLocal() != null && jid.isBareJid() && jid.getDomain().contains(".")) {
+                            showCreateContactDialog(jid.toString(), null);
+                            return;
+                        }
+                    } catch (IllegalArgumentException ignored) {
+                        //ignore and fall through
+                    }
+                }
                 showCreateContactDialog(null, null);
             } else {
                 showCreateConferenceDialog();
@@ -353,7 +364,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
         Bookmark bookmark = (Bookmark) conferences.get(position);
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, "xmpp:" + bookmark.getJid().toBareJid().toString() + "?join");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "xmpp:" + bookmark.getJid().asBareJid().toString() + "?join");
         shareIntent.setType("text/plain");
         try {
             startActivity(Intent.createChooser(shareIntent, getText(R.string.share_uri_with)));
@@ -510,8 +521,8 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
             }
             final Jid conferenceJid;
             try {
-                conferenceJid = Jid.fromString(jid.getText().toString());
-            } catch (final InvalidJidException e) {
+                conferenceJid = Jid.of(jid.getText().toString());
+            } catch (final IllegalArgumentException e) {
                 jid.setError(getString(R.string.invalid_jid));
                 return;
             }
@@ -520,9 +531,9 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
                 if (account.hasBookmarkFor(conferenceJid)) {
                     jid.setError(getString(R.string.bookmark_already_exists));
                 } else {
-                    final Bookmark bookmark = new Bookmark(account, conferenceJid.toBareJid());
+                    final Bookmark bookmark = new Bookmark(account, conferenceJid.asBareJid());
                     bookmark.setAutojoin(getPreferences().getBoolean("autojoin", getResources().getBoolean(R.bool.autojoin)));
-                    String nick = conferenceJid.getResourcepart();
+                    String nick = conferenceJid.getResource();
                     if (nick != null && !nick.isEmpty()) {
                         bookmark.setNick(nick);
                     }
@@ -571,7 +582,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
             intent.putExtra("multiple", true);
             intent.putExtra("show_enter_jid", true);
             intent.putExtra("subject", subject.getText().toString());
-            intent.putExtra(EXTRA_ACCOUNT, account.getJid().toBareJid().toString());
+            intent.putExtra(EXTRA_ACCOUNT, account.getJid().asBareJid().toString());
             intent.putExtra(ChooseContactActivity.EXTRA_TITLE_RES_ID, R.string.choose_participants);
             startActivityForResult(intent, REQUEST_CREATE_CONFERENCE);
         });
@@ -587,11 +598,11 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
         Jid jid;
         try {
             if (Config.DOMAIN_LOCK != null) {
-                jid = Jid.fromParts((String) spinner.getSelectedItem(), Config.DOMAIN_LOCK, null);
+                jid = Jid.of((String) spinner.getSelectedItem(), Config.DOMAIN_LOCK, null);
             } else {
-                jid = Jid.fromString((String) spinner.getSelectedItem());
+                jid = Jid.of((String) spinner.getSelectedItem());
             }
-        } catch (final InvalidJidException e) {
+        } catch (final IllegalArgumentException e) {
             return null;
         }
         return xmppConnectionService.findAccountByJid(jid);
@@ -686,14 +697,14 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
                         String[] toAdd = intent.getStringArrayExtra("contacts");
                         for (String item : toAdd) {
                             try {
-                                jids.add(Jid.fromString(item));
-                            } catch (InvalidJidException e) {
+                                jids.add(Jid.of(item));
+                            } catch (IllegalArgumentException e) {
                                 //ignored
                             }
                         }
                     } else {
                         try {
-                            jids.add(Jid.fromString(intent.getStringExtra("contact")));
+                            jids.add(Jid.of(intent.getStringExtra("contact")));
                         } catch (Exception e) {
                             //ignored
                         }
@@ -769,9 +780,9 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
         for (Account account : xmppConnectionService.getAccounts()) {
             if (account.getStatus() != Account.State.DISABLED) {
                 if (Config.DOMAIN_LOCK != null) {
-                    this.mActivatedAccounts.add(account.getJid().getLocalpart());
+                    this.mActivatedAccounts.add(account.getJid().getLocal());
                 } else {
-                    this.mActivatedAccounts.add(account.getJid().toBareJid().toString());
+                    this.mActivatedAccounts.add(account.getJid().asBareJid().toString());
                 }
             }
         }
@@ -839,7 +850,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
                 switchToConversation(muc, invite.getBody(), false);
                 return true;
             } else {
-                showJoinConferenceDialog(invite.getJid().toBareJid().toString());
+                showJoinConferenceDialog(invite.getJid().asBareJid().toString());
                 return false;
             }
         } else if (contacts.size() == 0) {
@@ -880,7 +891,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
         View view = getLayoutInflater().inflate(R.layout.dialog_verify_fingerprints, null);
         final CheckBox isTrustedSource = view.findViewById(R.id.trusted_source);
         TextView warning = view.findViewById(R.id.warning);
-        String jid = contact.getJid().toBareJid().toString();
+        String jid = contact.getJid().asBareJid().toString();
         SpannableString spannable = new SpannableString(getString(R.string.verifying_omemo_keys_trusted_source, jid, contact.getDisplayName()));
         int start = spannable.toString().indexOf(jid);
         if (start >= 0) {

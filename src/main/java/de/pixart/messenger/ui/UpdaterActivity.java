@@ -1,7 +1,6 @@
 package de.pixart.messenger.ui;
 
 import android.Manifest;
-import android.support.v7.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,6 +16,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.PowerManager;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;

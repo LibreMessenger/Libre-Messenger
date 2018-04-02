@@ -13,12 +13,10 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.OnIqPacketReceived;
-import de.pixart.messenger.xmpp.Patches;
 import de.pixart.messenger.xmpp.XmppConnection;
 import de.pixart.messenger.xmpp.forms.Data;
-import de.pixart.messenger.xmpp.jid.InvalidJidException;
-import de.pixart.messenger.xmpp.jid.Jid;
 import de.pixart.messenger.xmpp.stanzas.IqPacket;
+import rocks.xmpp.addr.Jid;
 
 public class PushManagementService {
 
@@ -31,7 +29,7 @@ public class PushManagementService {
     }
 
     public void registerPushTokenOnServer(final Account account) {
-        Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": has push support");
+        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": has push support");
         retrieveGcmInstanceToken(new OnGcmInstanceTokenRetrieved() {
             @Override
             public void onGcmInstanceTokenRetrieved(String token) {
@@ -58,7 +56,7 @@ public class PushManagementService {
                                     }
                                 }
                             } else {
-                                Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": invalid response from app server");
+                                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": invalid response from app server");
                             }
                         }
                     });
@@ -75,9 +73,9 @@ public class PushManagementService {
             @Override
             public void onIqPacketReceived(Account account, IqPacket packet) {
                 if (packet.getType() == IqPacket.TYPE.RESULT) {
-                    Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": successfully enabled push on server");
+                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": successfully enabled push on server");
                 } else if (packet.getType() == IqPacket.TYPE.ERROR) {
-                    Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": enabling push on server failed");
+                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": enabling push on server failed");
                 }
             }
         });

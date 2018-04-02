@@ -3,7 +3,6 @@ package de.pixart.messenger.crypto.axolotl;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.whispersystems.libsignal.SignalProtocolAddress;
 import org.whispersystems.libsignal.DuplicateMessageException;
 import org.whispersystems.libsignal.IdentityKey;
 import org.whispersystems.libsignal.InvalidKeyException;
@@ -13,6 +12,7 @@ import org.whispersystems.libsignal.InvalidVersionException;
 import org.whispersystems.libsignal.LegacyMessageException;
 import org.whispersystems.libsignal.NoSessionException;
 import org.whispersystems.libsignal.SessionCipher;
+import org.whispersystems.libsignal.SignalProtocolAddress;
 import org.whispersystems.libsignal.UntrustedIdentityException;
 import org.whispersystems.libsignal.protocol.CiphertextMessage;
 import org.whispersystems.libsignal.protocol.PreKeySignalMessage;

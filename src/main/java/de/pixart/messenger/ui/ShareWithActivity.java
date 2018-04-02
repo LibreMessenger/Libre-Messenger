@@ -28,8 +28,7 @@ import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.adapter.ConversationAdapter;
 import de.pixart.messenger.ui.util.PresenceSelector;
 import de.pixart.messenger.xmpp.XmppConnection;
-import de.pixart.messenger.xmpp.jid.InvalidJidException;
-import de.pixart.messenger.xmpp.jid.Jid;
+import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
 import static java.lang.String.format;
@@ -295,8 +294,8 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
         } else {
             Account account;
             try {
-                account = xmppConnectionService.findAccountByJid(Jid.fromString(share.account));
-            } catch (final InvalidJidException e) {
+                account = xmppConnectionService.findAccountByJid(Jid.of(share.account));
+            } catch (final IllegalArgumentException e) {
                 account = null;
             }
             if (account == null) {
@@ -305,8 +304,8 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
 
             try {
                 conversation = xmppConnectionService
-                        .findOrCreateConversation(account, Jid.fromString(share.contact), false, true);
-            } catch (final InvalidJidException e) {
+                        .findOrCreateConversation(account, Jid.of(share.contact), false, true);
+            } catch (final IllegalArgumentException e) {
                 return;
             }
         }

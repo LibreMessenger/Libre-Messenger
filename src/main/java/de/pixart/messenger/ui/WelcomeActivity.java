@@ -1,7 +1,6 @@
 package de.pixart.messenger.ui;
 
 import android.Manifest;
-import android.support.v7.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,6 +11,7 @@ import android.database.sqlite.SQLiteException;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -118,7 +118,7 @@ public class WelcomeActivity extends XmppActivity {
             List<Account> accounts = xmppConnectionService.getAccounts();
             Intent intent = new Intent(WelcomeActivity.this, EditAccountActivity.class);
             if (accounts.size() == 1) {
-                intent.putExtra("jid", accounts.get(0).getJid().toBareJid().toString());
+                intent.putExtra("jid", accounts.get(0).getJid().asBareJid().toString());
                 intent.putExtra("init", true);
             } else if (accounts.size() >= 1) {
                 intent = new Intent(WelcomeActivity.this, ManageAccountActivity.class);

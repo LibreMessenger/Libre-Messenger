@@ -18,9 +18,9 @@ import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.OnIqPacketReceived;
-import de.pixart.messenger.xmpp.jid.Jid;
 import de.pixart.messenger.xmpp.jingle.stanzas.JinglePacket;
 import de.pixart.messenger.xmpp.stanzas.IqPacket;
+import rocks.xmpp.addr.Jid;
 
 public class JingleConnectionManager extends AbstractConnectionManager {
     private List<JingleConnection> connections = new CopyOnWriteArrayList<>();
@@ -87,7 +87,7 @@ public class JingleConnectionManager extends AbstractConnectionManager {
             listener.onPrimaryCandidateFound(false, null);
             return;
         }
-        if (!this.primaryCandidates.containsKey(account.getJid().toBareJid())) {
+        if (!this.primaryCandidates.containsKey(account.getJid().asBareJid())) {
             final Jid proxy = account.getXmppConnection().findDiscoItemByFeature(Namespace.BYTE_STREAMS);
             if (proxy != null) {
                 IqPacket iq = new IqPacket(IqPacket.TYPE.GET);
@@ -108,7 +108,7 @@ public class JingleConnectionManager extends AbstractConnectionManager {
                                 candidate.setType(JingleCandidate.TYPE_PROXY);
                                 candidate.setJid(proxy);
                                 candidate.setPriority(655360 + 65535);
-                                primaryCandidates.put(account.getJid().toBareJid(), candidate);
+                                primaryCandidates.put(account.getJid().asBareJid(), candidate);
                                 listener.onPrimaryCandidateFound(true, candidate);
                             } catch (final NumberFormatException e) {
                                 listener.onPrimaryCandidateFound(false, null);
@@ -125,7 +125,7 @@ public class JingleConnectionManager extends AbstractConnectionManager {
 
         } else {
             listener.onPrimaryCandidateFound(true,
-                    this.primaryCandidates.get(account.getJid().toBareJid()));
+                    this.primaryCandidates.get(account.getJid().asBareJid()));
         }
     }
 

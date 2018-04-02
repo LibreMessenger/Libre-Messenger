@@ -234,7 +234,7 @@ public class ConversationActivity extends XmppActivity implements OnConversation
         Intent intent;
         if (pendingAccount != null) {
             intent = new Intent(this, EditAccountActivity.class);
-            intent.putExtra("jid", pendingAccount.getJid().toBareJid().toString());
+            intent.putExtra("jid", pendingAccount.getJid().asBareJid().toString());
         } else {
             if (xmppConnectionService.getAccounts().size() == 0) {
                 if (Config.X509_VERIFICATION) {
@@ -784,8 +784,8 @@ public class ConversationActivity extends XmppActivity implements OnConversation
             public boolean onMenuItemClick(MenuItem menuItem) {
                 Intent intent = new Intent(ConversationActivity.this, VerifyOTRActivity.class);
                 intent.setAction(VerifyOTRActivity.ACTION_VERIFY_CONTACT);
-                intent.putExtra("contact", conversation.getContact().getJid().toBareJid().toString());
-                intent.putExtra(EXTRA_ACCOUNT, conversation.getAccount().getJid().toBareJid().toString());
+                intent.putExtra("contact", conversation.getContact().getJid().asBareJid().toString());
+                intent.putExtra(EXTRA_ACCOUNT, conversation.getAccount().getJid().asBareJid().toString());
                 switch (menuItem.getItemId()) {
                     case R.id.scan_fingerprint:
                         intent.putExtra("mode", VerifyOTRActivity.MODE_SCAN_FINGERPRINT);

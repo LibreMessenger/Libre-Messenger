@@ -1,6 +1,5 @@
 package de.pixart.messenger.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;

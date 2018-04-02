@@ -3,7 +3,6 @@ package de.pixart.messenger.ui;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.ContextMenu;
 import android.view.MenuItem;

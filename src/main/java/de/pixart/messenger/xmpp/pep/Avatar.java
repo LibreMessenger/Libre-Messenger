@@ -3,7 +3,7 @@ package de.pixart.messenger.xmpp.pep;
 import android.util.Base64;
 
 import de.pixart.messenger.xml.Element;
-import de.pixart.messenger.xmpp.jid.Jid;
+import rocks.xmpp.addr.Jid;
 
 public class Avatar {
 

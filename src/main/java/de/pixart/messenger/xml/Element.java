@@ -11,8 +11,7 @@ import java.util.Locale;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.utils.XmlHelper;
-import de.pixart.messenger.xmpp.jid.InvalidJidException;
-import de.pixart.messenger.xmpp.jid.Jid;
+import rocks.xmpp.addr.Jid;
 
 public class Element {
     private final String name;
@@ -152,8 +151,8 @@ public class Element {
         final String jid = this.getAttribute(name);
         if (jid != null && !jid.isEmpty()) {
             try {
-                return Jid.fromString(jid);
-            } catch (final InvalidJidException e) {
+                return Jid.of(jid);
+            } catch (final IllegalArgumentException e) {
                 Log.e(Config.LOGTAG, "could not parse jid " + jid);
                 return null;
             }

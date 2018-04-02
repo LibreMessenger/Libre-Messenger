@@ -23,8 +23,7 @@ import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.XmppUri;
-import de.pixart.messenger.xmpp.jid.InvalidJidException;
-import de.pixart.messenger.xmpp.jid.Jid;
+import rocks.xmpp.addr.Jid;
 
 public class VerifyOTRActivity extends XmppActivity implements XmppConnectionService.OnConversationUpdate {
 
@@ -197,11 +196,11 @@ public class VerifyOTRActivity extends XmppActivity implements XmppConnectionSer
                 return false;
             }
             try {
-                this.mConversation = this.xmppConnectionService.find(this.mAccount, Jid.fromString(intent.getExtras().getString("contact")));
+                this.mConversation = this.xmppConnectionService.find(this.mAccount, Jid.of(intent.getExtras().getString("contact")));
                 if (this.mConversation == null) {
                     return false;
                 }
-            } catch (final InvalidJidException ignored) {
+            } catch (final IllegalArgumentException ignored) {
                 return false;
             }
             this.mode = intent.getIntExtra("mode", MODE_MANUAL_VERIFICATION);

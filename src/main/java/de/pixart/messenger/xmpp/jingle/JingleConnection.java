@@ -37,11 +37,11 @@ import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.OnIqPacketReceived;
-import de.pixart.messenger.xmpp.jid.Jid;
 import de.pixart.messenger.xmpp.jingle.stanzas.Content;
 import de.pixart.messenger.xmpp.jingle.stanzas.JinglePacket;
 import de.pixart.messenger.xmpp.jingle.stanzas.Reason;
 import de.pixart.messenger.xmpp.stanzas.IqPacket;
+import rocks.xmpp.addr.Jid;
 
 public class JingleConnection implements Transferable {
     private final SimpleDateFormat fileDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
@@ -108,7 +108,7 @@ public class JingleConnection implements Transferable {
         public void onFileTransmitted(DownloadableFile file) {
             if (responding()) {
                 if (expectedHash.length > 0 && !Arrays.equals(expectedHash, file.getSha1Sum())) {
-                    Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": hashes did not match");
+                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": hashes did not match");
                 }
                 sendSuccess();
                 mXmppConnectionService.getFileBackend().updateFileParams(message);
@@ -338,7 +338,7 @@ public class JingleConnection implements Transferable {
 
     private void upgradeNamespace() {
         Jid jid = this.message.getCounterpart();
-        String resource = jid != null ? jid.getResourcepart() : null;
+        String resource = jid != null ? jid.getResource() : null;
         if (resource != null) {
             Presence presence = this.account.getRoster().getContact(jid).getPresences().getPresences().get(resource);
             ServiceDiscoveryResult result = presence != null ? presence.getServiceDiscoveryResult() : null;
@@ -357,7 +357,7 @@ public class JingleConnection implements Transferable {
         this.mJingleStatus = JINGLE_STATUS_INITIATED;
         Conversation conversation = this.mXmppConnectionService
                 .findOrCreateConversation(account,
-                        packet.getFrom().toBareJid(), false, true);
+                        packet.getFrom().asBareJid(), false, true);
         this.message = new Message(conversation, "", Message.ENCRYPTION_NONE);
         this.message.setStatus(Message.STATUS_RECEIVED);
         this.mStatus = Transferable.STATUS_OFFER;
@@ -386,7 +386,7 @@ public class JingleConnection implements Transferable {
         if (fileOffer != null) {
             Element encrypted = fileOffer.findChild("encrypted", AxolotlService.PEP_PREFIX);
             if (encrypted != null) {
-                this.mXmppAxolotlMessage = XmppAxolotlMessage.fromElement(encrypted, packet.getFrom().toBareJid());
+                this.mXmppAxolotlMessage = XmppAxolotlMessage.fromElement(encrypted, packet.getFrom().asBareJid());
             }
             Element fileSize = fileOffer.findChild("size");
             Element fileNameElement = fileOffer.findChild("name");
@@ -495,7 +495,7 @@ public class JingleConnection implements Transferable {
                 if (message.getEncryption() == Message.ENCRYPTION_OTR) {
                     Conversation conversation = this.message.getConversation();
                     if (!this.mXmppConnectionService.renewSymmetricKey(conversation)) {
-                        Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": could not set symmetric key");
+                        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": could not set symmetric key");
                         cancel();
                     }
                     this.file.setKeyAndIv(conversation.getSymmetricKey());
@@ -527,7 +527,7 @@ public class JingleConnection implements Transferable {
                 @Override
                 public void onIqPacketReceived(Account account, IqPacket packet) {
                     if (packet.getType() == IqPacket.TYPE.RESULT) {
-                        Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": other party received offer");
+                        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": other party received offer");
                         if (mJingleStatus == JINGLE_STATUS_OFFERED) {
                             mJingleStatus = JINGLE_STATUS_INITIATED;
                             mXmppConnectionService.markMessage(message, Message.STATUS_OFFERED);
@@ -709,7 +709,7 @@ public class JingleConnection implements Transferable {
                 if (connection.getCandidate().isOurs()) {
                     final String sid;
                     if (ftVersion == Content.Version.FT_3) {
-                        Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": use session ID instead of transport ID to activate proxy");
+                        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": use session ID instead of transport ID to activate proxy");
                         sid = getSessionId();
                     } else {
                         sid = getTransportId();
@@ -805,7 +805,7 @@ public class JingleConnection implements Transferable {
     }
 
     private void sendFallbackToIbb() {
-        Log.d(Config.LOGTAG, account.getJid().toBareJid()+ ": sending fallback to ibb");
+        Log.d(Config.LOGTAG, account.getJid().asBareJid()+ ": sending fallback to ibb");
         JinglePacket packet = this.bootstrapPacket("transport-replace");
         Content content = new Content(this.contentCreator, this.contentName);
         this.transportId = this.mJingleConnectionManager.nextRandomId();
@@ -850,7 +850,7 @@ public class JingleConnection implements Transferable {
                 @Override
                 public void onIqPacketReceived(Account account, IqPacket packet) {
                     if (packet.getType() == IqPacket.TYPE.RESULT) {
-                        Log.d(Config.LOGTAG, account.getJid().toBareJid() + " recipient ACKed our transport-accept. creating ibb");
+                        Log.d(Config.LOGTAG, account.getJid().asBareJid() + " recipient ACKed our transport-accept. creating ibb");
                         transport.connect(onIbbTransportConnected);
                     }
                 }
@@ -896,7 +896,7 @@ public class JingleConnection implements Transferable {
             this.message.setTransferable(null);
             this.mJingleConnectionManager.finishConnection(this);
         } else {
-            Log.d(Config.LOGTAG, account.getJid().toBareJid() + ": received session-terminate/success while responding");
+            Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": received session-terminate/success while responding");
         }
     }
 

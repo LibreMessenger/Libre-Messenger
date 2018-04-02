@@ -33,8 +33,7 @@ import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xmpp.OnKeyStatusUpdated;
-import de.pixart.messenger.xmpp.jid.InvalidJidException;
-import de.pixart.messenger.xmpp.jid.Jid;
+import rocks.xmpp.addr.Jid;
 
 public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdated {
     private List<Jid> contactJids;
@@ -80,8 +79,8 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
         this.contactJids = new ArrayList<>();
         for(String jid : getIntent().getStringArrayExtra("contacts")) {
             try {
-                this.contactJids.add(Jid.fromString(jid));
-            } catch (InvalidJidException e) {
+                this.contactJids.add(Jid.of(jid));
+            } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             }
         }
@@ -226,7 +225,7 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
             showCameraToast();
         }
 
-        binding.ownKeysTitle.setText(mAccount.getJid().toBareJid().toString());
+        binding.ownKeysTitle.setText(mAccount.getJid().asBareJid().toString());
         binding.ownKeysCard.setVisibility(hasOwnKeys ? View.VISIBLE : View.GONE);
         binding.foreignKeys.setVisibility(hasForeignKeys ? View.VISIBLE : View.GONE);
         if(hasPendingKeyFetches()) {

@@ -8,8 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import de.pixart.messenger.xmpp.jid.InvalidJidException;
-import de.pixart.messenger.xmpp.jid.Jid;
+import rocks.xmpp.addr.Jid;
 
 public class XmppUri {
 
@@ -31,8 +30,8 @@ public class XmppUri {
             parse(Uri.parse(uri));
         } catch (IllegalArgumentException e) {
             try {
-                jid = Jid.fromString(uri).toBareJid().toString();
-            } catch (InvalidJidException e2) {
+                jid = Jid.of(uri).asBareJid().toString();
+            } catch (IllegalArgumentException e2) {
                 jid = null;
             }
         }
@@ -65,7 +64,7 @@ public class XmppUri {
             if (segments.size() >= 2 && segments.get(1).contains("@")) {
                 // sample : https://conversations.im/i/foo@bar.com
                 try {
-                    jid = Jid.fromString(segments.get(1)).toString();
+                    jid = Jid.of(segments.get(1)).toString();
                 } catch (Exception e) {
                     jid = null;
                 }
@@ -107,8 +106,8 @@ public class XmppUri {
             }
         } else {
             try {
-                jid = Jid.fromString(uri.toString()).toBareJid().toString();
-            } catch (final InvalidJidException ignored) {
+                jid = Jid.of(uri.toString()).asBareJid().toString();
+            } catch (final IllegalArgumentException ignored) {
                 jid = null;
             }
         }
@@ -183,17 +182,17 @@ public class XmppUri {
 
     public Jid getJid() {
         try {
-            return this.jid == null ? null : Jid.fromString(this.jid.toLowerCase());
-        } catch (InvalidJidException e) {
+            return this.jid == null ? null : Jid.of(this.jid.toLowerCase());
+        } catch (IllegalArgumentException e) {
             return null;
         }
     }
 
     public boolean isJidValid() {
         try {
-            Jid.fromString(jid);
+            Jid.of(jid);
             return true;
-        } catch (InvalidJidException e) {
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }

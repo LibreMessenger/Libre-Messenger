@@ -5,7 +5,6 @@ import android.support.text.emoji.EmojiCompat;
 import android.util.Log;
 
 import de.pixart.messenger.Config;
-import de.pixart.messenger.utils.Emoticons;
 
 public abstract class AbstractEmojiService {
 

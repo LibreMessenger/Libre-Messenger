@@ -163,7 +163,7 @@ public class NotificationService {
                 }
             }
         }
-        Log.d(Config.LOGTAG,account.getJid().toBareJid()+": backlog message count="+count);
+        Log.d(Config.LOGTAG,account.getJid().asBareJid()+": backlog message count="+count);
         return count;
     }
 
@@ -197,12 +197,12 @@ public class NotificationService {
     private void pushNow(final Message message) {
         mXmppConnectionService.updateUnreadCountBadge();
         if (!notify(message)) {
-            Log.d(Config.LOGTAG, message.getConversation().getAccount().getJid().toBareJid() + ": suppressing notification because turned off");
+            Log.d(Config.LOGTAG, message.getConversation().getAccount().getJid().asBareJid() + ": suppressing notification because turned off");
             return;
         }
         final boolean isScreenOn = mXmppConnectionService.isInteractive();
         if (this.mIsInForeground && isScreenOn && this.mOpenConversation == message.getConversation()) {
-            Log.d(Config.LOGTAG, message.getConversation().getAccount().getJid().toBareJid() + ": suppressing notification because conversation is open");
+            Log.d(Config.LOGTAG, message.getConversation().getAccount().getJid().asBareJid() + ": suppressing notification because conversation is open");
             mXmppConnectionService.vibrate();
             return;
         }
@@ -811,7 +811,7 @@ public class NotificationService {
             return;
         } else if (errors.size() == 1) {
             mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.problem_connecting_to_account));
-            mBuilder.setContentText(errors.get(0).getJid().toBareJid().toString());
+            mBuilder.setContentText(errors.get(0).getJid().asBareJid().toString());
         } else {
             mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.problem_connecting_to_accounts));
             mBuilder.setContentText(mXmppConnectionService.getString(R.string.touch_to_fix));
@@ -827,7 +827,7 @@ public class NotificationService {
         if (errors.size() == 1) {
             Intent intent = new Intent(mXmppConnectionService, EditAccountActivity.class);
             Account mAccount = mXmppConnectionService.getAccounts().get(0);
-            intent.putExtra("jid", mAccount.getJid().toBareJid().toString());
+            intent.putExtra("jid", mAccount.getJid().asBareJid().toString());
             intent.putExtra("init", false);
             mBuilder.setContentIntent(PendingIntent.getActivity(mXmppConnectionService,
                     145,

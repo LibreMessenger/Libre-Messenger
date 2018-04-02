@@ -22,7 +22,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.xml.Element;
-import de.pixart.messenger.xmpp.jid.Jid;
+import rocks.xmpp.addr.Jid;
 
 public class XmppAxolotlMessage {
     public static final String CONTAINERTAG = "encrypted";

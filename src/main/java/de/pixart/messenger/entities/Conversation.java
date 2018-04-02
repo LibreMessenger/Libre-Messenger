@@ -28,9 +28,8 @@ import de.pixart.messenger.crypto.PgpDecryptionService;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
-import de.pixart.messenger.xmpp.jid.InvalidJidException;
-import de.pixart.messenger.xmpp.jid.Jid;
 import de.pixart.messenger.xmpp.mam.MamReference;
+import rocks.xmpp.addr.Jid;
 
 
 public class Conversation extends AbstractEntity implements Blockable, Comparable<Conversation> {
@@ -384,7 +383,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
 
     public List<Jid> getAcceptedCryptoTargets() {
         if (mode == MODE_SINGLE) {
-            return Collections.singletonList(getJid().toBareJid());
+            return Collections.singletonList(getJid().asBareJid());
         } else {
             return getJidListAttribute(ATTRIBUTE_CRYPTO_TARGETS);
         }
@@ -517,11 +516,11 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
                 if (generatedName != null) {
                     return generatedName;
                 } else {
-                    return getJid().getUnescapedLocalpart();
+                    return getJid().getLocal();
                 }
             }
         } else if (isWithStranger()) {
-            return contactJid.toBareJid().toString();
+            return contactJid.asBareJid().toString();
         } else {
             return this.getContact().getDisplayName();
         }
@@ -583,7 +582,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
         values.put(NAME, name);
         values.put(CONTACT, contactUuid);
         values.put(ACCOUNT, accountUuid);
-        values.put(CONTACTJID, contactJid.toPreppedString());
+        values.put(CONTACTJID, contactJid.toString());
         values.put(CREATED, created);
         values.put(STATUS, status);
         values.put(MODE, mode);
@@ -594,8 +593,8 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
     public static Conversation fromCursor(Cursor cursor) {
         Jid jid;
         try {
-            jid = Jid.fromString(cursor.getString(cursor.getColumnIndex(CONTACTJID)), true);
-        } catch (final InvalidJidException e) {
+            jid = Jid.of(cursor.getString(cursor.getColumnIndex(CONTACTJID)));
+        } catch (final IllegalArgumentException e) {
             // Borked DB..
             jid = null;
         }
@@ -626,7 +625,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
         if (this.otrSession != null) {
             return this.otrSession;
         } else {
-            final SessionID sessionId = new SessionID(this.getJid().toBareJid().toString(),
+            final SessionID sessionId = new SessionID(this.getJid().asBareJid().toString(),
                     presence,
                     "xmpp");
             this.otrSession = new SessionImpl(sessionId, getAccount().getOtrService());
@@ -907,7 +906,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
     public boolean setAttribute(String key, List<Jid> jids) {
         JSONArray array = new JSONArray();
         for (Jid jid : jids) {
-            array.put(jid.toBareJid().toString());
+            array.put(jid.asBareJid().toString());
         }
         synchronized (this.attributes) {
             try {
@@ -937,8 +936,8 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
                 JSONArray array = this.attributes.getJSONArray(key);
                 for (int i = 0; i < array.length(); ++i) {
                     try {
-                        list.add(Jid.fromString(array.getString(i)));
-                    } catch (InvalidJidException e) {
+                        list.add(Jid.of(array.getString(i)));
+                    } catch (IllegalArgumentException e) {
                         //ignored
                     }
                 }
@@ -1089,7 +1088,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
 
     public boolean isWithStranger() {
         return mode == MODE_SINGLE
-                && !getJid().equals(account.getJid().toDomainJid())
+                && !getJid().equals(Jid.ofDomain(account.getJid().getDomain()))
                 && !getContact().showInRoster()
                 && sentMessagesCount() == 0;
     }

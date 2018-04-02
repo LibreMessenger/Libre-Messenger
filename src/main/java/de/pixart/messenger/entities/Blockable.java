@@ -1,6 +1,6 @@
 package de.pixart.messenger.entities;
 
-import de.pixart.messenger.xmpp.jid.Jid;
+import rocks.xmpp.addr.Jid;
 
 public interface Blockable {
     boolean isBlocked();

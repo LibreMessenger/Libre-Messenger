@@ -43,8 +43,7 @@ import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Presences;
 import de.pixart.messenger.utils.CryptoHelper;
-import de.pixart.messenger.xmpp.jid.InvalidJidException;
-import de.pixart.messenger.xmpp.jid.Jid;
+import rocks.xmpp.addr.Jid;
 
 public class PresenceSelector {
 
@@ -89,9 +88,9 @@ public class PresenceSelector {
         builder.setNegativeButton(R.string.cancel, null);
         builder.setPositiveButton(R.string.ok, (dialog, which) -> {
             try {
-                Jid next = Jid.fromParts(contact.getJid().getLocalpart(), contact.getJid().getDomainpart(), resourceArray[selectedResource.get()]);
+                Jid next = Jid.of(contact.getJid().getLocal(), contact.getJid().getDomain(), resourceArray[selectedResource.get()]);
                 conversation.setNextCounterpart(next);
-            } catch (InvalidJidException e) {
+            } catch (IllegalArgumentException e) {
                 conversation.setNextCounterpart(null);
             }
             listener.onPresenceSelected();

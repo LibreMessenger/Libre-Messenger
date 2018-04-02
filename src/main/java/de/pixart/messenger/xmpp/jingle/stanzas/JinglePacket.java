@@ -3,8 +3,8 @@ package de.pixart.messenger.xmpp.jingle.stanzas;
 import android.util.Base64;
 
 import de.pixart.messenger.xml.Element;
-import de.pixart.messenger.xmpp.jid.Jid;
 import de.pixart.messenger.xmpp.stanzas.IqPacket;
+import rocks.xmpp.addr.Jid;
 
 public class JinglePacket extends IqPacket {
     Content content = null;
