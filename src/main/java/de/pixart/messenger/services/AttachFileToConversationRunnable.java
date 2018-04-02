@@ -139,7 +139,6 @@ public class AttachFileToConversationRunnable implements Runnable, MediaTranscod
         if (message.getEncryption() == Message.ENCRYPTION_DECRYPTED) {
             mXmppConnectionService.getPgpEngine().encrypt(message, callback);
         } else {
-            mXmppConnectionService.sendMessage(message);
             callback.success(message);
         }
     }

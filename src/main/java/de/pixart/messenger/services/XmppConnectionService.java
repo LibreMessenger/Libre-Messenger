@@ -521,6 +521,7 @@ public class XmppConnectionService extends Service {
         }
         final String mimeType = MimeUtils.guessMimeTypeFromUri(this, uri);
         final String compressPictures = getCompressPicturesPreference();
+
         if ("never".equals(compressPictures)
                 || ("auto".equals(compressPictures) && getFileBackend().useImageAsIs(uri))
                 || (mimeType != null && mimeType.endsWith("/gif"))) {

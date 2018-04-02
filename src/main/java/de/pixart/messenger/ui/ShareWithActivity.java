@@ -84,7 +84,6 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
 
         @Override
         public void success(final Message message) {
-            xmppConnectionService.sendMessage(message);
             runOnUiThread(() -> {
                 if (attachmentCounter.decrementAndGet() <= 0) {
                     int resId;
@@ -366,6 +365,7 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
         } else {
             if (mReturnToPrevious && this.share.text != null && !this.share.text.isEmpty()) {
                 final PresenceSelector.OnPresenceSelected callback = new PresenceSelector.OnPresenceSelected() {
+
                     private void finishAndSend(Message message) {
                         replaceToast(getString(R.string.shared_text_with_x, conversation.getName()));
                         finish();
@@ -374,7 +374,6 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
                     private UiCallback<Message> messageEncryptionCallback = new UiCallback<Message>() {
                         @Override
                         public void success(final Message message) {
-                            message.setEncryption(Message.ENCRYPTION_DECRYPTED);
                             runOnUiThread(() -> finishAndSend(message));
                         }
 
