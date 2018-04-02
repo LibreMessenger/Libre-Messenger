@@ -230,7 +230,7 @@
         </activity>
         <activity
             android:name=".ui.ShowFullscreenMessageActivity"
-            android:theme="@style/ConversationsTheme.NoActionBar.FullScreen"
+            android:theme="@style/ConversationsTheme.FullScreen"
             android:configChanges="orientation|screenSize">
         </activity>
         <activity

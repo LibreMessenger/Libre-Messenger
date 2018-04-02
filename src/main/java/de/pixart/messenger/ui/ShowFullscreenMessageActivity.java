@@ -10,12 +10,12 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -39,7 +39,7 @@ import de.pixart.messenger.utils.ExifHelper;
 
 import static de.pixart.messenger.persistance.FileBackend.close;
 
-public class ShowFullscreenMessageActivity extends AppCompatActivity {
+public class ShowFullscreenMessageActivity extends XmppActivity {
 
     Integer oldOrientation;
     PhotoView mImage;
@@ -47,7 +47,7 @@ public class ShowFullscreenMessageActivity extends AppCompatActivity {
     ImageView mFullscreenbutton;
     Uri mFileUri;
     File mFile;
-    ImageButton mFAB;
+    FloatingActionButton fab;
     int height = 0;
     int width = 0;
     int rotation = 0;
@@ -55,6 +55,14 @@ public class ShowFullscreenMessageActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.mTheme = findTheme();
+        setTheme(this.mTheme);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null && actionBar.isShowing()) {
+            actionBar.hide();
+        }
+
         oldOrientation = getRequestedOrientation();
 
         WindowManager.LayoutParams layout = getWindow().getAttributes();
@@ -63,17 +71,15 @@ public class ShowFullscreenMessageActivity extends AppCompatActivity {
         }
         getWindow().setAttributes(layout);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_fullscreen_message);
         mImage = findViewById(R.id.message_image_view);
         mVideo = findViewById(R.id.message_video_view);
         mFullscreenbutton = findViewById(R.id.vcv_img_fullscreen);
-        mFAB = findViewById(R.id.imageButton);
-        mFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mVideo.reset();
-                shareWith(mFile);
-            }
+        fab = findViewById(R.id.fab);
+        fab.setOnClickListener(v -> {
+            mVideo.reset();
+            shareWith(mFile);
         });
     }
 
@@ -102,6 +108,11 @@ public class ShowFullscreenMessageActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    protected void refreshUiReal() {
+
     }
 
     @Override
@@ -227,7 +238,7 @@ public class ShowFullscreenMessageActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         WindowManager.LayoutParams layout = getWindow().getAttributes();
         if (useMaxBrightness()) {
             layout.screenBrightness = 1;
@@ -239,7 +250,7 @@ public class ShowFullscreenMessageActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         mVideo.reset();
         WindowManager.LayoutParams layout = getWindow().getAttributes();
         if (useMaxBrightness()) {
@@ -262,6 +273,11 @@ public class ShowFullscreenMessageActivity extends AppCompatActivity {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setRequestedOrientation(oldOrientation);
         super.onStop();
+    }
+
+    @Override
+    void onBackendConnected() {
+
     }
 
     public boolean useMaxBrightness() {
