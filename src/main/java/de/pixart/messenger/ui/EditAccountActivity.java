@@ -656,7 +656,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             reconnect.setVisible(true);
             announcePGP.setVisible(true);
             mamPrefs.setVisible(mAccount.getXmppConnection().getFeatures().mam());
-            changePresence.setVisible(true);
+            changePresence.setVisible(!mInitMode);
         } else {
             announcePGP.setVisible(false);
             reconnect.setVisible(false);
