@@ -105,7 +105,7 @@ import de.pixart.messenger.parser.MessageParser;
 import de.pixart.messenger.parser.PresenceParser;
 import de.pixart.messenger.persistance.DatabaseBackend;
 import de.pixart.messenger.persistance.FileBackend;
-import de.pixart.messenger.ui.ConversationActivity;
+import de.pixart.messenger.ui.ConversationsActivity;
 import de.pixart.messenger.ui.SettingsActivity;
 import de.pixart.messenger.ui.UiCallback;
 import de.pixart.messenger.utils.ConversationsFileObserver;
@@ -176,7 +176,7 @@ public class XmppConnectionService extends Service {
     private ReplacingSerialSingleThreadExecutor mContactMergerExecutor = new ReplacingSerialSingleThreadExecutor(true);
     private WakeLock wakeLock;
     private long mLastActivity = 0;
-    ConversationActivity mConversationActivity;
+    ConversationsActivity mConversationsActivity;
 
 
     private ContentObserver contactObserver = new ContentObserver(null) {

@@ -89,7 +89,7 @@ import de.pixart.messenger.xmpp.chatstate.ChatState;
 import static de.pixart.messenger.ui.ConversationFragment.REQUEST_DECRYPT_PGP;
 import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
 
-public class ConversationActivity extends XmppActivity implements OnConversationSelected, OnConversationArchived, OnConversationsListItemUpdated, OnConversationRead, XmppConnectionService.OnAccountUpdate, XmppConnectionService.OnConversationUpdate, XmppConnectionService.OnRosterUpdate, OnUpdateBlocklist, XmppConnectionService.OnShowErrorToast {
+public class ConversationsActivity extends XmppActivity implements OnConversationSelected, OnConversationArchived, OnConversationsListItemUpdated, OnConversationRead, XmppConnectionService.OnAccountUpdate, XmppConnectionService.OnConversationUpdate, XmppConnectionService.OnRosterUpdate, OnUpdateBlocklist, XmppConnectionService.OnShowErrorToast {
 
     public static final String ACTION_VIEW_CONVERSATION = "de.pixart.messenger.VIEW";
     public static final String EXTRA_CONVERSATION = "conversationUuid";
@@ -120,7 +120,7 @@ public class ConversationActivity extends XmppActivity implements OnConversation
     }
 
     private static Intent createLauncherIntent(Context context) {
-        final Intent intent = new Intent(context, ConversationActivity.class);
+        final Intent intent = new Intent(context, ConversationsActivity.class);
         intent.setAction(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
         return intent;
@@ -554,7 +554,7 @@ public class ConversationActivity extends XmppActivity implements OnConversation
             if (extras != null && extras.containsKey("MUC_UUID")) {
                 Log.d(Config.LOGTAG, "Get " + intent.getAction() + " intent for " + extras.getString("MUC_UUID"));
                 Conversation conversation = xmppConnectionService.findConversationByUuid(extras.getString("MUC_UUID"));
-                ConversationActivity.this.xmppConnectionService.clearConversationHistory(conversation);
+                ConversationsActivity.this.xmppConnectionService.clearConversationHistory(conversation);
                 xmppConnectionService.destroyMuc(conversation);
                 endConversation(conversation);
             }
@@ -640,7 +640,7 @@ public class ConversationActivity extends XmppActivity implements OnConversation
                         if (conversation.getMode() == Conversation.MODE_SINGLE) {
                             switchToContactDetails(conversation.getContact());
                         } else if (conversation.getMode() == Conversation.MODE_MULTI) {
-                            Intent intent = new Intent(ConversationActivity.this, ConferenceDetailsActivity.class);
+                            Intent intent = new Intent(ConversationsActivity.this, ConferenceDetailsActivity.class);
                             intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
                             intent.putExtra("uuid", conversation.getUuid());
                             startActivity(intent);
@@ -656,7 +656,7 @@ public class ConversationActivity extends XmppActivity implements OnConversation
                                 if (conversation.getMode() == Conversation.MODE_SINGLE) {
                                     switchToContactDetails(conversation.getContact());
                                 } else if (conversation.getMode() == Conversation.MODE_MULTI) {
-                                    Intent intent = new Intent(ConversationActivity.this, ConferenceDetailsActivity.class);
+                                    Intent intent = new Intent(ConversationsActivity.this, ConferenceDetailsActivity.class);
                                     intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
                                     intent.putExtra("uuid", conversation.getUuid());
                                     startActivity(intent);
@@ -671,7 +671,7 @@ public class ConversationActivity extends XmppActivity implements OnConversation
                                     if (conversation.getMode() == Conversation.MODE_SINGLE) {
                                         switchToContactDetails(conversation.getContact());
                                     } else if (conversation.getMode() == Conversation.MODE_MULTI) {
-                                        Intent intent = new Intent(ConversationActivity.this, ConferenceDetailsActivity.class);
+                                        Intent intent = new Intent(ConversationsActivity.this, ConferenceDetailsActivity.class);
                                         intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
                                         intent.putExtra("uuid", conversation.getUuid());
                                         startActivity(intent);
@@ -688,7 +688,7 @@ public class ConversationActivity extends XmppActivity implements OnConversation
                                     if (conversation.getMode() == Conversation.MODE_SINGLE) {
                                         switchToContactDetails(conversation.getContact());
                                     } else if (conversation.getMode() == Conversation.MODE_MULTI) {
-                                        Intent intent = new Intent(ConversationActivity.this, ConferenceDetailsActivity.class);
+                                        Intent intent = new Intent(ConversationsActivity.this, ConferenceDetailsActivity.class);
                                         intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
                                         intent.putExtra("uuid", conversation.getUuid());
                                         startActivity(intent);
@@ -733,7 +733,7 @@ public class ConversationActivity extends XmppActivity implements OnConversation
                                 if (conversation.getMode() == Conversation.MODE_SINGLE) {
                                     switchToContactDetails(conversation.getContact());
                                 } else if (conversation.getMode() == Conversation.MODE_MULTI) {
-                                    Intent intent = new Intent(ConversationActivity.this, ConferenceDetailsActivity.class);
+                                    Intent intent = new Intent(ConversationsActivity.this, ConferenceDetailsActivity.class);
                                     intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
                                     intent.putExtra("uuid", conversation.getUuid());
                                     startActivity(intent);
@@ -746,7 +746,7 @@ public class ConversationActivity extends XmppActivity implements OnConversation
                                 if (conversation.getMode() == Conversation.MODE_SINGLE) {
                                     switchToContactDetails(conversation.getContact());
                                 } else if (conversation.getMode() == Conversation.MODE_MULTI) {
-                                    Intent intent = new Intent(ConversationActivity.this, ConferenceDetailsActivity.class);
+                                    Intent intent = new Intent(ConversationsActivity.this, ConferenceDetailsActivity.class);
                                     intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
                                     intent.putExtra("uuid", conversation.getUuid());
                                     startActivity(intent);
@@ -782,7 +782,7 @@ public class ConversationActivity extends XmppActivity implements OnConversation
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                Intent intent = new Intent(ConversationActivity.this, VerifyOTRActivity.class);
+                Intent intent = new Intent(ConversationsActivity.this, VerifyOTRActivity.class);
                 intent.setAction(VerifyOTRActivity.ACTION_VERIFY_CONTACT);
                 intent.putExtra("contact", conversation.getContact().getJid().asBareJid().toString());
                 intent.putExtra(EXTRA_ACCOUNT, conversation.getAccount().getJid().asBareJid().toString());

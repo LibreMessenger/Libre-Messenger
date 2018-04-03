@@ -72,7 +72,7 @@ import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.services.AudioPlayer;
 import de.pixart.messenger.services.MessageArchiveService;
 import de.pixart.messenger.services.NotificationService;
-import de.pixart.messenger.ui.ConversationActivity;
+import de.pixart.messenger.ui.ConversationsActivity;
 import de.pixart.messenger.ui.ConversationFragment;
 import de.pixart.messenger.ui.ShowFullscreenMessageActivity;
 import de.pixart.messenger.ui.XmppActivity;
@@ -1071,7 +1071,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     public void openDownloadable(Message message) {
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ConversationFragment.registerPendingMessage(activity, message);
-            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, ConversationActivity.REQUEST_OPEN_MESSAGE);
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, ConversationsActivity.REQUEST_OPEN_MESSAGE);
             return;
         }
         DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);

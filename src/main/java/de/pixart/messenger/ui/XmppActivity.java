@@ -491,15 +491,15 @@ public abstract class XmppActivity extends AppCompatActivity {
     }
 
     private void switchToConversation(Conversation conversation, String text, String nick, boolean pm, boolean newTask) {
-        Intent intent = new Intent(this, ConversationActivity.class);
-        intent.setAction(ConversationActivity.ACTION_VIEW_CONVERSATION);
-        intent.putExtra(ConversationActivity.EXTRA_CONVERSATION, conversation.getUuid());
+        Intent intent = new Intent(this, ConversationsActivity.class);
+        intent.setAction(ConversationsActivity.ACTION_VIEW_CONVERSATION);
+        intent.putExtra(ConversationsActivity.EXTRA_CONVERSATION, conversation.getUuid());
         if (text != null) {
-            intent.putExtra(ConversationActivity.EXTRA_TEXT, text);
+            intent.putExtra(ConversationsActivity.EXTRA_TEXT, text);
         }
         if (nick != null) {
-            intent.putExtra(ConversationActivity.EXTRA_NICK, nick);
-            intent.putExtra(ConversationActivity.EXTRA_IS_PRIVATE_MESSAGE, pm);
+            intent.putExtra(ConversationsActivity.EXTRA_NICK, nick);
+            intent.putExtra(ConversationsActivity.EXTRA_IS_PRIVATE_MESSAGE, pm);
         }
         if (newTask) {
             intent.setFlags(intent.getFlags()

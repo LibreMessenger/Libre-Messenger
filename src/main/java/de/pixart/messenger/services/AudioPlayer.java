@@ -20,7 +20,7 @@ import java.util.Locale;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Message;
-import de.pixart.messenger.ui.ConversationActivity;
+import de.pixart.messenger.ui.ConversationsActivity;
 import de.pixart.messenger.ui.adapter.MessageAdapter;
 import de.pixart.messenger.ui.util.PendingItem;
 import de.pixart.messenger.utils.WeakReferenceSet;
@@ -108,7 +108,7 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
     private void startStop(ImageButton playPause) {
         if (ContextCompat.checkSelfPermission(messageAdapter.getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             pendingOnClickView.push(new WeakReference<>(playPause));
-            ActivityCompat.requestPermissions(messageAdapter.getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, ConversationActivity.REQUEST_PLAY_PAUSE);
+            ActivityCompat.requestPermissions(messageAdapter.getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, ConversationsActivity.REQUEST_PLAY_PAUSE);
             return;
         }
         final RelativeLayout audioPlayer = (RelativeLayout) playPause.getParent();

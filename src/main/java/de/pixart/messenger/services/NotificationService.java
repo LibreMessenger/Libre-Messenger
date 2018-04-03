@@ -44,7 +44,7 @@ import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.persistance.FileBackend;
-import de.pixart.messenger.ui.ConversationActivity;
+import de.pixart.messenger.ui.ConversationsActivity;
 import de.pixart.messenger.ui.EditAccountActivity;
 import de.pixart.messenger.ui.ManageAccountActivity;
 import de.pixart.messenger.ui.TimePreference;
@@ -625,11 +625,11 @@ public class NotificationService {
     }
 
     private PendingIntent createContentIntent(final String conversationUuid, final String downloadMessageUuid) {
-        final Intent viewConversationIntent = new Intent(mXmppConnectionService, ConversationActivity.class);
-        viewConversationIntent.setAction(ConversationActivity.ACTION_VIEW_CONVERSATION);
-        viewConversationIntent.putExtra(ConversationActivity.EXTRA_CONVERSATION, conversationUuid);
+        final Intent viewConversationIntent = new Intent(mXmppConnectionService, ConversationsActivity.class);
+        viewConversationIntent.setAction(ConversationsActivity.ACTION_VIEW_CONVERSATION);
+        viewConversationIntent.putExtra(ConversationsActivity.EXTRA_CONVERSATION, conversationUuid);
         if (downloadMessageUuid != null) {
-            viewConversationIntent.putExtra(ConversationActivity.EXTRA_DOWNLOAD_UUID, downloadMessageUuid);
+            viewConversationIntent.putExtra(ConversationsActivity.EXTRA_DOWNLOAD_UUID, downloadMessageUuid);
             return PendingIntent.getActivity(mXmppConnectionService,
                     generateRequestCode(conversationUuid, 8),
                     viewConversationIntent,
@@ -791,7 +791,7 @@ public class NotificationService {
     }
 
     private PendingIntent createOpenConversationsIntent() {
-        return PendingIntent.getActivity(mXmppConnectionService, 0, new Intent(mXmppConnectionService, ConversationActivity.class), 0);
+        return PendingIntent.getActivity(mXmppConnectionService, 0, new Intent(mXmppConnectionService, ConversationsActivity.class), 0);
     }
 
     public void updateErrorNotification() {
