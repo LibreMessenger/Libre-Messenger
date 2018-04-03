@@ -1,9 +1,10 @@
 ### Changelog
 
 #### Version 2.0.0 (in development)
-* Integrate QR code scanner (requires camera permission)
-* Removed support for customizable resources
-* Add ability to change status message
+* integrate QR code scanner (requires camera permission)
+* removed support for customizable resources
+* rework UI for status message
+* added splash screen at startup
 
 #### Version 1.22.1
 * show extended/TOR connection options in expert settings
