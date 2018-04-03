@@ -20,7 +20,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -634,7 +633,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
         mSearchEditText.addTextChangedListener(mSearchTextWatcher);
         mSearchEditText.setOnEditorActionListener(mSearchDone);
         if (mInitialJid != null) {
-            MenuItemCompat.expandActionView(mMenuSearchView);
+            mMenuSearchView.expandActionView();
             mSearchEditText.append(mInitialJid);
             filter(mInitialJid);
         }
