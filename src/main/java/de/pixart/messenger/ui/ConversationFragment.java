@@ -94,7 +94,6 @@ import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.services.MessageArchiveService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.adapter.MessageAdapter;
-import de.pixart.messenger.ui.interfaces.OnSwipeTouchListener;
 import de.pixart.messenger.ui.util.ActivityResult;
 import de.pixart.messenger.ui.util.AttachmentTool;
 import de.pixart.messenger.ui.util.ConversationMenuConfigurator;
@@ -2091,13 +2090,14 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 this.binding.messagesView.setSelection(pos);
             }
         }
-        this.binding.messagesView.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+        // todo add swipe listener --> causes strange scrolling in chats
+        /*this.binding.messagesView.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
             @Override
             public void onSwipeRight() {
                 Log.d(Config.LOGTAG, "Swipe right detected");
                 activity.onBackPressed();
             }
-        });
+        });*/
         activity.onConversationRead(this.conversation);
         //TODO if we only do this when this fragment is running on main it won't *bing* in tablet layout which might be unnecessary since we can *see* it
         activity.xmppConnectionService.getNotificationService().setOpenConversation(this.conversation);

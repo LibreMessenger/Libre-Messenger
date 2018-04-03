@@ -762,7 +762,9 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
     public int getNextEncryption() {
         final int defaultEncryption;
         AxolotlService axolotlService = account.getAxolotlService();
-        if (axolotlService != null && axolotlService.isConversationAxolotlCapable(this)) {
+        if (contactJid.asBareJid().equals(Config.BUG_REPORTS)) {
+            defaultEncryption = Message.ENCRYPTION_NONE;
+        } else if (axolotlService != null && axolotlService.isConversationAxolotlCapable(this)) {
             defaultEncryption = Message.ENCRYPTION_AXOLOTL;
         } else {
             defaultEncryption = Message.ENCRYPTION_NONE;

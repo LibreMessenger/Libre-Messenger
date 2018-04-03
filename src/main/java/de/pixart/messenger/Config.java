@@ -3,6 +3,7 @@ package de.pixart.messenger;
 import android.graphics.Bitmap;
 
 import de.pixart.messenger.xmpp.chatstate.ChatState;
+import rocks.xmpp.addr.Jid;
 
 public final class Config {
 
@@ -37,7 +38,7 @@ public final class Config {
 
     public static final String LOGTAG = "Pix-Art_Messenger";
 
-    public static final String BUG_REPORTS = "bugs@pix-art.de";
+    public static final Jid BUG_REPORTS = Jid.of("bugs@pix-art.de");
 
     public static final String inviteUserURL = "https://jabber.pix-art.de/i/";
     public static final String inviteMUCURL = "https://jabber.pix-art.de/j/";
