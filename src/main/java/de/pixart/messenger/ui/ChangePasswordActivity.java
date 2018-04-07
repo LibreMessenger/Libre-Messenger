@@ -61,18 +61,15 @@ public class ChangePasswordActivity extends XmppActivity implements XmppConnecti
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
         Button mCancelButton = findViewById(R.id.left_button);
-        mCancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        mCancelButton.setOnClickListener(view -> finish());
         this.mChangePasswordButton = findViewById(R.id.right_button);
         this.mChangePasswordButton.setOnClickListener(this.mOnChangePasswordButtonClicked);
         this.mCurrentPassword = findViewById(R.id.current_password);
         this.mCurrentPassword.setCustomSelectionActionModeCallback(new DisabledActionModeCallback());
         this.mNewPassword = findViewById(R.id.new_password);
         this.mNewPassword.setCustomSelectionActionModeCallback(new DisabledActionModeCallback());
+        this.mCurrentPasswordLayout = findViewById(R.id.current_password_layout);
+        this.mNewPasswordLayout = findViewById(R.id.new_password_layout);
     }
 
     @Override
