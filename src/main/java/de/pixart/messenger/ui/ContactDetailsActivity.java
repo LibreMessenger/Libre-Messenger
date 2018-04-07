@@ -44,7 +44,7 @@ import de.pixart.messenger.entities.ListItem;
 import de.pixart.messenger.services.XmppConnectionService.OnAccountUpdate;
 import de.pixart.messenger.services.XmppConnectionService.OnRosterUpdate;
 import de.pixart.messenger.utils.CryptoHelper;
-import de.pixart.messenger.utils.IrregularUnicodeBlockDetector;
+import de.pixart.messenger.utils.IrregularUnicodeDetector;
 import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.utils.TimeframeUtils;
 import de.pixart.messenger.utils.UIHelper;
@@ -509,7 +509,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             }
         }
 
-        binding.detailsContactjid.setText(IrregularUnicodeBlockDetector.style(this, contact.getJid()));
+        binding.detailsContactjid.setText(IrregularUnicodeDetector.style(this, contact.getJid()));
         String account;
         if (Config.DOMAIN_LOCK != null) {
             account = contact.getAccount().getJid().getLocal();

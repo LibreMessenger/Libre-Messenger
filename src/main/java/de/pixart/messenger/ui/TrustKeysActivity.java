@@ -31,7 +31,7 @@ import de.pixart.messenger.databinding.KeysCardBinding;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.utils.CryptoHelper;
-import de.pixart.messenger.utils.IrregularUnicodeBlockDetector;
+import de.pixart.messenger.utils.IrregularUnicodeDetector;
 import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xmpp.OnKeyStatusUpdated;
 import rocks.xmpp.addr.Jid;
@@ -191,7 +191,7 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
                 hasForeignKeys = true;
                 KeysCardBinding keysCardBinding =  DataBindingUtil.inflate(getLayoutInflater(),R.layout.keys_card, binding.foreignKeys,false);
                 final Jid jid = entry.getKey();
-                keysCardBinding.foreignKeysTitle.setText(IrregularUnicodeBlockDetector.style(this, jid));
+                keysCardBinding.foreignKeysTitle.setText(IrregularUnicodeDetector.style(this, jid));
                 keysCardBinding.foreignKeysTitle.setOnClickListener(v -> switchToContactDetails(mAccount.getRoster().getContact(jid)));
                 final Map<String, Boolean> fingerprints = entry.getValue();
                 for (final String fingerprint : fingerprints.keySet()) {
