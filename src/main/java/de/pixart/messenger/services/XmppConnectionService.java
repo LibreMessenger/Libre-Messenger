@@ -1853,6 +1853,7 @@ public class XmppConnectionService extends Service {
                 return conversation;
             }
             conversation = databaseBackend.findConversation(account, jid);
+            Log.d(Config.LOGTAG, "loaded from db: " + conversation.getNextMessage());
             final boolean loadMessagesFromDb;
             if (conversation != null) {
                 conversation.setStatus(Conversation.STATUS_AVAILABLE);
@@ -1978,6 +1979,7 @@ public class XmppConnectionService extends Service {
     public void archiveConversation(Conversation conversation) {
         getNotificationService().clear(conversation);
         conversation.setStatus(Conversation.STATUS_ARCHIVED);
+        conversation.setNextMessage(null);
         synchronized (this.conversations) {
             getMessageArchiveService().kill(conversation);
             if (conversation.getMode() == Conversation.MODE_MULTI) {
@@ -3370,12 +3372,7 @@ public class XmppConnectionService extends Service {
     }
 
     public void updateConversation(final Conversation conversation) {
-        mDatabaseWriterExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                databaseBackend.updateConversation(conversation);
-            }
-        });
+        mDatabaseWriterExecutor.execute(() -> databaseBackend.updateConversation(conversation));
     }
 
     private void reconnectAccount(final Account account, final boolean force, final boolean interactive) {

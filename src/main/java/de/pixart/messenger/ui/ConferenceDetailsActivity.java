@@ -431,6 +431,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             menu.setHeaderTitle(name);
             MenuItem sendPrivateMessage = menu.findItem(R.id.send_private_message);
             MenuItem highlightInMuc = menu.findItem(R.id.highlight_in_muc);
+            highlightInMuc.setVisible(true);
             if (user.getRealJid() != null) {
                 MenuItem startConversation = menu.findItem(R.id.start_conversation);
                 MenuItem giveMembership = menu.findItem(R.id.give_membership);
@@ -477,7 +478,6 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                         sendPrivateMessage.setVisible(false);
                     }
                 }
-                highlightInMuc.setVisible(self.getRole().ranks(MucOptions.Role.PARTICIPANT));
             }
 
         }
