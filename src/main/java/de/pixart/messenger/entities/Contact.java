@@ -128,15 +128,6 @@ public class Contact implements ListItem, Blockable {
     }
 
     @Override
-    public String getDisplayJid() {
-        if (jid != null) {
-            return jid.toString();
-        } else {
-            return null;
-        }
-    }
-
-    @Override
     public int getOffline() {
         return 0;
     }

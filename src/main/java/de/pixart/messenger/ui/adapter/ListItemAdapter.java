@@ -27,7 +27,9 @@ import de.pixart.messenger.databinding.ContactBinding;
 import de.pixart.messenger.entities.ListItem;
 import de.pixart.messenger.ui.SettingsActivity;
 import de.pixart.messenger.ui.XmppActivity;
+import de.pixart.messenger.utils.IrregularUnicodeBlockDetector;
 import de.pixart.messenger.utils.UIHelper;
+import rocks.xmpp.addr.Jid;
 
 public class ListItemAdapter extends ArrayAdapter<ListItem> {
 
@@ -87,10 +89,10 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
                 viewHolder.tags.addView(tv);
             }
         }
-        final String jid = item.getDisplayJid();
+        final Jid jid = item.getJid();
         if (jid != null) {
             viewHolder.jid.setVisibility(View.VISIBLE);
-            viewHolder.jid.setText(jid);
+            viewHolder.jid.setText(IrregularUnicodeBlockDetector.style(activity, jid));
         } else {
             viewHolder.jid.setVisibility(View.GONE);
         }

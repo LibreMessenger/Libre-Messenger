@@ -8,6 +8,7 @@
 
         <item name="color_background_primary">@color/grey50</item>
         <item name="color_background_secondary">@color/grey200</item>
+        <item name="color_warning">@color/red_a700</item>
 
         <item name="android:windowActionModeOverlay">true</item>
         <item name="android:actionModeBackground">@color/accent</item>
@@ -62,6 +63,8 @@
         <item name="ic_file_pdf">@drawable/ic_file_pdf_grey600_48dp</item>
         <item name="ic_file_vcard">@drawable/ic_account_card_details_grey600_48dp</item>
         <item name="ic_file_calendar">@drawable/ic_calendar_grey600_48dp</item>
+        <item name="color_warning">@color/red_a100</item>
+
     </style>
 
     <style name="ConversationsTheme.LargerText" parent="ConversationsTheme">
