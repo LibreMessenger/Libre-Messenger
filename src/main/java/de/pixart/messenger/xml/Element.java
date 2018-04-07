@@ -1,7 +1,6 @@
 package de.pixart.messenger.xml;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +8,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 
-import de.pixart.messenger.Config;
 import de.pixart.messenger.utils.XmlHelper;
 import rocks.xmpp.addr.Jid;
 
@@ -151,9 +149,8 @@ public class Element {
         final String jid = this.getAttribute(name);
         if (jid != null && !jid.isEmpty()) {
             try {
-                return Jid.of(jid);
+                return Jid.ofEscaped(jid);
             } catch (final IllegalArgumentException e) {
-                Log.e(Config.LOGTAG, "could not parse jid " + jid);
                 return null;
             }
         }
