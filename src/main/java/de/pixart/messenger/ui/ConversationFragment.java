@@ -398,9 +398,8 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     private AtomicBoolean mSendingPgpMessage = new AtomicBoolean(false);
     private OnEditorActionListener mEditorActionListener = (v, actionId, event) -> {
         if (actionId == EditorInfo.IME_ACTION_SEND) {
-            InputMethodManager imm = (InputMethodManager) v.getContext()
-                    .getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm.isFullscreenMode()) {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null && imm.isFullscreenMode()) {
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
             sendMessage();
@@ -1225,6 +1224,14 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         }
     }
 
+    private static void hideSoftKeyboard(final Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        View view = activity.getCurrentFocus();
+        if (view != null && imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
     private void quoteMessage(Message message) {
         quoteText(MessageUtils.prepareQuote(message));
     }
@@ -1990,6 +1997,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         super.onStop();
         final Activity activity = getActivity();
         if (activity == null || !activity.isChangingConfigurations()) {
+            hideSoftKeyboard(activity);
             messageListAdapter.stopAudioPlayer();
         }
         if (this.conversation != null) {
