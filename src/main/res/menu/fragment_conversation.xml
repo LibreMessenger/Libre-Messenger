@@ -73,21 +73,6 @@
         app:showAsAction="never"
         android:title="@string/action_end_conversation" />
     <item
-        android:id="@+id/action_archive_muc"
-        android:orderInCategory="60"
-        app:showAsAction="never"
-        android:title="@string/action_end_conversation_muc" />
-    <item
-        android:id="@+id/action_accounts"
-        android:orderInCategory="90"
-        app:showAsAction="never"
-        android:title="@string/mgmt_account_edit" />
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        app:showAsAction="never"
-        android:title="@string/action_settings" />
-    <item
         android:id="@+id/action_invite_user"
         android:orderInCategory="100"
         app:showAsAction="never"

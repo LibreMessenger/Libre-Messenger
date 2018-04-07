@@ -122,6 +122,7 @@ public abstract class XmppActivity extends AppCompatActivity {
                 registerListeners();
                 registeredListeners = true;
             }
+            invalidateOptionsMenu();
             onBackendConnected();
         }
 
@@ -383,7 +384,7 @@ public abstract class XmppActivity extends AppCompatActivity {
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
             case R.id.action_accounts:
-                if (xmppConnectionService.getAccounts().size() == 1 && !xmppConnectionService.multipleAccounts()) {
+                if (xmppConnectionServiceBound && this.xmppConnectionService.getAccounts().size() == 1 && !this.xmppConnectionService.multipleAccounts()) {
                     final Intent intent = new Intent(getApplicationContext(), EditAccountActivity.class);
                     Account mAccount = xmppConnectionService.getAccounts().get(0);
                     intent.putExtra("jid", mAccount.getJid().asBareJid().toString());

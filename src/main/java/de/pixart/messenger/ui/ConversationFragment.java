@@ -1098,13 +1098,18 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         final MenuItem menuNeedHelp = menu.findItem(R.id.action_create_issue);
         final MenuItem menuSearchHistory = menu.findItem(R.id.action_search_history);
         final MenuItem menuSearchUpdates = menu.findItem(R.id.action_check_updates);
+        final MenuItem menuArchiveChat = menu.findItem(R.id.action_archive_chat);
+        final MenuItem menuEditProfiles = menu.findItem(R.id.action_accounts);
 
         if (conversation != null) {
             if (conversation.getMode() == Conversation.MODE_MULTI) {
                 menuInviteContact.setVisible(true);
+                menuArchiveChat.setTitle(R.string.action_end_conversation_muc);
             } else {
                 menuInviteContact.setVisible(false);
+                menuArchiveChat.setTitle(R.string.action_end_conversation);
             }
+            menuEditProfiles.setVisible(false);
             menuNeedHelp.setVisible(true);
             menuSearchHistory.setVisible(true);
             menuSearchUpdates.setVisible(false);
@@ -1388,22 +1393,23 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 handleAttachmentSelection(item);
                 break;
             case R.id.action_archive_chat:
-                activity.xmppConnectionService.archiveConversation(conversation);
-                activity.onConversationArchived(conversation);
-                break;
-            case R.id.action_archive_muc:
-                activity.runOnUiThread(() -> {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle(getString(R.string.action_end_conversation_muc));
-                    builder.setMessage(getString(R.string.leave_conference_warning));
-                    builder.setNegativeButton(getString(R.string.cancel), null);
-                    builder.setPositiveButton(getString(R.string.action_end_conversation_muc),
-                            (dialog, which) -> {
-                                activity.xmppConnectionService.archiveConversation(conversation);
-                                activity.onConversationArchived(conversation);
-                            });
-                    builder.create().show();
-                });
+                if (conversation.getMode() == Conversation.MODE_SINGLE) {
+                    activity.xmppConnectionService.archiveConversation(conversation);
+                    activity.onConversationArchived(conversation);
+                } else {
+                    activity.runOnUiThread(() -> {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setTitle(getString(R.string.action_end_conversation_muc));
+                        builder.setMessage(getString(R.string.leave_conference_warning));
+                        builder.setNegativeButton(getString(R.string.cancel), null);
+                        builder.setPositiveButton(getString(R.string.action_end_conversation_muc),
+                                (dialog, which) -> {
+                                    activity.xmppConnectionService.archiveConversation(conversation);
+                                    activity.onConversationArchived(conversation);
+                                });
+                        builder.create().show();
+                    });
+                }
                 break;
             case R.id.action_invite:
                 startActivityForResult(ChooseContactActivity.create(activity, conversation), REQUEST_INVITE_TO_CONVERSATION);
