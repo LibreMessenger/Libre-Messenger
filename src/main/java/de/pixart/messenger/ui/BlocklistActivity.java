@@ -5,8 +5,8 @@ import android.text.Editable;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
@@ -15,7 +15,7 @@ import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import rocks.xmpp.addr.Jid;
 
 public class BlocklistActivity extends AbstractSearchableListItemActivity implements OnUpdateBlocklist {
-    private List<String> mKnownHosts = new ArrayList<>();
+    private Collection<String> mKnownHosts = new ArrayList<>();
     private Account account = null;
 
     @Override

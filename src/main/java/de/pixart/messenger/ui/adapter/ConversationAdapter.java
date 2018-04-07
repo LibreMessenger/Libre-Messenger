@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -31,8 +32,10 @@ import de.pixart.messenger.ui.ConversationFragment;
 import de.pixart.messenger.ui.XmppActivity;
 import de.pixart.messenger.ui.util.Color;
 import de.pixart.messenger.utils.EmojiWrapper;
+import de.pixart.messenger.utils.IrregularUnicodeDetector;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
+import rocks.xmpp.addr.Jid;
 
 public class ConversationAdapter extends ArrayAdapter<Conversation> {
 
@@ -45,7 +48,7 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
         this.activity = activity;
     }
 
-    public static boolean cancelPotentialWork(Conversation conversation, ImageView imageView) {
+    private static boolean cancelPotentialWork(Conversation conversation, ImageView imageView) {
         final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
 
         if (bitmapWorkerTask != null) {
@@ -71,7 +74,7 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
+    public View getView(int position, View view, @NonNull ViewGroup parent) {
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.conversation_list_row, parent, false);
@@ -83,7 +86,12 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
             viewHolder.swipeableItem.setBackgroundColor(c);
         }
         if (conversation.getMode() == Conversation.MODE_SINGLE || activity.useSubjectToIdentifyConference()) {
-            viewHolder.name.setText(EmojiWrapper.transform(conversation.getName()));
+            CharSequence name = conversation.getName();
+            if (name instanceof Jid) {
+                viewHolder.name.setText(IrregularUnicodeDetector.style(activity, (Jid) name));
+            } else {
+                viewHolder.name.setText(EmojiWrapper.transform(name));
+            }
         } else {
             viewHolder.name.setText(conversation.getJid().asBareJid().toString());
         }
@@ -275,7 +283,7 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
         return view;
     }
 
-    public void loadAvatar(Conversation conversation, ImageView imageView) {
+    private void loadAvatar(Conversation conversation, ImageView imageView) {
         if (cancelPotentialWork(conversation, imageView)) {
             final Bitmap bm = activity.avatarService().get(conversation, activity.getPixel(56), true);
             if (bm != null) {
@@ -283,7 +291,7 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
                 imageView.setImageBitmap(bm);
                 imageView.setBackgroundColor(0x00000000);
             } else {
-                imageView.setBackgroundColor(UIHelper.getColorForName(conversation.getName()));
+                imageView.setBackgroundColor(UIHelper.getColorForName(conversation.getName().toString()));
                 imageView.setImageDrawable(null);
                 final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
                 final AsyncDrawable asyncDrawable = new AsyncDrawable(activity.getResources(), null, task);
