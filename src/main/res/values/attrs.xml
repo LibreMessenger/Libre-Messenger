@@ -11,6 +11,18 @@
     <attr name="color_background_primary" format="reference|color" />
     <attr name="color_warning" format="reference|color"/>
 
+    <attr name="ic_send_cancel_offline" format="reference"/>
+    <attr name="ic_send_location_offline" format="reference"/>
+    <attr name="ic_send_photo_offline" format="reference"/>
+    <attr name="ic_send_picture_offline" format="reference"/>
+    <attr name="ic_send_text_offline" format="reference"/>
+    <attr name="ic_send_videocam_offline" format="reference"/>
+    <attr name="ic_send_voice_offline" format="reference"/>
+
+    <attr name="unread_count" format="reference|color" />
+
+    <attr name="conversations_overview_background" format="reference|color"/>
+
     <attr name="icon_add_group" format="reference" />
     <attr name="icon_add_person" format="reference" />
     <attr name="icon_cancel" format="reference" />
@@ -19,7 +31,7 @@
     <attr name="icon_discard" format="reference" />
     <attr name="icon_download" format="reference" />
     <attr name="icon_edit" format="reference" />
-    <attr name="icon_edit_dark" format="reference" />
+    <attr name="icon_edit_body" format="reference" />
     <attr name="icon_done" format="reference" />
     <attr name="icon_group" format="reference" />
     <attr name="icon_new" format="reference" />

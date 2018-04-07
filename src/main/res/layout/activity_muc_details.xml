@@ -180,9 +180,10 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
+                        android:alpha="?attr/icon_alpha"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:padding="@dimen/image_button_padding"
-                        android:src="?attr/icon_edit_dark" />
+                        android:src="?attr/icon_edit_body" />
                 </RelativeLayout>
 
                 <LinearLayout

@@ -762,4 +762,6 @@
     <string name="edit_status_message">Edit status message</string>
     <string name="all_accounts_on_this_device">Set for all accounts on this device</string>
     <string name="change_presence">Manage availability manually</string>
+    <string name="pref_automatically_delete_messages_description">Automatically delete messages from this device that are older than the configured time frame.</string>
+    <string name="pref_automatically_delete_messages">Automatic message deletion</string>
 </resources>
