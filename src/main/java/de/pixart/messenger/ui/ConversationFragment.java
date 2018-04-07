@@ -146,6 +146,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     private final PendingItem<Bundle> pendingExtras = new PendingItem<>();
     private final PendingItem<Uri> pendingTakePhotoUri = new PendingItem<>();
     private final PendingItem<ScrollState> pendingScrollState = new PendingItem<>();
+    private final PendingItem<Message> pendingMessage = new PendingItem<>();
     protected MessageAdapter messageListAdapter;
     private Conversation conversation;
 	public FragmentConversationBinding binding;
@@ -153,9 +154,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd. MMM yyyy", Locale.getDefault());
     private Toast messageLoaderToast;
     private ConversationsActivity activity;
-
     private boolean reInitRequiredOnStart = true;
-
     protected OnClickListener clickToVerify = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -278,6 +277,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             }
         }
     };
+
     private EditMessage.OnCommitContentListener mEditorContentListener = new EditMessage.OnCommitContentListener() {
         @Override
         public boolean onCommitContent(InputContentInfoCompat inputContentInfo, int flags, Bundle opts, String[] contentMimeTypes) {
@@ -462,7 +462,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     private int lastCompletionCursor;
     private boolean firstWord = false;
     private Message mPendingDownloadableMessage;
-    private final PendingItem<Message> pendingMessage = new PendingItem<>();
 
     private static ConversationFragment findConversationFragment(Activity activity) {
         Fragment fragment = activity.getFragmentManager().findFragmentById(R.id.main_fragment);
@@ -574,6 +573,24 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             activity.refreshUi();
         }
     };
+
+    private static boolean allGranted(int[] grantResults) {
+        for (int grantResult : grantResults) {
+            if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static String getFirstDenied(int[] grantResults, String[] permissions) {
+        for (int i = 0; i < grantResults.length; ++i) {
+            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                return permissions[i];
+            }
+        }
+        return null;
+    }
 
     private int getIndexOf(String uuid, List<Message> messages) {
         if (uuid == null) {
@@ -1567,24 +1584,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         }
     }
 
-    private static boolean allGranted(int[] grantResults) {
-        for (int grantResult : grantResults) {
-            if (grantResult != PackageManager.PERMISSION_GRANTED) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private static String getFirstDenied(int[] grantResults, String[] permissions) {
-        for (int i = 0; i < grantResults.length; ++i) {
-            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                return permissions[i];
-            }
-        }
-        return null;
-    }
-
     public void startDownloadable(Message message) {
         if (!Config.ONLY_INTERNAL_STORAGE && !hasStoragePermission(REQUEST_START_DOWNLOAD)) {
             this.mPendingDownloadableMessage = message;
@@ -2087,7 +2086,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     int i = getIndexOf(first.getUuid(), this.messageList);
                     pos = i < 0 ? bottom : i;
                 }
-                this.binding.messagesView.setSelection(pos);
+                setSelection(pos);
             }
         }
         // todo add swipe listener --> causes strange scrolling in chats
@@ -2102,6 +2101,11 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         //TODO if we only do this when this fragment is running on main it won't *bing* in tablet layout which might be unnecessary since we can *see* it
         activity.xmppConnectionService.getNotificationService().setOpenConversation(this.conversation);
         return true;
+    }
+
+    private void setSelection(int pos) {
+        this.binding.messagesView.setSelection(pos);
+        this.binding.messagesView.post(() -> this.binding.messagesView.setSelection(pos));
     }
 
     private boolean scrolledToBottom() {
