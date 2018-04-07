@@ -28,7 +28,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
@@ -83,7 +82,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     private TextInputLayout mAccountJidLayout;
     private EditText mPassword;
     private TextInputLayout mPasswordLayout;
-    private CheckBox mRegisterNew;
     private Button mCancelButton;
     private Button mSaveButton;
     private Button mDisableOsOptimizationsButton;
@@ -143,7 +141,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 }
                 return;
             }
-            final boolean registerNewAccount = mRegisterNew.isChecked() && !Config.DISALLOW_REGISTRATION_IN_UI;
+            final boolean registerNewAccount = binding.accountRegisterNew.isChecked() && !Config.DISALLOW_REGISTRATION_IN_UI;
             if (mUsernameMode && binding.accountJid.getText().toString().contains("@")) {
                 mAccountJidLayout.setError(getString(R.string.invalid_username));
                 removeErrorsOnAllBut(mAccountJidLayout);
@@ -492,7 +490,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             } else {
                 XmppConnection connection = mAccount == null ? null : mAccount.getXmppConnection();
                 URL url = connection != null && mAccount.getStatus() == Account.State.REGISTRATION_WEB ? connection.getRedirectionUrl() : null;
-                if (url != null && mRegisterNew.isChecked()) {
+                if (url != null && this.binding.accountRegisterNew.isChecked()) {
                     this.mSaveButton.setText(R.string.open_website);
                 } else {
                     this.mSaveButton.setText(R.string.next);
@@ -554,7 +552,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         this.mPasswordLayout = (TextInputLayout) findViewById(R.id.account_password_layout);
         this.mAvatar = findViewById(R.id.avater);
         this.mAvatar.setOnClickListener(this.mAvatarClickListener);
-        this.mRegisterNew = findViewById(R.id.account_register_new);
         this.mDisableOsOptimizationsButton = findViewById(R.id.os_optimization_disable);
         this.getmDisableOsOptimizationsBody = findViewById(R.id.os_optimization_body);
         this.mPgpFingerprintBox = findViewById(R.id.pgp_fingerprint_box);
@@ -576,12 +573,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         this.mHostname.setOnFocusChangeListener(mEditTextFocusListener);
         this.mHostnameLayout = (TextInputLayout)findViewById(R.id.hostname_layout);
         this.mClearDevicesButton = findViewById(R.id.clear_devices);
-        this.mClearDevicesButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showWipePepDialog();
-            }
-        });
+        this.mClearDevicesButton.setOnClickListener(v -> showWipePepDialog());
         this.mPort = findViewById(R.id.port);
         this.mPort.setText("5222");
         this.mPort.addTextChangedListener(mTextWatcher);
@@ -600,9 +592,9 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 updateSaveButton();
             }
         };
-        this.mRegisterNew.setOnCheckedChangeListener(OnCheckedShowConfirmPassword);
+        this.binding.accountRegisterNew.setOnCheckedChangeListener(OnCheckedShowConfirmPassword);
         if (Config.DISALLOW_REGISTRATION_IN_UI) {
-            this.mRegisterNew.setVisibility(View.GONE);
+            this.binding.accountRegisterNew.setVisibility(View.GONE);
         }
     }
 
@@ -688,7 +680,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             this.mInitMode = init || this.jidToEdit == null;
             this.messageFingerprint = getIntent().getStringExtra("fingerprint");
             if (!mInitMode) {
-                this.mRegisterNew.setVisibility(View.GONE);
+                this.binding.accountRegisterNew.setVisibility(View.GONE);
                 if (getSupportActionBar() != null) {
                     getSupportActionBar().setTitle(getString(R.string.account_details));
                 }
@@ -1013,6 +1005,8 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 }
             }
             this.binding.accountRegisterNew.setVisibility(View.GONE);
+        } else if (this.mAccount.isOptionSet(Account.OPTION_REGISTER)) {
+            this.binding.accountRegisterNew.setVisibility(View.VISIBLE);
         } else {
             this.binding.accountRegisterNew.setVisibility(mInitMode ? View.VISIBLE : View.GONE);
         }
