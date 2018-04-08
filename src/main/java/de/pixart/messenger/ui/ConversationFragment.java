@@ -910,11 +910,11 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 break;
             case Message.ENCRYPTION_AXOLOTL:
                 if (!trustKeysIfNeeded(REQUEST_TRUST_KEYS_TEXT)) {
-                    sendAxolotlMessage(message);
+                    sendMessage(message);
                 }
                 break;
             default:
-                sendPlainTextMessage(message);
+                sendMessage(message);
         }
     }
 
@@ -987,7 +987,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             case REQUEST_TRUST_KEYS_TEXT:
                 final String body = binding.textinput.getText().toString();
                 Message message = new Message(conversation, body, conversation.getNextEncryption());
-                sendAxolotlMessage(message);
+                sendMessage(message);
                 break;
             case REQUEST_TRUST_KEYS_MENU:
                 int choice = data.getIntExtra("choice", ATTACHMENT_CHOICE_INVALID);
@@ -2578,7 +2578,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         return this.binding.searchfield.getVisibility() == View.VISIBLE;
     }
 
-    protected void sendPlainTextMessage(Message message) {
+    protected void sendMessage(Message message) {
         activity.xmppConnectionService.sendMessage(message);
         messageSent();
     }
@@ -2695,11 +2695,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         builder.setNegativeButton(getString(R.string.cancel), null);
         builder.setPositiveButton(getString(R.string.send_unencrypted), listener);
         builder.create().show();
-    }
-
-    protected void sendAxolotlMessage(final Message message) {
-        activity.xmppConnectionService.sendMessage(message);
-        messageSent();
     }
 
     protected void sendOtrMessage(final Message message) {

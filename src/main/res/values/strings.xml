@@ -349,7 +349,7 @@
     <string name="distrust_omemo_key_text">Are you sure you want to remove the verification for this device?\nThis device and messages coming from that device will be marked as untrusted.</string>
     <string name="error_no_keys_to_trust_server_error">There are no usable keys available for this contact.\nFetching new keys from the server has been unsuccessful. Maybe there is something wrong with your contacts server.</string>
     <string name="error_no_keys_to_trust">There are no usable keys available for this contact. If you have purged any of their keys, they need to generate new ones.</string>
-    <string name="error_trustkeys_title">Error</string>
+    <string name="error_trustkeys_title">Something went wrong</string>
     <string name="fetching_history_from_server">Fetching history from server</string>
     <string name="no_more_history_on_server">No more history on server</string>
     <string name="updating">Updating…</string>
@@ -764,4 +764,11 @@
     <string name="change_presence">Manage availability manually</string>
     <string name="pref_automatically_delete_messages_description">Automatically delete messages from this device that are older than the configured time frame.</string>
     <string name="pref_automatically_delete_messages">Automatic message deletion</string>
+    <string name="disable_encryption">Disable encryption</string>
+    <string name="error_trustkey_general">Conversations is unable to send encrypted messages to %1$s. This may be due to your contact using an outdated server or client that can not handle OMEMO.</string>
+    <string name="error_trustkey_device_list">Unable to fetch device list</string>
+    <string name="error_trustkey_bundle">Unable to fetch device bundles</string>
+    <string name="error_trustkey_hint_mutual">Hint: In some cases this can be fixed by adding each other your contact lists.</string>
+    <string name="disable_encryption_message">Are you sure you want to disable OMEMO encryption for this conversation?\nThis will allow your server administrator to read your messages, but it might be the only way to communicate with people using outdated clients.</string>
+    <string name="disable_now">Disable now</string>
 </resources>

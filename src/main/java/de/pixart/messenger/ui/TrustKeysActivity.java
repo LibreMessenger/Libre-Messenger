@@ -1,5 +1,6 @@
 package de.pixart.messenger.ui;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -10,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import org.whispersystems.libsignal.IdentityKey;
@@ -29,7 +29,9 @@ import de.pixart.messenger.crypto.axolotl.FingerprintStatus;
 import de.pixart.messenger.databinding.ActivityTrustKeysBinding;
 import de.pixart.messenger.databinding.KeysCardBinding;
 import de.pixart.messenger.entities.Account;
+import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
+import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.IrregularUnicodeDetector;
 import de.pixart.messenger.utils.XmppUri;
@@ -37,33 +39,21 @@ import de.pixart.messenger.xmpp.OnKeyStatusUpdated;
 import rocks.xmpp.addr.Jid;
 
 public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdated {
+    private final Map<String, Boolean> ownKeysToTrust = new HashMap<>();
+    private final Map<Jid, Map<String, Boolean>> foreignKeysToTrust = new HashMap<>();
+    private final OnClickListener mCancelButtonListener = v -> {
+        setResult(RESULT_CANCELED);
+        finish();
+    };
     private List<Jid> contactJids;
-
     private Account mAccount;
     private Conversation mConversation;
-
+    private final OnClickListener mSaveButtonListener = v -> {
+        commitTrusts();
+        finishOk(false);
+    };
     private AtomicBoolean mUseCameraHintShown = new AtomicBoolean(false);
-
     private AxolotlService.FetchStatus lastFetchReport = AxolotlService.FetchStatus.SUCCESS;
-
-    private final Map<String, Boolean> ownKeysToTrust = new HashMap<>();
-    private final Map<Jid,Map<String, Boolean>> foreignKeysToTrust = new HashMap<>();
-
-    private final OnClickListener mSaveButtonListener = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            commitTrusts();
-            finishOk();
-        }
-    };
-
-    private final OnClickListener mCancelButtonListener = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            setResult(RESULT_CANCELED);
-            finish();
-        }
-    };
     private Toast mUseCameraHintToast = null;
     private ActivityTrustKeysBinding binding;
 
@@ -76,9 +66,9 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.binding = DataBindingUtil.setContentView(this,R.layout.activity_trust_keys);
+        this.binding = DataBindingUtil.setContentView(this, R.layout.activity_trust_keys);
         this.contactJids = new ArrayList<>();
-        for(String jid : getIntent().getStringArrayExtra("contacts")) {
+        for (String jid : getIntent().getStringArrayExtra("contacts")) {
             try {
                 this.contactJids.add(Jid.of(jid));
             } catch (IllegalArgumentException e) {
@@ -96,7 +86,7 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
         }
 
         if (savedInstanceState != null) {
-            mUseCameraHintShown.set(savedInstanceState.getBoolean("camera_hint_shown",false));
+            mUseCameraHintShown.set(savedInstanceState.getBoolean("camera_hint_shown", false));
         }
     }
 
@@ -115,9 +105,9 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
     }
 
     private void showCameraToast() {
-        mUseCameraHintToast = Toast.makeText(this,R.string.use_camera_icon_to_scan_barcode,Toast.LENGTH_LONG);
+        mUseCameraHintToast = Toast.makeText(this, R.string.use_camera_icon_to_scan_barcode, Toast.LENGTH_LONG);
         ActionBar actionBar = getSupportActionBar();
-        mUseCameraHintToast.setGravity(Gravity.TOP | Gravity.END, 0 ,actionBar == null ? 0 : actionBar.getHeight());
+        mUseCameraHintToast.setGravity(Gravity.TOP | Gravity.END, 0, actionBar == null ? 0 : actionBar.getHeight());
         mUseCameraHintToast.show();
     }
 
@@ -129,6 +119,7 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
                     Toast.makeText(this, R.string.please_wait_for_keys_to_be_fetched, Toast.LENGTH_SHORT).show();
                 } else {
                     ScanActivity.scan(this);
+                    //new IntentIntegrator(this).initiateScan(Arrays.asList("AZTEC","QR_CODE"));
                     return true;
                 }
         }
@@ -149,19 +140,19 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
                 && mAccount != null
                 && uri.hasFingerprints()
                 && mAccount.getAxolotlService().getCryptoTargets(mConversation).contains(uri.getJid())) {
-            boolean performedVerification = xmppConnectionService.verifyFingerprints(mAccount.getRoster().getContact(uri.getJid()),uri.getFingerprints());
+            boolean performedVerification = xmppConnectionService.verifyFingerprints(mAccount.getRoster().getContact(uri.getJid()), uri.getFingerprints());
             boolean keys = reloadFingerprints();
             if (performedVerification && !keys && !hasNoOtherTrustedKeys() && !hasPendingKeyFetches()) {
-                Toast.makeText(this,R.string.all_omemo_keys_have_been_verified, Toast.LENGTH_SHORT).show();
-                finishOk();
+                Toast.makeText(this, R.string.all_omemo_keys_have_been_verified, Toast.LENGTH_SHORT).show();
+                finishOk(false);
                 return;
             } else if (performedVerification) {
-                Toast.makeText(this,R.string.verified_fingerprints,Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.verified_fingerprints, Toast.LENGTH_SHORT).show();
             }
         } else {
             reloadFingerprints();
-            Log.d(Config.LOGTAG,"xmpp uri was: "+uri.getJid()+" has Fingerprints: "+Boolean.toString(uri.hasFingerprints()));
-            Toast.makeText(this,R.string.barcode_does_not_contain_fingerprints_for_this_conversation,Toast.LENGTH_SHORT).show();
+            Log.d(Config.LOGTAG, "xmpp uri was: " + uri.getJid() + " has Fingerprints: " + Boolean.toString(uri.hasFingerprints()));
+            Toast.makeText(this, R.string.barcode_does_not_contain_fingerprints_for_this_conversation, Toast.LENGTH_SHORT).show();
         }
         populateView();
     }
@@ -172,16 +163,13 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
         binding.foreignKeys.removeAllViews();
         boolean hasOwnKeys = false;
         boolean hasForeignKeys = false;
-        for(final String fingerprint : ownKeysToTrust.keySet()) {
+        for (final String fingerprint : ownKeysToTrust.keySet()) {
             hasOwnKeys = true;
             addFingerprintRowWithListeners(binding.ownKeysDetails, mAccount, fingerprint, false,
                     FingerprintStatus.createActive(ownKeysToTrust.get(fingerprint)), false, false,
-                    new CompoundButton.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                            ownKeysToTrust.put(fingerprint, isChecked);
-                            // own fingerprints have no impact on locked status.
-                        }
+                    (buttonView, isChecked) -> {
+                        ownKeysToTrust.put(fingerprint, isChecked);
+                        // own fingerprints have no impact on locked status.
                     }
             );
         }
@@ -189,7 +177,7 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
         synchronized (this.foreignKeysToTrust) {
             for (Map.Entry<Jid, Map<String, Boolean>> entry : foreignKeysToTrust.entrySet()) {
                 hasForeignKeys = true;
-                KeysCardBinding keysCardBinding =  DataBindingUtil.inflate(getLayoutInflater(),R.layout.keys_card, binding.foreignKeys,false);
+                KeysCardBinding keysCardBinding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.keys_card, binding.foreignKeys, false);
                 final Jid jid = entry.getKey();
                 keysCardBinding.foreignKeysTitle.setText(IrregularUnicodeDetector.style(this, jid));
                 keysCardBinding.foreignKeysTitle.setOnClickListener(v -> switchToContactDetails(mAccount.getRoster().getContact(jid)));
@@ -228,23 +216,30 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
         binding.ownKeysTitle.setText(mAccount.getJid().asBareJid().toString());
         binding.ownKeysCard.setVisibility(hasOwnKeys ? View.VISIBLE : View.GONE);
         binding.foreignKeys.setVisibility(hasForeignKeys ? View.VISIBLE : View.GONE);
-        if(hasPendingKeyFetches()) {
+        if (hasPendingKeyFetches()) {
             setFetching();
             lock();
         } else {
             if (!hasForeignKeys && hasNoOtherTrustedKeys()) {
                 binding.keyErrorMessageCard.setVisibility(View.VISIBLE);
-                if (lastFetchReport == AxolotlService.FetchStatus.ERROR
-                        || mAccount.getAxolotlService().fetchMapHasErrors(contactJids)) {
-                    if (anyWithoutMutualPresenceSubscription(contactJids)) {
-                        binding.keyErrorMessage.setText(R.string.error_no_keys_to_trust_presence);
-                    } else {
-                        binding.keyErrorMessage.setText(R.string.error_no_keys_to_trust_server_error);
-                    }
+                boolean lastReportWasError = lastFetchReport == AxolotlService.FetchStatus.ERROR;
+                boolean errorFetchingBundle = mAccount.getAxolotlService().fetchMapHasErrors(contactJids);
+                boolean errorFetchingDeviceList = mAccount.getAxolotlService().hasErrorFetchingDeviceList(contactJids);
+                boolean anyWithoutMutualPresenceSubscription = anyWithoutMutualPresenceSubscription(contactJids);
+                if (errorFetchingDeviceList) {
+                    binding.keyErrorMessage.setVisibility(View.VISIBLE);
+                    binding.keyErrorMessage.setText(R.string.error_trustkey_device_list);
+                } else if (errorFetchingBundle || lastReportWasError) {
+                    binding.keyErrorMessage.setVisibility(View.VISIBLE);
+                    binding.keyErrorMessage.setText(R.string.error_trustkey_bundle);
                 } else {
-                    binding.keyErrorMessage.setText(R.string.error_no_keys_to_trust);
+                    binding.keyErrorMessage.setVisibility(View.GONE);
                 }
+                this.binding.keyErrorHintMutual.setVisibility(anyWithoutMutualPresenceSubscription ? View.VISIBLE : View.GONE);
+                Contact contact = mAccount.getRoster().getContact(contactJids.get(0));
+                binding.keyErrorGeneral.setText(getString(R.string.error_trustkey_general, contact.getDisplayName()));
                 binding.ownKeysDetails.removeAllViews();
+                binding.disableButton.setOnClickListener(this::disableEncryptionDialog);
                 binding.ownKeysCard.setVisibility(View.GONE);
                 binding.foreignKeys.removeAllViews();
                 binding.foreignKeys.setVisibility(View.GONE);
@@ -254,8 +249,21 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
         }
     }
 
-    private boolean anyWithoutMutualPresenceSubscription(List<Jid> contactJids){
-        for(Jid jid : contactJids) {
+    private void disableEncryptionDialog(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.disable_encryption);
+        builder.setMessage(R.string.disable_encryption_message);
+        builder.setPositiveButton(R.string.disable_now, (dialog, which) -> {
+            mConversation.setNextEncryption(Message.ENCRYPTION_NONE);
+            xmppConnectionService.updateConversation(mConversation);
+            finishOk(true);
+        });
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.create().show();
+    }
+
+    private boolean anyWithoutMutualPresenceSubscription(List<Jid> contactJids) {
+        for (Jid jid : contactJids) {
             if (!mAccount.getRoster().getContact(jid).mutualPresenceSubscription()) {
                 return true;
             }
@@ -275,13 +283,13 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
     }
 
     private boolean reloadFingerprints() {
-        List<Jid> acceptedTargets = mConversation == null ? new ArrayList<Jid>() : mConversation.getAcceptedCryptoTargets();
+        List<Jid> acceptedTargets = mConversation == null ? new ArrayList<>() : mConversation.getAcceptedCryptoTargets();
         ownKeysToTrust.clear();
         AxolotlService service = this.mAccount.getAxolotlService();
         Set<IdentityKey> ownKeysSet = service.getKeysWithTrust(FingerprintStatus.createActiveUndecided());
-        for(final IdentityKey identityKey : ownKeysSet) {
+        for (final IdentityKey identityKey : ownKeysSet) {
             final String fingerprint = CryptoHelper.bytesToHex(identityKey.getPublicKey().serialize());
-            if(!ownKeysToTrust.containsKey(fingerprint)) {
+            if (!ownKeysToTrust.containsKey(fingerprint)) {
                 ownKeysToTrust.put(fingerprint, false);
             }
         }
@@ -342,25 +350,22 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
         final boolean keysToTrust = reloadFingerprints();
         if (report != null) {
             lastFetchReport = report;
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (mUseCameraHintToast != null && !keysToTrust) {
-                        mUseCameraHintToast.cancel();
-                    }
-                    switch (report) {
-                        case ERROR:
-                            Toast.makeText(TrustKeysActivity.this,R.string.error_fetching_omemo_key,Toast.LENGTH_SHORT).show();
-                            break;
-                        case SUCCESS_TRUSTED:
-                            Toast.makeText(TrustKeysActivity.this,R.string.blindly_trusted_omemo_keys,Toast.LENGTH_LONG).show();
-                            break;
-                        case SUCCESS_VERIFIED:
-                            Toast.makeText(TrustKeysActivity.this,
-                                    Config.X509_VERIFICATION ? R.string.verified_omemo_key_with_certificate : R.string.all_omemo_keys_have_been_verified,
-                                    Toast.LENGTH_LONG).show();
-                            break;
-                    }
+            runOnUiThread(() -> {
+                if (mUseCameraHintToast != null && !keysToTrust) {
+                    mUseCameraHintToast.cancel();
+                }
+                switch (report) {
+                    case ERROR:
+                        Toast.makeText(TrustKeysActivity.this, R.string.error_fetching_omemo_key, Toast.LENGTH_SHORT).show();
+                        break;
+                    case SUCCESS_TRUSTED:
+                        Toast.makeText(TrustKeysActivity.this, R.string.blindly_trusted_omemo_keys, Toast.LENGTH_LONG).show();
+                        break;
+                    case SUCCESS_VERIFIED:
+                        Toast.makeText(TrustKeysActivity.this,
+                                Config.X509_VERIFICATION ? R.string.verified_omemo_key_with_certificate : R.string.all_omemo_keys_have_been_verified,
+                                Toast.LENGTH_LONG).show();
+                        break;
                 }
             });
 
@@ -368,25 +373,21 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
         if (keysToTrust || hasPendingKeyFetches() || hasNoOtherTrustedKeys()) {
             refreshUi();
         } else {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    finishOk();
-                }
-            });
+            runOnUiThread(() -> finishOk(false));
 
         }
     }
 
-    private void finishOk() {
+    private void finishOk(boolean disabled) {
         Intent data = new Intent();
         data.putExtra("choice", getIntent().getIntExtra("choice", ConversationFragment.ATTACHMENT_CHOICE_INVALID));
+        data.putExtra("disabled", disabled);
         setResult(RESULT_OK, data);
         finish();
     }
 
     private void commitTrusts() {
-        for(final String fingerprint :ownKeysToTrust.keySet()) {
+        for (final String fingerprint : ownKeysToTrust.keySet()) {
             mAccount.getAxolotlService().setFingerprintTrust(
                     fingerprint,
                     FingerprintStatus.createActive(ownKeysToTrust.get(fingerprint)));
