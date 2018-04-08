@@ -2,7 +2,6 @@ package de.pixart.messenger.ui;
 
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.content.res.Resources;
@@ -15,7 +14,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -23,11 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +36,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.PgpEngine;
+import de.pixart.messenger.databinding.ActivityMucDetailsBinding;
 import de.pixart.messenger.databinding.ContactBinding;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Bookmark;
@@ -88,23 +83,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         }
     };
 
-    private TextView ConferenceName;
-    private TextView mYourNick;
-    private ImageView mYourPhoto;
-    private TextView mRoleAffiliaton;
-    private TextView mFullJid;
-    private TextView mAccountJid;
-    private LinearLayout membersView;
-    private CardView mMoreDetails;
-    private RelativeLayout mMucSettings;
-    private TextView mConferenceType;
-    private CardView mConferenceInfoTable;
-    private TextView mConferenceInfoMam;
-    private TextView mNotifyStatusText;
-    private ImageButton mChangeConferenceSettingsButton;
-    private ImageButton mNotifyStatusButton;
-    private Button mInviteButton;
-    private Button mDestroyButton;
+    private ActivityMucDetailsBinding binding;
     private String uuid = null;
     private User mSelectedUser = null;
 
@@ -113,24 +92,16 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
     private UiCallback<Conversation> renameCallback = new UiCallback<Conversation>() {
         @Override
         public void success(Conversation object) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(ConferenceDetailsActivity.this, getString(R.string.your_nick_has_been_changed), Toast.LENGTH_SHORT).show();
-                    updateView();
-                }
+            runOnUiThread(() -> {
+                Toast.makeText(ConferenceDetailsActivity.this, getString(R.string.your_nick_has_been_changed), Toast.LENGTH_SHORT).show();
+                updateView();
             });
 
         }
 
         @Override
         public void error(final int errorCode, Conversation object) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(ConferenceDetailsActivity.this, getString(errorCode), Toast.LENGTH_SHORT).show();
-                }
-            });
+            runOnUiThread(() -> Toast.makeText(ConferenceDetailsActivity.this, getString(errorCode), Toast.LENGTH_SHORT).show());
         }
 
         @Override
@@ -157,7 +128,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             }
             builder.setSingleChoiceItems(choices, choice.get(), (dialog, which) -> choice.set(which));
             builder.setNegativeButton(R.string.cancel, null);
-            builder.setPositiveButton(R.string.ok, (DialogInterface.OnClickListener) (dialog, which) -> {
+            builder.setPositiveButton(R.string.ok, (dialog, which) -> {
                 if (choice.get() == 2) {
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(ConferenceDetailsActivity.this);
                     builder1.setTitle(R.string.disable_notifications);
@@ -222,34 +193,26 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                         mucOptions.nonanonymous()
                 };
             }
-            builder.setMultiChoiceItems(options, values, new DialogInterface.OnMultiChoiceClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                    values[which] = isChecked;
-                }
-            });
+            builder.setMultiChoiceItems(options, values, (dialog, which, isChecked) -> values[which] = isChecked);
             builder.setNegativeButton(R.string.cancel, null);
-            builder.setPositiveButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if (!mucOptions.membersOnly() && values[0]) {
-                        xmppConnectionService.changeAffiliationsInConference(mConversation,
-                                MucOptions.Affiliation.NONE,
-                                MucOptions.Affiliation.MEMBER);
-                    }
-                    Bundle options = new Bundle();
-                    options.putString("muc#roomconfig_membersonly", values[0] ? "1" : "0");
-                    if (values.length == 2) {
-                        options.putString("muc#roomconfig_whois", values[1] ? "anyone" : "moderators");
-                    } else if (values.length == 3) {
-                        options.putString("muc#roomconfig_moderatedroom", values[1] ? "1" : "0");
-                        options.putString("muc#roomconfig_whois", values[2] ? "anyone" : "moderators");
-                    }
-                    options.putString("muc#roomconfig_persistentroom", "1");
-                    xmppConnectionService.pushConferenceConfiguration(mConversation,
-                            options,
-                            ConferenceDetailsActivity.this);
+            builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
+                if (!mucOptions.membersOnly() && values[0]) {
+                    xmppConnectionService.changeAffiliationsInConference(mConversation,
+                            MucOptions.Affiliation.NONE,
+                            MucOptions.Affiliation.MEMBER);
                 }
+                Bundle options1 = new Bundle();
+                options1.putString("muc#roomconfig_membersonly", values[0] ? "1" : "0");
+                if (values.length == 2) {
+                    options1.putString("muc#roomconfig_whois", values[1] ? "anyone" : "moderators");
+                } else if (values.length == 3) {
+                    options1.putString("muc#roomconfig_moderatedroom", values[1] ? "1" : "0");
+                    options1.putString("muc#roomconfig_whois", values[2] ? "anyone" : "moderators");
+                }
+                options1.putString("muc#roomconfig_persistentroom", "1");
+                xmppConnectionService.pushConferenceConfiguration(mConversation,
+                        options1,
+                        ConferenceDetailsActivity.this);
             });
             builder.create().show();
         }
@@ -262,6 +225,31 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             return null;
         }
     };
+
+    public static boolean cancelPotentialWork(User user, ImageView imageView) {
+        final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
+
+        if (bitmapWorkerTask != null) {
+            final User old = bitmapWorkerTask.o;
+            if (old == null || user != old) {
+                bitmapWorkerTask.cancel(true);
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
+        if (imageView != null) {
+            final Drawable drawable = imageView.getDrawable();
+            if (drawable instanceof AsyncDrawable) {
+                final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
+                return asyncDrawable.getBitmapWorkerTask();
+            }
+        }
+        return null;
+    }
 
     @Override
     public void onConversationUpdate() {
@@ -281,31 +269,20 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_muc_details);
-        ConferenceName = findViewById(R.id.conference_name);
-        mYourNick = findViewById(R.id.muc_your_nick);
-        mYourPhoto = findViewById(R.id.your_photo);
-        ImageButton mEditNickButton = findViewById(R.id.edit_nick_button);
-        mFullJid = findViewById(R.id.muc_jabberid);
-        membersView = findViewById(R.id.muc_members);
-        mAccountJid = findViewById(R.id.details_account);
-        mMucSettings = findViewById(R.id.muc_settings);
-        mMoreDetails = findViewById(R.id.muc_more_details);
-        mChangeConferenceSettingsButton = findViewById(R.id.change_conference_button);
-        mChangeConferenceSettingsButton.setOnClickListener(this.mChangeConferenceSettings);
-        mInviteButton = findViewById(R.id.invite);
-        mInviteButton.setVisibility(View.GONE);
-        mInviteButton.setOnClickListener(inviteListener);
-        mDestroyButton = findViewById(R.id.destroy);
-        mDestroyButton.setVisibility(View.GONE);
-        mDestroyButton.setOnClickListener(destroyListener);
-        mDestroyButton.getBackground().setColorFilter(getWarningButtonColor(), PorterDuff.Mode.MULTIPLY);
-        mConferenceType = findViewById(R.id.muc_conference_type);
+        this.binding = DataBindingUtil.setContentView(this, R.layout.activity_muc_details);
+        this.binding.changeConferenceButton.setOnClickListener(this.mChangeConferenceSettings);
+        this.binding.invite.setOnClickListener(inviteListener);
+        this.binding.invite.setVisibility(View.GONE);
+        this.binding.invite.setOnClickListener(inviteListener);
+        this.binding.destroy.setVisibility(View.GONE);
+        this.binding.destroy.setOnClickListener(destroyListener);
+        this.binding.destroy.getBackground().setColorFilter(getWarningButtonColor(), PorterDuff.Mode.MULTIPLY);
+        this.binding.mucMoreDetails.setVisibility(View.GONE);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        mEditNickButton.setOnClickListener(v -> quickEdit(mConversation.getMucOptions().getActualNick(),
+        this.binding.editNickButton.setOnClickListener(v -> quickEdit(mConversation.getMucOptions().getActualNick(),
                 0,
                 value -> {
                     if (xmppConnectionService.renameInMuc(mConversation, value, renameCallback)) {
@@ -315,12 +292,9 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                     }
                 }));
         this.mAdvancedMode = getPreferences().getBoolean("advanced_muc_mode", false);
-        this.mConferenceInfoTable = findViewById(R.id.muc_info_more);
-        this.mConferenceInfoTable.setVisibility(this.mAdvancedMode ? View.VISIBLE : View.GONE);
-        this.mConferenceInfoMam = findViewById(R.id.muc_info_mam);
-        this.mNotifyStatusButton = findViewById(R.id.notification_status_button);
-        this.mNotifyStatusButton.setOnClickListener(this.mNotifyStatusClickListener);
-        this.mNotifyStatusText = findViewById(R.id.notification_status_text);
+        this.binding.mucInfoMore.setVisibility(this.mAdvancedMode ? View.VISIBLE : View.GONE);
+        this.binding.notificationStatusButton.setOnClickListener(this.mNotifyStatusClickListener);
+        this.binding.notificationStatusButton.setOnClickListener(this.mNotifyStatusClickListener);
     }
 
     @Override
@@ -362,7 +336,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                 menuItem.setChecked(this.mAdvancedMode);
                 getPreferences().edit().putBoolean("advanced_muc_mode", mAdvancedMode).apply();
                 final boolean online = mConversation != null && mConversation.getMucOptions().online();
-                mConferenceInfoTable.setVisibility(this.mAdvancedMode && online ? View.VISIBLE : View.GONE);
+                this.binding.mucInfoMore.setVisibility(this.mAdvancedMode && online ? View.VISIBLE : View.GONE);
                 invalidateOptionsMenu();
                 updateView();
                 break;
@@ -541,13 +515,10 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             builder.setTitle(R.string.ban_from_conference);
             builder.setMessage(getString(R.string.removing_from_public_conference, user.getName()));
             builder.setNegativeButton(R.string.cancel, null);
-            builder.setPositiveButton(R.string.ban_now, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    xmppConnectionService.changeAffiliationInConference(mConversation, user.getRealJid(), MucOptions.Affiliation.OUTCAST, ConferenceDetailsActivity.this);
-                    if (user.getRole() != MucOptions.Role.NONE) {
-                        xmppConnectionService.changeRoleInConference(mConversation, mSelectedUser.getName(), MucOptions.Role.NONE, ConferenceDetailsActivity.this);
-                    }
+            builder.setPositiveButton(R.string.ban_now, (dialog, which) -> {
+                xmppConnectionService.changeAffiliationInConference(mConversation, user.getRealJid(), MucOptions.Affiliation.OUTCAST, ConferenceDetailsActivity.this);
+                if (user.getRole() != MucOptions.Role.NONE) {
+                    xmppConnectionService.changeRoleInConference(mConversation, mSelectedUser.getName(), MucOptions.Role.NONE, ConferenceDetailsActivity.this);
                 }
             });
             builder.create().show();
@@ -616,76 +587,79 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                 absubtitle.setClickable(false);
             }
         }
-        ConferenceName.setText(mConversation.getName());
-        mAccountJid.setText(getString(R.string.using_account, account));
+        this.binding.conferenceName.setText(mConversation.getName());
+        this.binding.detailsAccount.setText(getString(R.string.using_account, account));
         if (xmppConnectionService.multipleAccounts()) {
-            mAccountJid.setVisibility(View.VISIBLE);
+            this.binding.detailsAccount.setVisibility(View.VISIBLE);
         } else {
-            mAccountJid.setVisibility(View.GONE);
+            this.binding.detailsAccount.setVisibility(View.GONE);
         }
-        mYourPhoto.setImageBitmap(avatarService().get(mConversation.getAccount(), getPixel(48)));
+        this.binding.yourPhoto.setImageBitmap(avatarService().get(mConversation.getAccount(), getPixel(48)));
         setTitle(mConversation.getName());
-        mFullJid.setText(mConversation.getJid().asBareJid().toString());
-        mYourNick.setText(mucOptions.getActualNick());
-        TextView mRoleAffiliaton = findViewById(R.id.muc_role);
+        this.binding.mucJabberid.setText(mConversation.getJid().asBareJid().toString());
+        this.binding.mucYourNick.setText(mucOptions.getActualNick());
         if (mucOptions.online()) {
-            mMoreDetails.setVisibility(View.VISIBLE);
-            mMucSettings.setVisibility(View.VISIBLE);
-            mConferenceInfoTable.setVisibility(this.mAdvancedMode ? View.VISIBLE : View.GONE);
+            this.binding.mucMoreDetails.setVisibility(View.VISIBLE);
+            this.binding.mucSettings.setVisibility(View.VISIBLE);
+            this.binding.mucInfoMore.setVisibility(this.mAdvancedMode ? View.VISIBLE : View.GONE);
             final String status = getStatus(self);
             if (status != null) {
-                mRoleAffiliaton.setVisibility(View.VISIBLE);
-                mRoleAffiliaton.setText(status);
+                this.binding.mucRole.setVisibility(View.VISIBLE);
+                this.binding.mucRole.setText(status);
             } else {
-                mRoleAffiliaton.setVisibility(View.GONE);
+                this.binding.mucRole.setVisibility(View.GONE);
             }
             if (mucOptions.membersOnly()) {
-                mConferenceType.setText(R.string.private_conference);
+                this.binding.mucConferenceType.setText(R.string.private_conference);
             } else {
-                mConferenceType.setText(R.string.public_conference);
+                this.binding.mucConferenceType.setText(R.string.public_conference);
             }
             if (mucOptions.mamSupport()) {
-                mConferenceInfoMam.setText(R.string.server_info_available);
+                this.binding.mucInfoMam.setText(R.string.server_info_available);
             } else {
-                mConferenceInfoMam.setText(R.string.server_info_unavailable);
+                this.binding.mucInfoMam.setText(R.string.server_info_unavailable);
             }
             if (self.getAffiliation().ranks(MucOptions.Affiliation.OWNER)) {
-                mDestroyButton.setVisibility(View.VISIBLE);
-                mChangeConferenceSettingsButton.setVisibility(View.VISIBLE);
+                this.binding.destroy.setVisibility(View.VISIBLE);
+                this.binding.changeConferenceButton.setVisibility(View.VISIBLE);
             } else {
-                mDestroyButton.setVisibility(View.GONE);
-                mChangeConferenceSettingsButton.setVisibility(View.GONE);
+                this.binding.destroy.setVisibility(View.GONE);
+                this.binding.changeConferenceButton.setVisibility(View.GONE);
             }
         } else {
-            mMoreDetails.setVisibility(View.GONE);
-            mMucSettings.setVisibility(View.GONE);
-            mConferenceInfoTable.setVisibility(View.GONE);
+            this.binding.mucMoreDetails.setVisibility(View.GONE);
+            this.binding.mucInfoMore.setVisibility(View.GONE);
+            this.binding.mucSettings.setVisibility(View.GONE);
         }
 
+        int ic_notifications = getThemeResource(R.attr.icon_notifications, R.drawable.ic_notifications_black_24dp);
+        int ic_notifications_off = getThemeResource(R.attr.icon_notifications_off, R.drawable.ic_notifications_off_black_24dp);
+        int ic_notifications_paused = getThemeResource(R.attr.icon_notifications_paused, R.drawable.ic_notifications_paused_black_24dp);
+        int ic_notifications_none = getThemeResource(R.attr.icon_notifications_none, R.drawable.ic_notifications_none_black_24dp);
         long mutedTill = mConversation.getLongAttribute(Conversation.ATTRIBUTE_MUTED_TILL, 0);
         if (mutedTill == Long.MAX_VALUE) {
-            mNotifyStatusText.setText(R.string.notify_never);
-            mNotifyStatusButton.setImageResource(R.drawable.ic_notifications_off_grey600_24dp);
+            this.binding.notificationStatusText.setText(R.string.notify_never);
+            this.binding.notificationStatusButton.setImageResource(ic_notifications_off);
         } else if (System.currentTimeMillis() < mutedTill) {
-            mNotifyStatusText.setText(R.string.notify_paused);
-            mNotifyStatusButton.setImageResource(R.drawable.ic_notifications_paused_grey600_24dp);
+            this.binding.notificationStatusText.setText(R.string.notify_paused);
+            this.binding.notificationStatusButton.setImageResource(ic_notifications_paused);
         } else if (mConversation.alwaysNotify()) {
-            mNotifyStatusButton.setImageResource(R.drawable.ic_notifications_grey600_24dp);
-            mNotifyStatusText.setText(R.string.notify_on_all_messages);
+            this.binding.notificationStatusText.setText(R.string.notify_on_all_messages);
+            this.binding.notificationStatusButton.setImageResource(ic_notifications);
         } else {
-            mNotifyStatusButton.setImageResource(R.drawable.ic_notifications_none_grey600_24dp);
-            mNotifyStatusText.setText(R.string.notify_only_when_highlighted);
+            this.binding.notificationStatusText.setText(R.string.notify_only_when_highlighted);
+            this.binding.notificationStatusButton.setImageResource(ic_notifications_none);
         }
 
         final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        membersView.removeAllViews();
+        this.binding.mucMembers.removeAllViews();
         if (inflater == null) {
             return;
         }
         final ArrayList<User> users = mucOptions.getUsers();
         Collections.sort(users);
         for (final User user : users) {
-            ContactBinding binding = DataBindingUtil.inflate(inflater, R.layout.contact, membersView, false);
+            ContactBinding binding = DataBindingUtil.inflate(inflater, R.layout.contact, this.binding.mucMembers, false);
             final Contact contact = user.getContact();
             final String name = user.getName();
             this.setListItemBackgroundOnView(binding.getRoot());
@@ -714,11 +688,11 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                 binding.contactJid.setAlpha(INACTIVE_ALPHA);
                 binding.contactPhoto.setAlpha(INACTIVE_ALPHA);
             }
-            membersView.addView(binding.getRoot());
+            this.binding.mucMembers.addView(binding.getRoot());
             if (mConversation.getMucOptions().canInvite()) {
-                mInviteButton.setVisibility(View.VISIBLE);
+                this.binding.invite.setVisibility(View.VISIBLE);
             } else {
-                mInviteButton.setVisibility(View.GONE);
+                this.binding.invite.setVisibility(View.GONE);
             }
         }
     }
@@ -780,31 +754,6 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         runOnUiThread(() -> Toast.makeText(ConferenceDetailsActivity.this, msg, Toast.LENGTH_SHORT).show());
     }
 
-    public static boolean cancelPotentialWork(User user, ImageView imageView) {
-        final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
-
-        if (bitmapWorkerTask != null) {
-            final User old = bitmapWorkerTask.o;
-            if (old == null || user != old) {
-                bitmapWorkerTask.cancel(true);
-            } else {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
-        if (imageView != null) {
-            final Drawable drawable = imageView.getDrawable();
-            if (drawable instanceof AsyncDrawable) {
-                final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
-                return asyncDrawable.getBitmapWorkerTask();
-            }
-        }
-        return null;
-    }
-
     public void loadAvatar(User user, ImageView imageView) {
         if (cancelPotentialWork(user, imageView)) {
             final Bitmap bm = avatarService().get(user, getPixel(48), true);
@@ -830,12 +779,12 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
     static class AsyncDrawable extends BitmapDrawable {
         private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
 
-        public AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
+        AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
             super(res, bitmap);
             bitmapWorkerTaskReference = new WeakReference<>(bitmapWorkerTask);
         }
 
-        public BitmapWorkerTask getBitmapWorkerTask() {
+        BitmapWorkerTask getBitmapWorkerTask() {
             return bitmapWorkerTaskReference.get();
         }
     }
