@@ -6,18 +6,16 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Contact;
+import de.pixart.messenger.ui.interfaces.OnBackendConnected;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import rocks.xmpp.addr.Jid;
 
 public class BlocklistActivity extends AbstractSearchableListItemActivity implements OnUpdateBlocklist {
-    private Collection<String> mKnownHosts = new ArrayList<>();
     private Account account = null;
 
     @Override
@@ -39,7 +37,10 @@ public class BlocklistActivity extends AbstractSearchableListItemActivity implem
             }
         }
         filterContacts();
-        this.mKnownHosts = xmppConnectionService.getKnownHosts();
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_DIALOG);
+        if (fragment != null && fragment instanceof OnBackendConnected) {
+            ((OnBackendConnected) fragment).onBackendConnected();
+        }
     }
 
     @Override
@@ -65,9 +66,13 @@ public class BlocklistActivity extends AbstractSearchableListItemActivity implem
         }
         ft.addToBackStack(null);
         EnterJidDialog dialog = EnterJidDialog.newInstance(
-                mKnownHosts, null,
-                getString(R.string.block_jabber_id), getString(R.string.block),
-                null, account.getJid().asBareJid().toString(), true, xmppConnectionService.multipleAccounts()
+                null,
+                getString(R.string.block_jabber_id),
+                getString(R.string.block),
+                null,
+                account.getJid().asBareJid().toString(),
+                true,
+                xmppConnectionService.multipleAccounts()
         );
 
         dialog.setOnEnterJidDialogPositiveListener((accountJid, contactJid) -> {

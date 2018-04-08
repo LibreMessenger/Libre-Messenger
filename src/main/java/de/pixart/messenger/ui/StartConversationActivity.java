@@ -29,6 +29,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.TypefaceSpan;
+import android.util.Log;
 import android.util.Pair;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -51,7 +52,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -68,6 +68,7 @@ import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.services.EmojiService;
 import de.pixart.messenger.services.XmppConnectionService.OnRosterUpdate;
 import de.pixart.messenger.ui.adapter.ListItemAdapter;
+import de.pixart.messenger.ui.interfaces.OnBackendConnected;
 import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.XmppConnection;
@@ -87,8 +88,6 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
     private List<ListItem> conferences = new ArrayList<>();
     private ListItemAdapter mConferenceAdapter;
     private List<String> mActivatedAccounts = new ArrayList<>();
-    private Collection<String> mKnownHosts;
-    private Collection<String> mKnownConferenceHosts;
     private Invite mPendingInvite = null;
     private EditText mSearchEditText;
     private AtomicBoolean mRequestedContactsPermission = new AtomicBoolean(false);
@@ -433,15 +432,19 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
     @SuppressLint("InflateParams")
     protected void showCreateContactDialog(final String prefilledJid, final Invite invite) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_DIALOG);
         if (prev != null) {
             ft.remove(prev);
         }
         ft.addToBackStack(null);
         EnterJidDialog dialog = EnterJidDialog.newInstance(
-                mKnownHosts, mActivatedAccounts,
-                getString(R.string.create_contact), getString(R.string.create),
-                prefilledJid, null, invite == null || !invite.hasFingerprints(), xmppConnectionService.multipleAccounts()
+                mActivatedAccounts,
+                getString(R.string.create_contact),
+                getString(R.string.create),
+                prefilledJid,
+                null,
+                invite == null || !invite.hasFingerprints(),
+                xmppConnectionService.multipleAccounts()
         );
 
         dialog.setOnEnterJidDialogPositiveListener((accountJid, contactJid) -> {
@@ -473,30 +476,30 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
             }
         });
 
-        dialog.show(ft, "dialog");
+        dialog.show(ft, FRAGMENT_TAG_DIALOG);
     }
 
     @SuppressLint("InflateParams")
     protected void showJoinConferenceDialog(final String prefilledJid) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_DIALOG);
         if (prev != null) {
             ft.remove(prev);
         }
         ft.addToBackStack(null);
-        JoinConferenceDialog joinConferenceFragment = JoinConferenceDialog.newInstance(prefilledJid, mActivatedAccounts, mKnownConferenceHosts);
-        joinConferenceFragment.show(ft, "dialog");
+        JoinConferenceDialog joinConferenceFragment = JoinConferenceDialog.newInstance(prefilledJid, mActivatedAccounts);
+        joinConferenceFragment.show(ft, FRAGMENT_TAG_DIALOG);
     }
 
     private void showCreateConferenceDialog() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_DIALOG);
         if (prev != null) {
             ft.remove(prev);
         }
         ft.addToBackStack(null);
         CreateConferenceDialog createConferenceFragment = CreateConferenceDialog.newInstance(mActivatedAccounts);
-        createConferenceFragment.show(ft, "dialog");
+        createConferenceFragment.show(ft, FRAGMENT_TAG_DIALOG);
     }
 
     private Account getSelectedAccount(Spinner spinner) {
@@ -705,8 +708,6 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
             ab.setDisplayHomeAsUpEnabled(false);
             ab.setHomeButtonEnabled(false);
         }
-        this.mKnownHosts = xmppConnectionService.getKnownHosts();
-        this.mKnownConferenceHosts = xmppConnectionService.getKnownConferenceHosts();
         if (this.mPendingInvite != null) {
             mPendingInvite.invite();
             this.mPendingInvite = null;
@@ -721,6 +722,11 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
             filter(null);
         }
         setIntent(null);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_DIALOG);
+        if (fragment != null && fragment instanceof OnBackendConnected) {
+            Log.d(Config.LOGTAG, "calling on backend connected on dialog");
+            ((OnBackendConnected) fragment).onBackendConnected();
+        }
     }
 
     protected boolean handleIntent(Intent intent) {
