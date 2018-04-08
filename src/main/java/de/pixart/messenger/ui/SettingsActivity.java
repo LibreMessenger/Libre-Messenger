@@ -61,7 +61,10 @@ public class SettingsActivity extends XmppActivity implements
     private SettingsFragment mSettingsFragment;
 
     Preference multiAccountPreference;
+    Preference BundledEmojiPreference;
+
     boolean isMultiAccountChecked = false;
+    boolean isBundledEmojiChecked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +96,11 @@ public class SettingsActivity extends XmppActivity implements
         multiAccountPreference = mSettingsFragment.findPreference("enable_multi_accounts");
         if (multiAccountPreference != null) {
             isMultiAccountChecked = ((CheckBoxPreference) multiAccountPreference).isChecked();
+        }
+
+        BundledEmojiPreference = mSettingsFragment.findPreference("use_bundled_emoji");
+        if (BundledEmojiPreference != null) {
+            isBundledEmojiChecked = ((CheckBoxPreference) BundledEmojiPreference).isChecked();
         }
 
         if (Config.FORCE_ORBOT) {
@@ -217,6 +225,15 @@ public class SettingsActivity extends XmppActivity implements
         final Preference deleteOmemoPreference = mSettingsFragment.findPreference("delete_omemo_identities");
         if (deleteOmemoPreference != null) {
             deleteOmemoPreference.setOnPreferenceClickListener(preference -> deleteOmemoIdentities());
+        }
+
+        final Preference useBundledEmojis = mSettingsFragment.findPreference("use_bundled_emoji");
+        if (useBundledEmojis != null) {
+            Log.d(Config.LOGTAG, "Bundled Emoji checkbox checked: " + isBundledEmojiChecked);
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O && isBundledEmojiChecked) {
+                ((CheckBoxPreference) BundledEmojiPreference).setChecked(false);
+                useBundledEmojis.setEnabled(false);
+            }
         }
 
         final Preference enableMultiAccountsPreference = mSettingsFragment.findPreference("enable_multi_accounts");
