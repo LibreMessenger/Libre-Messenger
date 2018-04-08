@@ -110,6 +110,7 @@ import de.pixart.messenger.utils.StylingHelper;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.XmppConnection;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
+import in.championswimmer.sfg.lib.SimpleFingerGestures;
 import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.ui.XmppActivity.EXTRA_ACCOUNT;
@@ -155,6 +156,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     private Toast messageLoaderToast;
     private ConversationsActivity activity;
     private boolean reInitRequiredOnStart = true;
+
+    private SimpleFingerGestures gesturesDetector = new SimpleFingerGestures();
+
     protected OnClickListener clickToVerify = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -2110,13 +2114,46 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             }
         }
         // todo add swipe listener --> causes strange scrolling in chats
-        /*this.binding.messagesView.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
-            @Override
-            public void onSwipeRight() {
-                Log.d(Config.LOGTAG, "Swipe right detected");
-                activity.onBackPressed();
-            }
-        });*/
+        //this.binding.messagesView.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+        gesturesDetector.setOnFingerGestureListener(new SimpleFingerGestures.OnFingerGestureListener() {
+                @Override
+                public boolean onSwipeUp(int fingers, long gestureDuration, double gestureDistance) {
+                    return false;
+                }
+
+                @Override
+                public boolean onSwipeDown(int fingers, long gestureDuration, double gestureDistance) {
+                    return false;
+                }
+
+                @Override
+                public boolean onSwipeLeft(int fingers, long gestureDuration, double gestureDistance) {
+                    return false;
+                }
+
+                @Override
+                public boolean onSwipeRight(int fingers, long gestureDuration, double gestureDistance) {
+                    activity.onBackPressed();
+                    return false;
+                }
+
+                @Override
+                public boolean onPinch(int fingers, long gestureDuration, double gestureDistance) {
+                    return false;
+                }
+
+                @Override
+                public boolean onUnpinch(int fingers, long gestureDuration, double gestureDistance) {
+                    return false;
+                }
+
+                @Override
+                public boolean onDoubleTap(int fingers) {
+                    return false;
+                }
+            });
+        this.binding.messagesView.setOnTouchListener(gesturesDetector);
+
         activity.onConversationRead(this.conversation);
         //TODO if we only do this when this fragment is running on main it won't *bing* in tablet layout which might be unnecessary since we can *see* it
         activity.xmppConnectionService.getNotificationService().setOpenConversation(this.conversation);
