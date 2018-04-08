@@ -137,7 +137,7 @@ public class ConversationsOverviewFragment extends XmppFragment {
     }
 
     @Override
-    void onBackendConnected() {
+    public void onBackendConnected() {
         refresh();
     }
 

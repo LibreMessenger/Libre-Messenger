@@ -26,22 +26,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package de.pixart.messenger.ui.interfaces;
 
-package de.pixart.messenger.ui;
+public interface OnBackendConnected {
 
-import android.app.Activity;
-import android.app.Fragment;
+    void onBackendConnected();
 
-import de.pixart.messenger.ui.interfaces.OnBackendConnected;
-
-public abstract class XmppFragment extends Fragment implements OnBackendConnected {
-
-    abstract void refresh();
-
-    protected void runOnUiThread(Runnable runnable) {
-        final Activity activity = getActivity();
-        if (activity != null) {
-            activity.runOnUiThread(runnable);
-        }
-    }
 }

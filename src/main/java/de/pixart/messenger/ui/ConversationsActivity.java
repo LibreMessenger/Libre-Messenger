@@ -75,6 +75,7 @@ import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.services.EmojiService;
 import de.pixart.messenger.services.UpdateService;
 import de.pixart.messenger.services.XmppConnectionService;
+import de.pixart.messenger.ui.interfaces.OnBackendConnected;
 import de.pixart.messenger.ui.interfaces.OnConversationArchived;
 import de.pixart.messenger.ui.interfaces.OnConversationRead;
 import de.pixart.messenger.ui.interfaces.OnConversationSelected;
@@ -317,8 +318,8 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
 
     private void notifyFragmentOfBackendConnected(@IdRes int id) {
         final Fragment fragment = getFragmentManager().findFragmentById(id);
-        if (fragment != null && fragment instanceof XmppFragment) {
-            ((XmppFragment) fragment).onBackendConnected();
+        if (fragment != null && fragment instanceof OnBackendConnected) {
+            ((OnBackendConnected) fragment).onBackendConnected();
         }
     }
 
