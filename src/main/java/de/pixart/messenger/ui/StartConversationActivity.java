@@ -43,7 +43,6 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
-import android.widget.Checkable;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -68,9 +67,7 @@ import de.pixart.messenger.entities.ListItem;
 import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.services.EmojiService;
 import de.pixart.messenger.services.XmppConnectionService.OnRosterUpdate;
-import de.pixart.messenger.ui.adapter.KnownHostsAdapter;
 import de.pixart.messenger.ui.adapter.ListItemAdapter;
-import de.pixart.messenger.ui.util.DelayedHintHelper;
 import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.XmppConnection;
@@ -78,7 +75,7 @@ import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
 
-public class StartConversationActivity extends XmppActivity implements OnRosterUpdate, OnUpdateBlocklist {
+public class StartConversationActivity extends XmppActivity implements OnRosterUpdate, OnUpdateBlocklist, CreateConferenceDialog.CreateConferenceDialogListener, JoinConferenceDialog.JoinConferenceDialogListener {
 
     private final int REQUEST_SYNC_CONTACTS = 0x28cf;
     private final int REQUEST_CREATE_CONFERENCE = 0x39da;
@@ -95,7 +92,6 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
     private Invite mPendingInvite = null;
     private EditText mSearchEditText;
     private AtomicBoolean mRequestedContactsPermission = new AtomicBoolean(false);
-    private Dialog mCurrentDialog = null;
     private boolean mHideOfflineContacts = false;
     private MenuItem.OnActionExpandListener mOnActionExpandListener = new MenuItem.OnActionExpandListener() {
 
@@ -316,14 +312,6 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
     }
 
     @Override
-    public void onStop() {
-        if (mCurrentDialog != null) {
-            mCurrentDialog.dismiss();
-        }
-        super.onStop();
-    }
-
-    @Override
     public void onNewIntent(Intent intent) {
         if (xmppConnectionServiceBound) {
             handleIntent(intent);
@@ -479,116 +467,18 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
             }
         });
 
-        mCurrentDialog = dialog.show();
+        dialog.show();
     }
 
     @SuppressLint("InflateParams")
     protected void showJoinConferenceDialog(final String prefilledJid) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.join_conference);
-        final View dialogView = getLayoutInflater().inflate(R.layout.join_conference_dialog, null);
-        final TextView yourAccount = dialogView.findViewById(R.id.your_account);
-        final Spinner spinner = dialogView.findViewById(R.id.account);
-        final AutoCompleteTextView jid = dialogView.findViewById(R.id.jid);
-        DelayedHintHelper.setHint(R.string.conference_address_example, jid);
-        jid.setAdapter(new KnownHostsAdapter(this, R.layout.simple_list_item, mKnownConferenceHosts));
-        if (prefilledJid != null) {
-            jid.append(prefilledJid);
-        }
-        if (xmppConnectionService.multipleAccounts()) {
-            yourAccount.setVisibility(View.VISIBLE);
-            spinner.setVisibility(View.VISIBLE);
-        } else {
-            yourAccount.setVisibility(View.GONE);
-            spinner.setVisibility(View.GONE);
-        }
-        populateAccountSpinner(this, mActivatedAccounts, spinner);
-        final Checkable bookmarkCheckBox = (CheckBox) dialogView
-                .findViewById(R.id.bookmark);
-        builder.setView(dialogView);
-        builder.setNegativeButton(R.string.cancel, null);
-        builder.setPositiveButton(R.string.join, null);
-        final AlertDialog dialog = builder.create();
-        dialog.show();
-        mCurrentDialog = dialog;
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
-            if (!xmppConnectionServiceBound) {
-                return;
-            }
-            final Account account = getSelectedAccount(spinner);
-            if (account == null) {
-                return;
-            }
-            final Jid conferenceJid;
-            try {
-                conferenceJid = Jid.of(jid.getText().toString());
-            } catch (final IllegalArgumentException e) {
-                jid.setError(getString(R.string.invalid_jid));
-                return;
-            }
-
-            if (bookmarkCheckBox.isChecked()) {
-                if (account.hasBookmarkFor(conferenceJid)) {
-                    jid.setError(getString(R.string.bookmark_already_exists));
-                } else {
-                    final Bookmark bookmark = new Bookmark(account, conferenceJid.asBareJid());
-                    bookmark.setAutojoin(getPreferences().getBoolean("autojoin", getResources().getBoolean(R.bool.autojoin)));
-                    String nick = conferenceJid.getResource();
-                    if (nick != null && !nick.isEmpty()) {
-                        bookmark.setNick(nick);
-                    }
-                    account.getBookmarks().add(bookmark);
-                    xmppConnectionService.pushBookmarks(account);
-                    final Conversation conversation = xmppConnectionService.findOrCreateConversation(account, conferenceJid, true, true, true);
-                    bookmark.setConversation(conversation);
-                    dialog.dismiss();
-                    mCurrentDialog = null;
-                    switchToConversation(conversation);
-                }
-            } else {
-                final Conversation conversation = xmppConnectionService.findOrCreateConversation(account, conferenceJid, true, true, true);
-                dialog.dismiss();
-                mCurrentDialog = null;
-                switchToConversation(conversation);
-            }
-        });
+        JoinConferenceDialog dialog = JoinConferenceDialog.newInstance(prefilledJid, mActivatedAccounts, mKnownConferenceHosts);
+        dialog.show(getSupportFragmentManager(), "join_conference_dialog");
     }
 
     private void showCreateConferenceDialog() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.create_conference);
-        final View dialogView = getLayoutInflater().inflate(R.layout.create_conference_dialog, null);
-        final TextView yourAccount = dialogView.findViewById(R.id.your_account);
-        final Spinner spinner = dialogView.findViewById(R.id.account);
-        final EditText subject = dialogView.findViewById(R.id.subject);
-        populateAccountSpinner(this, mActivatedAccounts, spinner);
-        if (xmppConnectionService.multipleAccounts()) {
-            yourAccount.setVisibility(View.VISIBLE);
-            spinner.setVisibility(View.VISIBLE);
-        } else {
-            yourAccount.setVisibility(View.GONE);
-            spinner.setVisibility(View.GONE);
-        }
-        builder.setView(dialogView);
-        builder.setPositiveButton(R.string.choose_participants, (dialog, which) -> {
-            if (!xmppConnectionServiceBound) {
-                return;
-            }
-            final Account account = getSelectedAccount(spinner);
-            if (account == null) {
-                return;
-            }
-            Intent intent = new Intent(getApplicationContext(), ChooseContactActivity.class);
-            intent.putExtra("multiple", true);
-            intent.putExtra("show_enter_jid", true);
-            intent.putExtra("subject", subject.getText().toString());
-            intent.putExtra(EXTRA_ACCOUNT, account.getJid().asBareJid().toString());
-            intent.putExtra(ChooseContactActivity.EXTRA_TITLE_RES_ID, R.string.choose_participants);
-            startActivityForResult(intent, REQUEST_CREATE_CONFERENCE);
-        });
-        builder.setNegativeButton(R.string.cancel, null);
-        mCurrentDialog = builder.create();
-        mCurrentDialog.show();
+        CreateConferenceDialog dialog = CreateConferenceDialog.newInstance(mActivatedAccounts);
+        dialog.show(getSupportFragmentManager(), "create_conference_dialog");
     }
 
     private Account getSelectedAccount(Spinner spinner) {
@@ -980,6 +870,67 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
 
     public boolean useBundledEmoji() {
         return getPreferences().getBoolean(USE_BUNDLED_EMOJIS, getResources().getBoolean(R.bool.use_bundled_emoji));
+    }
+
+    @Override
+    public void onCreateDialogPositiveClick(Spinner spinner, String subject) {
+        if (!xmppConnectionServiceBound) {
+            return;
+        }
+        final Account account = getSelectedAccount(spinner);
+        if (account == null) {
+            return;
+        }
+        Intent intent = new Intent(getApplicationContext(), ChooseContactActivity.class);
+        intent.putExtra("multiple", true);
+        intent.putExtra("show_enter_jid", true);
+        intent.putExtra("subject", subject);
+        intent.putExtra(EXTRA_ACCOUNT, account.getJid().asBareJid().toString());
+        intent.putExtra(ChooseContactActivity.EXTRA_TITLE_RES_ID, R.string.choose_participants);
+        startActivityForResult(intent, REQUEST_CREATE_CONFERENCE);
+    }
+
+    @Override
+    public void onJoinDialogPositiveClick(Dialog dialog, Spinner spinner, AutoCompleteTextView jid, boolean isBookmarkChecked) {
+        if (!xmppConnectionServiceBound) {
+            return;
+        }
+        final Account account = getSelectedAccount(spinner);
+        if (account == null) {
+            return;
+        }
+        final Jid conferenceJid;
+        try {
+            conferenceJid = Jid.of(jid.getText().toString());
+        } catch (final IllegalArgumentException e) {
+            jid.setError(getString(R.string.invalid_jid));
+            return;
+        }
+
+        if (isBookmarkChecked) {
+            if (account.hasBookmarkFor(conferenceJid)) {
+                jid.setError(getString(R.string.bookmark_already_exists));
+            } else {
+                final Bookmark bookmark = new Bookmark(account, conferenceJid.asBareJid());
+                bookmark.setAutojoin(getPreferences().getBoolean("autojoin", getResources().getBoolean(R.bool.autojoin)));
+                String nick = conferenceJid.getResource();
+                if (nick != null && !nick.isEmpty()) {
+                    bookmark.setNick(nick);
+                }
+                account.getBookmarks().add(bookmark);
+                xmppConnectionService.pushBookmarks(account);
+                final Conversation conversation = xmppConnectionService
+                        .findOrCreateConversation(account, conferenceJid, true, true, true);
+                bookmark.setConversation(conversation);
+                dialog.dismiss();
+                switchToConversation(conversation);
+            }
+        } else {
+            final Conversation conversation = xmppConnectionService
+                    .findOrCreateConversation(account, conferenceJid, true, true, true);
+            dialog.dismiss();
+            switchToConversation(conversation);
+        }
     }
 
     public static class MyListFragment extends ListFragment {
