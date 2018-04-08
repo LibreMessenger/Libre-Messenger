@@ -3,16 +3,14 @@ package de.pixart.messenger.ui;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
-import android.widget.CheckBox;
-import android.widget.Checkable;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,6 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import de.pixart.messenger.R;
+import de.pixart.messenger.databinding.JoinConferenceDialogBinding;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.adapter.KnownHostsAdapter;
 import de.pixart.messenger.ui.util.DelayedHintHelper;
@@ -53,27 +52,22 @@ public class JoinConferenceDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.join_conference);
-        final View dialogView = getActivity().getLayoutInflater().inflate(R.layout.join_conference_dialog, null);
-        final TextView yourAccount = dialogView.findViewById(R.id.your_account);
-        final Spinner spinner = dialogView.findViewById(R.id.account);
-        final AutoCompleteTextView jid = dialogView.findViewById(R.id.jid);
-        DelayedHintHelper.setHint(R.string.conference_address_example, jid);
-        jid.setAdapter(new KnownHostsAdapter(getActivity(), R.layout.simple_list_item, (Collection<String>) getArguments().getSerializable(CONFERENCE_HOSTS_KEY)));
+        JoinConferenceDialogBinding binding = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.join_conference_dialog, null, false);
+        DelayedHintHelper.setHint(R.string.conference_address_example, binding.jid);
+        binding.jid.setAdapter(new KnownHostsAdapter(getActivity(), R.layout.simple_list_item, (Collection<String>) getArguments().getSerializable(CONFERENCE_HOSTS_KEY)));
         String prefilledJid = getArguments().getString(PREFILLED_JID_KEY);
         if (prefilledJid != null) {
-            jid.append(prefilledJid);
+            binding.jid.append(prefilledJid);
         }
         if (xmppConnectionService != null && xmppConnectionService.multipleAccounts()) {
-            yourAccount.setVisibility(View.VISIBLE);
-            spinner.setVisibility(View.VISIBLE);
+            binding.yourAccount.setVisibility(View.VISIBLE);
+            binding.account.setVisibility(View.VISIBLE);
         } else {
-            yourAccount.setVisibility(View.GONE);
-            spinner.setVisibility(View.GONE);
+            binding.yourAccount.setVisibility(View.GONE);
+            binding.account.setVisibility(View.GONE);
         }
-        final Checkable bookmarkCheckBox = (CheckBox) dialogView
-                .findViewById(R.id.bookmark);
-        StartConversationActivity.populateAccountSpinner(getActivity(), getArguments().getStringArrayList(ACCOUNTS_LIST_KEY), spinner);
-        builder.setView(dialogView);
+        StartConversationActivity.populateAccountSpinner(getActivity(), getArguments().getStringArrayList(ACCOUNTS_LIST_KEY), binding.account);
+        builder.setView(binding.getRoot());
         builder.setPositiveButton(R.string.join, null);
         builder.setNegativeButton(R.string.cancel, null);
         AlertDialog dialog = builder.create();
@@ -81,7 +75,7 @@ public class JoinConferenceDialog extends DialogFragment {
         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onJoinDialogPositiveClick(dialog, spinner, jid, bookmarkCheckBox.isChecked());
+                mListener.onJoinDialogPositiveClick(dialog, binding.account, binding.jid, binding.bookmark.isChecked());
             }
         });
         return dialog;

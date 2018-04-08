@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -231,6 +233,12 @@ public class ChooseContactActivity extends AbstractSearchableListItemActivity {
     }
 
     protected void showEnterJidDialog(XmppUri uri) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
         Jid jid = uri == null ? null : uri.getJid();
         EnterJidDialog dialog = EnterJidDialog.newInstance(
                 mKnownHosts,
@@ -258,7 +266,7 @@ public class ChooseContactActivity extends AbstractSearchableListItemActivity {
             return true;
         });
 
-        dialog.show(getSupportFragmentManager(), "enter_contact_dialog");
+        dialog.show(ft, "dialog");
     }
 
     @Override

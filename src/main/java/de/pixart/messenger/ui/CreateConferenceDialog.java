@@ -2,28 +2,27 @@ package de.pixart.messenger.ui;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.pixart.messenger.R;
+import de.pixart.messenger.databinding.CreateConferenceDialogBinding;
 import de.pixart.messenger.services.XmppConnectionService;
 
 
 public class CreateConferenceDialog extends DialogFragment {
 
     private static final String ACCOUNTS_LIST_KEY = "activated_accounts_list";
-    private CreateConferenceDialogListener mListener;
     public XmppConnectionService xmppConnectionService;
+    private CreateConferenceDialogListener mListener;
 
     public static CreateConferenceDialog newInstance(List<String> accounts) {
         CreateConferenceDialog dialog = new CreateConferenceDialog();
@@ -44,26 +43,22 @@ public class CreateConferenceDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.create_conference);
-        final View dialogView = getActivity().getLayoutInflater().inflate(R.layout.create_conference_dialog, null);
-        final TextView yourAccount = dialogView.findViewById(R.id.your_account);
-        final Spinner spinner = dialogView.findViewById(R.id.account);
-        final EditText subject = dialogView.findViewById(R.id.subject);
+        //final View dialogView = getActivity().getLayoutInflater().inflate(R.layout.create_conference_dialog, null);
+        //final TextView yourAccount = dialogView.findViewById(R.id.your_account);
+        //final Spinner spinner = dialogView.findViewById(R.id.account);
+        //final EditText subject = dialogView.findViewById(R.id.subject);
+        CreateConferenceDialogBinding binding = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.create_conference_dialog, null, false);
         if (xmppConnectionService != null && xmppConnectionService.multipleAccounts()) {
-            yourAccount.setVisibility(View.VISIBLE);
-            spinner.setVisibility(View.VISIBLE);
+            binding.yourAccount.setVisibility(View.VISIBLE);
+            binding.account.setVisibility(View.VISIBLE);
         } else {
-            yourAccount.setVisibility(View.GONE);
-            spinner.setVisibility(View.GONE);
+            binding.yourAccount.setVisibility(View.GONE);
+            binding.account.setVisibility(View.GONE);
         }
         ArrayList<String> mActivatedAccounts = getArguments().getStringArrayList(ACCOUNTS_LIST_KEY);
-        StartConversationActivity.populateAccountSpinner(getActivity(), mActivatedAccounts, spinner);
-        builder.setView(dialogView);
-        builder.setPositiveButton(R.string.choose_participants, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mListener.onCreateDialogPositiveClick(spinner, subject.getText().toString());
-            }
-        });
+        StartConversationActivity.populateAccountSpinner(getActivity(), mActivatedAccounts, binding.account);
+        builder.setView(binding.getRoot());
+        builder.setPositiveButton(R.string.choose_participants, (dialog, which) -> mListener.onCreateDialogPositiveClick(binding.account, binding.subject.getText().toString()));
         builder.setNegativeButton(R.string.cancel, null);
         return builder.create();
     }
