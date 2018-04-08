@@ -832,7 +832,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
             case Intent.ACTION_VIEW:
                 Uri uri = intent.getData();
                 if (uri != null) {
-                    Invite invite = new Invite(intent.getData(), false);
+                    Invite invite = new Invite(intent.getData(), intent.getBooleanExtra("scanned", false));
                     invite.account = intent.getStringExtra("account");
                     return invite.invite();
                 } else {
