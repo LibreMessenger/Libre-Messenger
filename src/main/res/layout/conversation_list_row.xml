@@ -131,6 +131,7 @@
 
                         <ImageView
                             android:id="@+id/notification_status"
+                            android:alpha="?attr/icon_alpha"
                             android:layout_width="?attr/IconSize"
                             android:layout_height="?attr/IconSize"
                             android:layout_centerVertical="true"
