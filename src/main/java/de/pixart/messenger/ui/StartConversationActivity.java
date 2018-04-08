@@ -432,8 +432,8 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
 
     @SuppressLint("InflateParams")
     protected void showCreateContactDialog(final String prefilledJid, final Invite invite) {
-        EnterJidDialog dialog = new EnterJidDialog(
-                this, mKnownHosts, mActivatedAccounts,
+        EnterJidDialog dialog = EnterJidDialog.newInstance(
+                mKnownHosts, mActivatedAccounts,
                 getString(R.string.create_contact), getString(R.string.create),
                 prefilledJid, null, invite == null || !invite.hasFingerprints(), xmppConnectionService.multipleAccounts()
         );
@@ -467,7 +467,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
             }
         });
 
-        dialog.show();
+        dialog.show(getSupportFragmentManager(), "create_contact_dialog");
     }
 
     @SuppressLint("InflateParams")

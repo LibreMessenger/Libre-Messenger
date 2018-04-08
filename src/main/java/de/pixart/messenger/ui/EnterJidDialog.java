@@ -1,16 +1,19 @@
 package de.pixart.messenger.ui;
 
 import android.app.Dialog;
-import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import de.pixart.messenger.Config;
@@ -19,42 +22,56 @@ import de.pixart.messenger.ui.adapter.KnownHostsAdapter;
 import de.pixart.messenger.ui.util.DelayedHintHelper;
 import rocks.xmpp.addr.Jid;
 
-public class EnterJidDialog {
-    public interface OnEnterJidDialogPositiveListener {
-        boolean onEnterJidDialogPositive(Jid account, Jid contact) throws EnterJidDialog.JidError;
-    }
+public class EnterJidDialog extends DialogFragment {
 
-    public static class JidError extends Exception {
-        final String msg;
+    private OnEnterJidDialogPositiveListener mListener = null;
+    private static final String TITLE_KEY = "title";
+	private static final String POSITIVE_BUTTON_KEY = "positive_button";
+	private static final String PREFILLED_JID_KEY = "prefilled_jid";
+	private static final String ACCOUNT_KEY = "account";
+	private static final String ALLOW_EDIT_JID_KEY = "allow_edit_jid";
+    private static final String MULTIPLE_ACCOUNTS = "multiple_accounts_enabled";
+	private static final String ACCOUNTS_LIST_KEY = "activated_accounts_list";
+	private static final String CONFERENCE_HOSTS_KEY = "known_conference_hosts";
 
-        public JidError(final String msg) {
-            this.msg = msg;
-        }
-
-        public String toString() {
-            return msg;
-        }
-    }
-
-    protected final AlertDialog dialog;
-    protected View.OnClickListener dialogOnClick;
-    protected OnEnterJidDialogPositiveListener listener = null;
-
-    public EnterJidDialog(
-            final Context context, Collection<String> knownHosts, final List<String> activatedAccounts,
+    public static EnterJidDialog newInstance(
+            Collection<String> knownHosts, final List<String> activatedAccounts,
             final String title, final String positiveButton,
-            final String prefilledJid, final String account, boolean allowEditJid, boolean multipleAccounts
-    ) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(title);
-        final View dialogView = LayoutInflater.from(context).inflate(R.layout.enter_jid_dialog, null);
+            final String prefilledJid, final String account, boolean allowEditJid, boolean multipleAccounts) {
+        EnterJidDialog dialog = new EnterJidDialog();
+        Bundle bundle = new Bundle();
+        bundle.putString(TITLE_KEY, title);
+        bundle.putString(POSITIVE_BUTTON_KEY, positiveButton);
+        bundle.putString(PREFILLED_JID_KEY, prefilledJid);
+        bundle.putString(ACCOUNT_KEY, account);
+        bundle.putBoolean(ALLOW_EDIT_JID_KEY, allowEditJid);
+        bundle.putBoolean(MULTIPLE_ACCOUNTS, multipleAccounts);
+        bundle.putStringArrayList(ACCOUNTS_LIST_KEY, (ArrayList<String>) activatedAccounts);
+        bundle.putSerializable(CONFERENCE_HOSTS_KEY, (HashSet) knownHosts);
+        dialog.setArguments(bundle);
+        return dialog;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setRetainInstance(true);
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(getArguments().getString(TITLE_KEY));
+        View dialogView = getActivity().getLayoutInflater().inflate(R.layout.enter_jid_dialog, null);
         final TextView yourAccount = dialogView.findViewById(R.id.your_account);
         final Spinner spinner = dialogView.findViewById(R.id.account);
         final AutoCompleteTextView jid = dialogView.findViewById(R.id.jid);
-        jid.setAdapter(new KnownHostsAdapter(context, R.layout.simple_list_item, knownHosts));
+        jid.setAdapter(new KnownHostsAdapter(getActivity(), R.layout.simple_list_item, (Collection<String>) getArguments().getSerializable(CONFERENCE_HOSTS_KEY)));
+        String prefilledJid = getArguments().getString(PREFILLED_JID_KEY);
         if (prefilledJid != null) {
             jid.append(prefilledJid);
-            if (!allowEditJid) {
+            if (!getArguments().getBoolean(ALLOW_EDIT_JID_KEY)) {
                 jid.setFocusable(false);
                 jid.setFocusableInTouchMode(false);
                 jid.setClickable(false);
@@ -64,7 +81,9 @@ public class EnterJidDialog {
 
         DelayedHintHelper.setHint(R.string.account_settings_example_jabber_id, jid);
 
-        if (multipleAccounts) {
+        String account = getArguments().getString(ACCOUNT_KEY);
+
+        if (getArguments().getBoolean(MULTIPLE_ACCOUNTS)) {
             yourAccount.setVisibility(View.VISIBLE);
             spinner.setVisibility(View.VISIBLE);
         } else {
@@ -73,9 +92,9 @@ public class EnterJidDialog {
         }
 
         if (account == null) {
-            StartConversationActivity.populateAccountSpinner(context, activatedAccounts, spinner);
+            StartConversationActivity.populateAccountSpinner(getActivity(), getArguments().getStringArrayList(ACCOUNTS_LIST_KEY), spinner);
         } else {
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(context,
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
                     R.layout.simple_list_item,
                     new String[]{account});
             spinner.setEnabled(false);
@@ -85,10 +104,10 @@ public class EnterJidDialog {
 
         builder.setView(dialogView);
         builder.setNegativeButton(R.string.cancel, null);
-        builder.setPositiveButton(positiveButton, null);
-        this.dialog = builder.create();
+        builder.setPositiveButton(getArguments().getString(POSITIVE_BUTTON_KEY), null);
+        AlertDialog dialog = builder.create();
 
-        this.dialogOnClick = v -> {
+        View.OnClickListener dialogOnClick = v -> {
             final Jid accountJid;
             if (!spinner.isEnabled() && account == null) {
                 return;
@@ -106,13 +125,13 @@ public class EnterJidDialog {
             try {
                 contactJid = Jid.of(jid.getText().toString());
             } catch (final IllegalArgumentException  e) {
-                jid.setError(context.getString(R.string.invalid_jid));
+                jid.setError(getActivity().getString(R.string.invalid_jid));
                 return;
             }
 
-            if(listener != null) {
+            if(mListener != null) {
                 try {
-                    if(listener.onEnterJidDialogPositive(accountJid, contactJid)) {
+                    if(mListener.onEnterJidDialogPositive(accountJid, contactJid)) {
                         dialog.dismiss();
                     }
                 } catch(JidError error) {
@@ -120,17 +139,37 @@ public class EnterJidDialog {
                 }
             }
         };
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(dialogOnClick);
+        return dialog;
     }
 
     public void setOnEnterJidDialogPositiveListener(OnEnterJidDialogPositiveListener listener) {
-        this.listener = listener;
+        this.mListener = listener;
     }
 
-    public Dialog show() {
-        this.dialog.show();
-        this.dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(this.dialogOnClick);
-        return this.dialog;
+    public interface OnEnterJidDialogPositiveListener {
+        boolean onEnterJidDialogPositive(Jid account, Jid contact) throws EnterJidDialog.JidError;
     }
 
+    public static class JidError extends Exception {
+        final String msg;
 
+        public JidError(final String msg) {
+            this.msg = msg;
+        }
+
+        public String toString() {
+            return msg;
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        Dialog dialog = getDialog();
+        if (dialog != null && getRetainInstance()) {
+            dialog.setDismissMessage(null);
+        }
+        super.onDestroyView();
+    }
 }

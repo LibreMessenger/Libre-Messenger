@@ -25,7 +25,7 @@ public class BlocklistActivity extends AbstractSearchableListItemActivity implem
             BlockContactDialog.show(BlocklistActivity.this, (Contact) getListItems().get(position));
             return true;
         });
-        this.binding.fab.setOnClickListener((v)->showEnterJidDialog());
+        this.binding.fab.setOnClickListener((v) -> showEnterJidDialog());
     }
 
     @Override
@@ -56,8 +56,8 @@ public class BlocklistActivity extends AbstractSearchableListItemActivity implem
     }
 
     protected void showEnterJidDialog() {
-        EnterJidDialog dialog = new EnterJidDialog(
-                this, mKnownHosts, null,
+        EnterJidDialog dialog = EnterJidDialog.newInstance(
+                mKnownHosts, null,
                 getString(R.string.block_jabber_id), getString(R.string.block),
                 null, account.getJid().asBareJid().toString(), true, xmppConnectionService.multipleAccounts()
         );
@@ -69,7 +69,7 @@ public class BlocklistActivity extends AbstractSearchableListItemActivity implem
             }
             return true;
         });
-        dialog.show();
+        dialog.show(getSupportFragmentManager(), "block_contact_dialog");
     }
 
     protected void refreshUiReal() {
