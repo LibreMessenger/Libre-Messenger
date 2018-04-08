@@ -445,13 +445,8 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                     banFromConference.setVisible(true);
                 }
             } else {
-                if (jid != null && !jid.isBareJid()) {
-                    if (mConversation.getMucOptions().isUserInRoom(jid)) {
-                        sendPrivateMessage.setVisible(true);
-                    } else {
-                        sendPrivateMessage.setVisible(false);
-                    }
-                }
+
+                sendPrivateMessage.setVisible(user.getRole().ranks(MucOptions.Role.VISITOR));
             }
 
         }
