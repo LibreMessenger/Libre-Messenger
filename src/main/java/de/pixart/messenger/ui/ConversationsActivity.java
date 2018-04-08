@@ -447,11 +447,15 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
         MenuItem qrCodeScanMenuItem = menu.findItem(R.id.action_scan_qr_code);
         final MenuItem menuEditProfiles = menu.findItem(R.id.action_accounts);
         if (qrCodeScanMenuItem != null) {
-            Fragment fragment = getFragmentManager().findFragmentById(R.id.main_fragment);
-            boolean visible = getResources().getBoolean(R.bool.show_qr_code_scan)
-                    && fragment != null
-                    && fragment instanceof ConversationsOverviewFragment;
-            qrCodeScanMenuItem.setVisible(visible);
+            if (isCameraFeatureAvailable()) {
+                Fragment fragment = getFragmentManager().findFragmentById(R.id.main_fragment);
+                boolean visible = getResources().getBoolean(R.bool.show_qr_code_scan)
+                        && fragment != null
+                        && fragment instanceof ConversationsOverviewFragment;
+                qrCodeScanMenuItem.setVisible(visible);
+            } else {
+                qrCodeScanMenuItem.setVisible(false);
+            }
         }
         if (xmppConnectionServiceBound && xmppConnectionService.getAccounts().size() == 1 && !xmppConnectionService.multipleAccounts()) {
             menuEditProfiles.setTitle(R.string.mgmt_account_edit);

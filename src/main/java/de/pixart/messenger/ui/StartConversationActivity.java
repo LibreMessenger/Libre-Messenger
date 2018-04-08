@@ -624,8 +624,10 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
             menuActionAccounts.setTitle(R.string.action_accounts);
         }
         MenuItem joinGroupChat = menu.findItem(R.id.action_join_conference);
+        MenuItem qrCodeScanMenuItem = menu.findItem(R.id.action_scan_qr_code);
         ActionBar bar = getSupportActionBar();
         joinGroupChat.setVisible(bar != null && bar.getSelectedNavigationIndex() == 1);
+        qrCodeScanMenuItem.setVisible(isCameraFeatureAvailable());
         menuHideOffline.setChecked(this.mHideOfflineContacts);
         mMenuSearchView = menu.findItem(R.id.action_search);
         mMenuSearchView.setOnActionExpandListener(mOnActionExpandListener);

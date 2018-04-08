@@ -94,14 +94,13 @@ public abstract class XmppActivity extends AppCompatActivity {
     public boolean xmppConnectionServiceBound = false;
     protected boolean registeredListeners = false;
 
-    protected int mPrimaryBackgroundColor;
-    protected int mSecondaryBackgroundColor;
     protected int mColorRed;
     protected int mColorWarningButton;
     protected int mColorWhite;
     protected int mColorOrange;
     protected int mColorGreen;
-    protected int mPrimaryColor;
+
+    private boolean isCameraFeatureAvailable = false;
 
     protected boolean mUseSubject = true;
 
@@ -410,14 +409,12 @@ public abstract class XmppActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         metrics = getResources().getDisplayMetrics();
         ExceptionHelper.init(getApplicationContext());
+        this.isCameraFeatureAvailable = getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
         mColorRed = ContextCompat.getColor(this, R.color.red800);
         mColorWarningButton = ContextCompat.getColor(this, R.color.warning_button);
         mColorWhite = ContextCompat.getColor(this, R.color.white70);
         mColorOrange = ContextCompat.getColor(this, R.color.orange500);
         mColorGreen = ContextCompat.getColor(this, R.color.realgreen);
-        mPrimaryColor = ContextCompat.getColor(this, R.color.primary);
-        mPrimaryBackgroundColor = ContextCompat.getColor(this, R.color.grey50);
-        mSecondaryBackgroundColor = ContextCompat.getColor(this, R.color.grey200);
         this.mTheme = findTheme();
         setTheme(this.mTheme);
         this.mUsingEnterKey = usingEnterKey();
@@ -428,10 +425,13 @@ public abstract class XmppActivity extends AppCompatActivity {
         }
     }
 
-    // todo theme
-//    public boolean isDarkTheme() {
-//        return this.mTheme == R.style.ConversationsTheme_Dark;
-//    }
+    protected boolean isCameraFeatureAvailable() {
+        return this.isCameraFeatureAvailable;
+    }
+
+    public boolean isDarkTheme() {
+        return this.mTheme == R.style.ConversationsTheme_Dark;
+    }
 
     public int getThemeResource(int r_attr_name, int r_drawable_def) {
         int[] attrs = {	r_attr_name };
