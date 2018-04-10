@@ -569,7 +569,7 @@
     <string name="conference_subject">Subject</string>
     <string name="choose_participants">Choose participants</string>
     <string name="creating_conference">Creating group chat…</string>
-    <string name="import_text">There is a backup on your device which can be imported.\nPossibly you will be asked to uninstall the old version or Conversations and your Messenger will be restarted during backup process. Shall the backup be imported? </string>
+    <string name="import_text">There is a backup on your device which can be imported.\nYour Messenger will be restarted during backup process. Shall the backup be imported? </string>
     <string name="import_database">Import backup</string>
     <string name="invite_again">Invite again</string>
     <string name="inviteUser_Subject">has invited you via</string>
@@ -765,7 +765,7 @@
     <string name="pref_automatically_delete_messages_description">Automatically delete messages from this device that are older than the configured time frame.</string>
     <string name="pref_automatically_delete_messages">Automatic message deletion</string>
     <string name="disable_encryption">Disable encryption</string>
-    <string name="error_trustkey_general">Conversations is unable to send encrypted messages to %1$s. This may be due to your contact using an outdated server or client that can not handle OMEMO.</string>
+    <string name="error_trustkey_general">Pix-Art Messenger is unable to send encrypted messages to %1$s. This may be due to your contact using an outdated server or client that can not handle OMEMO.</string>
     <string name="error_trustkey_device_list">Unable to fetch device list</string>
     <string name="error_trustkey_bundle">Unable to fetch device bundles</string>
     <string name="error_trustkey_hint_mutual">Hint: In some cases this can be fixed by adding each other your contact lists.</string>
