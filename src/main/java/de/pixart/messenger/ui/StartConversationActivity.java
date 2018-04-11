@@ -6,8 +6,6 @@ import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
@@ -17,7 +15,6 @@ import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -266,8 +263,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
                 showCreateConferenceDialog();
             }
         });
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(binding.startConversationViewPager);
+        binding.tabLayout.setupWithViewPager(binding.startConversationViewPager);
         binding.startConversationViewPager.addOnPageChangeListener(mOnPageChangeListener);
         mListPagerAdapter = new ListPagerAdapter(getSupportFragmentManager());
         binding.startConversationViewPager.setAdapter(mListPagerAdapter);
@@ -377,15 +373,10 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setNegativeButton(R.string.cancel, null);
         builder.setTitle(R.string.action_delete_contact);
-        builder.setMessage(getString(R.string.remove_contact_text,
-                contact.getJid()));
-        builder.setPositiveButton(R.string.delete, new OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                xmppConnectionService.deleteContactOnServer(contact);
-                filter(mSearchEditText.getText().toString());
-            }
+        builder.setMessage(getString(R.string.remove_contact_text, contact.getJid()));
+        builder.setPositiveButton(R.string.delete, (dialog, which) -> {
+            xmppConnectionService.deleteContactOnServer(contact);
+            filter(mSearchEditText.getText().toString());
         });
         builder.create().show();
     }
@@ -397,18 +388,13 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setNegativeButton(R.string.cancel, null);
         builder.setTitle(R.string.delete_bookmark);
-        builder.setMessage(getString(R.string.remove_bookmark_text,
-                bookmark.getJid()));
-        builder.setPositiveButton(R.string.delete, new OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                bookmark.setConversation(null);
-                Account account = bookmark.getAccount();
-                account.getBookmarks().remove(bookmark);
-                xmppConnectionService.pushBookmarks(account);
-                filter(mSearchEditText.getText().toString());
-            }
+        builder.setMessage(getString(R.string.remove_bookmark_text, bookmark.getJid()));
+        builder.setPositiveButton(R.string.delete, (dialog, which) -> {
+            bookmark.setConversation(null);
+            Account account = bookmark.getAccount();
+            account.getBookmarks().remove(bookmark);
+            xmppConnectionService.pushBookmarks(account);
+            filter(mSearchEditText.getText().toString());
         });
         builder.create().show();
 
@@ -640,21 +626,15 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
                         builder.setTitle(R.string.sync_with_contacts);
                         builder.setMessage(R.string.sync_with_contacts_long);
-                        builder.setPositiveButton(R.string.next, new OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                    requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_SYNC_CONTACTS);
-                                }
+                        builder.setPositiveButton(R.string.next, (dialog, which) -> {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_SYNC_CONTACTS);
                             }
                         });
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                            builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                @Override
-                                public void onDismiss(DialogInterface dialog) {
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                        requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_SYNC_CONTACTS);
-                                    }
+                            builder.setOnDismissListener(dialog -> {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_SYNC_CONTACTS);
                                 }
                             });
                         }
