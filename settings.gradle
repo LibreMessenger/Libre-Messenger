@@ -1,2 +1,2 @@
 include ':libs:android-transcoder'
-rootProject.name = 'Pix-Art Messenger'
+rootProject.name = 'PixArtMessenger'
