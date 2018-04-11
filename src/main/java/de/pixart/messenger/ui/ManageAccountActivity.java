@@ -75,6 +75,8 @@ public class ManageAccountActivity extends XmppActivity implements OnAccountUpda
 
         setContentView(R.layout.activity_manage_accounts);
 
+        setSupportActionBar(findViewById(R.id.toolbar));
+        configureActionBar(getSupportActionBar());
         if (savedInstanceState != null) {
             String jid = savedInstanceState.getString(STATE_SELECTED_ACCOUNT);
             if (jid != null) {

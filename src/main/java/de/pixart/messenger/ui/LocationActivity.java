@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import de.pixart.messenger.Config;
 
-public abstract class LocationActivity extends AppCompatActivity implements LocationListener {
+public abstract class LocationActivity extends XmppActivity implements LocationListener {
     private LocationManager locationManager;
 
     @Override
@@ -51,13 +51,13 @@ public abstract class LocationActivity extends AppCompatActivity implements Loca
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         pauseLocationUpdates();
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         this.setmLastLocation(null);
 

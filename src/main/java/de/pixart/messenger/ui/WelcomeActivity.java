@@ -79,6 +79,7 @@ public class WelcomeActivity extends XmppActivity {
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome);
+        setSupportActionBar(findViewById(R.id.toolbar));
         final ActionBar ab = getSupportActionBar();
         if (ab != null) {
             ab.setDisplayShowHomeEnabled(false);

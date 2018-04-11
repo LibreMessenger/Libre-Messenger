@@ -421,10 +421,6 @@ public abstract class XmppActivity extends AppCompatActivity {
         setTheme(this.mTheme);
         this.mUsingEnterKey = usingEnterKey();
         mUseSubject = getPreferences().getBoolean("use_subject", getResources().getBoolean(R.bool.use_subject));
-        final ActionBar ab = getSupportActionBar();
-        if (ab != null) {
-            ab.setDisplayHomeAsUpEnabled(true);
-        }
     }
 
     protected boolean isCameraFeatureAvailable() {
@@ -606,6 +602,13 @@ public abstract class XmppActivity extends AppCompatActivity {
                     }
                 }
             });
+        }
+    }
+
+    public static void configureActionBar(ActionBar actionBar) {
+        if (actionBar != null) {
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
 

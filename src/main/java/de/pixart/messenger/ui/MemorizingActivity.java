@@ -53,6 +53,8 @@ public class MemorizingActivity extends AppCompatActivity implements OnClickList
         LOGGER.log(Level.FINE, "onCreate");
         //setTheme(findTheme());
         super.onCreate(savedInstanceState);
+        getLayoutInflater().inflate(R.layout.toolbar, findViewById(android.R.id.content));
+        setSupportActionBar(findViewById(R.id.toolbar));
     }
 
     @Override

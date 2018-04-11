@@ -50,6 +50,7 @@ import android.provider.Settings;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -425,6 +426,8 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
         super.onCreate(savedInstanceState);
         new EmojiService(this).init(useBundledEmoji());
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_conversations);
+        setSupportActionBar((Toolbar) binding.toolbar);
+        configureActionBar(getSupportActionBar());
         this.getFragmentManager().addOnBackStackChangedListener(this::invalidateActionBarTitle);
         this.getFragmentManager().addOnBackStackChangedListener(this::showDialogsIfMainIsOverview);
         this.initializeFragments();

@@ -37,14 +37,47 @@ public class ShareLocationActivity extends LocationActivity implements LocationL
     private String mLocationName;
     private RelativeLayout mSnackbar;
 
+    private static String getAddress(Context context, Location location) {
+        double longitude = location.getLongitude();
+        double latitude = location.getLatitude();
+        String address = "";
+        if (latitude != 0 && longitude != 0) {
+            Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
+            try {
+                List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
+                if (addresses != null && addresses.size() > 0) {
+                    Address Address = addresses.get(0);
+                    StringBuilder strAddress = new StringBuilder("");
+
+                    if (Address.getAddressLine(0).length() > 0) {
+                        strAddress.append(Address.getAddressLine(0));
+                    }
+                    address = strAddress.toString().replace(", ", "<br>");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return address;
+    }
+
+    @Override
+    protected void refreshUiReal() {
+
+    }
+
+    @Override
+    void onBackendConnected() {
+
+    }
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share_locaction);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setHomeButtonEnabled(true);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        setTitle(getString(R.string.share_location));
+        setSupportActionBar(findViewById(R.id.toolbar));
+        configureActionBar(getSupportActionBar());
         locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         mLocationName = getString(R.string.me);
@@ -87,12 +120,12 @@ public class ShareLocationActivity extends LocationActivity implements LocationL
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         if (isLocationEnabled()) {
             this.mSnackbar.setVisibility(View.GONE);
@@ -145,7 +178,7 @@ public class ShareLocationActivity extends LocationActivity implements LocationL
     }
 
     private boolean isLocationEnabled() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             return isLocationEnabledKitkat();
         } else {
             return isLocationEnabledLegacy();
@@ -164,28 +197,22 @@ public class ShareLocationActivity extends LocationActivity implements LocationL
         }
     }
 
-    private static String getAddress(Context context, Location location) {
-        double longitude = location.getLongitude();
-        double latitude = location.getLatitude();
-        String address = "";
-        if (latitude != 0 && longitude != 0) {
-            Geocoder geoCoder = new Geocoder(context, Locale.getDefault());
-            try {
-                List<Address> addresses = geoCoder.getFromLocation(latitude, longitude, 1);
-                if (addresses != null && addresses.size() > 0) {
-                    Address Address = addresses.get(0);
-                    StringBuilder strAddress = new StringBuilder("");
-
-                    if (Address.getAddressLine(0).length() > 0) {
-                        strAddress.append(Address.getAddressLine(0));
-                    }
-                    address = strAddress.toString().replace(", ", "<br>");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    private void showLocation(@Nullable Location location, @Nullable String address) {
+        if (location == null && TextUtils.isEmpty(address)) { // no location and no address available
+            final WebView webView = findViewById(R.id.webView);
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.loadUrl("file:///android_asset/map.html");
+        } else if (location != null && TextUtils.isEmpty(address)) { // location but no address available
+            String LocationName = "<b>" + mLocationName + "</b>";
+            final WebView webView = findViewById(R.id.webView);
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.loadUrl("file:///android_asset/map.html?lat=" + mLastLocation.getLatitude() + "&lon=" + mLastLocation.getLongitude() + "&name=" + LocationName);
+        } else if (location != null && !TextUtils.isEmpty(address)) { // location and address available
+            String LocationName = "<b>" + mLocationName + "</b><br>" + address;
+            final WebView webView = findViewById(R.id.webView);
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.loadUrl("file:///android_asset/map.html?lat=" + mLastLocation.getLatitude() + "&lon=" + mLastLocation.getLongitude() + "&name=" + LocationName);
         }
-        return address;
     }
 
     private class getAddressAsync extends AsyncTask<Void, Void, Void> {
@@ -213,24 +240,6 @@ public class ShareLocationActivity extends LocationActivity implements LocationL
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             showLocation(mLastLocation, address);
-        }
-    }
-
-    private void showLocation (@Nullable Location location, @Nullable String address) {
-        if (location == null && TextUtils.isEmpty(address)) { // no location and no address available
-            final WebView webView = findViewById(R.id.webView);
-            webView.getSettings().setJavaScriptEnabled(true);
-            webView.loadUrl("file:///android_asset/map.html");
-        } else if (location != null && TextUtils.isEmpty(address)) { // location but no address available
-            String LocationName = "<b>" + mLocationName + "</b>";
-            final WebView webView = findViewById(R.id.webView);
-            webView.getSettings().setJavaScriptEnabled(true);
-            webView.loadUrl("file:///android_asset/map.html?lat=" + mLastLocation.getLatitude() + "&lon=" + mLastLocation.getLongitude() + "&name=" + LocationName);
-        } else if (location != null && !TextUtils.isEmpty(address)) { // location and address available
-            String LocationName = "<b>" + mLocationName + "</b><br>" + address;
-            final WebView webView = findViewById(R.id.webView);
-            webView.getSettings().setJavaScriptEnabled(true);
-            webView.loadUrl("file:///android_asset/map.html?lat=" + mLastLocation.getLatitude() + "&lon=" + mLastLocation.getLongitude() + "&name=" + LocationName);
         }
     }
 }

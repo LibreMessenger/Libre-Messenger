@@ -20,6 +20,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -544,6 +545,8 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             this.mSavedInstanceInit = savedInstanceState.getBoolean("initMode", false);
         }
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_account);
+        setSupportActionBar((Toolbar) binding.toolbar);
+        configureActionBar(getSupportActionBar());
         this.binding.accountJid.addTextChangedListener(this.mTextWatcher);
         this.binding.accountJid.setOnFocusChangeListener(this.mEditTextFocusListener);
         this.mAccountJidLayout = (TextInputLayout) findViewById(R.id.account_jid_layout);

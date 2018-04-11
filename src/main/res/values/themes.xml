@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="ConversationsTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="ConversationsTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
@@ -10,7 +10,7 @@
         <item name="color_background_secondary">@color/grey200</item>
         <item name="color_warning">@color/red_a700</item>
 
-        <item name="android:windowActionModeOverlay">true</item>
+        <item name="windowActionModeOverlay">true</item>
         <item name="android:actionModeBackground">@color/accent</item>
 
         <item type="reference" name="android:homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
@@ -72,7 +72,7 @@
         <item type="reference" name="icon_enable_undecided_device">@drawable/ic_new_releases_black_24dp</item>
     </style>
 
-    <style name="ConversationsTheme.Dark" parent="Theme.AppCompat">
+    <style name="ConversationsTheme.Dark" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
@@ -82,7 +82,7 @@
         <item name="color_background_secondary">@color/grey900</item>
         <item name="color_warning">@color/red_a100</item>
 
-        <item name="android:windowActionModeOverlay">true</item>
+        <item name="windowActionModeOverlay">true</item>
         <item name="android:actionModeBackground">@color/accent</item>
 
         <item name="TextSizeInfo">12sp</item>

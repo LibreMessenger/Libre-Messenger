@@ -8,11 +8,15 @@
         android:layout_height="wrap_content"
         android:background="?attr/color_background_secondary">
 
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
+
         <ScrollView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/button_bar"
-            android:layout_alignParentTop="true">
+            android:layout_below="@id/toolbar">
 
             <LinearLayout
                 android:id="@+id/account_main_layout"
@@ -612,19 +616,19 @@
                         android:orientation="vertical"
                         android:padding="@dimen/card_padding_list">
 
-                    <TextView
-                        android:id="@+id/other_device_keys_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/list_padding"
-                        android:text="@string/other_devices"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                        <TextView
+                            android:id="@+id/other_device_keys_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/list_padding"
+                            android:text="@string/other_devices"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-                    <LinearLayout
-                        android:id="@+id/other_device_keys"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"/>
+                        <LinearLayout
+                            android:id="@+id/other_device_keys"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" />
 
                         <Button
                             android:id="@+id/clear_devices"

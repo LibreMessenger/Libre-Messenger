@@ -7,6 +7,14 @@
         android:icon="@drawable/ic_image_black_24dp"
         android:key="userinterface"
         android:title="@string/pref_ui_options">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="de.pixart.messenger.ui.SettingsActivity"
+            android:targetPackage="@string/applicationId">
+            <extra
+                android:name="page"
+                android:value="userinterface" />
+        </intent>
         <CheckBoxPreference
             android:defaultValue="@bool/use_white_background"
             android:key="use_white_background"
@@ -56,6 +64,14 @@
         android:icon="@drawable/ic_notifications_black_24dp"
         android:key="notifications"
         android:title="@string/pref_notification_settings">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="de.pixart.messenger.ui.SettingsActivity"
+            android:targetPackage="@string/applicationId">
+            <extra
+                android:name="page"
+                android:value="notifications" />
+        </intent>
         <CheckBoxPreference
             android:defaultValue="@bool/show_notification"
             android:key="show_notification"
@@ -129,6 +145,14 @@
         android:icon="@drawable/ic_attachment_black_24dp"
         android:key="attachments"
         android:title="@string/pref_attachments">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="de.pixart.messenger.ui.SettingsActivity"
+            android:targetPackage="@string/applicationId">
+            <extra
+                android:name="page"
+                android:value="attachments" />
+        </intent>
         <ListPreference
             android:defaultValue="@integer/auto_accept_filesize_wifi"
             android:entries="@array/filesizes"
@@ -175,6 +199,14 @@
         android:icon="@drawable/ic_new_releases_black_24dp"
         android:key="presence"
         android:title="@string/pref_presence_settings">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="de.pixart.messenger.ui.SettingsActivity"
+            android:targetPackage="@string/applicationId">
+            <extra
+                android:name="page"
+                android:value="presence" />
+        </intent>
         <CheckBoxPreference
             android:defaultValue="@bool/manually_change_presence"
             android:disableDependentsState="true"
@@ -205,6 +237,14 @@
         android:icon="@drawable/ic_security_black_24dp"
         android:key="security"
         android:title="@string/pref_security_settings">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetClass="de.pixart.messenger.ui.SettingsActivity"
+            android:targetPackage="@string/applicationId">
+            <extra
+                android:name="page"
+                android:value="security" />
+        </intent>
         <CheckBoxPreference
             android:defaultValue="@bool/confirm_messages"
             android:key="confirm_messages"
