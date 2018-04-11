@@ -6,6 +6,7 @@
 * removed support for customizable resources
 * rework UI for status message
 * added splash screen at startup
+* use toolbar instead of actionbar
 * bug fixes
 
 #### Version 1.22.1
