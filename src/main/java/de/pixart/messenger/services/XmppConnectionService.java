@@ -117,6 +117,7 @@ import de.pixart.messenger.utils.OnPhoneContactsLoadedListener;
 import de.pixart.messenger.utils.PRNGFixes;
 import de.pixart.messenger.utils.PhoneHelper;
 import de.pixart.messenger.utils.ReplacingSerialSingleThreadExecutor;
+import de.pixart.messenger.utils.ReplacingTaskManager;
 import de.pixart.messenger.utils.Resolver;
 import de.pixart.messenger.utils.SerialSingleThreadExecutor;
 import de.pixart.messenger.utils.XmppUri;
@@ -169,6 +170,7 @@ public class XmppConnectionService extends Service {
     private final SerialSingleThreadExecutor mDatabaseWriterExecutor = new SerialSingleThreadExecutor("DatabaseWriter");
     private final SerialSingleThreadExecutor mDatabaseReaderExecutor = new SerialSingleThreadExecutor("DatabaseReader");
     private final SerialSingleThreadExecutor mNotificationExecutor = new SerialSingleThreadExecutor("NotificationExecutor");
+    private final ReplacingTaskManager mRosterSyncTaskManager = new ReplacingTaskManager();
     private final IBinder mBinder = new XmppConnectionBinder();
     private final List<Conversation> conversations = new CopyOnWriteArrayList<>();
     private final IqGenerator mIqGenerator = new IqGenerator(this);
@@ -1636,7 +1638,7 @@ public class XmppConnectionService extends Service {
     }
 
     public void syncRoster(final Account account) {
-        mDatabaseWriterExecutor.execute(() -> databaseBackend.writeRoster(account.getRoster()));
+        mRosterSyncTaskManager.execute(account, () -> databaseBackend.writeRoster(account.getRoster()));
     }
 
     public List<Conversation> getConversations() {
@@ -2089,6 +2091,7 @@ public class XmppConnectionService extends Service {
             };
             mDatabaseWriterExecutor.execute(runnable);
             this.accounts.remove(account);
+            this.mRosterSyncTaskManager.clear(account);
             updateAccountUi();
             getNotificationService().updateErrorNotification();
             syncEnabledAccountSetting();
