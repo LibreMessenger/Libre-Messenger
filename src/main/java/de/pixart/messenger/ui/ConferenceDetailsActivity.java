@@ -48,6 +48,7 @@ import de.pixart.messenger.entities.MucOptions.User;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.services.XmppConnectionService.OnConversationUpdate;
 import de.pixart.messenger.services.XmppConnectionService.OnMucRosterUpdate;
+import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import de.pixart.messenger.utils.TimeframeUtils;
 import de.pixart.messenger.utils.UIHelper;
 import rocks.xmpp.addr.Jid;
