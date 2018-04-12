@@ -60,16 +60,15 @@ public class Account extends AbstractEntity {
     public static final int OPTION_MAGIC_CREATE = 4;
     public static final int OPTION_REQUIRES_ACCESS_MODE_CHANGE = 5;
  	public static final int OPTION_LOGGED_IN_SUCCESSFULLY = 6;
+    public static final int OPTION_HTTP_UPLOAD_AVAILABLE = 7;
     public final HashSet<Pair<String, String>> inProgressDiscoFetches = new HashSet<>();
 
     public boolean httpUploadAvailable(long filesize) {
-        //make httpUpload independent from filesize
-        filesize = 0;
         return xmppConnection != null && xmppConnection.getFeatures().httpUpload(filesize);
     }
 
     public boolean httpUploadAvailable() {
-        return httpUploadAvailable(0);
+        return isOptionSet(OPTION_HTTP_UPLOAD_AVAILABLE) || httpUploadAvailable(0);
     }
 
     public void setDisplayName(String displayName) {
