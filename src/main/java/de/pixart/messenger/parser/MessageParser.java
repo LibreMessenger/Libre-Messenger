@@ -334,6 +334,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
         }
         final MessagePacket packet;
         Long timestamp = null;
+        final boolean isForwarded;
         boolean isCarbon = false;
         String serverMsgId = null;
         final Element fin = original.findChild("fin", Namespace.MAM_LEGACY);
@@ -351,6 +352,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
             }
             timestamp = f.second;
             packet = f.first;
+            isForwarded = true;
             serverMsgId = result.getAttribute("id");
             query.incrementMessageCount();
         } else if (query != null) {
@@ -366,8 +368,10 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
             }
             timestamp = f != null ? f.second : null;
             isCarbon = f != null;
+            isForwarded = isCarbon;
         } else {
             packet = original;
+            isForwarded = false;
         }
 
         if (timestamp == null) {
@@ -404,6 +408,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
             Log.e(Config.LOGTAG, account.getJid().asBareJid() + ": received groupchat (" + from + ") message on regular MAM request. skipping");
             return;
         }
+        boolean isProperlyAddressed = (to != null) && (!to.isBareJid() || account.countPresences() == 0);
         boolean isMucStatusMessage = from.isBareJid() && mucUserElement != null && mucUserElement.hasChild("status");
         boolean selfAddressed;
         if (packet.fromAccount(account)) {
