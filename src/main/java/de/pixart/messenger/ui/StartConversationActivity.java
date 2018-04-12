@@ -82,6 +82,9 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
 
     private final int REQUEST_SYNC_CONTACTS = 0x28cf;
     private final int REQUEST_CREATE_CONFERENCE = 0x39da;
+    private final PendingItem<Intent> pendingViewIntent = new PendingItem<>();
+    private final PendingItem<String> mInitialSearchValue = new PendingItem<>();
+    private final AtomicBoolean oneShotKeyboardSuppress = new AtomicBoolean();
     public int conference_context_id;
     public int contact_context_id;
     private ListPagerAdapter mListPagerAdapter;
@@ -90,7 +93,6 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
     private List<ListItem> conferences = new ArrayList<>();
     private ListItemAdapter mConferenceAdapter;
     private List<String> mActivatedAccounts = new ArrayList<>();
-    private Invite mPendingInvite = null;
     private EditText mSearchEditText;
     private AtomicBoolean mRequestedContactsPermission = new AtomicBoolean(false);
     private boolean mHideOfflineContacts = false;
@@ -135,26 +137,6 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
         public void onTextChanged(CharSequence s, int start, int before, int count) {
         }
     };
-    private TextView.OnEditorActionListener mSearchDone = new TextView.OnEditorActionListener() {
-        @Override
-        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            int pos = binding.startConversationViewPager.getCurrentItem();
-            if (pos == 0) {
-                if (contacts.size() == 1) {
-                    openConversationForContact((Contact) contacts.get(0));
-                    return true;
-                }
-            } else {
-                if (conferences.size() == 1) {
-                    openConversationsForBookmark((Bookmark) conferences.get(0));
-                    return true;
-                }
-            }
-            hideKeyboard();
-            mListPagerAdapter.requestFocus(pos);
-            return true;
-        }
-    };
     private MenuItem mMenuSearchView;
     private ListItemAdapter.OnTagClickedListener mOnTagClickedListener = new ListItemAdapter.OnTagClickedListener() {
         @Override
@@ -167,8 +149,6 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
             }
         }
     };
-    private final PendingItem<String> mInitialSearchValue = new PendingItem<>();
-    private final AtomicBoolean oneShotKeyboardSuppress = new AtomicBoolean();
     private Pair<Integer, Intent> mPostponedActivityResult;
     private Toast mToast;
     private UiCallback<Conversation> mAdhocConferenceCallback = new UiCallback<Conversation>() {
@@ -191,7 +171,26 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
     };
 
     private ActivityStartConversationBinding binding;
-
+    private TextView.OnEditorActionListener mSearchDone = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            int pos = binding.startConversationViewPager.getCurrentItem();
+            if (pos == 0) {
+                if (contacts.size() == 1) {
+                    openConversationForContact((Contact) contacts.get(0));
+                    return true;
+                }
+            } else {
+                if (conferences.size() == 1) {
+                    openConversationsForBookmark((Bookmark) conferences.get(0));
+                    return true;
+                }
+            }
+            hideKeyboard();
+            mListPagerAdapter.requestFocus(pos);
+            return true;
+        }
+    };
     private ViewPager.SimpleOnPageChangeListener mOnPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
         @Override
         public void onPageSelected(int position) {
@@ -218,6 +217,17 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
     public static void launch(Context context) {
         final Intent intent = new Intent(context, StartConversationActivity.class);
         context.startActivity(intent);
+    }
+
+    private static Intent createLauncherIntent(Context context) {
+        final Intent intent = new Intent(context, StartConversationActivity.class);
+        intent.setAction(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        return intent;
+    }
+
+    private static boolean isViewIntent(final Intent i) {
+        return i != null && (Intent.ACTION_VIEW.equals(i.getAction()) || Intent.ACTION_SENDTO.equals(i.getAction()));
     }
 
     protected void hideToast() {
@@ -274,6 +284,31 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
         mContactsAdapter.setOnTagClickedListener(this.mOnTagClickedListener);
         this.mHideOfflineContacts = getPreferences().getBoolean("hide_offline", false);
 
+        final Intent intent;
+        if (savedInstanceState == null) {
+            intent = getIntent();
+        } else {
+            final String search = savedInstanceState.getString("search");
+            if (search != null) {
+                mInitialSearchValue.push(search);
+            }
+            intent = savedInstanceState.getParcelable("intent");
+        }
+
+        if (isViewIntent(intent)) {
+            pendingViewIntent.push(intent);
+            setIntent(createLauncherIntent(this));
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        Intent pendingIntent = pendingViewIntent.peek();
+        savedInstanceState.putParcelable("intent", pendingIntent != null ? pendingIntent : getIntent());
+        if (mMenuSearchView != null && mMenuSearchView.isActionViewExpanded()) {
+            savedInstanceState.putString("search", mSearchEditText != null ? mSearchEditText.getText().toString() : null);
+        }
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     @Override
@@ -293,12 +328,13 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
     }
 
     @Override
-    public void onNewIntent(Intent intent) {
+    public void onNewIntent(final Intent intent) {
         if (xmppConnectionServiceBound) {
-            handleIntent(intent);
+            processViewIntent(intent);
         } else {
-            setIntent(intent);
+            pendingViewIntent.push(intent);
         }
+        setIntent(createLauncherIntent(this));
     }
 
     protected void openConversationForContact(int position) {
@@ -679,29 +715,23 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
                 }
             }
         }
-        final Intent intent = getIntent();
         final ActionBar ab = getSupportActionBar();
-        boolean init = intent != null && intent.getBooleanExtra("init", false);
         boolean noConversations = xmppConnectionService.getConversations().size() == 0;
-        if ((init || noConversations) && ab != null) {
+        if (noConversations && ab != null) {
             ab.setDisplayShowHomeEnabled(false);
             ab.setDisplayHomeAsUpEnabled(false);
             ab.setHomeButtonEnabled(false);
         }
-        if (this.mPendingInvite != null) {
-            mPendingInvite.invite();
-            this.mPendingInvite = null;
+        Intent intent = pendingViewIntent.pop();
+        if (intent != null && processViewIntent(intent)) {
             filter(null);
-        } else if (!handleIntent(getIntent())) {
+        } else {
             if (mSearchEditText != null) {
                 filter(mSearchEditText.getText().toString());
             } else {
                 filter(null);
             }
-        } else {
-            filter(null);
         }
-        setIntent(null);
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_DIALOG);
         if (fragment != null && fragment instanceof OnBackendConnected) {
             Log.d(Config.LOGTAG, "calling on backend connected on dialog");
@@ -709,19 +739,13 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
         }
     }
 
-    protected boolean handleIntent(Intent intent) {
-        if (intent == null) {
-            return false;
-        }
+    protected boolean processViewIntent(Intent intent) {
         final String inviteUri = intent.getStringExtra(WelcomeActivity.EXTRA_INVITE_URI);
         if (inviteUri != null) {
             Invite invite = new Invite(inviteUri);
             if (invite.isJidValid()) {
                 return invite.invite();
             }
-        }
-        if (intent.getAction() == null) {
-            return false;
         }
         switch (intent.getAction()) {
             case Intent.ACTION_SENDTO:
