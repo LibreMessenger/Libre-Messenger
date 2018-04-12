@@ -664,26 +664,27 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     @Override
     protected void onStart() {
         super.onStart();
+        final Intent intent = getIntent();
         final int theme = findTheme();
         if (this.mTheme != theme) {
             recreate();
-        } else if (getIntent() != null) {
+        } else if (intent != null) {
             try {
-                this.jidToEdit = Jid.of(getIntent().getStringExtra("jid"));
+                this.jidToEdit = Jid.of(intent.getStringExtra("jid"));
             } catch (final IllegalArgumentException | NullPointerException ignored) {
                 this.jidToEdit = null;
             }
-            if (jidToEdit != null && getIntent().getData() != null) {
-                final XmppUri uri = new XmppUri(getIntent().getData());
+            if (jidToEdit != null && intent.getData() != null && intent.getBooleanExtra("scanned", false)) {
+                final XmppUri uri = new XmppUri(intent.getData());
                 if (xmppConnectionServiceBound) {
                     processFingerprintVerification(uri, false);
                 } else {
                     this.pendingUri = uri;
                 }
             }
-            boolean init = getIntent().getBooleanExtra("init", false);
+            boolean init = intent.getBooleanExtra("init", false);
             this.mInitMode = init || this.jidToEdit == null;
-            this.messageFingerprint = getIntent().getStringExtra("fingerprint");
+            this.messageFingerprint = intent.getStringExtra("fingerprint");
             if (!mInitMode) {
                 this.binding.accountRegisterNew.setVisibility(View.GONE);
                 if (getSupportActionBar() != null) {
