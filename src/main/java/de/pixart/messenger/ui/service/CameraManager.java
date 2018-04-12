@@ -84,12 +84,12 @@ public final class CameraManager {
 
         camera.setPreviewTexture(textureView.getSurfaceTexture());
 
-        final Camera.Parameters parameters = camera.getParameters();
-
-        cameraResolution = findBestPreviewSizeValue(parameters, textureView.getWidth(), textureView.getHeight());
-
         final int width = textureView.getWidth();
         final int height = textureView.getHeight();
+
+        final Camera.Parameters parameters = camera.getParameters();
+
+        cameraResolution = findBestPreviewSizeValue(parameters, width, height);
 
         final int rawSize = Math.min(width * 2 / 3, height * 2 / 3);
         final int frameSize = Math.max(MIN_FRAME_SIZE, Math.min(MAX_FRAME_SIZE, rawSize));
@@ -97,9 +97,25 @@ public final class CameraManager {
         final int leftOffset = (width - frameSize) / 2;
         final int topOffset = (height - frameSize) / 2;
         frame = new Rect(leftOffset, topOffset, leftOffset + frameSize, topOffset + frameSize);
-        framePreview = new RectF(frame.left * cameraResolution.width / width,
-                frame.top * cameraResolution.height / height, frame.right * cameraResolution.width / width,
-                frame.bottom * cameraResolution.height / height);
+
+        float widthFactor;
+        float heightFactor;
+        Rect orientedFrame;
+        boolean isTexturePortrait = width < height;
+        boolean isCameraPortrait = cameraResolution.width < cameraResolution.height;
+        if (isTexturePortrait == isCameraPortrait) {
+            widthFactor = (float)cameraResolution.width / width;
+            heightFactor = (float)cameraResolution.height / height;
+            orientedFrame = new Rect(frame);
+        } else {
+            widthFactor = (float)cameraResolution.width / height;
+            heightFactor = (float)cameraResolution.height / width;
+            // Swap X and Y coordinates to flip frame to the same orientation as cameraResolution
+            orientedFrame = new Rect(frame.top, frame.left, frame.bottom, frame.right);
+        }
+
+        framePreview = new RectF(orientedFrame.left * widthFactor, orientedFrame.top * heightFactor,
+                orientedFrame.right * widthFactor, orientedFrame.bottom * heightFactor);
 
         final String savedParameters = parameters == null ? null : parameters.flatten();
 
@@ -244,7 +260,7 @@ public final class CameraManager {
         camera.setParameters(parameters);
     }
 
-    public void requestPreviewFrame(final android.hardware.Camera.PreviewCallback callback) {
+    public void requestPreviewFrame(final Camera.PreviewCallback callback) {
         try {
             camera.setOneShotPreviewCallback(callback);
         } catch (final RuntimeException x) {
@@ -256,6 +272,11 @@ public final class CameraManager {
         return new PlanarYUVLuminanceSource(data, cameraResolution.width, cameraResolution.height,
                 (int) framePreview.left, (int) framePreview.top, (int) framePreview.width(),
                 (int) framePreview.height(), false);
+    }
+
+    public void setTorch(final boolean enabled) {
+        if (enabled != getTorchEnabled(camera))
+            setTorchEnabled(camera, enabled);
     }
 
     private static boolean getTorchEnabled(final Camera camera) {
@@ -296,10 +317,5 @@ public final class CameraManager {
                 return valueToFind;
 
         return null;
-    }
-
-    public void setTorch(final boolean enabled) {
-        if (enabled != getTorchEnabled(camera))
-            setTorchEnabled(camera, enabled);
     }
 }
