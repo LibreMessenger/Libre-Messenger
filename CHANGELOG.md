@@ -144,6 +144,7 @@
 * Icons for attach menu
 * send typing notifications in private, non-anonymous MUCs
 * change media directory names
+* keep OTR, but without further development and support, just for compatibility
 * bug fixes
 
 #### Version 1.16.5

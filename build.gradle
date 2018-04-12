@@ -35,7 +35,7 @@ configurations {
 }
 
 ext {
-    supportLibVersion = '27.1.0'
+    supportLibVersion = '27.1.1'
 }
 
 dependencies {
@@ -87,8 +87,8 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
 
-        versionCode 224
-        versionName "2.0.0 beta (2018-04-11)"
+        versionCode 225
+        versionName "2.0.0 beta (2018-04-12)"
 
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"
@@ -120,13 +120,6 @@ android {
     productFlavors {
         standardPush
         standard
-        open {
-            buildConfigField("String", "UPDATE_URL", '"https://xmpp.pix-art.de/Pix-Art_Messenger/update/open/"')
-            applicationId "de.pixart.openmessenger"
-            resValue "string", "applicationId", applicationId
-            resValue "string", "app_name", "Pix-Art Messenger"
-            dimension "distribution"
-        }
     }
     if (project.hasProperty('mStoreFile') &&
             project.hasProperty('mStorePassword') &&
