@@ -40,6 +40,37 @@ public class BarcodeProvider extends ContentProvider implements ServiceConnectio
     private final Object lock = new Object();
 
     private XmppConnectionService mXmppConnectionService;
+    private boolean mBindingInProcess = false;
+
+    public static Uri getUriForAccount(Context context, Account account) {
+        final String packageId = context.getPackageName();
+        return Uri.parse("content://" + packageId + AUTHORITY + "/" + account.getJid().asBareJid() + ".png");
+    }
+
+    public static Bitmap create2dBarcodeBitmap(String input, int size) {
+        try {
+            final QRCodeWriter barcodeWriter = new QRCodeWriter();
+            final Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
+            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.M);
+            hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+            final BitMatrix result = barcodeWriter.encode(input, BarcodeFormat.QR_CODE, size, size, hints);
+            final int width = result.getWidth();
+            final int height = result.getHeight();
+            final int[] pixels = new int[width * height];
+            for (int y = 0; y < height; y++) {
+                final int offset = y * width;
+                for (int x = 0; x < width; x++) {
+                    pixels[offset + x] = result.get(x, y) ? Color.BLACK : Color.WHITE;
+                }
+            }
+            final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+            return bitmap;
+        } catch (final Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     @Override
     public boolean onCreate() {
@@ -112,7 +143,7 @@ public class BarcodeProvider extends ContentProvider implements ServiceConnectio
                             outputStream.close();
                             outputStream.flush();
                         }
-                        return ParcelFileDescriptor.open(file,ParcelFileDescriptor.MODE_READ_ONLY);
+                        return ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY);
                     }
                 } catch (Exception e) {
                     throw new FileNotFoundException();
@@ -124,14 +155,19 @@ public class BarcodeProvider extends ContentProvider implements ServiceConnectio
 
     private boolean connectAndWait() {
         Intent intent = new Intent(getContext(), XmppConnectionService.class);
-        intent.setAction("contact_chooser");
+        intent.setAction(this.getClass().getSimpleName());
         Context context = getContext();
         if (context != null) {
-            context.startService(intent);
-            context.bindService(intent, this, Context.BIND_AUTO_CREATE);
+            synchronized (this) {
+                if (mXmppConnectionService == null && !mBindingInProcess) {
+                    Log.d(Config.LOGTAG, "calling to bind service");
+                    context.startService(intent);
+                    context.bindService(intent, this, Context.BIND_AUTO_CREATE);
+                    this.mBindingInProcess = true;
+                }
+            }
             try {
                 waitForService();
-                Log.d(Config.LOGTAG, "service initialized");
                 return true;
             } catch (InterruptedException e) {
                 return false;
@@ -144,16 +180,21 @@ public class BarcodeProvider extends ContentProvider implements ServiceConnectio
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
-        XmppConnectionService.XmppConnectionBinder binder = (XmppConnectionService.XmppConnectionBinder) service;
-        mXmppConnectionService = binder.getService();
-        synchronized (this.lock) {
-            lock.notifyAll();
+        synchronized (this) {
+            XmppConnectionService.XmppConnectionBinder binder = (XmppConnectionService.XmppConnectionBinder) service;
+            mXmppConnectionService = binder.getService();
+            mBindingInProcess = false;
+            synchronized (this.lock) {
+                lock.notifyAll();
+            }
         }
     }
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
-        mXmppConnectionService = null;
+        synchronized (this) {
+            mXmppConnectionService = null;
+        }
     }
 
     private void waitForService() throws InterruptedException {
@@ -161,35 +202,8 @@ public class BarcodeProvider extends ContentProvider implements ServiceConnectio
             synchronized (this.lock) {
                 lock.wait();
             }
-        }
-    }
-
-    public static Uri getUriForAccount(Context context, Account account) {
-        final String packageId = context.getPackageName();
-        return Uri.parse("content://" + packageId + AUTHORITY + "/" + account.getJid().asBareJid() + ".png");
-    }
-
-    public static Bitmap create2dBarcodeBitmap(String input, int size) {
-        try {
-            final QRCodeWriter barcodeWriter = new QRCodeWriter();
-            final Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
-            hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.M);
-            final BitMatrix result = barcodeWriter.encode(input, BarcodeFormat.QR_CODE, size, size, hints);
-            final int width = result.getWidth();
-            final int height = result.getHeight();
-            final int[] pixels = new int[width * height];
-            for (int y = 0; y < height; y++) {
-                final int offset = y * width;
-                for (int x = 0; x < width; x++) {
-                    pixels[offset + x] = result.get(x, y) ? Color.BLACK : Color.WHITE;
-                }
-            }
-            final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
-            return bitmap;
-        } catch (final Exception e) {
-            e.printStackTrace();
-            return null;
+        } else {
+            Log.d(Config.LOGTAG, "not waiting for service because already initialized");
         }
     }
 }
