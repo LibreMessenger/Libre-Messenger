@@ -104,6 +104,7 @@ import de.pixart.messenger.ui.util.SendButtonAction;
 import de.pixart.messenger.ui.util.SendButtonTool;
 import de.pixart.messenger.ui.widget.EditMessage;
 import de.pixart.messenger.utils.FileUtils;
+import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import de.pixart.messenger.utils.MessageUtils;
 import de.pixart.messenger.utils.NickValidityChecker;
 import de.pixart.messenger.utils.StylingHelper;
@@ -1378,7 +1379,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        if (conversation == null) {
+        if (MenuDoubleTabUtil.shouldIgnoreTap()) {
+            return false;
+        } else if (conversation == null) {
             return super.onOptionsItemSelected(item);
         }
         switch (item.getItemId()) {

@@ -31,6 +31,7 @@ import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.services.XmppConnectionService.OnAccountUpdate;
 import de.pixart.messenger.ui.adapter.AccountAdapter;
+import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import de.pixart.messenger.xmpp.XmppConnection;
 import rocks.xmpp.addr.Jid;
 
@@ -188,6 +189,9 @@ public class ManageAccountActivity extends XmppActivity implements OnAccountUpda
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (MenuDoubleTabUtil.shouldIgnoreTap()) {
+            return false;
+        }
         switch (item.getItemId()) {
             case R.id.action_add_account:
                 startActivity(new Intent(getApplicationContext(),

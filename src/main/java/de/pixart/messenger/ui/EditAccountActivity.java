@@ -65,6 +65,7 @@ import de.pixart.messenger.ui.adapter.KnownHostsAdapter;
 import de.pixart.messenger.ui.adapter.PresenceTemplateAdapter;
 import de.pixart.messenger.ui.util.PendingItem;
 import de.pixart.messenger.utils.CryptoHelper;
+import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xml.Element;
@@ -788,6 +789,9 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
+        if (MenuDoubleTabUtil.shouldIgnoreTap()) {
+            return false;
+        }
         switch (item.getItemId()) {
             case R.id.mgmt_account_reconnect:
                 XmppConnection connection = mAccount.getXmppConnection();

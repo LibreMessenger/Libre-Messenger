@@ -39,10 +39,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -76,6 +78,7 @@ import de.pixart.messenger.services.XmppConnectionService.XmppConnectionBinder;
 import de.pixart.messenger.ui.util.PresenceSelector;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.ExceptionHelper;
+import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import de.pixart.messenger.xmpp.OnKeyStatusUpdated;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import rocks.xmpp.addr.Jid;
@@ -1020,6 +1023,14 @@ public abstract class XmppActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
+    }
+
+    @Override
+    public boolean onMenuOpened(int id, Menu menu) {
+        if (id == AppCompatDelegate.FEATURE_SUPPORT_ACTION_BAR && menu != null) {
+            MenuDoubleTabUtil.recordMenuOpen();
+        }
+        return super.onMenuOpened(id, menu);
     }
 
     protected void showQrCode() {

@@ -46,6 +46,7 @@ import de.pixart.messenger.services.XmppConnectionService.OnAccountUpdate;
 import de.pixart.messenger.services.XmppConnectionService.OnRosterUpdate;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.IrregularUnicodeDetector;
+import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.utils.TimeframeUtils;
 import de.pixart.messenger.utils.UIHelper;
@@ -60,7 +61,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
 
     private Contact contact;
     private Conversation mConversation;
-
+    ActivityContactDetailsBinding binding;
     private DialogInterface.OnClickListener removeFromRoster = new DialogInterface.OnClickListener() {
 
         @Override
@@ -107,9 +108,6 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             }
         }
     };
-
-    ActivityContactDetailsBinding binding;
-
     private Jid accountJid;
     private Jid contactJid;
     private boolean showDynamicTags = false;
@@ -287,6 +285,9 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem menuItem) {
+        if (MenuDoubleTabUtil.shouldIgnoreTap()) {
+            return false;
+        }
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setNegativeButton(getString(R.string.cancel), null);
         switch (menuItem.getItemId()) {

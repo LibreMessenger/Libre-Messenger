@@ -307,6 +307,9 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
+        if (MenuDoubleTabUtil.shouldIgnoreTap()) {
+            return false;
+        }
         switch (menuItem.getItemId()) {
             case android.R.id.home:
                 finish();

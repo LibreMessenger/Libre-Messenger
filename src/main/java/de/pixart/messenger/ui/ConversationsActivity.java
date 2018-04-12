@@ -84,6 +84,7 @@ import de.pixart.messenger.ui.interfaces.OnConversationsListItemUpdated;
 import de.pixart.messenger.ui.util.ActivityResult;
 import de.pixart.messenger.ui.util.PendingItem;
 import de.pixart.messenger.utils.ExceptionHelper;
+import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
@@ -505,6 +506,9 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (MenuDoubleTabUtil.shouldIgnoreTap()) {
+            return false;
+        }
         switch (item.getItemId()) {
             case android.R.id.home:
                 FragmentManager fm = getFragmentManager();

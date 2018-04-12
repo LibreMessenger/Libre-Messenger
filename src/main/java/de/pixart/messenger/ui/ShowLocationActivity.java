@@ -26,6 +26,7 @@ import java.util.Locale;
 
 import de.pixart.messenger.R;
 import de.pixart.messenger.services.EmojiService;
+import de.pixart.messenger.utils.MenuDoubleTabUtil;
 
 import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
 
@@ -107,6 +108,9 @@ public class ShowLocationActivity extends XmppActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (MenuDoubleTabUtil.shouldIgnoreTap()) {
+            return false;
+        }
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();

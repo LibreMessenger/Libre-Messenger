@@ -70,6 +70,7 @@ import de.pixart.messenger.services.XmppConnectionService.OnRosterUpdate;
 import de.pixart.messenger.ui.adapter.ListItemAdapter;
 import de.pixart.messenger.ui.interfaces.OnBackendConnected;
 import de.pixart.messenger.ui.util.PendingItem;
+import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.XmppConnection;
@@ -538,6 +539,9 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (MenuDoubleTabUtil.shouldIgnoreTap()) {
+            return false;
+        }
         switch (item.getItemId()) {
             case R.id.action_join_conference:
                 showJoinConferenceDialog(null);
