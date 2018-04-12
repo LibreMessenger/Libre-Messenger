@@ -7,6 +7,7 @@
 * rework UI for status message
 * added splash screen at startup
 * use toolbar instead of actionbar
+* keep OTR, but without further development and support, just for compatibility
 * bug fixes
 
 #### Version 1.22.1
@@ -144,7 +145,6 @@
 * Icons for attach menu
 * send typing notifications in private, non-anonymous MUCs
 * change media directory names
-* keep OTR, but without further development and support, just for compatibility
 * bug fixes
 
 #### Version 1.16.5
