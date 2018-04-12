@@ -2052,11 +2052,11 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         if (this.reInit(conversation, extras != null)) {
             if (extras != null) {
                 processExtras(extras);
-                this.reInitRequiredOnStart = false;
-            } else {
-                this.reInitRequiredOnStart = true;
-                pendingExtras.push(extras);
             }
+            this.reInitRequiredOnStart = false;
+        } else {
+            this.reInitRequiredOnStart = true;
+            pendingExtras.push(extras);
         }
     }
 
@@ -2103,7 +2103,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 final int bottom = Math.max(0, this.messageList.size() - 1);
                 final int pos;
                 if (first == null) {
-                    Log.d(Config.LOGTAG, "first unread message was null");
                     pos = bottom;
                 } else {
                     int i = getIndexOf(first.getUuid(), this.messageList);
@@ -2113,48 +2112,48 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             }
         }
 
-        gesturesDetector.setOnFingerGestureListener(new SimpleFingerGestures.OnFingerGestureListener() {
-                @Override
-                public boolean onSwipeUp(int fingers, long gestureDuration, double gestureDistance) {
-                    return false;
-                }
-
-                @Override
-                public boolean onSwipeDown(int fingers, long gestureDuration, double gestureDistance) {
-                    return false;
-                }
-
-                @Override
-                public boolean onSwipeLeft(int fingers, long gestureDuration, double gestureDistance) {
-                    return false;
-                }
-
-                @Override
-                public boolean onSwipeRight(int fingers, long gestureDuration, double gestureDistance) {
-                    activity.onBackPressed();
-                    return false;
-                }
-
-                @Override
-                public boolean onPinch(int fingers, long gestureDuration, double gestureDistance) {
-                    return false;
-                }
-
-                @Override
-                public boolean onUnpinch(int fingers, long gestureDuration, double gestureDistance) {
-                    return false;
-                }
-
-                @Override
-                public boolean onDoubleTap(int fingers) {
-                    return false;
-                }
-            });
-        this.binding.messagesView.setOnTouchListener(gesturesDetector);
-
         activity.onConversationRead(this.conversation);
         //TODO if we only do this when this fragment is running on main it won't *bing* in tablet layout which might be unnecessary since we can *see* it
         activity.xmppConnectionService.getNotificationService().setOpenConversation(this.conversation);
+
+        gesturesDetector.setOnFingerGestureListener(new SimpleFingerGestures.OnFingerGestureListener() {
+            @Override
+            public boolean onSwipeUp(int fingers, long gestureDuration, double gestureDistance) {
+                return false;
+            }
+
+            @Override
+            public boolean onSwipeDown(int fingers, long gestureDuration, double gestureDistance) {
+                return false;
+            }
+
+            @Override
+            public boolean onSwipeLeft(int fingers, long gestureDuration, double gestureDistance) {
+                return false;
+            }
+
+            @Override
+            public boolean onSwipeRight(int fingers, long gestureDuration, double gestureDistance) {
+                activity.onBackPressed();
+                return false;
+            }
+
+            @Override
+            public boolean onPinch(int fingers, long gestureDuration, double gestureDistance) {
+                return false;
+            }
+
+            @Override
+            public boolean onUnpinch(int fingers, long gestureDuration, double gestureDistance) {
+                return false;
+            }
+
+            @Override
+            public boolean onDoubleTap(int fingers) {
+                return false;
+            }
+        });
+        this.binding.messagesView.setOnTouchListener(gesturesDetector);
         return true;
     }
 
