@@ -196,37 +196,30 @@ public class XmppConnectionService extends Service {
     private OnMessagePacketReceived mMessageParser = new MessageParser(this);
     private OnPresencePacketReceived mPresenceParser = new PresenceParser(this);
     private IqParser mIqParser = new IqParser(this);
-    private OnIqPacketReceived mDefaultIqHandler = new OnIqPacketReceived() {
-        @Override
-        public void onIqPacketReceived(Account account, IqPacket packet) {
-            if (packet.getType() != IqPacket.TYPE.RESULT) {
-                Element error = packet.findChild("error");
-                String text = error != null ? error.findChildContent("text") : null;
-                if (text != null) {
-                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": received iq error - " + text);
-                }
+    private final OnIqPacketReceived mDefaultIqHandler = (account, packet) -> {
+        if (packet.getType() != IqPacket.TYPE.RESULT) {
+            Element error = packet.findChild("error");
+            String text = error != null ? error.findChildContent("text") : null;
+            if (text != null) {
+                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": received iq error - " + text);
             }
         }
     };
     private MessageGenerator mMessageGenerator = new MessageGenerator(this);
-    public OnContactStatusChanged onContactStatusChanged = new OnContactStatusChanged() {
-
-        @Override
-        public void onContactStatusChanged(Contact contact, boolean online) {
-            Conversation conversation = find(getConversations(), contact);
-            if (conversation != null) {
-                if (online) {
-                    conversation.endOtrIfNeeded();
-                    if (contact.getPresences().size() == 1) {
-                        sendUnsentMessages(conversation);
-                    }
-                } else {
-                    //check if the resource we are haveing a conversation with is still online
-                    if (conversation.hasValidOtrSession()) {
-                        String otrResource = conversation.getOtrSession().getSessionID().getUserID();
-                        if (!(Arrays.asList(contact.getPresences().toResourceArray()).contains(otrResource))) {
-                            conversation.endOtrIfNeeded();
-                        }
+    public OnContactStatusChanged onContactStatusChanged = (contact, online) -> {
+        Conversation conversation = find(getConversations(), contact);
+        if (conversation != null) {
+            if (online) {
+                conversation.endOtrIfNeeded();
+                if (contact.getPresences().size() == 1) {
+                    sendUnsentMessages(conversation);
+                }
+            } else {
+                //check if the resource we are haveing a conversation with is still online
+                if (conversation.hasValidOtrSession()) {
+                    String otrResource = conversation.getOtrSession().getSessionID().getUserID();
+                    if (!(Arrays.asList(contact.getPresences().toResourceArray()).contains(otrResource))) {
+                        conversation.endOtrIfNeeded();
                     }
                 }
             }
@@ -1102,7 +1095,7 @@ public class XmppConnectionService extends Service {
         restoreFromDatabase();
 
         getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, contactObserver);
-        new Thread(() -> fileObserver.startWatching()).start();
+        new Thread(fileObserver::startWatching).start();
         if (Config.supportOpenPgp()) {
             this.pgpServiceConnection = new OpenPgpServiceConnection(this, "org.sufficientlysecure.keychain", new OpenPgpServiceConnection.OnBound() {
                 @Override
@@ -1640,6 +1633,10 @@ public class XmppConnectionService extends Service {
                 updateAccountUi();
             }
         }));
+    }
+
+    public void syncRoster(final Account account) {
+        mDatabaseWriterExecutor.execute(() -> databaseBackend.writeRoster(account.getRoster()));
     }
 
     public List<Conversation> getConversations() {
@@ -3036,13 +3033,13 @@ public class XmppConnectionService extends Service {
             iq.query(Namespace.ROSTER).addChild(contact.asElement());
             account.getXmppConnection().sendIqPacket(iq, mDefaultIqHandler);
             if (sendUpdates) {
-                sendPresencePacket(account,
-                        mPresenceGenerator.sendPresenceUpdatesTo(contact));
+                sendPresencePacket(account, mPresenceGenerator.sendPresenceUpdatesTo(contact));
             }
             if (ask) {
-                sendPresencePacket(account,
-                        mPresenceGenerator.requestPresenceUpdatesFrom(contact));
+                sendPresencePacket(account, mPresenceGenerator.requestPresenceUpdatesFrom(contact));
             }
+        } else {
+            syncRoster(contact.getAccount());
         }
     }
 
