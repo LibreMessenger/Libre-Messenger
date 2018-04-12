@@ -994,18 +994,17 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 selectPresenceToAttachFile(choice);
                 break;
             case ATTACHMENT_CHOICE_CHOOSE_IMAGE:
-                List<Uri> imageUris = AttachmentTool.extractUriFromIntent(data);
-                int ImageUrisCount = imageUris.size();
-                if (activity.xmppConnectionServiceBound) {
-                    if (ImageUrisCount == 1) {
-                        Uri uri = imageUris.get(0);
-                        Log.d(Config.LOGTAG, "ConversationsActivity.onActivityResult() - attaching image to conversations. CHOOSE_IMAGE");
-                        attachImageToConversation(conversation, uri, false);
-                    } else {
-                        for (Iterator<Uri> i = imageUris.iterator(); i.hasNext(); i.remove()) {
-                            Log.d(Config.LOGTAG, "ConversationsActivity.onActivityResult() - attaching images to conversations. CHOOSE_IMAGES");
-                            attachImagesToConversation(conversation, i.next());
-                        }
+                final List<Uri> imageUris = AttachmentTool.extractUriFromIntent(data);
+                final int ImageUrisCount = imageUris.size();
+                Log.d(Config.LOGTAG, "ConversationsActivity.onActivityResult() - attaching image - number of uris: " + ImageUrisCount);
+                if (ImageUrisCount == 1) {
+                    Uri uri = imageUris.get(0);
+                    Log.d(Config.LOGTAG, "ConversationsActivity.onActivityResult() - attaching image to conversations. CHOOSE_IMAGE");
+                    attachImageToConversation(conversation, uri, false);
+                } else {
+                    for (Iterator<Uri> i = imageUris.iterator(); i.hasNext(); i.remove()) {
+                        Log.d(Config.LOGTAG, "ConversationsActivity.onActivityResult() - attaching images to conversations. CHOOSE_IMAGES");
+                        attachImagesToConversation(conversation, i.next());
                     }
                 }
                 break;
@@ -2113,8 +2112,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 setSelection(pos);
             }
         }
-        // todo add swipe listener --> causes strange scrolling in chats
-        //this.binding.messagesView.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+
         gesturesDetector.setOnFingerGestureListener(new SimpleFingerGestures.OnFingerGestureListener() {
                 @Override
                 public boolean onSwipeUp(int fingers, long gestureDuration, double gestureDistance) {
