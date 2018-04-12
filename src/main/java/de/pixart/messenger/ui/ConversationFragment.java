@@ -1561,15 +1561,11 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     }
                     selectPresenceToAttachFile(attachmentChoice);
                 } else {
-                    final ConversationFragment fragment = (ConversationFragment) getFragmentManager()
-                            .findFragmentByTag("conversation");
-                    if (fragment != null) {
-                        fragment.showNoPGPKeyDialog(false, (dialog, which) -> {
-                            conversation.setNextEncryption(Message.ENCRYPTION_NONE);
-                            activity.xmppConnectionService.updateConversation(conversation);
-                            selectPresenceToAttachFile(attachmentChoice);
-                        });
-                    }
+                    showNoPGPKeyDialog(false, (dialog, which) -> {
+                        conversation.setNextEncryption(Message.ENCRYPTION_NONE);
+                        activity.xmppConnectionService.updateConversation(conversation);
+                        selectPresenceToAttachFile(attachmentChoice);
+                    });
                 }
             } else {
                 activity.showInstallPgpDialog();

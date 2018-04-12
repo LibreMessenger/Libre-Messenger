@@ -758,13 +758,14 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
             defaultEncryption = Message.ENCRYPTION_NONE;
         }
         int encryption = this.getIntAttribute(ATTRIBUTE_NEXT_ENCRYPTION, defaultEncryption);
-        // don't ignore OTR
-        /*if (encryption == Message.ENCRYPTION_OTR) {
+
+        if (encryption == Message.ENCRYPTION_OTR) {
+            return encryption;
+        } else if (encryption < 0) {
             return defaultEncryption;
         } else {
             return encryption;
-        }*/
-        return  encryption;
+        }
     }
 
     public void setNextEncryption(int encryption) {
