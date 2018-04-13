@@ -259,6 +259,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             showInactiveOmemo = !showInactiveOmemo;
             populateView();
         });
+        binding.addContactButton.setOnClickListener(v -> showAddToRosterDialog(contact));
         this.mNotifyStatusButton = findViewById(R.id.notification_status_button);
         this.mNotifyStatusButton.setOnClickListener(this.mNotifyStatusClickListener);
         this.mNotifyStatusText = findViewById(R.id.notification_status_text);
