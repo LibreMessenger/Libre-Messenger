@@ -2,6 +2,9 @@ package de.pixart.messenger;
 
 import android.graphics.Bitmap;
 
+import java.util.Collections;
+import java.util.List;
+
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 import rocks.xmpp.addr.Jid;
 
@@ -168,6 +171,15 @@ public final class Config {
             "_DES_",
             "_MD5",
     };
+
+    public static class OMEMO_EXCEPTIONS {
+        //if the own account matches one of the following domains OMEMO won’t be turned on automatically
+        public static final List<String> ACCOUNT_DOMAINS = Collections.singletonList("s.ms");
+
+        //if the contacts domain matches one of the following domains OMEMO won’t be turned on automatically
+        //can be used for well known, widely used gateways
+        public static final List<String> CONTACT_DOMAINS = Collections.singletonList("cheogram.com");
+    }
 
     private Config() {
     }

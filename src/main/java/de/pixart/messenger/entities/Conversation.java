@@ -753,10 +753,9 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
         if (!Config.supportOmemo() && !Config.supportOpenPgp() && !Config.supportOtr()) {
             return Message.ENCRYPTION_NONE;
         }
-        AxolotlService axolotlService = account.getAxolotlService();
         if (contactJid.asBareJid().equals(Config.BUG_REPORTS)) {
             defaultEncryption = Message.ENCRYPTION_NONE;
-        } else if (axolotlService != null && axolotlService.isConversationAxolotlCapable(this)) {
+        } else if (suitableForOmemoByDefault(this)) {
             defaultEncryption = Message.ENCRYPTION_AXOLOTL;
         } else {
             defaultEncryption = Message.ENCRYPTION_NONE;
@@ -770,6 +769,16 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
         } else {
             return encryption;
         }
+    }
+
+    private static boolean suitableForOmemoByDefault(final Conversation conversation) {
+        final String contact = conversation.getJid().getDomain();
+        final String account = conversation.getAccount().getServer();
+        if (Config.OMEMO_EXCEPTIONS.CONTACT_DOMAINS.contains(contact) || Config.OMEMO_EXCEPTIONS.ACCOUNT_DOMAINS.contains(account)) {
+            return false;
+        }
+        final AxolotlService axolotlService = conversation.getAccount().getAxolotlService();
+        return axolotlService != null && axolotlService.isConversationAxolotlCapable(conversation);
     }
 
     public void setNextEncryption(int encryption) {
