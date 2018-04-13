@@ -11,6 +11,8 @@
     <dimen name="audio_player_width">224dp</dimen>
     <dimen name="avatar_item_distance">16dp</dimen>
 
+    <dimen name="toolbar_elevation">4dp</dimen>
+
     <dimen name="input_label_vertical_spacing">4dp</dimen>
     <dimen name="input_label_horizontal_spacing">4dp</dimen>
 
