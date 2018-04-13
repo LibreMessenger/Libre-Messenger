@@ -74,15 +74,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/cancel"
-                android:textColor="@color/primary" />
+                android:text="@string/cancel" />
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="fill_parent"
                 android:layout_marginBottom="7dp"
-                android:layout_marginTop="7dp"
-                android:background="@color/primary" />
+                android:layout_marginTop="7dp" />
 
             <Button
                 android:id="@+id/share_button"
@@ -91,8 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:enabled="false"
-                android:text="@string/share"
-                android:textColor="@color/primary" />
+                android:text="@string/share" />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

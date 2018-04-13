@@ -6,17 +6,30 @@
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
         <item name="popupOverlayStyle">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="colorControlNormal">@color/accent</item>
+        <item name="colorControlActivated">@color/accent</item>
+        <item name="text_Color_Main">@color/realblack</item>
 
         <item name="color_background_primary">@color/grey50</item>
         <item name="color_background_secondary">@color/grey200</item>
         <item name="color_warning">@color/red_a700</item>
+
+        <item name="color_bubble_light">@color/lightwhite</item>
+        <item name="color_bubble_blue">@color/lightblue</item>
+        <item name="color_bubble_date">@color/lightgreen</item>
+        <item name="color_bubble_warning">@color/lightred</item>
+
+        <item name="color_border">@color/grey500</item>
 
         <item name="windowActionModeOverlay">true</item>
         <item name="android:actionModeBackground">@color/accent</item>
 
         <item type="reference" name="android:homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
 
+        <item name="TextSizeTitle">20sp</item>
+        <item name="TextSizeCaption">12sp</item>
         <item name="TextSizeInfo">12sp</item>
+        <item name="TextSizeInput">14sp</item>
         <item name="TextSizeBody">14sp</item>
         <item name="TextSeparation">5sp</item>
         <item name="IconSize">16sp</item>
@@ -48,6 +61,15 @@
         <item type="reference" name="icon_import_export">@drawable/ic_import_export_white_24dp</item>
         <item type="reference" name="icon_share">@drawable/ic_share_white_24dp</item>
         <item type="reference" name="icon_scan_qr_code">@drawable/ic_barcode_scan_white_24dp</item>
+
+        <!-- settings-->
+        <item type="reference" name="ic_settings_ui">@drawable/ic_image_black_24dp</item>
+        <item type="reference" name="ic_settings_notifications">@drawable/ic_notifications_black_24dp</item>
+        <item type="reference" name="ic_settings_attachments">@drawable/ic_attachment_black_24dp</item>
+        <item type="reference" name="ic_settings_status">@drawable/ic_new_releases_black_24dp</item>
+        <item type="reference" name="ic_settings_security">@drawable/ic_security_black_24dp</item>
+        <item type="reference" name="ic_settings_expert">@drawable/ic_settings_black_24dp</item>
+
         <item name="dialog_horizontal_padding">16dp</item>
         <item name="dialog_vertical_padding">16dp</item>
         <item type="float" name="icon_alpha">0.54</item>
@@ -71,6 +93,7 @@
         <item type="reference" name="icon_notifications_paused">@drawable/ic_notifications_paused_black_24dp</item>
         <item type="reference" name="icon_notifications_none">@drawable/ic_notifications_none_black_24dp</item>
         <item type="reference" name="icon_enable_undecided_device">@drawable/ic_new_releases_black_24dp</item>
+        <item type="reference" name="ic_settings_about">@drawable/ic_help_black_24dp</item>
     </style>
 
     <style name="ConversationsTheme.Dark" parent="Theme.AppCompat.NoActionBar">
@@ -78,17 +101,32 @@
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
         <item name="popupOverlayStyle">@style/ThemeOverlay.AppCompat.Dark</item>
+        <item name="colorControlNormal">@color/accent</item>
+        <item name="colorControlActivated">@color/accent</item>
+        <item name="text_Color_Main">@color/realwhite</item>
 
-        <item name="color_background_primary">@color/grey800</item>
-        <item name="color_background_secondary">@color/grey900</item>
-        <item name="color_warning">@color/red_a100</item>
+        <item name="color_background_primary">@color/grey900</item>
+        <item name="color_background_secondary">@color/realblack</item>
+        <item name="color_warning">@color/red_a700</item>
+
+        <item name="color_bubble_light">@color/darkwhite</item>
+        <item name="color_bubble_blue">@color/darkblue</item>
+        <item name="color_bubble_date">@color/darkgreen</item>
+        <item name="color_bubble_warning">@color/darkred</item>
+
+        <item name="color_border">@color/grey800</item>
 
         <item name="windowActionModeOverlay">true</item>
         <item name="android:actionModeBackground">@color/accent</item>
 
+        <item name="TextSizeTitle">20sp</item>
+        <item name="TextSizeCaption">12sp</item>
         <item name="TextSizeInfo">12sp</item>
+        <item name="TextSizeInput">14sp</item>
+        <item name="TextSizeBody">14sp</item>
         <item name="TextSeparation">5sp</item>
-        <item name="IconSize">18sp</item>
+        <item name="IconSize">16sp</item>
+        <item name="TextSizeHeadline">18sp</item>
 
         <item name="divider">@color/white12</item>
 
@@ -142,11 +180,23 @@
         <item type="reference" name="icon_notifications_paused">@drawable/ic_notifications_paused_white_24dp</item>
         <item type="reference" name="icon_notifications_none">@drawable/ic_notifications_none_white_24dp</item>
         <item type="reference" name="icon_enable_undecided_device">@drawable/ic_new_releases_white_24dp</item>
+
+        <!-- settings-->
+        <item type="reference" name="ic_settings_ui">@drawable/ic_image_white_24dp</item>
+        <item type="reference" name="ic_settings_notifications">@drawable/ic_notifications_white_24dp</item>
+        <item type="reference" name="ic_settings_attachments">@drawable/ic_attachment_white_24dp</item>
+        <item type="reference" name="ic_settings_status">@drawable/ic_new_releases_white_24dp</item>
+        <item type="reference" name="ic_settings_security">@drawable/ic_security_white_24dp</item>
+        <item type="reference" name="ic_settings_expert">@drawable/ic_settings_white_24dp</item>
+        <item type="reference" name="ic_settings_about">@drawable/ic_help_circle_white_24dp</item>
     </style>
 
 
     <style name="ConversationsTheme.LargerText" parent="ConversationsTheme">
+        <item name="TextSizeTitle">22sp</item>
+        <item name="TextSizeCaption">14sp</item>
         <item name="TextSizeInfo">14sp</item>
+        <item name="TextSizeInput">16sp</item>
         <item name="TextSizeBody">16sp</item>
         <item name="IconSize">18sp</item>
         <item name="TextSizeHeadline">20sp</item>
@@ -154,9 +204,32 @@
 
     <style name="ConversationsDialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+
         <item name="TextSizeInfo">12sp</item>
         <item name="TextSizeBody">14sp</item>
+        <item name="TextSizeInput">14sp</item>
         <item name="TextSizeHeadline">18sp</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="color_background_primary">@color/grey50</item>
+        <item name="color_background_secondary">@color/grey200</item>
+
+        <item name="android:background">@color/grey50</item>
+    </style>
+
+    <style name="ConversationsDialog.Dark" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="TextSizeInfo">12sp</item>
+        <item name="TextSizeBody">14sp</item>
+        <item name="TextSizeInput">14sp</item>
+        <item name="TextSizeHeadline">18sp</item>
+
+        <item name="colorAccent">@color/accent</item>
+        <item name="color_background_primary">@color/grey900</item>
+        <item name="color_background_secondary">@color/realblack</item>
+
+        <item name="android:background">@color/grey900</item>
     </style>
 
     <style name="ConversationsTheme.FullScreen" parent="@style/Theme.AppCompat.Light">

@@ -753,7 +753,6 @@
     <string name="mtm_connect_anyway">Do you want to connect anyway?</string>
     <string name="mtm_cert_details">Certificate details:</string>
     <string name="once">Once</string>
-    <string name="theme">Theme</string>
     <string name="qr_code_scanner_needs_access_to_camera">The QR code scanner needs access to the camera</string>
     <string name="pref_scroll_to_bottom_summary">Scroll down after sending a message</string>
     <string name="pref_scroll_to_bottom">Scroll to bottom</string>
@@ -778,4 +777,8 @@
     <string name="pref_omemo_setting_summary_default_off">OMEMO will have to be turned on explicitly for new conversations.</string>
     <string name="default_on">On by default</string>
     <string name="default_off">Off by default</string>
+    <string name="pref_theme_light">Light theme</string>
+    <string name="pref_theme_dark">Dark theme</string>
+    <string name="pref_theme_options_summary">Select the color palette</string>
+    <string name="pref_theme_options">Theme</string>
 </resources>

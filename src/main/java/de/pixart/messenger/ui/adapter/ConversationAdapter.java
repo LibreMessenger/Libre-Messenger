@@ -246,11 +246,11 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
                     viewHolder.name.setTextColor(ContextCompat.getColor(activity, R.color.notavailable));
                     break;
                 default:
-                    viewHolder.name.setTextColor(ContextCompat.getColor(activity, R.color.black87));
+                    viewHolder.name.setTextColor(Color.get(activity, R.attr.text_Color_Main));
                     break;
             }
         } else {
-            viewHolder.name.setTextColor(ContextCompat.getColor(activity, R.color.black87));
+            viewHolder.name.setTextColor(Color.get(activity, R.attr.text_Color_Main));
         }
 
         if (activity.xmppConnectionService.indicateReceived()) {

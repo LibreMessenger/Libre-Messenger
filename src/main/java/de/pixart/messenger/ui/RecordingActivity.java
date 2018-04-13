@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -25,7 +24,7 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.persistance.FileBackend;
 
-public class RecordingActivity extends AppCompatActivity implements View.OnClickListener {
+public class RecordingActivity extends XmppActivity implements View.OnClickListener {
 
     private TextView mTimerTextView;
     private Button mCancelButton;
@@ -51,6 +50,8 @@ public class RecordingActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recording);
+        this.mTheme = findTheme();
+        setTheme(this.mTheme);
         this.mTimerTextView = this.findViewById(R.id.timer);
         this.mCancelButton = this.findViewById(R.id.cancel_button);
         this.mCancelButton.setOnClickListener(this);
@@ -58,6 +59,12 @@ public class RecordingActivity extends AppCompatActivity implements View.OnClick
         this.mStopButton.setOnClickListener(this);
         this.setFinishOnTouchOutside(false);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        this.setTitle(R.string.attach_record_voice);
+    }
+
+    @Override
+    protected void refreshUiReal() {
+
     }
 
     @Override
@@ -77,6 +84,11 @@ public class RecordingActivity extends AppCompatActivity implements View.OnClick
         if (mRecorder != null) {
             stopRecording(false);
         }
+    }
+
+    @Override
+    void onBackendConnected() {
+
     }
 
     private boolean startRecording() {
@@ -160,6 +172,20 @@ public class RecordingActivity extends AppCompatActivity implements View.OnClick
                 setResult(Activity.RESULT_OK, new Intent().setData(uri));
                 finish();
                 break;
+        }
+    }
+
+    public boolean isDarkTheme() {
+        return this.mTheme == R.style.ConversationsDialog_Dark;
+    }
+
+    protected int findTheme() {
+        Boolean dark = getPreferences().getString(SettingsActivity.THEME, getResources().getString(R.string.theme)).equals("dark");
+
+        if (dark) {
+            return R.style.ConversationsDialog_Dark;
+        } else {
+            return R.style.ConversationsDialog;
         }
     }
 }

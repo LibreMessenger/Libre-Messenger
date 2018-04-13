@@ -8,7 +8,7 @@
             android:left="2dp"
             android:right="2dp"
             android:top="2dp" />
-        <solid android:color="@color/primary" />
+        <solid android:color="?attr/colorAccent" />
         <corners android:radius="6dp" />
     </shape>
 </item>

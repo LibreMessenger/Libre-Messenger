@@ -14,7 +14,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/grey50">
+            android:background="?attr/color_background_secondary">
 
             <LinearLayout
                 android:id="@+id/linearLayout"
@@ -53,7 +53,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="@string/import_text"
-                    android:textColor="@color/black87"
+                    android:textColor="?attr/text_Color_Main"
                     android:textSize="?attr/TextSizeBody"
                     android:visibility="gone" />
 
@@ -64,7 +64,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:text="@string/import_database"
-                    android:textColor="@color/accent"
+                    android:textColor="?attr/colorAccent"
                     android:visibility="gone" />
 
                 <Button
@@ -74,7 +74,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:text="@string/create_account"
-                    android:textColor="@color/accent" />
+                    android:textColor="?attr/colorAccent" />
 
                 <Button
                     android:id="@+id/use_existing_account"
@@ -83,7 +83,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:text="@string/use_existing_accout"
-                    android:textColor="@color/black54" />
+                    android:textColor="?attr/colorAccent" />
             </LinearLayout>
 
             <RelativeLayout

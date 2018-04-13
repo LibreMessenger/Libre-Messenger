@@ -14,8 +14,7 @@
 
         <ScrollView
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="@color/grey200">
+            android:layout_height="fill_parent">
 
             <LinearLayout
                 android:id="@+id/muc_main_layout"
@@ -42,15 +41,12 @@
                             android:id="@+id/conference_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentTop="true"
-                            android:layout_centerHorizontal="true"
                             android:layout_gravity="center_horizontal"
                             android:paddingBottom="5dp"
                             android:text="@string/conference_subject"
                             android:textAlignment="center"
-                            android:textColor="@color/black87"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
                             android:textIsSelectable="false"
-                            android:textSize="?attr/TextSizeHeadline"
                             android:textStyle="bold" />
 
                         <RelativeLayout
@@ -76,6 +72,7 @@
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
                                 android:layout_gravity="center_horizontal"
+                                android:alpha="?attr/icon_alpha"
                                 android:background="?attr/selectableItemBackgroundBorderless"
                                 android:padding="@dimen/image_button_padding"
                                 android:src="?attr/icon_settings" />
@@ -160,7 +157,7 @@
                                 android:layout_alignParentLeft="true"
                                 android:layout_alignParentRight="false"
                                 android:padding="1dp"
-                                app:riv_border_color="@color/grey500"
+                                app:riv_border_color="?attr/color_border"
                                 app:riv_border_width="1dp"
                                 app:riv_corner_radius="36dp" />
 

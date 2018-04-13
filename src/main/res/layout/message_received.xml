@@ -16,7 +16,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:scaleType="fitXY"
-        app:riv_border_color="@color/grey500"
+        app:riv_border_color="?attr/color_border"
         app:riv_border_width="1dip"
         app:riv_corner_radius="24dp" />
 
@@ -28,7 +28,7 @@
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:layout_toRightOf="@+id/message_photo"
-        android:background="@drawable/message_bubble_received_white"
+        android:background="@drawable/message_bubble_received_light"
         android:longClickable="true"
         android:minHeight="48dp">
 
@@ -63,8 +63,9 @@
                     android:layout_height="?attr/TextSizeInfo"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="4sp"
+                    android:alpha="0.70"
                     android:gravity="center_vertical"
-                    android:src="@drawable/ic_lock_blue_18dp" />
+                    android:src="@drawable/ic_lock_white_18dp" />
 
                 <ImageView
                     android:id="@+id/edit_indicator"
@@ -73,7 +74,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="4sp"
                     android:gravity="center_vertical"
-                    android:src="@drawable/ic_mode_edit_blue_18dp" />
+                    android:src="@drawable/ic_mode_edit_white_18dp" />
 
                 <TextView
                     android:id="@+id/message_time"

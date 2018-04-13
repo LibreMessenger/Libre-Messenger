@@ -188,11 +188,9 @@ public class ShareLocationActivity extends LocationActivity implements LocationL
     private void setShareButtonEnabled(final boolean enabled) {
         if (enabled) {
             this.mShareButton.setEnabled(true);
-            this.mShareButton.setTextColor(0xff2e4272);
             this.mShareButton.setText(R.string.share);
         } else {
             this.mShareButton.setEnabled(false);
-            this.mShareButton.setTextColor(0x8a000000);
             this.mShareButton.setText(R.string.locating);
         }
     }

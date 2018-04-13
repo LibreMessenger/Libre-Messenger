@@ -47,11 +47,13 @@
 
             <de.pixart.messenger.ui.widget.ImmediateAutoCompleteTextView
                 android:id="@+id/status_message"
+                style="@style/Widget.Conversations.EditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="@string/status_message"
-                android:inputType="textShortMessage"/>
+                android:inputType="textShortMessage"
+                android:textColor="?attr/text_Color_Main" />
         </android.support.design.widget.TextInputLayout>
 
     </LinearLayout>

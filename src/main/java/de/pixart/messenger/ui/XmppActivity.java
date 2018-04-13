@@ -412,16 +412,20 @@ public abstract class XmppActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.mTheme = findTheme();
+        setTheme(this.mTheme);
         metrics = getResources().getDisplayMetrics();
         ExceptionHelper.init(getApplicationContext());
         this.isCameraFeatureAvailable = getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
         mColorRed = ContextCompat.getColor(this, R.color.red800);
-        mColorWarningButton = ContextCompat.getColor(this, R.color.warning_button);
+        if (isDarkTheme()) {
+            mColorWarningButton = ContextCompat.getColor(this, R.color.warning_button_dark);
+        } else {
+            mColorWarningButton = ContextCompat.getColor(this, R.color.warning_button);
+        }
         mColorWhite = ContextCompat.getColor(this, R.color.white70);
         mColorOrange = ContextCompat.getColor(this, R.color.orange500);
         mColorGreen = ContextCompat.getColor(this, R.color.realgreen);
-        this.mTheme = findTheme();
-        setTheme(this.mTheme);
         this.mUsingEnterKey = usingEnterKey();
         mUseSubject = getPreferences().getBoolean("use_subject", getResources().getBoolean(R.bool.use_subject));
     }
@@ -1011,10 +1015,9 @@ public abstract class XmppActivity extends AppCompatActivity {
 
     protected int findTheme() {
         Boolean dark = getPreferences().getString(SettingsActivity.THEME, getResources().getString(R.string.theme)).equals("dark");
-        Boolean larger = getPreferences().getBoolean("use_larger_font", getResources().getBoolean(R.bool.use_larger_font));
 
-        if (larger) {
-            return R.style.ConversationsTheme_LargerText;
+        if (dark) {
+            return R.style.ConversationsTheme_Dark;
         } else {
             return R.style.ConversationsTheme;
         }

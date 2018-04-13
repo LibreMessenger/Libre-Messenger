@@ -1,5 +1,8 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
+    <style name="TextAppearance.Conversations.Title" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">?TextSizeTitle</item>
+    </style>
 
     <style name="TextAppearance.Conversations.Body1.Secondary" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textColor">?android:textColorSecondary</item>
@@ -8,6 +11,10 @@
     <style name="TextAppearance.Conversations.Fingerprint" parent="TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily" tools:targetApi="jelly_bean">monospace</item>
         <item name="android:typeface">monospace</item>
+    </style>
+
+    <style name="Widget.Conversations.EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:textSize">?TextSizeInput</item>
     </style>
 
     <style name="InputLabel" parent="TextAppearance.AppCompat.Caption">
@@ -32,7 +39,9 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="TextAppearance.Conversations.Caption" parent="TextAppearance.AppCompat.Caption"></style>
+    <style name="TextAppearance.Conversations.Caption" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">?TextSizeCaption</item>
+    </style>
 
     <style name="TextAppearance.Conversations.Caption.Waring" parent="TextAppearance.Conversations.Caption">
         <item name="android:textColor">@color/red800</item>

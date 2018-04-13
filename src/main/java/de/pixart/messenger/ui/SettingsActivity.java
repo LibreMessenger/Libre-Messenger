@@ -69,6 +69,8 @@ public class SettingsActivity extends XmppActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.mTheme = findTheme();
+        setTheme(this.mTheme);
         setContentView(R.layout.activity_settings);
         FragmentManager fm = getFragmentManager();
         mSettingsFragment = (SettingsFragment) fm.findFragmentById(R.id.settings_content);
@@ -77,9 +79,7 @@ public class SettingsActivity extends XmppActivity implements
             fm.beginTransaction().replace(R.id.settings_content, mSettingsFragment).commit();
         }
         mSettingsFragment.setActivityIntent(getIntent());
-        this.mTheme = findTheme();
-        setTheme(this.mTheme);
-        getWindow().getDecorView().setBackgroundColor(Color.get(this, R.attr.color_background_primary));
+        getWindow().getDecorView().setBackgroundColor(Color.get(this, R.attr.color_background_secondary));
         setSupportActionBar(findViewById(R.id.toolbar));
         configureActionBar(getSupportActionBar());
     }
@@ -92,8 +92,9 @@ public class SettingsActivity extends XmppActivity implements
     @Override
     public void onStart() {
         super.onStart();
-        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+        updateTheme();
 
+        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
         multiAccountPreference = mSettingsFragment.findPreference("enable_multi_accounts");
         if (multiAccountPreference != null) {
             isMultiAccountChecked = ((CheckBoxPreference) multiAccountPreference).isChecked();
@@ -266,6 +267,13 @@ public class SettingsActivity extends XmppActivity implements
                     return true;
                 });
             }
+        }
+    }
+
+    private void updateTheme() {
+        final int theme = findTheme();
+        if (this.mTheme != theme) {
+            recreate();
         }
     }
 
@@ -495,10 +503,7 @@ public class SettingsActivity extends XmppActivity implements
         } else if (name.equals(AUTOMATIC_MESSAGE_DELETION)) {
             xmppConnectionService.expireOldMessages(true);
         } else if (name.equals(THEME)) {
-            final int theme = findTheme();
-            if (this.mTheme != theme) {
-                recreate();
-            }
+            updateTheme();
         }
     }
 

@@ -57,7 +57,7 @@
                         android:layout_marginBottom="-8dp"
                         android:layout_marginRight="-8dp"
                         android:text="@string/change_presence"
-                        android:textColor="@color/accent" />
+                        android:textColor="?attr/colorAccent" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
