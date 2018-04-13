@@ -33,6 +33,7 @@ import java.util.List;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.crypto.OmemoSetting;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.services.ExportLogsService;
 import de.pixart.messenger.services.MemorizingTrustManager;
@@ -53,6 +54,7 @@ public class SettingsActivity extends XmppActivity implements
     public static final String WARN_UNENCRYPTED_CHAT = "warn_unencrypted_chat";
     public static final String THEME = "theme";
     public static final String SHOW_DYNAMIC_TAGS = "show_dynamic_tags";
+    public static final String OMEMO_SETTING = "omemo";
     public static final String SHOW_FOREGROUND_SERVICE = "show_foreground_service";
     public static final String USE_BUNDLED_EMOJIS = "use_bundled_emoji";
     public static final String USE_MULTI_ACCOUNTS = "use_multi_accounts";
@@ -101,6 +103,8 @@ public class SettingsActivity extends XmppActivity implements
         if (BundledEmojiPreference != null) {
             isBundledEmojiChecked = ((CheckBoxPreference) BundledEmojiPreference).isChecked();
         }
+
+        changeOmemoSettingSummary();
 
         if (Config.FORCE_ORBOT) {
             PreferenceCategory connectionOptions = (PreferenceCategory) mSettingsFragment.findPreference("connection_options");
@@ -262,6 +266,26 @@ public class SettingsActivity extends XmppActivity implements
                     return true;
                 });
             }
+        }
+    }
+
+    private void changeOmemoSettingSummary() {
+        ListPreference omemoPreference = (ListPreference) mSettingsFragment.findPreference(OMEMO_SETTING);
+        if (omemoPreference != null) {
+            String value = omemoPreference.getValue();
+            switch (value) {
+                case "always":
+                    omemoPreference.setSummary(R.string.pref_omemo_setting_summary_always);
+                    break;
+                case "default_on":
+                    omemoPreference.setSummary(R.string.pref_omemo_setting_summary_default_on);
+                    break;
+                case "default_off":
+                    omemoPreference.setSummary(R.string.pref_omemo_setting_summary_default_off);
+                    break;
+            }
+        } else {
+            Log.d(Config.LOGTAG, "unable to find preference named " + OMEMO_SETTING);
         }
     }
 
@@ -450,7 +474,10 @@ public class SettingsActivity extends XmppActivity implements
                 TREAT_VIBRATE_AS_SILENT,
                 MANUALLY_CHANGE_PRESENCE,
                 BROADCAST_LAST_ACTIVITY);
-        if (name.equals(SHOW_FOREGROUND_SERVICE)) {
+        if (name.equals(OMEMO_SETTING)) {
+            OmemoSetting.load(this, preferences);
+            changeOmemoSettingSummary();
+        } else if (name.equals(SHOW_FOREGROUND_SERVICE)) {
             xmppConnectionService.toggleForegroundService();
         } else if (resendPresence.contains(name)) {
             if (xmppConnectionServiceBound) {

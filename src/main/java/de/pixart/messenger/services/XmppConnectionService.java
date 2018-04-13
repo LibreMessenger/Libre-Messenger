@@ -74,6 +74,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import de.pixart.messenger.BuildConfig;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.crypto.OmemoSetting;
 import de.pixart.messenger.crypto.PgpDecryptionService;
 import de.pixart.messenger.crypto.PgpEngine;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
@@ -1068,6 +1069,7 @@ public class XmppConnectionService extends Service {
     @SuppressLint("TrulyRandom")
     @Override
     public void onCreate() {
+        OmemoSetting.load(this);
         ExceptionHelper.init(getApplicationContext());
         PRNGFixes.apply();
         Resolver.init(this);

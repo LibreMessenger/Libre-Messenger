@@ -35,6 +35,7 @@ import android.view.MenuItem;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.crypto.OmemoSetting;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Message;
@@ -45,7 +46,9 @@ public class ConversationMenuConfigurator {
         final MenuItem menuAttach = menu.findItem(R.id.action_attach_file);
 
         final boolean visible;
-        if (conversation.getMode() == Conversation.MODE_MULTI) {
+        if (OmemoSetting.isAlways()) {
+            visible = false;
+        } else if (conversation.getMode() == Conversation.MODE_MULTI) {
             visible = conversation.getAccount().httpUploadAvailable() && conversation.getMucOptions().participating();
         } else {
             visible = true;

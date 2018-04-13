@@ -275,6 +275,13 @@
             android:key="warn_unencrypted_chat"
             android:title="@string/pref_warn_unencrypted_chat"
             android:summary="@string/pref_warn_unencrypted_chat_summary"/>
+        <ListPreference
+            android:defaultValue="@string/omemo_setting_default"
+            android:entries="@array/omemo_setting_entries"
+            android:entryValues="@array/omemo_setting_entry_values"
+            android:key="omemo"
+            android:summary="@string/pref_omemo_setting_summary_default_on"
+            android:title="@string/pref_omemo_setting" />
         <CheckBoxPreference
             android:defaultValue="@bool/send_crashreport"
             android:key="crashreport"

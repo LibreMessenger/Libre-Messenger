@@ -68,6 +68,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.crypto.OmemoSetting;
 import de.pixart.messenger.databinding.ActivityConversationsBinding;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Conversation;
@@ -425,6 +426,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        OmemoSetting.load(this);
         new EmojiService(this).init(useBundledEmoji());
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_conversations);
         setSupportActionBar((Toolbar) binding.toolbar);
