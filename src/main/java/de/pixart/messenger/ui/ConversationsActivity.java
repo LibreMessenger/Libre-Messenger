@@ -303,7 +303,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 builder.setOnDismissListener(dialog -> setNeverAskForBatteryOptimizationsAgain());
             }
-            AlertDialog dialog = builder.create();
+            final AlertDialog dialog = builder.create();
             dialog.setCanceledOnTouchOutside(false);
             dialog.show();
         }
