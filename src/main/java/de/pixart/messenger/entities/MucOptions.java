@@ -373,12 +373,24 @@ public class MucOptions {
         this.self = new User(this, createJoinJid(getProposedNick()));
     }
 
-    public void updateFeatures(ArrayList<String> features) {
+    public boolean updateConfiguration(List<String> features, Data data) {
+        updateFeatures(features);
+        updateFormData(data == null ? new Data() : data);
+        Field allowPmField = this.form.getFieldByName("muc#roomconfig_allowpm");
+        boolean changed = false;
+        changed |= conversation.setAttribute(Conversation.ATTRIBUTE_ALLOW_PM, allowPmField == null || "1".equals(allowPmField.getValue()));
+        changed |= conversation.setAttribute(Conversation.ATTRIBUTE_MEMBERS_ONLY, this.hasFeature("muc_membersonly"));
+        changed |= conversation.setAttribute(Conversation.ATTRIBUTE_MODERATED, this.hasFeature("muc_moderated"));
+        changed |= conversation.setAttribute(Conversation.ATTRIBUTE_NON_ANONYMOUS, this.hasFeature("muc_nonanonymous"));
+        return changed;
+    }
+
+    private void updateFeatures(List<String> features) {
         this.features.clear();
         this.features.addAll(features);
     }
 
-    public void updateFormData(Data form) {
+    private void updateFormData(Data form) {
         this.form = form;
     }
 
@@ -397,8 +409,7 @@ public class MucOptions {
     }
 
     public boolean allowPm() {
-        Field field = this.form.getFieldByName("muc#roomconfig_allowpm");
-        return field == null || "1".equals(field.getValue());
+        return conversation.getBooleanAttribute(Conversation.ATTRIBUTE_ALLOW_PM, false);
     }
 
     public boolean participating() {
@@ -408,7 +419,7 @@ public class MucOptions {
     }
 
     public boolean membersOnly() {
-        return hasFeature("muc_membersonly");
+        return conversation.getBooleanAttribute(Conversation.ATTRIBUTE_MEMBERS_ONLY, false);
     }
 
     public boolean mamSupport() {
@@ -420,19 +431,15 @@ public class MucOptions {
     }
 
     public boolean nonanonymous() {
-        return hasFeature("muc_nonanonymous");
+        return conversation.getBooleanAttribute(Conversation.ATTRIBUTE_NON_ANONYMOUS, false);
     }
 
     public boolean isPrivateAndNonAnonymous() {
         return membersOnly() && nonanonymous();
     }
 
-    public boolean persistent() {
-        return hasFeature("muc_persistent");
-    }
-
     public boolean moderated() {
-        return hasFeature("muc_moderated");
+        return conversation.getBooleanAttribute(Conversation.ATTRIBUTE_MODERATED, false);
     }
 
     public User deleteUser(Jid jid) {
