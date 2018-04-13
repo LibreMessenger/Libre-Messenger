@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import net.java.otr4j.OtrException;
 import net.java.otr4j.session.Session;
 
+import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Contact;
@@ -204,9 +206,10 @@ public class VerifyOTRActivity extends XmppActivity implements XmppConnectionSer
                 return false;
             }
             this.mode = intent.getIntExtra("mode", MODE_MANUAL_VERIFICATION);
+            // todo scan OTR fingerprint
             if (this.mode == MODE_SCAN_FINGERPRINT) {
-                // todo scan OTR fingerprint
-                // new IntentIntegrator(this).initiateScan();
+                Log.d(Config.LOGTAG, "Scan OTR fingerprint is not implemented in this version");
+                //new IntentIntegrator(this).initiateScan();
                 return false;
             }
             return true;
@@ -217,7 +220,8 @@ public class VerifyOTRActivity extends XmppActivity implements XmppConnectionSer
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        // todo onActivityResult OTR
+        // todo onActivityResult for OTR scan
+        Log.d(Config.LOGTAG, "Scan OTR fingerprint result is not implemented in this version");
         /*if ((requestCode & 0xFFFF) == IntentIntegrator.REQUEST_CODE) {
             IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
             if (scanResult != null && scanResult.getFormatName() != null) {
