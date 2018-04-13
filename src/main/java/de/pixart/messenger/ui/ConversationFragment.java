@@ -182,7 +182,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         @Override
         public void onClick(View v) {
             activity.xmppConnectionService.archiveConversation(conversation);
-            activity.onConversationArchived(conversation);
         }
     };
     private OnClickListener joinMuc = new OnClickListener() {
@@ -1403,7 +1402,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             case R.id.action_archive_chat:
                 if (conversation.getMode() == Conversation.MODE_SINGLE) {
                     activity.xmppConnectionService.archiveConversation(conversation);
-                    activity.onConversationArchived(conversation);
                 } else {
                     activity.runOnUiThread(() -> {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -1413,7 +1411,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                         builder.setPositiveButton(getString(R.string.action_end_conversation_muc),
                                 (dialog, which) -> {
                                     activity.xmppConnectionService.archiveConversation(conversation);
-                                    activity.onConversationArchived(conversation);
                                 });
                         builder.create().show();
                     });
@@ -1661,7 +1658,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             this.activity.xmppConnectionService.clearConversationHistory(conversation);
             if (endConversationCheckBox.isChecked()) {
                 this.activity.xmppConnectionService.archiveConversation(conversation);
-                this.activity.onConversationArchived(conversation);
             } else {
                 activity.onConversationsListItemUpdated();
                 refresh();
