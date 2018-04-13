@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.crypto.OmemoSetting;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.crypto.axolotl.FingerprintStatus;
 import de.pixart.messenger.databinding.ActivityTrustKeysBinding;
@@ -237,7 +238,12 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
                 Contact contact = mAccount.getRoster().getContact(contactJids.get(0));
                 binding.keyErrorGeneral.setText(getString(R.string.error_trustkey_general, contact.getDisplayName()));
                 binding.ownKeysDetails.removeAllViews();
-                binding.disableButton.setOnClickListener(this::disableEncryptionDialog);
+                if (OmemoSetting.isAlways()) {
+                    binding.disableButton.setVisibility(View.GONE);
+                } else {
+                    binding.disableButton.setVisibility(View.VISIBLE);
+                    binding.disableButton.setOnClickListener(this::disableEncryptionDialog);
+                }
                 binding.ownKeysCard.setVisibility(View.GONE);
                 binding.foreignKeys.removeAllViews();
                 binding.foreignKeys.setVisibility(View.GONE);
@@ -283,6 +289,9 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
     private boolean reloadFingerprints() {
         List<Jid> acceptedTargets = mConversation == null ? new ArrayList<>() : mConversation.getAcceptedCryptoTargets();
         ownKeysToTrust.clear();
+        if (this.mAccount == null) {
+            return false;
+        }
         AxolotlService service = this.mAccount.getAxolotlService();
         Set<IdentityKey> ownKeysSet = service.getKeysWithTrust(FingerprintStatus.createActiveUndecided());
         for (final IdentityKey identityKey : ownKeysSet) {
