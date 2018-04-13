@@ -32,6 +32,8 @@ import de.pixart.messenger.xmpp.chatstate.ChatState;
 import de.pixart.messenger.xmpp.mam.MamReference;
 import rocks.xmpp.addr.Jid;
 
+import static de.pixart.messenger.entities.Bookmark.printableValue;
+
 
 public class Conversation extends AbstractEntity implements Blockable, Comparable<Conversation> {
     public static final String TABLENAME = "conversations";
@@ -511,16 +513,15 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
     public CharSequence getName() {
         if (getMode() == MODE_MULTI) {
             final String subject = getMucOptions().getSubject();
-            Bookmark bookmark = getBookmark();
+            final Bookmark bookmark = getBookmark();
             final String bookmarkName = bookmark != null ? bookmark.getBookmarkName() : null;
-
-            if (subject != null && !subject.trim().isEmpty()) {
+            if (printableValue(subject)) {
                 return subject;
-            } else if (bookmarkName != null && !bookmarkName.trim().isEmpty()) {
+            } else if (printableValue(bookmarkName, false)) {
                 return bookmarkName;
             } else {
-                String generatedName = getMucOptions().createNameFromParticipants();
-                if (generatedName != null) {
+                final String generatedName = getMucOptions().createNameFromParticipants();
+                if (printableValue(generatedName)) {
                     return generatedName;
                 } else {
                     return getJid().getLocal();
