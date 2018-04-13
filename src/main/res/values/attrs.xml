@@ -69,5 +69,7 @@
     <attr name="ic_file_calendar" format="reference" />
 
     <attr name="icon_alpha" format="float"/>
+
+    <attr name="popupOverlayStyle" format="reference"/>
     
 </resources>
