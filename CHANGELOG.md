@@ -7,6 +7,7 @@
 * rework UI for status message
 * added splash screen at startup
 * use toolbar instead of actionbar
+* integrate dark theme
 * keep OTR, but without further development and support, just for compatibility
 * bug fixes
 
