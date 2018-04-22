@@ -245,8 +245,7 @@ public class SettingsActivity extends XmppActivity implements
             Log.d(Config.LOGTAG, "Multi account checkbox checked: " + isMultiAccountChecked);
             if (isMultiAccountChecked) {
                 enableMultiAccountsPreference.setEnabled(false);
-            /*
-            if (xmppConnectionServiceBound) { // todo doesn't work --> it seems the service is never bound
+            if (xmppConnectionService != null) {
                 final List<Account> accounts = xmppConnectionService.getAccounts();
                 Log.d(Config.LOGTAG, "Disabled multi account: Number of accounts " + accounts.size());
                 if (accounts.size() > 1) {
@@ -257,9 +256,9 @@ public class SettingsActivity extends XmppActivity implements
                     enableMultiAccountsPreference.setEnabled(true);
                 }
             } else {
+                Log.d(Config.LOGTAG, "Disabled multi account not possible because XmppConnectionService == null");
                 enableMultiAccountsPreference.setEnabled(false);
             }
-            */
             } else {
                 enableMultiAccountsPreference.setEnabled(true);
                 enableMultiAccountsPreference.setOnPreferenceClickListener(preference -> {
