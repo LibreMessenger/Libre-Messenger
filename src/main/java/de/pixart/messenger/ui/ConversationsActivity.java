@@ -535,6 +535,9 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
                     Toast.makeText(this, R.string.account_status_no_internet, Toast.LENGTH_LONG).show();
                 }
                 break;
+            case R.id.action_invite_user:
+                inviteUser();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

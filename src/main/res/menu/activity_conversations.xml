@@ -8,10 +8,6 @@
         android:visible="@bool/show_qr_code_scan"
         app:showAsAction="always" />
     <item
-        android:id="@+id/action_check_updates"
-        app:showAsAction="never"
-        android:title="@string/action_check_update" />
-    <item
         android:id="@+id/action_accounts"
         android:orderInCategory="90"
         android:title="@string/action_accounts"
@@ -21,5 +17,14 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_check_updates"
+        app:showAsAction="never"
+        android:title="@string/action_check_update" />
+    <item
+        android:id="@+id/action_invite_user"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:title="@string/invite_user" />
 
 </menu>

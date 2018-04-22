@@ -50,6 +50,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import net.java.otr4j.session.SessionID;
@@ -378,9 +379,6 @@ public abstract class XmppActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_invite_user:
-                inviteUser();
-                break;
             case R.id.action_create_issue:
                 createIssue();
                 break;
@@ -962,17 +960,51 @@ public abstract class XmppActivity extends AppCompatActivity {
         return null;
     }
 
-    private void inviteUser() {
-        Account mAccount = xmppConnectionService.getAccounts().get(0);
-        String user = mAccount.getJid().getLocal().toString();
-        String domain = mAccount.getJid().getDomain().toString();
-        String inviteURL = Config.inviteUserURL + user + "/" + domain;
-        String inviteText = getString(R.string.InviteText, user);
-        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_SUBJECT, user + " " + getString(R.string.inviteUser_Subject) + " " + getString(R.string.app_name));
-        intent.putExtra(Intent.EXTRA_TEXT, inviteText + "\n\n" + inviteURL);
-        startActivity(Intent.createChooser(intent, getString(R.string.invite_contact)));
+    public void inviteUser() {
+        if (xmppConnectionServiceBound && !xmppConnectionService.multipleAccounts()) {
+            Account mAccount = xmppConnectionService.getAccounts().get(0);
+            String user = Jid.of(mAccount.getJid()).getLocal();
+            String domain = Jid.of(mAccount.getJid()).getDomain();
+            String inviteURL = Config.inviteUserURL + user + "/" + domain;
+            String inviteText = getString(R.string.InviteText, user);
+            Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_SUBJECT, user + " " + getString(R.string.inviteUser_Subject) + " " + getString(R.string.app_name));
+            intent.putExtra(Intent.EXTRA_TEXT, inviteText + "\n\n" + inviteURL);
+            startActivity(Intent.createChooser(intent, getString(R.string.invite_contact)));
+        } else {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.chooce_account);
+            final View dialogView = this.getLayoutInflater().inflate(R.layout.choose_account_dialog, null);
+            final Spinner spinner = dialogView.findViewById(R.id.account);
+            builder.setView(dialogView);
+            List<String> mActivatedAccounts = new ArrayList<>();
+            for (Account account : xmppConnectionService.getAccounts()) {
+                if (account.getStatus() != Account.State.DISABLED) {
+                    if (Config.DOMAIN_LOCK != null) {
+                        mActivatedAccounts.add(account.getJid().getLocal());
+                    } else {
+                        mActivatedAccounts.add(account.getJid().asBareJid().toString());
+                    }
+                }
+            }
+            StartConversationActivity.populateAccountSpinner(this, mActivatedAccounts, spinner);
+            builder.setPositiveButton(R.string.ok,
+                    (dialog, id) -> {
+                        String selection = spinner.getSelectedItem().toString();
+                        String user = Jid.of(selection).getLocal();
+                        String domain = Jid.of(selection).getDomain();
+                        String inviteURL = Config.inviteUserURL + user + "/" + domain;
+                        String inviteText = getString(R.string.InviteText, user);
+                        Intent intent = new Intent(Intent.ACTION_SEND);
+                        intent.setType("text/plain");
+                        intent.putExtra(Intent.EXTRA_SUBJECT, user + " " + getString(R.string.inviteUser_Subject) + " " + getString(R.string.app_name));
+                        intent.putExtra(Intent.EXTRA_TEXT, inviteText + "\n\n" + inviteURL);
+                        startActivity(Intent.createChooser(intent, getString(R.string.invite_contact)));
+                    });
+            builder.setNegativeButton(R.string.cancel, null);
+            builder.create().show();
+        }
     }
 
     private void createIssue() {

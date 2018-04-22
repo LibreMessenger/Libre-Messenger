@@ -73,11 +73,6 @@
         app:showAsAction="never"
         android:title="@string/action_end_conversation" />
     <item
-        android:id="@+id/action_invite_user"
-        android:orderInCategory="100"
-        app:showAsAction="never"
-        android:title="@string/invite_user" />
-    <item
         android:id="@+id/action_create_issue"
         android:orderInCategory="100"
         app:showAsAction="never"

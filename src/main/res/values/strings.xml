@@ -781,4 +781,5 @@
     <string name="pref_theme_dark">Dark theme</string>
     <string name="pref_theme_options_summary">Select the color palette</string>
     <string name="pref_theme_options">Theme</string>
+    <string name="chooce_account">Choose account</string>
 </resources>
