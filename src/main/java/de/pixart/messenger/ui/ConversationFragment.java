@@ -212,11 +212,15 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     };
 
     private void toggleScrollDownButton() {
-        toggleScrollDownButton(binding.messagesView, binding.messagesView.getCount());
+        toggleScrollDownButton(binding.messagesView);
     }
 
-    private void toggleScrollDownButton(AbsListView listView, int count) {
-        if (listView.getLastVisiblePosition() < count - 5) {
+    private void toggleScrollDownButton(AbsListView listView) {
+        if (scrolledToBottom(listView)) {
+            lastMessageUuid = null;
+            hideUnreadMessagesCount();
+
+        } else {
             binding.scrollToBottomButton.setEnabled(true);
             binding.scrollToBottomButton.setVisibility(View.VISIBLE);
             if (lastMessageUuid == null) {
@@ -225,9 +229,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             if (conversation.getReceivedMessagesCountSinceUuid(lastMessageUuid) > 0) {
                 binding.unreadCountCustomView.setVisibility(View.VISIBLE);
             }
-        } else if (scrolledToBottom(listView)) {
-            lastMessageUuid = null;
-            hideUnreadMessagesCount();
         }
     }
 
@@ -241,7 +242,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 
         @Override
         public void onScroll(final AbsListView view, int firstVisibleItem, int visibleItemCount, final int totalItemCount) {
-            toggleScrollDownButton(view, totalItemCount);
+            toggleScrollDownButton(view);
             synchronized (ConversationFragment.this.messageList) {
                 if (firstVisibleItem < 25 && conversation != null && conversation.messagesLoaded.compareAndSet(true, false) && messageList.size() > 0) {
                     long timestamp;
