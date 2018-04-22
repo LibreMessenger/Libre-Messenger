@@ -211,30 +211,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         }
     };
 
-    private void toggleScrollDownButton() {
-        toggleScrollDownButton(binding.messagesView);
-    }
-
-    private void toggleScrollDownButton(AbsListView listView) {
-        if (conversation == null) {
-            return;
-        }
-        if (scrolledToBottom(listView)) {
-            lastMessageUuid = null;
-            hideUnreadMessagesCount();
-
-        } else {
-            binding.scrollToBottomButton.setEnabled(true);
-            binding.scrollToBottomButton.setVisibility(View.VISIBLE);
-            if (lastMessageUuid == null) {
-                lastMessageUuid = conversation.getLatestMessage().getUuid();
-            }
-            if (conversation.getReceivedMessagesCountSinceUuid(lastMessageUuid) > 0) {
-                binding.unreadCountCustomView.setVisibility(View.VISIBLE);
-            }
-        }
-    }
-
     private OnScrollListener mOnScrollListener = new OnScrollListener() {
 
         @Override
@@ -633,6 +609,49 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             }
         }
         return null;
+    }
+
+    private static void hideSoftKeyboard(final Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        View view = activity.getCurrentFocus();
+        if (view != null && imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    private static boolean scrolledToBottom(AbsListView listView) {
+        final int count = listView.getCount();
+        if (count == 0) {
+            return true;
+        } else if (listView.getLastVisiblePosition() == count - 1) {
+            final View lastChild = listView.getChildAt(listView.getChildCount() - 1);
+            return lastChild != null && lastChild.getBottom() <= listView.getHeight();
+        } else {
+            return false;
+        }
+    }
+
+    private void toggleScrollDownButton() {
+        toggleScrollDownButton(binding.messagesView);
+    }
+
+    private void toggleScrollDownButton(AbsListView listView) {
+        if (conversation == null) {
+            return;
+        }
+        if (scrolledToBottom(listView)) {
+            lastMessageUuid = null;
+            hideUnreadMessagesCount();
+        } else {
+            binding.scrollToBottomButton.setEnabled(true);
+            binding.scrollToBottomButton.setVisibility(View.VISIBLE);
+            if (lastMessageUuid == null) {
+                lastMessageUuid = conversation.getLatestMessage().getUuid();
+            }
+            if (conversation.getReceivedMessagesCountSinceUuid(lastMessageUuid) > 0) {
+                binding.unreadCountCustomView.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     private int getIndexOf(String uuid, List<Message> messages) {
@@ -1281,14 +1300,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             if (inputMethodManager != null) {
                 inputMethodManager.showSoftInput(binding.textinput, InputMethodManager.SHOW_IMPLICIT);
             }
-        }
-    }
-
-    private static void hideSoftKeyboard(final Activity activity) {
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        View view = activity.getCurrentFocus();
-        if (view != null && imm != null) {
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
@@ -2131,7 +2142,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             this.reInitRequiredOnStart = true;
             pendingExtras.push(extras);
         }
-        updateUnreadMessagesCount();
+        resetUnreadMessagesCount();
     }
 
     private void reInit(Conversation conversation) {
@@ -2177,6 +2188,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         Log.d(Config.LOGTAG, "scrolledToBottomAndNoPending=" + Boolean.toString(scrolledToBottomAndNoPending));
 
         if (hasExtras || scrolledToBottomAndNoPending) {
+            resetUnreadMessagesCount();
             synchronized (this.messageList) {
                 Log.d(Config.LOGTAG, "jump to first unread message");
                 final Message first = conversation.getFirstUnreadMessage();
@@ -2237,7 +2249,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         return true;
     }
 
-    private void updateUnreadMessagesCount() {
+    private void resetUnreadMessagesCount() {
         lastMessageUuid = null;
         hideUnreadMessagesCount();
     }
@@ -2254,6 +2266,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     private void setSelection(int pos) {
         this.binding.messagesView.setSelection(pos);
         this.binding.messagesView.post(() -> this.binding.messagesView.setSelection(pos));
+        this.binding.messagesView.post(this::fireReadEvent);
     }
 
     private boolean scrolledToBottom() {
@@ -2261,15 +2274,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             return false;
         }
         return scrolledToBottom(this.binding.messagesView);
-    }
-
-    private static boolean scrolledToBottom(AbsListView listView) {
-        if (listView.getLastVisiblePosition() == listView.getCount() - 1) {
-            final View lastChild = listView.getChildAt(listView.getChildCount() - 1);
-            return lastChild != null && lastChild.getBottom() <= listView.getHeight();
-        } else {
-            return false;
-        }
     }
 
     private void processExtras(Bundle extras) {
