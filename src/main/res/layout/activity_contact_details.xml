@@ -136,6 +136,7 @@
 
                             <CheckBox
                                 android:id="@+id/details_send_presence"
+                                style="@style/Widget.Conversations.CheckBox"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentLeft="true"
@@ -147,6 +148,7 @@
 
                             <CheckBox
                                 android:id="@+id/details_receive_presence"
+                                style="@style/Widget.Conversations.CheckBox"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentLeft="true"

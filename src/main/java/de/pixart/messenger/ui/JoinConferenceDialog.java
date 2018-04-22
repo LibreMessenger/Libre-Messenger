@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.List;
 
 import de.pixart.messenger.R;
-import de.pixart.messenger.databinding.JoinConferenceDialogBinding;
+import de.pixart.messenger.databinding.DialogJoinConferenceBinding;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.adapter.KnownHostsAdapter;
 import de.pixart.messenger.ui.interfaces.OnBackendConnected;
@@ -55,7 +55,7 @@ public class JoinConferenceDialog extends DialogFragment implements OnBackendCon
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.join_conference);
-        JoinConferenceDialogBinding binding = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.join_conference_dialog, null, false);
+        DialogJoinConferenceBinding binding = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.dialog_join_conference, null, false);
         DelayedHintHelper.setHint(R.string.conference_address_example, binding.jid);
         this.knownHostsAdapter = new KnownHostsAdapter(getActivity(), R.layout.simple_list_item);
         binding.jid.setAdapter(knownHostsAdapter);
