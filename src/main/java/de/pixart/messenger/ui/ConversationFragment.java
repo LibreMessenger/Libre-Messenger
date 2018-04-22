@@ -216,6 +216,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     }
 
     private void toggleScrollDownButton(AbsListView listView) {
+        if (conversation == null) {
+            return;
+        }
         if (scrolledToBottom(listView)) {
             lastMessageUuid = null;
             hideUnreadMessagesCount();
