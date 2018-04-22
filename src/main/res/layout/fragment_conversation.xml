@@ -5,8 +5,8 @@
     <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clickable="false"
-        android:background="?attr/color_background_secondary">
+        android:background="?attr/color_background_secondary"
+        android:clickable="false">
 
         <ListView
             android:id="@+id/messages_view"
@@ -22,6 +22,29 @@
             android:stackFromBottom="true"
             android:transcriptMode="normal"
             tools:listitem="@layout/message_sent"></ListView>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/scroll_to_bottom_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/messages_view"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="12dp"
+            android:alpha="0.85"
+            android:src="?attr/icon_scroll_down"
+            android:visibility="gone"
+            app:backgroundTint="?attr/color_background_primary"
+            app:fabSize="mini" />
+
+        <de.pixart.messenger.ui.widget.UnreadCountCustomView
+                    android:id="@+id/unread_count_custom_view"
+                    android:layout_width="?attr/IconSize"
+                    android:layout_height="?attr/IconSize"
+                    android:layout_alignTop="@+id/scroll_to_bottom_button"
+                    android:layout_alignEnd="@+id/scroll_to_bottom_button"
+                    android:elevation="8dp"
+                    android:visibility="gone"
+                    app:backgroundColor="?attr/unread_count" />
 
         <RelativeLayout
             android:id="@+id/input"
@@ -100,7 +123,6 @@
                     android:layout_alignParentLeft="true"
                     android:layout_toLeftOf="@+id/textSendButton"
                     android:background="?attr/color_background_secondary"
-                    android:textColor="?attr/text_Color_Main"
                     android:ems="10"
                     android:imeOptions="flagNoExtractUi|actionSend"
                     android:inputType="textShortMessage|textMultiLine|textCapSentences"
@@ -111,7 +133,8 @@
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:paddingTop="12dp"
-                    android:singleLine="false">
+                    android:singleLine="false"
+                    android:textColor="?attr/text_Color_Main">
 
                 </de.pixart.messenger.ui.widget.EditMessage>
 
