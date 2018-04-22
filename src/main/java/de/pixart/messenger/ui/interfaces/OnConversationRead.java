@@ -32,5 +32,5 @@ package de.pixart.messenger.ui.interfaces;
 import de.pixart.messenger.entities.Conversation;
 
 public interface OnConversationRead {
-    void onConversationRead(Conversation conversation);
+    void onConversationRead(Conversation conversation, String upToUuid);
 }

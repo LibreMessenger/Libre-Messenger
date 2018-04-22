@@ -475,7 +475,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
         return (this.messages.size() == 0) || this.messages.get(this.messages.size() - 1).isRead();
     }
 
-    public List<Message> markRead() {
+    public List<Message> markRead(String upToUuid) {
         final List<Message> unread = new ArrayList<>();
         synchronized (this.messages) {
             for (Message message : this.messages) {
@@ -483,20 +483,21 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
                     message.markRead();
                     unread.add(message);
                 }
+                if (message.getUuid().equals(upToUuid)) {
+                    return unread;
+                }
             }
         }
         return unread;
     }
 
-    public Message getLatestMarkableMessage(boolean isPrivateAndNonAnonymousMuc) {
-        synchronized (this.messages) {
-            for (int i = this.messages.size() - 1; i >= 0; --i) {
-                final Message message = this.messages.get(i);
-                if (message.getStatus() <= Message.STATUS_RECEIVED
-                        && (message.markable || isPrivateAndNonAnonymousMuc)
-                        && message.getType() != Message.TYPE_PRIVATE) {
-                    return message.isRead() ? null : message;
-                }
+    public static Message getLatestMarkableMessage(final List<Message> messages, boolean isPrivateAndNonAnonymousMuc) {
+        for (int i = messages.size() - 1; i >= 0; --i) {
+            final Message message = messages.get(i);
+            if (message.getStatus() <= Message.STATUS_RECEIVED
+                    && (message.markable || isPrivateAndNonAnonymousMuc)
+                    && message.getType() != Message.TYPE_PRIVATE) {
+                return message;
             }
         }
         return null;
