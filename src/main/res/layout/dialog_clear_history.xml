@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:text="@string/clear_histor_msg"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:textAppearance="@style/TextAppearance.Conversations.Body1" />
 
     <CheckBox
         android:id="@+id/end_conversation_checkbox"

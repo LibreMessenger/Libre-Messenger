@@ -59,8 +59,8 @@
                     android:linksClickable="true"
                     android:paddingBottom="@dimen/activity_vertical_margin"
                     android:text="@string/pref_about_message"
-                    android:textColor="?attr/text_Color_Main"
                     android:textSize="?attr/TextSizeBody"
+                    android:textAppearance="@style/TextAppearance.Conversations.Body1"
                     android:typeface="monospace" />
 
             </android.support.v7.widget.CardView>

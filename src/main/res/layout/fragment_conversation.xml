@@ -37,14 +37,14 @@
             app:fabSize="mini" />
 
         <de.pixart.messenger.ui.widget.UnreadCountCustomView
-                    android:id="@+id/unread_count_custom_view"
-                    android:layout_width="?attr/IconSize"
-                    android:layout_height="?attr/IconSize"
-                    android:layout_alignTop="@+id/scroll_to_bottom_button"
-                    android:layout_alignEnd="@+id/scroll_to_bottom_button"
-                    android:elevation="8dp"
-                    android:visibility="gone"
-                    app:backgroundColor="?attr/unread_count" />
+            android:id="@+id/unread_count_custom_view"
+            android:layout_width="?attr/IconSize"
+            android:layout_height="?attr/IconSize"
+            android:layout_alignEnd="@+id/scroll_to_bottom_button"
+            android:layout_alignTop="@+id/scroll_to_bottom_button"
+            android:elevation="8dp"
+            android:visibility="gone"
+            app:backgroundColor="?attr/unread_count" />
 
         <RelativeLayout
             android:id="@+id/input"
@@ -118,6 +118,7 @@
 
                 <de.pixart.messenger.ui.widget.EditMessage
                     android:id="@+id/textinput"
+                    style="@style/Widget.Conversations.EditText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"

@@ -50,8 +50,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:paddingRight="4dp"
-                    android:textColor="?attr/text_Color_Main"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                    android:textAppearance="@style/TextAppearance.Conversations.Subhead" />
 
                 <RelativeLayout
                     android:id="@+id/conversation_lastwrapper"
@@ -86,7 +85,7 @@
                             android:id="@+id/conversation_lastmsg_img"
                             android:layout_width="?attr/IconSize"
                             android:layout_height="?attr/IconSize"
-                            android:layout_marginRight="?attr/TextSeparation" />/>
+                            android:layout_marginRight="?attr/TextSeparation" />
 
                         <TextView
                             android:id="@+id/conversation_lastmsg"
@@ -97,7 +96,7 @@
                             android:maxLines="1"
                             android:minHeight="?attr/IconSize"
                             android:scrollHorizontally="false"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                            android:textAppearance="@style/TextAppearance.Conversations.Body1" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -132,11 +131,11 @@
 
                         <ImageView
                             android:id="@+id/notification_status"
-                            android:alpha="?attr/icon_alpha"
                             android:layout_width="?attr/IconSize"
                             android:layout_height="?attr/IconSize"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="4dp"
+                            android:alpha="?attr/icon_alpha"
                             android:src="@drawable/ic_notifications_grey600_24dp" />
                     </LinearLayout>
                 </RelativeLayout>
@@ -181,7 +180,7 @@
                     android:layout_alignParentRight="true"
                     android:gravity="right"
                     android:paddingLeft="4dp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+                    android:textAppearance="@style/TextAppearance.Conversations.Caption" />
             </RelativeLayout>
         </RelativeLayout>
     </FrameLayout>

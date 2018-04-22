@@ -85,8 +85,6 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
         if (conversation == null) {
             return view;
         }
-        int c = Color.get(activity, conversation == selectedConversation ? R.attr.color_background_secondary : R.attr.color_background_primary);
-        viewHolder.swipeableItem.setBackgroundColor(c);
         if (conversation.getMode() == Conversation.MODE_SINGLE || activity.useSubjectToIdentifyConference()) {
             CharSequence name = conversation.getName();
             if (name instanceof Jid) {
@@ -332,7 +330,6 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
     }
 
     public static class ViewHolder {
-        private View swipeableItem;
         private TextView name;
         private TextView lastMessage;
         private ImageView lastMessageIcon;
@@ -353,7 +350,6 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
             ViewHolder viewHolder = (ViewHolder) layout.getTag();
             if (viewHolder == null) {
                 viewHolder = new ViewHolder();
-                viewHolder.swipeableItem = layout.findViewById(R.id.swipeable_item);
                 viewHolder.name = layout.findViewById(R.id.conversation_name);
                 viewHolder.lastMessage = layout.findViewById(R.id.conversation_lastmsg);
                 viewHolder.lastMessageIcon = layout.findViewById(R.id.conversation_lastmsg_img);

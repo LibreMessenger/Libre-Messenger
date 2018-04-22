@@ -44,7 +44,7 @@
                             android:paddingBottom="5dp"
                             android:text="@string/contact"
                             android:textAlignment="center"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+                            android:textAppearance="@style/TextAppearance.Conversations.Title"
                             android:textIsSelectable="false"
                             android:textStyle="bold" />
 
@@ -79,7 +79,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
                                 android:text="@string/account_settings_example_jabber_id"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                                android:textAppearance="@style/TextAppearance.Conversations.Title"
                                 android:textIsSelectable="true"
                                 android:visibility="gone" />
 
@@ -100,7 +100,7 @@
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginBottom="4dp"
                                 android:layout_marginTop="4dp"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
+                                android:textAppearance="@style/TextAppearance.Conversations.Subhead" />
 
                             <android.support.text.emoji.widget.EmojiTextView
                                 android:id="@+id/status_message"
@@ -110,7 +110,7 @@
                                 android:layout_marginBottom="4dp"
                                 android:layout_marginTop="4dp"
                                 android:gravity="center_horizontal"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                                android:textAppearance="@style/TextAppearance.Conversations.Body1" />
 
                             <android.support.text.emoji.widget.EmojiTextView
                                 android:id="@+id/resource"
@@ -143,7 +143,7 @@
                                 android:layout_below="@+id/add_contact_button"
                                 android:layout_marginTop="4dp"
                                 android:text="@string/send_presence_updates"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                                android:textAppearance="@style/TextAppearance.Conversations.Body1" />
 
                             <CheckBox
                                 android:id="@+id/details_receive_presence"
@@ -153,7 +153,7 @@
                                 android:layout_alignParentStart="true"
                                 android:layout_below="@+id/details_send_presence"
                                 android:text="@string/receive_presence_updates"
-                                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                                android:textAppearance="@style/TextAppearance.Conversations.Body1" />
 
                         </LinearLayout>
 
@@ -165,7 +165,7 @@
                             android:layout_below="@+id/details_jidbox"
                             android:layout_marginTop="32dp"
                             android:text="@string/using_account"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                            android:textAppearance="@style/TextAppearance.Conversations.Caption"
                             android:visibility="gone" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
