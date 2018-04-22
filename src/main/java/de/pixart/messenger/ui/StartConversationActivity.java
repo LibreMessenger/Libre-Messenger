@@ -548,7 +548,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
         getMenuInflater().inflate(R.menu.start_conversation, menu);
         MenuItem menuHideOffline = menu.findItem(R.id.action_hide_offline);
         MenuItem menuActionAccounts = menu.findItem(R.id.action_accounts);
-        if (xmppConnectionService.getAccounts().size() == 1 && !xmppConnectionService.multipleAccounts()) {
+        if (xmppConnectionService != null && xmppConnectionService.getAccounts().size() == 1 && !xmppConnectionService.multipleAccounts()) {
             menuActionAccounts.setTitle(R.string.mgmt_account_edit);
         } else {
             menuActionAccounts.setTitle(R.string.action_accounts);
