@@ -28,15 +28,18 @@ public class JoinConferenceDialog extends DialogFragment implements OnBackendCon
 
     private static final String PREFILLED_JID_KEY = "prefilled_jid";
     private static final String ACCOUNTS_LIST_KEY = "activated_accounts_list";
+    private static final String MULTIPLE_ACCOUNTS = "multiple_accounts_enabled";
     public XmppConnectionService xmppConnectionService;
     private JoinConferenceDialogListener mListener;
     private KnownHostsAdapter knownHostsAdapter;
 
-    public static JoinConferenceDialog newInstance(String prefilledJid, List<String> accounts) {
+    public static JoinConferenceDialog newInstance(String prefilledJid, List<String> accounts, boolean multipleAccounts) {
         JoinConferenceDialog dialog = new JoinConferenceDialog();
         Bundle bundle = new Bundle();
         bundle.putString(PREFILLED_JID_KEY, prefilledJid);
+        bundle.putBoolean(MULTIPLE_ACCOUNTS, multipleAccounts);
         bundle.putStringArrayList(ACCOUNTS_LIST_KEY, (ArrayList<String>) accounts);
+
         dialog.setArguments(bundle);
         return dialog;
     }
@@ -60,7 +63,7 @@ public class JoinConferenceDialog extends DialogFragment implements OnBackendCon
         if (prefilledJid != null) {
             binding.jid.append(prefilledJid);
         }
-        if (xmppConnectionService != null && xmppConnectionService.multipleAccounts()) {
+        if (getArguments().getBoolean(MULTIPLE_ACCOUNTS)) {
             binding.yourAccount.setVisibility(View.VISIBLE);
             binding.account.setVisibility(View.VISIBLE);
         } else {

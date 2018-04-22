@@ -21,13 +21,15 @@ import de.pixart.messenger.services.XmppConnectionService;
 public class CreateConferenceDialog extends DialogFragment {
 
     private static final String ACCOUNTS_LIST_KEY = "activated_accounts_list";
+    private static final String MULTIPLE_ACCOUNTS = "multiple_accounts_enabled";
     public XmppConnectionService xmppConnectionService;
     private CreateConferenceDialogListener mListener;
 
-    public static CreateConferenceDialog newInstance(List<String> accounts) {
+    public static CreateConferenceDialog newInstance(List<String> accounts, boolean multipleAccounts) {
         CreateConferenceDialog dialog = new CreateConferenceDialog();
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(ACCOUNTS_LIST_KEY, (ArrayList<String>) accounts);
+        bundle.putBoolean(MULTIPLE_ACCOUNTS, multipleAccounts);
         dialog.setArguments(bundle);
         return dialog;
     }
@@ -48,7 +50,7 @@ public class CreateConferenceDialog extends DialogFragment {
         //final Spinner spinner = dialogView.findViewById(R.id.account);
         //final EditText subject = dialogView.findViewById(R.id.subject);
         CreateConferenceDialogBinding binding = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.create_conference_dialog, null, false);
-        if (xmppConnectionService != null && xmppConnectionService.multipleAccounts()) {
+        if (getArguments().getBoolean(MULTIPLE_ACCOUNTS)) {
             binding.yourAccount.setVisibility(View.VISIBLE);
             binding.account.setVisibility(View.VISIBLE);
         } else {

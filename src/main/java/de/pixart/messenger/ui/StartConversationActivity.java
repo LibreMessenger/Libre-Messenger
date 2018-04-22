@@ -494,7 +494,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
             ft.remove(prev);
         }
         ft.addToBackStack(null);
-        JoinConferenceDialog joinConferenceFragment = JoinConferenceDialog.newInstance(prefilledJid, mActivatedAccounts);
+        JoinConferenceDialog joinConferenceFragment = JoinConferenceDialog.newInstance(prefilledJid, mActivatedAccounts, xmppConnectionService.multipleAccounts());
         joinConferenceFragment.show(ft, FRAGMENT_TAG_DIALOG);
     }
 
@@ -505,7 +505,7 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
             ft.remove(prev);
         }
         ft.addToBackStack(null);
-        CreateConferenceDialog createConferenceFragment = CreateConferenceDialog.newInstance(mActivatedAccounts);
+        CreateConferenceDialog createConferenceFragment = CreateConferenceDialog.newInstance(mActivatedAccounts, xmppConnectionService.multipleAccounts());
         createConferenceFragment.show(ft, FRAGMENT_TAG_DIALOG);
     }
 
