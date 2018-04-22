@@ -2085,14 +2085,18 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     @Override
     public void onStart() {
         super.onStart();
-        if (this.reInitRequiredOnStart) {
+        if (this.reInitRequiredOnStart && this.conversation != null) {
             final Bundle extras = pendingExtras.pop();
-            reInit(conversation, extras != null);
+            reInit(this.conversation, extras != null);
             if (extras != null) {
                 processExtras(extras);
             }
-        } else {
-            Log.d(Config.LOGTAG, "skipped reinit on start");
+        } else if (conversation == null && activity != null && activity.xmppConnectionService != null) {
+            final String uuid = pendingConversationsUuid.pop();
+            Log.d(Config.LOGTAG, "ConversationFragment.onStart() - activity was bound but no conversation loaded. uuid=" + uuid);
+            if (uuid != null) {
+                findAndReInitByUuidOrArchive(uuid);
+            }
         }
     }
 
@@ -3012,17 +3016,8 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         Log.d(Config.LOGTAG, "ConversationFragment.onBackendConnected()");
         String uuid = pendingConversationsUuid.pop();
         if (uuid != null) {
-            Conversation conversation = activity.xmppConnectionService.findConversationByUuid(uuid);
-            if (conversation == null) {
-                clearPending();
-                activity.onConversationArchived(null);
+            if (!findAndReInitByUuidOrArchive(uuid)) {
                 return;
-            }
-            reInit(conversation);
-            ScrollState scrollState = pendingScrollState.pop();
-            String lastMessageUuid = pendingLastMessageUuid.pop();
-            if (scrollState != null) {
-                setScrollPosition(scrollState, lastMessageUuid);
             }
         } else {
             if (!activity.xmppConnectionService.isConversationStillOpen(conversation)) {
@@ -3036,6 +3031,22 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             handleActivityResult(activityResult);
         }
         clearPending();
+    }
+
+    private boolean findAndReInitByUuidOrArchive(@NonNull final String uuid) {
+        Conversation conversation = activity.xmppConnectionService.findConversationByUuid(uuid);
+        if (conversation == null) {
+            clearPending();
+            activity.onConversationArchived(null);
+            return false;
+        }
+        reInit(conversation);
+        ScrollState scrollState = pendingScrollState.pop();
+        String lastMessageUuid = pendingLastMessageUuid.pop();
+        if (scrollState != null) {
+            setScrollPosition(scrollState, lastMessageUuid);
+        }
+        return true;
     }
 
     private void clearPending() {
