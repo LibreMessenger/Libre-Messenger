@@ -36,7 +36,6 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
@@ -72,8 +71,8 @@ import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.services.AudioPlayer;
 import de.pixart.messenger.services.MessageArchiveService;
 import de.pixart.messenger.services.NotificationService;
-import de.pixart.messenger.ui.ConversationsActivity;
 import de.pixart.messenger.ui.ConversationFragment;
+import de.pixart.messenger.ui.ConversationsActivity;
 import de.pixart.messenger.ui.ShowFullscreenMessageActivity;
 import de.pixart.messenger.ui.XmppActivity;
 import de.pixart.messenger.ui.text.DividerSpan;
@@ -336,14 +335,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             }
             viewHolder.resend_button.setText(R.string.send_again);
             viewHolder.resend_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_resend_grey600_48dp, 0, 0, 0);
-            viewHolder.resend_button.setOnClickListener(new OnClickListener() {
-                final Message mMessage = message;
-
-                @Override
-                public void onClick(View v) {
-                    mConversationFragment.resendMessage(mMessage);
-                }
-            });
+            viewHolder.resend_button.setOnClickListener(v -> mConversationFragment.resendMessage(message));
         } else if (!error && type == SENT) {
             viewHolder.resend_button.setVisibility(View.GONE);
             if (darkBackground) {
@@ -365,9 +357,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         } else {
             boolean verified = false;
             if (message.getEncryption() == Message.ENCRYPTION_AXOLOTL) {
-                final FingerprintStatus status = message.getConversation()
-                        .getAccount().getAxolotlService().getFingerprintTrust(
-                                message.getFingerprint());
+                final FingerprintStatus status = message.getConversation().getAccount().getAxolotlService().getFingerprintTrust(message.getFingerprint());
                 if (status != null && status.isVerified()) {
                     verified = true;
                 }

@@ -1840,7 +1840,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     }
 
     public void resendMessage(final Message message) {
-        if (message.isFileOrImage()) {
+        if (message != null && message.isFileOrImage()) {
             DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
             if (file.exists()) {
                 final Conversation conversation = message.getConversation();
