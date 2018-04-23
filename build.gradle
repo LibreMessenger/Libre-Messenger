@@ -77,14 +77,13 @@ ext {
 android {
 
     compileSdkVersion 27
-    buildToolsVersion "27.0.3"
 
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 25
 
-        versionCode 227
-        versionName "2.0.0 beta (2018-04-22)"
+        versionCode 228
+        versionName "2.0.0 beta (2018-04-23)"
 
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"

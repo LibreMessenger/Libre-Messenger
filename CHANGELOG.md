@@ -1,7 +1,7 @@
 ### Changelog
 
 #### Version 2.0.0 (in development)
-* Highlight irregular unicode code blocks in Jabber IDs
+* highlight irregular unicode code blocks in Jabber IDs
 * integrate QR code scanner (requires camera permission)
 * removed support for customizable resources
 * rework UI for status message
@@ -9,7 +9,10 @@
 * use toolbar instead of actionbar
 * integrate dark theme
 * keep OTR, but without further development and support, just for compatibility
-* bug fixes
+* added configurable font size
+* added global OMEMO preference
+* added scroll to bottom button
+* a lot of bug fixes
 
 #### Version 1.22.1
 * show extended/TOR connection options in expert settings
