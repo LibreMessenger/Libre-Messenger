@@ -31,6 +31,7 @@ import de.pixart.messenger.entities.Transferable;
 import de.pixart.messenger.ui.ConversationFragment;
 import de.pixart.messenger.ui.XmppActivity;
 import de.pixart.messenger.ui.util.Color;
+import de.pixart.messenger.ui.widget.UnreadCountCustomView;
 import de.pixart.messenger.utils.EmojiWrapper;
 import de.pixart.messenger.utils.IrregularUnicodeDetector;
 import de.pixart.messenger.utils.UIHelper;
@@ -113,13 +114,13 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
 
         if (unreadCount > 0) {
             viewHolder.unreadCount.setVisibility(View.VISIBLE);
-            viewHolder.unreadCount.setText(unreadCount > 99 ? "\u221E" : String.valueOf(unreadCount));
+            viewHolder.unreadCount.setUnreadCount(unreadCount);
         } else {
             viewHolder.unreadCount.setVisibility(View.GONE);
         }
         if (failedCount > 0) {
             viewHolder.failedCount.setVisibility(View.VISIBLE);
-            viewHolder.failedCount.setText(failedCount > 99 ? "\u221E" : String.valueOf(failedCount));
+            viewHolder.failedCount.setUnreadCount(failedCount);
         } else {
             viewHolder.failedCount.setVisibility(View.GONE);
         }
@@ -336,8 +337,8 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
         private TextView timestamp;
         private TextView sender;
         private ImageView notificationIcon;
-        private TextView unreadCount;
-        private TextView failedCount;
+        private UnreadCountCustomView unreadCount;
+        private UnreadCountCustomView failedCount;
         private ImageView receivedStatus;
         private ImageView readStatus;
         private ImageView avatar;

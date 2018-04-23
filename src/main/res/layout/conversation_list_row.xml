@@ -140,37 +140,29 @@
                     </LinearLayout>
                 </RelativeLayout>
 
-                <TextView
+                <de.pixart.messenger.ui.widget.UnreadCountCustomView
                     android:id="@+id/conversation_unread"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/conversation_name"
+                    android:layout_width="?attr/IconSize"
+                    android:layout_height="?attr/IconSize"
                     android:layout_margin="1dp"
                     android:layout_toLeftOf="@+id/conversation_lastupdate"
-                    android:background="@drawable/rounded_rectangle_primary"
                     android:paddingBottom="2dp"
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
-                    android:text="100"
-                    android:textColor="@color/grey50"
-                    android:textSize="?attr/TextSizeBody"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    app:backgroundColor="?attr/colorAccent" />
 
-                <TextView
+                <de.pixart.messenger.ui.widget.UnreadCountCustomView
                     android:id="@+id/conversation_failed"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/conversation_name"
+                    android:layout_width="?attr/IconSize"
+                    android:layout_height="?attr/IconSize"
                     android:layout_margin="1dp"
                     android:layout_toLeftOf="@+id/conversation_unread"
-                    android:background="@drawable/rounded_rectangle_red"
                     android:paddingBottom="2dp"
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
-                    android:text="100"
-                    android:textColor="@color/grey50"
-                    android:textSize="?attr/TextSizeBody"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    app:backgroundColor="?attr/color_warning" />
 
                 <TextView
                     android:id="@+id/conversation_lastupdate"

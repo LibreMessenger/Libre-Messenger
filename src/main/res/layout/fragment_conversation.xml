@@ -44,7 +44,7 @@
             android:layout_alignTop="@+id/scroll_to_bottom_button"
             android:elevation="8dp"
             android:visibility="gone"
-            app:backgroundColor="?attr/unread_count" />
+            app:backgroundColor="?attr/colorAccent" />
 
         <RelativeLayout
             android:id="@+id/input"
