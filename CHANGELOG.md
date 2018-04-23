@@ -12,6 +12,7 @@
 * added configurable font size
 * added global OMEMO preference
 * added scroll to bottom button
+* added contact button as android widget
 * a lot of bug fixes
 
 #### Version 1.22.1
