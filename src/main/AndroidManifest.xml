@@ -131,6 +131,9 @@
             android:label="@string/title_activity_start_conversation"
             android:configChanges="orientation|screenSize"
             android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".ui.WelcomeActivity"
@@ -260,6 +263,13 @@
             android:label="@string/title_activity_updater"
             android:launchMode="singleTask"
             android:theme="@style/ConversationsTheme">
+        </activity>
+        <activity
+            android:name=".ui.ShortcutActivity"
+            android:label="@string/contact">
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
+            </intent-filter>
         </activity>
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
         <activity android:name=".ui.MemorizingActivity" />
