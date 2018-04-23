@@ -972,6 +972,8 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             }
         } else if (message.getEncryption() == Message.ENCRYPTION_DECRYPTION_FAILED) {
             displayDecryptionFailed(viewHolder, darkBackground);
+        } else if (message.getEncryption() == Message.ENCRYPTION_AXOLOTL_NOT_FOR_THIS_DEVICE) {
+            displayInfoMessage(viewHolder, activity.getString(R.string.not_encrypted_for_this_device), darkBackground);
         } else {
             if (message.isGeoUri()) {
                 displayLocationMessage(viewHolder, message);
