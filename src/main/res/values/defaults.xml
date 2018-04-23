@@ -89,11 +89,9 @@
     <bool name="display_enter_key">false</bool>
     <bool name="show_dynamic_tags">false</bool>
     <integer name="grace_period">144</integer>
-    <bool name="use_larger_font">false</bool>
     <bool name="presence_colored_names">false</bool>
     <bool name="use_max_brightness">true</bool>
     <bool name="auto_rotate">true</bool>
-    <bool name="use_white_background">false</bool>
     <bool name="send_crashreport">true</bool>
     <bool name="plain_text_logs">false</bool>
     <bool name="validate_hostname">false</bool>

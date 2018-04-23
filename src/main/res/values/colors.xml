@@ -3,7 +3,6 @@
     <color name="realgreen">#ff259b24</color>
     <color name="primary">#ff2e4272</color>
     <color name="primary_dark">#ff08183e</color>
-    <color name="dark">#ff000309</color>
     <color name="accent">#ff0091ea</color>
     <color name="black87">#de000309</color>
     <color name="black54">#8a000309</color>
@@ -21,7 +20,6 @@
     <color name="red800">#ffc62828</color>
     <color name="red500">#fff44336</color>
     <color name="red_a700">#ffd50000</color>
-    <color name="red_a100">#ffff8a80</color>
     <color name="orange500">#ffff9800</color>
     <color name="bubble">#ff2e4272</color>
     <color name="realwhite">#ffffffff</color>
