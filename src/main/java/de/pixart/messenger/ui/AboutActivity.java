@@ -3,6 +3,7 @@ package de.pixart.messenger.ui;
 import android.os.Bundle;
 
 import de.pixart.messenger.R;
+import de.pixart.messenger.utils.ThemeHelper;
 
 public class AboutActivity extends XmppActivity {
 
@@ -19,8 +20,7 @@ public class AboutActivity extends XmppActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.mTheme = findTheme();
-        setTheme(this.mTheme);
+        setTheme(ThemeHelper.find(this));
         setContentView(R.layout.activity_about);
         setSupportActionBar(findViewById(R.id.toolbar));
         configureActionBar(getSupportActionBar());

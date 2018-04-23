@@ -80,6 +80,7 @@ import de.pixart.messenger.ui.util.PresenceSelector;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.ExceptionHelper;
 import de.pixart.messenger.utils.MenuDoubleTabUtil;
+import de.pixart.messenger.utils.ThemeHelper;
 import de.pixart.messenger.xmpp.OnKeyStatusUpdated;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import rocks.xmpp.addr.Jid;
@@ -1046,13 +1047,7 @@ public abstract class XmppActivity extends AppCompatActivity {
     }
 
     protected int findTheme() {
-        Boolean dark = getPreferences().getString(SettingsActivity.THEME, getResources().getString(R.string.theme)).equals("dark");
-
-        if (dark) {
-            return R.style.ConversationsTheme_Dark;
-        } else {
-            return R.style.ConversationsTheme;
-        }
+        return ThemeHelper.find(this);
     }
 
     @Override

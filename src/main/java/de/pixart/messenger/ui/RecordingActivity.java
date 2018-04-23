@@ -180,8 +180,7 @@ public class RecordingActivity extends XmppActivity implements View.OnClickListe
     }
 
     protected int findTheme() {
-        Boolean dark = getPreferences().getString(SettingsActivity.THEME, getResources().getString(R.string.theme)).equals("dark");
-
+        final Boolean dark = getPreferences().getString(SettingsActivity.THEME, getResources().getString(R.string.theme)).equals("dark");
         if (dark) {
             return R.style.ConversationsDialog_Dark;
         } else {

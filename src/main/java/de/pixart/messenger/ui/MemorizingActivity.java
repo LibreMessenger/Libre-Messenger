@@ -27,9 +27,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
@@ -39,6 +37,7 @@ import java.util.logging.Logger;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.MTMDecision;
 import de.pixart.messenger.services.MemorizingTrustManager;
+import de.pixart.messenger.utils.ThemeHelper;
 
 public class MemorizingActivity extends AppCompatActivity implements OnClickListener,OnCancelListener {
 
@@ -51,7 +50,7 @@ public class MemorizingActivity extends AppCompatActivity implements OnClickList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         LOGGER.log(Level.FINE, "onCreate");
-        //setTheme(findTheme());
+        setTheme(ThemeHelper.find(this));
         super.onCreate(savedInstanceState);
         getLayoutInflater().inflate(R.layout.toolbar, findViewById(android.R.id.content));
         setSupportActionBar(findViewById(R.id.toolbar));
@@ -86,16 +85,6 @@ public class MemorizingActivity extends AppCompatActivity implements OnClickList
         LOGGER.log(Level.FINE, "Sending decision: " + decision);
         MemorizingTrustManager.interactResult(decisionId, decision);
         finish();
-    }
-
-    protected int findTheme() {
-        return 0;
-        //return getPreferences().getString(SettingsActivity.THEME, getResources().getString(R.string.theme)).equals("dark") ? R.style.ConversationsTheme_Dark : R.style.ConversationsTheme;
-    }
-
-    protected SharedPreferences getPreferences() {
-        return PreferenceManager
-                .getDefaultSharedPreferences(getApplicationContext());
     }
 
     // react on AlertDialog button press
