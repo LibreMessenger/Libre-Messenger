@@ -48,7 +48,7 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
     private static final String PREFIX_GENERIC = "generic";
 
     final private ArrayList<Integer> sizes = new ArrayList<>();
-    final private HashMap<String,Set<String>> conversationDependentKeys = new HashMap<>();
+    final private HashMap<String, Set<String>> conversationDependentKeys = new HashMap<>();
 
     protected XmppConnectionService mXmppConnectionService = null;
 
@@ -56,9 +56,22 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
         this.mXmppConnectionService = service;
     }
 
+    private static String getFirstLetter(String name) {
+        for (Character c : name.toCharArray()) {
+            if (Character.isLetterOrDigit(c)) {
+                return c.toString();
+            }
+        }
+        return "X";
+    }
+
+    private static String emptyOnNull(@Nullable Jid value) {
+        return value == null ? "" : value.toString();
+    }
+
     private Bitmap get(final Contact contact, final int size, boolean cachedOnly) {
         if (contact.isSelf()) {
-            return get(contact.getAccount(),size,cachedOnly);
+            return get(contact.getAccount(), size, cachedOnly);
         }
         final String KEY = key(contact, size);
         Bitmap avatar = this.mXmppConnectionService.getBitmapCache().get(KEY);
@@ -115,14 +128,16 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
 
     private void drawIcon(Canvas canvas, Paint paint) {
         BitmapFactory.Options opts = new BitmapFactory.Options();
-        opts.inSampleSize = 3;
+        opts.inSampleSize = 2;
         Resources resources = mXmppConnectionService.getResources();
         Bitmap icon = BitmapFactory.decodeResource(resources, R.drawable.ic_launcher, opts);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
 
-        int left = canvas.getWidth() - icon.getWidth();
-        int top = canvas.getHeight() - icon.getHeight();
-        final Rect rect = new Rect(left, top, left + icon.getWidth(), top + icon.getHeight());
+        int iconSize = Math.round(canvas.getHeight() / 2.6f);
+
+        int left = canvas.getWidth() - iconSize;
+        int top = canvas.getHeight() - iconSize;
+        final Rect rect = new Rect(left, top, left + iconSize, top + iconSize);
         canvas.drawBitmap(icon, null, rect, paint);
     }
 
@@ -416,6 +431,10 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
         }
     }
 
+    /*public Bitmap get(String name, int size) {
+         return get(name,null, size,false);
+ 	}*/
+
     public void clear(MucOptions.User user) {
         synchronized (this.sizes) {
             for (Integer size : sizes) {
@@ -433,10 +452,6 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
         return PREFIX_ACCOUNT + "_" + account.getUuid() + "_"
                 + String.valueOf(size);
     }
-
-    /*public Bitmap get(String name, int size) {
-         return get(name,null, size,false);
- 	}*/
 
     public Bitmap get(final String name, String seed, final int size, boolean cachedOnly) {
         final String KEY = key(seed == null ? name : seed, size);
@@ -548,15 +563,6 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
         return false;
     }
 
-    private static String getFirstLetter(String name) {
-        for (Character c : name.toCharArray()) {
-            if (Character.isLetterOrDigit(c)) {
-                return c.toString();
-            }
-        }
-        return "X";
-    }
-
     private boolean drawTile(Canvas canvas, Uri uri, int left, int top, int right, int bottom) {
         if (uri != null) {
             Bitmap bitmap = mXmppConnectionService.getFileBackend()
@@ -584,9 +590,5 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
                 mXmppConnectionService.republishAvatarIfNeeded(account);
             }
         }
-    }
-
-    private static String emptyOnNull(@Nullable Jid value) {
-        return value == null ? "" : value.toString();
     }
 }
