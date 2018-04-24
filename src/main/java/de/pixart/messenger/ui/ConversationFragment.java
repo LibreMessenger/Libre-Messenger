@@ -107,6 +107,7 @@ import de.pixart.messenger.utils.FileUtils;
 import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import de.pixart.messenger.utils.MessageUtils;
 import de.pixart.messenger.utils.NickValidityChecker;
+import de.pixart.messenger.utils.QuickLoader;
 import de.pixart.messenger.utils.StylingHelper;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.XmppConnection;
@@ -2084,6 +2085,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         String uuid = savedInstanceState.getString(STATE_CONVERSATION_UUID);
         pendingLastMessageUuid.push(savedInstanceState.getString(STATE_LAST_MESSAGE_UUID, null));
         if (uuid != null) {
+            QuickLoader.set(uuid);
             this.pendingConversationsUuid.push(uuid);
             String takePhotoUri = savedInstanceState.getString(STATE_PHOTO_URI);
             if (takePhotoUri != null) {
@@ -2153,6 +2155,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     }
 
     public void reInit(Conversation conversation, Bundle extras) {
+        QuickLoader.set(conversation.getUuid());
         this.saveMessageDraftStopAudioPlayer();
         if (this.reInit(conversation, extras != null)) {
             if (extras != null) {

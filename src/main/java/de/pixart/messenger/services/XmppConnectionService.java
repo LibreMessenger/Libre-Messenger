@@ -117,6 +117,7 @@ import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.utils.OnPhoneContactsLoadedListener;
 import de.pixart.messenger.utils.PRNGFixes;
 import de.pixart.messenger.utils.PhoneHelper;
+import de.pixart.messenger.utils.QuickLoader;
 import de.pixart.messenger.utils.ReplacingSerialSingleThreadExecutor;
 import de.pixart.messenger.utils.ReplacingTaskManager;
 import de.pixart.messenger.utils.Resolver;
@@ -1581,11 +1582,17 @@ public class XmppConnectionService extends Service {
                 loadPhoneContacts();
                 Log.d(Config.LOGTAG, "restoring messages...");
                 final long startMessageRestore = SystemClock.elapsedRealtime();
-                for (Conversation conversation : conversations) {
-                    conversation.addAll(0, databaseBackend.getMessages(conversation, Config.PAGE_SIZE));
-                    checkDeletedFiles(conversation);
-                    conversation.findUnsentTextMessages(message -> markMessage(message, Message.STATUS_WAITING));
-                    conversation.findUnreadMessages(message -> mNotificationService.pushFromBacklog(message));
+                final Conversation quickLoad = QuickLoader.get(this.conversations);
+                if (quickLoad != null) {
+                    restoreMessages(quickLoad);
+                    updateConversationUi();
+                    final long diffMessageRestore = SystemClock.elapsedRealtime() - startMessageRestore;
+                    Log.d(Config.LOGTAG, "quickly restored " + quickLoad.getName() + " after " + diffMessageRestore + "ms");
+                }
+                for (Conversation conversation : this.conversations) {
+                    if (quickLoad != conversation) {
+                        restoreMessages(conversation);
+                    }
                 }
                 mNotificationService.finishBacklog(false);
                 restoredFromDatabaseLatch.countDown();
@@ -1595,6 +1602,13 @@ public class XmppConnectionService extends Service {
             };
             mDatabaseReaderExecutor.execute(runnable); //will contain one write command (expiry) but that's fine
         }
+    }
+
+    private void restoreMessages(Conversation conversation) {
+        conversation.addAll(0, databaseBackend.getMessages(conversation, Config.PAGE_SIZE));
+        checkDeletedFiles(conversation);
+        conversation.findUnsentTextMessages(message -> markMessage(message, Message.STATUS_WAITING));
+        conversation.findUnreadMessages(message -> mNotificationService.pushFromBacklog(message));
     }
 
     public void loadPhoneContacts() {
