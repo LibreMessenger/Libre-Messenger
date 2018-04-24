@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import java.net.URLConnection;
@@ -62,7 +62,7 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
     private Share share;
 
     private static final int REQUEST_START_NEW_CONVERSATION = 0x0501;
-    private ListView mListView;
+    private RecyclerView mListView;
     private ConversationAdapter mAdapter;
     private List<Conversation> mConversations = new ArrayList<>();
     private Toast mToast;
@@ -176,7 +176,7 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
         mListView = findViewById(R.id.choose_conversation_list);
         mAdapter = new ConversationAdapter(this, this.mConversations);
         mListView.setAdapter(mAdapter);
-        mListView.setOnItemClickListener((arg0, arg1, position, arg3) -> share(mConversations.get(position)));
+        mAdapter.setConversationClickListener((view, conversation) -> share(conversation));
 
         if (savedInstanceState != null) {
             SharingIsRunning = savedInstanceState.getBoolean(STATE_SHARING_IS_RUNNING, false);

@@ -33,6 +33,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +48,7 @@ import de.pixart.messenger.databinding.FragmentConversationsOverviewBinding;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.ui.adapter.ConversationAdapter;
 import de.pixart.messenger.ui.interfaces.OnConversationSelected;
+import de.pixart.messenger.ui.util.PendingActionHelper;
 import de.pixart.messenger.ui.util.PendingItem;
 import de.pixart.messenger.ui.util.ScrollState;
 
@@ -60,6 +62,7 @@ public class ConversationsOverviewFragment extends XmppFragment {
     private FragmentConversationsOverviewBinding binding;
     private ConversationAdapter conversationsAdapter;
     private XmppActivity activity;
+    private PendingActionHelper pendingActionHelper = new PendingActionHelper();
 
     public static Conversation getSuggestion(Activity activity) {
         final Conversation exception;
@@ -111,6 +114,13 @@ public class ConversationsOverviewFragment extends XmppFragment {
     }
 
     @Override
+    public void onPause() {
+        Log.d(Config.LOGTAG, "ConversationsOverviewFragment.onPause()");
+        pendingActionHelper.execute();
+        super.onPause();
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         this.activity = null;
@@ -123,9 +133,7 @@ public class ConversationsOverviewFragment extends XmppFragment {
         this.binding.fab.setOnClickListener((view) -> StartConversationActivity.launch(getActivity()));
 
         this.conversationsAdapter = new ConversationAdapter(this.activity, this.conversations);
-        this.binding.list.setAdapter(this.conversationsAdapter);
-        this.binding.list.setOnItemClickListener((parent, view, position, id) -> {
-            Conversation conversation = this.conversations.get(position);
+        this.conversationsAdapter.setConversationClickListener((view, conversation) -> {
             if (activity instanceof OnConversationSelected) {
                 ((OnConversationSelected) activity).onConversationSelected(conversation);
             } else {
@@ -133,6 +141,8 @@ public class ConversationsOverviewFragment extends XmppFragment {
             }
         });
 
+        this.binding.list.setAdapter(this.conversationsAdapter);
+        this.binding.list.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         return binding.getRoot();
     }
 
@@ -154,7 +164,8 @@ public class ConversationsOverviewFragment extends XmppFragment {
         if (this.binding == null) {
             return null;
         }
-        int position = this.binding.list.getFirstVisiblePosition();
+        LinearLayoutManager layoutManager = (LinearLayoutManager) this.binding.list.getLayoutManager();
+        int position = layoutManager.findFirstVisibleItemPosition();
         final View view = this.binding.list.getChildAt(0);
         if (view != null) {
             return new ScrollState(position, view.getTop());
@@ -194,7 +205,8 @@ public class ConversationsOverviewFragment extends XmppFragment {
 
     private void setScrollPosition(ScrollState scrollPosition) {
         if (scrollPosition != null) {
-            this.binding.list.setSelectionFromTop(scrollPosition.position, scrollPosition.offset);
+            LinearLayoutManager layoutManager = (LinearLayoutManager) binding.list.getLayoutManager();
+            layoutManager.scrollToPositionWithOffset(scrollPosition.position, scrollPosition.offset);
         }
     }
 }

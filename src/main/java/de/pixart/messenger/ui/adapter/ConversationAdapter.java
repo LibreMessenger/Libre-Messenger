@@ -11,11 +11,11 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,7 +28,6 @@ import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.Transferable;
-import de.pixart.messenger.ui.ConversationFragment;
 import de.pixart.messenger.ui.XmppActivity;
 import de.pixart.messenger.ui.util.Color;
 import de.pixart.messenger.ui.widget.UnreadCountCustomView;
@@ -38,15 +37,15 @@ import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 import rocks.xmpp.addr.Jid;
 
-public class ConversationAdapter extends ArrayAdapter<Conversation> {
+public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapter.ConversationViewHolder> {
 
     private XmppActivity activity;
-    private Conversation selectedConversation = null;
+    private List<Conversation> conversations;
+	private OnConversationClickListener listener;
 
-    public ConversationAdapter(XmppActivity activity,
-                               List<Conversation> conversations) {
-        super(activity, 0, conversations);
+    public ConversationAdapter(XmppActivity activity, List<Conversation> conversations) {
         this.activity = activity;
+        this.conversations = conversations;
     }
 
     private static boolean cancelPotentialWork(Conversation conversation, ImageView imageView) {
@@ -74,17 +73,20 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
         return null;
     }
 
+    @NonNull
     @Override
-    public @NonNull
-    View getView(int position, View view, @NonNull ViewGroup parent) {
-        if (view == null) {
-            LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.conversation_list_row, parent, false);
-        }
-        ViewHolder viewHolder = ViewHolder.get(view);
-        Conversation conversation = getItem(position);
+    public ConversationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.conversation_list_row, parent, false);
+        ConversationViewHolder conversationViewHolder = ConversationViewHolder.get(view);
+        return conversationViewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ConversationViewHolder viewHolder, int position) {
+        Conversation conversation = conversations.get(position);
         if (conversation == null) {
-            return view;
+            return;
         }
         if (conversation.getMode() == Conversation.MODE_SINGLE || activity.useSubjectToIdentifyConference()) {
             CharSequence name = conversation.getName();
@@ -300,13 +302,16 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
                 }
             }
         }
-        return view;
+        viewHolder.itemView.setOnClickListener(v -> listener.onConversationClick(v, conversation));
     }
 
     @Override
-    public void notifyDataSetChanged() {
-        this.selectedConversation = ConversationFragment.getConversation(activity);
-        super.notifyDataSetChanged();
+    public int getItemCount() {
+        return conversations.size();
+    }
+
+    public void setConversationClickListener(OnConversationClickListener listener) {
+        this.listener = listener;
     }
 
     private void loadAvatar(Conversation conversation, ImageView imageView) {
@@ -330,7 +335,17 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
         }
     }
 
-    public static class ViewHolder {
+    public void insert(Conversation c, int position) {
+        conversations.add(position, c);
+        notifyDataSetChanged();
+    }
+
+    public void remove(Conversation conversation, int position) {
+        conversations.remove(conversation);
+        notifyItemRemoved(position);
+    }
+
+    public static class ConversationViewHolder extends RecyclerView.ViewHolder {
         private TextView name;
         private TextView lastMessage;
         private ImageView lastMessageIcon;
@@ -343,28 +358,28 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
         private ImageView readStatus;
         private ImageView avatar;
 
-        private ViewHolder() {
-
+        private ConversationViewHolder(View view) {
+            super(view);
         }
 
-        public static ViewHolder get(View layout) {
-            ViewHolder viewHolder = (ViewHolder) layout.getTag();
-            if (viewHolder == null) {
-                viewHolder = new ViewHolder();
-                viewHolder.name = layout.findViewById(R.id.conversation_name);
-                viewHolder.lastMessage = layout.findViewById(R.id.conversation_lastmsg);
-                viewHolder.lastMessageIcon = layout.findViewById(R.id.conversation_lastmsg_img);
-                viewHolder.timestamp = layout.findViewById(R.id.conversation_lastupdate);
-                viewHolder.avatar = layout.findViewById(R.id.conversation_image);
-                viewHolder.sender = layout.findViewById(R.id.sender_name);
-                viewHolder.notificationIcon = layout.findViewById(R.id.notification_status);
-                viewHolder.unreadCount = layout.findViewById(R.id.conversation_unread);
-                viewHolder.failedCount = layout.findViewById(R.id.conversation_failed);
-                viewHolder.receivedStatus = layout.findViewById(R.id.indicator_received);
-                viewHolder.readStatus = layout.findViewById(R.id.indicator_read);
-                layout.setTag(viewHolder);
+        public static ConversationViewHolder get(View layout) {
+            ConversationViewHolder conversationViewHolder = (ConversationViewHolder) layout.getTag();
+            if (conversationViewHolder == null) {
+                conversationViewHolder = new ConversationViewHolder(layout);
+                conversationViewHolder.name = layout.findViewById(R.id.conversation_name);
+                conversationViewHolder.lastMessage = layout.findViewById(R.id.conversation_lastmsg);
+                conversationViewHolder.lastMessageIcon = layout.findViewById(R.id.conversation_lastmsg_img);
+                conversationViewHolder.timestamp = layout.findViewById(R.id.conversation_lastupdate);
+                conversationViewHolder.avatar = layout.findViewById(R.id.conversation_image);
+                conversationViewHolder.sender = layout.findViewById(R.id.sender_name);
+                conversationViewHolder.notificationIcon = layout.findViewById(R.id.notification_status);
+                conversationViewHolder.unreadCount = layout.findViewById(R.id.conversation_unread);
+                conversationViewHolder.failedCount = layout.findViewById(R.id.conversation_failed);
+                conversationViewHolder.receivedStatus = layout.findViewById(R.id.indicator_received);
+                conversationViewHolder.readStatus = layout.findViewById(R.id.indicator_read);
+                layout.setTag(conversationViewHolder);
             }
-            return viewHolder;
+            return conversationViewHolder;
         }
     }
 
@@ -413,5 +428,9 @@ public class ConversationAdapter extends ArrayAdapter<Conversation> {
 
     protected SharedPreferences getPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+    }
+
+    public interface OnConversationClickListener {
+        void onConversationClick(View view, Conversation conversation);
     }
 }
