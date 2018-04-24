@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.persistance.DatabaseBackend;
 import de.pixart.messenger.utils.XmppUri;
@@ -89,7 +90,7 @@ public class UriHandlerActivity extends AppCompatActivity {
             return;
         }
 
-        if (accounts.size() == 0) {
+        if (accounts.size() == 0 && Config.MAGIC_CREATE_DOMAIN != null) {
             intent = new Intent(getApplicationContext(), WelcomeActivity.class);
             WelcomeActivity.addInviteUri(intent, xmppUri);
             startActivity(intent);

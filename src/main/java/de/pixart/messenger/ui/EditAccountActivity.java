@@ -324,7 +324,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         if (mInitMode && mAccount != null && !mAccount.isOptionSet(Account.OPTION_LOGGED_IN_SUCCESSFULLY)) {
             xmppConnectionService.deleteAccount(mAccount);
         }
-        if (xmppConnectionService.getAccounts().size() == 0) {
+        if (xmppConnectionService.getAccounts().size() == 0 && Config.MAGIC_CREATE_DOMAIN != null) {
             Intent intent = new Intent(EditAccountActivity.this, WelcomeActivity.class);
             WelcomeActivity.addInviteUri(intent, getIntent());
             startActivity(intent);
