@@ -66,6 +66,7 @@ import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.ListItem;
 import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.services.EmojiService;
+import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.services.XmppConnectionService.OnRosterUpdate;
 import de.pixart.messenger.ui.adapter.ListItemAdapter;
 import de.pixart.messenger.ui.interfaces.OnBackendConnected;
@@ -78,7 +79,7 @@ import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
 
-public class StartConversationActivity extends XmppActivity implements OnRosterUpdate, OnUpdateBlocklist, CreateConferenceDialog.CreateConferenceDialogListener, JoinConferenceDialog.JoinConferenceDialogListener {
+public class StartConversationActivity extends XmppActivity implements XmppConnectionService.OnConversationUpdate, OnRosterUpdate, OnUpdateBlocklist, CreateConferenceDialog.CreateConferenceDialogListener, JoinConferenceDialog.JoinConferenceDialogListener {
 
     private final int REQUEST_SYNC_CONTACTS = 0x28cf;
     private final int REQUEST_CREATE_CONFERENCE = 0x39da;
@@ -981,6 +982,11 @@ public class StartConversationActivity extends XmppActivity implements OnRosterU
             dialog.dismiss();
             switchToConversation(conversation);
         }
+    }
+
+    @Override
+    public void onConversationUpdate() {
+        refreshUi();
     }
 
     public static class MyListFragment extends ListFragment {
