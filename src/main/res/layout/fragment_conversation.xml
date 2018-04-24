@@ -29,12 +29,12 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/messages_view"
             android:layout_alignParentEnd="true"
-            android:layout_margin="12dp"
             android:alpha="0.85"
             android:src="?attr/icon_scroll_down"
             android:visibility="gone"
             app:backgroundTint="?attr/color_background_primary"
-            app:fabSize="mini" />
+            app:fabSize="mini"
+            app:useCompatPadding="true" />
 
         <de.pixart.messenger.ui.widget.UnreadCountCustomView
             android:id="@+id/unread_count_custom_view"
@@ -42,6 +42,8 @@
             android:layout_height="?attr/IconSize"
             android:layout_alignEnd="@+id/scroll_to_bottom_button"
             android:layout_alignTop="@+id/scroll_to_bottom_button"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="16dp"
             android:elevation="8dp"
             android:visibility="gone"
             app:backgroundColor="?attr/colorAccent" />
