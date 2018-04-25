@@ -215,6 +215,24 @@
                             android:text="@string/invite_contact" />
 
                         <Button
+                            android:id="@+id/leave_muc"
+                            style="?android:attr/buttonStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="24dp"
+                            android:text="@string/action_end_conversation_muc" />
+
+                        <Button
+                            android:id="@+id/add_contact_button"
+                            style="?android:attr/buttonStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="24dp"
+                            android:text="@string/add_to_contact_list" />
+
+                        <Button
                             android:id="@+id/destroy"
                             style="?android:attr/buttonStyleSmall"
                             android:layout_width="wrap_content"

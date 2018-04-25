@@ -64,26 +64,6 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             inviteToConversation(mConversation);
         }
     };
-    private OnClickListener destroyListener = new OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            final AlertDialog.Builder DestroyMucDialog = new AlertDialog.Builder(ConferenceDetailsActivity.this);
-            DestroyMucDialog.setNegativeButton(getString(R.string.cancel), null);
-            DestroyMucDialog.setTitle(getString(R.string.destroy_muc));
-            DestroyMucDialog.setMessage(getString(R.string.destroy_muc_text, mConversation.getName()));
-            DestroyMucDialog.setPositiveButton(getString(R.string.delete), (dialogInterface, i) -> {
-                Intent intent = new Intent(xmppConnectionService, ConversationsActivity.class);
-                intent.setAction(ConversationsActivity.ACTION_DESTROY_MUC);
-                intent.putExtra("MUC_UUID", mConversation.getUuid());
-                Log.d(Config.LOGTAG, "Sending DESTROY intent for " + mConversation.getName());
-                startActivity(intent);
-                deleteBookmark();
-                finish();
-            });
-            DestroyMucDialog.create().show();
-        }
-    };
 
     private ActivityMucDetailsBinding binding;
     private String uuid = null;
@@ -277,8 +257,8 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         this.binding.invite.setVisibility(View.GONE);
         this.binding.invite.setOnClickListener(inviteListener);
         this.binding.destroy.setVisibility(View.GONE);
-        this.binding.destroy.setOnClickListener(destroyListener);
-        this.binding.destroy.getBackground().setColorFilter(getWarningButtonColor(), PorterDuff.Mode.MULTIPLY);
+        this.binding.leaveMuc.setVisibility(View.GONE);
+        this.binding.addContactButton.setVisibility(View.GONE);
         this.binding.mucMoreDetails.setVisibility(View.GONE);
         setSupportActionBar((Toolbar) binding.toolbar);
         configureActionBar(getSupportActionBar());
@@ -328,12 +308,6 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             case R.id.action_share_uri:
                 shareLink(false);
                 break;
-            case R.id.action_save_as_bookmark:
-                saveAsBookmark();
-                break;
-            case R.id.action_delete_bookmark:
-                deleteBookmark();
-                break;
             case R.id.action_advanced_mode:
                 this.mAdvancedMode = !menuItem.isChecked();
                 menuItem.setChecked(this.mAdvancedMode);
@@ -362,20 +336,11 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem menuItemSaveBookmark = menu.findItem(R.id.action_save_as_bookmark);
-        MenuItem menuItemDeleteBookmark = menu.findItem(R.id.action_delete_bookmark);
         MenuItem menuItemAdvancedMode = menu.findItem(R.id.action_advanced_mode);
         MenuItem menuItemChangeSubject = menu.findItem(R.id.action_edit_subject);
         menuItemAdvancedMode.setChecked(mAdvancedMode);
         if (mConversation == null) {
             return true;
-        }
-        if (mConversation.getBookmark() != null) {
-            menuItemSaveBookmark.setVisible(false);
-            menuItemDeleteBookmark.setVisible(true);
-        } else {
-            menuItemDeleteBookmark.setVisible(false);
-            menuItemSaveBookmark.setVisible(true);
         }
         menuItemChangeSubject.setVisible(mConversation.getMucOptions().canChangeSubject());
         return true;
@@ -533,6 +498,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
     protected void saveAsBookmark() {
         xmppConnectionService.saveConversationAsBookmark(mConversation,
                 mConversation.getMucOptions().getSubject());
+        updateView();
     }
 
     protected void deleteBookmark() {
@@ -563,6 +529,9 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 
     private void updateView() {
         invalidateOptionsMenu();
+        if (mConversation == null) {
+            return;
+        }
         final MucOptions mucOptions = mConversation.getMucOptions();
         final User self = mucOptions.getSelf();
         String account;
@@ -619,10 +588,63 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             }
             if (self.getAffiliation().ranks(MucOptions.Affiliation.OWNER)) {
                 this.binding.destroy.setVisibility(View.VISIBLE);
+                this.binding.destroy.setOnClickListener(v -> {
+                    final AlertDialog.Builder DestroyMucDialog = new AlertDialog.Builder(ConferenceDetailsActivity.this);
+                    DestroyMucDialog.setNegativeButton(getString(R.string.cancel), null);
+                    DestroyMucDialog.setTitle(getString(R.string.destroy_muc));
+                    DestroyMucDialog.setMessage(getString(R.string.destroy_muc_text, mConversation.getName()));
+                    DestroyMucDialog.setPositiveButton(getString(R.string.delete), (dialogInterface, i) -> {
+                        Intent intent = new Intent(xmppConnectionService, ConversationsActivity.class);
+                        intent.setAction(ConversationsActivity.ACTION_DESTROY_MUC);
+                        intent.putExtra("MUC_UUID", mConversation.getUuid());
+                        Log.d(Config.LOGTAG, "Sending DESTROY intent for " + mConversation.getName());
+                        startActivity(intent);
+                        deleteBookmark();
+                        finish();
+                    });
+                });
+                this.binding.destroy.getBackground().setColorFilter(getWarningButtonColor(), PorterDuff.Mode.MULTIPLY);
                 this.binding.changeConferenceButton.setVisibility(View.VISIBLE);
             } else {
                 this.binding.destroy.setVisibility(View.GONE);
                 this.binding.changeConferenceButton.setVisibility(View.GONE);
+            }
+            this.binding.leaveMuc.setVisibility(View.VISIBLE);
+            this.binding.leaveMuc.setOnClickListener(v1 -> {
+                final AlertDialog.Builder LeaveMucDialog = new AlertDialog.Builder(ConferenceDetailsActivity.this);
+                LeaveMucDialog.setTitle(getString(R.string.action_end_conversation_muc));
+                LeaveMucDialog.setMessage(getString(R.string.leave_conference_warning));
+                LeaveMucDialog.setNegativeButton(getString(R.string.cancel), null);
+                LeaveMucDialog.setPositiveButton(getString(R.string.action_end_conversation_muc),
+                        (dialog, which) -> {
+                            startActivity(new Intent(xmppConnectionService, ConversationsActivity.class));
+                            this.xmppConnectionService.archiveConversation(mConversation);
+                            finish();
+                        });
+                LeaveMucDialog.create().show();
+            });
+            this.binding.leaveMuc.getBackground().setColorFilter(getWarningButtonColor(), PorterDuff.Mode.MULTIPLY);
+            this.binding.addContactButton.setVisibility(View.VISIBLE);
+            if (mConversation.getBookmark() != null) {
+                this.binding.addContactButton.setText(R.string.delete_bookmark);
+                this.binding.addContactButton.getBackground().setColorFilter(getWarningButtonColor(), PorterDuff.Mode.MULTIPLY);
+                this.binding.addContactButton.setOnClickListener(v2 -> {
+                    final AlertDialog.Builder deleteFromRosterDialog = new AlertDialog.Builder(ConferenceDetailsActivity.this);
+                    deleteFromRosterDialog.setNegativeButton(getString(R.string.cancel), null);
+                    deleteFromRosterDialog.setTitle(getString(R.string.action_delete_contact));
+                    deleteFromRosterDialog.setMessage(getString(R.string.remove_bookmark_text, mConversation.getJid().toString()));
+                    deleteFromRosterDialog.setPositiveButton(getString(R.string.delete),
+                            (dialog, which) -> {
+                                deleteBookmark();
+                            });
+                    deleteFromRosterDialog.create().show();
+                });
+            } else {
+                this.binding.addContactButton.setText(R.string.save_as_bookmark);
+                this.binding.addContactButton.getBackground().clearColorFilter();
+                this.binding.addContactButton.setOnClickListener(v2 -> {
+                    saveAsBookmark();
+                });
             }
         } else {
             this.binding.mucMoreDetails.setVisibility(View.GONE);

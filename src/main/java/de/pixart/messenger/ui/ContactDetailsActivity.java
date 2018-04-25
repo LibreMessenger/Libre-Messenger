@@ -406,18 +406,12 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             binding.detailsSendPresence.setOnCheckedChangeListener(null);
             binding.detailsReceivePresence.setOnCheckedChangeListener(null);
 
-            final AlertDialog.Builder deleteFromRosterDialog = new AlertDialog.Builder(ContactDetailsActivity.this);
-            binding.addContactButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    deleteFromRosterDialog.setNegativeButton(getString(R.string.cancel), null);
-                    deleteFromRosterDialog.setTitle(getString(R.string.action_delete_contact))
-                            .setMessage(
-                                    getString(R.string.remove_contact_text,
-                                            contact.getJid().toString()))
-                            .setPositiveButton(getString(R.string.delete),
-                                    removeFromRoster).create().show();
-                }
+            binding.addContactButton.setOnClickListener(view -> {
+                final AlertDialog.Builder deleteFromRosterDialog = new AlertDialog.Builder(ContactDetailsActivity.this);
+                deleteFromRosterDialog.setNegativeButton(getString(R.string.cancel), null);
+                deleteFromRosterDialog.setTitle(getString(R.string.action_delete_contact));
+                deleteFromRosterDialog.setMessage(getString(R.string.remove_contact_text, contact.getJid().toString()));
+                deleteFromRosterDialog.setPositiveButton(getString(R.string.delete), removeFromRoster).create().show();
             });
             binding.detailsSendPresence.setOnCheckedChangeListener(null);
             binding.detailsReceivePresence.setOnCheckedChangeListener(null);

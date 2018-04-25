@@ -6,14 +6,14 @@
         android:id="@+id/action_edit_subject"
         android:icon="?attr/icon_edit"
         android:orderInCategory="10"
-        app:showAsAction="always"
-        android:title="@string/action_edit_subject" />
+        android:title="@string/action_edit_subject"
+        app:showAsAction="always" />
     <item
         android:id="@+id/action_share"
         android:icon="?attr/icon_share"
-        app:showAsAction="always"
         android:orderInCategory="15"
-        android:title="@string/share_uri_with" >
+        android:title="@string/share_uri_with"
+        app:showAsAction="always">
         <menu>
             <item
                 android:id="@+id/action_share_uri"
@@ -26,23 +26,11 @@
                 android:title="@string/show_qr_code" />
         </menu>
     </item>
-
-    <item
-        android:id="@+id/action_save_as_bookmark"
-        android:orderInCategory="80"
-        app:showAsAction="never"
-        android:title="@string/save_as_bookmark" />
-    <item
-        android:id="@+id/action_delete_bookmark"
-        android:orderInCategory="80"
-        app:showAsAction="never"
-        android:title="@string/delete_bookmark" />
     <item
         android:id="@+id/action_advanced_mode"
         android:checkable="true"
         android:checked="false"
         android:orderInCategory="85"
-        app:showAsAction="never"
-        android:title="@string/advanced_mode" />
-
+        android:title="@string/advanced_mode"
+        app:showAsAction="never" />
 </menu>
