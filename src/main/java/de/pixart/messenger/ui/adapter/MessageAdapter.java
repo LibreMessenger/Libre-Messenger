@@ -319,7 +319,6 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
         if (error && type == SENT) {
             viewHolder.time.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Caption_Waring);
-            viewHolder.time.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Caption_Waring);
             DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
             if (file.exists()) {
                 if (activity.xmppConnectionService.mHttpConnectionManager.getAutoAcceptFileSize() >= message.getFileParams().size) {
@@ -336,14 +335,6 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             viewHolder.resend_button.setText(R.string.send_again);
             viewHolder.resend_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_resend_grey600_48dp, 0, 0, 0);
             viewHolder.resend_button.setOnClickListener(v -> mConversationFragment.resendMessage(message));
-        } else if (!error && type == SENT) {
-            viewHolder.resend_button.setVisibility(View.GONE);
-            if (darkBackground) {
-                viewHolder.time.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Caption_OnDark);
-            } else {
-                viewHolder.time.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Caption);
-            }
-            viewHolder.time.setTextColor(this.getMessageTextColor(darkBackground, false));
         } else {
             if (darkBackground) {
                 viewHolder.time.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Caption_OnDark);
@@ -351,6 +342,9 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 viewHolder.time.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Caption);
             }
             viewHolder.time.setTextColor(this.getMessageTextColor(darkBackground, false));
+        }
+        if (!error && type == SENT) {
+            viewHolder.resend_button.setVisibility(View.GONE);
         }
         if (message.getEncryption() == Message.ENCRYPTION_NONE) {
             viewHolder.indicator.setVisibility(View.GONE);
@@ -544,7 +538,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         } else {
             viewHolder.messageBody.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Body1);
         }
-        viewHolder.messageBody.setHighlightColor(ContextCompat.getColor(activity, darkBackground ? R.color.grey800 : R.color.grey500));
+        viewHolder.messageBody.setHighlightColor(darkBackground ? type == SENT ? ContextCompat.getColor(activity, R.color.black26) : ContextCompat.getColor(activity, R.color.grey800) : ContextCompat.getColor(activity, R.color.grey500));
         viewHolder.messageBody.setTypeface(null, Typeface.NORMAL);
         if (message.getBody() != null) {
             final String nick = UIHelper.getMessageDisplayName(message);
@@ -878,7 +872,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             }
         }
 
-        boolean darkBackground = type == SENT && !isInValidSession || activity.isDarkTheme();
+        boolean darkBackground = type == RECEIVED && !isInValidSession || activity.isDarkTheme();
 
         if (type == DATE_SEPARATOR) {
             if (UIHelper.today(message.getTimeSent())) {
@@ -1007,9 +1001,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             } else {
                 viewHolder.message_box.setBackgroundResource(R.drawable.message_bubble_received_warning);
                 viewHolder.encryption.setVisibility(View.VISIBLE);
-                if (!darkBackground) {
-                    viewHolder.encryption.setTextColor(activity.getWarningTextColor());
-                }
+                viewHolder.encryption.setTextColor(activity.getWarningTextColor());
                 if (omemoEncryption && !message.isTrusted()) {
                     viewHolder.encryption.setText(R.string.not_trusted);
                 } else {

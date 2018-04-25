@@ -65,7 +65,7 @@
                     android:layout_marginRight="4sp"
                     android:alpha="0.70"
                     android:gravity="center_vertical"
-                    android:src="@drawable/ic_lock_white_18dp" />
+                    android:src="@drawable/ic_lock_black_18dp" />
 
                 <ImageView
                     android:id="@+id/edit_indicator"
@@ -73,8 +73,9 @@
                     android:layout_height="?attr/TextSizeCaption"
                     android:layout_gravity="center_vertical"
                     android:layout_marginRight="4sp"
+                    android:alpha="0.70"
                     android:gravity="center_vertical"
-                    android:src="@drawable/ic_mode_edit_white_18dp" />
+                    android:src="@drawable/ic_mode_edit_black_18dp" />
 
                 <TextView
                     android:id="@+id/message_time"
