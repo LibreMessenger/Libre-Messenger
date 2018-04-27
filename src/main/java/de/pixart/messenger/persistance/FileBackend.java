@@ -697,9 +697,7 @@ public class FileBackend {
             avatar.width = options.outWidth;
             avatar.type = options.outMimeType;
             return avatar;
-        } catch (IOException e) {
-            return null;
-        } catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException | IOException e) {
             return null;
         } finally {
             close(is);
@@ -711,14 +709,13 @@ public class FileBackend {
         return file.exists();
     }
 
-    public boolean save(Avatar avatar) {
+    public boolean save(final Avatar avatar) {
         File file;
         if (isAvatarCached(avatar)) {
             file = new File(getAvatarPath(avatar.getFilename()));
             avatar.size = file.length();
         } else {
-            String filename = getAvatarPath(avatar.getFilename());
-            file = new File(filename + ".tmp");
+            file = new File(mXmppConnectionService.getCacheDir().getAbsolutePath() + "/" + UUID.randomUUID().toString());
             file.getParentFile().mkdirs();
             OutputStream os = null;
             try {
@@ -733,6 +730,7 @@ public class FileBackend {
                 mDigestOutputStream.close();
                 String sha1sum = CryptoHelper.bytesToHex(digest.digest());
                 if (sha1sum.equals(avatar.sha1sum)) {
+                    String filename = getAvatarPath(avatar.getFilename());
                     file.renameTo(new File(filename));
                 } else {
                     Log.d(Config.LOGTAG, "sha1sum mismatch for " + avatar.owner);
@@ -749,7 +747,7 @@ public class FileBackend {
         return true;
     }
 
-    public String getAvatarPath(String avatar) {
+    private String getAvatarPath(String avatar) {
         return mXmppConnectionService.getFilesDir().getAbsolutePath() + "/avatars/" + avatar;
     }
 
