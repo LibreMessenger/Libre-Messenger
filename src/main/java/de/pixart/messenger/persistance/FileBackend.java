@@ -50,6 +50,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
