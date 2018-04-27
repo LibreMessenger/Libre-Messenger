@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
@@ -38,10 +39,6 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
     private static final int REQUEST_STORAGE_PERMISSION = 0x733f32;
     private boolean mReturnToPrevious = false;
     private Conversation mPendingConversation = null;
-    private static final String STATE_SHARING_IS_RUNNING = "state_sharing_is_running";
-    static boolean ContactChosen = false;
-    static boolean IntentReceived = false;
-    boolean SharingIsRunning = false;
 
     @Override
     public void onConversationUpdate() {
@@ -175,19 +172,10 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
 
         mListView = findViewById(R.id.choose_conversation_list);
         mAdapter = new ConversationAdapter(this, this.mConversations);
+        mListView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         mListView.setAdapter(mAdapter);
         mAdapter.setConversationClickListener((view, conversation) -> share(conversation));
-
-        if (savedInstanceState != null) {
-            SharingIsRunning = savedInstanceState.getBoolean(STATE_SHARING_IS_RUNNING, false);
-        }
-        if (!SharingIsRunning) {
-            Log.d(Config.LOGTAG, "ShareWithActivity onCreate: state restored");
-            this.share = new Share();
-        } else {
-            Log.d(Config.LOGTAG, "ShareWithActivity onCreate: shring running, finish()");
-            this.finish();
-        }
+        this.share = new Share();
     }
 
     @Override
@@ -213,10 +201,7 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
         Intent intent = getIntent();
         if (intent == null) {
             return;
-        } else {
-            IntentReceived = true;
         }
-        Log.d(Config.LOGTAG, "ShareWithActivity onStart() getIntent " + intent.toString());
         this.mReturnToPrevious = getPreferences().getBoolean("return_to_previous", getResources().getBoolean(R.bool.return_to_previous));
         final String type = intent.getType();
         final String action = intent.getAction();
@@ -226,7 +211,6 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
             final String subject = intent.getStringExtra(Intent.EXTRA_SUBJECT);
             final String text = intent.getStringExtra(Intent.EXTRA_TEXT);
             final Uri uri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-            Log.d(Config.LOGTAG, "ShareWithActivity onStart() Uri: " + uri);
             if (type != null && uri != null && (text == null || !type.equals("text/plain"))) {
                 this.share.uris.clear();
                 this.share.uris.add(uri);
@@ -254,18 +238,6 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
             }
         }
 
-    }
-
-    @Override
-    public void onSaveInstanceState(final Bundle savedInstanceState) {
-        Log.d(Config.LOGTAG, "ShareWithActivity onSaveInstanceState: IntentReceived: " + IntentReceived + " ContactChosen: " + ContactChosen);
-        if (IntentReceived && ContactChosen) {
-            Log.d(Config.LOGTAG, "ShareWithActivity onSaveInstanceState: state saved");
-            savedInstanceState.putBoolean(STATE_SHARING_IS_RUNNING, true);
-        } else {
-            Log.d(Config.LOGTAG, "ShareWithActivity onSaveInstanceState: sharing is running, do nothing at this point");
-        }
-        super.onSaveInstanceState(savedInstanceState);
     }
 
     protected boolean isImage(Uri uri) {
@@ -312,7 +284,6 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
                 return;
             }
         }
-        ContactChosen = true;
         share(conversation);
     }
 
@@ -392,8 +363,10 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
                             finish();
                         }
                     };
+
                     @Override
                     public void onPresenceSelected() {
+
                         final int encryption = conversation.getNextEncryption();
 
                         Message message = new Message(conversation,share.text, encryption);
@@ -419,20 +392,7 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
                     callback.onPresenceSelected();
                 }
             } else {
-                final PresenceSelector.OnPresenceSelected callback = () -> {
-                    Message message = new Message(conversation, share.text, conversation.getNextEncryption());
-                    if (conversation.getNextEncryption() == Message.ENCRYPTION_OTR) {
-                        message.setCounterpart(conversation.getNextCounterpart());
-                    }
-                    xmppConnectionService.sendMessage(message);
-                    replaceToast(getString(R.string.shared_text_with_x, conversation.getName()));
-                    switchToConversation(message.getConversation());
-                };
-                if (conversation.getNextEncryption() == Message.ENCRYPTION_OTR) {
-                    selectPresence(conversation, callback);
-                } else {
-                    callback.onPresenceSelected();
-                }
+                switchToConversation(conversation, this.share.text, true);
             }
         }
 
