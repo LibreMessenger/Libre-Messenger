@@ -33,7 +33,6 @@ import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +44,8 @@ public class AttachmentTool {
         if (intent == null) {
             return uris;
         }
-        Uri uri = intent.getData();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2 && uri == null) {
+        final Uri uri = intent.getData();
+        if (uri == null) {
             final ClipData clipData = intent.getClipData();
             if (clipData != null) {
                 for (int i = 0; i < clipData.getItemCount(); ++i) {

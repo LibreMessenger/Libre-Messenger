@@ -1,40 +1,39 @@
 package de.pixart.messenger.ui;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.media.MediaRecorder;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.FileObserver;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.databinding.ActivityRecordingBinding;
 import de.pixart.messenger.persistance.FileBackend;
+import de.pixart.messenger.utils.ThemeHelper;
 
-public class RecordingActivity extends XmppActivity implements View.OnClickListener {
+public class RecordingActivity extends Activity implements View.OnClickListener {
 
-    private TextView mTimerTextView;
-    private Button mCancelButton;
-    private Button mStopButton;
+    private ActivityRecordingBinding binding;
 
     private MediaRecorder mRecorder;
     private long mStartTime = 0;
-
-    private int[] amplitudes = new int[100];
-    private int i = 0;
 
     private Handler mHandler = new Handler();
     private Runnable mTickExecutor = new Runnable() {
@@ -44,38 +43,28 @@ public class RecordingActivity extends XmppActivity implements View.OnClickListe
             mHandler.postDelayed(mTickExecutor, 100);
         }
     };
+
     private File mOutputFile;
+    private boolean mShouldFinishAfterWrite = false;
+
+    private FileObserver mFileObserver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(ThemeHelper.findDialog(this));
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recording);
-        this.mTheme = findTheme();
-        setTheme(this.mTheme);
-        this.mTimerTextView = this.findViewById(R.id.timer);
-        this.mCancelButton = this.findViewById(R.id.cancel_button);
-        this.mCancelButton.setOnClickListener(this);
-        this.mStopButton = this.findViewById(R.id.share_button);
-        this.mStopButton.setOnClickListener(this);
+        this.binding = DataBindingUtil.setContentView(this,R.layout.activity_recording);
+        this.binding.cancelButton.setOnClickListener(this);
+        this.binding.shareButton.setOnClickListener(this);
         this.setFinishOnTouchOutside(false);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        this.setTitle(R.string.attach_record_voice);
-    }
-
-    @Override
-    protected void refreshUiReal() {
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        this.mTheme = findTheme();
-        setTheme(this.mTheme);
-        Log.d(Config.LOGTAG, "output: " + getOutputFile());
         if (!startRecording()) {
-            mStopButton.setEnabled(false);
-            mStopButton.setTextColor(0x8a000000);
+            this.binding.shareButton.setEnabled(false);
             Toast.makeText(this, R.string.unable_to_start_recording, Toast.LENGTH_SHORT).show();
         }
     }
@@ -84,29 +73,22 @@ public class RecordingActivity extends XmppActivity implements View.OnClickListe
     protected void onStop() {
         super.onStop();
         if (mRecorder != null) {
+            mHandler.removeCallbacks(mTickExecutor);
             stopRecording(false);
         }
-    }
-
-    @Override
-    void onBackendConnected() {
-
+        if (mFileObserver != null) {
+            mFileObserver.stopWatching();
+        }
     }
 
     private boolean startRecording() {
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-            mRecorder.setAudioEncodingBitRate(48000);
-        } else {
-            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-            mRecorder.setAudioEncodingBitRate(48000);
-        }
-        mRecorder.setAudioSamplingRate(48000);
-        mOutputFile = getOutputFile();
-        mOutputFile.getParentFile().mkdirs();
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+        mRecorder.setAudioEncodingBitRate(48000);
+        mRecorder.setAudioSamplingRate(16000);
+        setupOutputFile();
         mRecorder.setOutputFile(mOutputFile.getAbsolutePath());
 
         try {
@@ -114,79 +96,96 @@ public class RecordingActivity extends XmppActivity implements View.OnClickListe
             mRecorder.start();
             mStartTime = SystemClock.elapsedRealtime();
             mHandler.postDelayed(mTickExecutor, 100);
-            Log.d(Config.LOGTAG, "started recording to " + mOutputFile.getAbsolutePath());
+            Log.d("Voice Recorder", "started recording to " + mOutputFile.getAbsolutePath());
             return true;
         } catch (Exception e) {
-            Log.e(Config.LOGTAG, "prepare() failed " + e.getMessage());
+            Log.e("Voice Recorder", "prepare() failed " + e.getMessage());
             return false;
         }
     }
 
     protected void stopRecording(boolean saveFile) {
-        mRecorder.stop();
+        mShouldFinishAfterWrite = saveFile;
+        try {
+            mRecorder.stop();
+        } catch (RuntimeException stopException) {
+            //handle cleanup here
+        }
         mRecorder.release();
         mRecorder = null;
         mStartTime = 0;
-        mHandler.removeCallbacks(mTickExecutor);
         if (!saveFile && mOutputFile != null) {
-            mOutputFile.delete();
+            if (mOutputFile.delete()) {
+                Log.d(Config.LOGTAG,"deleted canceled recording");
+            }
         }
     }
 
-    private File getOutputFile() {
+    private static File generateOutputFilename(Context context) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
         return new File(FileBackend.getConversationsDirectory("Audios", true) + "/"
                 + dateFormat.format(new Date())
                 + ".m4a");
     }
 
+    private void setupOutputFile() {
+        mOutputFile = generateOutputFilename(this);
+        File parentDirectory = mOutputFile.getParentFile();
+        if (parentDirectory.mkdirs()) {
+            Log.d(Config.LOGTAG, "created " + parentDirectory.getAbsolutePath());
+        }
+        File noMedia = new File(parentDirectory, ".nomedia");
+        if (!noMedia.exists()) {
+            try {
+                if (noMedia.createNewFile()) {
+                    Log.d(Config.LOGTAG, "created nomedia file in " + parentDirectory.getAbsolutePath());
+                }
+            } catch (IOException e) {
+                Log.d(Config.LOGTAG, "unable to create nomedia file in " + parentDirectory.getAbsolutePath(), e);
+            }
+        }
+        setupFileObserver(parentDirectory);
+    }
+
+    private void setupFileObserver(File directory) {
+        mFileObserver = new FileObserver(directory.getAbsolutePath()) {
+            @Override
+            public void onEvent(int event, String s) {
+                if (s != null && s.equals(mOutputFile.getName()) && event == FileObserver.CLOSE_WRITE) {
+                    if (mShouldFinishAfterWrite) {
+                        setResult(Activity.RESULT_OK, new Intent().setData(Uri.fromFile(mOutputFile)));
+                        finish();
+                    }
+                }
+            }
+        };
+        mFileObserver.startWatching();
+    }
+
+    @SuppressLint("SetTextI18n")
     private void tick() {
         long time = (mStartTime < 0) ? 0 : (SystemClock.elapsedRealtime() - mStartTime);
         int minutes = (int) (time / 60000);
         int seconds = (int) (time / 1000) % 60;
         int milliseconds = (int) (time / 100) % 10;
-        mTimerTextView.setText(minutes + ":" + (seconds < 10 ? "0" + seconds : seconds) + "." + milliseconds);
-        if (mRecorder != null) {
-            amplitudes[i] = mRecorder.getMaxAmplitude();
-            //Log.d(Config.LOGTAG,"amplitude: "+(amplitudes[i] * 100 / 32767));
-            if (i >= amplitudes.length - 1) {
-                i = 0;
-            } else {
-                ++i;
-            }
-        }
+        this.binding.timer.setText(minutes + ":" + (seconds < 10 ? "0" + seconds : seconds) + "." + milliseconds);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.cancel_button:
+                mHandler.removeCallbacks(mTickExecutor);
                 stopRecording(false);
                 setResult(RESULT_CANCELED);
                 finish();
                 break;
             case R.id.share_button:
-                stopRecording(true);
-                Uri uri = Uri.parse("file://" + mOutputFile.getAbsolutePath());
-                Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                scanIntent.setData(uri);
-                sendBroadcast(scanIntent);
-                setResult(Activity.RESULT_OK, new Intent().setData(uri));
-                finish();
+                this.binding.shareButton.setEnabled(false);
+                this.binding.shareButton.setText(R.string.please_wait);
+                mHandler.removeCallbacks(mTickExecutor);
+                mHandler.postDelayed(() -> stopRecording(true), 500);
                 break;
-        }
-    }
-
-    public boolean isDarkTheme() {
-        return this.mTheme == R.style.ConversationsDialog_Dark;
-    }
-
-    protected int findTheme() {
-        final Boolean dark = getPreferences().getString(SettingsActivity.THEME, getResources().getString(R.string.theme)).equals("dark");
-        if (dark) {
-            return R.style.ConversationsDialog_Dark;
-        } else {
-            return R.style.ConversationsDialog;
         }
     }
 }

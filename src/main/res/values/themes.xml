@@ -247,6 +247,7 @@
         <item name="TextSizeCaption">12sp</item>
         <item name="TextSizeBody1">14sp</item>
         <item name="TextSizeBody2">14sp</item>
+        <item name="TextSizeDisplay2">45sp</item>
         <item name="TextSizeSubhead">16sp</item>
         <item name="TextSizeTitle">20sp</item>
         <item name="TextSizeInput">16sp</item>
@@ -270,6 +271,7 @@
         <item name="TextSizeCaption">12sp</item>
         <item name="TextSizeBody1">14sp</item>
         <item name="TextSizeBody2">14sp</item>
+        <item name="TextSizeDisplay2">45sp</item>
         <item name="TextSizeSubhead">16sp</item>
         <item name="TextSizeTitle">20sp</item>
         <item name="TextSizeInput">16sp</item>
@@ -284,6 +286,49 @@
         <item name="color_background_secondary">@color/realblack</item>
 
         <item name="android:background">@color/grey900</item>
+    </style>
+
+
+    <style name="ConversationsTheme.Dialog" parent="@style/Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="color_background_primary">@color/grey50</item>
+        <item name="divider">@color/black12</item>
+        <item name="TextSizeBody2">14sp</item>
+        <item name="TextSizeDisplay2">45sp</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="ConversationsTheme.Dark.Dialog" parent="@style/Theme.AppCompat.Dialog">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="color_background_primary">@color/grey800</item>
+        <item name="divider">@color/white12</item>
+        <item name="TextSizeBody2">14sp</item>
+        <item name="TextSizeDisplay2">45sp</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="ConversationsTheme.Dialog.Medium" parent="ConversationsTheme.Dialog">
+        <item name="TextSizeBody2">16sp</item>
+        <item name="TextSizeDisplay2">51sp</item>
+    </style>
+
+    <style name="ConversationsTheme.Dark.Dialog.Medium" parent="ConversationsTheme.Dark.Dialog">
+        <item name="TextSizeBody2">16sp</item>
+        <item name="TextSizeDisplay2">51sp</item>
+    </style>
+
+    <style name="ConversationsTheme.Dialog.Large" parent="ConversationsTheme.Dialog">
+        <item name="TextSizeBody2">18sp</item>
+        <item name="TextSizeDisplay2">56sp</item>
+    </style>
+
+    <style name="ConversationsTheme.Dark.Dialog.Large" parent="ConversationsTheme.Dark.Dialog">
+        <item name="TextSizeBody2">18sp</item>
+        <item name="TextSizeTitle">56sp</item>
     </style>
 
     <style name="ConversationsTheme.FullScreen" parent="@style/Theme.AppCompat.Light">
