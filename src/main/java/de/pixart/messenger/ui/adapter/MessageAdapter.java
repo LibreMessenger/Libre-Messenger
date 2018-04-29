@@ -859,7 +859,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             }
         }
 
-        boolean darkBackground = type == RECEIVED && !isInValidSession || activity.isDarkTheme();
+        boolean darkBackground = activity.isDarkTheme();
 
         if (type == DATE_SEPARATOR) {
             if (UIHelper.today(message.getTimeSent())) {
@@ -987,6 +987,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             if (isInValidSession) {
                 viewHolder.message_box.setBackgroundResource(R.drawable.message_bubble_received_light);
                 viewHolder.encryption.setVisibility(View.GONE);
+                viewHolder.encryption.setTextColor(this.getMessageTextColor(darkBackground, false));
             } else {
                 viewHolder.message_box.setBackgroundResource(R.drawable.message_bubble_received_warning);
                 viewHolder.encryption.setVisibility(View.VISIBLE);
