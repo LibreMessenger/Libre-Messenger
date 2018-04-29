@@ -12,12 +12,11 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
-import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -35,7 +34,7 @@ public class ShareLocationActivity extends LocationActivity implements LocationL
     private Button mCancelButton;
     private Button mShareButton;
     private String mLocationName;
-    private RelativeLayout mSnackbar;
+    private Snackbar snackBar;
 
     private static String getAddress(Context context, Location location) {
         double longitude = location.getLongitude();
@@ -101,12 +100,20 @@ public class ShareLocationActivity extends LocationActivity implements LocationL
             }
         });
 
-        mSnackbar = findViewById(R.id.snackbar);
-        TextView snackbarAction = findViewById(R.id.snackbar_action);
-        snackbarAction.setOnClickListener(view -> startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)));
-        showLocation(null, null);
-        setShareButtonEnabled(false);
-        requestLocationUpdates();
+        final CoordinatorLayout snackBarCoordinator = findViewById(R.id.snackbarCoordinator);
+        if (snackBarCoordinator != null) {
+            this.snackBar = Snackbar.make(snackBarCoordinator, R.string.location_sharing_disabled, Snackbar.LENGTH_INDEFINITE);
+            snackBar.setAction(R.string.enable, view -> {
+                if (isLocationEnabled()) {
+                    requestLocationUpdates();
+                } else {
+                    showLocation(null, null);
+                    setShareButtonEnabled(false);
+                    requestLocationUpdates();
+                    startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                }
+            });
+        }
     }
 
     @Override
@@ -128,10 +135,10 @@ public class ShareLocationActivity extends LocationActivity implements LocationL
     public void onResume() {
         super.onResume();
         if (isLocationEnabled()) {
-            this.mSnackbar.setVisibility(View.GONE);
+            this.snackBar.dismiss();
             showLocation(null, null);
         } else {
-            this.mSnackbar.setVisibility(View.VISIBLE);
+            this.snackBar.show();
         }
         setShareButtonEnabled(false);
     }
