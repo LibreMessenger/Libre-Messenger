@@ -17,6 +17,7 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -26,20 +27,33 @@
 
     <uses-sdk tools:overrideLibrary="net.ypresto.androidtranscoder" />
 
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
-    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.network"
+        android:required="false" />
 
     <application
-        android:networkSecurityConfig="@xml/network_security_configuration"
         android:name="android.support.multidex.MultiDexApplication"
         android:allowBackup="false"
+        android:appCategory="social"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
+        android:networkSecurityConfig="@xml/network_security_configuration"
         android:theme="@style/ConversationsTheme"
-        android:appCategory="social"
-        tools:targetApi="o"
-        tools:replace="android:label, android:allowBackup" >
+        tools:replace="android:label, android:allowBackup"
+        tools:targetApi="o">
 
         <meta-data
             android:name="com.google.android.gms.car.application"
@@ -86,10 +100,9 @@
             android:name=".ui.ConversationsActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:minWidth="300dp"
             android:minHeight="300dp"
-            android:windowSoftInputMode="stateHidden">
-        </activity>
+            android:minWidth="300dp"
+            android:windowSoftInputMode="stateHidden"></activity>
         <activity
             android:name=".ui.ScanActivity"
             android:screenOrientation="portrait"
@@ -128,8 +141,8 @@
         </activity>
         <activity
             android:name=".ui.StartConversationActivity"
-            android:label="@string/title_activity_start_conversation"
             android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_start_conversation"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -221,10 +234,9 @@
         <activity
             android:name=".ui.ShareLocationActivity"
             android:label="@string/share_location"
-            android:parentActivityName=".ui.ConversationsActivity"
-            >
+            android:parentActivityName=".ui.ConversationsActivity">
             <intent-filter>
-                <action android:name=".location.request" />
+                <action android:name="de.pixart.messenger.location.request" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -232,15 +244,19 @@
             android:name=".ui.ShowLocationActivity"
             android:label="@string/show_location">
             <intent-filter>
-                <action android:name=".location.show" />
+                <action android:name="de.pixart.messenger.location.show" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <data android:scheme="geo" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.ShowFullscreenMessageActivity"
-            android:theme="@style/ConversationsTheme.FullScreen"
-            android:configChanges="orientation|screenSize">
-        </activity>
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/ConversationsTheme.FullScreen"></activity>
         <activity
             android:name=".ui.TrustKeysActivity"
             android:label="@string/trust_omemo_fingerprints"
@@ -262,8 +278,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_updater"
             android:launchMode="singleTask"
-            android:theme="@style/ConversationsTheme">
-        </activity>
+            android:theme="@style/ConversationsTheme"></activity>
         <activity
             android:name=".ui.ShortcutActivity"
             android:label="@string/contact">
@@ -273,6 +288,7 @@
         </activity>
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
         <activity android:name=".ui.MemorizingActivity" />
+
         <service android:name=".services.ExportLogsService" />
         <service
             android:name=".services.ContactChooserTargetService"
@@ -292,9 +308,9 @@
                 android:resource="@xml/file_paths" />
         </provider>
         <provider
-            android:authorities="${applicationId}.barcodes"
             android:name=".services.BarcodeProvider"
+            android:authorities="${applicationId}.barcodes"
             android:exported="false"
-            android:grantUriPermissions="true"/>
+            android:grantUriPermissions="true" />
     </application>
 </manifest>

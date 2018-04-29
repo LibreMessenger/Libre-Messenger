@@ -36,9 +36,7 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.text.InputType;
 import android.util.DisplayMetrics;
@@ -85,7 +83,7 @@ import de.pixart.messenger.xmpp.OnKeyStatusUpdated;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import rocks.xmpp.addr.Jid;
 
-public abstract class XmppActivity extends AppCompatActivity {
+public abstract class XmppActivity extends ActionBarActivity {
 
     protected static final int REQUEST_ANNOUNCE_PGP = 0x0101;
     protected static final int REQUEST_INVITE_TO_CONVERSATION = 0x0102;
@@ -608,13 +606,6 @@ public abstract class XmppActivity extends AppCompatActivity {
                     }
                 }
             });
-        }
-    }
-
-    public static void configureActionBar(ActionBar actionBar) {
-        if (actionBar != null) {
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
 
