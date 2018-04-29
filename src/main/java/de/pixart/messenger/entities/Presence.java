@@ -1,5 +1,7 @@
 package de.pixart.messenger.entities;
 
+import android.support.annotation.NonNull;
+
 import java.util.Locale;
 
 import de.pixart.messenger.xml.Element;
@@ -65,7 +67,7 @@ public class Presence implements Comparable {
         return new Presence(Status.fromShowString(show), ver, hash, node, message);
     }
 
-    public int compareTo(Object other) {
+    public int compareTo(@NonNull Object other) {
         return this.status.compareTo(((Presence) other).status);
     }
 

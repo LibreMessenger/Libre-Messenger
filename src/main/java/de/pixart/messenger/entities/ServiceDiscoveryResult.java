@@ -2,6 +2,7 @@ package de.pixart.messenger.entities;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.util.Base64;
 
 import org.json.JSONArray;
@@ -13,7 +14,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import de.pixart.messenger.utils.Namespace;
@@ -27,94 +27,11 @@ public class ServiceDiscoveryResult {
     public static final String HASH = "hash";
     public static final String VER = "ver";
     public static final String RESULT = "result";
-
-    protected static String blankNull(String s) {
-        return s == null ? "" : s;
-    }
-
-    public static class Identity implements Comparable {
-        protected final String category;
-        protected final String type;
-        protected final String lang;
-        protected final String name;
-
-        public Identity(final String category, final String type, final String lang, final String name) {
-            this.category = category;
-            this.type = type;
-            this.lang = lang;
-            this.name = name;
-        }
-
-        public Identity(final Element el) {
-            this(
-                    el.getAttribute("category"),
-                    el.getAttribute("type"),
-                    el.getAttribute("xml:lang"),
-                    el.getAttribute("name")
-            );
-        }
-
-        public Identity(final JSONObject o) {
-
-            this(
-                    o.optString("category", null),
-                    o.optString("type", null),
-                    o.optString("lang", null),
-                    o.optString("name", null)
-            );
-        }
-
-        public String getCategory() {
-            return this.category;
-        }
-
-        public String getType() {
-            return this.type;
-        }
-
-        public String getLang() {
-            return this.lang;
-        }
-
-        public String getName() {
-            return this.name;
-        }
-
-        public int compareTo(Object other) {
-            Identity o = (Identity) other;
-            int r = blankNull(this.getCategory()).compareTo(blankNull(o.getCategory()));
-            if (r == 0) {
-                r = blankNull(this.getType()).compareTo(blankNull(o.getType()));
-            }
-            if (r == 0) {
-                r = blankNull(this.getLang()).compareTo(blankNull(o.getLang()));
-            }
-            if (r == 0) {
-                r = blankNull(this.getName()).compareTo(blankNull(o.getName()));
-            }
-
-            return r;
-        }
-
-        public JSONObject toJSON() {
-            try {
-                JSONObject o = new JSONObject();
-                o.put("category", this.getCategory());
-                o.put("type", this.getType());
-                o.put("lang", this.getLang());
-                o.put("name", this.getName());
-                return o;
-            } catch (JSONException e) {
-                return null;
-            }
-        }
-    }
-
     protected final String hash;
     protected final byte[] ver;
-    protected final List<Identity> identities;
     protected final List<String> features;
     protected final List<Data> forms;
+    private final List<Identity> identities;
 
     public ServiceDiscoveryResult(final IqPacket packet) {
         this.identities = new ArrayList<>();
@@ -141,7 +58,7 @@ public class ServiceDiscoveryResult {
         this.ver = this.mkCapHash();
     }
 
-    public ServiceDiscoveryResult(String hash, byte[] ver, JSONObject o) throws JSONException {
+    private ServiceDiscoveryResult(String hash, byte[] ver, JSONObject o) throws JSONException {
         this.identities = new ArrayList<>();
         this.features = new ArrayList<>();
         this.forms = new ArrayList<>();
@@ -166,6 +83,22 @@ public class ServiceDiscoveryResult {
                 this.forms.add(createFormFromJSONObject(forms.getJSONObject(i)));
             }
         }
+    }
+
+    public ServiceDiscoveryResult(Cursor cursor) throws JSONException {
+        this(
+                cursor.getString(cursor.getColumnIndex(HASH)),
+                Base64.decode(cursor.getString(cursor.getColumnIndex(VER)), Base64.DEFAULT),
+                new JSONObject(cursor.getString(cursor.getColumnIndex(RESULT)))
+        );
+    }
+
+    private static String clean(String s) {
+        return s.replace("<", "&lt;");
+    }
+
+    private static String blankNull(String s) {
+        return s == null ? "" : clean(s);
     }
 
     private static Data createFormFromJSONObject(JSONObject o) {
@@ -214,14 +147,6 @@ public class ServiceDiscoveryResult {
         return new String(Base64.encode(this.ver, Base64.DEFAULT)).trim();
     }
 
-    public ServiceDiscoveryResult(Cursor cursor) throws JSONException {
-        this(
-                cursor.getString(cursor.getColumnIndex(HASH)),
-                Base64.decode(cursor.getString(cursor.getColumnIndex(VER)), Base64.DEFAULT),
-                new JSONObject(cursor.getString(cursor.getColumnIndex(RESULT)))
-        );
-    }
-
     public List<Identity> getIdentities() {
         return this.identities;
     }
@@ -254,50 +179,42 @@ public class ServiceDiscoveryResult {
         return null;
     }
 
-    protected byte[] mkCapHash() {
+    private byte[] mkCapHash() {
         StringBuilder s = new StringBuilder();
 
         List<Identity> identities = this.getIdentities();
         Collections.sort(identities);
 
         for (Identity id : identities) {
-            s.append(
-                    blankNull(id.getCategory()) + "/" +
-                            blankNull(id.getType()) + "/" +
-                            blankNull(id.getLang()) + "/" +
-                            blankNull(id.getName()) + "<"
-            );
+            s.append(blankNull(id.getCategory()))
+                    .append("/")
+                    .append(blankNull(id.getType()))
+                    .append("/")
+                    .append(blankNull(id.getLang()))
+                    .append("/")
+                    .append(blankNull(id.getName()))
+                    .append("<");
         }
 
         List<String> features = this.getFeatures();
         Collections.sort(features);
 
         for (String feature : features) {
-            s.append(feature + "<");
+            s.append(clean(feature)).append("<");
         }
 
-        Collections.sort(forms, new Comparator<Data>() {
-            @Override
-            public int compare(Data lhs, Data rhs) {
-                return lhs.getFormType().compareTo(rhs.getFormType());
-            }
-        });
+        Collections.sort(forms, (lhs, rhs) -> lhs.getFormType().compareTo(rhs.getFormType()));
 
         for (Data form : forms) {
-            s.append(form.getFormType() + "<");
+            s.append(clean(form.getFormType())).append("<");
             List<Field> fields = form.getFields();
-            Collections.sort(fields, new Comparator<Field>() {
-                @Override
-                public int compare(Field lhs, Field rhs) {
-                    return lhs.getFieldName().compareTo(rhs.getFieldName());
-                }
-            });
+            Collections.sort(fields, (lhs, rhs) -> lhs.getFieldName().compareTo(rhs.getFieldName()));
             for (Field field : fields) {
-                s.append(field.getFieldName() + "<");
+                s.append(clean(field.getFieldName())).append("<");
                 List<String> values = field.getValues();
                 Collections.sort(values);
                 for (String value : values) {
-                    s.append(value + "<");
+                    s.append(blankNull(value)).append("<");
                 }
             }
         }
@@ -316,7 +233,7 @@ public class ServiceDiscoveryResult {
         }
     }
 
-    public JSONObject toJSON() {
+    private JSONObject toJSON() {
         try {
             JSONObject o = new JSONObject();
 
@@ -344,7 +261,86 @@ public class ServiceDiscoveryResult {
         final ContentValues values = new ContentValues();
         values.put(HASH, this.hash);
         values.put(VER, getVer());
-        values.put(RESULT, this.toJSON().toString());
+        JSONObject jsonObject = toJSON();
+        values.put(RESULT, jsonObject == null ? "" : jsonObject.toString());
         return values;
+    }
+
+    public static class Identity implements Comparable {
+        protected final String type;
+        protected final String lang;
+        protected final String name;
+        final String category;
+
+        Identity(final String category, final String type, final String lang, final String name) {
+            this.category = category;
+            this.type = type;
+            this.lang = lang;
+            this.name = name;
+        }
+
+        Identity(final Element el) {
+            this(
+                    el.getAttribute("category"),
+                    el.getAttribute("type"),
+                    el.getAttribute("xml:lang"),
+                    el.getAttribute("name")
+            );
+        }
+
+        Identity(final JSONObject o) {
+
+            this(
+                    o.optString("category", null),
+                    o.optString("type", null),
+                    o.optString("lang", null),
+                    o.optString("name", null)
+            );
+        }
+
+        public String getCategory() {
+            return this.category;
+        }
+
+        public String getType() {
+            return this.type;
+        }
+
+        public String getLang() {
+            return this.lang;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public int compareTo(@NonNull Object other) {
+            Identity o = (Identity) other;
+            int r = blankNull(this.getCategory()).compareTo(blankNull(o.getCategory()));
+            if (r == 0) {
+                r = blankNull(this.getType()).compareTo(blankNull(o.getType()));
+            }
+            if (r == 0) {
+                r = blankNull(this.getLang()).compareTo(blankNull(o.getLang()));
+            }
+            if (r == 0) {
+                r = blankNull(this.getName()).compareTo(blankNull(o.getName()));
+            }
+
+            return r;
+        }
+
+        JSONObject toJSON() {
+            try {
+                JSONObject o = new JSONObject();
+                o.put("category", this.getCategory());
+                o.put("type", this.getType());
+                o.put("lang", this.getLang());
+                o.put("name", this.getName());
+                return o;
+            } catch (JSONException e) {
+                return null;
+            }
+        }
     }
 }
