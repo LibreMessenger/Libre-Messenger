@@ -64,7 +64,25 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             inviteToConversation(mConversation);
         }
     };
-
+    private OnClickListener destroyListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            final AlertDialog.Builder DestroyMucDialog = new AlertDialog.Builder(ConferenceDetailsActivity.this);
+            DestroyMucDialog.setNegativeButton(getString(R.string.cancel), null);
+            DestroyMucDialog.setTitle(getString(R.string.destroy_muc));
+            DestroyMucDialog.setMessage(getString(R.string.destroy_muc_text, mConversation.getName()));
+            DestroyMucDialog.setPositiveButton(getString(R.string.delete), (dialogInterface, i) -> {
+                Intent intent = new Intent(xmppConnectionService, ConversationsActivity.class);
+                intent.setAction(ConversationsActivity.ACTION_DESTROY_MUC);
+                intent.putExtra("MUC_UUID", mConversation.getUuid());
+                Log.d(Config.LOGTAG, "Sending DESTROY intent for " + mConversation.getName());
+                startActivity(intent);
+                deleteBookmark();
+                finish();
+            });
+            DestroyMucDialog.create().show();
+        }
+    };
     private ActivityMucDetailsBinding binding;
     private String uuid = null;
     private User mSelectedUser = null;
@@ -257,6 +275,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         this.binding.invite.setVisibility(View.GONE);
         this.binding.invite.setOnClickListener(inviteListener);
         this.binding.destroy.setVisibility(View.GONE);
+        this.binding.destroy.setOnClickListener(destroyListener);
         this.binding.leaveMuc.setVisibility(View.GONE);
         this.binding.addContactButton.setVisibility(View.GONE);
         this.binding.mucMoreDetails.setVisibility(View.GONE);
@@ -587,23 +606,12 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                 this.binding.mucInfoMam.setText(R.string.server_info_unavailable);
             }
             if (self.getAffiliation().ranks(MucOptions.Affiliation.OWNER)) {
-                this.binding.destroy.setVisibility(View.VISIBLE);
-                this.binding.destroy.setOnClickListener(v -> {
-                    final AlertDialog.Builder DestroyMucDialog = new AlertDialog.Builder(ConferenceDetailsActivity.this);
-                    DestroyMucDialog.setNegativeButton(getString(R.string.cancel), null);
-                    DestroyMucDialog.setTitle(getString(R.string.destroy_muc));
-                    DestroyMucDialog.setMessage(getString(R.string.destroy_muc_text, mConversation.getName()));
-                    DestroyMucDialog.setPositiveButton(getString(R.string.delete), (dialogInterface, i) -> {
-                        Intent intent = new Intent(xmppConnectionService, ConversationsActivity.class);
-                        intent.setAction(ConversationsActivity.ACTION_DESTROY_MUC);
-                        intent.putExtra("MUC_UUID", mConversation.getUuid());
-                        Log.d(Config.LOGTAG, "Sending DESTROY intent for " + mConversation.getName());
-                        startActivity(intent);
-                        deleteBookmark();
-                        finish();
-                    });
-                });
-                this.binding.destroy.getBackground().setColorFilter(getWarningButtonColor(), PorterDuff.Mode.MULTIPLY);
+                if (mAdvancedMode) {
+                    this.binding.destroy.getBackground().setColorFilter(getWarningButtonColor(), PorterDuff.Mode.MULTIPLY);
+                    this.binding.destroy.setVisibility(View.VISIBLE);
+                } else {
+                    this.binding.destroy.setVisibility(View.GONE);
+                }
                 this.binding.changeConferenceButton.setVisibility(View.VISIBLE);
             } else {
                 this.binding.destroy.setVisibility(View.GONE);

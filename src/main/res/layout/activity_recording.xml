@@ -14,7 +14,7 @@
 
         <Button
             android:id="@+id/cancel_button"
-            style="?android:attr/borderlessButtonStyle"
+            style="@style/Widget.Conversations.Button.Borderless"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -30,7 +30,7 @@
 
         <Button
             android:id="@+id/share_button"
-            style="?android:attr/borderlessButtonStyle"
+            style="@style/Widget.Conversations.Button.Borderless"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

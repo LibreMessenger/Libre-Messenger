@@ -59,7 +59,7 @@
 
                 <Button
                     android:id="@+id/import_database"
-                    style="?android:attr/borderlessButtonStyle"
+                    style="@style/Widget.Conversations.Button.Borderless"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
@@ -69,7 +69,7 @@
 
                 <Button
                     android:id="@+id/create_account"
-                    style="?android:attr/borderlessButtonStyle"
+                    style="@style/Widget.Conversations.Button.Borderless"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
@@ -78,7 +78,7 @@
 
                 <Button
                     android:id="@+id/use_existing_account"
-                    style="?android:attr/borderlessButtonStyle"
+                    style="@style/Widget.Conversations.Button.Borderless"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"

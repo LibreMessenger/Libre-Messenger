@@ -208,7 +208,7 @@
                         <Button
                             android:id="@+id/invite"
                             style="?android:attr/buttonStyleSmall"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="24dp"
@@ -217,7 +217,7 @@
                         <Button
                             android:id="@+id/leave_muc"
                             style="?android:attr/buttonStyleSmall"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="24dp"
@@ -226,7 +226,7 @@
                         <Button
                             android:id="@+id/add_contact_button"
                             style="?android:attr/buttonStyleSmall"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="24dp"
@@ -235,7 +235,7 @@
                         <Button
                             android:id="@+id/destroy"
                             style="?android:attr/buttonStyleSmall"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="24dp"
