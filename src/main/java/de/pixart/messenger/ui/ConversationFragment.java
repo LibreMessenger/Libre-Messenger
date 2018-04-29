@@ -426,7 +426,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         @Override
         public void onClick(View v) {
             stopScrolling();
-            setSelection(binding.messagesView.getCount() - 1);
+            setSelection(binding.messagesView.getCount() - 1, true);
         }
     };
 
@@ -2218,13 +2218,16 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 final Message first = conversation.getFirstUnreadMessage();
                 final int bottom = Math.max(0, this.messageList.size() - 1);
                 final int pos;
+                final boolean jumpToBottom;
                 if (first == null) {
                     pos = bottom;
+                    jumpToBottom = true;
                 } else {
                     int i = getIndexOf(first.getUuid(), this.messageList);
                     pos = i < 0 ? bottom : i;
+                    jumpToBottom = false;
                 }
-                setSelection(pos);
+                setSelection(pos, jumpToBottom);
             }
         }
 
@@ -2287,17 +2290,25 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         this.binding.unreadCountCustomView.setVisibility(View.GONE);
     }
 
-    private void setSelection(int pos) {
-        this.binding.messagesView.setSelection(pos);
-        this.binding.messagesView.post(() -> this.binding.messagesView.setSelection(pos));
+    private void setSelection(int pos, boolean jumpToBottom) {
+        setSelection(this.binding.messagesView, pos, jumpToBottom);
+        this.binding.messagesView.post(() -> setSelection(this.binding.messagesView, pos, jumpToBottom));
         this.binding.messagesView.post(this::fireReadEvent);
     }
 
-    private boolean scrolledToBottom() {
-        if (this.binding == null) {
-            return false;
+    private static void setSelection(final ListView listView, int pos, boolean jumpToBottom) {
+        if (jumpToBottom) {
+            final View lastChild = listView.getChildAt(listView.getChildCount() - 1);
+            if (lastChild != null) {
+                listView.setSelectionFromTop(pos, -lastChild.getHeight());
+                return;
+            }
         }
-        return scrolledToBottom(this.binding.messagesView);
+        listView.setSelection(pos);
+    }
+
+    private boolean scrolledToBottom() {
+        return this.binding != null && scrolledToBottom(this.binding.messagesView);
     }
 
     private void processExtras(Bundle extras) {
