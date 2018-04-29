@@ -23,6 +23,7 @@
     <attr name="EmojiColor" format="reference|color" />
 
     <attr name="activity_background_search" format="reference" />
+    <attr name="activity_background_no_results" format="reference" />
 
     <attr name="ic_send_cancel_offline" format="reference" />
     <attr name="ic_send_location_offline" format="reference" />

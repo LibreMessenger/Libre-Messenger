@@ -15,6 +15,7 @@
         <item name="color_warning">@color/red_a700</item>
 
         <item name="activity_background_search">@drawable/search_background_light</item>
+        <item name="activity_background_no_results">@drawable/no_results_background_light</item>
 
         <item name="EmojiColor">@color/realblack</item>
 
@@ -133,6 +134,7 @@
         <item name="color_warning">@color/red_a700</item>
 
         <item name="activity_background_search">@drawable/search_background_dark</item>
+        <item name="activity_background_no_results">@drawable/no_results_background_dark</item>
 
         <item name="EmojiColor">@color/realwhite</item>
 

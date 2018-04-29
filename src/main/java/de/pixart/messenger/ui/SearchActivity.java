@@ -47,6 +47,8 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.databinding.ActivitySearchBinding;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.ui.adapter.MessageAdapter;
+import de.pixart.messenger.ui.util.Color;
+import de.pixart.messenger.ui.util.Drawable;
 
 import static de.pixart.messenger.ui.util.SoftKeyboardUtils.hideSoftKeyboard;
 import static de.pixart.messenger.ui.util.SoftKeyboardUtils.showKeyboard;
@@ -94,6 +96,18 @@ public class SearchActivity extends XmppActivity implements TextWatcher {
     @Override
     void onBackendConnected() {
 
+    }
+
+    private void changeBackground(boolean hasSearch, boolean hasResults) {
+        if (hasSearch) {
+            if (hasResults) {
+                binding.searchResults.setBackgroundColor(Color.get(this, R.attr.color_background_secondary));
+            } else {
+                binding.searchResults.setBackground(Drawable.get(this, R.attr.activity_background_no_results));
+            }
+        } else {
+            binding.searchResults.setBackground(Drawable.get(this, R.attr.activity_background_search));
+        }
     }
 
     @Override
