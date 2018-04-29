@@ -46,7 +46,6 @@ import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -72,14 +71,9 @@ public class FileBackend {
 
     private static final SimpleDateFormat fileDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
 
-    public static final String FILE_PROVIDER = ".files";
+    private static final String FILE_PROVIDER = ".files";
 
     private XmppConnectionService mXmppConnectionService;
-
-    private static final List<String> BLACKLISTED_PATH_ELEMENTS = Arrays.asList(
-            "org.mozilla.firefox",
-            "org.mozilla.fennec_fdroid"
-    );
 
     public FileBackend(XmppConnectionService service) {
         this.mXmppConnectionService = service;
@@ -254,7 +248,7 @@ public class FileBackend {
         }
     }
 
-    public static Bitmap rotate(Bitmap bitmap, int degree) {
+    private static Bitmap rotate(Bitmap bitmap, int degree) {
         if (degree == 0) {
             return bitmap;
         }
@@ -307,19 +301,16 @@ public class FileBackend {
     }
 
     public static boolean isPathBlacklisted(String path) {
-        for (String element : BLACKLISTED_PATH_ELEMENTS) {
-            if (path.contains(element)) {
-                return true;
-            }
-        }
-        return false;
+        Environment.getDataDirectory();
+        final String androidDataPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Android/data/";
+        return path.startsWith(androidDataPath);
     }
 
     public String getOriginalPath(Uri uri) {
         return FileUtils.getPath(mXmppConnectionService, uri);
     }
 
-    public void copyFileToPrivateStorage(File file, Uri uri) throws FileCopyException {
+    private void copyFileToPrivateStorage(File file, Uri uri) throws FileCopyException {
         Log.d(Config.LOGTAG, "copy file (" + uri.toString() + ") to private storage " + file.getAbsolutePath());
         file.getParentFile().mkdirs();
         OutputStream os = null;
