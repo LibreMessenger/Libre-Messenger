@@ -36,6 +36,7 @@ import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.persistance.DatabaseBackend;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.utils.EncryptDecryptFile;
+import de.pixart.messenger.utils.WakeLockHelper;
 import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.ui.SettingsActivity.USE_MULTI_ACCOUNTS;
@@ -72,13 +73,7 @@ public class ExportLogsService extends Service {
                 public void run() {
                     export();
                     stopForeground(true);
-                    if (wakeLock.isHeld()) {
-                        try {
-                            wakeLock.release();
-                        } catch (final RuntimeException ignored) {
-                            //ignored
-                        }
-                    }
+                    WakeLockHelper.release(wakeLock);
                     running.set(false);
                     stopSelf();
                 }
@@ -88,7 +83,7 @@ public class ExportLogsService extends Service {
     }
 
     private void export() {
-        wakeLock.acquire();
+        WakeLockHelper.acquire(wakeLock);
         List<Conversation> conversations = mDatabaseBackend.getConversations(Conversation.STATUS_AVAILABLE);
         conversations.addAll(mDatabaseBackend.getConversations(Conversation.STATUS_ARCHIVED));
         NotificationManager mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

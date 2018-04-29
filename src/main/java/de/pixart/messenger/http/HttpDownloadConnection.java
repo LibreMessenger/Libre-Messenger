@@ -29,6 +29,7 @@ import de.pixart.messenger.services.AbstractConnectionManager;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.FileWriterException;
+import de.pixart.messenger.utils.WakeLockHelper;
 
 public class HttpDownloadConnection implements Transferable {
 
@@ -225,7 +226,7 @@ public class HttpDownloadConnection implements Transferable {
         private long retrieveFileSize() throws IOException {
             PowerManager.WakeLock wakeLock = mHttpConnectionManager.createWakeLock("http_download_filesize" + message.getUuid());
             try {
-                wakeLock.acquire();
+                WakeLockHelper.acquire(wakeLock);
                 Log.d(Config.LOGTAG, "retrieve file size. interactive:" + String.valueOf(interactive));
                 changeStatus(STATUS_CHECKING);
                 HttpURLConnection connection;
@@ -257,7 +258,7 @@ public class HttpDownloadConnection implements Transferable {
             } catch (NumberFormatException e) {
                 throw new IOException();
             } finally {
-                wakeLock.release();
+                WakeLockHelper.release(wakeLock);
             }
         }
 
@@ -298,7 +299,7 @@ public class HttpDownloadConnection implements Transferable {
             HttpURLConnection connection = null;
             PowerManager.WakeLock wakeLock = mHttpConnectionManager.createWakeLock("http_download_" + message.getUuid());
             try {
-                wakeLock.acquire();
+                WakeLockHelper.acquire(wakeLock);
                 if (mUseTor) {
                     connection = (HttpURLConnection) mUrl.openConnection(mHttpConnectionManager.getProxy());
                 } else {
@@ -376,7 +377,7 @@ public class HttpDownloadConnection implements Transferable {
                 if (connection != null) {
                     connection.disconnect();
                 }
-                wakeLock.release();
+                WakeLockHelper.release(wakeLock);
             }
         }
 

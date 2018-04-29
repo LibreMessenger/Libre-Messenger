@@ -28,6 +28,7 @@ import de.pixart.messenger.services.AbstractConnectionManager;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.Namespace;
+import de.pixart.messenger.utils.WakeLockHelper;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.stanzas.IqPacket;
 import rocks.xmpp.addr.Jid;
@@ -237,9 +238,7 @@ public class HttpUploadConnection implements Transferable {
             if (connection != null) {
                 connection.disconnect();
             }
-            if (wakeLock.isHeld()) {
-                wakeLock.release();
-            }
+            WakeLockHelper.release(wakeLock);
         }
     }
 }

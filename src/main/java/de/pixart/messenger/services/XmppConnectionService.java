@@ -122,6 +122,7 @@ import de.pixart.messenger.utils.ReplacingSerialSingleThreadExecutor;
 import de.pixart.messenger.utils.ReplacingTaskManager;
 import de.pixart.messenger.utils.Resolver;
 import de.pixart.messenger.utils.SerialSingleThreadExecutor;
+import de.pixart.messenger.utils.WakeLockHelper;
 import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.OnBindListener;
@@ -684,7 +685,7 @@ public class XmppConnectionService extends Service {
             }
         }
         synchronized (this) {
-            this.wakeLock.acquire();
+            WakeLockHelper.acquire(wakeLock);
             boolean pingNow = ConnectivityManager.CONNECTIVITY_ACTION.equals(action);
             HashSet<Account> pingCandidates = new HashSet<>();
             for (Account account : accounts) {
@@ -708,12 +709,7 @@ public class XmppConnectionService extends Service {
                     scheduleWakeUpCall(lowTimeout ? Config.LOW_PING_TIMEOUT : Config.PING_TIMEOUT, account.getUuid().hashCode());
                 }
             }
-            if (wakeLock.isHeld()) {
-                try {
-                    wakeLock.release();
-                } catch (final RuntimeException ignored) {
-                }
-            }
+            WakeLockHelper.release(wakeLock);
         }
         if (SystemClock.elapsedRealtime() - mLastExpiryRun.get() >= Config.EXPIRY_INTERVAL) {
             expireOldMessages();

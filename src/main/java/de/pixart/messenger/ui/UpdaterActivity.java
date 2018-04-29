@@ -33,6 +33,7 @@ import java.util.List;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.persistance.FileBackend;
+import de.pixart.messenger.utils.WakeLockHelper;
 
 public class UpdaterActivity extends XmppActivity {
     static final private String FileName = "update.apk";
@@ -196,7 +197,7 @@ public class UpdaterActivity extends XmppActivity {
             PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
             if (pm != null) {
                 mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, getClass().getName());
-                mWakeLock.acquire();
+                WakeLockHelper.acquire(mWakeLock);
             }
             mProgressDialog.show();
         }
@@ -273,9 +274,7 @@ public class UpdaterActivity extends XmppActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if (mWakeLock.isHeld()) {
-                mWakeLock.release();
-            }
+            WakeLockHelper.release(mWakeLock);
             mProgressDialog.dismiss();
             if (result != null) {
                 Toast.makeText(getApplicationContext(), getString(R.string.failed), Toast.LENGTH_LONG).show();
