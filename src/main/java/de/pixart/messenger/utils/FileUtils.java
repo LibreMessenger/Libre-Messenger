@@ -14,8 +14,10 @@ import android.util.Log;
 import android.webkit.MimeTypeMap;
 
 import java.io.File;
+import java.util.List;
 
 import de.pixart.messenger.Config;
+import de.pixart.messenger.persistance.FileBackend;
 
 public class FileUtils {
 
@@ -92,7 +94,13 @@ public class FileUtils {
         // MediaStore (and general)
         else if ("content".equalsIgnoreCase(uri.getScheme())) {
             Log.d(Config.LOGTAG, "FileUtils is media store");
-            String path = getDataColumn(context, uri, null, null);
+            List<String> segments = uri.getPathSegments();
+            String path;
+            if (FileBackend.getAuthority(context).equals(uri.getAuthority()) && segments.size() > 1 && segments.get(0).equals("external")) {
+                path = Environment.getExternalStorageDirectory().getAbsolutePath() + uri.getPath().substring(segments.get(0).length() + 1);
+            } else {
+                path = getDataColumn(context, uri, null, null);
+            }
             if (path != null) {
                 File file = new File(path);
                 if (!file.canRead()) {
@@ -120,15 +128,12 @@ public class FileUtils {
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
-    public static String getDataColumn(Context context, Uri uri, String selection,
-                                       String[] selectionArgs) {
-
+    public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
         Cursor cursor = null;
         final String column = "_data";
         final String[] projection = {
                 column
         };
-
         try {
             cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
             if (cursor != null && cursor.moveToFirst()) {
