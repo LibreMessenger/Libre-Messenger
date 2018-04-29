@@ -102,6 +102,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
         @Override
         public boolean onMenuItemActionExpand(MenuItem item) {
             mSearchEditText.post(() -> {
+                updateSearchViewHint();
                 mSearchEditText.requestFocus();
                 if (oneShotKeyboardSuppress.compareAndSet(true, false)) {
                     return;
@@ -544,6 +545,17 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
         super.invalidateOptionsMenu();
     }
 
+    private void updateSearchViewHint() {
+        if (binding == null || mSearchEditText == null) {
+            return;
+        }
+        if (binding.startConversationViewPager.getCurrentItem() == 0) {
+            mSearchEditText.setHint(R.string.search_contacts);
+        } else {
+            mSearchEditText.setHint(R.string.search_groups);
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.start_conversation, menu);
@@ -571,6 +583,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
             mSearchEditText.append(initialSearchValue);
             filter(initialSearchValue);
         }
+        updateSearchViewHint();
         return super.onCreateOptionsMenu(menu);
     }
 
