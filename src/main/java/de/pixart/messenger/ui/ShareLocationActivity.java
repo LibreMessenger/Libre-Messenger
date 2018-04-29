@@ -26,6 +26,7 @@ import java.util.Locale;
 
 import de.pixart.messenger.R;
 import de.pixart.messenger.utils.LocationHelper;
+import de.pixart.messenger.utils.ThemeHelper;
 
 public class ShareLocationActivity extends LocationActivity implements LocationListener {
 
@@ -86,7 +87,7 @@ public class ShareLocationActivity extends LocationActivity implements LocationL
             setResult(RESULT_CANCELED);
             finish();
         });
-
+        ThemeHelper.fixTextSize(this.snackBar);
         mShareButton = findViewById(R.id.share_button);
         mShareButton.setOnClickListener(view -> {
             if (mLastLocation != null) {
