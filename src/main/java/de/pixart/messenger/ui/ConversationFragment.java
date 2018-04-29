@@ -118,6 +118,7 @@ import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.ui.XmppActivity.EXTRA_ACCOUNT;
 import static de.pixart.messenger.ui.XmppActivity.REQUEST_INVITE_TO_CONVERSATION;
+import static de.pixart.messenger.ui.util.SoftKeyboardUtils.hideSoftKeyboard;
 import static de.pixart.messenger.xmpp.Patches.ENCRYPTION_EXCEPTIONS;
 
 public class ConversationFragment extends XmppFragment implements EditMessage.KeyboardListener {
@@ -610,14 +611,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             }
         }
         return null;
-    }
-
-    private static void hideSoftKeyboard(final Activity activity) {
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        View view = activity.getCurrentFocus();
-        if (view != null && imm != null) {
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
     }
 
     private static boolean scrolledToBottom(AbsListView listView) {

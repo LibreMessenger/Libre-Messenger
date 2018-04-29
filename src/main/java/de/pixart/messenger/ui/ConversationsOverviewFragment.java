@@ -31,11 +31,15 @@ package de.pixart.messenger.ui;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -51,6 +55,7 @@ import de.pixart.messenger.ui.interfaces.OnConversationSelected;
 import de.pixart.messenger.ui.util.PendingActionHelper;
 import de.pixart.messenger.ui.util.PendingItem;
 import de.pixart.messenger.ui.util.ScrollState;
+import de.pixart.messenger.utils.MenuDoubleTabUtil;
 
 public class ConversationsOverviewFragment extends XmppFragment {
 
@@ -127,11 +132,15 @@ public class ConversationsOverviewFragment extends XmppFragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.d(Config.LOGTAG, "onCreateView");
         this.binding = DataBindingUtil.inflate(inflater, R.layout.fragment_conversations_overview, container, false);
         this.binding.fab.setOnClickListener((view) -> StartConversationActivity.launch(getActivity()));
-
         this.conversationsAdapter = new ConversationAdapter(this.activity, this.conversations);
         this.conversationsAdapter.setConversationClickListener((view, conversation) -> {
             if (activity instanceof OnConversationSelected) {
@@ -144,6 +153,11 @@ public class ConversationsOverviewFragment extends XmppFragment {
         this.binding.list.setAdapter(this.conversationsAdapter);
         this.binding.list.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         return binding.getRoot();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.fragment_conversations_overview, menu);
     }
 
     @Override
@@ -187,6 +201,19 @@ public class ConversationsOverviewFragment extends XmppFragment {
     public void onResume() {
         super.onResume();
         Log.d(Config.LOGTAG, "ConversationsOverviewFragment.onResume()");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (MenuDoubleTabUtil.shouldIgnoreTap()) {
+            return false;
+        }
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                startActivity(new Intent(getActivity(), SearchActivity.class));
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

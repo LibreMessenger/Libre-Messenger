@@ -241,6 +241,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.SearchActivity"
+            android:label="@string/title_activity_search" />
+        <activity
             android:name=".ui.ShowFullscreenMessageActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/ConversationsTheme.FullScreen"></activity>

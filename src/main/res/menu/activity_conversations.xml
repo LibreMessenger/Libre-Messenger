@@ -4,6 +4,7 @@
     <item
         android:id="@+id/action_scan_qr_code"
         android:icon="?attr/icon_scan_qr_code"
+        android:orderInCategory="10"
         android:title="@string/scan_qr_code"
         android:visible="@bool/show_qr_code_scan"
         app:showAsAction="always" />
@@ -19,12 +20,12 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/action_check_updates"
-        app:showAsAction="never"
-        android:title="@string/action_check_update" />
+        android:title="@string/action_check_update"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_invite_user"
         android:orderInCategory="100"
-        app:showAsAction="never"
-        android:title="@string/invite_user" />
+        android:title="@string/invite_user"
+        app:showAsAction="never" />
 
 </menu>

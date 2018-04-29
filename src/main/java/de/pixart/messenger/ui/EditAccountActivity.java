@@ -64,6 +64,7 @@ import de.pixart.messenger.services.XmppConnectionService.OnCaptchaRequested;
 import de.pixart.messenger.ui.adapter.KnownHostsAdapter;
 import de.pixart.messenger.ui.adapter.PresenceTemplateAdapter;
 import de.pixart.messenger.ui.util.PendingItem;
+import de.pixart.messenger.ui.util.SoftKeyboardUtils;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import de.pixart.messenger.utils.UIHelper;
@@ -401,7 +402,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 
     protected void finishInitialSetup(final Avatar avatar) {
         runOnUiThread(() -> {
-            hideKeyboard();
+            SoftKeyboardUtils.hideSoftKeyboard(EditAccountActivity.this);
             final Intent intent;
             final XmppConnection connection = mAccount.getXmppConnection();
             final boolean wasFirstAccount = xmppConnectionService != null && xmppConnectionService.getAccounts().size() == 1;

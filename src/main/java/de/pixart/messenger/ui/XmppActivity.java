@@ -45,7 +45,6 @@ import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -263,16 +262,6 @@ public abstract class XmppActivity extends ActionBarActivity {
             }
             unbindService(mConnection);
             xmppConnectionServiceBound = false;
-        }
-    }
-
-    protected void hideKeyboard() {
-        final InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        View focus = getCurrentFocus();
-
-        if (focus != null && inputManager != null) {
-            inputManager.hideSoftInputFromWindow(focus.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 

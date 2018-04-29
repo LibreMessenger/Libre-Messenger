@@ -781,4 +781,6 @@
     <string name="create_shortcut">Create Shortcut</string>
     <string name="not_encrypted_for_this_device">Message was not encrypted for this device.</string>
     <string name="no_microphone_permission">Conversations needs access to the microphone</string>
+    <string name="title_activity_search">Search</string>
+    <string name="search_messages">Search messages</string>
 </resources>
