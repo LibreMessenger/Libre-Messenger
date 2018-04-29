@@ -6,7 +6,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.0'
+        classpath 'com.android.tools.build:gradle:3.1.1'
     }
 }
 
@@ -36,7 +36,7 @@ ext {
 
 dependencies {
     implementation project(':libs:android-transcoder')
-    standardPushimplementation 'com.google.android.gms:play-services-gcm:12.0.1'
+    standardPushimplementation 'com.google.android.gms:play-services-gcm:15.0.0'
     implementation 'org.sufficientlysecure:openpgp-api:10.0'
     implementation 'com.soundcloud.android:android-crop:1.0.1@aar'
     implementation 'org.bouncycastle:bcmail-jdk15on:1.58'
