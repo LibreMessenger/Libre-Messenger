@@ -401,7 +401,6 @@
     <string name="pdf_document">PDF document</string>
     <string name="apk">Android App</string>
     <string name="vcard">Contact</string>
-    <string name="received_x_file">Received %s</string>
     <string name="touch_to_open_conversations">Touch to open Pix-Art Messenger</string>
     <string name="avatar_has_been_published">Avatar has been published!</string>
     <string name="sending_x_file">Sending %s</string>
@@ -414,7 +413,6 @@
     <string name="show_location">Show location</string>
     <string name="no_application_found_to_display_location">No application found to display location</string>
     <string name="location">Location</string>
-    <string name="received_location">Received location</string>
     <string name="pref_dont_trust_system_cas_title">Don’t trust system CAs</string>
     <string name="pref_dont_trust_system_cas_summary">All certificates must be manually approved</string>
     <string name="pref_remove_trusted_certificates_title">Remove certificates</string>
@@ -611,7 +609,6 @@
     <string name="device_does_not_support_data_saver">Your device does not supporting disabling data saver for Pix-Art Messenger.</string>
     <string name="navigate">Navigate to location</string>
     <string name="add_to_contact_list">Add to contact list</string>
-    <string name="received_contact">Received contact</string>
     <string name="contact">Contact</string>
     <string name="unable_to_start_recording">Unable to start recording</string>
     <string name="error_unable_to_create_temporary_file">Unable to create temporary file</string>
