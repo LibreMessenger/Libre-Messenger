@@ -81,9 +81,7 @@ public class MessageGenerator extends AbstractGenerator {
             return null;
         }
         packet.setAxolotlMessage(axolotlMessage.toElement());
-        if (Config.supportUnencrypted() && !recipientSupportsOmemo(message)) {
-            packet.setBody(OMEMO_FALLBACK_MESSAGE);
-        }
+        packet.setBody(OMEMO_FALLBACK_MESSAGE);
         packet.addChild("store", "urn:xmpp:hints");
         packet.addChild("encryption", "urn:xmpp:eme:0").setAttribute("name", "OMEMO").setAttribute("namespace", AxolotlService.PEP_PREFIX);
         return packet;
