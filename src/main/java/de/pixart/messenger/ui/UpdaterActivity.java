@@ -50,6 +50,10 @@ public class UpdaterActivity extends XmppActivity {
 
         //set activity
         setContentView(R.layout.activity_updater);
+
+        this.mTheme = findTheme();
+        setTheme(this.mTheme);
+
         TextView textView = findViewById(R.id.updater);
         textView.setText(R.string.update_info);
 
@@ -76,6 +80,11 @@ public class UpdaterActivity extends XmppActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        this.mTheme = findTheme();
+        setTheme(this.mTheme);
+        setTitle(getString(R.string.update_service));
+        setSupportActionBar(findViewById(R.id.toolbar));
+        configureActionBar(getSupportActionBar());
         if (getIntent() != null && getIntent().getStringExtra("update").equals("PixArtMessenger_UpdateService")) {
             try {
                 appURI = getIntent().getStringExtra("url");

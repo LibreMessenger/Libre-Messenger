@@ -70,6 +70,8 @@ public class RecordingActivity extends XmppActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
+        this.mTheme = findTheme();
+        setTheme(this.mTheme);
         Log.d(Config.LOGTAG, "output: " + getOutputFile());
         if (!startRecording()) {
             mStopButton.setEnabled(false);
