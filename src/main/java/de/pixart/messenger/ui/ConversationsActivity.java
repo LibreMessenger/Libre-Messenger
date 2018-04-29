@@ -811,14 +811,8 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
                 intent.putExtra("contact", conversation.getContact().getJid().asBareJid().toString());
                 intent.putExtra(EXTRA_ACCOUNT, conversation.getAccount().getJid().asBareJid().toString());
                 switch (menuItem.getItemId()) {
-                    case R.id.scan_fingerprint:
-                        intent.putExtra("mode", VerifyOTRActivity.MODE_SCAN_FINGERPRINT);
-                        break;
                     case R.id.ask_question:
                         intent.putExtra("mode", VerifyOTRActivity.MODE_ASK_QUESTION);
-                        break;
-                    case R.id.manual_verification:
-                        intent.putExtra("mode", VerifyOTRActivity.MODE_MANUAL_VERIFICATION);
                         break;
                 }
                 startActivity(intent);
