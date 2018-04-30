@@ -69,6 +69,10 @@ public class MessageSearchTask implements Runnable, Cancellable {
         new MessageSearchTask(xmppConnectionService, term, onSearchResultsAvailable).executeInBackground();
     }
 
+    public static void cancelRunningTasks() {
+        EXECUTOR.cancelRunningTasks();
+    }
+
     @Override
     public void cancel() {
         this.isCancelled = true;
@@ -82,20 +86,31 @@ public class MessageSearchTask implements Runnable, Cancellable {
             final HashMap<String, Conversational> conversationCache = new HashMap<>();
             final List<Message> result = new ArrayList<>();
             cursor = xmppConnectionService.databaseBackend.getMessageSearchCursor(term);
-            while (cursor.moveToNext()) {
-                final String conversationUuid = cursor.getString(cursor.getColumnIndex(Message.CONVERSATION));
-                Conversational conversation;
-                if (conversationCache.containsKey(conversationUuid)) {
-                    conversation = conversationCache.get(conversationUuid);
-                } else {
-                    String accountUuid = cursor.getString(cursor.getColumnIndex(Conversation.ACCOUNT));
-                    String contactJid = cursor.getString(cursor.getColumnIndex(Conversation.CONTACTJID));
-                    int mode = cursor.getInt(cursor.getColumnIndex(Conversation.MODE));
-                    conversation = findOrGenerateStub(conversationUuid, accountUuid, contactJid, mode);
-                    conversationCache.put(conversationUuid, conversation);
-                }
-                Message message = IndividualMessage.fromCursor(cursor, conversation);
-                result.add(message);
+            if (isCancelled) {
+                Log.d(Config.LOGTAG, "canceled search task");
+                return;
+            }
+            if (cursor != null && cursor.getCount() > 0) {
+                cursor.moveToLast();
+                do {
+                    if (isCancelled) {
+                        Log.d(Config.LOGTAG, "canceled search task");
+                        return;
+                    }
+                    final String conversationUuid = cursor.getString(cursor.getColumnIndex(Message.CONVERSATION));
+                    Conversational conversation;
+                    if (conversationCache.containsKey(conversationUuid)) {
+                        conversation = conversationCache.get(conversationUuid);
+                    } else {
+                        String accountUuid = cursor.getString(cursor.getColumnIndex(Conversation.ACCOUNT));
+                        String contactJid = cursor.getString(cursor.getColumnIndex(Conversation.CONTACTJID));
+                        int mode = cursor.getInt(cursor.getColumnIndex(Conversation.MODE));
+                        conversation = findOrGenerateStub(conversationUuid, accountUuid, contactJid, mode);
+                        conversationCache.put(conversationUuid, conversation);
+                    }
+                    Message message = IndividualMessage.fromCursor(cursor, conversation);
+                    result.add(message);
+                } while (cursor.moveToPrevious());
             }
             long stopTimestamp = SystemClock.elapsedRealtime();
             Log.d(Config.LOGTAG, "found " + result.size() + " messages in " + (stopTimestamp - startTimestamp) + "ms");

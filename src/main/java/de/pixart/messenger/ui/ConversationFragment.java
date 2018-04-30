@@ -97,6 +97,7 @@ import de.pixart.messenger.ui.adapter.MessageAdapter;
 import de.pixart.messenger.ui.util.ActivityResult;
 import de.pixart.messenger.ui.util.AttachmentTool;
 import de.pixart.messenger.ui.util.ConversationMenuConfigurator;
+import de.pixart.messenger.ui.util.ListViewUtils;
 import de.pixart.messenger.ui.util.PendingItem;
 import de.pixart.messenger.ui.util.PresenceSelector;
 import de.pixart.messenger.ui.util.ScrollState;
@@ -2253,20 +2254,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     }
 
     private void setSelection(int pos, boolean jumpToBottom) {
-        setSelection(this.binding.messagesView, pos, jumpToBottom);
-        this.binding.messagesView.post(() -> setSelection(this.binding.messagesView, pos, jumpToBottom));
+        ListViewUtils.setSelection(this.binding.messagesView, pos, jumpToBottom);
+        this.binding.messagesView.post(() -> ListViewUtils.setSelection(this.binding.messagesView, pos, jumpToBottom));
         this.binding.messagesView.post(this::fireReadEvent);
-    }
-
-    private static void setSelection(final ListView listView, int pos, boolean jumpToBottom) {
-        if (jumpToBottom) {
-            final View lastChild = listView.getChildAt(listView.getChildCount() - 1);
-            if (lastChild != null) {
-                listView.setSelectionFromTop(pos, -lastChild.getHeight());
-                return;
-            }
-        }
-        listView.setSelection(pos);
     }
 
     private boolean scrolledToBottom() {

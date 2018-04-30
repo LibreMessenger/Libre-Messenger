@@ -33,6 +33,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,10 +45,12 @@ import java.util.List;
 import de.pixart.messenger.R;
 import de.pixart.messenger.databinding.ActivitySearchBinding;
 import de.pixart.messenger.entities.Message;
+import de.pixart.messenger.services.MessageSearchTask;
 import de.pixart.messenger.ui.adapter.MessageAdapter;
 import de.pixart.messenger.ui.interfaces.OnSearchResultsAvailable;
 import de.pixart.messenger.ui.util.Color;
 import de.pixart.messenger.ui.util.Drawable;
+import de.pixart.messenger.ui.util.ListViewUtils;
 
 import static de.pixart.messenger.ui.util.SoftKeyboardUtils.hideSoftKeyboard;
 import static de.pixart.messenger.ui.util.SoftKeyboardUtils.showKeyboard;
@@ -75,6 +78,7 @@ public class SearchActivity extends XmppActivity implements TextWatcher, OnSearc
         EditText searchField = searchActionMenuItem.getActionView().findViewById(R.id.search_field);
         searchField.addTextChangedListener(this);
         searchField.setHint(R.string.search_messages);
+        searchField.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_AUTO_COMPLETE);
         showKeyboard(searchField);
         return super.onCreateOptionsMenu(menu);
     }
@@ -125,6 +129,7 @@ public class SearchActivity extends XmppActivity implements TextWatcher, OnSearc
         if (term.length() > 0) {
             xmppConnectionService.search(s.toString().trim(), this);
         } else {
+            MessageSearchTask.cancelRunningTasks();
             this.messages.clear();
             messageListAdapter.notifyDataSetChanged();
             changeBackground(false, false);
@@ -133,11 +138,12 @@ public class SearchActivity extends XmppActivity implements TextWatcher, OnSearc
 
     @Override
     public void onSearchResultsAvailable(String term, List<Message> messages) {
-        this.messages.clear();
-        this.messages.addAll(messages);
         runOnUiThread(() -> {
+            this.messages.clear();
+            this.messages.addAll(messages);
             messageListAdapter.notifyDataSetChanged();
             changeBackground(true, messages.size() > 0);
+            ListViewUtils.scrollToBottom(this.binding.searchResults);
         });
     }
 
