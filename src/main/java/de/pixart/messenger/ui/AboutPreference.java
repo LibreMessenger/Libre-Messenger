@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.preference.Preference;
 import android.util.AttributeSet;
 
-import de.pixart.messenger.BuildConfig;
+import de.pixart.messenger.R;
 import de.pixart.messenger.utils.PhoneHelper;
 
 public class AboutPreference extends Preference {
@@ -27,7 +27,7 @@ public class AboutPreference extends Preference {
     }
 
     private void setSummary() {
-        setSummary("Pix-Art Messenger " + PhoneHelper.getVersionName(getContext()) + " [" + BuildConfig.FLAVOR + "]");
+        setSummary(getContext().getString(R.string.app_name) + ' ' + PhoneHelper.getVersionName(getContext()));
     }
 }
 
