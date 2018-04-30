@@ -242,7 +242,7 @@
         </activity>
         <activity
             android:name=".ui.SearchActivity"
-            android:label="@string/title_activity_search" />
+            android:label="@string/search_messages" />
         <activity
             android:name=".ui.ShowFullscreenMessageActivity"
             android:configChanges="orientation|screenSize"

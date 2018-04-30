@@ -32,6 +32,6 @@
     <item
         android:id="@+id/action_search"
         android:orderInCategory="50"
-        android:title="@string/title_activity_search"
+        android:title="@string/search_messages"
         app:showAsAction="never" />
 </menu>

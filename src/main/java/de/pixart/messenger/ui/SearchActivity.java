@@ -44,6 +44,7 @@ import java.util.List;
 
 import de.pixart.messenger.R;
 import de.pixart.messenger.databinding.ActivitySearchBinding;
+import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.services.MessageSearchTask;
 import de.pixart.messenger.ui.adapter.MessageAdapter;
@@ -55,7 +56,7 @@ import de.pixart.messenger.ui.util.ListViewUtils;
 import static de.pixart.messenger.ui.util.SoftKeyboardUtils.hideSoftKeyboard;
 import static de.pixart.messenger.ui.util.SoftKeyboardUtils.showKeyboard;
 
-public class SearchActivity extends XmppActivity implements TextWatcher, OnSearchResultsAvailable {
+public class SearchActivity extends XmppActivity implements TextWatcher, OnSearchResultsAvailable, MessageAdapter.OnContactPictureClicked {
 
     private final List<Message> messages = new ArrayList<>();
     private ActivitySearchBinding binding;
@@ -68,6 +69,7 @@ public class SearchActivity extends XmppActivity implements TextWatcher, OnSearc
         setSupportActionBar((Toolbar) this.binding.toolbar);
         configureActionBar(getSupportActionBar());
         this.messageListAdapter = new MessageAdapter(this, this.messages);
+        this.messageListAdapter.setOnContactPictureClicked(this);
         this.binding.searchResults.setAdapter(messageListAdapter);
     }
 
@@ -147,4 +149,25 @@ public class SearchActivity extends XmppActivity implements TextWatcher, OnSearc
         });
     }
 
+    @Override
+    public void onContactPictureClicked(Message message) {
+        String fingerprint;
+        if (message.getEncryption() == Message.ENCRYPTION_PGP || message.getEncryption() == Message.ENCRYPTION_DECRYPTED) {
+            fingerprint = "pgp";
+        } else {
+            fingerprint = message.getFingerprint();
+        }
+        if (message.getStatus() == Message.STATUS_RECEIVED) {
+            final Contact contact = message.getContact();
+            if (contact != null) {
+                if (contact.isSelf()) {
+                    switchToAccount(message.getConversation().getAccount(), fingerprint);
+                } else {
+                    switchToContactDetails(contact, fingerprint);
+                }
+            }
+        } else {
+            switchToAccount(message.getConversation().getAccount(), fingerprint);
+        }
+    }
 }
