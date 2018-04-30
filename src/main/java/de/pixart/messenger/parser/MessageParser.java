@@ -306,7 +306,8 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                         extractErrorMessage(packet));
                 if (message != null) {
                     if (message.getEncryption() == Message.ENCRYPTION_OTR) {
-                        message.getConversation().endOtrIfNeeded();
+                        Conversation conversation = (Conversation) message.getConversation();
+                        conversation.endOtrIfNeeded();
                     }
                 }
             }

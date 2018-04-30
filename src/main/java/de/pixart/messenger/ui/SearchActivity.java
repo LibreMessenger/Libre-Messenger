@@ -34,7 +34,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -42,18 +41,18 @@ import android.widget.EditText;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.databinding.ActivitySearchBinding;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.ui.adapter.MessageAdapter;
+import de.pixart.messenger.ui.interfaces.OnSearchResultsAvailable;
 import de.pixart.messenger.ui.util.Color;
 import de.pixart.messenger.ui.util.Drawable;
 
 import static de.pixart.messenger.ui.util.SoftKeyboardUtils.hideSoftKeyboard;
 import static de.pixart.messenger.ui.util.SoftKeyboardUtils.showKeyboard;
 
-public class SearchActivity extends XmppActivity implements TextWatcher {
+public class SearchActivity extends XmppActivity implements TextWatcher, OnSearchResultsAvailable {
 
     private final List<Message> messages = new ArrayList<>();
     private ActivitySearchBinding binding;
@@ -122,7 +121,24 @@ public class SearchActivity extends XmppActivity implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable s) {
-        Log.d(Config.LOGTAG, "searching for " + s);
+        String term = s.toString().trim();
+        if (term.length() > 0) {
+            xmppConnectionService.search(s.toString().trim(), this);
+        } else {
+            this.messages.clear();
+            messageListAdapter.notifyDataSetChanged();
+            changeBackground(false, false);
+        }
+    }
+
+    @Override
+    public void onSearchResultsAvailable(String term, List<Message> messages) {
+        this.messages.clear();
+        this.messages.addAll(messages);
+        runOnUiThread(() -> {
+            messageListAdapter.notifyDataSetChanged();
+            changeBackground(true, messages.size() > 0);
+        });
     }
 
 }

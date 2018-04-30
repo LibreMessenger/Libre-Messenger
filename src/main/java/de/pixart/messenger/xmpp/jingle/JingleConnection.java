@@ -24,6 +24,7 @@ import de.pixart.messenger.crypto.axolotl.OnMessageCreatedCallback;
 import de.pixart.messenger.crypto.axolotl.XmppAxolotlMessage;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Conversation;
+import de.pixart.messenger.entities.Conversational;
 import de.pixart.messenger.entities.DownloadableFile;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.Presence;
@@ -264,7 +265,7 @@ public class JingleConnection implements Transferable {
 
     public void init(final Message message) {
         if (message.getEncryption() == Message.ENCRYPTION_AXOLOTL) {
-            Conversation conversation = message.getConversation();
+            Conversation conversation = (Conversation) message.getConversation();
             conversation.getAccount().getAxolotlService().prepareKeyTransportMessage(conversation, new OnMessageCreatedCallback() {
                 @Override
                 public void run(XmppAxolotlMessage xmppAxolotlMessage) {
@@ -355,9 +356,7 @@ public class JingleConnection implements Transferable {
 
     public void init(Account account, JinglePacket packet) {
         this.mJingleStatus = JINGLE_STATUS_INITIATED;
-        Conversation conversation = this.mXmppConnectionService
-                .findOrCreateConversation(account,
-                        packet.getFrom().asBareJid(), false, true);
+        Conversation conversation = this.mXmppConnectionService.findOrCreateConversation(account, packet.getFrom().asBareJid(), false, false);
         this.message = new Message(conversation, "", Message.ENCRYPTION_NONE);
         this.message.setStatus(Message.STATUS_RECEIVED);
         this.mStatus = Transferable.STATUS_OFFER;
@@ -493,12 +492,13 @@ public class JingleConnection implements Transferable {
             Pair<InputStream, Integer> pair;
             try {
                 if (message.getEncryption() == Message.ENCRYPTION_OTR) {
-                    Conversation conversation = this.message.getConversation();
-                    if (!this.mXmppConnectionService.renewSymmetricKey(conversation)) {
+                    Conversational conversation = this.message.getConversation();
+                    if (!this.mXmppConnectionService.renewSymmetricKey((Conversation) conversation)) {
                         Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": could not set symmetric key");
                         cancel();
                     }
-                    this.file.setKeyAndIv(conversation.getSymmetricKey());
+                    Conversation c = (Conversation) this.message.getConversation();
+                    this.file.setKeyAndIv(c.getSymmetricKey());
                     pair = AbstractConnectionManager.createInputStream(this.file, false);
                     this.file.setExpectedSize(pair.second);
                     content.setFileOffer(this.file, true, this.ftVersion);
@@ -845,6 +845,8 @@ public class JingleConnection implements Transferable {
         content.setTransportId(this.transportId);
         content.ibbTransport().setAttribute("block-size", this.ibbBlockSize);
         answer.setContent(content);
+
+
         if (initiating()) {
             this.sendJinglePacket(answer, new OnIqPacketReceived() {
                 @Override
@@ -873,6 +875,7 @@ public class JingleConnection implements Transferable {
                 }
             }
             this.transport = new JingleInbandTransport(this, this.transportId, this.ibbBlockSize);
+
             //might be receive instead if we are not initiating
             if (initiating()) {
                 this.transport.connect(onIbbTransportConnected);

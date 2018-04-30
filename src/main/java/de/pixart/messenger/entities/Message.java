@@ -92,7 +92,7 @@ public class Message extends AbstractEntity {
     protected boolean read = true;
     protected String remoteMsgId = null;
     protected String serverMsgId = null;
-    private final Conversation conversation;
+    private final Conversational conversation;
     protected Transferable transferable = null;
     private Message mNextMessage = null;
     private Message mPreviousMessage = null;
@@ -108,15 +108,15 @@ public class Message extends AbstractEntity {
     private List<MucOptions.User> counterparts;
     private WeakReference<MucOptions.User> user;
 
-    private Message(Conversation conversation) {
+    private Message(Conversational conversation) {
         this.conversation = conversation;
     }
 
-    public Message(Conversation conversation, String body, int encryption) {
+    public Message(Conversational conversation, String body, int encryption) {
         this(conversation, body, encryption, STATUS_UNSEND);
     }
 
-    public Message(Conversation conversation, String body, int encryption, int status) {
+    public Message(Conversational conversation, String body, int encryption, int status) {
         this(conversation, java.util.UUID.randomUUID().toString(),
                 conversation.getUuid(),
                 conversation.getJid() == null ? null : conversation.getJid().asBareJid(),
@@ -139,7 +139,7 @@ public class Message extends AbstractEntity {
                 false);
     }
 
-    private Message(final Conversation conversation, final String uuid, final String conversationUUid, final Jid counterpart,
+    protected Message(final Conversational conversation, final String uuid, final String conversationUUid, final Jid counterpart,
                     final Jid trueCounterpart, final String body, final long timeSent,
                     final int encryption, final int status, final int type, final boolean carbon,
                     final String remoteMsgId, final String relativeFilePath,
@@ -278,7 +278,7 @@ public class Message extends AbstractEntity {
         return conversationUuid;
     }
 
-    public Conversation getConversation() {
+    public Conversational getConversation() {
         return this.conversation;
     }
 
@@ -514,30 +514,40 @@ public class Message extends AbstractEntity {
     }
 
     public Message next() {
-        synchronized (this.conversation.messages) {
-            if (this.mNextMessage == null) {
-                int index = this.conversation.messages.indexOf(this);
-                if (index < 0 || index >= this.conversation.messages.size() - 1) {
-                    this.mNextMessage = null;
-                } else {
-                    this.mNextMessage = this.conversation.messages.get(index + 1);
+        if (this.conversation instanceof Conversation) {
+            final Conversation conversation = (Conversation) this.conversation;
+            synchronized (conversation.messages) {
+                if (this.mNextMessage == null) {
+                    int index = conversation.messages.indexOf(this);
+                    if (index < 0 || index >= conversation.messages.size() - 1) {
+                        this.mNextMessage = null;
+                    } else {
+                        this.mNextMessage = conversation.messages.get(index + 1);
+                    }
                 }
+                return this.mNextMessage;
             }
-            return this.mNextMessage;
+        } else {
+            throw new AssertionError("Calling next should be disabled for stubs");
         }
     }
 
     public Message prev() {
-        synchronized (this.conversation.messages) {
-            if (this.mPreviousMessage == null) {
-                int index = this.conversation.messages.indexOf(this);
-                if (index <= 0 || index > this.conversation.messages.size()) {
-                    this.mPreviousMessage = null;
-                } else {
-                    this.mPreviousMessage = this.conversation.messages.get(index - 1);
+        if (this.conversation instanceof Conversation) {
+            final Conversation conversation = (Conversation) this.conversation;
+            synchronized (conversation.messages) {
+                if (this.mPreviousMessage == null) {
+                    int index = conversation.messages.indexOf(this);
+                    if (index <= 0 || index > conversation.messages.size()) {
+                        this.mPreviousMessage = null;
+                    } else {
+                        this.mPreviousMessage = conversation.messages.get(index - 1);
+                    }
                 }
             }
             return this.mPreviousMessage;
+        } else {
+            throw new AssertionError("Calling prev should be disabled for stubs");
         }
     }
 
@@ -893,13 +903,18 @@ public class Message extends AbstractEntity {
     }
 
     private int getNextEncryption() {
-        for (Message iterator = this.next(); iterator != null; iterator = iterator.next()) {
-            if (iterator.isCarbon() || iterator.getStatus() == STATUS_RECEIVED) {
-                continue;
+        if (this.conversation instanceof Conversation) {
+            Conversation conversation = (Conversation) this.conversation;
+            for (Message iterator = this.next(); iterator != null; iterator = iterator.next()) {
+                if (iterator.isCarbon() || iterator.getStatus() == STATUS_RECEIVED) {
+                    continue;
+                }
+                return iterator.getEncryption();
             }
-            return iterator.getEncryption();
+            return conversation.getNextEncryption();
+        } else {
+            throw new AssertionError("This should never be called since isInValidSession should be disabled for stubs");
         }
-        return conversation.getNextEncryption();
     }
 
     public boolean isValidInSession() {

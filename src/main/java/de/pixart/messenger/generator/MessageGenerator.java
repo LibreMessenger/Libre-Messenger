@@ -33,7 +33,7 @@ public class MessageGenerator extends AbstractGenerator {
     }
 
     private MessagePacket preparePacket(Message message) {
-        Conversation conversation = message.getConversation();
+        Conversation conversation = (Conversation) message.getConversation();
         Account account = conversation.getAccount();
         MessagePacket packet = new MessagePacket();
         final boolean isWithSelf = conversation.getContact().isSelf();
@@ -109,7 +109,8 @@ public class MessageGenerator extends AbstractGenerator {
     }
 
     public MessagePacket generateOtrChat(Message message) {
-        Session otrSession = message.getConversation().getOtrSession();
+        Conversation conversation = (Conversation) message.getConversation();
+        Session otrSession = conversation.getOtrSession();
         if (otrSession == null) {
             return null;
         }

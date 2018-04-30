@@ -18,6 +18,7 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
+import de.pixart.messenger.entities.Conversational;
 import de.pixart.messenger.entities.ListItem;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.MucOptions;
@@ -444,7 +445,7 @@ public class UIHelper {
     }
 
     public static String getMessageDisplayName(final Message message) {
-        final Conversation conversation = message.getConversation();
+        final Conversational conversation = message.getConversation();
         if (message.getStatus() == Message.STATUS_RECEIVED) {
             final Contact contact = message.getContact();
             if (conversation.getMode() == Conversation.MODE_MULTI) {
@@ -457,8 +458,8 @@ public class UIHelper {
                 return contact != null ? contact.getDisplayName() : "";
             }
         } else {
-            if (conversation.getMode() == Conversation.MODE_MULTI) {
-                return conversation.getMucOptions().getSelf().getName();
+            if (conversation instanceof Conversation && conversation.getMode() == Conversation.MODE_MULTI) {
+                return ((Conversation) conversation).getMucOptions().getSelf().getName();
             } else {
                 final Jid jid = conversation.getAccount().getJid();
                 return jid.getLocal() != null ? jid.getLocal() : Jid.ofDomain(jid.getDomain()).toString();

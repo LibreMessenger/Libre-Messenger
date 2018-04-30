@@ -109,6 +109,7 @@ import de.pixart.messenger.persistance.DatabaseBackend;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.ui.SettingsActivity;
 import de.pixart.messenger.ui.UiCallback;
+import de.pixart.messenger.ui.interfaces.OnSearchResultsAvailable;
 import de.pixart.messenger.utils.ConversationsFileObserver;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.ExceptionHelper;
@@ -559,6 +560,10 @@ public class XmppConnectionService extends Service {
         return find(getConversations(), account, jid);
     }
 
+    public void search(String term, OnSearchResultsAvailable onSearchResultsAvailable) {
+        MessageSearchTask.search(this, term, onSearchResultsAvailable);
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         final String action = intent == null ? null : intent.getAction();
@@ -813,7 +818,7 @@ public class XmppConnectionService extends Service {
                     message.setEncryption(Message.ENCRYPTION_DECRYPTED);
                     sendMessage(message);
                     if (dismissAfterReply) {
-                        markRead(message.getConversation(), true);
+                        markRead((Conversation) message.getConversation(), true);
                     } else {
                         mNotificationService.pushFromDirectReply(message);
                     }
@@ -1279,7 +1284,7 @@ public class XmppConnectionService extends Service {
             databaseBackend.updateAccount(account);
             mNotificationService.updateErrorNotification();
         }
-        final Conversation conversation = message.getConversation();
+        final Conversation conversation = (Conversation) message.getConversation();
         account.deactivateGracePeriod();
         MessagePacket packet = null;
         final boolean addToConversation = (conversation.getMode() != Conversation.MODE_MULTI
@@ -1289,8 +1294,8 @@ public class XmppConnectionService extends Service {
         message.setStatus(Message.STATUS_WAITING);
 
         if (!resend && message.getEncryption() != Message.ENCRYPTION_OTR) {
-            message.getConversation().endOtrIfNeeded();
-            message.getConversation().findUnsentMessagesWithEncryption(Message.ENCRYPTION_OTR,
+            conversation.endOtrIfNeeded();
+            conversation.findUnsentMessagesWithEncryption(Message.ENCRYPTION_OTR,
                     new Conversation.OnMessageFound() {
                         @Override
                         public void onMessageFound(Message message) {
@@ -3592,6 +3597,15 @@ public class XmppConnectionService extends Service {
         return null;
     }
 
+    public Account findAccountByUuid(final String uuid) {
+        for (Account account : this.accounts) {
+            if (account.getUuid().equals(uuid)) {
+                return account;
+            }
+        }
+        return null;
+    }
+
     public Conversation findConversationByUuid(String uuid) {
         for (Conversation conversation : getConversations()) {
             if (conversation.getUuid().equals(uuid)) {
@@ -3885,7 +3899,9 @@ public class XmppConnectionService extends Service {
             markMessage(msg, Message.STATUS_WAITING);
             this.resendMessage(msg, false);
         }
-        message.getConversation().sort();
+        if (message.getConversation() instanceof Conversation) {
+            ((Conversation) message.getConversation()).sort();
+        }
         updateConversationUi();
     }
 

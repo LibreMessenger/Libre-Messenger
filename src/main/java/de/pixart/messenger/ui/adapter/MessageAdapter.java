@@ -63,6 +63,7 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.axolotl.FingerprintStatus;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Conversation;
+import de.pixart.messenger.entities.Conversational;
 import de.pixart.messenger.entities.DownloadableFile;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.Message.FileParams;
@@ -594,10 +595,13 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 }
             }
             if (message.getConversation().getMode() == Conversation.MODE_MULTI && message.getStatus() == Message.STATUS_RECEIVED) {
-                Pattern pattern = NotificationService.generateNickHighlightPattern(message.getConversation().getMucOptions().getActualNick());
-                Matcher matcher = pattern.matcher(body);
-                while (matcher.find()) {
-                    body.setSpan(new StyleSpan(Typeface.BOLD), matcher.start(), matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                if (message.getConversation() instanceof Conversation) {
+                    final Conversation conversation = (Conversation) message.getConversation();
+                    Pattern pattern = NotificationService.generateNickHighlightPattern(conversation.getMucOptions().getActualNick());
+                    Matcher matcher = pattern.matcher(body);
+                    while (matcher.find()) {
+                        body.setSpan(new StyleSpan(Typeface.BOLD), matcher.start(), matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
                 }
             }
             Matcher matcher = Emoticons.generatePattern(body).matcher(body);
@@ -798,7 +802,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         final Message message = getItem(position);
         final boolean omemoEncryption = message.getEncryption() == Message.ENCRYPTION_AXOLOTL;
         final boolean isInValidSession = message.isValidInSession() && (!omemoEncryption || message.isTrusted());
-        final Conversation conversation = message.getConversation();
+        final Conversational conversation = message.getConversation();
         final Account account = conversation.getAccount();
         final int type = getItemViewType(position);
         ViewHolder viewHolder;
@@ -875,7 +879,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 viewHolder.status_message.setVisibility(View.GONE);
                 viewHolder.contact_picture.setVisibility(View.GONE);
                 viewHolder.load_more_messages.setVisibility(View.VISIBLE);
-                viewHolder.load_more_messages.setOnClickListener(v -> loadMoreMessages(message.getConversation()));
+                viewHolder.load_more_messages.setOnClickListener(v -> loadMoreMessages((Conversation) message.getConversation()));
             } else {
                 viewHolder.status_message.setVisibility(View.VISIBLE);
                 viewHolder.load_more_messages.setVisibility(View.GONE);
@@ -943,7 +947,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             }
         } else if (message.getEncryption() == Message.ENCRYPTION_PGP) {
             if (account.isPgpDecryptionServiceConnected()) {
-                if (!account.hasPendingPgpIntent(conversation)) {
+                if (conversation instanceof Conversation && !account.hasPendingPgpIntent((Conversation) conversation)) {
                     displayInfoMessage(viewHolder, activity.getString(R.string.message_decrypting), darkBackground);
                 } else {
                     displayInfoMessage(viewHolder, activity.getString(R.string.pgp_message), darkBackground);
