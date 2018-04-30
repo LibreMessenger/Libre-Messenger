@@ -1159,7 +1159,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         menuInflater.inflate(R.menu.fragment_conversation, menu);
         final MenuItem menuInviteContact = menu.findItem(R.id.action_invite);
         final MenuItem menuNeedHelp = menu.findItem(R.id.action_create_issue);
-        final MenuItem menuSearchHistory = menu.findItem(R.id.action_search_history);
         final MenuItem menuSearchUpdates = menu.findItem(R.id.action_check_updates);
         final MenuItem menuArchiveChat = menu.findItem(R.id.action_archive_chat);
         final MenuItem menuEditProfiles = menu.findItem(R.id.action_accounts);
@@ -1174,13 +1173,11 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             }
             menuEditProfiles.setVisible(false);
             menuNeedHelp.setVisible(true);
-            menuSearchHistory.setVisible(true);
             menuSearchUpdates.setVisible(false);
             ConversationMenuConfigurator.configureAttachmentMenu(conversation, menu);
             ConversationMenuConfigurator.configureEncryptionMenu(conversation, menu);
         } else {
             menuNeedHelp.setVisible(false);
-            menuSearchHistory.setVisible(false);
             menuSearchUpdates.setVisible(true);
         }
         super.onCreateOptionsMenu(menu, menuInflater);
@@ -1472,9 +1469,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 if (activity instanceof XmppActivity) {
                     BlockContactDialog.show((XmppActivity) activity, conversation);
                 }
-                break;
-            case R.id.action_search_history:
-                showSearchField();
                 break;
             default:
                 break;
@@ -2628,33 +2622,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 
     protected void hideMessageHint() {
         this.binding.messagehint.setVisibility(View.GONE);
-    }
-
-    protected void showSearchField() {
-        this.binding.textsend.setVisibility(View.GONE);
-        this.binding.searchfield.setVisibility(View.VISIBLE);
-        this.binding.searchfieldInput.addTextChangedListener(mSearchTextWatcher);
-        this.binding.searchfieldInput.requestFocus();
-        final InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null) {
-            imm.showSoftInput(this.binding.searchfieldInput, InputMethodManager.SHOW_IMPLICIT);
-        }
-    }
-
-    protected void hideSearchField() {
-        this.binding.textsend.setVisibility(View.VISIBLE);
-        this.binding.searchfield.setVisibility(View.GONE);
-        if (activity != null) {
-            final InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (imm != null) {
-                imm.hideSoftInputFromWindow(this.binding.searchfieldInput.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
-            }
-        }
-        this.binding.searchfieldInput.setText("");
-    }
-
-    protected boolean isSearchFieldVisible() {
-        return this.binding.searchfield.getVisibility() == View.VISIBLE;
     }
 
     protected void sendMessage(Message message) {

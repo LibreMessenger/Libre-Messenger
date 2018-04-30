@@ -248,54 +248,6 @@
         <item name="ic_settings_about" type="reference">@drawable/ic_help_circle_white_24dp</item>
     </style>
 
-    <style name="ConversationsDialog" parent="Theme.AppCompat.Light.Dialog">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowActionBar">false</item>
-
-        <item name="TextSizeCaption">12sp</item>
-        <item name="TextSizeBody1">14sp</item>
-        <item name="TextSizeBody2">14sp</item>
-        <item name="TextSizeDisplay2">45sp</item>
-        <item name="TextSizeSubhead">16sp</item>
-        <item name="TextSizeTitle">20sp</item>
-        <item name="TextSizeInput">16sp</item>
-        <item name="TextSeparation">5sp</item>
-        <item name="IconSize">18sp</item>
-        <item name="TextSizeInfo">12sp</item>
-        <item name="TextSizeBody">14sp</item>
-        <item name="TextSizeHeadline">18sp</item>
-
-        <item name="colorAccent">@color/accent</item>
-        <item name="color_background_primary">@color/grey50</item>
-        <item name="color_background_secondary">@color/grey200</item>
-
-        <item name="android:background">@color/grey50</item>
-    </style>
-
-    <style name="ConversationsDialog.Dark" parent="Theme.AppCompat.Dialog">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowActionBar">false</item>
-
-        <item name="TextSizeCaption">12sp</item>
-        <item name="TextSizeBody1">14sp</item>
-        <item name="TextSizeBody2">14sp</item>
-        <item name="TextSizeDisplay2">45sp</item>
-        <item name="TextSizeSubhead">16sp</item>
-        <item name="TextSizeTitle">20sp</item>
-        <item name="TextSizeInput">16sp</item>
-        <item name="TextSeparation">5sp</item>
-        <item name="IconSize">18sp</item>
-        <item name="TextSizeInfo">12sp</item>
-        <item name="TextSizeBody">14sp</item>
-        <item name="TextSizeHeadline">18sp</item>
-
-        <item name="colorAccent">@color/accent</item>
-        <item name="color_background_primary">@color/grey900</item>
-        <item name="color_background_secondary">@color/realblack</item>
-
-        <item name="android:background">@color/grey900</item>
-    </style>
-
 
     <style name="ConversationsTheme.Dialog" parent="@style/Theme.AppCompat.Light.Dialog">
         <item name="colorPrimary">@color/primary</item>

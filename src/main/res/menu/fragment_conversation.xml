@@ -77,9 +77,4 @@
         android:orderInCategory="100"
         app:showAsAction="never"
         android:title="@string/create_issue" />
-    <item
-        android:id="@+id/action_search_history"
-        android:icon="?attr/icon_search"
-        app:showAsAction="ifRoom"
-        android:title="@string/search" />
 </menu>
