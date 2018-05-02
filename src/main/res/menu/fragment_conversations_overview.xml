@@ -33,5 +33,6 @@
         android:id="@+id/action_search"
         android:orderInCategory="50"
         android:title="@string/search_messages"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_search_white_24dp"
+        app:showAsAction="always" />
 </menu>
