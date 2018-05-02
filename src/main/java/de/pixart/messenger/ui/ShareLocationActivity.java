@@ -87,7 +87,7 @@ public class ShareLocationActivity extends LocationActivity implements LocationL
             setResult(RESULT_CANCELED);
             finish();
         });
-        ThemeHelper.fixTextSize(this.snackBar);
+        ThemeHelper.fix(this.snackBar);
         mShareButton = findViewById(R.id.share_button);
         mShareButton.setOnClickListener(view -> {
             if (mLastLocation != null) {

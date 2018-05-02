@@ -8,6 +8,10 @@
     <color name="black54">#8a000309</color>
     <color name="black26">#42000000</color>
     <color name="black12">#1f000000</color>
+    <color name="deep_purple_a100">#ffB388FF</color>
+    <color name="deep_purple_a200">#ff7C4DFF</color>
+    <color name="deep_purple_a400">#ff651FFF</color>
+    <color name="deep_purple_a700">#ff6200EA</color>
     <color name="realblack">#ff000000</color>
     <color name="white">#ffe2e7f1</color>
     <color name="white12">#1fffffff</color>

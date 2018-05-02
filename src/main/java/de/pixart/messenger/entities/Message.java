@@ -17,7 +17,6 @@ import java.util.Set;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.crypto.axolotl.FingerprintStatus;
 import de.pixart.messenger.http.AesGcmURLStreamHandler;
-import de.pixart.messenger.ui.adapter.MessageAdapter;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.Emoticons;
 import de.pixart.messenger.utils.GeoHelper;
@@ -108,7 +107,7 @@ public class Message extends AbstractEntity {
     private List<MucOptions.User> counterparts;
     private WeakReference<MucOptions.User> user;
 
-    private Message(Conversational conversation) {
+    protected Message(Conversational conversation) {
         this.conversation = conversation;
     }
 
@@ -230,14 +229,6 @@ public class Message extends AbstractEntity {
         message.setType(Message.TYPE_STATUS);
         message.body = "LOAD_MORE";
         return message;
-    }
-
-    public static Message createDateSeparator(Message message) {
-        final Message separator = new Message(message.getConversation());
-        separator.setType(Message.TYPE_STATUS);
-        separator.body = MessageAdapter.DATE_SEPARATOR_BODY;
-        separator.setTime(message.getTimeSent());
-        return separator;
     }
 
     @Override

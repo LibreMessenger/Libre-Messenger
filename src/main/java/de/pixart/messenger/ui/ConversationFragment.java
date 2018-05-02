@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.PendingIntent;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -97,12 +96,14 @@ import de.pixart.messenger.ui.adapter.MessageAdapter;
 import de.pixart.messenger.ui.util.ActivityResult;
 import de.pixart.messenger.ui.util.AttachmentTool;
 import de.pixart.messenger.ui.util.ConversationMenuConfigurator;
+import de.pixart.messenger.ui.util.DateSeparator;
 import de.pixart.messenger.ui.util.ListViewUtils;
 import de.pixart.messenger.ui.util.PendingItem;
 import de.pixart.messenger.ui.util.PresenceSelector;
 import de.pixart.messenger.ui.util.ScrollState;
 import de.pixart.messenger.ui.util.SendButtonAction;
 import de.pixart.messenger.ui.util.SendButtonTool;
+import de.pixart.messenger.ui.util.ShareUtil;
 import de.pixart.messenger.ui.widget.EditMessage;
 import de.pixart.messenger.utils.FileUtils;
 import de.pixart.messenger.utils.MenuDoubleTabUtil;
@@ -1382,13 +1383,13 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.share_with:
-                shareWith(selectedMessage);
+                ShareUtil.share(activity, selectedMessage);
                 return true;
             case R.id.correct_message:
                 correctMessage(selectedMessage);
                 return true;
             case R.id.copy_message:
-                copyMessage(selectedMessage);
+                ShareUtil.copyToClipboard(activity, selectedMessage);
                 return true;
             case R.id.quote_message:
                 quoteMessage(selectedMessage);
@@ -1397,7 +1398,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 resendMessage(selectedMessage);
                 return true;
             case R.id.copy_url:
-                copyUrl(selectedMessage);
+                ShareUtil.copyUrlToClipboard(activity, selectedMessage);
                 return true;
             case R.id.download_file:
                 startDownloadable(selectedMessage);
@@ -1834,44 +1835,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         builder.create().show();
     }
 
-    private void shareWith(Message message) {
-        Intent shareIntent = new Intent();
-        shareIntent.setAction(Intent.ACTION_SEND);
-        if (message.isGeoUri() || message.isXmppUri()) {
-            shareIntent.putExtra(Intent.EXTRA_TEXT, message.getBody());
-            shareIntent.setType("text/plain");
-        } else if (!message.isFileOrImage()) {
-            shareIntent.putExtra(Intent.EXTRA_TEXT, message.getMergedBody().toString());
-            shareIntent.setType("text/plain");
-        } else {
-            final DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
-            try {
-                shareIntent.putExtra(Intent.EXTRA_STREAM, FileBackend.getUriForFile(getActivity(), file));
-            } catch (SecurityException e) {
-                Toast.makeText(getActivity(), activity.getString(R.string.no_permission_to_access_x, file.getAbsolutePath()), Toast.LENGTH_SHORT).show();
-                return;
-            }
-            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            String mime = message.getMimeType();
-            if (mime == null) {
-                mime = "*/*";
-            }
-            shareIntent.setType(mime);
-        }
-        try {
-            startActivity(Intent.createChooser(shareIntent, getText(R.string.share_with)));
-        } catch (ActivityNotFoundException e) {
-            //This should happen only on faulty androids because normally chooser is always available
-            Toast.makeText(getActivity(), R.string.no_application_found_to_open_file, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void copyMessage(Message message) {
-        if (activity.copyTextToClipboard(message.getMergedBody().toString(), R.string.message)) {
-            Toast.makeText(getActivity(), R.string.message_copied_to_clipboard, Toast.LENGTH_SHORT).show();
-        }
-    }
-
     private void deleteFile(Message message) {
         if (activity.xmppConnectionService.getFileBackend().deleteFile(message)) {
             message.setTransferable(new TransferablePlaceholder(Transferable.STATUS_DELETED));
@@ -2249,6 +2212,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         final String downloadUuid = extras.getString(ConversationsActivity.EXTRA_DOWNLOAD_UUID);
         final String text = extras.getString(ConversationsActivity.EXTRA_TEXT);
         final String nick = extras.getString(ConversationsActivity.EXTRA_NICK);
+        final boolean asQuote = extras.getBoolean(ConversationsActivity.EXTRA_AS_QUOTE);
         final boolean pm = extras.getBoolean(ConversationsActivity.EXTRA_IS_PRIVATE_MESSAGE, false);
         if (nick != null) {
             if (pm) {
@@ -2266,7 +2230,11 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 }
             }
         } else {
-            appendText(text);
+            if (text != null && asQuote) {
+                quoteText(text);
+            } else {
+                appendText(text);
+            }
         }
         final Message message = downloadUuid == null ? null : conversation.findMessageWithFileAndUuid(downloadUuid);
         if (message != null) {
@@ -2560,13 +2528,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 
     protected void updateDateBubbles() {
         synchronized (this.messageList) {
-            for (int i = 0; i < this.messageList.size(); ++i) {
-                final Message current = this.messageList.get(i);
-                if (i == 0 || !UIHelper.sameDay(this.messageList.get(i - 1).getTimeSent(), current.getTimeSent())) {
-                    this.messageList.add(i, Message.createDateSeparator(current));
-                    i++;
-                }
-            }
+            DateSeparator.addAll(this.messageList);
         }
     }
 
