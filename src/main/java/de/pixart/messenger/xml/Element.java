@@ -10,6 +10,7 @@ import java.util.Locale;
 
 import de.pixart.messenger.utils.XmlHelper;
 import de.pixart.messenger.xmpp.InvalidJid;
+import de.pixart.messenger.xmpp.stanzas.MessagePacket;
 import rocks.xmpp.addr.Jid;
 
 public class Element {
@@ -152,7 +153,7 @@ public class Element {
             try {
                 return Jid.ofEscaped(jid);
             } catch (final IllegalArgumentException e) {
-                return new InvalidJid(jid);
+                return InvalidJid.of(jid, this instanceof MessagePacket);
             }
         }
         return null;
