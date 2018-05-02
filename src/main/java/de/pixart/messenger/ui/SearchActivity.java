@@ -129,6 +129,9 @@ public class SearchActivity extends XmppActivity implements TextWatcher, OnSearc
         final Message message = selectedMessageReference.get();
         if (message != null) {
             switch (item.getItemId()) {
+                case R.id.open_conversation:
+                    switchToConversation(wrap(message.getConversation()));
+                    break;
                 case R.id.share_with:
                     ShareUtil.share(this, message);
                     break;
@@ -140,6 +143,7 @@ public class SearchActivity extends XmppActivity implements TextWatcher, OnSearc
                     break;
                 case R.id.quote_message:
                     quote(message);
+                    break;
             }
         }
         return super.onContextItemSelected(item);
@@ -148,17 +152,20 @@ public class SearchActivity extends XmppActivity implements TextWatcher, OnSearc
     private void quote(Message message) {
         String text = MessageUtils.prepareQuote(message);
         final Conversational conversational = message.getConversation();
+        switchToConversationAndQuote(wrap(message.getConversation()), text);
+    }
+
+    private Conversation wrap(Conversational conversational) {
         final Conversation conversation;
         if (conversational instanceof Conversation) {
-            conversation = (Conversation) conversational;
+            return (Conversation) conversational;
         } else {
-            conversation = xmppConnectionService.findOrCreateConversation(conversational.getAccount(),
+            return xmppConnectionService.findOrCreateConversation(conversational.getAccount(),
                     conversational.getJid(),
                     conversational.getMode() == Conversational.MODE_MULTI,
                     true,
                     true);
         }
-        switchToConversationAndQuote(conversation, text);
     }
 
     @Override
