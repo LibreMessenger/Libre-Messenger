@@ -24,7 +24,6 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.format.DateUtils;
-import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
@@ -532,21 +531,6 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             final String nick = UIHelper.getMessageDisplayName(message);
             SpannableStringBuilder body = message.getMergedBody();
             boolean hasMeCommand = message.hasMeCommand();
-            if (mConversationFragment != null) {
-                String searchQuery = mConversationFragment.binding.searchfieldInput.getText().toString().toLowerCase().trim();
-                if (((!searchQuery.isEmpty() || !searchQuery.contains("")) && searchQuery.length() >= 3) && body.toString().toLowerCase().contains(searchQuery)) {
-                    int ofe = body.toString().toLowerCase().indexOf(searchQuery, 0);
-                    for (int ofs = 0; ofs < body.length() && ofe != -1; ofs = ofe + 1) {
-                        ofe = body.toString().toLowerCase().indexOf(searchQuery, ofs);
-                        if (ofe == -1) {
-                            break;
-                        } else {
-                            body.setSpan(new StyleSpan(Typeface.BOLD), ofe, ofe + searchQuery.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                            body.setSpan(new BackgroundColorSpan(0xFFFFFF00), ofe, ofe + searchQuery.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        }
-                    }
-                }
-            }
             if (hasMeCommand) {
                 body = body.replace(0, Message.ME_COMMAND.length(), nick);
             }

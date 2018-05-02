@@ -29,7 +29,6 @@ import android.support.v13.view.inputmethod.InputConnectionCompat;
 import android.support.v13.view.inputmethod.InputContentInfoCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -549,53 +548,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         }
         return getConversation(activity, R.id.main_fragment);
     }
-
-    private TextWatcher mSearchTextWatcher = new TextWatcher() {
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-            String query = editable.toString().trim();
-
-            if ((!query.isEmpty() || !query.contains("")) && query.length() >= 3) {
-                binding.searchUp.setVisibility(View.VISIBLE);
-                binding.searchDown.setVisibility(View.VISIBLE);
-                Message found = searchHistory(query);
-                if (found != null) {
-                    binding.searchUp.setVisibility(View.VISIBLE);
-                    binding.searchDown.setVisibility(View.VISIBLE);
-                } else {
-                    binding.searchUp.setVisibility(View.GONE);
-                    binding.searchDown.setVisibility(View.GONE);
-                }
-                binding.searchUp.setEnabled(found != null);
-                binding.searchDown.setEnabled(found != null);
-                View.OnClickListener upDownListener = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        String searchQuery = binding.searchfieldInput.getText().toString().trim();
-                        if (!searchQuery.isEmpty() || !searchQuery.contains("")) {
-                            searchHistory(searchQuery, view.getId() == R.id.search_up);
-                        }
-
-                    }
-                };
-                binding.searchUp.setOnClickListener(upDownListener);
-                binding.searchDown.setOnClickListener(upDownListener);
-            } else {
-                binding.searchUp.setVisibility(View.GONE);
-                binding.searchDown.setVisibility(View.GONE);
-            }
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            activity.refreshUi();
-        }
-    };
 
     private static boolean allGranted(int[] grantResults) {
         for (int grantResult : grantResults) {
