@@ -90,7 +90,7 @@ public class SendButtonTool {
                     case DND:
                         return R.drawable.ic_send_text_dnd;
                     default:
-                        return R.drawable.ic_send_text_offline;
+                        return getThemeResource(activity, R.attr.ic_send_text_offline, R.drawable.ic_send_text_offline);
                 }
             case TAKE_FROM_CAMERA:
                 switch (status) {
@@ -103,7 +103,7 @@ public class SendButtonTool {
                     case DND:
                         return R.drawable.ic_send_photo_dnd;
                     default:
-                        return R.drawable.ic_send_photo_offline;
+                        return getThemeResource(activity, R.attr.ic_send_photo_offline, R.drawable.ic_send_photo_offline);
                 }
             case RECORD_VOICE:
                 switch (status) {
@@ -116,7 +116,7 @@ public class SendButtonTool {
                     case DND:
                         return R.drawable.ic_send_voice_dnd;
                     default:
-                        return R.drawable.ic_send_voice_offline;
+                        return getThemeResource(activity, R.attr.ic_send_voice_offline, R.drawable.ic_send_voice_offline);
                 }
             case SEND_LOCATION:
                 switch (status) {
@@ -129,7 +129,7 @@ public class SendButtonTool {
                     case DND:
                         return R.drawable.ic_send_location_dnd;
                     default:
-                        return R.drawable.ic_send_location_offline;
+                        return getThemeResource(activity, R.attr.ic_send_location_offline, R.drawable.ic_send_location_offline);
                 }
             case CANCEL:
                 switch (status) {
@@ -142,7 +142,7 @@ public class SendButtonTool {
                     case DND:
                         return R.drawable.ic_send_cancel_dnd;
                     default:
-                        return R.drawable.ic_send_cancel_offline;
+                        return getThemeResource(activity, R.attr.ic_send_cancel_offline, R.drawable.ic_send_cancel_offline);
                 }
             case CHOOSE_PICTURE:
                 switch (status) {
@@ -155,10 +155,10 @@ public class SendButtonTool {
                     case DND:
                         return R.drawable.ic_send_picture_dnd;
                     default:
-                        return R.drawable.ic_send_picture_offline;
+                        return getThemeResource(activity, R.attr.ic_send_picture_offline, R.drawable.ic_send_picture_offline);
                 }
         }
-        return R.drawable.ic_send_text_offline;
+        return getThemeResource(activity, R.attr.ic_send_text_offline, R.drawable.ic_send_text_offline);
     }
 
     private static int getThemeResource(Activity activity, int r_attr_name, int r_drawable_def) {
