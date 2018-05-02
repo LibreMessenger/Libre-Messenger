@@ -87,7 +87,6 @@ public class ShareLocationActivity extends LocationActivity implements LocationL
             setResult(RESULT_CANCELED);
             finish();
         });
-        ThemeHelper.fix(this.snackBar);
         mShareButton = findViewById(R.id.share_button);
         mShareButton.setOnClickListener(view -> {
             if (mLastLocation != null) {
@@ -114,6 +113,7 @@ public class ShareLocationActivity extends LocationActivity implements LocationL
                     startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                 }
             });
+            ThemeHelper.fix(this.snackBar);
         }
     }
 
