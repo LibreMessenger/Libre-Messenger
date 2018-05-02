@@ -1022,7 +1022,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 }
                 break;
             case ATTACHMENT_CHOICE_TAKE_FROM_CAMERA:
-                Uri takePhotoUri = pendingTakePhotoUri.pop();
+                final Uri takePhotoUri = pendingTakePhotoUri.pop();
                 if (takePhotoUri != null) {
                     attachPhotoToConversation(conversation, takePhotoUri);
                 } else {
@@ -1032,7 +1032,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             case ATTACHMENT_CHOICE_CHOOSE_FILE:
             case ATTACHMENT_CHOICE_RECORD_VOICE:
                 final List<Uri> fileUris = AttachmentTool.extractUriFromIntent(data);
-                String type = data.getType();
+                final String type = data == null ? null : data.getType();
                 final PresenceSelector.OnPresenceSelected callback = () -> {
                     for (Iterator<Uri> i = fileUris.iterator(); i.hasNext(); i.remove()) {
                         Log.d(Config.LOGTAG, "ConversationsActivity.onActivityResult() - attaching file to conversations. CHOOSE_FILE/RECORD_VOICE");
