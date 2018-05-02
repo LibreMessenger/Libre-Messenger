@@ -34,6 +34,6 @@ import de.pixart.messenger.entities.Message;
 
 public interface OnSearchResultsAvailable {
 
-    void onSearchResultsAvailable(String term, List<Message> messages);
+    void onSearchResultsAvailable(List<String> term, List<Message> messages);
 
 }

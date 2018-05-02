@@ -61,6 +61,7 @@ import de.pixart.messenger.ui.util.DateSeparator;
 import de.pixart.messenger.ui.util.Drawable;
 import de.pixart.messenger.ui.util.ListViewUtils;
 import de.pixart.messenger.ui.util.ShareUtil;
+import de.pixart.messenger.utils.FtsUtils;
 import de.pixart.messenger.utils.MessageUtils;
 
 import static de.pixart.messenger.ui.util.SoftKeyboardUtils.hideSoftKeyboard;
@@ -72,7 +73,7 @@ public class SearchActivity extends XmppActivity implements TextWatcher, OnSearc
     private MessageAdapter messageListAdapter;
     private final List<Message> messages = new ArrayList<>();
     private WeakReference<Message> selectedMessageReference = new WeakReference<>(null);
-	private final ChangeWatcher<String> currentSearch = new ChangeWatcher<>();
+    private final ChangeWatcher<List<String>> currentSearch = new ChangeWatcher<>();
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -150,13 +151,10 @@ public class SearchActivity extends XmppActivity implements TextWatcher, OnSearc
     }
 
     private void quote(Message message) {
-        String text = MessageUtils.prepareQuote(message);
-        final Conversational conversational = message.getConversation();
-        switchToConversationAndQuote(wrap(message.getConversation()), text);
+        switchToConversationAndQuote(wrap(message.getConversation()), MessageUtils.prepareQuote(message));
     }
 
     private Conversation wrap(Conversational conversational) {
-        final Conversation conversation;
         if (conversational instanceof Conversation) {
             return (Conversation) conversational;
         } else {
@@ -202,12 +200,12 @@ public class SearchActivity extends XmppActivity implements TextWatcher, OnSearc
 
     @Override
     public void afterTextChanged(Editable s) {
-        final String term = s.toString().trim();
+        final List<String> term = FtsUtils.parse(s.toString().trim());
         if (!currentSearch.watch(term)) {
             return;
         }
-        if (term.length() > 0) {
-            xmppConnectionService.search(s.toString().trim(), this);
+        if (term.size() > 0) {
+            xmppConnectionService.search(term, this);
         } else {
             MessageSearchTask.cancelRunningTasks();
             this.messages.clear();
@@ -218,7 +216,7 @@ public class SearchActivity extends XmppActivity implements TextWatcher, OnSearc
     }
 
     @Override
-    public void onSearchResultsAvailable(String term, List<Message> messages) {
+    public void onSearchResultsAvailable(List<String> term, List<Message> messages) {
         runOnUiThread(() -> {
             this.messages.clear();
             messageListAdapter.setHighlightedTerm(term);
