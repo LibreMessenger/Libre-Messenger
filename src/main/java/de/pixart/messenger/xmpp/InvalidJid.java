@@ -31,6 +31,7 @@ package de.pixart.messenger.xmpp;
 
 import android.support.annotation.NonNull;
 
+import de.pixart.messenger.xmpp.stanzas.AbstractStanza;
 import rocks.xmpp.addr.Jid;
 
 public class InvalidJid implements Jid {
@@ -141,10 +142,19 @@ public class InvalidJid implements Jid {
     }
 
     public static boolean isValid(Jid jid) {
-        if (jid != null && jid instanceof InvalidJid) {
+        return !(jid != null && jid instanceof InvalidJid);
+    }
+
+    public static boolean hasValidFrom(AbstractStanza stanza) {
+        final String from = stanza.getAttribute("from");
+        if (from == null) {
             return false;
-        } else {
+        }
+        try {
+            Jid.ofEscaped(from);
             return true;
+        } catch (IllegalArgumentException e) {
+            return false;
         }
     }
 }

@@ -407,7 +407,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
             return;
         }
         boolean isProperlyAddressed = (to != null) && (!to.isBareJid() || account.countPresences() == 0);
-        boolean isMucStatusMessage = from.isBareJid() && mucUserElement != null && mucUserElement.hasChild("status");
+        boolean isMucStatusMessage = InvalidJid.hasValidFrom(packet) && from.isBareJid() && mucUserElement != null && mucUserElement.hasChild("status");
         boolean selfAddressed;
         if (packet.fromAccount(account)) {
             status = Message.STATUS_SEND;
@@ -759,7 +759,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                     }
                 }
             }
-            if (conversation != null && mucUserElement != null && from.isBareJid()) {
+            if (conversation != null && mucUserElement != null && InvalidJid.hasValidFrom(packet) && from.isBareJid()) {
                 for (Element child : mucUserElement.getChildren()) {
                     if ("status".equals(child.getName())) {
                         try {
@@ -861,12 +861,12 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
         }
 
         Element event = original.findChild("event", "http://jabber.org/protocol/pubsub#event");
-        if (event != null) {
+        if (event != null && InvalidJid.hasValidFrom(original)) {
             parseEvent(event, original.getFrom(), account);
         }
 
         final String nick = packet.findChildContent("nick", Namespace.NICK);
-        if (nick != null) {
+        if (nick != null && InvalidJid.hasValidFrom(original)) {
             Contact contact = account.getRoster().getContact(from);
             if (contact.setPresenceName(nick)) {
                 mXmppConnectionService.getAvatarService().clear(contact);
