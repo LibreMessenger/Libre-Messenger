@@ -10,6 +10,7 @@ import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.xml.Element;
+import de.pixart.messenger.xmpp.InvalidJid;
 import de.pixart.messenger.xmpp.stanzas.AbstractStanza;
 import rocks.xmpp.addr.Jid;
 
@@ -36,7 +37,7 @@ public abstract class AbstractParser {
         }
         for (Element child : element.getChildren()) {
             if ("delay".equals(child.getName()) && "urn:xmpp:delay".equals(child.getNamespace())) {
-                final Jid f = to == null ? null : child.getAttributeAsJid("from");
+                final Jid f = to == null ? null : InvalidJid.getNullForInvalid(child.getAttributeAsJid("from"));
                 if (f != null && (to.asBareJid().equals(f) || to.getDomain().equals(f.toString()))) {
                     continue;
                 }
@@ -114,7 +115,9 @@ public abstract class AbstractParser {
         }
         Jid realJid = item.getAttributeAsJid("jid");
         MucOptions.User user = new MucOptions.User(conference.getMucOptions(), fullJid);
-        user.setRealJid(realJid);
+        if (InvalidJid.isValid(realJid)) {
+            user.setRealJid(realJid);
+        }
         user.setAffiliation(affiliation);
         user.setRole(role);
         return user;

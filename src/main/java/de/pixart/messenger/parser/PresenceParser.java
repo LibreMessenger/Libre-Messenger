@@ -19,6 +19,7 @@ import de.pixart.messenger.generator.PresenceGenerator;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.xml.Element;
+import de.pixart.messenger.xmpp.InvalidJid;
 import de.pixart.messenger.xmpp.OnPresencePacketReceived;
 import de.pixart.messenger.xmpp.pep.Avatar;
 import de.pixart.messenger.xmpp.stanzas.PresencePacket;
@@ -66,7 +67,7 @@ public class PresenceParser extends AbstractParser implements
                     if (item != null && !from.isBareJid()) {
                         mucOptions.setError(MucOptions.Error.NONE);
                         MucOptions.User user = parseItem(conversation, item, from);
-                        if (codes.contains(MucOptions.STATUS_CODE_SELF_PRESENCE) || (codes.contains(MucOptions.STATUS_CODE_ROOM_CREATED) && jid.equals(item.getAttributeAsJid("jid")))) {
+                        if (codes.contains(MucOptions.STATUS_CODE_SELF_PRESENCE) || (codes.contains(MucOptions.STATUS_CODE_ROOM_CREATED) && jid.equals(InvalidJid.getNullForInvalid(item.getAttributeAsJid("jid"))))) {
                             if (mucOptions.setOnline()) {
                                 mXmppConnectionService.getAvatarService().clear(mucOptions);
                             }

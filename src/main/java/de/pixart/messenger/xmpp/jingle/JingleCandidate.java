@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.pixart.messenger.xml.Element;
+import de.pixart.messenger.xmpp.InvalidJid;
 import rocks.xmpp.addr.Jid;
 
 public class JingleCandidate {
@@ -108,7 +109,7 @@ public class JingleCandidate {
         JingleCandidate parsedCandidate = new JingleCandidate(
                 candidate.getAttribute("cid"), false);
         parsedCandidate.setHost(candidate.getAttribute("host"));
-        parsedCandidate.setJid(candidate.getAttributeAsJid("jid"));
+        parsedCandidate.setJid(InvalidJid.getNullForInvalid(candidate.getAttributeAsJid("jid")));
         parsedCandidate.setType(candidate.getAttribute("type"));
         parsedCandidate.setPriority(Integer.parseInt(candidate
                 .getAttribute("priority")));

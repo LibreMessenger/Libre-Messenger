@@ -29,6 +29,7 @@ import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.xml.Element;
+import de.pixart.messenger.xmpp.InvalidJid;
 import de.pixart.messenger.xmpp.OnIqPacketReceived;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.stanzas.IqPacket;
@@ -47,7 +48,7 @@ public class IqParser extends AbstractParser implements OnIqPacketReceived {
         }
         for (final Element item : query.getChildren()) {
             if (item.getName().equals("item")) {
-                final Jid jid = item.getAttributeAsJid("jid");
+                final Jid jid = InvalidJid.getNullForInvalid(item.getAttributeAsJid("jid"));
                 if (jid == null) {
                     continue;
                 }
@@ -310,7 +311,7 @@ public class IqParser extends AbstractParser implements OnIqPacketReceived {
                 // Create a collection of Jids from the packet
                 for (final Element item : items) {
                     if (item.getName().equals("item")) {
-                        final Jid jid = item.getAttributeAsJid("jid");
+                        final Jid jid = InvalidJid.getNullForInvalid(item.getAttributeAsJid("jid"));
                         if (jid != null) {
                             jids.add(jid);
                         }
@@ -344,7 +345,7 @@ public class IqParser extends AbstractParser implements OnIqPacketReceived {
                 final Collection<Jid> jids = new ArrayList<>(items.size());
                 for (final Element item : items) {
                     if (item.getName().equals("item")) {
-                        final Jid jid = item.getAttributeAsJid("jid");
+                        final Jid jid = InvalidJid.getNullForInvalid(item.getAttributeAsJid("jid"));
                         if (jid != null) {
                             jids.add(jid);
                         }

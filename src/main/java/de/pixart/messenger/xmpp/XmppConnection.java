@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.SystemClock;
 import android.security.KeyChain;
+import android.support.annotation.NonNull;
 import android.util.Base64;
 import android.util.Log;
 import android.util.Pair;
@@ -187,6 +188,25 @@ public class XmppConnection implements Runnable {
         this.account = account;
         final String tag = account.getJid().asBareJid().toString();
         mXmppConnectionService = service;
+    }
+
+    private static void fixResource(Context context, Account account) {
+        String resource = account.getResource();
+        int fixedPartLength = context.getString(R.string.app_name).length() + 1; //include the trailing dot
+        int randomPartLength = 4; // 3 bytes
+        if (resource != null && resource.length() > fixedPartLength + randomPartLength) {
+            if (validBase64(resource.substring(fixedPartLength, fixedPartLength + randomPartLength))) {
+                account.setResource(resource.substring(0, fixedPartLength + randomPartLength));
+            }
+        }
+    }
+
+    private static boolean validBase64(String input) {
+        try {
+            return Base64.decode(input, Base64.URL_SAFE).length == 3;
+        } catch (Throwable throwable) {
+            return false;
+        }
     }
 
     protected void changeStatus(final Account.State nextStatus) {
@@ -690,8 +710,8 @@ public class XmppConnection implements Runnable {
         }
     }
 
-    private Element processPacket(final Tag currentTag, final int packetType)
-            throws XmlPullParserException, IOException {
+    private @NonNull
+    Element processPacket(final Tag currentTag, final int packetType) throws XmlPullParserException, IOException {
         Element element;
         switch (packetType) {
             case PACKET_IQ:
@@ -704,7 +724,7 @@ public class XmppConnection implements Runnable {
                 element = new PresencePacket();
                 break;
             default:
-                return null;
+                throw new AssertionError("Should never encounter invalid type");
         }
         element.setAttributes(currentTag.getAttributes());
         Tag nextTag = tagReader.readTag();
@@ -748,8 +768,9 @@ public class XmppConnection implements Runnable {
     private void processIq(final Tag currentTag) throws XmlPullParserException, IOException {
         final IqPacket packet = (IqPacket) processPacket(currentTag, PACKET_IQ);
 
-        if (packet.getId() == null) {
-            return; // an iq packet without id is definitely invalid
+        if (!packet.valid()) {
+            Log.e(Config.LOGTAG, "encountered invalid iq from='" + packet.getFrom() + "' to='" + packet.getTo() + "'");
+            return;
         }
 
         if (packet instanceof JinglePacket) {
@@ -793,11 +814,19 @@ public class XmppConnection implements Runnable {
 
     private void processMessage(final Tag currentTag) throws XmlPullParserException, IOException {
         final MessagePacket packet = (MessagePacket) processPacket(currentTag, PACKET_MESSAGE);
+        if (!packet.valid()) {
+            Log.e(Config.LOGTAG, "encountered invalid message from='" + packet.getFrom() + "' to='" + packet.getTo() + "'");
+            return;
+        }
         this.messageListener.onMessagePacketReceived(account, packet);
     }
 
     private void processPresence(final Tag currentTag) throws XmlPullParserException, IOException {
         PresencePacket packet = (PresencePacket) processPacket(currentTag, PACKET_PRESENCE);
+        if (!packet.valid()) {
+            Log.e(Config.LOGTAG, "encountered invalid presence from='" + packet.getFrom() + "' to='" + packet.getTo() + "'");
+            return;
+        }
         this.presenceListener.onPresencePacketReceived(account, packet);
     }
 
@@ -1257,7 +1286,7 @@ public class XmppConnection implements Runnable {
                     final List<Element> elements = packet.query().getChildren();
                     for (final Element element : elements) {
                         if (element.getName().equals("item")) {
-                            final Jid jid = element.getAttributeAsJid("jid");
+                            final Jid jid = InvalidJid.getNullForInvalid(element.getAttributeAsJid("jid"));
                             if (jid != null && !jid.equals(account.getServer())) {
                                 items.add(jid);
                             }
@@ -1329,25 +1358,6 @@ public class XmppConnection implements Runnable {
 
     private String createNewResource() {
         return mXmppConnectionService.getString(R.string.app_name) + '.' + nextRandomId(true);
-    }
-
-    private static void fixResource(Context context, Account account) {
-        String resource = account.getResource();
-        int fixedPartLength = context.getString(R.string.app_name).length() + 1; //include the trailing dot
-        int randomPartLength = 4; // 3 bytes
-        if (resource != null && resource.length() > fixedPartLength + randomPartLength) {
-            if (validBase64(resource.substring(fixedPartLength, fixedPartLength + randomPartLength))) {
-                account.setResource(resource.substring(0, fixedPartLength + randomPartLength));
-            }
-        }
-    }
-
-    private static boolean validBase64(String input) {
-        try {
-            return Base64.decode(input, Base64.URL_SAFE).length == 3;
-        } catch (Throwable throwable) {
-            return false;
-        }
     }
 
     private String nextRandomId() {

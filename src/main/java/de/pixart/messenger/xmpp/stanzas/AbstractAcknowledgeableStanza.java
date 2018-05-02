@@ -1,6 +1,7 @@
 package de.pixart.messenger.xmpp.stanzas;
 
 import de.pixart.messenger.xml.Element;
+import de.pixart.messenger.xmpp.InvalidJid;
 
 abstract public class AbstractAcknowledgeableStanza extends AbstractStanza {
 
@@ -27,5 +28,9 @@ abstract public class AbstractAcknowledgeableStanza extends AbstractStanza {
             }
         }
         return null;
+    }
+
+    public boolean valid() {
+        return InvalidJid.isValid(getFrom()) && InvalidJid.isValid(getTo());
     }
 }

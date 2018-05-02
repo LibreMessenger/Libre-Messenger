@@ -11,6 +11,7 @@ import java.util.Locale;
 
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xml.Element;
+import de.pixart.messenger.xmpp.InvalidJid;
 import rocks.xmpp.addr.Jid;
 
 public class Bookmark extends Element implements ListItem {
@@ -35,7 +36,7 @@ public class Bookmark extends Element implements ListItem {
         Bookmark bookmark = new Bookmark(account);
         bookmark.setAttributes(element.getAttributes());
         bookmark.setChildren(element.getChildren());
-        bookmark.jid =  bookmark.getAttributeAsJid("jid");
+        bookmark.jid = InvalidJid.getNullForInvalid(bookmark.getAttributeAsJid("jid"));
         return bookmark;
     }
 
