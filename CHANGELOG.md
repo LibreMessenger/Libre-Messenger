@@ -4,15 +4,15 @@
 * highlight irregular unicode code blocks in Jabber IDs
 * integrate QR code scanner (requires camera permission)
 * removed support for customizable resources
-* rework UI for status message
+* reworked message search
 * added splash screen at startup
-* use toolbar instead of actionbar
 * integrate dark theme
 * keep OTR, but without further development and support, just for compatibility
 * added configurable font size
 * added global OMEMO preference
 * added scroll to bottom button
 * added contact button as android widget
+* only mark visible messages as read
 * a lot of bug fixes
 
 #### Version 1.22.1
