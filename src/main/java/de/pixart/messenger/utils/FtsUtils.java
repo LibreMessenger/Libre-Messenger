@@ -107,4 +107,15 @@ public class FtsUtils {
             return input.substring(begin, end + 1);
         }
     }
+
+    public static String toUserEnteredString(List<String> term) {
+        final StringBuilder builder = new StringBuilder();
+        for (String part : term) {
+            if (builder.length() != 0) {
+                builder.append(' ');
+            }
+            builder.append(part);
+        }
+        return builder.toString();
+    }
 }
