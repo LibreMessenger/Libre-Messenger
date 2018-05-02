@@ -351,10 +351,11 @@ public class FileBackend {
         Log.d(Config.LOGTAG, "copy " + uri.toString() + " to private storage (mime=" + mime + ")");
         String extension = MimeUtils.guessExtensionFromMimeType(mime);
         if (extension == null) {
+            Log.d(Config.LOGTAG, "extension from mime type was null");
             extension = getExtensionFromUri(uri);
         }
-        if (extension == null) {
-            extension = MimeUtils.guessExtensionFromMimeType(mime);
+        if ("ogg".equals(extension) && type != null && type.startsWith("audio/")) {
+            extension = "oga";
         }
         String filename = fileDateFormat.format(new Date(message.getTimeSent())) + "_" + message.getUuid().substring(0, 4);
         message.setRelativeFilePath(filename + "." + extension);
@@ -374,6 +375,12 @@ public class FileBackend {
                 filename = null;
             } finally {
                 cursor.close();
+            }
+        }
+        if (filename == null) {
+            final List<String> segments = uri.getPathSegments();
+            if (segments.size() > 0) {
+                filename = segments.get(segments.size() - 1);
             }
         }
         int pos = filename == null ? -1 : filename.lastIndexOf('.');
