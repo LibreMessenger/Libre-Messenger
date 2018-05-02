@@ -53,14 +53,14 @@ public class AccountAdapter extends ArrayAdapter<Account> {
         statusView.setText(getContext().getString(account.getStatus().getReadableId()));
         switch (account.getStatus()) {
             case ONLINE:
-                statusView.setTextColor(activity.getOnlineColor());
+                statusView.setTextColor(Color.get(activity, R.attr.TextColorOnline));
                 break;
             case DISABLED:
             case CONNECTING:
                 statusView.setTextColor(Color.get(activity, android.R.attr.textColorSecondary));
                 break;
             default:
-                statusView.setTextColor(activity.getWarningTextColor());
+                statusView.setTextColor(Color.get(activity, R.attr.TextColorError));
                 break;
         }
         return view;

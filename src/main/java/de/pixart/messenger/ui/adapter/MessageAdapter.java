@@ -319,7 +319,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 break;
         }
         if (error && type == SENT) {
-            viewHolder.time.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Caption_Waring);
+            viewHolder.time.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Caption_Warning);
             DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
             if (file.exists()) {
                 if (activity.xmppConnectionService.mHttpConnectionManager.getAutoAcceptFileSize() >= message.getFileParams().size) {

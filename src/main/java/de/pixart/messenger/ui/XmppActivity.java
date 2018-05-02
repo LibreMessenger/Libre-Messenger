@@ -99,8 +99,6 @@ public abstract class XmppActivity extends ActionBarActivity {
     protected int mColorRed;
     protected int mColorWarningButton;
     protected int mColorWhite;
-    protected int mColorOrange;
-    protected int mColorGreen;
 
     protected static final String FRAGMENT_TAG_DIALOG = "dialog";
 
@@ -410,8 +408,6 @@ public abstract class XmppActivity extends ActionBarActivity {
             mColorWarningButton = ContextCompat.getColor(this, R.color.warning_button);
         }
         mColorWhite = ContextCompat.getColor(this, R.color.white70);
-        mColorOrange = ContextCompat.getColor(this, R.color.orange500);
-        mColorGreen = ContextCompat.getColor(this, R.color.realgreen);
         this.mUsingEnterKey = usingEnterKey();
         mUseSubject = getPreferences().getBoolean("use_subject", getResources().getBoolean(R.bool.use_subject));
     }
@@ -910,10 +906,6 @@ public abstract class XmppActivity extends ActionBarActivity {
 
     public int getWarningButtonColor() {
         return this.mColorWarningButton;
-    }
-
-    public int getOnlineColor() {
-        return this.mColorGreen;
     }
 
     public int getPixel(int dp) {
