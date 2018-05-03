@@ -16,6 +16,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,6 +29,7 @@ import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.Transferable;
+import de.pixart.messenger.ui.ConversationFragment;
 import de.pixart.messenger.ui.XmppActivity;
 import de.pixart.messenger.ui.util.Color;
 import de.pixart.messenger.ui.widget.UnreadCountCustomView;
@@ -78,8 +80,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     public ConversationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.conversation_list_row, parent, false);
-        ConversationViewHolder conversationViewHolder = ConversationViewHolder.get(view);
-        return conversationViewHolder;
+        return ConversationViewHolder.get(view);
     }
 
     @Override
@@ -98,6 +99,8 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         } else {
             viewHolder.name.setText(conversation.getJid().asBareJid().toString());
         }
+
+        viewHolder.frame.setBackgroundColor(Color.get(activity, conversation == ConversationFragment.getConversation(activity) ? R.attr.color_background_secondary : R.attr.color_background_primary));
 
         Message message = conversation.getLatestMessage();
         final int failedCount = conversation.failedCount();
@@ -357,6 +360,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         private ImageView receivedStatus;
         private ImageView readStatus;
         private ImageView avatar;
+        private FrameLayout frame;
 
         private ConversationViewHolder(View view) {
             super(view);
@@ -366,6 +370,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             ConversationViewHolder conversationViewHolder = (ConversationViewHolder) layout.getTag();
             if (conversationViewHolder == null) {
                 conversationViewHolder = new ConversationViewHolder(layout);
+                conversationViewHolder.frame = layout.findViewById(R.id.frame);
                 conversationViewHolder.name = layout.findViewById(R.id.conversation_name);
                 conversationViewHolder.lastMessage = layout.findViewById(R.id.conversation_lastmsg);
                 conversationViewHolder.lastMessageIcon = layout.findViewById(R.id.conversation_lastmsg_img);
