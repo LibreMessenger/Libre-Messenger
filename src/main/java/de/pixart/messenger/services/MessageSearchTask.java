@@ -46,6 +46,7 @@ import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.StubConversation;
 import de.pixart.messenger.ui.interfaces.OnSearchResultsAvailable;
 import de.pixart.messenger.utils.Cancellable;
+import de.pixart.messenger.utils.MessageUtils;
 import de.pixart.messenger.utils.ReplacingSerialSingleThreadExecutor;
 import rocks.xmpp.addr.Jid;
 
@@ -93,17 +94,28 @@ public class MessageSearchTask implements Runnable, Cancellable {
             }
             if (cursor != null && cursor.getCount() > 0) {
                 cursor.moveToLast();
+                final int indexBody = cursor.getColumnIndex(Message.BODY);
+                final int indexOob = cursor.getColumnIndex(Message.OOB);
+                final int indexConversation = cursor.getColumnIndex(Message.CONVERSATION);
+                final int indexAccount = cursor.getColumnIndex(Conversation.ACCOUNT);
+                final int indexContact = cursor.getColumnIndex(Conversation.CONTACTJID);
+                final int indexMode = cursor.getColumnIndex(Conversation.MODE);
                 do {
                     if (isCancelled) {
                         Log.d(Config.LOGTAG, "canceled search task");
                         return;
                     }
-                    final String conversationUuid = cursor.getString(cursor.getColumnIndex(Message.CONVERSATION));
+                    final String body = cursor.getString(indexBody);
+                    final boolean oob = cursor.getInt(indexOob) > 0;
+                    if (MessageUtils.treatAsDownloadable(body, oob)) {
+                        continue;
+                    }
+                    final String conversationUuid = cursor.getString(indexConversation);
                     Conversational conversation = conversationCache.get(conversationUuid);
                     if (conversation == null) {
-                        String accountUuid = cursor.getString(cursor.getColumnIndex(Conversation.ACCOUNT));
-                        String contactJid = cursor.getString(cursor.getColumnIndex(Conversation.CONTACTJID));
-                        int mode = cursor.getInt(cursor.getColumnIndex(Conversation.MODE));
+                        String accountUuid = cursor.getString(indexAccount);
+                        String contactJid = cursor.getString(indexContact);
+                        int mode = cursor.getInt(indexMode);
                         conversation = findOrGenerateStub(conversationUuid, accountUuid, contactJid, mode);
                         conversationCache.put(conversationUuid, conversation);
                     }
