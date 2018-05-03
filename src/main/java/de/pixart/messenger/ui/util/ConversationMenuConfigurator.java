@@ -29,6 +29,8 @@
 
 package de.pixart.messenger.ui.util;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,18 +44,29 @@ import de.pixart.messenger.entities.Message;
 
 public class ConversationMenuConfigurator {
 
+    private static boolean microphoneAvailable = false;
+    private static boolean locationAvailable = false;
+
+    public static void reloadFeatures(Context context) {
+        microphoneAvailable = context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_MICROPHONE);
+        locationAvailable = context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS) || context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_LOCATION_NETWORK);
+    }
+
     public static void configureAttachmentMenu(@NonNull Conversation conversation, Menu menu) {
         final MenuItem menuAttach = menu.findItem(R.id.action_attach_file);
 
         final boolean visible;
-        if (OmemoSetting.isAlways()) {
-            visible = false;
-        } else if (conversation.getMode() == Conversation.MODE_MULTI) {
+        if (conversation.getMode() == Conversation.MODE_MULTI) {
             visible = conversation.getAccount().httpUploadAvailable() && conversation.getMucOptions().participating();
         } else {
             visible = true;
         }
         menuAttach.setVisible(visible);
+        if (!visible) {
+            return;
+        }
+        menu.findItem(R.id.attach_record_voice).setVisible(microphoneAvailable);
+        menu.findItem(R.id.attach_location).setVisible(locationAvailable);
     }
 
     public static void configureEncryptionMenu(@NonNull Conversation conversation, Menu menu) {
@@ -64,7 +77,9 @@ public class ConversationMenuConfigurator {
         final MenuItem axolotl = menu.findItem(R.id.encryption_choice_axolotl);
 
         boolean visible;
-        if (conversation.getMode() == Conversation.MODE_MULTI) {
+        if (OmemoSetting.isAlways()) {
+            visible = false;
+        } else if (conversation.getMode() == Conversation.MODE_MULTI) {
             visible = (Config.supportOpenPgp() || Config.supportOmemo()) && Config.multipleEncryptionChoices();
         } else {
             visible = Config.multipleEncryptionChoices();

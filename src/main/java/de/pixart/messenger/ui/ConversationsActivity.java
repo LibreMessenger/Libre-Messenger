@@ -83,6 +83,7 @@ import de.pixart.messenger.ui.interfaces.OnConversationRead;
 import de.pixart.messenger.ui.interfaces.OnConversationSelected;
 import de.pixart.messenger.ui.interfaces.OnConversationsListItemUpdated;
 import de.pixart.messenger.ui.util.ActivityResult;
+import de.pixart.messenger.ui.util.ConversationMenuConfigurator;
 import de.pixart.messenger.ui.util.PendingItem;
 import de.pixart.messenger.utils.ExceptionHelper;
 import de.pixart.messenger.utils.MenuDoubleTabUtil;
@@ -428,6 +429,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ConversationMenuConfigurator.reloadFeatures(this);
         OmemoSetting.load(this);
         new EmojiService(this).init(useBundledEmoji());
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_conversations);
