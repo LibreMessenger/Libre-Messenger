@@ -1161,8 +1161,8 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
     }
 
-    public void setHighlightedTerm(List<String> term) {
-        this.highlightedTerm = term;
+    public void setHighlightedTerm(List<String> terms) {
+        this.highlightedTerm = terms == null ? null : StylingHelper.filterHighlightedWords(terms);
     }
 
     public interface OnQuoteListener {
