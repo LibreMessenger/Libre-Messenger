@@ -29,6 +29,8 @@
 
 package de.pixart.messenger.ui;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -214,6 +216,12 @@ public class ConversationsOverviewFragment extends XmppFragment {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public Animator onCreateAnimator(int transit, boolean enter, int nextAnim) {
+        int animator = enter ? R.animator.fade_left_in : R.animator.fade_left_out;
+        return AnimatorInflater.loadAnimator(getActivity(), animator);
     }
 
     @Override

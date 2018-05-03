@@ -1,6 +1,8 @@
 package de.pixart.messenger.ui;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
@@ -1210,6 +1212,12 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 
         registerForContextMenu(binding.messagesView);
         return binding.getRoot();
+    }
+
+    @Override
+    public Animator onCreateAnimator(int transit, boolean enter, int nextAnim) {
+        int animator = enter ? R.animator.fade_right_in : R.animator.fade_right_out;
+        return AnimatorInflater.loadAnimator(getActivity(), animator);
     }
 
     private void quoteText(String text) {
