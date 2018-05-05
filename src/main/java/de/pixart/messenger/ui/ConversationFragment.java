@@ -1217,8 +1217,12 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 
     @Override
     public Animator onCreateAnimator(int transit, boolean enter, int nextAnim) {
-        int animator = enter ? R.animator.fade_right_in : R.animator.fade_right_out;
-        return AnimatorInflater.loadAnimator(getActivity(), animator);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            int animator = enter ? R.animator.fade_right_in : R.animator.fade_right_out;
+            return AnimatorInflater.loadAnimator(getActivity(), animator);
+        } else {
+            return null;
+        }
     }
 
     private void quoteText(String text) {

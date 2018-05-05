@@ -129,17 +129,25 @@ public class HttpUploadConnection implements Transferable {
         this.file.setExpectedSize(pair.second);
         message.resetFileParams();
         this.mFileInputStream = pair.first;
-        Jid host = account.getXmppConnection().findDiscoItemByFeature(Namespace.HTTP_UPLOAD);
-        IqPacket request = mXmppConnectionService.getIqGenerator().requestHttpUploadSlot(host, file, mime);
+        String http_upload_namespace = account.getXmppConnection().getFeatures().http_upload_namespace;
+        Jid host = account.getXmppConnection().findDiscoItemByFeature(http_upload_namespace);
+        IqPacket request = mXmppConnectionService.getIqGenerator().requestHttpUploadSlot(host, file, mime, http_upload_namespace);
         mXmppConnectionService.sendIqPacket(account, request, (a, packet) -> {
             if (packet.getType() == IqPacket.TYPE.RESULT) {
-                Element slot = packet.findChild("slot", Namespace.HTTP_UPLOAD);
+                Element slot = packet.findChild("slot", http_upload_namespace);
                 if (slot != null) {
                     try {
                         final Element put = slot.findChild("put");
                         final Element get = slot.findChild("get");
-                        final String putUrl = put == null ? null : put.getAttribute("url");
-                        final String getUrl = get == null ? null : get.getAttribute("url");
+                        final String putUrl;
+                        final String getUrl;
+                        if (http_upload_namespace == Namespace.HTTP_UPLOAD) {
+                            putUrl = put == null ? null : put.getAttribute("url");
+                            getUrl = get == null ? null : get.getAttribute("url");
+                        } else {
+                            putUrl = put == null ? null : put.getContent();
+                            getUrl = get == null ? null : get.getContent();
+                        }
                         if (getUrl != null && putUrl != null) {
                             this.mGetUrl = new URL(getUrl);
                             this.mPutUrl = new URL(putUrl);
