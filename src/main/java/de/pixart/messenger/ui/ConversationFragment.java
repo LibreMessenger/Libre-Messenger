@@ -185,6 +185,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
             intent.putExtra("uuid", conversation.getUuid());
             startActivity(intent);
+            activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
         }
     };
     private OnClickListener leaveMuc = new OnClickListener() {
@@ -388,6 +389,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             intent.putExtra(VerifyOTRActivity.EXTRA_ACCOUNT, conversation.getAccount().getJid().asBareJid().toString());
             intent.putExtra("mode", VerifyOTRActivity.MODE_ANSWER_QUESTION);
             startActivity(intent);
+            activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
         }
     };
 
@@ -1714,6 +1716,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                 intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
                                 startActivityForResult(intent, attachmentChoice);
+                                activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                             });
                     builder.setPositiveButton(getString(R.string.action_take_video),
                             (dialog, which) -> {
@@ -1721,6 +1724,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                 intent.setAction(MediaStore.ACTION_VIDEO_CAPTURE);
                                 startActivityForResult(intent, attachmentChoice);
+                                activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                             });
                     builder.create().show();
                     break;
@@ -1732,9 +1736,11 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     break;
                 case ATTACHMENT_CHOICE_RECORD_VOICE:
                     startActivityForResult(new Intent(getActivity(), RecordingActivity.class), attachmentChoice);
+                    activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                     break;
                 case ATTACHMENT_CHOICE_LOCATION:
                     startActivityForResult(new Intent(getActivity(), ShareLocationActivity.class), attachmentChoice);
+                    activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                     break;
             }
             if (intent.resolveActivity(getActivity().getPackageManager()) != null) {

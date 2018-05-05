@@ -88,7 +88,6 @@ public class ShowFullscreenMessageActivity extends XmppActivity {
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType(getMimeType(mFile.toString()));
         share.putExtra(Intent.EXTRA_STREAM, FileBackend.getUriForFile(this, mFile));
-        startActivity(Intent.createChooser(share, getString(R.string.share_with)));
         try {
             startActivity(Intent.createChooser(share, getText(R.string.share_with)));
         } catch (ActivityNotFoundException e) {

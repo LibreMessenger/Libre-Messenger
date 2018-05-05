@@ -111,6 +111,7 @@ public class ShareLocationActivity extends LocationActivity implements LocationL
                     setShareButtonEnabled(false);
                     requestLocationUpdates();
                     startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                 }
             });
             ThemeHelper.fix(this.snackBar);

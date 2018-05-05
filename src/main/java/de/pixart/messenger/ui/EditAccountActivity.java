@@ -160,6 +160,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             if (url != null && redirectionWorthyStatus && !wasDisabled) {
                 try {
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url.toString())));
+                    overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                     return;
                 } catch (ActivityNotFoundException e) {
                     Toast.makeText(EditAccountActivity.this, R.string.application_found_to_open_website, Toast.LENGTH_SHORT).show();
@@ -294,8 +295,8 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         if (mAccount != null
                 && mAccount.getStatus() != Account.State.ONLINE
                 && mFetchingAvatar) {
-            startActivity(new Intent(getApplicationContext(),
-                    ManageAccountActivity.class));
+            startActivity(new Intent(getApplicationContext(), ManageAccountActivity.class));
+            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
             finish();
         } else if (mInitMode && mAccount != null && mAccount.getStatus() == Account.State.ONLINE) {
             if (!mFetchingAvatar) {
@@ -329,6 +330,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             Intent intent = new Intent(EditAccountActivity.this, WelcomeActivity.class);
             WelcomeActivity.addInviteUri(intent, getIntent());
             startActivity(intent);
+            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
         }
     }
 
@@ -396,6 +398,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 final Intent intent = new Intent(getApplicationContext(), PublishProfilePictureActivity.class);
                 intent.putExtra(EXTRA_ACCOUNT, mAccount.getJid().asBareJid().toString());
                 startActivity(intent);
+                overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
             }
         }
     };
@@ -421,6 +424,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             }
             WelcomeActivity.addInviteUri(intent, getIntent());
             startActivity(intent);
+            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
             finish();
         });
     }
@@ -807,6 +811,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 final Intent showBlocklistIntent = new Intent(this, BlocklistActivity.class);
                 showBlocklistIntent.putExtra(EXTRA_ACCOUNT, mAccount.getJid().toString());
                 startActivity(showBlocklistIntent);
+                overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                 break;
             case R.id.action_server_info_show_more:
                 changeMoreTableVisibility(!item.isChecked());
@@ -856,6 +861,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.setType("image/png");
         startActivity(Intent.createChooser(intent, getText(R.string.share_with)));
+
     }
 
     private void changeMoreTableVisibility(boolean visible) {
@@ -869,6 +875,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             changePasswordIntent.putExtra("password", newPassword);
         }
         startActivity(changePasswordIntent);
+        overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
     }
 
     private void renewCertificate() {

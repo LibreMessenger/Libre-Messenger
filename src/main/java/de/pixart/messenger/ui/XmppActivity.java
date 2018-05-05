@@ -286,9 +286,9 @@ public abstract class XmppActivity extends ActionBarActivity {
                         startActivity(marketIntent);
                     } else {
                         uri = Uri.parse("http://www.openkeychain.org/");
-                        Intent browserIntent = new Intent(
-                                Intent.ACTION_VIEW, uri);
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
                         startActivity(browserIntent);
+                        overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                     }
                     finish();
                 });
@@ -359,6 +359,7 @@ public abstract class XmppActivity extends ActionBarActivity {
                 break;
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
+                overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                 break;
             case R.id.action_accounts:
                 if (xmppConnectionServiceBound && this.xmppConnectionService.getAccounts().size() == 1 && !this.xmppConnectionService.multipleAccounts()) {
@@ -367,9 +368,11 @@ public abstract class XmppActivity extends ActionBarActivity {
                     intent.putExtra("jid", mAccount.getJid().asBareJid().toString());
                     intent.putExtra("init", false);
                     startActivity(intent);
+                    overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                 } else {
                     final Intent intent = new Intent(getApplicationContext(), ManageAccountActivity.class);
                     startActivity(intent);
+                    overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                 }
                 break;
             case android.R.id.home:
@@ -489,10 +492,10 @@ public abstract class XmppActivity extends ActionBarActivity {
                     | Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         } else {
-            intent.setFlags(intent.getFlags()
-                    | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }
         startActivity(intent);
+        overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
         finish();
     }
 
@@ -507,6 +510,7 @@ public abstract class XmppActivity extends ActionBarActivity {
         intent.putExtra("contact", contact.getJid().toString());
         intent.putExtra("fingerprint", messageFingerprint);
         startActivity(intent);
+        overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
     }
 
     public void switchToAccount(Account account, String fingerprint) {
@@ -528,6 +532,7 @@ public abstract class XmppActivity extends ActionBarActivity {
             intent.putExtra("fingerprint", fingerprint);
         }
         startActivity(intent);
+        overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
         if (init) {
             overridePendingTransition(0, 0);
         }
@@ -947,6 +952,7 @@ public abstract class XmppActivity extends ActionBarActivity {
             intent.putExtra(Intent.EXTRA_SUBJECT, user + " " + getString(R.string.inviteUser_Subject) + " " + getString(R.string.app_name));
             intent.putExtra(Intent.EXTRA_TEXT, inviteText + "\n\n" + inviteURL);
             startActivity(Intent.createChooser(intent, getString(R.string.invite_contact)));
+            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
         } else {
             final AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.chooce_account);
@@ -976,6 +982,7 @@ public abstract class XmppActivity extends ActionBarActivity {
                         intent.putExtra(Intent.EXTRA_SUBJECT, user + " " + getString(R.string.inviteUser_Subject) + " " + getString(R.string.app_name));
                         intent.putExtra(Intent.EXTRA_TEXT, inviteText + "\n\n" + inviteURL);
                         startActivity(Intent.createChooser(intent, getString(R.string.invite_contact)));
+                        overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                     });
             builder.setNegativeButton(R.string.cancel, null);
             builder.create().show();
@@ -987,6 +994,7 @@ public abstract class XmppActivity extends ActionBarActivity {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(IssueURL));
         startActivity(intent);
+        overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
     }
 
     protected void shareLink(boolean http) {
@@ -999,6 +1007,7 @@ public abstract class XmppActivity extends ActionBarActivity {
         intent.putExtra(Intent.EXTRA_TEXT, getShareableUri(http));
         try {
             startActivity(Intent.createChooser(intent, getText(R.string.share_uri_with)));
+            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
         } catch (ActivityNotFoundException e) {
             Toast.makeText(this, R.string.no_application_to_share_uri, Toast.LENGTH_SHORT).show();
         }

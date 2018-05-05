@@ -128,6 +128,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
                     CommonDataKinds.Im.PROTOCOL_JABBER);
             intent.putExtra("finishActivityOnSaveCompleted", true);
             ContactDetailsActivity.this.startActivityForResult(intent, 0);
+            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
         }
     };
 
@@ -148,6 +149,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(systemAccount);
                 startActivity(intent);
+                overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
             }
         }
     };
@@ -318,6 +320,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
                     intent.setDataAndType(systemAccount, Contacts.CONTENT_ITEM_TYPE);
                     intent.putExtra("finishActivityOnSaveCompleted", true);
                     startActivity(intent);
+                    overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                 }
                 break;
             case R.id.action_block:

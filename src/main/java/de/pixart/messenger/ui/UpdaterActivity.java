@@ -131,10 +131,12 @@ public class UpdaterActivity extends XmppActivity {
                                 List<ResolveInfo> infos = manager.queryIntentActivities(marketIntent, 0);
                                 if (infos.size() > 0) {
                                     startActivity(marketIntent);
+                                    overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                                 } else {
                                     uri = Uri.parse("https://jabber.pix-art.de/");
                                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
                                     startActivity(browserIntent);
+                                    overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                                 }
                             } else {
                                 Toast.makeText(getApplicationContext(), getText(R.string.download_started), Toast.LENGTH_LONG).show();
@@ -150,6 +152,7 @@ public class UpdaterActivity extends XmppActivity {
                         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
+                        overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                         //restart updater to show dialog again after coming back after opening changelog
                         recreate();
                     })
@@ -300,6 +303,7 @@ public class UpdaterActivity extends XmppActivity {
                 installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 installIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 startActivity(installIntent);
+                overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                 UpdaterActivity.this.finish();
             }
         }

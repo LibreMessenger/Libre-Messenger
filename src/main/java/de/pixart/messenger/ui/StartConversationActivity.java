@@ -371,6 +371,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
         shareIntent.setType("text/plain");
         try {
             startActivity(Intent.createChooser(shareIntent, getText(R.string.share_uri_with)));
+            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
         } catch (ActivityNotFoundException e) {
             Toast.makeText(this, R.string.no_application_to_share_uri, Toast.LENGTH_SHORT).show();
         }
@@ -960,6 +961,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
         intent.putExtra(EXTRA_ACCOUNT, account.getJid().asBareJid().toString());
         intent.putExtra(ChooseContactActivity.EXTRA_TITLE_RES_ID, R.string.choose_participants);
         startActivityForResult(intent, REQUEST_CREATE_CONFERENCE);
+        overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
     }
 
     @Override

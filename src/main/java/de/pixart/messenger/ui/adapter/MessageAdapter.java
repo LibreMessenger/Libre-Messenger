@@ -437,6 +437,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(body));
             activity.startActivity(intent);
+            activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
         });
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.GONE);
@@ -1072,6 +1073,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             intent.putExtra("image", Uri.fromFile(file));
             try {
                 activity.startActivity(intent);
+                activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                 return;
             } catch (ActivityNotFoundException e) {
                 //ignored
@@ -1081,6 +1083,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             intent.putExtra("video", Uri.fromFile(file));
             try {
                 activity.startActivity(intent);
+                activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                 return;
             } catch (ActivityNotFoundException e) {
                 //ignored
@@ -1107,6 +1110,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
         try {
             getContext().startActivity(openIntent);
+            activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
         } catch (ActivityNotFoundException e) {
             Toast.makeText(activity, R.string.no_application_found_to_open_file, Toast.LENGTH_SHORT).show();
         }
@@ -1116,6 +1120,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         for (Intent intent : GeoHelper.createGeoIntentsFromMessage(message, this.getContext())) {
             if (intent.resolveActivity(getContext().getPackageManager()) != null) {
                 getContext().startActivity(intent);
+                activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                 return;
             }
         }

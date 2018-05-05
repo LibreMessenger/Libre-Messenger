@@ -83,6 +83,7 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher {
                     Toast.makeText(MagicCreateActivity.this, R.string.secure_password_generated, Toast.LENGTH_SHORT).show();
                     WelcomeActivity.addInviteUri(intent, getIntent());
                     startActivity(intent);
+                    overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                 }
             } catch (IllegalArgumentException e) {
                 mUsername.setError(getString(R.string.invalid_username));

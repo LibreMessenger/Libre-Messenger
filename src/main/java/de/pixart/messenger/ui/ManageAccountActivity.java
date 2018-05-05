@@ -194,8 +194,8 @@ public class ManageAccountActivity extends XmppActivity implements OnAccountUpda
         }
         switch (item.getItemId()) {
             case R.id.action_add_account:
-                startActivity(new Intent(getApplicationContext(),
-                        EditAccountActivity.class));
+                startActivity(new Intent(getApplicationContext(), EditAccountActivity.class));
+                overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                 break;
             case R.id.action_add_account_with_cert:
                 addAccountFromKey();
@@ -240,6 +240,7 @@ public class ManageAccountActivity extends XmppActivity implements OnAccountUpda
                 PublishProfilePictureActivity.class);
         intent.putExtra(EXTRA_ACCOUNT, account.getJid().toString());
         startActivity(intent);
+        overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
     }
 
     private void disableAllAccounts() {
@@ -370,6 +371,7 @@ public class ManageAccountActivity extends XmppActivity implements OnAccountUpda
         intent.putExtra("jid", account.getJid().asBareJid().toString());
         intent.putExtra("init", true);
         startActivity(intent);
+        overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
     }
 
     @Override

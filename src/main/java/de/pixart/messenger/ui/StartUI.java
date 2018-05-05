@@ -47,6 +47,7 @@ public class StartUI extends AppCompatActivity
             Intent intent = new Intent(this, ConversationsActivity.class);
             intent.putExtra(PREF_FIRST_START, FirstStartTime);
             startActivity(intent);
+            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
             finish();
         } else {
             // set first start to 0 if there are permissions to request
@@ -85,6 +86,7 @@ public class StartUI extends AppCompatActivity
                         Uri uri = Uri.fromParts("package", getPackageName(), null);
                         intent.setData(uri);
                         startActivity(intent);
+                        overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                     }
                 })
                 .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {

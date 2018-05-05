@@ -274,6 +274,7 @@ public final class ScanActivity extends Activity implements SurfaceTextureListen
         if (ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             Intent intent = new Intent(activity, ScanActivity.class);
             activity.startActivityForResult(intent, REQUEST_SCAN_QR_CODE);
+            activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
         } else {
             ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSIONS_TO_SCAN);
         }

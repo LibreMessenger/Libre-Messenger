@@ -66,6 +66,7 @@ public class PublishProfilePictureActivity extends XmppActivity implements XmppC
                     WelcomeActivity.addInviteUri(intent, getIntent());
                     intent.putExtra("init", true);
                     startActivity(intent);
+                    overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                 }
                 Toast.makeText(PublishProfilePictureActivity.this,
                         R.string.avatar_has_been_published,
@@ -117,6 +118,7 @@ public class PublishProfilePictureActivity extends XmppActivity implements XmppC
                     intent.putExtra("init", true);
                 }
                 startActivity(intent);
+                overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
             }
             finish();
         });
@@ -134,6 +136,7 @@ public class PublishProfilePictureActivity extends XmppActivity implements XmppC
         attachFileIntent.setAction(Intent.ACTION_GET_CONTENT);
         Intent chooser = Intent.createChooser(attachFileIntent, getString(R.string.attach_file));
         startActivityForResult(chooser, crop ? REQUEST_CHOOSE_FILE_AND_CROP : REQUEST_CHOOSE_FILE);
+        overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
     }
 
     @Override

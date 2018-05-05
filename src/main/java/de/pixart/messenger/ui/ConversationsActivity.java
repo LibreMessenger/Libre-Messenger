@@ -183,6 +183,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
             restartintent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             restartintent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(restartintent);
+            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
             System.exit(0);
         }
 
@@ -228,6 +229,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
             final Intent intent = getRedirectionIntent(noAnimation);
             runOnUiThread(() -> {
                 startActivity(intent);
+                overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                 if (noAnimation) {
                     overridePendingTransition(0, 0);
                 }
@@ -681,6 +683,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
                             intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
                             intent.putExtra("uuid", conversation.getUuid());
                             startActivity(intent);
+                            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                         }
                     });
                     abtitle.setSelected(true);
@@ -697,6 +700,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
                                     intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
                                     intent.putExtra("uuid", conversation.getUuid());
                                     startActivity(intent);
+                                    overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                                 }
                             });
                         } else {
@@ -712,6 +716,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
                                         intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
                                         intent.putExtra("uuid", conversation.getUuid());
                                         startActivity(intent);
+                                        overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                                     }
                                 });
                             } else {
@@ -729,6 +734,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
                                         intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
                                         intent.putExtra("uuid", conversation.getUuid());
                                         startActivity(intent);
+                                        overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                                     }
                                 });
                             }
@@ -774,6 +780,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
                                     intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
                                     intent.putExtra("uuid", conversation.getUuid());
                                     startActivity(intent);
+                                    overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                                 }
                             });
                         } else {
@@ -787,6 +794,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
                                     intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
                                     intent.putExtra("uuid", conversation.getUuid());
                                     startActivity(intent);
+                                    overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                                 }
                             });
                         }
@@ -829,6 +837,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
                         break;
                 }
                 startActivity(intent);
+                overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                 return true;
             }
         });

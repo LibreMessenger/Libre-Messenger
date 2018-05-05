@@ -187,6 +187,7 @@ public class ShowLocationActivity extends XmppActivity {
         try {
             Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("geo:" + String.valueOf(latitude) + "," + String.valueOf(longitude)));
             startActivity(intent);
+            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
         } catch (ActivityNotFoundException e) {
             Toast.makeText(this, R.string.no_application_found_to_display_location, Toast.LENGTH_SHORT).show();
         }
