@@ -278,7 +278,7 @@ public class UIHelper {
         } else if (message.getType() == Message.TYPE_FILE || message.getType() == Message.TYPE_IMAGE) {
             return new Pair<>(getFileDescriptionString(context, message), true);
         } else {
-            final String body = message.getBody();
+            final String body = MessageUtils.filterLtrRtl(message.getBody());
             if (body.startsWith(Message.ME_COMMAND)) {
                 return new Pair<>(body.replaceAll("^" + Message.ME_COMMAND, UIHelper.getMessageDisplayName(message)), false);
             } else if (message.isGeoUri()) {
