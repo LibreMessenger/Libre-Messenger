@@ -51,6 +51,7 @@ import de.pixart.messenger.services.XmppConnectionService.OnMucRosterUpdate;
 import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import de.pixart.messenger.utils.TimeframeUtils;
 import de.pixart.messenger.utils.UIHelper;
+import de.pixart.messenger.utils.XmppUri;
 import rocks.xmpp.addr.Jid;
 
 public class ConferenceDetailsActivity extends XmppActivity implements OnConversationUpdate, OnMucRosterUpdate, XmppConnectionService.OnAffiliationChanged, XmppConnectionService.OnRoleChanged, XmppConnectionService.OnConfigurationPushed {
@@ -344,7 +345,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
     protected String getShareableUri(boolean http) {
         if (mConversation != null) {
             if (http) {
-                return Config.inviteMUCURL + mConversation.getJid().asBareJid().toEscapedString();
+                return Config.inviteMUCURL + XmppUri.lameUrlEncode(mConversation.getJid().asBareJid().toEscapedString());
             } else {
                 return "xmpp:" + mConversation.getJid().asBareJid().toEscapedString() + "?join";
             }

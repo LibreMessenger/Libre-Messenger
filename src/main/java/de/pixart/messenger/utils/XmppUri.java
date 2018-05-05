@@ -1,6 +1,7 @@
 package de.pixart.messenger.utils;
 
 import android.net.Uri;
+import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import de.pixart.messenger.Config;
 import rocks.xmpp.addr.Jid;
 
 public class XmppUri {
@@ -64,8 +66,9 @@ public class XmppUri {
             if (segments.size() >= 2 && segments.get(1).contains("@")) {
                 // sample : https://conversations.im/i/foo@bar.com
                 try {
-                    jid = Jid.of(segments.get(1)).toString();
+                    jid = Jid.of(lameUrlDecode(segments.get(1))).toString();
                 } catch (Exception e) {
+                    Log.d(Config.LOGTAG, "parsing failed ", e);
                     jid = null;
                 }
             } else if (segments.size() >= 3) {
@@ -260,5 +263,13 @@ public class XmppUri {
         public String toString() {
             return type.toString() + ": " + fingerprint + (deviceId != 0 ? " " + String.valueOf(deviceId) : "");
         }
+    }
+
+    public static String lameUrlDecode(String url) {
+        return url.replace("%23", "#").replace("%25", "%");
+    }
+
+    public static String lameUrlEncode(String url) {
+        return url.replace("%", "%25").replace("#", "%23");
     }
 }

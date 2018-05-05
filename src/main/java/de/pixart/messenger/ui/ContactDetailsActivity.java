@@ -228,11 +228,10 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
 
     @Override
     protected String getShareableUri(boolean http) {
-        final String prefix = http ? Config.inviteUserURL : "xmpp:";
-        if (contact != null) {
-            return prefix + contact.getJid().asBareJid().toEscapedString();
+        if (http) {
+            return Config.inviteUserURL + XmppUri.lameUrlEncode(contact.getJid().asBareJid().toEscapedString());
         } else {
-            return "";
+            return "xmpp:" + contact.getJid().asBareJid().toEscapedString();
         }
     }
 

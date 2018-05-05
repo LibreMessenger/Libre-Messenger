@@ -784,4 +784,8 @@
     <string name="search_messages">Search messages</string>
     <string name="gif">GIF</string>
     <string name="view_conversation">View conversation</string>
+    <string name="web_address">web address</string>
+    <string name="jabber_id_copied_to_clipboard">Copied JID to clipboard</string>
+    <string name="copy_jabber_id">Copy JID</string>
+    <string name="copy_link">Copy web address</string>
 </resources>

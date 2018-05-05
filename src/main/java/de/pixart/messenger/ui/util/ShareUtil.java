@@ -33,11 +33,16 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.widget.Toast;
 
+import java.util.regex.Matcher;
+
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.DownloadableFile;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.ui.XmppActivity;
+import de.pixart.messenger.utils.Patterns;
+import de.pixart.messenger.utils.XmppUri;
+import rocks.xmpp.addr.Jid;
 
 public class ShareUtil {
 
@@ -95,5 +100,41 @@ public class ShareUtil {
         if (activity.copyTextToClipboard(url, resId)) {
             Toast.makeText(activity, R.string.url_copied_to_clipboard, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public static void copyLinkToClipboard(XmppActivity activity, Message message) {
+        String body = message.getMergedBody().toString();
+        Matcher xmppPatternMatcher = Patterns.XMPP_PATTERN.matcher(body);
+        if (xmppPatternMatcher.find()) {
+            try {
+                Jid jid = new XmppUri(body.substring(xmppPatternMatcher.start(), xmppPatternMatcher.end())).getJid();
+                if (activity.copyTextToClipboard(jid.asBareJid().toString(), R.string.account_settings_jabber_id)) {
+                    Toast.makeText(activity, R.string.jabber_id_copied_to_clipboard, Toast.LENGTH_SHORT).show();
+                }
+                return;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+        }
+        Matcher webUrlPatternMatcher = Patterns.AUTOLINK_WEB_URL.matcher(body);
+        if (webUrlPatternMatcher.find()) {
+            String url = body.substring(webUrlPatternMatcher.start(), webUrlPatternMatcher.end());
+            if (activity.copyTextToClipboard(url, R.string.web_address)) {
+                Toast.makeText(activity, R.string.url_copied_to_clipboard, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public static boolean containsXmppUri(String body) {
+        Matcher xmppPatternMatcher = Patterns.XMPP_PATTERN.matcher(body);
+        if (xmppPatternMatcher.find()) {
+            try {
+                return new XmppUri(body.substring(xmppPatternMatcher.start(), xmppPatternMatcher.end())).isJidValid();
+            } catch (Exception e) {
+                return false;
+            }
+        }
+        return false;
     }
 }
