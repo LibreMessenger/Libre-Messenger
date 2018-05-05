@@ -1,6 +1,6 @@
 ### Changelog
 
-#### Version 2.0.0 (in development)
+#### Version 2.0.0
 * highlight irregular unicode code blocks in Jabber IDs
 * integrate QR code scanner (requires camera permission)
 * removed support for customizable resources
