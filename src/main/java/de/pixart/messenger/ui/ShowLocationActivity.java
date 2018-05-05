@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,6 +34,7 @@ import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
 public class ShowLocationActivity extends XmppActivity {
     private Location location;
     private String mLocationName;
+    FloatingActionButton fab;
 
     private static String getAddress(Context context, Location location) {
         double longitude = location.getLongitude();
@@ -80,6 +82,11 @@ public class ShowLocationActivity extends XmppActivity {
             this.location.setLongitude(longitude);
         }
         markAndCenterOnLocation(location);
+
+        fab = findViewById(R.id.fab);
+        fab.setOnClickListener(v -> {
+            navigate(location);
+        });
     }
 
     private void markAndCenterOnLocation(final Location location) {
@@ -89,8 +96,6 @@ public class ShowLocationActivity extends XmppActivity {
             new getAddressAsync(this).execute();
         }
     }
-
-    ;
 
     protected SharedPreferences getPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -115,16 +120,6 @@ public class ShowLocationActivity extends XmppActivity {
             case android.R.id.home:
                 finish();
                 return true;
-            case R.id.action_navigate:
-                double longitude = location.getLongitude();
-                double latitude = location.getLatitude();
-                try {
-                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("geo:" + String.valueOf(latitude) + "," + String.valueOf(longitude)));
-                    startActivity(intent);
-                } catch (ActivityNotFoundException e) {
-                    Toast.makeText(this, R.string.no_application_found_to_display_location, Toast.LENGTH_SHORT).show();
-                }
-                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -132,7 +127,6 @@ public class ShowLocationActivity extends XmppActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.showlocation, menu);
         return true;
     }
 
@@ -184,6 +178,17 @@ public class ShowLocationActivity extends XmppActivity {
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             showLocation(location, address);
+        }
+    }
+
+    private void navigate (Location location) {
+        double longitude = location.getLongitude();
+        double latitude = location.getLatitude();
+        try {
+            Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("geo:" + String.valueOf(latitude) + "," + String.valueOf(longitude)));
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, R.string.no_application_found_to_display_location, Toast.LENGTH_SHORT).show();
         }
     }
 }
