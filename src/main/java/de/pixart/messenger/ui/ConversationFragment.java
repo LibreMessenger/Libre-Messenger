@@ -146,6 +146,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     public static final String STATE_CONVERSATION_UUID = ConversationFragment.class.getName() + ".uuid";
 	public static final String STATE_SCROLL_POSITION = ConversationFragment.class.getName() + ".scroll_position";
     public static final String STATE_PHOTO_URI = ConversationFragment.class.getName() + ".take_photo_uri";
+    public static final String STATE_VIDEO_URI = ConversationFragment.class.getName() + ".take_video_uri";
 
     private static final String STATE_LAST_MESSAGE_UUID = "state_last_message_uuid";
 
@@ -157,6 +158,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 	private final PendingItem<String> pendingConversationsUuid = new PendingItem<>();
     private final PendingItem<Bundle> pendingExtras = new PendingItem<>();
     private final PendingItem<Uri> pendingTakePhotoUri = new PendingItem<>();
+    private final PendingItem<Uri> pendingTakeVideoUri = new PendingItem<>();
     private final PendingItem<ScrollState> pendingScrollState = new PendingItem<>();
     private final PendingItem<String> pendingLastMessageUuid = new PendingItem<>();
     private final PendingItem<Message> pendingMessage = new PendingItem<>();
@@ -1001,6 +1003,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     }
 
     private void handlePositiveActivityResult(int requestCode, final Intent data) {
+        final String type = data == null ? null : data.getType();
         switch (requestCode) {
             case REQUEST_TRUST_KEYS_TEXT:
                 final String body = binding.textinput.getText().toString();
@@ -1028,16 +1031,18 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 break;
             case ATTACHMENT_CHOICE_TAKE_FROM_CAMERA:
                 final Uri takePhotoUri = pendingTakePhotoUri.pop();
+                final Uri takeVideoUri = pendingTakeVideoUri.pop();
                 if (takePhotoUri != null) {
                     attachPhotoToConversation(conversation, takePhotoUri);
+                } else if (takeVideoUri != null) {
+                    attachFileToConversation(conversation, takeVideoUri, type);
                 } else {
-                    Log.d(Config.LOGTAG, "lost take photo uri. unable to to attach");
+                    Log.d(Config.LOGTAG, "lost take uri. unable to to attach");
                 }
                 break;
             case ATTACHMENT_CHOICE_CHOOSE_FILE:
             case ATTACHMENT_CHOICE_RECORD_VOICE:
                 final List<Uri> fileUris = AttachmentTool.extractUriFromIntent(data);
-                final String type = data == null ? null : data.getType();
                 final PresenceSelector.OnPresenceSelected callback = () -> {
                     for (Iterator<Uri> i = fileUris.iterator(); i.hasNext(); i.remove()) {
                         Log.d(Config.LOGTAG, "ConversationsActivity.onActivityResult() - attaching file to conversations. CHOOSE_FILE/RECORD_VOICE");
@@ -1724,6 +1729,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                             });
                     builder.setPositiveButton(getString(R.string.action_take_video),
                             (dialog, which) -> {
+                                final Uri uri = activity.xmppConnectionService.getFileBackend().getTakeVideoUri();
+                                pendingTakeVideoUri.push(uri);
+                                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                                 intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                 intent.setAction(MediaStore.ACTION_VIDEO_CAPTURE);
@@ -1959,9 +1967,13 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         if (conversation != null) {
             outState.putString(STATE_CONVERSATION_UUID, conversation.getUuid());
             outState.putString(STATE_LAST_MESSAGE_UUID, lastMessageUuid);
-            final Uri uri = pendingTakePhotoUri.peek();
-            if (uri != null) {
-                outState.putString(STATE_PHOTO_URI, uri.toString());
+            final Uri PhotoUri = pendingTakePhotoUri.peek();
+            final Uri VideoUri = pendingTakeVideoUri.peek();
+            if (PhotoUri != null) {
+                outState.putString(STATE_PHOTO_URI, PhotoUri.toString());
+            }
+            if (VideoUri != null) {
+                outState.putString(STATE_VIDEO_URI, VideoUri.toString());
             }
             final ScrollState scrollState = getScrollPosition();
             if (scrollState != null) {
@@ -1984,6 +1996,10 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             String takePhotoUri = savedInstanceState.getString(STATE_PHOTO_URI);
             if (takePhotoUri != null) {
                 pendingTakePhotoUri.push(Uri.parse(takePhotoUri));
+            }
+            String takeVideoUri = savedInstanceState.getString(STATE_VIDEO_URI);
+            if (takeVideoUri != null) {
+                pendingTakeVideoUri.push(Uri.parse(takeVideoUri));
             }
             pendingScrollState.push(savedInstanceState.getParcelable(STATE_SCROLL_POSITION));
         }

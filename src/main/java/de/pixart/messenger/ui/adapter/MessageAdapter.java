@@ -324,14 +324,14 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 } else {
                     isResendable = false;
                     viewHolder.resend_button.setVisibility(View.VISIBLE);
+                    viewHolder.resend_button.setText(R.string.send_again);
+                    viewHolder.resend_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_resend_grey600_48dp, 0, 0, 0);
+                    viewHolder.resend_button.setOnClickListener(v -> mConversationFragment.resendMessage(message));
                 }
             } else {
                 isResendable = false;
                 viewHolder.resend_button.setVisibility(View.GONE);
             }
-            viewHolder.resend_button.setText(R.string.send_again);
-            viewHolder.resend_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_resend_grey600_48dp, 0, 0, 0);
-            viewHolder.resend_button.setOnClickListener(v -> mConversationFragment.resendMessage(message));
         } else {
             if (darkBackground) {
                 viewHolder.time.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Caption_OnDark);
