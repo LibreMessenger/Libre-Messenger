@@ -36,6 +36,7 @@ import android.support.annotation.ColorInt;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.ParcelableSpan;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextWatcher;
@@ -132,6 +133,44 @@ public class StylingHelper {
 
     }
 
+    static CharSequence subSequence(CharSequence charSequence, int start, int end) {
+        if (start == 0 && charSequence.length() + 1 == end) {
+            return charSequence;
+        }
+        if (charSequence instanceof Spannable) {
+            Spannable spannable = (Spannable) charSequence;
+            Spannable sub = (Spannable) spannable.subSequence(start, end);
+            for (Class<? extends ParcelableSpan> clazz : SPAN_CLASSES) {
+                ParcelableSpan[] spannables = spannable.getSpans(start, end, clazz);
+                for (ParcelableSpan parcelableSpan : spannables) {
+                    int beginSpan = spannable.getSpanStart(parcelableSpan);
+                    int endSpan = spannable.getSpanEnd(parcelableSpan);
+                    if (beginSpan >= start && endSpan <= end) {
+                        continue;
+                    }
+                    sub.setSpan(clone(parcelableSpan), Math.max(beginSpan - start, 0), Math.min(sub.length() - 1, endSpan), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+            }
+            return sub;
+        } else {
+            return charSequence.subSequence(start, end);
+        }
+    }
+
+    private static ParcelableSpan clone(ParcelableSpan span) {
+        if (span instanceof ForegroundColorSpan) {
+            return new ForegroundColorSpan(((ForegroundColorSpan) span).getForegroundColor());
+        } else if (span instanceof TypefaceSpan) {
+            return new TypefaceSpan(((TypefaceSpan) span).getFamily());
+        } else if (span instanceof StyleSpan) {
+            return new StyleSpan(((StyleSpan) span).getStyle());
+        } else if (span instanceof StrikethroughSpan) {
+            return new StrikethroughSpan();
+        } else {
+            throw new AssertionError("Unknown Span");
+        }
+    }
+
     public static boolean isDarkText(TextView textView) {
         int argb = textView.getCurrentTextColor();
         return Color.red(argb) + Color.green(argb) + Color.blue(argb) == 0;
@@ -163,7 +202,7 @@ public class StylingHelper {
     private static
     @ColorInt
     int transformColor(@ColorInt int c) {
-        return Color.argb(Math.round(Color.alpha(c) * 0.6f), Color.red(c), Color.green(c), Color.blue(c));
+        return Color.argb(Math.round(Color.alpha(c) * 0.45f), Color.red(c), Color.green(c), Color.blue(c));
     }
 
     private static int indexOfIgnoreCase(final String haystack, final String needle, final int start) {
