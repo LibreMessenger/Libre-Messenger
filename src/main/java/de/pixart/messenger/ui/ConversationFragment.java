@@ -1525,6 +1525,10 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             if (!hasPermissions(attachmentChoice, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)) {
                 return;
             }
+        } else if (attachmentChoice == ATTACHMENT_CHOICE_LOCATION) {
+            if (!hasPermissions(attachmentChoice, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                return;
+            }
         } else if (attachmentChoice != ATTACHMENT_CHOICE_LOCATION) {
             if (!hasPermissions(attachmentChoice, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 return;
