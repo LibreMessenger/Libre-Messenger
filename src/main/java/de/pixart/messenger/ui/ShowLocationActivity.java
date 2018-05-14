@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,6 +26,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Locale;
 
+import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.services.EmojiService;
 import de.pixart.messenger.utils.MenuDoubleTabUtil;
@@ -80,16 +82,20 @@ public class ShowLocationActivity extends XmppActivity {
             this.location = new Location("");
             this.location.setLatitude(latitude);
             this.location.setLongitude(longitude);
+            Log.d(Config.LOGTAG, "Location: lat: " + latitude + " long: " + longitude);
+            markAndCenterOnLocation(this.location);
+            fab = findViewById(R.id.fab);
+            fab.setOnClickListener(v -> {
+                navigate(this.location);
+            });
         }
-        markAndCenterOnLocation(location);
-
-        fab = findViewById(R.id.fab);
-        fab.setOnClickListener(v -> {
-            navigate(location);
-        });
     }
 
     private void markAndCenterOnLocation(final Location location) {
+        if (location == null) {
+            Log.d(Config.LOGTAG, "No location given");
+            return;
+        }
         double longitude = location.getLongitude();
         double latitude = location.getLatitude();
         if (latitude != 0 && longitude != 0) {
@@ -182,6 +188,10 @@ public class ShowLocationActivity extends XmppActivity {
     }
 
     private void navigate (Location location) {
+        if (location == null) {
+            Log.d(Config.LOGTAG, "No location given");
+            return;
+        }
         double longitude = location.getLongitude();
         double latitude = location.getLatitude();
         try {

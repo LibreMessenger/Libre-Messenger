@@ -233,15 +233,6 @@
         <activity
             android:name=".ui.ShowLocationActivity"
             android:label="@string/show_location">
-            <intent-filter>
-                <action android:name="de.pixart.messenger.location.show" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <data android:scheme="geo" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".ui.SearchActivity"
