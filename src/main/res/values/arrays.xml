@@ -46,10 +46,10 @@
     <string-array name="quick_action_values">
         <item>none</item>
         <item>recent</item>
-        <item>photo</item>
-        <item>picture</item>
-        <item>voice</item>
-        <item>location</item>
+        <item>TAKE_FROM_CAMERA</item>
+        <item>CHOOSE_PICTURE</item>
+        <item>RECORD_VOICE</item>
+        <item>SEND_LOCATION</item>
     </string-array>
 
     <string-array name="image_compression_values">

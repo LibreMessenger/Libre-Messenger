@@ -150,6 +150,28 @@ public class SettingsActivity extends XmppActivity implements
             automaticMessageDeletionList.setEntryValues(entryValues);
         }
 
+        boolean removeVoice = !getApplicationContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_MICROPHONE);
+        boolean removeLocation = !getApplicationContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS)
+                && !getApplicationContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_LOCATION_NETWORK);
+
+        ListPreference quickAction = (ListPreference) mSettingsFragment.findPreference("quick_action");
+        if (quickAction != null && (removeLocation || removeVoice)) {
+            ArrayList<CharSequence> entries = new ArrayList<>(Arrays.asList(quickAction.getEntries()));
+            ArrayList<CharSequence> entryValues = new ArrayList<>(Arrays.asList(quickAction.getEntryValues()));
+            int index = entryValues.indexOf("location");
+            if (index > 0 && removeLocation) {
+                entries.remove(index);
+                entryValues.remove(index);
+            }
+            index = entryValues.indexOf("voice");
+            if (index > 0 && removeVoice) {
+                entries.remove(index);
+                entryValues.remove(index);
+            }
+            quickAction.setEntries(entries.toArray(new CharSequence[entries.size()]));
+            quickAction.setEntryValues(entryValues.toArray(new CharSequence[entryValues.size()]));
+        }
+
         final Preference removeCertsPreference = mSettingsFragment.findPreference("remove_trusted_certificates");
         if (removeCertsPreference != null) {
             removeCertsPreference.setOnPreferenceClickListener(preference -> {
