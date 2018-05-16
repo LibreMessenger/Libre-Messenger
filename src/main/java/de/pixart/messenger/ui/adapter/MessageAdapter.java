@@ -213,7 +213,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         return 4;
     }
 
-    public int getItemViewType(Message message) {
+    private int getItemViewType(Message message) {
         if (message.getType() == Message.TYPE_STATUS) {
             if (DATE_SEPARATOR_BODY.equals(message.getBody())) {
                 return DATE_SEPARATOR;
@@ -232,7 +232,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         return this.getItemViewType(getItem(position));
     }
 
-    public int getMessageTextColor(boolean onDark, boolean primary) {
+    private int getMessageTextColor(boolean onDark, boolean primary) {
         if (onDark) {
             return ContextCompat.getColor(activity, primary ? R.color.white : R.color.white70);
         } else {
@@ -444,7 +444,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
     }
 
-    private int applyQuoteSpan(SpannableStringBuilder body, int start, int end, boolean darkBackground) {
+    private void applyQuoteSpan(SpannableStringBuilder body, int start, int end, boolean darkBackground) {
         if (start > 1 && !"\n\n".equals(body.subSequence(start - 2, start).toString())) {
             body.insert(start++, "\n");
             body.setSpan(new DividerSpan(false), start - 2, start, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -458,7 +458,6 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 : ContextCompat.getColor(activity, R.color.bubble);
         DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
         body.setSpan(new QuoteSpan(color, metrics), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return 0;
     }
 
     /**
@@ -586,7 +585,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                     }
                 }
             }
-            Matcher matcher = Emoticons.generatePattern(body).matcher(body);
+            Matcher matcher = Emoticons.getEmojiPattern(body).matcher(body);
             while (matcher.find()) {
                 if (matcher.start() < matcher.end()) {
                     body.setSpan(new RelativeSizeSpan(1.5f), matcher.start(), matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
