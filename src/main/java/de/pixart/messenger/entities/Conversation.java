@@ -29,6 +29,7 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.crypto.OmemoSetting;
 import de.pixart.messenger.crypto.PgpDecryptionService;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
+import de.pixart.messenger.utils.JidHelper;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 import de.pixart.messenger.xmpp.mam.MamReference;
 import rocks.xmpp.addr.Jid;
@@ -115,18 +116,11 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
     }
 
     public static Conversation fromCursor(Cursor cursor) {
-        Jid jid;
-        try {
-            jid = Jid.of(cursor.getString(cursor.getColumnIndex(CONTACTJID)));
-        } catch (final IllegalArgumentException e) {
-            // Borked DB..
-            jid = null;
-        }
         return new Conversation(cursor.getString(cursor.getColumnIndex(UUID)),
                 cursor.getString(cursor.getColumnIndex(NAME)),
                 cursor.getString(cursor.getColumnIndex(CONTACT)),
                 cursor.getString(cursor.getColumnIndex(ACCOUNT)),
-                jid,
+                JidHelper.parseOrFallbackToInvalid(cursor.getString(cursor.getColumnIndex(CONTACTJID))),
                 cursor.getLong(cursor.getColumnIndex(CREATED)),
                 cursor.getInt(cursor.getColumnIndex(STATUS)),
                 cursor.getInt(cursor.getColumnIndex(MODE)),

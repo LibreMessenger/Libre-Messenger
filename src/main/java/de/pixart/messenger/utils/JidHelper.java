@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import de.pixart.messenger.xmpp.InvalidJid;
 import rocks.xmpp.addr.Jid;
 
 public class JidHelper {
@@ -50,4 +51,11 @@ public class JidHelper {
         }
     }
 
+    public static Jid parseOrFallbackToInvalid(String jid) {
+        try {
+            return Jid.of(jid);
+        } catch (IllegalArgumentException e) {
+            return InvalidJid.of(jid, true);
+        }
+    }
 }
