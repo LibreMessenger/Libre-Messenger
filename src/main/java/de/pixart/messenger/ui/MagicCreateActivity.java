@@ -6,23 +6,31 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
 import rocks.xmpp.addr.Jid;
 
-public class MagicCreateActivity extends XmppActivity implements TextWatcher {
+public class MagicCreateActivity extends XmppActivity implements TextWatcher, AdapterView.OnItemSelectedListener {
 
     private TextView mFullJidDisplay;
     private EditText mUsername;
+    private Spinner mServer;
     private SecureRandom mRandom;
+    String domain = null;
 
     private static final String CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456780+-/#$!?";
     private static final int PW_LENGTH = 10;
@@ -52,17 +60,27 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.magic_create);
+        setContentView(R.layout.activity_magic_create);
         setSupportActionBar(findViewById(R.id.toolbar));
         configureActionBar(getSupportActionBar());
         mFullJidDisplay = findViewById(R.id.full_jid);
+        final List<String> domains = Arrays.asList(getResources().getStringArray(R.array.domains));
+        Collections.sort(domains, String::compareToIgnoreCase);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_selectable_list_item, domains);
         mUsername = findViewById(R.id.username);
+        mServer = findViewById(R.id.server);
+        mServer.setAdapter(adapter);
+        mServer.setOnItemSelectedListener(this);
+        adapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
         mRandom = new SecureRandom();
         Button next = findViewById(R.id.create_account);
         next.setOnClickListener(v -> {
             try {
                 String username = mUsername.getText().toString();
-                Jid jid = Jid.of(username.toLowerCase(), Config.MAGIC_CREATE_DOMAIN, null);
+                if (domain == null) {
+                    domain = Config.MAGIC_CREATE_DOMAIN;
+                }
+                Jid jid = Jid.of(username.toLowerCase(), domain, null);
                 if (!jid.getEscapedLocal().equals(jid.getLocal()) || username.length() < 3) {
                     mUsername.setError(getString(R.string.invalid_username));
                     mUsername.requestFocus();
@@ -80,9 +98,11 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher {
                     intent.putExtra("jid", account.getJid().asBareJid().toString());
                     intent.putExtra("init", true);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    Toast.makeText(MagicCreateActivity.this, R.string.secure_password_generated, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MagicCreateActivity.this, R.string.secure_password_generated, Toast.LENGTH_LONG).show();
                     WelcomeActivity.addInviteUri(intent, getIntent());
                     startActivity(intent);
+                    overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+                    finish();
                     overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                 }
             } catch (IllegalArgumentException e) {
@@ -113,10 +133,28 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable s) {
-        if (s.toString().trim().length() > 0) {
+        generateJID(s.toString());
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        generateJID(mUsername.getText().toString());
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+        generateJID(mUsername.getText().toString());
+    }
+
+    private void generateJID (String s) {
+        domain = mServer.getSelectedItem().toString();
+        if (s.trim().length() > 0) {
             try {
                 mFullJidDisplay.setVisibility(View.VISIBLE);
-                Jid jid = Jid.of(s.toString().toLowerCase(), Config.MAGIC_CREATE_DOMAIN, null);
+                if (domain == null) {
+                    domain = Config.MAGIC_CREATE_DOMAIN;
+                }
+                Jid jid = Jid.of(s.toLowerCase(), domain, null);
                 mFullJidDisplay.setText(getString(R.string.your_full_jid_will_be, jid.toEscapedString()));
             } catch (IllegalArgumentException e) {
                 mFullJidDisplay.setVisibility(View.INVISIBLE);

@@ -100,12 +100,7 @@ public class WelcomeActivity extends XmppActivity {
             ImportText.setVisibility(View.VISIBLE);
         }
 
-        ImportDatabase.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                enterPasswordDialog();
-            }
-        });
+        ImportDatabase.setOnClickListener(v -> enterPasswordDialog());
 
         final Button createAccount = findViewById(R.id.create_account);
         createAccount.setOnClickListener(v -> {
@@ -126,6 +121,8 @@ public class WelcomeActivity extends XmppActivity {
             }
             addInviteUri(intent);
             startActivity(intent);
+            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+            finish();
             overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
         });
 
