@@ -110,6 +110,9 @@ public class StylingHelper {
                     codepoint = term.codePointAt(i);
                     if (Character.isLetterOrDigit(codepoint)) {
                         builder.append(Character.toChars(codepoint));
+                    } else if (builder.length() > 0) {
+                        words.add(builder.toString());
+                        builder.delete(0, builder.length());
                     }
                 }
                 if (builder.length() > 0) {
