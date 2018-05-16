@@ -225,21 +225,23 @@ public class FileBackend {
 
     }
 
-    public Bitmap resize(Bitmap originalBitmap, int size) {
+    private Bitmap resize(final Bitmap originalBitmap, int size) throws IOException {
         int w = originalBitmap.getWidth();
         int h = originalBitmap.getHeight();
-        if (Math.max(w, h) > size) {
+        if (w <= 0 || h <= 0) {
+            throw new IOException("Decoded bitmap reported bounds smaller 0");
+        } else if (Math.max(w, h) > size) {
             int scalledW;
             int scalledH;
             if (w <= h) {
-                scalledW = (int) (w / ((double) h / size));
+                scalledW = Math.max((int) (w / ((double) h / size)), 1);
                 scalledH = size;
             } else {
                 scalledW = size;
-                scalledH = (int) (h / ((double) w / size));
+                scalledH = Math.max((int) (h / ((double) w / size)), 1);
             }
-            Bitmap result = Bitmap.createScaledBitmap(originalBitmap, scalledW, scalledH, true);
-            if (originalBitmap != null && !originalBitmap.isRecycled()) {
+            final Bitmap result = Bitmap.createScaledBitmap(originalBitmap, scalledW, scalledH, true);
+            if (!originalBitmap.isRecycled()) {
                 originalBitmap.recycle();
             }
             return result;
