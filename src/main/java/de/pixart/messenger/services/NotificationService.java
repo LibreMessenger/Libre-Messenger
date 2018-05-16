@@ -25,7 +25,7 @@ import android.util.Log;
 import android.util.Pair;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -508,7 +508,7 @@ public class NotificationService {
                 builder.setContentText(UIHelper.getFileDescriptionString(mXmppConnectionService, message));
             }
             builder.setStyle(bigPictureStyle);
-        } catch (final FileNotFoundException e) {
+        } catch (final IOException e) {
             modifyForTextOnly(builder, uBuilder, messages);
         }
     }

@@ -485,7 +485,7 @@ public class FileBackend {
         }
     }
 
-    public Bitmap getThumbnail(Message message, int size, boolean cacheOnly) throws FileNotFoundException {
+    public Bitmap getThumbnail(Message message, int size, boolean cacheOnly) throws IOException {
         final String uuid = message.getUuid();
         final LruCache<String, Bitmap> cache = mXmppConnectionService.getBitmapCache();
         Bitmap thumbnail = cache.get(uuid);
@@ -549,7 +549,7 @@ public class FileBackend {
         return paint;
     }
 
-    private Bitmap getVideoPreview(File file, int size) {
+    private Bitmap getVideoPreview(File file, int size) throws IOException {
         MediaMetadataRetriever metadataRetriever = new MediaMetadataRetriever();
         Bitmap frame;
         try {
@@ -557,7 +557,7 @@ public class FileBackend {
             frame = metadataRetriever.getFrameAtTime(0);
             metadataRetriever.release();
             frame = resize(frame, size);
-        } catch(RuntimeException  e) {
+        } catch (IOException | RuntimeException e) {
             frame = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
             frame.eraseColor(0xff000000);
         }
