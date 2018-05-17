@@ -58,10 +58,9 @@ import rocks.xmpp.addr.Jid;
 
 public class DatabaseBackend extends SQLiteOpenHelper {
 
-    private static DatabaseBackend instance = null;
-
     public static final String DATABASE_NAME = "history";
-    public static final int DATABASE_VERSION = 42; // = Conversations DATABASE_VERSION + 1
+    public static final int DATABASE_VERSION = 43; // = Conversations DATABASE_VERSION + 1
+    private static DatabaseBackend instance = null;
 
     private static String CREATE_CONTATCS_STATEMENT = "create table "
             + Contact.TABLENAME + "(" + Contact.ACCOUNT + " TEXT, "
@@ -165,11 +164,24 @@ public class DatabaseBackend extends SQLiteOpenHelper {
     private static String CREATE_MESSAGE_INDEX_TABLE = "CREATE VIRTUAL TABLE messages_index USING FTS4(uuid TEXT PRIMARY KEY, body TEXT)";
     private static String CREATE_MESSAGE_INSERT_TRIGGER = "CREATE TRIGGER after_message_insert AFTER INSERT ON " + Message.TABLENAME + " BEGIN INSERT INTO messages_index (uuid,body) VALUES (new.uuid,new.body); END;";
     private static String CREATE_MESSAGE_UPDATE_TRIGGER = "CREATE TRIGGER after_message_update UPDATE of uuid,body ON " + Message.TABLENAME + " BEGIN update messages_index set body=new.body,uuid=new.uuid WHERE uuid=old.uuid; END;";
-    private static String CREATE_MESSAGE_DELETE_TRIGGER = "CREATE TRIGGER after_message_delete AFTER DELETE ON " + Message.TABLENAME + " BEGIN DELETE from messages_index where uuid=old.uuid; END;";
     private static String COPY_PREEXISTING_ENTRIES = "INSERT into messages_index(uuid,body) select uuid,body FROM " + Message.TABLENAME + ";";
 
     private DatabaseBackend(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    private static ContentValues createFingerprintStatusContentValues(FingerprintStatus.Trust trust, boolean active) {
+        ContentValues values = new ContentValues();
+        values.put(SQLiteAxolotlStore.TRUST, trust.toString());
+        values.put(SQLiteAxolotlStore.ACTIVE, active ? 1 : 0);
+        return values;
+    }
+
+    public static synchronized DatabaseBackend getInstance(Context context) {
+        if (instance == null) {
+            instance = new DatabaseBackend(context);
+        }
+        return instance;
     }
 
     @Override
@@ -232,7 +244,6 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         db.execSQL(CREATE_MESSAGE_INDEX_TABLE);
         db.execSQL(CREATE_MESSAGE_INSERT_TRIGGER);
         db.execSQL(CREATE_MESSAGE_UPDATE_TRIGGER);
-        db.execSQL(CREATE_MESSAGE_DELETE_TRIGGER);
     }
 
     @Override
@@ -318,7 +329,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
             db.execSQL("ALTER TABLE " + Account.TABLENAME + " ADD COLUMN " + Account.RESOURCE + " TEXT");
         }
         /* Any migrations that alter the Account table need to happen BEFORE this migration, as it
-		 * depends on account de-serialization.
+         * depends on account de-serialization.
 		 */
         if (oldVersion < 17 && newVersion >= 17 && newVersion < 31) {
             List<Account> accounts = getAccounts(db);
@@ -412,14 +423,14 @@ public class DatabaseBackend extends SQLiteOpenHelper {
             }
         }
         if (oldVersion >= 15 && oldVersion < 32 && newVersion >= 32) {
-            db.execSQL("ALTER TABLE "+ SQLiteAxolotlStore.IDENTITIES_TABLENAME + " ADD COLUMN "+SQLiteAxolotlStore.LAST_ACTIVATION + " NUMBER");
+            db.execSQL("ALTER TABLE " + SQLiteAxolotlStore.IDENTITIES_TABLENAME + " ADD COLUMN " + SQLiteAxolotlStore.LAST_ACTIVATION + " NUMBER");
             ContentValues defaults = new ContentValues();
-            defaults.put(SQLiteAxolotlStore.LAST_ACTIVATION,System.currentTimeMillis());
-            db.update(SQLiteAxolotlStore.IDENTITIES_TABLENAME,defaults,null,null);
+            defaults.put(SQLiteAxolotlStore.LAST_ACTIVATION, System.currentTimeMillis());
+            db.update(SQLiteAxolotlStore.IDENTITIES_TABLENAME, defaults, null, null);
         }
         if (oldVersion >= 15 && oldVersion < 33 && newVersion >= 33) {
-            String whereClause = SQLiteAxolotlStore.OWN+"=1";
-            db.update(SQLiteAxolotlStore.IDENTITIES_TABLENAME,createFingerprintStatusContentValues(FingerprintStatus.Trust.VERIFIED,true),whereClause,null);
+            String whereClause = SQLiteAxolotlStore.OWN + "=1";
+            db.update(SQLiteAxolotlStore.IDENTITIES_TABLENAME, createFingerprintStatusContentValues(FingerprintStatus.Trust.VERIFIED, true), whereClause, null);
         }
         if (oldVersion < 34 && newVersion >= 34) {
             db.execSQL(CREATE_MESSAGE_TIME_INDEX);
@@ -429,57 +440,57 @@ public class DatabaseBackend extends SQLiteOpenHelper {
             db.execSQL(CREATE_MESSAGE_CONVERSATION_INDEX);
         }
         if (oldVersion < 36 && newVersion >= 36) {
-						// only rename videos, images, audios and other files directories
-						final File oldPicturesDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger/Images/");
-						final File oldFilesDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger/Files/");
-						final File oldAudiosDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger/Audios/");
-						final File oldVideosDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger/Videos/");
-						
-						if (oldPicturesDirectory.exists() && oldPicturesDirectory.isDirectory()) {
-								final File newPicturesDirectory = new File(Environment.getExternalStorageDirectory() + "/Pix-Art Messenger/Media/Pix-Art Messenger Images/");
-								newPicturesDirectory.getParentFile().mkdirs();
-								final File[] files = oldPicturesDirectory.listFiles();
-								if (files == null) {
-									return;
-								}
-								if (oldPicturesDirectory.renameTo(newPicturesDirectory)) {
-										Log.d(Config.LOGTAG,"moved " + oldPicturesDirectory.getAbsolutePath() + " to " + newPicturesDirectory.getAbsolutePath());
-								}
-						}
-						if (oldFilesDirectory.exists() && oldFilesDirectory.isDirectory()) {
-								final File newFilesDirectory = new File(Environment.getExternalStorageDirectory() + "/Pix-Art Messenger/Media/Pix-Art Messenger Files/");
-								newFilesDirectory.mkdirs();
-								final File[] files = oldFilesDirectory.listFiles();
-								if (files == null) {
-									return;
-								}
-								if (oldFilesDirectory.renameTo(newFilesDirectory)) {
-										Log.d(Config.LOGTAG,"moved " + oldFilesDirectory.getAbsolutePath() + " to " + newFilesDirectory.getAbsolutePath());
-								}
-						}
-						if (oldAudiosDirectory.exists() && oldAudiosDirectory.isDirectory()) {
-								final File newAudiosDirectory = new File(Environment.getExternalStorageDirectory() + "/Pix-Art Messenger/Media/Pix-Art Messenger Audios/");
-								newAudiosDirectory.mkdirs();
-								final File[] files = oldAudiosDirectory.listFiles();
-								if (files == null) {
-									return;
-								}
-								if (oldAudiosDirectory.renameTo(newAudiosDirectory)) {
-										Log.d(Config.LOGTAG,"moved " + oldAudiosDirectory.getAbsolutePath() + " to " + newAudiosDirectory.getAbsolutePath());
-								}
-						}
-						if (oldVideosDirectory.exists() && oldVideosDirectory.isDirectory()) {
-								final File newVideosDirectory = new File(Environment.getExternalStorageDirectory() + "/Pix-Art Messenger/Media/Pix-Art Messenger Videos/");
-								newVideosDirectory.mkdirs();
-								final File[] files = oldVideosDirectory.listFiles();
-								if (files == null) {
-									return;
-								}
-								if (oldVideosDirectory.renameTo(newVideosDirectory)) {
-										Log.d(Config.LOGTAG,"moved " + oldVideosDirectory.getAbsolutePath() + " to " + newVideosDirectory.getAbsolutePath());
-								}
-						}
-				}
+            // only rename videos, images, audios and other files directories
+            final File oldPicturesDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger/Images/");
+            final File oldFilesDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger/Files/");
+            final File oldAudiosDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger/Audios/");
+            final File oldVideosDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Pix-Art Messenger/Videos/");
+
+            if (oldPicturesDirectory.exists() && oldPicturesDirectory.isDirectory()) {
+                final File newPicturesDirectory = new File(Environment.getExternalStorageDirectory() + "/Pix-Art Messenger/Media/Pix-Art Messenger Images/");
+                newPicturesDirectory.getParentFile().mkdirs();
+                final File[] files = oldPicturesDirectory.listFiles();
+                if (files == null) {
+                    return;
+                }
+                if (oldPicturesDirectory.renameTo(newPicturesDirectory)) {
+                    Log.d(Config.LOGTAG, "moved " + oldPicturesDirectory.getAbsolutePath() + " to " + newPicturesDirectory.getAbsolutePath());
+                }
+            }
+            if (oldFilesDirectory.exists() && oldFilesDirectory.isDirectory()) {
+                final File newFilesDirectory = new File(Environment.getExternalStorageDirectory() + "/Pix-Art Messenger/Media/Pix-Art Messenger Files/");
+                newFilesDirectory.mkdirs();
+                final File[] files = oldFilesDirectory.listFiles();
+                if (files == null) {
+                    return;
+                }
+                if (oldFilesDirectory.renameTo(newFilesDirectory)) {
+                    Log.d(Config.LOGTAG, "moved " + oldFilesDirectory.getAbsolutePath() + " to " + newFilesDirectory.getAbsolutePath());
+                }
+            }
+            if (oldAudiosDirectory.exists() && oldAudiosDirectory.isDirectory()) {
+                final File newAudiosDirectory = new File(Environment.getExternalStorageDirectory() + "/Pix-Art Messenger/Media/Pix-Art Messenger Audios/");
+                newAudiosDirectory.mkdirs();
+                final File[] files = oldAudiosDirectory.listFiles();
+                if (files == null) {
+                    return;
+                }
+                if (oldAudiosDirectory.renameTo(newAudiosDirectory)) {
+                    Log.d(Config.LOGTAG, "moved " + oldAudiosDirectory.getAbsolutePath() + " to " + newAudiosDirectory.getAbsolutePath());
+                }
+            }
+            if (oldVideosDirectory.exists() && oldVideosDirectory.isDirectory()) {
+                final File newVideosDirectory = new File(Environment.getExternalStorageDirectory() + "/Pix-Art Messenger/Media/Pix-Art Messenger Videos/");
+                newVideosDirectory.mkdirs();
+                final File[] files = oldVideosDirectory.listFiles();
+                if (files == null) {
+                    return;
+                }
+                if (oldVideosDirectory.renameTo(newVideosDirectory)) {
+                    Log.d(Config.LOGTAG, "moved " + oldVideosDirectory.getAbsolutePath() + " to " + newVideosDirectory.getAbsolutePath());
+                }
+            }
+        }
 
         if (oldVersion < 37 && newVersion >= 37) {
             List<Account> accounts = getAccounts(db);
@@ -507,16 +518,12 @@ public class DatabaseBackend extends SQLiteOpenHelper {
             db.execSQL(CREATE_MESSAGE_INDEX_TABLE);
             db.execSQL(CREATE_MESSAGE_INSERT_TRIGGER);
             db.execSQL(CREATE_MESSAGE_UPDATE_TRIGGER);
-            db.execSQL(CREATE_MESSAGE_DELETE_TRIGGER);
             db.execSQL(COPY_PREEXISTING_ENTRIES);
         }
-    }
 
-    private static ContentValues createFingerprintStatusContentValues(FingerprintStatus.Trust trust, boolean active) {
-        ContentValues values = new ContentValues();
-        values.put(SQLiteAxolotlStore.TRUST, trust.toString());
-        values.put(SQLiteAxolotlStore.ACTIVE, active ? 1 : 0);
-        return values;
+        if (oldVersion < 42 && newVersion >= 42) {
+            db.execSQL("DROP TRIGGER IF EXISTS after_message_delete");
+        }
     }
 
     private void canonicalizeJids(SQLiteDatabase db) {
@@ -596,13 +603,6 @@ public class DatabaseBackend extends SQLiteOpenHelper {
                     + " where " + Account.UUID + " = ?", updateArgs);
         }
         cursor.close();
-    }
-
-    public static synchronized DatabaseBackend getInstance(Context context) {
-        if (instance == null) {
-            instance = new DatabaseBackend(context);
-        }
-        return instance;
     }
 
     public void createConversation(Conversation conversation) {
@@ -693,7 +693,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         String[] selectionArgs = {Integer.toString(status)};
         Cursor cursor = db.rawQuery("select * from " + Conversation.TABLENAME
-                + " where " + Conversation.STATUS + " = ? and "+Conversation.CONTACTJID+" is not null order by "
+                + " where " + Conversation.STATUS + " = ? and " + Conversation.CONTACTJID + " is not null order by "
                 + Conversation.CREATED + " desc", selectionArgs);
         while (cursor.moveToNext()) {
             final Conversation conversation = Conversation.fromCursor(cursor);
@@ -922,16 +922,23 @@ public class DatabaseBackend extends SQLiteOpenHelper {
     public void deleteMessagesInConversation(Conversation conversation) {
         long start = SystemClock.elapsedRealtime();
         final SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
         String[] args = {conversation.getUuid()};
+        db.delete("messages_index", "uuid in (select uuid from messages where conversationUuid=?)", args);
         int num = db.delete(Message.TABLENAME, Message.CONVERSATION + "=?", args);
+        db.setTransactionSuccessful();
+        db.endTransaction();
         Log.d(Config.LOGTAG, "deleted " + num + " messages for " + conversation.getJid().asBareJid() + " in " + (SystemClock.elapsedRealtime() - start) + "ms");
     }
 
-    public boolean expireOldMessages(long timestamp) {
-        String where = Message.TIME_SENT + "<?";
-        String[] whereArgs = {String.valueOf(timestamp)};
+    public void expireOldMessages(long timestamp) {
+        final String[] args = {String.valueOf(timestamp)};
         SQLiteDatabase db = this.getReadableDatabase();
-        return db.delete(Message.TABLENAME, where, whereArgs) > 0;
+        db.beginTransaction();
+        db.delete("messages_index", "uuid in (select uuid from messages where timeSent<?)", args);
+        db.delete(Message.TABLENAME, "timeSent<?", args);
+        db.setTransactionSuccessful();
+        db.endTransaction();
     }
 
     public MamReference getLastMessageReceived(Account account) {
@@ -959,7 +966,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
     public long getLastTimeFingerprintUsed(Account account, String fingerprint) {
         String SQL = "select messages.timeSent from accounts join conversations on accounts.uuid=conversations.accountUuid join messages on conversations.uuid=messages.conversationUuid where accounts.uuid=? and messages.axolotl_fingerprint=? order by messages.timesent desc limit 1";
         String[] args = {account.getUuid(), fingerprint};
-        Cursor cursor = getReadableDatabase().rawQuery(SQL,args);
+        Cursor cursor = getReadableDatabase().rawQuery(SQL, args);
         long time;
         if (cursor.moveToFirst()) {
             time = cursor.getLong(0);
@@ -1047,7 +1054,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 
     public List<String> getKnownSignalAddresses(Account account) {
         List<String> addresses = new ArrayList<>();
-        String[] colums = {"DISTINCT "+SQLiteAxolotlStore.NAME};
+        String[] colums = {"DISTINCT " + SQLiteAxolotlStore.NAME};
         String[] selectionArgs = {account.getUuid()};
         Cursor cursor = getReadableDatabase().query(SQLiteAxolotlStore.SESSION_TABLENAME,
                 colums,
