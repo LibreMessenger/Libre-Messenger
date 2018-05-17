@@ -788,6 +788,6 @@
     <string name="jabber_id_copied_to_clipboard">Copied JID to clipboard</string>
     <string name="copy_jabber_id">Copy JID</string>
     <string name="copy_link">Copy web address</string>
-    <string name="server_hint">Choose provide</string>
+    <string name="server_hint">Choose provider</string>
     <string name="choose_your_server">Choose your jabber provider</string>
 </resources>
