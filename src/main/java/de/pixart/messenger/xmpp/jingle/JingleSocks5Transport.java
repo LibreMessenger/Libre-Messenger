@@ -85,7 +85,7 @@ public class JingleSocks5Transport extends JingleTransport {
             InputStream fileInputStream = null;
             final PowerManager.WakeLock wakeLock = connection.getConnectionManager().createWakeLock("jingle_send_" + connection.getSessionId());
             try {
-                WakeLockHelper.acquire(wakeLock);
+                wakeLock.acquire();
                 MessageDigest digest = MessageDigest.getInstance("SHA-1");
                 digest.reset();
                 fileInputStream = connection.getFileInputStream();
@@ -125,7 +125,7 @@ public class JingleSocks5Transport extends JingleTransport {
             OutputStream fileOutputStream = null;
             final PowerManager.WakeLock wakeLock = connection.getConnectionManager().createWakeLock("jingle_receive_" + connection.getSessionId());
             try {
-                WakeLockHelper.acquire(wakeLock);
+                wakeLock.acquire();
                 MessageDigest digest = MessageDigest.getInstance("SHA-1");
                 digest.reset();
                 //inputStream.skip(45);

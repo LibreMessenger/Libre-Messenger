@@ -299,7 +299,7 @@ public class XmppConnection implements Runnable {
                 try {
                     startXmpp(localSocket);
                 } catch (InterruptedException e) {
-                    Log.d(Config.LOGTAG,account.getJid().asBareJid()+": thread was interrupted before beginning stream");
+                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": thread was interrupted before beginning stream");
                     return;
                 } catch (Exception e) {
                     throw new IOException(e.getMessage());

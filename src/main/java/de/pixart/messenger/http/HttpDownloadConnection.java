@@ -226,12 +226,12 @@ public class HttpDownloadConnection implements Transferable {
         private long retrieveFileSize() throws IOException {
             PowerManager.WakeLock wakeLock = mHttpConnectionManager.createWakeLock("http_download_filesize" + message.getUuid());
             try {
-                WakeLockHelper.acquire(wakeLock);
+                wakeLock.acquire();
                 Log.d(Config.LOGTAG, "retrieve file size. interactive:" + String.valueOf(interactive));
                 changeStatus(STATUS_CHECKING);
                 HttpURLConnection connection;
                 if (mUseTor) {
-                    connection = (HttpURLConnection) mUrl.openConnection(mHttpConnectionManager.getProxy());
+                    connection = (HttpURLConnection) mUrl.openConnection(HttpConnectionManager.getProxy());
                 } else {
                     connection = (HttpURLConnection) mUrl.openConnection();
                 }
@@ -299,9 +299,9 @@ public class HttpDownloadConnection implements Transferable {
             HttpURLConnection connection = null;
             PowerManager.WakeLock wakeLock = mHttpConnectionManager.createWakeLock("http_download_" + message.getUuid());
             try {
-                WakeLockHelper.acquire(wakeLock);
+                wakeLock.acquire();
                 if (mUseTor) {
-                    connection = (HttpURLConnection) mUrl.openConnection(mHttpConnectionManager.getProxy());
+                    connection = (HttpURLConnection) mUrl.openConnection(HttpConnectionManager.getProxy());
                 } else {
                     connection = (HttpURLConnection) mUrl.openConnection();
                 }

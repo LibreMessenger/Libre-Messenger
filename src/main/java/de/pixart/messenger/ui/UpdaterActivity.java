@@ -209,7 +209,7 @@ public class UpdaterActivity extends XmppActivity {
             PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
             if (pm != null) {
                 mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, getClass().getName());
-                WakeLockHelper.acquire(mWakeLock);
+                mWakeLock.acquire();
             }
             mProgressDialog.show();
         }

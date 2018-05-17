@@ -83,7 +83,7 @@ public class ExportLogsService extends Service {
     }
 
     private void export() {
-        WakeLockHelper.acquire(wakeLock);
+        wakeLock.acquire();
         List<Conversation> conversations = mDatabaseBackend.getConversations(Conversation.STATUS_AVAILABLE);
         conversations.addAll(mDatabaseBackend.getConversations(Conversation.STATUS_ARCHIVED));
         NotificationManager mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
