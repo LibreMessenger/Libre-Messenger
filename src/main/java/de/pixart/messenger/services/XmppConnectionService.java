@@ -1002,7 +1002,7 @@ public class XmppConnectionService extends Service {
     public boolean hasInternetConnection() {
         final ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         try {
-            final NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            final NetworkInfo activeNetwork = cm == null ? null : cm.getActiveNetworkInfo();
             return activeNetwork != null && activeNetwork.isConnected();
         } catch (RuntimeException e) {
             Log.d(Config.LOGTAG, "unable to check for internet connection", e);
@@ -1013,7 +1013,7 @@ public class XmppConnectionService extends Service {
     public boolean isWIFI() {
         final ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         try {
-            final NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            final NetworkInfo activeNetwork = cm == null ? null : cm.getActiveNetworkInfo();
             if (activeNetwork != null) { // connected to the internet
                 if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
                     return true;
@@ -1029,7 +1029,7 @@ public class XmppConnectionService extends Service {
     public boolean isMobile() {
         final ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         try {
-            final NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            final NetworkInfo activeNetwork = cm == null ? null : cm.getActiveNetworkInfo();
             if (activeNetwork != null) { // connected to the internet
                 if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
                     if (!activeNetwork.isRoaming()) {
@@ -1047,7 +1047,7 @@ public class XmppConnectionService extends Service {
     public boolean isMobileRoaming() {
         final ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         try {
-            final NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            final NetworkInfo activeNetwork = cm == null ? null : cm.getActiveNetworkInfo();
             if (activeNetwork != null) { // connected to the internet
                 if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
                     if (activeNetwork.isRoaming()) {
