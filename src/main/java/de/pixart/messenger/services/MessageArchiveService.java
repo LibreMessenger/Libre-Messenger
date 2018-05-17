@@ -12,6 +12,7 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Conversation;
+import de.pixart.messenger.entities.Conversational;
 import de.pixart.messenger.entities.ReceiptRequest;
 import de.pixart.messenger.generator.AbstractGenerator;
 import de.pixart.messenger.utils.Namespace;
@@ -58,9 +59,9 @@ public class MessageArchiveService implements OnAdvancedStreamFeaturesLoaded {
                     this.query(conversation, startCatchup, true);
                 }
             }
-            query = new Query(account, new MamReference(startCatchup), endCatchup);
+            query = new Query(account, new MamReference(startCatchup), 0);
         } else {
-            query = new Query(account, mamReference, endCatchup);
+            query = new Query(account, mamReference, 0);
         }
         synchronized (this.queries) {
             this.queries.add(query);
@@ -72,12 +73,12 @@ public class MessageArchiveService implements OnAdvancedStreamFeaturesLoaded {
         if (conversation.getLastMessageTransmitted().getTimestamp() < 0 && conversation.countMessages() == 0) {
             query(conversation,
                     new MamReference(0),
-                    System.currentTimeMillis(),
+                    0,
                     true);
         } else {
             query(conversation,
                     conversation.getLastMessageTransmitted(),
-                    System.currentTimeMillis(),
+                    0,
                     true);
         }
     }
@@ -136,7 +137,7 @@ public class MessageArchiveService implements OnAdvancedStreamFeaturesLoaded {
                     query = new Query(conversation, startActual, end, false);
                 }
             }
-            if (start.greaterThan(end)) {
+            if (end != 0 && start.greaterThan(end)) {
                 return null;
             }
             this.queries.add(query);
@@ -218,6 +219,20 @@ public class MessageArchiveService implements OnAdvancedStreamFeaturesLoaded {
             for (Query query : queries) {
                 if (query.account == account && query.isCatchup() && query.getWith() == null) {
                     return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isCatchupInProgress(Conversation conversation) {
+        synchronized (this.queries) {
+            for (Query query : queries) {
+                if (query.account == conversation.getAccount() && query.isCatchup()) {
+                    final Jid with = query.getWith() == null ? null : query.getWith().asBareJid();
+                    if ((conversation.getMode() == Conversational.MODE_SINGLE && with == null) || (conversation.getJid().asBareJid().equals(with))) {
+                        return true;
+                    }
                 }
             }
         }
@@ -540,8 +555,10 @@ public class MessageArchiveService implements OnAdvancedStreamFeaturesLoaded {
                 builder.append(", start=");
                 builder.append(AbstractGenerator.getTimestamp(this.start));
             }
-            builder.append(", end=");
-            builder.append(AbstractGenerator.getTimestamp(this.end));
+            if (this.end != 0) {
+                builder.append(", end=");
+                builder.append(AbstractGenerator.getTimestamp(this.end));
+            }
             builder.append(", order=").append(pagingOrder.toString());
             if (this.reference != null) {
                 if (this.pagingOrder == PagingOrder.NORMAL) {
