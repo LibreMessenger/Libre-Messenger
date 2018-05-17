@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:attr/activatedBackgroundIndicator"
-    android:paddingLeft="8dp"
     android:paddingBottom="8dp"
+    android:paddingLeft="8dp"
     android:paddingTop="8dp">
 
     <com.makeramen.roundedimageview.RoundedImageView
@@ -13,8 +13,8 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_alignParentLeft="true"
-        android:contentDescription="@string/account_image_description"
         android:background="@drawable/message_border"
+        android:contentDescription="@string/account_image_description"
         android:padding="1dp"
         app:riv_corner_radius="24dp" />
 
@@ -22,7 +22,9 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/tgl_account_status"
         android:layout_toRightOf="@+id/account_image"
+        android:layout_toStartOf="@+id/tgl_account_status"
         android:orientation="vertical"
         android:paddingLeft="@dimen/avatar_item_distance">
 
@@ -41,5 +43,14 @@
             android:text="@string/account_status_unknown"
             android:textAppearance="@style/TextAppearance.Conversations.Body2" />
     </LinearLayout>
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/tgl_account_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:focusable="false"
+        android:padding="16dp" />
 
 </RelativeLayout>

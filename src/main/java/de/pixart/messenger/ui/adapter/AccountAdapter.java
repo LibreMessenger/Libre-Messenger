@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import java.util.concurrent.RejectedExecutionException;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
+import de.pixart.messenger.ui.ManageAccountActivity;
 import de.pixart.messenger.ui.XmppActivity;
 import de.pixart.messenger.ui.util.Color;
 import de.pixart.messenger.utils.UIHelper;
@@ -27,10 +29,18 @@ import de.pixart.messenger.utils.UIHelper;
 public class AccountAdapter extends ArrayAdapter<Account> {
 
     private XmppActivity activity;
+    private boolean showStateButton;
+
+    public AccountAdapter(XmppActivity activity, List<Account> objects, boolean showStateButton) {
+        super(activity, 0, objects);
+        this.activity = activity;
+        this.showStateButton = showStateButton;
+    }
 
     public AccountAdapter(XmppActivity activity, List<Account> objects) {
         super(activity, 0, objects);
         this.activity = activity;
+        this.showStateButton = true;
     }
 
     @Override
@@ -63,6 +73,20 @@ public class AccountAdapter extends ArrayAdapter<Account> {
                 statusView.setTextColor(Color.get(activity, R.attr.TextColorError));
                 break;
         }
+        final SwitchCompat tglAccountState = view.findViewById(R.id.tgl_account_status);
+        final boolean isDisabled = (account.getStatus() == Account.State.DISABLED);
+        tglAccountState.setOnCheckedChangeListener(null);
+        tglAccountState.setChecked(!isDisabled);
+        if (this.showStateButton) {
+            tglAccountState.setVisibility(View.VISIBLE);
+        } else {
+            tglAccountState.setVisibility(View.GONE);
+        }
+        tglAccountState.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (b == isDisabled && activity instanceof ManageAccountActivity) {
+                ((ManageAccountActivity) activity).onClickTglAccountState(account, b);
+            }
+        });
         return view;
     }
 

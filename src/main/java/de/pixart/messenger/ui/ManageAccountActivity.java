@@ -227,6 +227,14 @@ public class ManageAccountActivity extends XmppActivity implements OnAccountUpda
         }
     }
 
+    public void onClickTglAccountState(Account account, boolean enable) {
+        if (enable) {
+            enableAccount(account);
+        } else {
+            disableAccount(account);
+        }
+    }
+
     private void addAccountFromKey() {
         try {
             KeyChain.choosePrivateKeyAlias(this, this, null, null, null, -1, null);
