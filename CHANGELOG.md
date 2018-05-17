@@ -1,5 +1,11 @@
 ### Changelog
 
+#### Version 2.0.1
+* improved recording quality
+* let the user select a public server for account creation
+* add possibility to de-/activate accounts in multi account mode
+* bug fixes 
+
 #### Version 2.0.0
 * highlight irregular unicode code blocks in Jabber IDs
 * integrate QR code scanner (requires camera permission)
