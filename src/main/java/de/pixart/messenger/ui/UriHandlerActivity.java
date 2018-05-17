@@ -12,6 +12,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
@@ -153,12 +155,20 @@ public class UriHandlerActivity extends AppCompatActivity {
         finish();
     }
 
+    private static final Pattern VCARD_XMPP_PATTERN = Pattern.compile("\nIMPP([^:]*):(xmpp:.+)\n");
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, requestCode, intent);
         if (requestCode == REQUEST_SCAN_QR_CODE && resultCode == RESULT_OK) {
             String result = intent.getStringExtra(ScanActivity.INTENT_EXTRA_RESULT);
             if (result != null) {
+                if (result.startsWith("BEGIN:VCARD\n")) {
+                    Matcher matcher = VCARD_XMPP_PATTERN.matcher(result);
+                    if (matcher.find()) {
+                        result = matcher.group(2);
+                    }
+                }
                 Uri uri = Uri.parse(result);
                 handleUri(uri, true);
             }
