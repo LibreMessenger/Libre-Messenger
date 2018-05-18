@@ -1325,7 +1325,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 shareWith.setVisible(true);
 
             }
-            if (m.getStatus() == Message.STATUS_SEND_FAILED && !m.isFileOrImage()) {
+            if (m.getStatus() == Message.STATUS_SEND_FAILED) {
                 sendAgain.setVisible(true);
             }
             if (m.hasFileOnRemoteHost()

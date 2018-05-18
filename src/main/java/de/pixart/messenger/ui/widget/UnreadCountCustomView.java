@@ -16,7 +16,7 @@ public class UnreadCountCustomView extends View {
 
     private int unreadCount;
     private Paint paint, textPaint;
-    private int backgroundColor = 0xff326130;
+    private int backgroundColor = 0xff0091ea;
 
     public UnreadCountCustomView(Context context) {
         super(context);
