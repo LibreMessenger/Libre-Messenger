@@ -26,7 +26,7 @@
         <item name="color_bubble_date">@color/lightgreen</item>
         <item name="color_bubble_warning">@color/lightred</item>
 
-        <item name="color_border">@color/grey500</item>
+        <item name="color_border">@color/grey800</item>
 
         <item name="windowActionModeOverlay">true</item>
         <item name="android:actionModeBackground">@color/accent</item>

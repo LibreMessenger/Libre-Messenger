@@ -457,8 +457,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             body.insert(end, "\n");
             body.setSpan(new DividerSpan(false), end, end + 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-        int color = darkBackground ? this.getMessageTextColor(darkBackground, false)
-                : ContextCompat.getColor(activity, R.color.bubble);
+        int color = darkBackground ? this.getMessageTextColor(darkBackground, false) : ContextCompat.getColor(activity, R.color.bubble);
         DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
         body.setSpan(new QuoteSpan(color, metrics), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
@@ -799,6 +798,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 case DATE_SEPARATOR:
                     view = activity.getLayoutInflater().inflate(R.layout.message_date_bubble, parent, false);
                     viewHolder.status_message = view.findViewById(R.id.status_message);
+                    viewHolder.message_box = view.findViewById(R.id.message_box);
                     break;
                 case SENT:
                     view = activity.getLayoutInflater().inflate(R.layout.message_sent, parent, false);
@@ -860,6 +860,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             } else {
                 viewHolder.status_message.setText(DateUtils.formatDateTime(activity, message.getTimeSent(), DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR));
             }
+            viewHolder.message_box.setBackgroundResource(darkBackground ? R.drawable.date_bubble_dark : R.drawable.date_bubble);
             return view;
         } else if (type == STATUS) {
             if ("LOAD_MORE".equals(message.getBody())) {
@@ -974,11 +975,11 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
         if (type == RECEIVED) {
             if (isInValidSession) {
-                viewHolder.message_box.setBackgroundResource(R.drawable.message_bubble_received_light);
+                viewHolder.message_box.setBackgroundResource(darkBackground ? R.drawable.message_bubble_received_light_dark : R.drawable.message_bubble_received_light);
                 viewHolder.encryption.setVisibility(View.GONE);
                 viewHolder.encryption.setTextColor(this.getMessageTextColor(darkBackground, false));
             } else {
-                viewHolder.message_box.setBackgroundResource(R.drawable.message_bubble_received_warning);
+                viewHolder.message_box.setBackgroundResource(darkBackground ? R.drawable.message_bubble_received_warning_dark: R.drawable.message_bubble_received_warning);
                 viewHolder.encryption.setVisibility(View.VISIBLE);
                 viewHolder.encryption.setTextColor(activity.getWarningTextColor());
                 if (omemoEncryption && !message.isTrusted()) {
@@ -990,7 +991,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
 
         if (type == SENT) {
-            viewHolder.message_box.setBackgroundResource(R.drawable.message_bubble_sent_blue);
+            viewHolder.message_box.setBackgroundResource(activity.isDarkTheme() ? R.drawable.message_bubble_sent_blue_dark : R.drawable.message_bubble_sent_blue);
         }
 
         displayStatus(viewHolder, message, type, darkBackground);
