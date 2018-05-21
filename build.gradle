@@ -36,7 +36,9 @@ ext {
 
 dependencies {
     implementation project(':libs:android-transcoder')
-    standardPushimplementation 'com.google.firebase:firebase-messaging:15.0.2'
+    standardPushimplementation('com.google.firebase:firebase-messaging:15.0.2') {
+        exclude group: 'com.google.firebase', module: 'firebase-core'
+    }
     implementation 'org.sufficientlysecure:openpgp-api:10.0'
     implementation 'com.soundcloud.android:android-crop:1.0.1@aar'
     implementation 'org.bouncycastle:bcmail-jdk15on:1.58'
