@@ -185,8 +185,12 @@ public class DatabaseBackend extends SQLiteOpenHelper {
     }
 
     @Override
+    public void onConfigure(SQLiteDatabase db) {
+        db.execSQL("PRAGMA foreign_keys=ON");
+    }
+
+    @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("PRAGMA foreign_keys=ON;");
         db.execSQL("create table " + Account.TABLENAME + "(" + Account.UUID + " TEXT PRIMARY KEY,"
                 + Account.USERNAME + " TEXT,"
                 + Account.SERVER + " TEXT,"
@@ -859,13 +863,6 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         String[] args = {account.getUuid()};
         final int rows = db.delete(Account.TABLENAME, Account.UUID + "=?", args);
         return rows == 1;
-    }
-
-    @Override
-    public SQLiteDatabase getWritableDatabase() {
-        SQLiteDatabase db = super.getWritableDatabase();
-        db.execSQL("PRAGMA foreign_keys=ON;");
-        return db;
     }
 
     public boolean updateMessage(Message message, boolean includeBody) {
