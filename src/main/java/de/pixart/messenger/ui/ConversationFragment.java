@@ -2146,6 +2146,8 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         //TODO if we only do this when this fragment is running on main it won't *bing* in tablet layout which might be unnecessary since we can *see* it
         activity.xmppConnectionService.getNotificationService().setOpenConversation(this.conversation);
 
+        // todo temporarly disable swipe gestures
+        /*
         gesturesDetector.setOnFingerGestureListener(new SimpleFingerGestures.OnFingerGestureListener() {
             @Override
             public boolean onSwipeUp(int fingers, long gestureDuration, double gestureDistance) {
@@ -2184,6 +2186,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             }
         });
         this.binding.messagesView.setOnTouchListener(gesturesDetector);
+        */
         return true;
     }
 
