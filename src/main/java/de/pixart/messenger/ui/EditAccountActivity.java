@@ -28,7 +28,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
@@ -254,7 +253,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     private Toast mFetchingMamPrefsToast;
     private String mSavedInstanceAccount;
     private boolean mSavedInstanceInit = false;
-    private Button mClearDevicesButton;
     private XmppUri pendingUri = null;
     private boolean mUseTor;
     private ActivityEditAccountBinding binding;
@@ -1094,9 +1092,9 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 this.binding.otherDeviceKeysCard.setVisibility(View.VISIBLE);
                 Set<Integer> otherDevices = mAccount.getAxolotlService().getOwnDeviceIds();
                 if (otherDevices == null || otherDevices.isEmpty()) {
-                    mClearDevicesButton.setVisibility(View.GONE);
+                    binding.clearDevices.setVisibility(View.GONE);
                 } else {
-                    mClearDevicesButton.setVisibility(View.VISIBLE);
+                    binding.clearDevices.setVisibility(View.VISIBLE);
                 }
             } else {
                 this.binding.otherDeviceKeysCard.setVisibility(View.GONE);
