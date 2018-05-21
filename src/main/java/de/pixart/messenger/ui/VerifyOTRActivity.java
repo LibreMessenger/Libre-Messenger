@@ -203,6 +203,10 @@ public class VerifyOTRActivity extends XmppActivity implements XmppConnectionSer
                     return false;
                 }
             } catch (final IllegalArgumentException ignored) {
+                ignored.printStackTrace();
+                return false;
+            } catch (Exception e) {
+                e.printStackTrace();
                 return false;
             }
             this.mode = intent.getIntExtra("mode", MODE_MANUAL_VERIFICATION);
