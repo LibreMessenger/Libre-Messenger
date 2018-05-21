@@ -1,17 +1,11 @@
 package de.pixart.messenger.services;
 
-import android.provider.Settings;
 import android.util.Log;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.android.gms.iid.InstanceID;
-
 import de.pixart.messenger.Config;
-import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.utils.Namespace;
+import de.pixart.messenger.utils.PhoneHelper;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.XmppConnection;
 import de.pixart.messenger.xmpp.forms.Data;
@@ -30,7 +24,7 @@ public class PushManagementService {
 
     void registerPushTokenOnServer(final Account account) {
         Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": has push support");
-        retrieveGcmInstanceToken(token -> {
+        retrieveFcmInstanceToken(token -> {
             final String androidId = PhoneHelper.getAndroidId(mXmppConnectionService);
             IqPacket packet = mXmppConnectionService.getIqGenerator().pushTokenToAppServer(APP_SERVER, token, androidId);
             mXmppConnectionService.sendIqPacket(account, packet, (a, p) -> {
@@ -68,14 +62,12 @@ public class PushManagementService {
         });
     }
 
-    private void retrieveGcmInstanceToken(final OnGcmInstanceTokenRetrieved instanceTokenRetrieved) {
+    private void retrieveFcmInstanceToken(final OnGcmInstanceTokenRetrieved instanceTokenRetrieved) {
         new Thread(() -> {
-            InstanceID instanceID = InstanceID.getInstance(mXmppConnectionService);
             try {
-                String token = instanceID.getToken(mXmppConnectionService.getString(R.string.gcm_defaultSenderId), GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
-                instanceTokenRetrieved.onGcmInstanceTokenRetrieved(token);
+                instanceTokenRetrieved.onGcmInstanceTokenRetrieved(FirebaseInstanceId.getInstance().getToken());
             } catch (Exception e) {
-                Log.d(Config.LOGTAG, "unable to get push token");
+                Log.d(Config.LOGTAG, "unable to get push token", e);
             }
         }).start();
 

@@ -1,15 +1,14 @@
 package de.pixart.messenger.services;
 
 import android.content.Intent;
+import com.google.firebase.iid.FirebaseInstanceIdService;
 
-import com.google.android.gms.iid.InstanceIDListenerService;
-
-public class InstanceIdService extends InstanceIDListenerService {
+public class InstanceIdService extends FirebaseInstanceIdService {
 
     @Override
     public void onTokenRefresh() {
         Intent intent = new Intent(this, XmppConnectionService.class);
-        intent.setAction(XmppConnectionService.ACTION_GCM_TOKEN_REFRESH);
+        intent.setAction(XmppConnectionService.ACTION_FCM_TOKEN_REFRESH);
         startService(intent);
     }
 }
