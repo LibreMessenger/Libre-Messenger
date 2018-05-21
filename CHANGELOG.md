@@ -1,5 +1,8 @@
 ### Changelog
 
+#### Version 2.0.2
+* bug fixes especially for Android 4
+
 #### Version 2.0.1
 * improved recording quality
 * let the user select a public server for account creation
