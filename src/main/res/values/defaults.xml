@@ -21,7 +21,8 @@
 			along with this program. If not, see https://www.gnu.org/licenses
 			\n\nDownload the full original source code at https://github.com/siacs/Conversations (Copyright © 2014-2018 Daniel Gultsch)
 			\n\nDownload the modified source code at https://github.com/kriztan/Pix-Art-Messenger
-			\n\n\nLibraries
+	</string>
+    <string name="pref_about_libraries" translatable="false"><b>Libraries</b>
 			\n\nhttps://www.bouncycastle.org\n(The MIT License (MIT))
 			\n\nhttps://www.gnu.org/software/libidn\n(Apache License, Version 2.0)
 			\n\nhttps://github.com/ge0rg/MemorizingTrustManager\n(The MIT License (MIT))
@@ -50,7 +51,8 @@
             \n\nhttps://www.openstreetmap.org/\n(Open Database License)
             \n\nhttp://xmpp.rocks/\n(The MIT License (MIT))
             \n\nhttps://github.com/championswimmer/SimpleFingerGestures_Android_Library/\n(Apache License, Version 2.0)
-	</string>
+    </string>
+
     <string name="default_resource" translatable="false">Phone</string>
     <bool name="portrait_only">true</bool>
     <bool name="enter_is_send">false</bool>
@@ -222,7 +224,7 @@
         <item>xmpp.slack.com</item>
         <item>chat.hipchat.com</item>
         <item>googlemail.com</item>
-	<item>nsa.li</item>
+        <item>nsa.li</item>
     </string-array>
 </resources>
 

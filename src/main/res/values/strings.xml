@@ -790,4 +790,6 @@
     <string name="copy_link">Copy web address</string>
     <string name="server_hint">Choose provider</string>
     <string name="choose_your_server">Choose your jabber provider</string>
+    <string name="show_privacy">Privacy Policy</string>
+    <string name="show_termsofuse">Terms of Use</string>
 </resources>
