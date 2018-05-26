@@ -8,6 +8,7 @@ import android.util.Pair;
 import net.java.otr4j.session.Session;
 import net.java.otr4j.session.SessionStatus;
 
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +36,7 @@ import de.pixart.messenger.entities.ReadByMarker;
 import de.pixart.messenger.entities.ReceiptRequest;
 import de.pixart.messenger.entities.ServiceDiscoveryResult;
 import de.pixart.messenger.http.HttpConnectionManager;
+import de.pixart.messenger.http.P1S3UrlStreamHandler;
 import de.pixart.messenger.services.MessageArchiveService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.utils.CryptoHelper;
@@ -380,6 +382,8 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
         final String pgpEncrypted = packet.findChildContent("x", "jabber:x:encrypted");
         final Element replaceElement = packet.findChild("replace", "urn:xmpp:message-correct:0");
         final Element oob = packet.findChild("x", Namespace.OOB);
+        final Element xP1S3 = packet.findChild("x", Namespace.P1_S3_FILE_TRANSFER);
+        final URL xP1S3url = xP1S3 == null ? null : P1S3UrlStreamHandler.of(xP1S3);
         final String oobUrl = oob != null ? oob.findChildContent("url") : null;
         final String replacementId = replaceElement == null ? null : replaceElement.getAttribute("id");
         final Element axolotlEncrypted = packet.findChild(XmppAxolotlMessage.CONTAINERTAG, AxolotlService.PEP_PREFIX);
@@ -428,7 +432,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
             return;
         }
 
-        if ((body != null || pgpEncrypted != null || (axolotlEncrypted != null && axolotlEncrypted.hasChild("payload")) || oobUrl != null) && !isMucStatusMessage) {
+        if ((body != null || pgpEncrypted != null || (axolotlEncrypted != null && axolotlEncrypted.hasChild("payload")) || oobUrl != null || xP1S3 != null) && !isMucStatusMessage) {
             final boolean conversationIsProbablyMuc = isTypeGroupChat || mucUserElement != null || account.getXmppConnection().getMucServersWithholdAccount().contains(counterpart.getDomain());
             final Conversation conversation = mXmppConnectionService.findOrCreateConversation(account, counterpart.asBareJid(), conversationIsProbablyMuc, false, query, false);
             final boolean conversationMultiMode = conversation.getMode() == Conversation.MODE_MULTI;
@@ -471,6 +475,12 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                 } else {
                     Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": ignoring OTR message from " + from + " isForwarded=" + Boolean.toString(isForwarded) + ", isProperlyAddressed=" + Boolean.valueOf(isProperlyAddressed));
                     message = new Message(conversation, body, Message.ENCRYPTION_NONE, status);
+                }
+            } else if (xP1S3url != null) {
+                message = new Message(conversation, xP1S3url.toString(), Message.ENCRYPTION_NONE, status);
+                message.setOob(true);
+                if (CryptoHelper.isPgpEncryptedUrl(xP1S3url.toString())) {
+                    message.setEncryption(Message.ENCRYPTION_DECRYPTED);
                 }
             } else if (pgpEncrypted != null && Config.supportOpenPgp()) {
                 message = new Message(conversation, pgpEncrypted, Message.ENCRYPTION_PGP, status);

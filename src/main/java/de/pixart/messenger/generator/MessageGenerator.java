@@ -3,6 +3,7 @@ package de.pixart.messenger.generator;
 import net.java.otr4j.OtrException;
 import net.java.otr4j.session.Session;
 
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,6 +17,7 @@ import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Message;
+import de.pixart.messenger.http.P1S3UrlStreamHandler;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.xml.Element;
@@ -136,8 +138,17 @@ public class MessageGenerator extends AbstractGenerator {
         String content;
         if (message.hasFileOnRemoteHost()) {
             Message.FileParams fileParams = message.getFileParams();
-            content = fileParams.url.toString();
-            packet.addChild("x", Namespace.OOB).addChild("url").setContent(content);
+            final URL url = fileParams.url;
+            if (P1S3UrlStreamHandler.PROTOCOL_NAME.equals(url.getProtocol())) {
+                Element x = packet.addChild("x", Namespace.P1_S3_FILE_TRANSFER);
+                final String file = url.getFile();
+                x.setAttribute("name", file.charAt(0) == '/' ? file.substring(1) : file);
+                x.setAttribute("fileid", url.getHost());
+                return packet;
+            } else {
+                content = url.toString();
+                packet.addChild("x", Namespace.OOB).addChild("url").setContent(content);
+            }
         } else {
             content = message.getBody();
         }
@@ -148,9 +159,17 @@ public class MessageGenerator extends AbstractGenerator {
     public MessagePacket generatePgpChat(Message message) {
         MessagePacket packet = preparePacket(message);
         if (message.hasFileOnRemoteHost()) {
-            final String url = message.getFileParams().url.toString();
-            packet.setBody(url);
-            packet.addChild("x", Namespace.OOB).addChild("url").setContent(url);
+            Message.FileParams fileParams = message.getFileParams();
+            final URL url = fileParams.url;
+            if (P1S3UrlStreamHandler.PROTOCOL_NAME.equals(url.getProtocol())) {
+                Element x = packet.addChild("x", Namespace.P1_S3_FILE_TRANSFER);
+                final String file = url.getFile();
+                x.setAttribute("name", file.charAt(0) == '/' ? file.substring(1) : file);
+                x.setAttribute("fileid", url.getHost());
+            } else {
+                packet.setBody(url.toString());
+                packet.addChild("x", Namespace.OOB).addChild("url").setContent(url.toString());
+            }
         } else {
             if (Config.supportUnencrypted()) {
                 packet.setBody(PGP_FALLBACK_MESSAGE);

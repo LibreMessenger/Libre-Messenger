@@ -792,4 +792,5 @@
     <string name="choose_your_server">Choose your jabber provider</string>
     <string name="show_privacy">Privacy Policy</string>
     <string name="show_termsofuse">Terms of Use</string>
+    <string name="p1_s3_filetransfer">HTTP File Sharing for S3</string>
 </resources>

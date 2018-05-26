@@ -1842,45 +1842,50 @@ public class XmppConnection implements Runnable {
             this.blockListRequested = value;
         }
 
+        public boolean p1S3FileTransfer() {
+            return hasDiscoFeature(Jid.of(account.getServer()), Namespace.P1_S3_FILE_TRANSFER);
+        }
+
         public boolean httpUpload(long filesize) {
             if (Config.DISABLE_HTTP_UPLOAD) {
                 return false;
             } else {
-                List<Entry<Jid, ServiceDiscoveryResult>> items = findDiscoItemsByFeature(this.http_upload_namespace);
-                if (items.size() == 0) {
-                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": this server does not support the latest version of XEP-0363");
-                    this.http_upload_namespace = Namespace.HTTP_UPLOAD_LEGACY;
-                    items = findDiscoItemsByFeature(this.http_upload_namespace);
-                }
-                if (items.size() > 0) {
-                    try {
-                        long maxsize = Long.parseLong(items.get(0).getValue().getExtendedDiscoInformation(this.http_upload_namespace, "max-file-size"));
-                        if (filesize <= maxsize) {
-                            return true;
-                        } else {
-                            Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": http upload is not available for files with size " + filesize + " (max is " + maxsize + ")");
-                            return false;
+                for (String namespace : new String[]{Namespace.HTTP_UPLOAD, Namespace.HTTP_UPLOAD_LEGACY}) {
+                    List<Entry<Jid, ServiceDiscoveryResult>> items = findDiscoItemsByFeature(namespace);
+                    if (items.size() > 0) {
+                        try {
+                            long maxsize = Long.parseLong(items.get(0).getValue().getExtendedDiscoInformation(namespace, "max-file-size"));
+                            if (filesize <= maxsize) {
+                                return true;
+                            } else {
+                                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": http upload is not available for files with size " + filesize + " (max is " + maxsize + ")");
+                                return false;
+                            }
+                        } catch (Exception e) {
+                            //ignored
                         }
-                    } catch (Exception e) {
-                        return true;
                     }
-                } else {
-                    return false;
                 }
+                return false;
             }
         }
 
+        public boolean useLegacyHttpUpload() {
+            return findDiscoItemByFeature(Namespace.HTTP_UPLOAD) == null && findDiscoItemByFeature(Namespace.HTTP_UPLOAD_LEGACY) != null;
+        }
+
         public long getMaxHttpUploadSize() {
-            List<Entry<Jid, ServiceDiscoveryResult>> items = findDiscoItemsByFeature(this.http_upload_namespace);
-            if (items.size() > 0) {
-                try {
-                    return Long.parseLong(items.get(0).getValue().getExtendedDiscoInformation(this.http_upload_namespace, "max-file-size"));
-                } catch (Exception e) {
-                    return -1;
+            for (String namespace : new String[]{Namespace.HTTP_UPLOAD, Namespace.HTTP_UPLOAD_LEGACY}) {
+                List<Entry<Jid, ServiceDiscoveryResult>> items = findDiscoItemsByFeature(namespace);
+                if (items.size() > 0) {
+                    try {
+                        return Long.parseLong(items.get(0).getValue().getExtendedDiscoInformation(namespace, "max-file-size"));
+                    } catch (Exception e) {
+                        //ignored
+                    }
                 }
-            } else {
-                return -1;
             }
+            return -1;
         }
 
         public boolean stanzaIds() {

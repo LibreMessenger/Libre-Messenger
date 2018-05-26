@@ -99,7 +99,7 @@ import de.pixart.messenger.generator.AbstractGenerator;
 import de.pixart.messenger.generator.IqGenerator;
 import de.pixart.messenger.generator.MessageGenerator;
 import de.pixart.messenger.generator.PresenceGenerator;
-import de.pixart.messenger.http.AesGcmURLStreamHandlerFactory;
+import de.pixart.messenger.http.CustomURLStreamHandlerFactory;
 import de.pixart.messenger.http.HttpConnectionManager;
 import de.pixart.messenger.parser.AbstractParser;
 import de.pixart.messenger.parser.IqParser;
@@ -165,7 +165,7 @@ public class XmppConnectionService extends Service {
     private static final String ACTION_MERGE_PHONE_CONTACTS = "merge_phone_contacts";
 
     static {
-        URL.setURLStreamHandlerFactory(new AesGcmURLStreamHandlerFactory());
+        URL.setURLStreamHandlerFactory(new CustomURLStreamHandlerFactory());
     }
 
     public final CountDownLatch restoredFromDatabaseLatch = new CountDownLatch(1);

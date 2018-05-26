@@ -352,21 +352,37 @@ public class IqGenerator extends AbstractGenerator {
         return packet;
     }
 
-    public IqPacket requestHttpUploadSlot(Jid host, DownloadableFile file, String mime, String http_upload_namespace) {
+    public IqPacket requestHttpUploadSlot(Jid host, DownloadableFile file, String mime) {
         IqPacket packet = new IqPacket(IqPacket.TYPE.GET);
         packet.setTo(host);
-        Element request = packet.addChild("request", http_upload_namespace);
-        if (http_upload_namespace == Namespace.HTTP_UPLOAD) {
-            request.setAttribute("filename", convertFilename(file.getName()));
-            request.setAttribute("size", file.getExpectedSize());
-            request.setAttribute("content-type", mime);
-        } else {
-            request.addChild("filename").setContent(convertFilename(file.getName()));
-            request.addChild("size").setContent(String.valueOf(file.getExpectedSize()));
-            if (mime != null) {
-                request.addChild("content-type").setContent(mime);
-            }
-        }
+        Element request = packet.addChild("request", Namespace.HTTP_UPLOAD);
+        request.setAttribute("filename", convertFilename(file.getName()));
+        request.setAttribute("size", file.getExpectedSize());
+        request.setAttribute("content-type", mime);
+        return packet;
+    }
+
+    public IqPacket requestHttpUploadLegacySlot(Jid host, DownloadableFile file, String mime) {
+        IqPacket packet = new IqPacket(IqPacket.TYPE.GET);
+        packet.setTo(host);
+        Element request = packet.addChild("request", Namespace.HTTP_UPLOAD_LEGACY);
+        request.addChild("filename").setContent(convertFilename(file.getName()));
+        request.addChild("size").setContent(String.valueOf(file.getExpectedSize()));
+        request.addChild("content-type").setContent(mime);
+        return packet;
+    }
+
+    public IqPacket requestP1S3Slot(Jid host, String md5) {
+        IqPacket packet = new IqPacket(IqPacket.TYPE.SET);
+        packet.setTo(host);
+        packet.query(Namespace.P1_S3_FILE_TRANSFER).setAttribute("md5", md5);
+        return packet;
+    }
+
+    public IqPacket requestP1S3Url(Jid host, String fileId) {
+        IqPacket packet = new IqPacket(IqPacket.TYPE.GET);
+        packet.setTo(host);
+        packet.query(Namespace.P1_S3_FILE_TRANSFER).setAttribute("fileid", fileId);
         return packet;
     }
 

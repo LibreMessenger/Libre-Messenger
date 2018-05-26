@@ -1,6 +1,7 @@
 package de.pixart.messenger.http;
 
 import android.os.PowerManager;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
@@ -20,6 +21,7 @@ import javax.net.ssl.SSLHandshakeException;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.DownloadableFile;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.Transferable;
@@ -30,6 +32,8 @@ import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.FileWriterException;
 import de.pixart.messenger.utils.WakeLockHelper;
+import de.pixart.messenger.xmpp.stanzas.IqPacket;
+import rocks.xmpp.addr.Jid;
 
 public class HttpDownloadConnection implements Transferable {
 
@@ -42,8 +46,9 @@ public class HttpDownloadConnection implements Transferable {
     private int mStatus = Transferable.STATUS_UNKNOWN;
     private boolean acceptedAutomatically = false;
     private int mProgress = 0;
-    private boolean mUseTor = false;
+    private final boolean mUseTor;
     private boolean canceled = false;
+    private Method method = Method.HTTP_UPLOAD;
 
     private final SimpleDateFormat fileDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
 
@@ -107,6 +112,7 @@ public class HttpDownloadConnection implements Transferable {
                     && this.file.getKey() == null) {
                 this.message.setEncryption(Message.ENCRYPTION_NONE);
             }
+            method = mUrl.getProtocol().equalsIgnoreCase(P1S3UrlStreamHandler.PROTOCOL_NAME) ? Method.P1_S3 : Method.HTTP_UPLOAD;
             checkFileSize(interactive);
         } catch (MalformedURLException e) {
             this.cancel();
@@ -160,7 +166,7 @@ public class HttpDownloadConnection implements Transferable {
         }
     }
 
-    public void updateProgress(long i) {
+    private void updateProgress(long i) {
         this.mProgress = (int) i;
         mHttpConnectionManager.updateConversationUi(false);
     }
@@ -186,27 +192,63 @@ public class HttpDownloadConnection implements Transferable {
 
     private class FileSizeChecker implements Runnable {
 
-        private boolean interactive = false;
+        private final boolean interactive;
 
-        public FileSizeChecker(boolean interactive) {
+        FileSizeChecker(boolean interactive) {
             this.interactive = interactive;
         }
 
         @Override
         public void run() {
+            if (mUrl.getProtocol().equalsIgnoreCase(P1S3UrlStreamHandler.PROTOCOL_NAME)) {
+                retrieveUrl();
+            } else {
+                check();
+            }
+        }
+
+        private void retrieveUrl() {
+            changeStatus(STATUS_CHECKING);
+            final Account account = message.getConversation().getAccount();
+            IqPacket request = mXmppConnectionService.getIqGenerator().requestP1S3Url(Jid.of(account.getJid().getDomain()), mUrl.getHost());
+            mXmppConnectionService.sendIqPacket(message.getConversation().getAccount(), request, (a, packet) -> {
+                if (packet.getType() == IqPacket.TYPE.RESULT) {
+                    String download = packet.query().getAttribute("download");
+                    if (download != null) {
+                        try {
+                            mUrl = new URL(download);
+                            check();
+                            return;
+                        } catch (MalformedURLException e) {
+                            //fallthrough
+                        }
+                    }
+                }
+                Log.d(Config.LOGTAG, "unable to retrieve actual download url");
+                retrieveFailed(null);
+            });
+        }
+
+        private void retrieveFailed(@Nullable Exception e) {
+            changeStatus(STATUS_OFFER_CHECK_FILESIZE);
+            if (interactive) {
+                if (e != null) {
+                    showToastForException(e);
+                }
+            } else {
+                HttpDownloadConnection.this.acceptedAutomatically = false;
+                HttpDownloadConnection.this.mXmppConnectionService.getNotificationService().push(message);
+            }
+            cancel();
+        }
+
+        private void check() {
             long size;
             try {
                 size = retrieveFileSize();
             } catch (Exception e) {
-                changeStatus(STATUS_OFFER_CHECK_FILESIZE);
                 Log.d(Config.LOGTAG, "io exception in http file size checker: " + e.getMessage());
-                if (interactive) {
-                    showToastForException(e);
-                } else {
-                    HttpDownloadConnection.this.acceptedAutomatically = false;
-                    HttpDownloadConnection.this.mXmppConnectionService.getNotificationService().push(message);
-                }
-                cancel();
+                retrieveFailed(e);
                 return;
             }
             file.setExpectedSize(size);
@@ -235,10 +277,14 @@ public class HttpDownloadConnection implements Transferable {
                 } else {
                     connection = (HttpURLConnection) mUrl.openConnection();
                 }
-                connection.setRequestMethod("HEAD");
+                if (method == Method.P1_S3) {
+                    connection.setRequestMethod("GET");
+                    connection.addRequestProperty("Range", "bytes=0-0");
+                } else {
+                    connection.setRequestMethod("HEAD");
+                }
                 connection.setUseCaches(false);
                 Log.d(Config.LOGTAG, "url: " + connection.getURL().toString());
-                Log.d(Config.LOGTAG, "connection: " + connection.toString());
                 connection.setRequestProperty("User-Agent", mXmppConnectionService.getIqGenerator().getIdentityName());
                 if (connection instanceof HttpsURLConnection) {
                     mHttpConnectionManager.setupTrustManager((HttpsURLConnection) connection, interactive);
@@ -246,7 +292,18 @@ public class HttpDownloadConnection implements Transferable {
                 connection.setConnectTimeout(Config.SOCKET_TIMEOUT * 1000);
                 connection.setReadTimeout(Config.CONNECT_TIMEOUT * 1000);
                 connection.connect();
-                String contentLength = connection.getHeaderField("Content-Length");
+                String contentLength;
+                if (method == Method.P1_S3) {
+                    String contentRange = connection.getHeaderField("Content-Range");
+                    String[] contentRangeParts = contentRange == null ? new String[0] : contentRange.split("/");
+                    if (contentRangeParts.length != 2) {
+                        contentLength = null;
+                    } else {
+                        contentLength = contentRangeParts[1];
+                    }
+                } else {
+                    contentLength = connection.getHeaderField("Content-Length");
+                }
                 connection.disconnect();
                 if (contentLength == null) {
                     throw new IOException("no content-length found in HEAD response");
@@ -266,7 +323,7 @@ public class HttpDownloadConnection implements Transferable {
 
     private class FileDownloader implements Runnable {
 
-        private boolean interactive = false;
+        private final boolean interactive;
 
         private OutputStream os;
 
@@ -385,7 +442,9 @@ public class HttpDownloadConnection implements Transferable {
             message.setType(Message.TYPE_FILE);
             final URL url;
             final String ref = mUrl.getRef();
-            if (ref != null && AesGcmURLStreamHandler.IV_KEY.matcher(ref).matches()) {
+            if (method == Method.P1_S3) {
+                url = message.getFileParams().url;
+            } else if (ref != null && AesGcmURLStreamHandler.IV_KEY.matcher(ref).matches()) {
                 url = CryptoHelper.toAesGcmUrl(mUrl);
             } else {
                 url = mUrl;
