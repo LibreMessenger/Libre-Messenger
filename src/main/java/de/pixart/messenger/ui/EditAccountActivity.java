@@ -328,6 +328,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         @Override
         public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
             updateSaveButton();
+            updateInfoButtons();
         }
 
         @Override
@@ -426,6 +427,18 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             }
         } else if (showWarningToast) {
             Toast.makeText(this,R.string.invalid_barcode,Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    protected void updateInfoButtons() {
+        if (this.binding.accountRegisterNew.isChecked()) {
+            if (!mUsernameMode && Jid.ofEscaped(this.binding.accountJid.getText()).getDomain().toLowerCase().equals("pix-art.de")) {
+                this.binding.showPrivacyPolicy.setVisibility(View.VISIBLE);
+                this.binding.showTermsOfUse.setVisibility(View.VISIBLE);
+            }
+        } else {
+            this.binding.showPrivacyPolicy.setVisibility(View.GONE);
+            this.binding.showTermsOfUse.setVisibility(View.GONE);
         }
     }
 
@@ -539,12 +552,23 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             @Override
             public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
                 updateSaveButton();
+                updateInfoButtons();
             }
         };
         this.binding.accountRegisterNew.setOnCheckedChangeListener(OnCheckedShowConfirmPassword);
         if (Config.DISALLOW_REGISTRATION_IN_UI) {
             this.binding.accountRegisterNew.setVisibility(View.GONE);
         }
+        this.binding.showPrivacyPolicy.setOnClickListener(view -> {
+            final Uri uri = Uri.parse("https://jabber.pix-art.de/privacy/");
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(browserIntent);
+        });
+        this.binding.showTermsOfUse.setOnClickListener(view -> {
+            final Uri uri = Uri.parse("https://jabber.pix-art.de/termsofuse/");
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(browserIntent);
+        });
     }
 
     @Override
