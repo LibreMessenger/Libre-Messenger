@@ -109,8 +109,8 @@ public class WelcomeActivity extends XmppActivity {
             addInviteUri(intent);
             startActivity(intent);
         });
-        final Button useOwnProvider = findViewById(R.id.use_existing_account);
-        useOwnProvider.setOnClickListener(v -> {
+        final Button useAdvancedMode = findViewById(R.id.use_advanced_mode);
+        useAdvancedMode.setOnClickListener(v -> {
             List<Account> accounts = xmppConnectionService.getAccounts();
             Intent intent = new Intent(WelcomeActivity.this, EditAccountActivity.class);
             if (accounts.size() == 1) {
