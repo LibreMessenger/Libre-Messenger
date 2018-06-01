@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -16,6 +17,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.X509TrustManager;
 
+import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.services.AbstractConnectionManager;
 import de.pixart.messenger.services.XmppConnectionService;
@@ -45,6 +47,15 @@ public class HttpConnectionManager extends AbstractConnectionManager {
         HttpUploadConnection connection = new HttpUploadConnection(Method.determine(message.getConversation().getAccount()), this);
         connection.init(message, delay);
         this.uploadConnections.add(connection);
+    }
+
+    public boolean checkConnection(Message message) {
+        final Account account = message.getConversation().getAccount();
+        final URL url = message.getFileParams().url;
+        if (url.getProtocol().equalsIgnoreCase(P1S3UrlStreamHandler.PROTOCOL_NAME) && account.getStatus() != Account.State.ONLINE) {
+            return false;
+        }
+        return mXmppConnectionService.hasInternetConnection();
     }
 
     public void finishConnection(HttpDownloadConnection connection) {
