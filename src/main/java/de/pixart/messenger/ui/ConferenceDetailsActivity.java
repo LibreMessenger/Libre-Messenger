@@ -552,6 +552,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                 updateView();
             }
         }
+        this.binding.detailsMucAvatar.setImageBitmap(avatarService().get(mConversation, getPixel(Config.AVATAR_SIZE)));
     }
 
     private void updateView() {
