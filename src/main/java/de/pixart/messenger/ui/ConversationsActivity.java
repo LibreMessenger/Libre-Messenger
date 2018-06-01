@@ -145,6 +145,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
         if (performRedirectIfNecessary(true)) {
             return;
         }
+        Log.d(Config.LOGTAG, "ConversationsActivity onBackendConnected(): setIsInForeground = true");
         xmppConnectionService.getNotificationService().setIsInForeground(true);
 
         final Intent FirstStartIntent = getIntent();

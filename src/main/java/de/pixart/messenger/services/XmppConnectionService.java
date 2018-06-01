@@ -2124,6 +2124,7 @@ public class XmppConnectionService extends Service {
                 switchToForeground();
             }
             this.mOnConversationUpdates.add(listener);
+            Log.d(Config.LOGTAG, "XmppConnectionService setOnConversationListChangedListener(): setIsInForeground = " + (this.mOnConversationUpdates.size() > 0));
             this.mNotificationService.setIsInForeground(this.mOnConversationUpdates.size() > 0);
         }
     }
@@ -2131,6 +2132,7 @@ public class XmppConnectionService extends Service {
     public void removeOnConversationListChangedListener(OnConversationUpdate listener) {
         synchronized (this) {
             this.mOnConversationUpdates.remove(listener);
+            Log.d(Config.LOGTAG, "XmppConnectionService removeOnConversationListChangedListener(): setIsInForeground = " + (this.mOnConversationUpdates.size() > 0));
             this.mNotificationService.setIsInForeground(this.mOnConversationUpdates.size() > 0);
             if (checkListeners()) {
                 switchToBackground();
@@ -2321,6 +2323,7 @@ public class XmppConnectionService extends Service {
                 }
             }
         }
+        Log.d(Config.LOGTAG, "XmppConnectionService switchToBackground(): setIsInForeground = false");
         this.mNotificationService.setIsInForeground(false);
         Log.d(Config.LOGTAG, "app switched into background");
     }

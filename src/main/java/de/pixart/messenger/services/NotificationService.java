@@ -199,7 +199,6 @@ public class NotificationService {
         final boolean isScreenOn = mXmppConnectionService.isInteractive();
         if (this.mIsInForeground && isScreenOn && this.mOpenConversation == message.getConversation()) {
             Log.d(Config.LOGTAG, message.getConversation().getAccount().getJid().asBareJid() + ": suppressing notification because conversation is open");
-            mXmppConnectionService.vibrate();
             return;
         }
         if (this.mIsInForeground && isScreenOn) {
