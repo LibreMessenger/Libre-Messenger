@@ -1,6 +1,7 @@
 package de.pixart.messenger.ui.adapter;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -37,6 +38,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -1147,6 +1150,8 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 cancelPotentialWork(message, imageView);
                 imageView.setImageBitmap(bm);
                 imageView.setBackgroundColor(Color.TRANSPARENT);
+                Animation myFadeInAnimation = AnimationUtils.loadAnimation(activity, R.animator.fade_in);
+                imageView.startAnimation(myFadeInAnimation);
             } else {
                 @ColorInt int bg;
                 if (message.getType() == Message.TYPE_STATUS && message.getCounterparts() != null && message.getCounterparts().size() > 1) {
@@ -1159,6 +1164,8 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 final BitmapWorkerTask task = new BitmapWorkerTask(imageView, size);
                 final AsyncDrawable asyncDrawable = new AsyncDrawable(activity.getResources(), null, task);
                 imageView.setImageDrawable(asyncDrawable);
+                Animation myFadeInAnimation = AnimationUtils.loadAnimation(activity, R.animator.fade_in);
+                imageView.startAnimation(myFadeInAnimation);
                 try {
                     task.executeOnExecutor(BitmapWorkerTask.THREAD_POOL_EXECUTOR, message);
                 } catch (final RejectedExecutionException ignored) {

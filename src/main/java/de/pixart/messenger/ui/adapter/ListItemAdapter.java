@@ -11,6 +11,8 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -165,6 +167,8 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
                 cancelPotentialWork(item, imageView);
                 imageView.setImageBitmap(bm);
                 imageView.setBackgroundColor(0x00000000);
+                Animation myFadeInAnimation = AnimationUtils.loadAnimation(activity, R.animator.fade_in);
+                imageView.startAnimation(myFadeInAnimation);
             } else {
                 String seed = item.getJid() != null ? item.getJid().asBareJid().toString() : item.getDisplayName();
                 imageView.setBackgroundColor(UIHelper.getColorForName(seed));
@@ -172,6 +176,8 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
                 final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
                 final AsyncDrawable asyncDrawable = new AsyncDrawable(activity.getResources(), null, task);
                 imageView.setImageDrawable(asyncDrawable);
+                Animation myFadeInAnimation = AnimationUtils.loadAnimation(activity, R.animator.fade_in);
+                imageView.startAnimation(myFadeInAnimation);
                 try {
                     task.executeOnExecutor(BitmapWorkerTask.THREAD_POOL_EXECUTOR, item);
                 } catch (final RejectedExecutionException ignored) {

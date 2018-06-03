@@ -46,6 +46,8 @@ import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -1095,6 +1097,8 @@ public abstract class XmppActivity extends ActionBarActivity {
             cancelPotentialWork(message, imageView);
             imageView.setImageBitmap(bm);
             imageView.setBackgroundColor(0x00000000);
+            Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.animator.fade_in);
+            imageView.startAnimation(myFadeInAnimation);
         } else {
             if (cancelPotentialWork(message, imageView)) {
                 imageView.setBackgroundColor(0xff333333);
@@ -1103,6 +1107,8 @@ public abstract class XmppActivity extends ActionBarActivity {
                 final AsyncDrawable asyncDrawable = new AsyncDrawable(
                         getResources(), null, task);
                 imageView.setImageDrawable(asyncDrawable);
+                Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.animator.fade_in);
+                imageView.startAnimation(myFadeInAnimation);
                 try {
                     task.execute(message);
                 } catch (final RejectedExecutionException ignored) {

@@ -22,6 +22,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -799,6 +801,8 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                 cancelPotentialWork(user, imageView);
                 imageView.setImageBitmap(bm);
                 imageView.setBackgroundColor(0x00000000);
+                Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.animator.fade_in);
+                imageView.startAnimation(myFadeInAnimation);
             } else {
                 String seed = user.getRealJid() != null ? user.getRealJid().asBareJid().toString() : null;
                 imageView.setBackgroundColor(UIHelper.getColorForName(seed == null ? user.getName() : seed));
@@ -806,6 +810,8 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                 final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
                 final AsyncDrawable asyncDrawable = new AsyncDrawable(getResources(), null, task);
                 imageView.setImageDrawable(asyncDrawable);
+                Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.animator.fade_in);
+                imageView.startAnimation(myFadeInAnimation);
                 try {
                     task.execute(user);
                 } catch (final RejectedExecutionException ignored) {
