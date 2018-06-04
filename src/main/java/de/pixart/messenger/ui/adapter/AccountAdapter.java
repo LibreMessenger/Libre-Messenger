@@ -10,8 +10,6 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -124,16 +122,12 @@ public class AccountAdapter extends ArrayAdapter<Account> {
                 cancelPotentialWork(account, imageView);
                 imageView.setImageBitmap(bm);
                 imageView.setBackgroundColor(0x00000000);
-                Animation myFadeInAnimation = AnimationUtils.loadAnimation(activity, R.animator.fade_in);
-                imageView.startAnimation(myFadeInAnimation);
             } else {
                 imageView.setBackgroundColor(UIHelper.getColorForName(account.getJid().asBareJid().toString()));
                 imageView.setImageDrawable(null);
                 final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
                 final AsyncDrawable asyncDrawable = new AsyncDrawable(activity.getResources(), null, task);
                 imageView.setImageDrawable(asyncDrawable);
-                Animation myFadeInAnimation = AnimationUtils.loadAnimation(activity, R.animator.fade_in);
-                imageView.startAnimation(myFadeInAnimation);
                 try {
                     task.executeOnExecutor(BitmapWorkerTask.THREAD_POOL_EXECUTOR, account);
                 } catch (final RejectedExecutionException ignored) {

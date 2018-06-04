@@ -16,8 +16,6 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -326,16 +324,12 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 cancelPotentialWork(conversation, imageView);
                 imageView.setImageBitmap(bm);
                 imageView.setBackgroundColor(0x00000000);
-                Animation myFadeInAnimation = AnimationUtils.loadAnimation(activity, R.animator.fade_in);
-                imageView.startAnimation(myFadeInAnimation);
             } else {
                 imageView.setBackgroundColor(UIHelper.getColorForName(conversation.getName().toString()));
                 imageView.setImageDrawable(null);
                 final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
                 final AsyncDrawable asyncDrawable = new AsyncDrawable(activity.getResources(), null, task);
                 imageView.setImageDrawable(asyncDrawable);
-                Animation myFadeInAnimation = AnimationUtils.loadAnimation(activity, R.animator.fade_in);
-                imageView.startAnimation(myFadeInAnimation);
                 try {
                     task.executeOnExecutor(BitmapWorkerTask.THREAD_POOL_EXECUTOR, conversation);
                 } catch (final RejectedExecutionException ignored) {
