@@ -313,7 +313,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 }
             }
             if (hasPermissions(REQUEST_ADD_EDITOR_CONTENT, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                attachImageToConversation(inputContentInfo.getContentUri());
+                attachEditorContentToConversation(inputContentInfo.getContentUri());
             } else {
                 mPendingEditorContent = inputContentInfo.getContentUri();
             }
@@ -785,8 +785,8 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 });
     }
 
-    public void attachImageToConversation(Uri uri) {
-        this.attachImageToConversation(conversation, uri, true);
+    public void attachEditorContentToConversation(Uri uri) {
+        this.attachFileToConversation(conversation, uri, null);
     }
 
     private void attachImageToConversation(Conversation conversation, Uri uri, boolean sendAsIs) {
@@ -1607,7 +1607,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     }
                 } else if (requestCode == REQUEST_ADD_EDITOR_CONTENT) {
                     if (this.mPendingEditorContent != null) {
-                        attachImageToConversation(this.mPendingEditorContent);
+                        attachEditorContentToConversation(this.mPendingEditorContent);
                     }
                 } else {
                     attachFile(requestCode);
