@@ -814,7 +814,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            orientation = exif != null ? exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL) : 0;
         }
         Log.d(Config.LOGTAG, "EXIF: " + orientation);
         Bitmap rotated_image = null;
