@@ -793,4 +793,6 @@
     <string name="show_privacy">Privacy Policy</string>
     <string name="show_termsofuse">Terms of Use</string>
     <string name="p1_s3_filetransfer">HTTP File Sharing for S3</string>
+    <string name="pref_start_search">Direct Search</string>
+    <string name="pref_start_search_summary">At 'Start Conversation' screen open keyboard and place cursor in search field</string>
 </resources>
