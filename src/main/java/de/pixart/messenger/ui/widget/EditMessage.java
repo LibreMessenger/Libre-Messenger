@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.support.text.emoji.widget.EmojiAppCompatEditText;
 import android.support.v13.view.inputmethod.EditorInfoCompat;
 import android.support.v13.view.inputmethod.InputConnectionCompat;
@@ -128,8 +127,24 @@ public class EditMessage extends EmojiAppCompatEditText {
         this.mCommitContentListener = listener;
     }
 
+    public void insertAsQuote(String text) {
+        text = text.replaceAll("(\n *){2,}", "\n").replaceAll("(^|\n)", "$1> ").replaceAll("\n$", "");
+        Editable editable = getEditableText();
+        int position = getSelectionEnd();
+        if (position == -1) position = editable.length();
+        if (position > 0 && editable.charAt(position - 1) != '\n') {
+            editable.insert(position++, "\n");
+        }
+        editable.insert(position, text);
+        position += text.length();
+        editable.insert(position++, "\n");
+        if (position < editable.length() && editable.charAt(position) != '\n') {
+            editable.insert(position, "\n");
+        }
+        setSelection(position);
+    }
+
     @Override
-    @Nullable
     public InputConnection onCreateInputConnection(EditorInfo editorInfo) {
         final InputConnection ic = super.onCreateInputConnection(editorInfo);
 
