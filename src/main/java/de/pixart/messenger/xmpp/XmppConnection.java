@@ -1862,7 +1862,7 @@ public class XmppConnection implements Runnable {
                                 return false;
                             }
                         } catch (Exception e) {
-                            //ignored
+                            return true;
                         }
                     }
                 }
