@@ -373,7 +373,7 @@ public class MucOptions {
         this.self = new User(this, createJoinJid(getProposedNick()));
     }
 
-    public boolean updateConfiguration(List<String> features, Data data) {
+    public boolean updateConfiguration(List<String> features, String name, Data data) {
         updateFeatures(features);
         updateFormData(data == null ? new Data() : data);
         Field allowPmField = this.form.getFieldByName("muc#roomconfig_allowpm");
@@ -382,6 +382,7 @@ public class MucOptions {
         changed |= conversation.setAttribute(Conversation.ATTRIBUTE_MEMBERS_ONLY, this.hasFeature("muc_membersonly"));
         changed |= conversation.setAttribute(Conversation.ATTRIBUTE_MODERATED, this.hasFeature("muc_moderated"));
         changed |= conversation.setAttribute(Conversation.ATTRIBUTE_NON_ANONYMOUS, this.hasFeature("muc_nonanonymous"));
+        changed |= setName(name);
         return changed;
     }
 
@@ -400,6 +401,10 @@ public class MucOptions {
 
     public boolean hasFeature(String feature) {
         return this.features.contains(feature);
+    }
+
+    public boolean hasVCards() {
+        return hasFeature("vcard-temp");
     }
 
     public boolean canInvite() {
@@ -686,6 +691,14 @@ public class MucOptions {
 
     public String getSubject() {
         return this.conversation.getAttribute("subject");
+    }
+
+    private boolean setName(String name) {
+        return this.conversation.setAttribute("muc_name", name);
+    }
+
+    public String getName() {
+        return this.conversation.getAttribute("muc_name");
     }
 
     public List<User> getFallbackUsersFromCryptoTargets() {

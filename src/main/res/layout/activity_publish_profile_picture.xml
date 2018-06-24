@@ -1,128 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?attr/color_background_secondary">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
-
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/button_bar"
-        android:layout_below="@id/toolbar">
+        android:layout_height="match_parent"
+        android:background="?attr/color_background_secondary">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
 
         <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/toolbar"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:padding="@dimen/card_padding_regular">
 
-                <LinearLayout
+                <FrameLayout
                     android:id="@+id/account_image_wrapper"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_below="@+id/secondary_hint"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center_horizontal">
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="@dimen/publish_avatar_top_margin">
 
                     <com.makeramen.roundedimageview.RoundedImageView
                         android:id="@+id/account_image"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true"
                         android:adjustViewBounds="true"
-                        android:contentDescription="@string/account_image_description"
                         android:maxHeight="384dp"
                         android:maxWidth="384dp"
                         android:padding="1dp"
-                        app:riv_border_color="?attr/message_border"
+                        android:scaleType="centerCrop"
+                        app:riv_border_color="?attr/color_border"
                         app:riv_border_width="1dp"
                         app:riv_corner_radius="@dimen/rounded_image_border" />
-                </LinearLayout>
+                </FrameLayout>
 
                 <TextView
                     android:id="@+id/hint"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/account_image_wrapper"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center_horizontal"
                     android:text="@string/touch_to_choose_picture"
-                    android:textAlignment="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                    android:textAppearance="@style/TextAppearance.Conversations.Body1" />
 
                 <TextView
                     android:id="@+id/secondary_hint"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/hint"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center_horizontal"
                     android:text="@string/or_long_press_for_default"
-                    android:textAlignment="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                    android:textAppearance="@style/TextAppearance.Conversations.Body1" />
 
                 <TextView
                     android:id="@+id/hint_or_warning"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="8dp"
                     android:layout_marginTop="8dp"
-                    android:minLines="3"
-                    android:textAlignment="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                    android:textAppearance="@style/TextAppearance.Conversations.Body1" />
+
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
-    </ScrollView>
-
-    <LinearLayout
-        android:id="@+id/button_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true">
-
-        <Button
-            android:id="@+id/cancel_button"
-            style="@style/Widget.Conversations.Button.Borderless"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/button_bar"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/cancel" />
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true">
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="7dp"
-            android:layout_marginTop="7dp" />
+            <Button
+                android:id="@+id/cancel_button"
+                style="@style/Widget.Conversations.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/cancel" />
 
-        <Button
-            android:id="@+id/publish_button"
-            style="@style/Widget.Conversations.Button.Borderless"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:enabled="false"
-            android:text="@string/publish" />
-    </LinearLayout>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:layout_marginBottom="7dp"
+                android:layout_marginTop="7dp"
+                android:background="?attr/divider" />
 
-</RelativeLayout>
+            <Button
+                android:id="@+id/publish_button"
+                style="@style/Widget.Conversations.Button.Borderless"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:enabled="false"
+                android:text="@string/publish" />
+        </LinearLayout>
+
+    </RelativeLayout>
+</layout>

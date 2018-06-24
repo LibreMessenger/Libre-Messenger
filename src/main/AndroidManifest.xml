@@ -196,6 +196,9 @@
             android:label="@string/mgmt_account_publish_avatar"
             android:windowSoftInputMode="stateHidden" />
         <activity
+            android:name=".ui.PublishGroupChatProfilePictureActivity"
+            android:label="@string/group_chat_avatar" />
+        <activity
             android:name=".ui.VerifyOTRActivity"
             android:label="@string/verify_otr"
             android:windowSoftInputMode="stateHidden" />
@@ -270,7 +273,9 @@
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
             </intent-filter>
         </activity>
-        <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
         <activity android:name=".ui.MemorizingActivity" />
 
         <service android:name=".services.ExportLogsService" />

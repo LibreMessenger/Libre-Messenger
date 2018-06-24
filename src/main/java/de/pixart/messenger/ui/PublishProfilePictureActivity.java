@@ -1,16 +1,11 @@
 package de.pixart.messenger.ui;
 
-import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
@@ -18,25 +13,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.soundcloud.android.crop.Crop;
-
-import java.io.File;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
-import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.services.XmppConnectionService;
-import de.pixart.messenger.utils.FileUtils;
+import de.pixart.messenger.ui.interfaces.OnAvatarPublication;
 import de.pixart.messenger.utils.PhoneHelper;
-import de.pixart.messenger.xmpp.pep.Avatar;
 
-public class PublishProfilePictureActivity extends XmppActivity implements XmppConnectionService.OnAccountUpdate {
+public class PublishProfilePictureActivity extends XmppActivity implements XmppConnectionService.OnAccountUpdate, OnAvatarPublication {
 
-    private static final int REQUEST_CHOOSE_FILE_AND_CROP = 0xac23;
-    private static final int REQUEST_CHOOSE_FILE = 0xac24;
     private ImageView avatar;
-    private TextView accountTextView;
     private TextView hintOrWarning;
     private TextView secondaryHint;
     private Button cancelButton;
@@ -56,41 +44,33 @@ public class PublishProfilePictureActivity extends XmppActivity implements XmppC
         }
     };
     private boolean mInitialAccountSetup;
-    private UiCallback<Avatar> avatarPublication = new UiCallback<Avatar>() {
 
-        @Override
-        public void success(Avatar object) {
-            runOnUiThread(() -> {
-                if (mInitialAccountSetup) {
-                    Intent intent = new Intent(getApplicationContext(), StartConversationActivity.class);
-                    WelcomeActivity.addInviteUri(intent, getIntent());
-                    intent.putExtra("init", true);
-                    startActivity(intent);
-                    overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
-                }
-                Toast.makeText(PublishProfilePictureActivity.this,
-                        R.string.avatar_has_been_published,
-                        Toast.LENGTH_SHORT).show();
-                finish();
-            });
-        }
+    @Override
+    public void onAvatarPublicationSucceeded() {
+        runOnUiThread(() -> {
+            if (mInitialAccountSetup) {
+                Intent intent = new Intent(getApplicationContext(), StartConversationActivity.class);
+                WelcomeActivity.addInviteUri(intent, getIntent());
+                intent.putExtra("init", true);
+                startActivity(intent);
+            }
+            Toast.makeText(PublishProfilePictureActivity.this,
+                    R.string.avatar_has_been_published,
+                    Toast.LENGTH_SHORT).show();
+            finish();
+        });
+    }
 
-        @Override
-        public void error(final int errorCode, Avatar object) {
-            runOnUiThread(() -> {
-                hintOrWarning.setText(errorCode);
-                hintOrWarning.setTextColor(getWarningTextColor());
-                hintOrWarning.setVisibility(View.VISIBLE);
-                publishing = false;
-                togglePublishButton(true,R.string.publish);
-            });
-
-        }
-
-        @Override
-        public void userInputRequried(PendingIntent pi, Avatar object) {
-        }
-    };
+    @Override
+    public void onAvatarPublicationFailed(int res) {
+        runOnUiThread(() -> {
+            hintOrWarning.setText(res);
+            hintOrWarning.setTextColor(getWarningTextColor());
+            hintOrWarning.setVisibility(View.VISIBLE);
+            publishing = false;
+            togglePublishButton(true, R.string.publish);
+        });
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,6 +78,7 @@ public class PublishProfilePictureActivity extends XmppActivity implements XmppC
         setContentView(R.layout.activity_publish_profile_picture);
         setSupportActionBar(findViewById(R.id.toolbar));
         configureActionBar(getSupportActionBar());
+
         this.avatar = findViewById(R.id.account_image);
         this.cancelButton = findViewById(R.id.cancel_button);
         this.publishButton = findViewById(R.id.publish_button);
@@ -106,8 +87,8 @@ public class PublishProfilePictureActivity extends XmppActivity implements XmppC
         this.publishButton.setOnClickListener(v -> {
             if (avatarUri != null) {
                 publishing = true;
-                togglePublishButton(false,R.string.publishing);
-                xmppConnectionService.publishAvatar(account, avatarUri, avatarPublication);
+                togglePublishButton(false, R.string.publishing);
+                xmppConnectionService.publishAvatar(account, avatarUri, this);
             }
         });
         this.cancelButton.setOnClickListener(v -> {
@@ -118,103 +99,38 @@ public class PublishProfilePictureActivity extends XmppActivity implements XmppC
                     intent.putExtra("init", true);
                 }
                 startActivity(intent);
-                overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
             }
             finish();
         });
-        this.avatar.setOnClickListener(v -> {
-            if (hasStoragePermission(REQUEST_CHOOSE_FILE)) {
-                chooseAvatar(false);
-            }
-        });
+        this.avatar.setOnClickListener(v -> chooseAvatar());
         this.defaultUri = PhoneHelper.getProfilePictureUri(getApplicationContext());
     }
 
-    private void chooseAvatar(boolean crop) {
-        Intent attachFileIntent = new Intent();
-        attachFileIntent.setType("image/*");
-        attachFileIntent.setAction(Intent.ACTION_GET_CONTENT);
-        Intent chooser = Intent.createChooser(attachFileIntent, getString(R.string.attach_file));
-        startActivityForResult(chooser, crop ? REQUEST_CHOOSE_FILE_AND_CROP : REQUEST_CHOOSE_FILE);
-        overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
-    }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        if (grantResults.length > 0)
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (requestCode == REQUEST_CHOOSE_FILE_AND_CROP) {
-                    chooseAvatar(true);
-                } else if (requestCode == REQUEST_CHOOSE_FILE) {
-                    chooseAvatar(false);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                this.avatarUri = result.getUri();
+                if (xmppConnectionServiceBound) {
+                    loadImageIntoPreview(this.avatarUri);
                 }
-            } else {
-                Toast.makeText(this, R.string.no_storage_permission, Toast.LENGTH_SHORT).show();
-            }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.publish_avatar, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == R.id.action_crop_image) {
-            if (hasStoragePermission(REQUEST_CHOOSE_FILE_AND_CROP)) {
-                chooseAvatar(true);
-            }
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            Uri source = data.getData();
-            switch (requestCode) {
-                case REQUEST_CHOOSE_FILE_AND_CROP:
-                    if (FileBackend.weOwnFile(this, source)) {
-                        Toast.makeText(this, R.string.security_error_invalid_file_access, Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    String original = FileUtils.getPath(this, source);
-                    if (original != null) {
-                        source = Uri.parse("file://" + original);
-                    }
-                    Uri destination = Uri.fromFile(new File(getCacheDir(), "croppedAvatar"));
-                    final int size = getPixel(Config.AVATAR_SIZE);
-                    Crop.of(source, destination).asSquare().withMaxSize(size, size).start(this);
-                    break;
-                case REQUEST_CHOOSE_FILE:
-                    if (FileBackend.weOwnFile(this, source)) {
-                        Toast.makeText(this, R.string.security_error_invalid_file_access, Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    this.avatarUri = source;
-                    if (xmppConnectionServiceBound) {
-                        loadImageIntoPreview(this.avatarUri);
-                    }
-                    break;
-                case Crop.REQUEST_CROP:
-                    this.avatarUri = Uri.fromFile(new File(getCacheDir(), "croppedAvatar"));
-                    if (xmppConnectionServiceBound) {
-                        loadImageIntoPreview(this.avatarUri);
-                    }
-                    break;
-            }
-        } else {
-            if (requestCode == Crop.REQUEST_CROP && data != null) {
-                Throwable throwable = Crop.getError(data);
-                if (throwable != null && throwable instanceof OutOfMemoryError) {
-                    Toast.makeText(this, R.string.selection_too_large, Toast.LENGTH_SHORT).show();
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+                if (error != null) {
+                    Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         }
+    }
+
+    private void chooseAvatar() {
+        CropImage.activity()
+                .setOutputCompressFormat(Bitmap.CompressFormat.PNG)
+                .setAspectRatio(1, 1)
+                .setMinCropResultSize(Config.AVATAR_SIZE, Config.AVATAR_SIZE)
+                .start(this);
     }
 
     @Override
@@ -251,6 +167,7 @@ public class PublishProfilePictureActivity extends XmppActivity implements XmppC
     }
 
     protected void loadImageIntoPreview(Uri uri) {
+
         Bitmap bm = null;
         if (uri == null) {
             bm = avatarService().get(account, getPixel(Config.AVATAR_SIZE));
@@ -308,4 +225,5 @@ public class PublishProfilePictureActivity extends XmppActivity implements XmppC
     public void onAccountUpdate() {
         refreshUi();
     }
+
 }

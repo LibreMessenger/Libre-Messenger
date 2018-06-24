@@ -38,7 +38,7 @@ dependencies {
         exclude group: 'com.google.firebase', module: 'firebase-core'
     }
     implementation 'org.sufficientlysecure:openpgp-api:10.0'
-    implementation 'com.soundcloud.android:android-crop:1.0.1@aar'
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.+'
     implementation 'org.bouncycastle:bcmail-jdk15on:1.58'
     implementation 'org.jitsi:org.otr4j:0.22'
     implementation 'org.gnu.inet:libidn:1.15'

@@ -109,6 +109,7 @@ import de.pixart.messenger.persistance.DatabaseBackend;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.ui.SettingsActivity;
 import de.pixart.messenger.ui.UiCallback;
+import de.pixart.messenger.ui.interfaces.OnAvatarPublication;
 import de.pixart.messenger.ui.interfaces.OnSearchResultsAvailable;
 import de.pixart.messenger.utils.ConversationsFileObserver;
 import de.pixart.messenger.utils.CryptoHelper;
@@ -2698,18 +2699,21 @@ public class XmppConnectionService extends Service {
             public void onIqPacketReceived(Account account, IqPacket packet) {
                 Element query = packet.findChild("query", "http://jabber.org/protocol/disco#info");
                 if (packet.getType() == IqPacket.TYPE.RESULT && query != null) {
+                    String name = null;
                     ArrayList<String> features = new ArrayList<>();
                     for (Element child : query.getChildren()) {
-                        if (child != null && child.getName().equals("feature")) {
+                        if (child.getName().equals("feature")) {
                             String var = child.getAttribute("var");
                             if (var != null) {
                                 features.add(var);
                             }
+                        } else if (child.getName().equals("identity")) {
+                            name = child.getAttribute("name");
                         }
                     }
                     Element form = query.findChild("x", Namespace.DATA);
                     Data data = form == null ? null : Data.parse(form);
-                    if (conversation.getMucOptions().updateConfiguration(features, data)) {
+                    if (conversation.getMucOptions().updateConfiguration(features, name, data)) {
                         Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": muc configuration changed for " + conversation.getJid().asBareJid());
                         updateConversation(conversation);
                     }
@@ -3025,24 +3029,77 @@ public class XmppConnectionService extends Service {
         }
     }
 
-    public void publishAvatar(final Account account, final Uri image, final UiCallback<Avatar> callback) {
+    public void publishMucAvatar(final Conversation conversation, final Uri image, final OnAvatarPublication callback) {
         new Thread(() -> {
             final Bitmap.CompressFormat format = Config.AVATAR_FORMAT;
             final int size = Config.AVATAR_SIZE;
             final Avatar avatar = getFileBackend().getPepAvatar(image, size, format);
             if (avatar != null) {
                 if (!getFileBackend().save(avatar)) {
-                    callback.error(R.string.error_saving_avatar, avatar);
+                    callback.onAvatarPublicationFailed(R.string.error_saving_avatar);
                     return;
                 }
-                publishAvatar(account, avatar, callback);
+                avatar.owner = conversation.getJid().asBareJid();
+                publishMucAvatar(conversation, avatar, callback);
             } else {
-                callback.error(R.string.error_publish_avatar_converting, null);
+                callback.onAvatarPublicationFailed(R.string.error_publish_avatar_converting);
             }
         }).start();
     }
 
-    public void publishAvatar(Account account, final Avatar avatar, final UiCallback<Avatar> callback) {
+    public void publishAvatar(final Account account, final Uri image, final OnAvatarPublication callback) {
+        new Thread(() -> {
+            final Bitmap.CompressFormat format = Config.AVATAR_FORMAT;
+            final int size = Config.AVATAR_SIZE;
+            final Avatar avatar = getFileBackend().getPepAvatar(image, size, format);
+            if (avatar != null) {
+                if (!getFileBackend().save(avatar)) {
+                    Log.d(Config.LOGTAG, "unable to save vcard");
+                    callback.onAvatarPublicationFailed(R.string.error_saving_avatar);
+                    return;
+                }
+                publishAvatar(account, avatar, callback);
+            } else {
+                callback.onAvatarPublicationFailed(R.string.error_publish_avatar_converting);
+            }
+        }).start();
+    }
+
+    private void publishMucAvatar(Conversation conversation, Avatar avatar, OnAvatarPublication callback) {
+        final IqPacket retrieve = mIqGenerator.retrieveVcardAvatar(avatar);
+        sendIqPacket(conversation.getAccount(), retrieve, (account, response) -> {
+            boolean itemNotFound = response.getType() == IqPacket.TYPE.ERROR && response.hasChild("error") && response.findChild("error").hasChild("item-not-found");
+            if (response.getType() == IqPacket.TYPE.RESULT || itemNotFound) {
+                Element vcard = response.findChild("vCard", "vcard-temp");
+                if (vcard == null) {
+                    vcard = new Element("vCard", "vcard-temp");
+                }
+                Element photo = vcard.findChild("PHOTO");
+                if (photo == null) {
+                    photo = vcard.addChild("PHOTO");
+                }
+                photo.clearChildren();
+                photo.addChild("TYPE").setContent(avatar.type);
+                photo.addChild("BINVAL").setContent(avatar.image);
+                IqPacket publication = new IqPacket(IqPacket.TYPE.SET);
+                publication.setTo(conversation.getJid().asBareJid());
+                publication.addChild(vcard);
+                sendIqPacket(account, publication, (a1, publicationResponse) -> {
+                    if (publicationResponse.getType() == IqPacket.TYPE.RESULT) {
+                        callback.onAvatarPublicationSucceeded();
+                    } else {
+                        Log.d(Config.LOGTAG, "failed to publish vcard " + publicationResponse.getError());
+                        callback.onAvatarPublicationFailed(R.string.error_publish_avatar_server_reject);
+                    }
+                });
+            } else {
+                Log.d(Config.LOGTAG, "failed to request vcard " + response.toString());
+                callback.onAvatarPublicationFailed(R.string.error_publish_avatar_no_server_support);
+            }
+        });
+    }
+
+    public void publishAvatar(Account account, final Avatar avatar, final OnAvatarPublication callback) {
         IqPacket packet = this.mIqGenerator.publishAvatar(avatar);
         this.sendIqPacket(account, packet, new OnIqPacketReceived() {
 
@@ -3060,11 +3117,11 @@ public class XmppConnectionService extends Service {
                                 }
                                 Log.d(Config.LOGTAG,account.getJid().asBareJid()+": published avatar "+(avatar.size/1024)+"KiB");
                                 if (callback != null) {
-                                    callback.success(avatar);
+                                    callback.onAvatarPublicationSucceeded();
                                 }
                             } else {
                                 if (callback != null) {
-                                    callback.error(R.string.error_publish_avatar_server_reject,avatar);
+                                    callback.onAvatarPublicationFailed(R.string.error_publish_avatar_server_reject);
                                 }
                             }
                         }
@@ -3073,7 +3130,7 @@ public class XmppConnectionService extends Service {
                     Element error = result.findChild("error");
                     Log.d(Config.LOGTAG,account.getJid().asBareJid()+": server rejected avatar "+(avatar.size/1024)+"KiB "+(error!=null?error.toString():""));
                     if (callback != null) {
-                        callback.error(R.string.error_publish_avatar_server_reject, avatar);
+                        callback.onAvatarPublicationFailed(R.string.error_publish_avatar_server_reject);
                     }
                 }
             }
