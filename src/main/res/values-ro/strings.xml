@@ -219,7 +219,6 @@
   <string name="delete_bookmark">Șterge semn de carte</string>
   <string name="bookmark_already_exists">Acest semn de carte exista</string>
   <string name="action_edit_subject">Editează subiectul discuției de grup</string>
-  <string name="edit_subject_hint">Subiectul acestei discuții de grup</string>
   <string name="joining_conference">Vă alăturați discuției de grup...</string>
   <string name="leave">Paraseste</string>
   <string name="contact_added_you">Contactul a fost adăugat în listă</string>
@@ -500,7 +499,6 @@ sau chiar pierderea mesajelor.\nÎn continuare veți fi rugați să dezactivați
   <string name="correct_message">Corecție mesaj</string>
   <string name="send_corrected_message">Trimite text corectat</string>
   <string name="no_keys_just_confirm">Deja aveți încredere în acest contact. Selectând \'gata\' doar confirmați că %s ia parte la această discuție de grup.</string>
-  <string name="select_image_and_crop">Selectează imaginea și decupează</string>
   <string name="contacts_have_no_pgp_keys">Pix-Art Messenger nu poate cripta mesajele tale către contactele tale care nu își anunță cheia publică.\n\n</string>
   <string name="this_account_is_disabled">Ați dezactivat acest cont</string>
   <string name="security_error_invalid_file_access">Eroare de securitate.: Acces fișier invalid</string>
