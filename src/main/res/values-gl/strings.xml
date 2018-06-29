@@ -215,7 +215,6 @@
   <string name="delete_bookmark">Eliminar marcador</string>
   <string name="bookmark_already_exists">Este marcador xa existe</string>
   <string name="action_edit_subject">Editar o tema da conversa en grupo</string>
-  <string name="edit_subject_hint">O tema desta conversa en grupo</string>
   <string name="joining_conference">Entrando na conversa en grupo</string>
   <string name="leave">Saír</string>
   <string name="contact_added_you">Contacto engadido a súa lista de contactos</string>
@@ -484,7 +483,6 @@
   <string name="correct_message">Correxir mensaxe</string>
   <string name="send_corrected_message">Enviar mensaxe correxida</string>
   <string name="no_keys_just_confirm">Xa confia neste contacto. Ao seleccionar \'feito\' só está confirmando que %s é parte deste chat grupal.</string>
-  <string name="select_image_and_crop">Escoller imaxe e recortar</string>
   <string name="contacts_have_no_pgp_keys">Conversations non pode cifrar a súa mensaxe porque os seus contactos no publicaron a súa chave pública.\n\n <small>Por favor solicite aos seus contactos que configuren OpenPGP.</small></string>
   <string name="this_account_is_disabled">Deshabilitou esta conta</string>
   <string name="security_error_invalid_file_access">Fallo na seguridade: Acceso non válido ao ficheiro</string>
