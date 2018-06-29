@@ -12,7 +12,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableStringBuilder;
@@ -24,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.openintents.openpgp.util.OpenPgpUtils;
@@ -227,14 +225,6 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             builder.create().show();
         }
     };
-    private OnValueEdited onSubjectEdited = new OnValueEdited() {
-
-        @Override
-        public String onValueEdited(String value) {
-            xmppConnectionService.pushSubjectToConference(mConversation, value.trim().isEmpty() ? null : value.trim());
-            return null;
-        }
-    };
 
     public static boolean cancelPotentialWork(User user, ImageView imageView) {
         final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
@@ -317,6 +307,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             intent.putExtra("uuid", mConversation.getUuid());
             startActivity(intent);
         });
+        this.binding.editMucNameButton.setOnClickListener(this::onMucEditButtonClicked);
     }
 
     @Override
@@ -355,6 +346,69 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         }
         return super.onOptionsItemSelected(menuItem);
     }
+
+    public void onMucEditButtonClicked(View v) {
+        if (this.binding.mucEditor.getVisibility() == View.GONE) {
+            final MucOptions mucOptions = mConversation.getMucOptions();
+            this.binding.mucEditor.setVisibility(View.VISIBLE);
+            this.binding.mucDisplay.setVisibility(View.GONE);
+            this.binding.editMucNameButton.setImageResource(getThemeResource(R.attr.icon_save, R.drawable.ic_save_black_24dp));
+            final String name = mucOptions.getName();
+            this.binding.mucEditTitle.setText("");
+            final boolean owner = mucOptions.getSelf().getAffiliation().ranks(MucOptions.Affiliation.OWNER);
+            if (owner || printableValue(name)) {
+                this.binding.mucEditTitle.setVisibility(View.VISIBLE);
+                if (name != null) {
+                    this.binding.mucEditTitle.append(name);
+                }
+            } else {
+                this.binding.mucEditTitle.setVisibility(View.GONE);
+            }
+            this.binding.mucEditTitle.setEnabled(owner);
+            final String subject = mucOptions.getSubject();
+            this.binding.mucEditSubject.setText("");
+            if (subject != null) {
+                this.binding.mucEditSubject.append(subject);
+            }
+            this.binding.mucEditSubject.setEnabled(mucOptions.canChangeSubject());
+            if (!owner) {
+                this.binding.mucEditSubject.requestFocus();
+            }
+            this.binding.yourPhoto.setVisibility(View.GONE);
+        } else {
+            String subject = this.binding.mucEditSubject.isEnabled() ? this.binding.mucEditSubject.getEditableText().toString().trim() : null;
+            String name = this.binding.mucEditTitle.isEnabled() ? this.binding.mucEditTitle.getEditableText().toString().trim() : null;
+            onMucInfoUpdated(subject, name);
+            hideEditor();
+        }
+    }
+
+    private void hideEditor() {
+        this.binding.mucEditor.setVisibility(View.GONE);
+        this.binding.mucDisplay.setVisibility(View.VISIBLE);
+        this.binding.editMucNameButton.setImageResource(getThemeResource(R.attr.icon_edit_body, R.drawable.ic_edit_black_24dp));
+        this.binding.yourPhoto.setVisibility(View.VISIBLE);
+    }
+
+    private void onMucInfoUpdated(String subject, String name) {
+        final MucOptions mucOptions = mConversation.getMucOptions();
+        if (mucOptions.canChangeSubject() && !blankOnNull(mucOptions.getSubject()).equals(subject)) {
+            Log.d(Config.LOGTAG, "subject changed");
+            xmppConnectionService.pushSubjectToConference(mConversation, subject);
+        }
+        if (mucOptions.getSelf().getAffiliation().ranks(MucOptions.Affiliation.OWNER) && !blankOnNull(mucOptions.getName()).equals(name)) {
+            Log.d(Config.LOGTAG, "name changed");
+            Bundle options = new Bundle();
+            options.putString("muc#roomconfig_persistentroom", "1");
+            options.putString("muc#roomconfig_roomname", name);
+            xmppConnectionService.pushConferenceConfiguration(mConversation, options, null);
+        }
+    }
+
+    private static String blankOnNull(String input) {
+        return input == null ? "" : input;
+    }
+
 
     @Override
     protected String getShareableUri(boolean http) {
@@ -567,6 +621,15 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         this.binding.detailsMucAvatar.setImageBitmap(avatarService().get(mConversation, getPixel(Config.AVATAR_SIZE)));
     }
 
+    @Override
+    public void onBackPressed() {
+        if (this.binding.mucEditor.getVisibility() == View.VISIBLE) {
+            hideEditor();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     private void updateView() {
         invalidateOptionsMenu();
         if (mConversation == null) {
@@ -580,20 +643,9 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         } else {
             account = mConversation.getAccount().getJid().asBareJid().toString();
         }
-        if (getSupportActionBar() != null) {
-            final ActionBar ab = getSupportActionBar();
-            if (ab != null) {
-                ab.setCustomView(R.layout.ab_title);
-                ab.setDisplayShowCustomEnabled(true);
-                TextView abtitle = findViewById(android.R.id.text1);
-                TextView absubtitle = findViewById(android.R.id.text2);
-                abtitle.setText(mConversation.getName());
-                abtitle.setSelected(true);
-                abtitle.setClickable(false);
-                absubtitle.setVisibility(View.GONE);
-                absubtitle.setClickable(false);
-            }
-        }
+
+
+        this.binding.editMucNameButton.setVisibility((self.getAffiliation().ranks(MucOptions.Affiliation.OWNER) || mucOptions.canChangeSubject()) ? View.VISIBLE : View.GONE);
         this.binding.detailsAccount.setText(getString(R.string.using_account, account));
         this.binding.jid.setText(mConversation.getJid().asBareJid().toEscapedString());
         if (xmppConnectionService.multipleAccounts()) {
