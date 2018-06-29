@@ -88,6 +88,7 @@ import de.pixart.messenger.ui.util.PendingItem;
 import de.pixart.messenger.utils.ExceptionHelper;
 import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import de.pixart.messenger.utils.UIHelper;
+import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 
@@ -521,6 +522,18 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
         } else {
             invalidateActionBarTitle();
         }
+    }
+
+    public boolean onXmppUriClicked(Uri uri) {
+        XmppUri xmppUri = new XmppUri(uri);
+        if (xmppUri.isJidValid() && !xmppUri.hasFingerprints()) {
+            final Conversation conversation = xmppConnectionService.findUniqueConversationByJid(xmppUri);
+            if (conversation != null) {
+                openConversation(conversation, null);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

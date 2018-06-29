@@ -63,6 +63,7 @@
                                     android:layout_alignParentLeft="true"
                                     android:layout_below="@+id/muc_title"
                                     android:layout_toLeftOf="@+id/edit_muc_name_button"
+                                    android:autoLink="web"
                                     android:textAppearance="@style/TextAppearance.Conversations.Subhead" />
 
                                 <TextView

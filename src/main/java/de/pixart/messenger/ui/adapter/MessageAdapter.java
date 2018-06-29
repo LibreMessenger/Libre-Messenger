@@ -15,7 +15,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.ColorInt;
 import android.support.v4.app.ActivityCompat;
@@ -28,7 +27,6 @@ import android.text.format.DateUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
-import android.text.util.Linkify;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -53,7 +51,6 @@ import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -78,8 +75,8 @@ import de.pixart.messenger.ui.ConversationsActivity;
 import de.pixart.messenger.ui.ShowFullscreenMessageActivity;
 import de.pixart.messenger.ui.XmppActivity;
 import de.pixart.messenger.ui.text.DividerSpan;
-import de.pixart.messenger.ui.text.FixedURLSpan;
 import de.pixart.messenger.ui.text.QuoteSpan;
+import de.pixart.messenger.ui.util.MyLinkify;
 import de.pixart.messenger.ui.widget.ClickableMovementMethod;
 import de.pixart.messenger.ui.widget.CopyTextView;
 import de.pixart.messenger.ui.widget.ListSelectionManager;
@@ -87,10 +84,8 @@ import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.EmojiWrapper;
 import de.pixart.messenger.utils.Emoticons;
 import de.pixart.messenger.utils.GeoHelper;
-import de.pixart.messenger.utils.Patterns;
 import de.pixart.messenger.utils.StylingHelper;
 import de.pixart.messenger.utils.UIHelper;
-import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xmpp.mam.MamReference;
 
 public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextView.CopyHandler {
@@ -104,60 +99,6 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     private static final int DATE_SEPARATOR = 3;
 
     boolean isResendable = false;
-
-    private static final Linkify.TransformFilter WEBURL_TRANSFORM_FILTER = (matcher, url) -> {
-        		if (url == null) {
-            			return null;
-        }
-        final String lcUrl = url.toLowerCase(Locale.US);
-        if (lcUrl.startsWith("http://") || lcUrl.startsWith("https://")) {
-            return removeTrailingBracket(url);
-        } else {
-            return "http://" + removeTrailingBracket(url);
-        }
-    };
-
-    private static String removeTrailingBracket(final String url) {
-        int numOpenBrackets = 0;
-        for (char c : url.toCharArray()) {
-            if (c == '(') {
-                ++numOpenBrackets;
-            } else if (c == ')') {
-                --numOpenBrackets;
-            }
-        }
-        if (numOpenBrackets != 0 && url.charAt(url.length() - 1) == ')') {
-            return url.substring(0, url.length() - 1);
-        } else {
-            return url;
-        }
-    }
-
-    private static final Linkify.MatchFilter WEBURL_MATCH_FILTER = (cs, start, end) -> {
-        if (start > 0) {
-            if (cs.charAt(start - 1) == '@' || cs.charAt(start - 1) == '.'
-                    || cs.subSequence(Math.max(0, start - 3), start).equals("://")) {
-                return false;
-            }
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if (end < cs.length()) {
-                // Reject strings that were probably matched only because they contain a dot followed by
-                // by some known TLD (see also comment for WORD_BOUNDARY in Patterns.java)
-                if (Character.isAlphabetic(cs.charAt(end - 1)) && Character.isAlphabetic(cs.charAt(end))) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    };
-
-    private static final Linkify.MatchFilter XMPPURI_MATCH_FILTER = (s, start, end) -> {
-        XmppUri uri = new XmppUri(s.subSequence(start, end).toString());
-        return uri.isJidValid();
-    };
 
     private final XmppActivity activity;
     private final ListSelectionManager listSelectionManager = new ListSelectionManager();
@@ -622,10 +563,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             if (highlightedTerm != null) {
                 StylingHelper.highlight(activity, body, highlightedTerm, StylingHelper.isDarkText(viewHolder.messageBody));
             }
-            Linkify.addLinks(body, Patterns.XMPP_PATTERN, "xmpp", XMPPURI_MATCH_FILTER, null);
-            Linkify.addLinks(body, Patterns.AUTOLINK_WEB_URL, "http", WEBURL_MATCH_FILTER, WEBURL_TRANSFORM_FILTER);
-            Linkify.addLinks(body, GeoHelper.GEO_URI, "geo");
-            FixedURLSpan.fix(body);
+            MyLinkify.addLinks(body,true);
             viewHolder.messageBody.setAutoLinkMask(0);
             viewHolder.messageBody.setText(EmojiWrapper.transform(body));
             viewHolder.messageBody.setTextIsSelectable(true);
@@ -862,14 +800,14 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                     break;
                 default:
                     throw new AssertionError("Unknown view type");
-                }
+            }
             if (viewHolder.messageBody != null) {
                 listSelectionManager.onCreate(viewHolder.messageBody, new MessageBodyActionModeCallback(viewHolder.messageBody));
                 viewHolder.messageBody.setCopyHandler(this);
             }
             view.setTag(viewHolder);
         } else {
-      	    viewHolder = (ViewHolder) view.getTag();
+            viewHolder = (ViewHolder) view.getTag();
             if (viewHolder == null) {
                 return view;
             }
@@ -922,12 +860,12 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         resetClickListener(viewHolder.message_box, viewHolder.messageBody);
 
         viewHolder.contact_picture.setOnClickListener(v -> {
-                    if (MessageAdapter.this.mOnContactPictureClickedListener != null) {
-                        MessageAdapter.this.mOnContactPictureClickedListener
-                                .onContactPictureClicked(message);
-                    }
+            if (MessageAdapter.this.mOnContactPictureClickedListener != null) {
+                MessageAdapter.this.mOnContactPictureClickedListener
+                        .onContactPictureClicked(message);
+            }
 
-                });
+        });
         viewHolder.contact_picture
                 .setOnLongClickListener(v -> {
                     if (MessageAdapter.this.mOnContactPictureLongClickedListener != null) {

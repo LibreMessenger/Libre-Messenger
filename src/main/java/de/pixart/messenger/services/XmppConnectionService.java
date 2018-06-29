@@ -85,6 +85,7 @@ import de.pixart.messenger.entities.Blockable;
 import de.pixart.messenger.entities.Bookmark;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
+import de.pixart.messenger.entities.Conversational;
 import de.pixart.messenger.entities.DownloadableFile;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.MucOptions;
@@ -3614,6 +3615,16 @@ public class XmppConnectionService extends Service {
             }
         }
         return null;
+    }
+
+    public Conversation findUniqueConversationByJid(XmppUri xmppUri) {
+        List<Conversation> findings = new ArrayList<>();
+        for (Conversation c : getConversations()) {
+            if (c.getJid().asBareJid().equals(xmppUri.getJid()) && ((c.getMode() == Conversational.MODE_MULTI) == xmppUri.isAction(XmppUri.ACTION_JOIN))) {
+                findings.add(c);
+            }
+        }
+        return findings.size() == 1 ? findings.get(0) : null;
     }
 
     public boolean markRead(final Conversation conversation, boolean dismiss) {
