@@ -47,7 +47,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginBottom="16dp"
+                            android:layout_marginBottom="@dimen/avatar_item_distance"
                             android:adjustViewBounds="true"
                             android:contentDescription="@string/account_image_description"
                             android:maxHeight="384dp"

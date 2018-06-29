@@ -14,7 +14,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.SpannableStringBuilder;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -48,6 +50,7 @@ import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.services.XmppConnectionService.OnConversationUpdate;
 import de.pixart.messenger.services.XmppConnectionService.OnMucRosterUpdate;
 import de.pixart.messenger.ui.util.MyLinkify;
+import de.pixart.messenger.ui.util.SoftKeyboardUtils;
 import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import de.pixart.messenger.utils.TimeframeUtils;
 import de.pixart.messenger.utils.UIHelper;
@@ -56,7 +59,7 @@ import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.entities.Bookmark.printableValue;
 
-public class ConferenceDetailsActivity extends XmppActivity implements OnConversationUpdate, OnMucRosterUpdate, XmppConnectionService.OnAffiliationChanged, XmppConnectionService.OnRoleChanged, XmppConnectionService.OnConfigurationPushed {
+public class ConferenceDetailsActivity extends XmppActivity implements OnConversationUpdate, OnMucRosterUpdate, XmppConnectionService.OnAffiliationChanged, XmppConnectionService.OnRoleChanged, XmppConnectionService.OnConfigurationPushed, TextWatcher {
     public static final String ACTION_VIEW_MUC = "view_muc";
     private static final float INACTIVE_ALPHA = 0.4684f; //compromise between dark and light theme
     private Conversation mConversation;
@@ -308,6 +311,8 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             startActivity(intent);
         });
         this.binding.editMucNameButton.setOnClickListener(this::onMucEditButtonClicked);
+        this.binding.mucEditTitle.addTextChangedListener(this);
+        this.binding.mucEditSubject.addTextChangedListener(this);
     }
 
     @Override
@@ -352,7 +357,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             final MucOptions mucOptions = mConversation.getMucOptions();
             this.binding.mucEditor.setVisibility(View.VISIBLE);
             this.binding.mucDisplay.setVisibility(View.GONE);
-            this.binding.editMucNameButton.setImageResource(getThemeResource(R.attr.icon_save, R.drawable.ic_save_black_24dp));
+            this.binding.editMucNameButton.setImageResource(getThemeResource(R.attr.icon_cancel, R.drawable.ic_cancel_black_24dp));
             final String name = mucOptions.getName();
             this.binding.mucEditTitle.setText("");
             final boolean owner = mucOptions.getSelf().getAffiliation().ranks(MucOptions.Affiliation.OWNER);
@@ -374,11 +379,11 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             if (!owner) {
                 this.binding.mucEditSubject.requestFocus();
             }
-            this.binding.yourPhoto.setVisibility(View.GONE);
         } else {
             String subject = this.binding.mucEditSubject.isEnabled() ? this.binding.mucEditSubject.getEditableText().toString().trim() : null;
             String name = this.binding.mucEditTitle.isEnabled() ? this.binding.mucEditTitle.getEditableText().toString().trim() : null;
             onMucInfoUpdated(subject, name);
+            SoftKeyboardUtils.hideSoftKeyboard(this);
             hideEditor();
         }
     }
@@ -387,21 +392,18 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         this.binding.mucEditor.setVisibility(View.GONE);
         this.binding.mucDisplay.setVisibility(View.VISIBLE);
         this.binding.editMucNameButton.setImageResource(getThemeResource(R.attr.icon_edit_body, R.drawable.ic_edit_black_24dp));
-        this.binding.yourPhoto.setVisibility(View.VISIBLE);
     }
 
     private void onMucInfoUpdated(String subject, String name) {
         final MucOptions mucOptions = mConversation.getMucOptions();
-        if (mucOptions.canChangeSubject() && !blankOnNull(mucOptions.getSubject()).equals(subject)) {
-            Log.d(Config.LOGTAG, "subject changed");
+        if (mucOptions.canChangeSubject() && changed(mucOptions.getSubject(), subject)) {
             xmppConnectionService.pushSubjectToConference(mConversation, subject);
         }
-        if (mucOptions.getSelf().getAffiliation().ranks(MucOptions.Affiliation.OWNER) && !blankOnNull(mucOptions.getName()).equals(name)) {
-            Log.d(Config.LOGTAG, "name changed");
+        if (mucOptions.getSelf().getAffiliation().ranks(MucOptions.Affiliation.OWNER) && changed(mucOptions.getName(), name)) {
             Bundle options = new Bundle();
             options.putString("muc#roomconfig_persistentroom", "1");
             options.putString("muc#roomconfig_roomname", name);
-            xmppConnectionService.pushConferenceConfiguration(mConversation, options, null);
+            xmppConnectionService.pushConferenceConfiguration(mConversation, options, this);
         }
     }
 
@@ -409,6 +411,9 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         return input == null ? "" : input;
     }
 
+    private static boolean changed(String one, String two) {
+        return !blankOnNull(one).equals(blankOnNull(two));
+    }
 
     @Override
     protected String getShareableUri(boolean http) {
@@ -888,6 +893,30 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                     task.execute(user);
                 } catch (final RejectedExecutionException ignored) {
                 }
+            }
+        }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        final MucOptions mucOptions = mConversation.getMucOptions();
+        if (this.binding.mucEditor.getVisibility() == View.VISIBLE) {
+            boolean subjectChanged = changed(binding.mucEditSubject.getEditableText().toString(), mucOptions.getSubject());
+            boolean nameChanged = changed(binding.mucEditTitle.getEditableText().toString(), mucOptions.getName());
+            if (subjectChanged || nameChanged) {
+                this.binding.editMucNameButton.setImageResource(getThemeResource(R.attr.icon_save, R.drawable.ic_save_black_24dp));
+            } else {
+                this.binding.editMucNameButton.setImageResource(getThemeResource(R.attr.icon_cancel, R.drawable.ic_cancel_black_24dp));
             }
         }
     }
