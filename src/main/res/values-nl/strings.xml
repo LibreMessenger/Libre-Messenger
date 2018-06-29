@@ -215,7 +215,6 @@
   <string name="delete_bookmark">Bladwijzer verwijderen</string>
   <string name="bookmark_already_exists">Deze bladwijzer bestaat al</string>
   <string name="action_edit_subject">Gespreksonderwerp bewerken</string>
-  <string name="edit_subject_hint">Het onderwerp van dit groepsgesprek</string>
   <string name="joining_conference">Deelnemen aan groepsgesprek…</string>
   <string name="leave">Verlaten</string>
   <string name="contact_added_you">Contact heeft je toegevoegd aan zijn/haar contacten</string>
@@ -484,7 +483,6 @@
   <string name="correct_message">Bericht corrigeren</string>
   <string name="send_corrected_message">Gecorrigeerd bericht versturen</string>
   <string name="no_keys_just_confirm">Je vertrouwt dit contact al. Door \'klaar\' te kiezen bevestig je enkel dat %s deel uitmaakt van dit groepsgesprek.</string>
-  <string name="select_image_and_crop">Afbeelding kiezen en bijsnijden</string>
   <string name="this_account_is_disabled">Je hebt deze account uitgeschakeld</string>
   <string name="security_error_invalid_file_access">Beveiligingsfout: Ongeldige bestandstoegang</string>
   <string name="no_application_to_share_uri">Geen applicatie om URI te delen</string>
