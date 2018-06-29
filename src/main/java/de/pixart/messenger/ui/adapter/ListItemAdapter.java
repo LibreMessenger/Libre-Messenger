@@ -8,6 +8,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.text.emoji.widget.EmojiTextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -219,7 +220,7 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
     }
 
     private static class ViewHolder {
-        private TextView name;
+        private EmojiTextView name;
         private TextView jid;
         private ImageView avatar;
         private FlowLayout tags;
