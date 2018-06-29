@@ -54,6 +54,8 @@ import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.utils.XmppUri;
 import rocks.xmpp.addr.Jid;
 
+import static de.pixart.messenger.entities.Bookmark.printableValue;
+
 public class ConferenceDetailsActivity extends XmppActivity implements OnConversationUpdate, OnMucRosterUpdate, XmppConnectionService.OnAffiliationChanged, XmppConnectionService.OnRoleChanged, XmppConnectionService.OnConfigurationPushed {
     public static final String ACTION_VIEW_MUC = "view_muc";
     private static final float INACTIVE_ALPHA = 0.4684f; //compromise between dark and light theme
@@ -598,9 +600,23 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             this.binding.detailsAccount.setVisibility(View.GONE);
         }
         this.binding.yourPhoto.setImageBitmap(avatarService().get(mConversation.getAccount(), getPixel(48)));
-
-        this.binding.mucTitle.setText(mucOptions.getName());
-        this.binding.mucSubject.setText(mucOptions.getSubject());
+        String roomName = mucOptions.getName();
+        String subject = mucOptions.getSubject();
+        if (printableValue(roomName)) {
+            this.binding.mucTitle.setText(roomName);
+            this.binding.mucTitle.setVisibility(View.VISIBLE);
+        } else if (!printableValue(subject)) {
+            this.binding.mucTitle.setText(mConversation.getName());
+            this.binding.mucTitle.setVisibility(View.VISIBLE);
+        } else {
+            this.binding.mucTitle.setVisibility(View.GONE);
+        }
+        if (printableValue(subject)) {
+            this.binding.mucSubject.setText(mucOptions.getSubject());
+            this.binding.mucSubject.setVisibility(View.VISIBLE);
+        } else {
+            this.binding.mucSubject.setVisibility(View.GONE);
+        }
         this.binding.mucYourNick.setText(mucOptions.getActualNick());
         if (mucOptions.online()) {
             this.binding.mucMoreDetails.setVisibility(View.VISIBLE);
