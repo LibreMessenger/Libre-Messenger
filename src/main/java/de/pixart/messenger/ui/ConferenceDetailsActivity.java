@@ -51,7 +51,9 @@ import de.pixart.messenger.services.XmppConnectionService.OnConversationUpdate;
 import de.pixart.messenger.services.XmppConnectionService.OnMucRosterUpdate;
 import de.pixart.messenger.ui.util.MyLinkify;
 import de.pixart.messenger.ui.util.SoftKeyboardUtils;
+import de.pixart.messenger.utils.EmojiWrapper;
 import de.pixart.messenger.utils.MenuDoubleTabUtil;
+import de.pixart.messenger.utils.StylingHelper;
 import de.pixart.messenger.utils.TimeframeUtils;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.utils.XmppUri;
@@ -313,6 +315,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         this.binding.editMucNameButton.setOnClickListener(this::onMucEditButtonClicked);
         this.binding.mucEditTitle.addTextChangedListener(this);
         this.binding.mucEditSubject.addTextChangedListener(this);
+        this.binding.mucEditSubject.addTextChangedListener(new StylingHelper.MessageEditorStyler(this.binding.mucEditSubject));
     }
 
     @Override
@@ -661,19 +664,25 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         this.binding.yourPhoto.setImageBitmap(avatarService().get(mConversation.getAccount(), getPixel(48)));
         String roomName = mucOptions.getName();
         String subject = mucOptions.getSubject();
+        final boolean hasTitle;
         if (printableValue(roomName)) {
             this.binding.mucTitle.setText(roomName);
             this.binding.mucTitle.setVisibility(View.VISIBLE);
+            hasTitle = true;
         } else if (!printableValue(subject)) {
-            this.binding.mucTitle.setText(mConversation.getName());
+            this.binding.mucTitle.setText(EmojiWrapper.transform(mConversation.getName()));
+            hasTitle = true;
             this.binding.mucTitle.setVisibility(View.VISIBLE);
         } else {
+            hasTitle = false;
             this.binding.mucTitle.setVisibility(View.GONE);
         }
         if (printableValue(subject)) {
             SpannableStringBuilder spannable = new SpannableStringBuilder(subject);
+            StylingHelper.format(spannable, this.binding.mucSubject.getCurrentTextColor());
             MyLinkify.addLinks(spannable, false);
-            this.binding.mucSubject.setText(spannable);
+            this.binding.mucSubject.setText(EmojiWrapper.transform(spannable));
+            this.binding.mucSubject.setTextAppearance(this, subject.length() > (hasTitle ? 128 : 196) ? R.style.TextAppearance_Conversations_Body1_Linkified : R.style.TextAppearance_Conversations_Subhead);
             this.binding.mucSubject.setAutoLinkMask(0);
             this.binding.mucSubject.setVisibility(View.VISIBLE);
         } else {
@@ -909,6 +918,9 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 
     @Override
     public void afterTextChanged(Editable s) {
+        if (mConversation == null) {
+            return;
+        }
         final MucOptions mucOptions = mConversation.getMucOptions();
         if (this.binding.mucEditor.getVisibility() == View.VISIBLE) {
             boolean subjectChanged = changed(binding.mucEditSubject.getEditableText().toString(), mucOptions.getSubject());
