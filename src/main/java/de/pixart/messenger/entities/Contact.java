@@ -565,6 +565,10 @@ public class Contact implements ListItem, Blockable {
         return this.mLastPresence;
     }
 
+    public String getServerName() {
+        return serverName;
+    }
+
     public final class Options {
         public static final int TO = 0;
         public static final int FROM = 1;
