@@ -229,7 +229,6 @@
   <string name="delete_bookmark">Hapus penanda</string>
   <string name="bookmark_already_exists">Penanda ini sudah ada</string>
   <string name="action_edit_subject">Ubah subjek obrolan kelompok</string>
-  <string name="edit_subject_hint">Subjek kelompok obrolan ini</string>
   <string name="joining_conference">Bergabung dengan kelompok obrolan…</string>
   <string name="leave">Meninggalkan</string>
   <string name="contact_added_you">Menambahkan kontak anda kedaftar kontak</string>
@@ -519,7 +518,6 @@
   <string name="correct_message">Memeriksa pesan</string>
   <string name="send_corrected_message">Kirim pesan yang dikoreksi</string>
   <string name="no_keys_just_confirm">Anda sudah mempercayai kontak ini. Dengan memilih \'selesai\' anda telah memastikan bahwa %s anda adalah bagian dari obrolan kelompok ini.</string>
-  <string name="select_image_and_crop">Pilih gambar dan hasil pemotongan</string>
   <string name="contacts_have_no_pgp_keys">Pix-Art Messenger tidak dapat mengenkripsi pesan anda karena kontak tidak menampilkan kunci publik mereka.\n\n</string>
   <string name="this_account_is_disabled">Anda telah menonaktifkan akun ini</string>
   <string name="security_error_invalid_file_access">Kesalahan keamanan: Akses berkas tidak sah</string>
