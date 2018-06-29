@@ -215,7 +215,6 @@
   <string name="delete_bookmark">Elimina segnalibro</string>
   <string name="bookmark_already_exists">Questo segnalibro esiste già</string>
   <string name="action_edit_subject">Modifica titolo chat di gruppo</string>
-  <string name="edit_subject_hint">L\'argomento di questa chat di gruppo</string>
   <string name="joining_conference">Ingresso nella chat di gruppo...</string>
   <string name="leave">Abbandona</string>
   <string name="contact_added_you">Il contatto ti ha aggiunto alla sua lista contatti</string>
@@ -484,7 +483,6 @@
   <string name="correct_message">Correggi messaggio</string>
   <string name="send_corrected_message">Invia messaggio corretto</string>
   <string name="no_keys_just_confirm">Ti fidi già di questo contatto. Selezionando \'fatto\' stai solo confermando che %s fa parte di questa chat di gruppo.</string>
-  <string name="select_image_and_crop">Seleziona immagine e ritagliala</string>
   <string name="this_account_is_disabled">Hai disabilitato questo account</string>
   <string name="security_error_invalid_file_access">Errore di sicurezza: accesso file non valido</string>
   <string name="no_application_to_share_uri">Nessuna applicazione trovata per condividere l\'URI</string>
