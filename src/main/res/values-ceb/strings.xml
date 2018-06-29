@@ -229,7 +229,6 @@
   <string name="delete_bookmark">Tangtanga ang bookmark</string>
   <string name="bookmark_already_exists">Ang kini nga bookmark kay naa na daan</string>
   <string name="action_edit_subject">I-edit ang subject sa grupo nga chat</string>
-  <string name="edit_subject_hint">Ang subject sa kini nga grupo sa chat</string>
   <string name="joining_conference">Pag-apil sa grupo sa chat…</string>
   <string name="leave">Hawa</string>
   <string name="contact_added_you">Ang kontak ge puno ka sa lista sa kontak</string>
@@ -485,7 +484,6 @@ Pili %d mga kontak</item>
   <string name="correct_message">Sakto nga mensahe</string>
   <string name="send_corrected_message">Pagpadala ug insakto nga mensahe</string>
   <string name="no_keys_just_confirm">Nagasalig naka niini nga kontak. Pinaagi sa pagpili sa \'nahuman\' gipamatuod nimo nga kana %s kay parte diri sa grupo nga chat.</string>
-  <string name="select_image_and_crop">Pili ug hulagway unya i-crop</string>
   <string name="contacts_have_no_pgp_keys">Ang Pix-Art Messenger kay dili makahimo sa pag-encrypt sa imong mga mensahe tungod kay ang imong mga kontak wala magpahibalo sa ilang mga yawe sa publiko.\n\n</string>
   <string name="this_account_is_disabled">Gipugngan nimo ang kini nga account</string>
   <string name="security_error_invalid_file_access">Pakyas sa seguridad: Dili ma-access nga file</string>
