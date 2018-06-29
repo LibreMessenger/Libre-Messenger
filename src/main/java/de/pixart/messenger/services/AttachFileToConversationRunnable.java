@@ -105,8 +105,10 @@ public class AttachFileToConversationRunnable implements Runnable, MediaTranscod
         try {
             future.get();
         } catch (InterruptedException e) {
+            mXmppConnectionService.stopForcingForegroundNotification();
             throw new AssertionError(e);
         } catch (ExecutionException e) {
+            mXmppConnectionService.stopForcingForegroundNotification();
             Log.d(Config.LOGTAG, "ignoring execution exception. Should get handled by onTranscodeFiled() instead", e);
         }
     }
