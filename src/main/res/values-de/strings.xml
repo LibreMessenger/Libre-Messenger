@@ -22,6 +22,7 @@
   <string name="title_activity_sharewith">Mit Unterhaltung teilen</string>
   <string name="title_activity_start_conversation">Unterhaltung beginnen</string>
   <string name="title_activity_choose_contact">Kontakt auswählen</string>
+  <string name="title_activity_choose_contacts">Kontakte wählen</string>
   <string name="title_activity_block_list">Sperrliste</string>
   <string name="just_now">gerade</string>
   <string name="minute_ago">vor einer Minute</string>
@@ -230,6 +231,7 @@
   <string name="delete_bookmark">Von Kontaktliste entfernen</string>
   <string name="bookmark_already_exists">Die Konferenz befindet sich bereits auf deiner Kontaktliste</string>
   <string name="action_edit_subject">Betreff dieses Gruppenchats ändern</string>
+  <string name="topic">Thema</string>
   <string name="joining_conference">Gruppenchat beitreten…</string>
   <string name="leave">Verlassen</string>
   <string name="contact_added_you">Der Kontakt hat dich zur Kontaktliste hinzugefügt</string>
@@ -791,4 +793,5 @@
   <string name="pref_start_search">Direktsuche</string>
   <string name="pref_start_search_summary">Bei \'Unterhaltung beginnen\' direkt die Suche starten</string>
   <string name="paste_as_quote">Als Zitat einfügen</string>
+  <string name="contact_name">Name des Kontaktes</string>
 </resources>
