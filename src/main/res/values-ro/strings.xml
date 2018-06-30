@@ -412,11 +412,6 @@
     <item quantity="few">%d certificate sterse</item>
     <item quantity="other">%d certificate șterse</item>
   </plurals>
-  <plurals name="select_contact">
-    <item quantity="one">Selecteaza %d contact</item>
-    <item quantity="few">Selecteaza %d contacte</item>
-    <item quantity="other">Selectează %d contacte</item>
-  </plurals>
   <string name="pref_quick_action_summary">Înlocuiește butonul de trimitere cu o acțiune rapidă</string>
   <string name="pref_quick_action">Acțiune rapidă</string>
   <string name="none">Nimic</string>
