@@ -422,9 +422,6 @@
   <plurals name="toast_delete_certificates">
     <item quantity="other">%d hapus sertifikat</item>
   </plurals>
-  <plurals name="select_contact">
-    <item quantity="other">Pilih %d kontak</item>
-  </plurals>
   <string name="pref_quick_action_summary">Ganti tombol kirim dengan tindakan cepat</string>
   <string name="pref_quick_action">Tindakan cepat</string>
   <string name="none">Tidak ada</string>
