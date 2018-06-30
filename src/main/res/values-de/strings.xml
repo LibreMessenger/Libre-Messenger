@@ -794,4 +794,5 @@
   <string name="pref_start_search_summary">Bei \'Unterhaltung beginnen\' direkt die Suche starten</string>
   <string name="paste_as_quote">Als Zitat einfügen</string>
   <string name="contact_name">Name des Kontaktes</string>
+  <string name="group_chat_name">Name</string>
 </resources>
