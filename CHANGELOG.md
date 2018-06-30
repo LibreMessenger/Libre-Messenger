@@ -1,9 +1,15 @@
 ### Changelog
 
-#### Version 2.0.3 (not yet released)
-* show avatar for group chats in group details
-* fade in image previews and avatars
+#### Version 2.1.0 (not yet released)
+* use group chat name as primary identifier
+* upload group chat avatar on compatible servers
+* show group name and subject in group chat details
 * UI improvements
+* introduce Expert Setting to enable direct search
+* introduce Paste As Quote on Android 6+
+* fixed issues with HTTP Upload
+* fixed connection problems with TLS1.3 servers
+* attempt to delete broken bundles from PEP
 * bug fixes
 
 #### Version 2.0.2
