@@ -423,10 +423,6 @@
     <item quantity="one">%d naburang katibayan</item>
     <item quantity="other">%d naburang mga katibayan</item>
   </plurals>
-  <plurals name="select_contact">
-    <item quantity="one">Piliin %d kontak</item>
-    <item quantity="other">Piliin %d kontaks</item>
-  </plurals>
   <string name="pref_quick_action_summary">Palitan ang pindutan ng pagpapadala sa mabilis na aksyon</string>
   <string name="pref_quick_action">Mabilis na aksyon</string>
   <string name="none">Wala</string>
