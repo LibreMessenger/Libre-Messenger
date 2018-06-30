@@ -380,12 +380,6 @@
     <item quantity="other">%d sertipiko na natanggal
 %d sertipiko na natanggal</item>
   </plurals>
-  <plurals name="select_contact">
-    <item quantity="one">Pili %d kontak
-Pili %d mga kontak</item>
-    <item quantity="other">Pili %d kontak
-Pili %d mga kontak</item>
-  </plurals>
   <string name="pref_quick_action_summary">Ilisi ang napadala nga button nga naay paspas nga lihok</string>
   <string name="pref_quick_action">Paspas nga Lihok</string>
   <string name="none">Wala</string>
