@@ -423,10 +423,6 @@
     <item quantity="one">%d sertifika silindi</item>
     <item quantity="other">%d sertifikalar silindi</item>
   </plurals>
-  <plurals name="select_contact">
-    <item quantity="one">Bağlantı %d seçin</item>
-    <item quantity="other">Bağlantılar %d seçin</item>
-  </plurals>
   <string name="pref_quick_action_summary">Gönderme düğmesini hızlı eylemle değiştirin</string>
   <string name="pref_quick_action">Hızlı İşlem</string>
   <string name="none">Yok</string>
