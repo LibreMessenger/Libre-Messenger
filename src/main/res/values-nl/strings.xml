@@ -405,10 +405,6 @@
     <item quantity="one">%d certificaat verwijderd</item>
     <item quantity="other">%d certificaten verwijderd</item>
   </plurals>
-  <plurals name="select_contact">
-    <item quantity="one">Selecteer %d contact</item>
-    <item quantity="other">Selecteer %d contacten</item>
-  </plurals>
   <string name="pref_quick_action_summary">Vervang verzendknop door snelle actie</string>
   <string name="pref_quick_action">Snelle actie</string>
   <string name="none">Geen</string>
