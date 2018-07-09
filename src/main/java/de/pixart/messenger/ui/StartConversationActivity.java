@@ -660,26 +660,10 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
                 this.mPostponedActivityResult = null;
                 if (requestCode == REQUEST_CREATE_CONFERENCE) {
                     Account account = extractAccount(intent);
-                    final String subject = intent.getStringExtra("subject");
-                    List<Jid> jids = new ArrayList<>();
-                    if (intent.getBooleanExtra("multiple", false)) {
-                        String[] toAdd = intent.getStringArrayExtra("contacts");
-                        for (String item : toAdd) {
-                            try {
-                                jids.add(Jid.of(item));
-                            } catch (IllegalArgumentException e) {
-                                //ignored
-                            }
-                        }
-                    } else {
-                        try {
-                            jids.add(Jid.of(intent.getStringExtra("contact")));
-                        } catch (Exception e) {
-                            //ignored
-                        }
-                    }
+                    final String name = intent.getStringExtra(ChooseContactActivity.EXTRA_GROUP_CHAT_NAME);
+                    final List<Jid> jids = ChooseContactActivity.extractJabberIds(intent);
                     if (account != null && jids.size() > 0) {
-                        if (xmppConnectionService.createAdhocConference(account, subject, jids, mAdhocConferenceCallback)) {
+                        if (xmppConnectionService.createAdhocConference(account, name, jids, mAdhocConferenceCallback)) {
                             mToast = Toast.makeText(this, R.string.creating_conference, Toast.LENGTH_LONG);
                             mToast.show();
                         }
@@ -959,7 +943,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
     }
 
     @Override
-    public void onCreateDialogPositiveClick(Spinner spinner, String subject) {
+    public void onCreateDialogPositiveClick(Spinner spinner, String name) {
         if (!xmppConnectionServiceBound) {
             return;
         }
@@ -968,10 +952,10 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
             return;
         }
         Intent intent = new Intent(getApplicationContext(), ChooseContactActivity.class);
-        intent.putExtra("multiple", true);
-        intent.putExtra("show_enter_jid", true);
-        intent.putExtra("subject", subject);
-        intent.putExtra(EXTRA_ACCOUNT, account.getJid().asBareJid().toString());
+        intent.putExtra(ChooseContactActivity.EXTRA_SHOW_ENTER_JID, false);
+        intent.putExtra(ChooseContactActivity.EXTRA_SELECT_MULTIPLE, true);
+        intent.putExtra(ChooseContactActivity.EXTRA_GROUP_CHAT_NAME, name.trim());
+        intent.putExtra(ChooseContactActivity.EXTRA_ACCOUNT, account.getJid().asBareJid().toString());
         intent.putExtra(ChooseContactActivity.EXTRA_TITLE_RES_ID, R.string.choose_participants);
         startActivityForResult(intent, REQUEST_CREATE_CONFERENCE);
         overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
@@ -1054,8 +1038,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
         }
 
         @Override
-        public void onCreateContextMenu(final ContextMenu menu, final View v,
-                                        final ContextMenuInfo menuInfo) {
+        public void onCreateContextMenu(final ContextMenu menu, final View v, final ContextMenuInfo menuInfo) {
             super.onCreateContextMenu(menu, v, menuInfo);
             final StartConversationActivity activity = (StartConversationActivity) getActivity();
             if (activity == null) {

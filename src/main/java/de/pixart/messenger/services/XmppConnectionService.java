@@ -31,6 +31,7 @@ import android.security.KeyChain;
 import android.support.annotation.BoolRes;
 import android.support.annotation.IntegerRes;
 import android.support.v4.app.RemoteInput;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.LruCache;
@@ -46,7 +47,6 @@ import org.openintents.openpgp.IOpenPgpService2;
 import org.openintents.openpgp.util.OpenPgpApi;
 import org.openintents.openpgp.util.OpenPgpServiceConnection;
 
-import java.math.BigInteger;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
@@ -2625,7 +2625,7 @@ public class XmppConnectionService extends Service {
     }
 
     public boolean createAdhocConference(final Account account,
-                                         final String subject,
+                                         final String name,
                                          final Iterable<Jid> jids,
                                          final UiCallback<Conversation> callback) {
         Log.d(Config.LOGTAG, account.getJid().asBareJid().toString() + ": creating adhoc conference with " + jids.toString());
@@ -2638,24 +2638,25 @@ public class XmppConnectionService extends Service {
                     }
                     return false;
                 }
-                final Jid jid = Jid.of(new BigInteger(64, getRNG()).toString(Character.MAX_RADIX), server, null);
+                final Jid jid = Jid.of(CryptoHelper.pronounceable(getRNG()), server, null);
                 final Conversation conversation = findOrCreateConversation(account, jid, true, false, true);
                 joinMuc(conversation, new OnConferenceJoined() {
                     @Override
                     public void onConferenceJoined(final Conversation conversation) {
-                        pushConferenceConfiguration(conversation, IqGenerator.defaultRoomConfiguration(), new OnConfigurationPushed() {
+                        final Bundle configuration = IqGenerator.defaultRoomConfiguration();
+                        if (!TextUtils.isEmpty(name)) {
+                            configuration.putString("muc#roomconfig_roomname", name);
+                        }
+                        pushConferenceConfiguration(conversation, configuration, new OnConfigurationPushed() {
                             @Override
                             public void onPushSucceeded() {
-                                if (subject != null && !subject.trim().isEmpty()) {
-                                    pushSubjectToConference(conversation, subject.trim());
-                                }
                                 for (Jid invite : jids) {
                                     invite(conversation, invite);
                                 }
                                 if (account.countPresences() > 1) {
                                     directInvite(conversation, account.getJid().asBareJid());
                                 }
-                                saveConversationAsBookmark(conversation, subject);
+                                saveConversationAsBookmark(conversation, name);
                                 if (callback != null) {
                                     callback.success(conversation);
                                 }
@@ -4116,8 +4117,8 @@ public class XmppConnectionService extends Service {
         if (!conversation.getJid().isBareJid()) {
             bookmark.setNick(conversation.getJid().getResource());
         }
-        if (name != null && !name.trim().isEmpty()) {
-            bookmark.setBookmarkName(name.trim());
+        if (!TextUtils.isEmpty(name)) {
+            bookmark.setBookmarkName(name);
         }
         bookmark.setAutojoin(getPreferences().getBoolean("autojoin", getResources().getBoolean(R.bool.autojoin)));
         account.getBookmarks().add(bookmark);

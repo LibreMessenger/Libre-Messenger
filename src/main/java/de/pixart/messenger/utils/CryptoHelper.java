@@ -34,6 +34,10 @@ import de.pixart.messenger.http.AesGcmURLStreamHandler;
 import rocks.xmpp.addr.Jid;
 
 public final class CryptoHelper {
+
+    private static final char[] VOWELS = "aeiou".toCharArray();
+    private static final char[] CONSONANTS = "bcfghjklmnpqrstvwxyz".toCharArray();
+
     public static final String FILETRANSFER = "?FILETRANSFERv1:";
     private final static char[] hexArray = "0123456789abcdef".toCharArray();
 
@@ -48,6 +52,16 @@ public final class CryptoHelper {
             hexChars[j * 2 + 1] = hexArray[v & 0x0F];
         }
         return new String(hexChars);
+    }
+
+    public static String pronounceable(SecureRandom random) {
+        char[] output = new char[random.nextInt(4) * 2 + 5];
+        boolean vowel = random.nextBoolean();
+        for (int i = 0; i < output.length; ++i) {
+            output[i] = vowel ? VOWELS[random.nextInt(VOWELS.length)] : CONSONANTS[random.nextInt(CONSONANTS.length)];
+            vowel = !vowel;
+        }
+        return String.valueOf(output);
     }
 
     public static byte[] hexToBytes(String hexString) {
