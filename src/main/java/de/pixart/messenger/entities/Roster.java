@@ -76,7 +76,6 @@ public class Roster {
             return;
         }
         contact.setAccount(account);
-        contact.setOption(Contact.Options.IN_ROSTER);
         synchronized (this.contacts) {
             contacts.put(contact.getJid().asBareJid(), contact);
         }
