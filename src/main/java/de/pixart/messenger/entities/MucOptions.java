@@ -2,7 +2,6 @@ package de.pixart.messenger.entities;
 
 import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -384,12 +383,12 @@ public class MucOptions {
         String name;
         Field roomConfigName = getRoomInfoForm().getFieldByName("muc#roomconfig_roomname");
         if (roomConfigName != null) {
-            Log.d(Config.LOGTAG, "value of room config name " + roomConfigName.getValue());
             name = roomConfigName.getValue();
         } else {
             List<ServiceDiscoveryResult.Identity> identities = serviceDiscoveryResult.getIdentities();
             String identityName = identities.size() > 0 ? identities.get(0).getName() : null;
-            if (!conversation.getJid().getEscapedLocal().equals(identityName)) {
+            final Jid jid = conversation.getJid();
+            if (identityName != null && !identityName.equals(jid == null ? null : jid.getEscapedLocal())) {
                 name = identityName;
             } else {
                 name = null;
@@ -714,8 +713,7 @@ public class MucOptions {
     }
 
     public String getName() {
-        String mucName = this.conversation.getAttribute("muc_name");
-        return conversation.getJid().getEscapedLocal().equals(mucName) ? null : mucName;
+        return this.conversation.getAttribute("muc_name");
     }
 
     private List<User> getFallbackUsersFromCryptoTargets() {
