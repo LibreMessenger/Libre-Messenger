@@ -3223,10 +3223,12 @@ public class XmppConnectionService extends Service {
                             updateAccountUi();
                         } else {
                             Contact contact = a.getRoster().getContact(avatar.owner);
-                            contact.setAvatar(avatar);
-                            getAvatarService().clear(contact);
-                            updateConversationUi();
-                            updateRosterUi();
+                            if (contact.setAvatar(avatar)) {
+                                syncRoster(account);
+                                getAvatarService().clear(contact);
+                                updateConversationUi();
+                                updateRosterUi();
+                            }
                         }
                         if (callback != null) {
                             callback.success(avatar);
@@ -3278,9 +3280,11 @@ public class XmppConnectionService extends Service {
                                     updateAccountUi();
                                 } else {
                                     Contact contact = account.getRoster().getContact(avatar.owner);
-                                    contact.setAvatar(avatar);
-                                    getAvatarService().clear(contact);
-                                    updateRosterUi();
+                                    if (contact.setAvatar(avatar)) {
+                                        syncRoster(account);
+                                        getAvatarService().clear(contact);
+                                        updateRosterUi();
+                                    }
                                 }
                                 updateConversationUi();
                             } else {
