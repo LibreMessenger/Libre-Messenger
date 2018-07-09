@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.text.emoji.widget.EmojiAppCompatEditText;
 import android.support.v13.view.inputmethod.EditorInfoCompat;
 import android.support.v13.view.inputmethod.InputConnectionCompat;
 import android.support.v13.view.inputmethod.InputContentInfoCompat;
@@ -22,7 +21,7 @@ import android.view.inputmethod.InputConnection;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 
-public class EditMessage extends EmojiAppCompatEditText {
+public class EditMessage extends EmojiWrapperEditText {
 
     private static final InputFilter SPAN_FILTER = (source, start, end, dest, dstart, dend) -> source instanceof Spanned ? source.toString() : source;
     protected Handler mTypingHandler = new Handler();
