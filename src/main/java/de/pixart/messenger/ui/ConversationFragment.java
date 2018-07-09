@@ -82,6 +82,7 @@ import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Blockable;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
+import de.pixart.messenger.entities.Conversational;
 import de.pixart.messenger.entities.DownloadableFile;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.MucOptions;
@@ -2050,7 +2051,8 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         }
         if (this.conversation != null) {
             final String msg = this.binding.textinput.getText().toString();
-            if (this.conversation.getStatus() != Conversation.STATUS_ARCHIVED && this.conversation.setNextMessage(msg)) {
+            final boolean participating = conversation.getMode() == Conversational.MODE_SINGLE || conversation.getMucOptions().participating();
+            if (this.conversation.getStatus() != Conversation.STATUS_ARCHIVED && participating && this.conversation.setNextMessage(msg)) {
                 this.activity.xmppConnectionService.updateConversation(this.conversation);
             }
             updateChatState(this.conversation, msg);
@@ -2074,7 +2076,8 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         }
         Log.d(Config.LOGTAG, "ConversationFragment.saveMessageDraftStopAudioPlayer()");
         final String msg = this.binding.textinput.getText().toString();
-        if (previousConversation.setNextMessage(msg)) {
+        final boolean participating = previousConversation.getMode() == Conversational.MODE_SINGLE || previousConversation.getMucOptions().participating();
+        if (participating && previousConversation.setNextMessage(msg)) {
             activity.xmppConnectionService.updateConversation(previousConversation);
         }
         updateChatState(this.conversation, msg);
@@ -2130,7 +2133,10 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         this.binding.textSendButton.setContentDescription(activity.getString(R.string.send_message_to_x, conversation.getName()));
         this.binding.textinput.setKeyboardListener(null);
         this.binding.textinput.setText("");
-        this.binding.textinput.append(this.conversation.getNextMessage());
+        final boolean participating = conversation.getMode() == Conversational.MODE_SINGLE || conversation.getMucOptions().participating();
+        if (participating) {
+            this.binding.textinput.append(this.conversation.getNextMessage());
+        }
         this.binding.textinput.setKeyboardListener(this);
         messageListAdapter.updatePreferences();
         refresh(false);
@@ -2429,6 +2435,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 }
                 updateSendButton();
                 updateEditablity();
+                activity.invalidateOptionsMenu();
             }
         }
     }
@@ -2440,8 +2447,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             this.binding.textinput.append(conversation.getDraftMessage());
             conversation.setDraftMessage(null);
         }
-        if (conversation.setNextMessage(this.binding.textinput.getText().toString())) {
-            activity.xmppConnectionService.updateConversation(conversation);
+        final boolean participating = conversation.getMode() == Conversational.MODE_SINGLE || conversation.getMucOptions().participating();
+        if (participating && conversation.setNextMessage(this.binding.textinput.getText().toString())) {
+            activity.xmppConnectionService.databaseBackend.updateConversation(conversation);
         }
         updateChatMsgHint();
         SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(activity);
@@ -2469,6 +2477,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         this.binding.textinput.setFocusableInTouchMode(canWrite);
         this.binding.textSendButton.setEnabled(canWrite);
         this.binding.textinput.setCursorVisible(canWrite);
+        this.binding.textinput.setEnabled(canWrite);
     }
 
     public void updateSendButton() {

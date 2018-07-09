@@ -1722,7 +1722,7 @@ public class XmppConnectionService extends Service {
         } else {
             for (Conversation conversation : getConversations()) {
                 if (conversation.getMode() == Conversation.MODE_SINGLE
-                        || conversation.getAccount().httpUploadAvailable()) {
+                        || (conversation.getAccount().httpUploadAvailable() && conversation.getMucOptions().participating())) {
                     list.add(conversation);
                 }
             }

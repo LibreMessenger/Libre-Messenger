@@ -40,6 +40,7 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.OmemoSetting;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.entities.Conversation;
+import de.pixart.messenger.entities.Conversational;
 import de.pixart.messenger.entities.Message;
 
 public class ConversationMenuConfigurator {
@@ -71,6 +72,11 @@ public class ConversationMenuConfigurator {
 
     public static void configureEncryptionMenu(@NonNull Conversation conversation, Menu menu) {
         final MenuItem menuSecure = menu.findItem(R.id.action_security);
+        final boolean participating = conversation.getMode() == Conversational.MODE_SINGLE || conversation.getMucOptions().participating();
+        if (!participating) {
+            menuSecure.setVisible(false);
+            return;
+        }
         final MenuItem none = menu.findItem(R.id.encryption_choice_none);
         final MenuItem otr = menu.findItem(R.id.encryption_choice_otr);
         final MenuItem pgp = menu.findItem(R.id.encryption_choice_pgp);
