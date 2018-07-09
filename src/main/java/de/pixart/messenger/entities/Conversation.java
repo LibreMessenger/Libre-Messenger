@@ -134,6 +134,10 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
         this.messagesLeftOnServer = value;
     }
 
+    public void deleteMessage(Message message) {
+        this.messages.remove(message);
+    }
+
     public Message getFirstUnreadMessage() {
         Message first = null;
         synchronized (this.messages) {

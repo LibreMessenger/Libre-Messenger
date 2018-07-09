@@ -1299,6 +1299,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             MenuItem quoteMessage = menu.findItem(R.id.quote_message);
             MenuItem retryDecryption = menu.findItem(R.id.retry_decryption);
             MenuItem correctMessage = menu.findItem(R.id.correct_message);
+            MenuItem deleteMessage = menu.findItem(R.id.delete_message);
             MenuItem shareWith = menu.findItem(R.id.share_with);
             MenuItem sendAgain = menu.findItem(R.id.send_again);
             MenuItem copyUrl = menu.findItem(R.id.copy_url);
@@ -1309,6 +1310,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             if (!m.isFileOrImage() && !encrypted && !m.isGeoUri() && !m.treatAsDownloadable()) {
                 copyMessage.setVisible(true);
                 quoteMessage.setVisible(MessageUtils.prepareQuote(m).length() > 0);
+                deleteMessage.setVisible(true);
                 String body = m.getMergedBody().toString();
                 if (ShareUtil.containsXmppUri(body)) {
                     copyLink.setTitle(R.string.copy_jabber_id);
@@ -1396,6 +1398,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 return true;
             case R.id.retry_decryption:
                 retryDecryption(selectedMessage);
+                return true;
+            case R.id.delete_message:
+                deleteMessage(selectedMessage);
                 return true;
             case R.id.delete_file:
                 deleteFile(selectedMessage);
@@ -1845,6 +1850,13 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         builder.setMessage(message.getErrorMessage());
         builder.setPositiveButton(R.string.ok, null);
         builder.create().show();
+    }
+
+    private void deleteMessage(Message message) {
+        final Conversation conversation = (Conversation) message.getConversation();
+        activity.xmppConnectionService.deleteMessage(conversation, message);
+        activity.onConversationsListItemUpdated();
+        refresh();
     }
 
     private void deleteFile(Message message) {
