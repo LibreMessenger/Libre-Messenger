@@ -162,4 +162,10 @@ public class ReadByMarker {
         return true;
     }
 
+    public static boolean allUsersRepresented(Collection<MucOptions.User> users, Set<ReadByMarker> markers, ReadByMarker marker) {
+        HashSet<ReadByMarker> markersCopy = new HashSet<>(markers);
+        markersCopy.add(marker);
+        return allUsersRepresented(users, markersCopy);
+    }
+
 }
