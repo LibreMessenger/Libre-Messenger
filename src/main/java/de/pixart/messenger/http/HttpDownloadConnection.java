@@ -52,7 +52,7 @@ public class HttpDownloadConnection implements Transferable {
 
     private final SimpleDateFormat fileDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
 
-    public HttpDownloadConnection(HttpConnectionManager manager) {
+    HttpDownloadConnection(HttpConnectionManager manager) {
         this.mHttpConnectionManager = manager;
         this.mXmppConnectionService = manager.getXmppConnectionService();
         this.mUseTor = mXmppConnectionService.useTorToConnect();
@@ -64,7 +64,7 @@ public class HttpDownloadConnection implements Transferable {
             if (this.mStatus == STATUS_OFFER_CHECK_FILESIZE) {
                 checkFileSize(true);
             } else {
-                new Thread(new FileDownloader(true)).start();
+                download(true);
             }
             return true;
         } else {
@@ -113,10 +113,20 @@ public class HttpDownloadConnection implements Transferable {
                 this.message.setEncryption(Message.ENCRYPTION_NONE);
             }
             method = mUrl.getProtocol().equalsIgnoreCase(P1S3UrlStreamHandler.PROTOCOL_NAME) ? Method.P1_S3 : Method.HTTP_UPLOAD;
-            checkFileSize(interactive);
+            long knownFileSize = message.getFileParams().size;
+            if (knownFileSize > 0 && interactive && method != Method.P1_S3) {
+                this.file.setExpectedSize(knownFileSize);
+                download(true);
+            } else {
+                checkFileSize(interactive);
+            }
         } catch (MalformedURLException e) {
             this.cancel();
         }
+    }
+
+    private void download(boolean interactive) {
+        new Thread(new FileDownloader(interactive)).start();
     }
 
     private void checkFileSize(boolean interactive) {
@@ -257,7 +267,7 @@ public class HttpDownloadConnection implements Transferable {
                     && size <= mHttpConnectionManager.getAutoAcceptFileSize()
                     && mXmppConnectionService.isDataSaverDisabled()) {
                 HttpDownloadConnection.this.acceptedAutomatically = true;
-                new Thread(new FileDownloader(interactive)).start();
+                download(interactive);
             } else {
                 changeStatus(STATUS_OFFER);
                 HttpDownloadConnection.this.acceptedAutomatically = false;
