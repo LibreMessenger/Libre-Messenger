@@ -31,6 +31,7 @@ import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -71,6 +72,7 @@ import de.pixart.messenger.entities.ServiceDiscoveryResult;
 import de.pixart.messenger.generator.IqGenerator;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.services.MemorizingTrustManager;
+import de.pixart.messenger.services.MessageArchiveService;
 import de.pixart.messenger.services.NotificationService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.EditAccountActivity;
@@ -1821,13 +1823,12 @@ public class XmppConnection implements Runnable {
         }
 
         public boolean mam() {
-            return hasDiscoFeature(account.getJid().asBareJid(), Namespace.MAM)
-                    || hasDiscoFeature(account.getJid().asBareJid(), Namespace.MAM_LEGACY);
+            return MessageArchiveService.Version.has(getAccountFeatures());
         }
 
-        public boolean mamLegacy() {
-            return !hasDiscoFeature(account.getJid().asBareJid(), Namespace.MAM)
-                    && hasDiscoFeature(account.getJid().asBareJid(), Namespace.MAM_LEGACY);
+        public List<String> getAccountFeatures() {
+            ServiceDiscoveryResult result = connection.disco.get(account.getJid().asBareJid());
+            return result == null ? Collections.emptyList() : result.getFeatures();
         }
 
         public boolean push() {

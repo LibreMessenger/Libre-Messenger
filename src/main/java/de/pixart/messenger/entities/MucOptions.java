@@ -11,8 +11,8 @@ import java.util.Set;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.services.MessageArchiveService;
 import de.pixart.messenger.utils.JidHelper;
-import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 import de.pixart.messenger.xmpp.forms.Data;
@@ -64,6 +64,10 @@ public class MucOptions {
                 user.chatState = Config.DEFAULT_CHATSTATE;
             }
         }
+    }
+
+    public boolean mamSupport() {
+        return MessageArchiveService.Version.has(getFeatures());
     }
 
     public enum Affiliation {
@@ -455,12 +459,8 @@ public class MucOptions {
         return conversation.getBooleanAttribute(Conversation.ATTRIBUTE_MEMBERS_ONLY, false);
     }
 
-    public boolean mamSupport() {
-        return hasFeature(Namespace.MAM) || hasFeature(Namespace.MAM_LEGACY);
-    }
-
-    public boolean mamLegacy() {
-        return hasFeature(Namespace.MAM_LEGACY) && !hasFeature(Namespace.MAM);
+    public List<String> getFeatures() {
+        return this.serviceDiscoveryResult != null ? this.serviceDiscoveryResult.features : Collections.emptyList();
     }
 
     public boolean nonanonymous() {
