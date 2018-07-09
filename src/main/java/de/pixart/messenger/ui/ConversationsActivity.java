@@ -85,6 +85,7 @@ import de.pixart.messenger.ui.interfaces.OnConversationsListItemUpdated;
 import de.pixart.messenger.ui.util.ActivityResult;
 import de.pixart.messenger.ui.util.ConversationMenuConfigurator;
 import de.pixart.messenger.ui.util.PendingItem;
+import de.pixart.messenger.utils.EmojiWrapper;
 import de.pixart.messenger.utils.ExceptionHelper;
 import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import de.pixart.messenger.utils.UIHelper;
@@ -688,7 +689,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
                     actionBar.setDisplayShowCustomEnabled(true);
                     TextView abtitle = findViewById(android.R.id.text1);
                     TextView absubtitle = findViewById(android.R.id.text2);
-                    abtitle.setText(conversation.getName());
+                    abtitle.setText(EmojiWrapper.transform(conversation.getName()));
                     abtitle.setOnClickListener(view1 -> {
                         if (conversation.getMode() == Conversation.MODE_SINGLE) {
                             switchToContactDetails(conversation.getContact());
@@ -766,7 +767,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
                                 if (userWithChatStates.size() > 0) {
                                     if (userWithChatStates.size() == 1) {
                                         MucOptions.User user = userWithChatStates.get(0);
-                                        absubtitle.setText(getString(R.string.contact_is_typing, UIHelper.getDisplayName(user)));
+                                        absubtitle.setText(EmojiWrapper.transform(getString(R.string.contact_is_typing, UIHelper.getDisplayName(user))));
                                     } else {
                                         StringBuilder builder = new StringBuilder();
                                         for (MucOptions.User user : userWithChatStates) {
@@ -775,7 +776,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
                                             }
                                             builder.append(UIHelper.getDisplayName(user));
                                         }
-                                        absubtitle.setText(getString(R.string.contacts_are_typing, builder.toString()));
+                                        absubtitle.setText(EmojiWrapper.transform(getString(R.string.contacts_are_typing, builder.toString())));
                                     }
                                 }
                             } else {
