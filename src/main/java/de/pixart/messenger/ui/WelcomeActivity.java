@@ -245,7 +245,9 @@ public class WelcomeActivity extends XmppActivity {
         if (checkDB != null) {
             checkDB.close();
         }
-        Log.d(Config.LOGTAG, "checkDB = " + checkDB.toString() + ", Backup DB = " + Backup_DB_Version + ", DB = " + DB_Version);
+        if (checkDB != null) {
+            Log.d(Config.LOGTAG, "checkDB = " + checkDB.toString() + ", Backup DB = " + Backup_DB_Version + ", DB = " + DB_Version);
+        }
         if (checkDB != null && Backup_DB_Version != 0 && Backup_DB_Version <= DB_Version) {
             try {
                 ImportDatabase();
