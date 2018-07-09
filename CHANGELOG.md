@@ -10,6 +10,7 @@
 * fixed issues with HTTP Upload
 * fixed connection problems with TLS1.3 servers
 * attempt to delete broken bundles from PEP
+* offer Paste as quote for HTML content
 * bug fixes
 
 #### Version 2.0.2
