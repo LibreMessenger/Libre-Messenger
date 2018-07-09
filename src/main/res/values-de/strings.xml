@@ -801,4 +801,5 @@
   <string name="providing_a_name_is_optional">Die Angabe eines Namens ist optional</string>
   <string name="create_dialog_group_chat_name">Gruppenchat-Name</string>
   <string name="everyone_has_read_up_to_this_point">Alle haben bis hierher gelesen</string>
+  <string name="delete_message">Nachricht löschen</string>
 </resources>
