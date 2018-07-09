@@ -351,7 +351,7 @@ public class TrustKeysActivity extends OmemoActivity implements OnKeyStatusUpdat
     }
 
     private boolean hasPendingKeyFetches() {
-        return mAccount != null && mAccount.getAxolotlService().hasPendingKeyFetches(mAccount, contactJids);
+        return mAccount != null && mAccount.getAxolotlService().hasPendingKeyFetches(contactJids);
     }
 
 
