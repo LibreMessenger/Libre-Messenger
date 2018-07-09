@@ -61,7 +61,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.pixart.messenger.Config;
@@ -99,7 +98,6 @@ public abstract class XmppActivity extends ActionBarActivity {
 
     public XmppConnectionService xmppConnectionService;
     public boolean xmppConnectionServiceBound = false;
-    protected final AtomicBoolean registeredListeners = new AtomicBoolean(false);
 
     protected int mColorRed;
     protected int mColorWarningButton;
@@ -122,9 +120,7 @@ public abstract class XmppActivity extends ActionBarActivity {
             XmppConnectionBinder binder = (XmppConnectionBinder) service;
             xmppConnectionService = binder.getService();
             xmppConnectionServiceBound = true;
-            if (registeredListeners.compareAndSet(false, true)) {
-                registerListeners();
-            }
+            registerListeners();
             invalidateOptionsMenu();
             onBackendConnected();
         }
@@ -228,9 +224,7 @@ public abstract class XmppActivity extends ActionBarActivity {
                 connectToBackend();
             }
         } else {
-            if (registeredListeners.compareAndSet(false, true)) {
-                this.registerListeners();
-            }
+            this.registerListeners();
             this.onBackendConnected();
         }
     }
@@ -246,9 +240,7 @@ public abstract class XmppActivity extends ActionBarActivity {
     protected void onStop() {
         super.onStop();
         if (xmppConnectionServiceBound) {
-            if (registeredListeners.compareAndSet(true, false)) {
-                this.unregisterListeners();
-            }
+            this.unregisterListeners();
             unbindService(mConnection);
             xmppConnectionServiceBound = false;
         }
