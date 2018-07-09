@@ -137,7 +137,9 @@
         <item name="ic_settings_about" type="reference">@drawable/ic_help_black_24dp</item>
     </style>
 
-    <style name="ConversationsTheme.Dark" parent="Theme.AppCompat.NoActionBar">
+    <style name="ConversationsTheme.Dark" parent="ConversationsTheme.Dark.Base" />
+
+    <style name="ConversationsTheme.Dark.Base" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
