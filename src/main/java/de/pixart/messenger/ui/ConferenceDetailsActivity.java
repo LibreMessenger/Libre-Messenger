@@ -60,6 +60,7 @@ import de.pixart.messenger.utils.XmppUri;
 import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.entities.Bookmark.printableValue;
+import static de.pixart.messenger.utils.StringUtils.changed;
 
 public class ConferenceDetailsActivity extends XmppActivity implements OnConversationUpdate, OnMucRosterUpdate, XmppConnectionService.OnAffiliationChanged, XmppConnectionService.OnRoleChanged, XmppConnectionService.OnConfigurationPushed, TextWatcher {
     public static final String ACTION_VIEW_MUC = "view_muc";
@@ -410,14 +411,6 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         }
     }
 
-    private static String blankOnNull(String input) {
-        return input == null ? "" : input;
-    }
-
-    private static boolean changed(String one, String two) {
-        return !blankOnNull(one).equals(blankOnNull(two));
-    }
-
     @Override
     protected String getShareableUri(boolean http) {
         if (mConversation != null) {
@@ -595,8 +588,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
     }
 
     protected void saveAsBookmark() {
-        xmppConnectionService.saveConversationAsBookmark(mConversation,
-                mConversation.getMucOptions().getSubject());
+        xmppConnectionService.saveConversationAsBookmark(mConversation, mConversation.getMucOptions().getName());
         updateView();
     }
 

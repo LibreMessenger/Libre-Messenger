@@ -125,6 +125,7 @@ import de.pixart.messenger.utils.ReplacingSerialSingleThreadExecutor;
 import de.pixart.messenger.utils.ReplacingTaskManager;
 import de.pixart.messenger.utils.Resolver;
 import de.pixart.messenger.utils.SerialSingleThreadExecutor;
+import de.pixart.messenger.utils.StringUtils;
 import de.pixart.messenger.utils.WakeLockHelper;
 import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xml.Element;
@@ -2699,13 +2700,25 @@ public class XmppConnectionService extends Service {
             @Override
             public void onIqPacketReceived(Account account, IqPacket packet) {
                 if (packet.getType() == IqPacket.TYPE.RESULT) {
-                    if (conversation.getMucOptions().updateConfiguration(new ServiceDiscoveryResult(packet))) {
+                    final MucOptions mucOptions = conversation.getMucOptions();
+                    final Bookmark bookmark = conversation.getBookmark();
+                    final boolean sameBefore = StringUtils.equals(bookmark == null ? null : bookmark.getBookmarkName(), mucOptions.getName());
+
+                    if (mucOptions.updateConfiguration(new ServiceDiscoveryResult(packet))) {
                         Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": muc configuration changed for " + conversation.getJid().asBareJid());
                         updateConversation(conversation);
                     }
+
+                    if (bookmark != null && (sameBefore || bookmark.getBookmarkName() == null)) {
+                        if (bookmark.setBookmarkName(mucOptions.getName())) {
+                            pushBookmarks(account);
+                        }
+                    }
+
                     if (callback != null) {
                         callback.onConferenceConfigurationFetched(conversation);
                     }
+
                     updateConversationUi();
                 } else if (packet.getType() == IqPacket.TYPE.ERROR) {
                     if (callback != null) {

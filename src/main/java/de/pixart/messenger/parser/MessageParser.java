@@ -26,7 +26,6 @@ import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.crypto.axolotl.NotEncryptedForThisDeviceException;
 import de.pixart.messenger.crypto.axolotl.XmppAxolotlMessage;
 import de.pixart.messenger.entities.Account;
-import de.pixart.messenger.entities.Bookmark;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Message;
@@ -758,12 +757,6 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                         String subject = packet.findInternationalizedChildContent("subject");
                         if (conversation.getMucOptions().setSubject(subject)) {
                             mXmppConnectionService.updateConversation(conversation);
-                        }
-                        final Bookmark bookmark = conversation.getBookmark();
-                        if (bookmark != null && bookmark.getBookmarkName() == null) {
-                            if (bookmark.setBookmarkName(subject)) {
-                                mXmppConnectionService.pushBookmarks(account);
-                            }
                         }
                         mXmppConnectionService.updateConversationUi();
                         return;
