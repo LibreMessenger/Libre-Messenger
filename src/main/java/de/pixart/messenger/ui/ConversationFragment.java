@@ -566,6 +566,15 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         return true;
     }
 
+    private static boolean writeGranted(int[] grantResults, String[] permission) {
+        for (int i = 0; i < grantResults.length; ++i) {
+            if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equals(permission[i])) {
+                return grantResults[i] == PackageManager.PERMISSION_GRANTED;
+            }
+        }
+        return false;
+    }
+
     private static String getFirstDenied(int[] grantResults, String[] permissions) {
         for (int i = 0; i < grantResults.length; ++i) {
             if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
@@ -1616,6 +1625,11 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     res = R.string.no_storage_permission;
                 }
                 Toast.makeText(getActivity(), res, Toast.LENGTH_SHORT).show();
+            }
+        }
+        if (writeGranted(grantResults, permissions)) {
+            if (activity != null && activity.xmppConnectionService != null) {
+                activity.xmppConnectionService.restartFileObserver();
             }
         }
     }
