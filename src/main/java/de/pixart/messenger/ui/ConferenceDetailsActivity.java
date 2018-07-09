@@ -53,6 +53,7 @@ import de.pixart.messenger.ui.util.MyLinkify;
 import de.pixart.messenger.ui.util.SoftKeyboardUtils;
 import de.pixart.messenger.utils.EmojiWrapper;
 import de.pixart.messenger.utils.MenuDoubleTabUtil;
+import de.pixart.messenger.utils.StringUtils;
 import de.pixart.messenger.utils.StylingHelper;
 import de.pixart.messenger.utils.TimeframeUtils;
 import de.pixart.messenger.utils.UIHelper;
@@ -406,7 +407,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         if (mucOptions.getSelf().getAffiliation().ranks(MucOptions.Affiliation.OWNER) && changed(mucOptions.getName(), name)) {
             Bundle options = new Bundle();
             options.putString("muc#roomconfig_persistentroom", "1");
-            options.putString("muc#roomconfig_roomname", name);
+            options.putString("muc#roomconfig_roomname", StringUtils.nullOnEmpty(name));
             xmppConnectionService.pushConferenceConfiguration(mConversation, options, this);
         }
     }

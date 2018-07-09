@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import de.pixart.messenger.utils.StringUtils;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.InvalidJid;
@@ -40,6 +41,14 @@ public class Bookmark extends Element implements ListItem {
         return bookmark;
     }
 
+    public static boolean printableValue(@Nullable String value, boolean permitNone) {
+        return value != null && !value.trim().isEmpty() && (permitNone || !"None".equals(value));
+    }
+
+    public static boolean printableValue(@Nullable String value) {
+        return printableValue(value, true);
+    }
+
     public void setAutojoin(boolean autojoin) {
         if (autojoin) {
             this.setAttribute("autojoin", "true");
@@ -66,14 +75,6 @@ public class Bookmark extends Element implements ListItem {
             Jid jid = this.getJid();
             return jid != null && jid.getLocal() != null ? jid.getLocal() : "";
         }
-    }
-
-    public static boolean printableValue(@Nullable String value, boolean permitNone) {
-        return value != null && !value.trim().isEmpty() && (permitNone || !"None".equals(value));
-    }
-
-    public static boolean printableValue(@Nullable String value) {
-        return printableValue(value, true);
     }
 
     @Override
@@ -168,11 +169,11 @@ public class Bookmark extends Element implements ListItem {
 
     public boolean setBookmarkName(String name) {
         String before = getBookmarkName();
-        if (name != null && !name.equals(before)) {
+        if (name != null) {
             this.setAttribute("name", name);
-            return true;
         } else {
-            return false;
+            this.removeAttribute("name");
         }
+        return StringUtils.changed(before, name);
     }
 }
