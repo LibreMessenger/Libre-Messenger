@@ -804,4 +804,5 @@
     <string name="everyone_has_read_up_to_this_point">Everyone has read up to this point</string>
     <string name="conference_resource_constraint">Resource constraint</string>
     <string name="delete_message">Delete message</string>
+    <string name="conference_destroyed">This group chat has been destroyed</string>
 </resources>

@@ -18,6 +18,7 @@ import de.pixart.messenger.generator.IqGenerator;
 import de.pixart.messenger.generator.PresenceGenerator;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.utils.Namespace;
+import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.InvalidJid;
 import de.pixart.messenger.xmpp.OnPresencePacketReceived;
@@ -121,7 +122,15 @@ public class PresenceParser extends AbstractParser implements
                     }
                 }
             } else if (type.equals("unavailable")) {
-                if (codes.contains(MucOptions.STATUS_CODE_SHUTDOWN) && from.equals(mucOptions.getSelf().getFullJid())) {
+                final boolean fullJidMatches = from.equals(mucOptions.getSelf().getFullJid());
+                if (x.hasChild("destroy") && fullJidMatches) {
+                    Element destroy = x.findChild("destroy");
+                    final Jid alternate = destroy == null ? null : InvalidJid.getNullForInvalid(destroy.getAttributeAsJid("jid"));
+                    mucOptions.setError(MucOptions.Error.DESTROYED);
+                    if (alternate != null) {
+                        Log.d(Config.LOGTAG, conversation.getAccount().getJid().asBareJid() + ": muc destroyed. alternate location " + alternate);
+                    }
+                } else if (codes.contains(MucOptions.STATUS_CODE_SHUTDOWN) && fullJidMatches) {
                     mucOptions.setError(MucOptions.Error.SHUTDOWN);
                 } else if (codes.contains(MucOptions.STATUS_CODE_SELF_PRESENCE)) {
                     if (codes.contains(MucOptions.STATUS_CODE_KICKED)) {
@@ -167,6 +176,23 @@ public class PresenceParser extends AbstractParser implements
                     mucOptions.setError(MucOptions.Error.MEMBERS_ONLY);
                 } else if (error.hasChild("resource-constraint")) {
                     mucOptions.setError(MucOptions.Error.RESOURCE_CONSTRAINT);
+                } else if (error.hasChild("gone")) {
+                    final String gone = error.findChildContent("gone");
+                    final Jid alternate;
+                    if (gone != null) {
+                        final XmppUri xmppUri = new XmppUri(gone);
+                        if (xmppUri.isJidValid()) {
+                            alternate = xmppUri.getJid();
+                        } else {
+                            alternate = null;
+                        }
+                    } else {
+                        alternate = null;
+                    }
+                    mucOptions.setError(MucOptions.Error.DESTROYED);
+                    if (alternate != null) {
+                        Log.d(Config.LOGTAG, conversation.getAccount().getJid().asBareJid() + ": muc destroyed. alternate location " + alternate);
+                    }
                 } else {
                     final String text = error.findChildContent("text");
                     if (text != null && text.contains("attribute 'to'")) {

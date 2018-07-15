@@ -2355,12 +2355,15 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     showSnackbar(R.string.conference_kicked, R.string.join, joinMuc);
                     break;
                 case UNKNOWN:
-                    showSnackbar(R.string.conference_unknown_error, R.string.leave, leaveMuc);
+                    showSnackbar(R.string.conference_unknown_error, R.string.leave, joinMuc);
                     break;
                 case INVALID_NICK:
                     showSnackbar(R.string.invalid_muc_nick, R.string.edit, clickToMuc);
                 case SHUTDOWN:
                     showSnackbar(R.string.conference_shutdown, R.string.try_again, joinMuc);
+                    break;
+                case DESTROYED:
+                    showSnackbar(R.string.conference_destroyed, R.string.leave, leaveMuc);
                     break;
                 default:
                     hideSnackbar();
