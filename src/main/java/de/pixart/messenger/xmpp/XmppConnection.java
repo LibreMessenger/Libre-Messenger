@@ -213,8 +213,7 @@ public class XmppConnection implements Runnable {
 
     protected void changeStatus(final Account.State nextStatus) {
         synchronized (this) {
-            this.mThread = Thread.currentThread();
-            if (this.mThread.isInterrupted()) {
+            if (Thread.currentThread().isInterrupted()) {
                 Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": not changing status to " + nextStatus + " because thread was interrupted");
                 return;
             }
@@ -505,7 +504,8 @@ public class XmppConnection implements Runnable {
     @Override
     public void run() {
         synchronized (this) {
-            if (Thread.currentThread().isInterrupted()) {
+            this.mThread = Thread.currentThread();
+            if (this.mThread.isInterrupted()) {
                 Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": aborting connect because thread was interrupted");
                 return;
             }
