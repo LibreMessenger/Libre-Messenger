@@ -797,9 +797,11 @@
   <string name="host_does_not_support_group_chat_avatars">Host unterstützt keine Gruppenchat-Avatare</string>
   <string name="only_the_owner_can_change_group_chat_avatar">Nur der Eigentümer kann den Gruppenchat-Avatar ändern</string>
   <string name="contact_name">Name des Kontaktes</string>
+  <string name="nickname">Nickname für diesen Gruppenchat</string>
   <string name="group_chat_name">Name</string>
   <string name="providing_a_name_is_optional">Die Angabe eines Namens ist optional</string>
   <string name="create_dialog_group_chat_name">Gruppenchat-Name</string>
   <string name="everyone_has_read_up_to_this_point">Alle haben bis hierher gelesen</string>
   <string name="delete_message">Nachricht löschen</string>
+  <string name="conference_destroyed">Dieser Gruppenchat wurde aufgelöst</string>
 </resources>
