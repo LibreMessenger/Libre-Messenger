@@ -3,13 +3,9 @@
 
 Pix-Art Messenger ist eine Kopie der offiziellen Android-App [Conversations](https://github.com/siacs/Conversations) mit einigen Änderungen, insbesondere zur Verbesserung der Benutzerfreundlichkeit, um den Umstieg von oftmals vorinstallierten Messengern zu erleichtern.
 
-###### Jetzt auch im Google Play Store:
+<a href='https://play.google.com/store/apps/details?id=de.pixart.messenger'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height="100"/></a> <a href="https://f-droid.org/app/de.pixart.messenger"><img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="100"></a>
 
-<a href="https://play.google.com/store/apps/details?id=de.pixart.messenger">
-    <img src="https://conversations.im/images/en-play-badge.png" alt="Google Play">
-</a>
-
-Alternativ kannst du den Messenger direkt aus dem F-Droid Repo von IzzySoft installieren https://android.izzysoft.de/repo, oder hier von GitHub unter [Releases](https://github.com/kriztan/Pix-Art-Messenger/releases/latest) herunterladen.
+Alternativ kannst du den Messenger direkt aus hier von GitHub unter [Releases](https://github.com/kriztan/Pix-Art-Messenger/releases/latest) herunterladen.
 
 #### Wie kann ich bei der Übersetzung helfen?
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/pix-art-messenger/localized.svg)](https://crowdin.com/project/pix-art-messenger)
