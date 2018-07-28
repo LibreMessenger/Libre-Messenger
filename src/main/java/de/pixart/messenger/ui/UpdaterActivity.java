@@ -33,24 +33,29 @@ import java.util.List;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.persistance.FileBackend;
+import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.utils.WakeLockHelper;
+
+import static de.pixart.messenger.http.HttpConnectionManager.getProxy;
 
 public class UpdaterActivity extends XmppActivity {
     static final private String FileName = "update.apk";
-
     String appURI = "";
     String changelog = "";
     Integer filesize = 0;
     boolean playstore = false;
     ProgressDialog mProgressDialog;
     DownloadTask downloadTask;
+    XmppConnectionService mXmppConnectionService;
+    private boolean mUseTor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         //set activity
         setContentView(R.layout.activity_updater);
-
+        this.mUseTor = mXmppConnectionService.useTorToConnect();
         this.mTheme = findTheme();
         setTheme(this.mTheme);
 
@@ -65,7 +70,7 @@ public class UpdaterActivity extends XmppActivity {
             }
         };
         mProgressDialog.setMessage(getString(R.string.download_started));
-        mProgressDialog.setProgressNumberFormat (null);
+        mProgressDialog.setProgressNumberFormat(null);
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         mProgressDialog.setCancelable(false);
@@ -140,7 +145,8 @@ public class UpdaterActivity extends XmppActivity {
                                 }
                             } else {
                                 Toast.makeText(getApplicationContext(), getText(R.string.download_started), Toast.LENGTH_LONG).show();
-                                downloadTask = new DownloadTask(UpdaterActivity.this) {};
+                                downloadTask = new DownloadTask(UpdaterActivity.this) {
+                                };
                                 downloadTask.execute(appURI);
                             }
                         } else {
@@ -188,127 +194,6 @@ public class UpdaterActivity extends XmppActivity {
         super.onRestoreInstanceState(savedInstanceState);
     }
 
-    private class DownloadTask extends AsyncTask<String, Integer, String> {
-
-        private Context context;
-
-        private PowerManager.WakeLock mWakeLock;
-        private long startTime = 0;
-        File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + FileBackend.getDirectoryName("Update", false));
-        File file = new File(dir, FileName);
-        public DownloadTask(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            startTime = System.currentTimeMillis();
-            // take CPU lock to prevent CPU from going off if the user
-            // presses the power button during download
-            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-            if (pm != null) {
-                mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, getClass().getName());
-                mWakeLock.acquire();
-            }
-            mProgressDialog.show();
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... progress) {
-            super.onProgressUpdate(progress);
-            // if we get here, length is known, now set indeterminate to false
-            mProgressDialog.setIndeterminate(false);
-            mProgressDialog.setMax(100);
-            mProgressDialog.setProgress(progress[0]);
-        }
-
-        @Override
-        protected String doInBackground(String... sUrl) {
-            InputStream is = null;
-            OutputStream os = null;
-            HttpURLConnection connection = null;
-            try {
-                Log.d(Config.LOGTAG, "AppUpdater: save file to " + file.toString());
-                Log.d(Config.LOGTAG, "AppUpdater: download update from url: " + sUrl[0] + " to file name: " + file.toString());
-
-                URL url = new URL(sUrl[0]);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-
-                // expect HTTP 200 OK, so we don't mistakenly save error report
-                // instead of the file
-                if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                    Toast.makeText(getApplicationContext(), getText(R.string.failed), Toast.LENGTH_LONG).show();
-                    return connection.getResponseCode() + ": " + connection.getResponseMessage();
-                }
-
-                // this will be useful to display download percentage
-                // might be -1: server did not report the length
-                int fileLength = connection.getContentLength();
-
-                // download the file
-                is = connection.getInputStream();
-                os = new FileOutputStream(file);
-
-                byte data[] = new byte[4096];
-                long total = 0;
-                int count;
-                while ((count = is.read(data)) != -1) {
-                    // allow canceling with back button
-                    if (isCancelled()) {
-                        is.close();
-                        return "canceled";
-                    }
-                    total += count;
-                    // publishing the progress....
-                    if (fileLength > 0) // only if total length is known
-                        publishProgress((int) (total * 100 / fileLength));
-                    os.write(data, 0, count);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                return e.toString();
-            } finally {
-                try {
-                    if (os != null)
-                        os.close();
-                    if (is != null)
-                        is.close();
-                } catch (IOException ignored) {
-                }
-
-                if (connection != null)
-                    connection.disconnect();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            WakeLockHelper.release(mWakeLock);
-            mProgressDialog.dismiss();
-            if (result != null) {
-                Toast.makeText(getApplicationContext(), getString(R.string.failed), Toast.LENGTH_LONG).show();
-                Log.d(Config.LOGTAG, "AppUpdater: failed with " + result);
-                UpdaterActivity.this.finish();
-            } else {
-                Log.d(Config.LOGTAG, "AppUpdater: download ready in " + ((System.currentTimeMillis() - startTime) / 1000) + " sec");
-
-                //start the installation of the latest localVersion
-                Intent installIntent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
-                installIntent.setDataAndType(FileBackend.getUriForFile(UpdaterActivity.this, file), "application/vnd.android.package-archive");
-                installIntent.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
-                installIntent.putExtra(Intent.EXTRA_RETURN_RESULT, true);
-                installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                installIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                startActivity(installIntent);
-                overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
-                UpdaterActivity.this.finish();
-            }
-        }
-
-    }
     //check for internet connection
     private boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -383,5 +268,132 @@ public class UpdaterActivity extends XmppActivity {
             downloadTask.cancel(true);
         }
         UpdaterActivity.this.finish();
+    }
+
+    private class DownloadTask extends AsyncTask<String, Integer, String> {
+
+        File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + FileBackend.getDirectoryName("Update", false));
+        File file = new File(dir, FileName);
+        private Context context;
+        private PowerManager.WakeLock mWakeLock;
+        private long startTime = 0;
+
+        public DownloadTask(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            startTime = System.currentTimeMillis();
+            // take CPU lock to prevent CPU from going off if the user
+            // presses the power button during download
+            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            if (pm != null) {
+                mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, getClass().getName());
+                mWakeLock.acquire();
+            }
+            mProgressDialog.show();
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+            super.onProgressUpdate(progress);
+            // if we get here, length is known, now set indeterminate to false
+            mProgressDialog.setIndeterminate(false);
+            mProgressDialog.setMax(100);
+            mProgressDialog.setProgress(progress[0]);
+        }
+
+        @Override
+        protected String doInBackground(String... sUrl) {
+            InputStream is = null;
+            OutputStream os = null;
+            HttpURLConnection connection = null;
+            try {
+                Log.d(Config.LOGTAG, "AppUpdater: save file to " + file.toString());
+                Log.d(Config.LOGTAG, "AppUpdater: download update from url: " + sUrl[0] + " to file name: " + file.toString());
+
+                URL url = new URL(sUrl[0]);
+
+                if (mUseTor) {
+                    connection = (HttpURLConnection) url.openConnection(getProxy());
+                } else {
+                    connection = (HttpURLConnection) url.openConnection();
+                }
+                connection.connect();
+
+                // expect HTTP 200 OK, so we don't mistakenly save error report
+                // instead of the file
+                if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                    Toast.makeText(getApplicationContext(), getText(R.string.failed), Toast.LENGTH_LONG).show();
+                    return connection.getResponseCode() + ": " + connection.getResponseMessage();
+                }
+
+                // this will be useful to display download percentage
+                // might be -1: server did not report the length
+                int fileLength = connection.getContentLength();
+
+                // download the file
+                is = connection.getInputStream();
+                os = new FileOutputStream(file);
+
+                byte data[] = new byte[4096];
+                long total = 0;
+                int count;
+                while ((count = is.read(data)) != -1) {
+                    // allow canceling with back button
+                    if (isCancelled()) {
+                        is.close();
+                        return "canceled";
+                    }
+                    total += count;
+                    // publishing the progress....
+                    if (fileLength > 0) // only if total length is known
+                        publishProgress((int) (total * 100 / fileLength));
+                    os.write(data, 0, count);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e.toString();
+            } finally {
+                try {
+                    if (os != null)
+                        os.close();
+                    if (is != null)
+                        is.close();
+                } catch (IOException ignored) {
+                }
+
+                if (connection != null)
+                    connection.disconnect();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            WakeLockHelper.release(mWakeLock);
+            mProgressDialog.dismiss();
+            if (result != null) {
+                Toast.makeText(getApplicationContext(), getString(R.string.failed), Toast.LENGTH_LONG).show();
+                Log.d(Config.LOGTAG, "AppUpdater: failed with " + result);
+                UpdaterActivity.this.finish();
+            } else {
+                Log.d(Config.LOGTAG, "AppUpdater: download ready in " + ((System.currentTimeMillis() - startTime) / 1000) + " sec");
+
+                //start the installation of the latest localVersion
+                Intent installIntent = new Intent(Intent.ACTION_INSTALL_PACKAGE);
+                installIntent.setDataAndType(FileBackend.getUriForFile(UpdaterActivity.this, file), "application/vnd.android.package-archive");
+                installIntent.putExtra(Intent.EXTRA_NOT_UNKNOWN_SOURCE, true);
+                installIntent.putExtra(Intent.EXTRA_RETURN_RESULT, true);
+                installIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                installIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                startActivity(installIntent);
+                overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+                UpdaterActivity.this.finish();
+            }
+        }
+
     }
 }

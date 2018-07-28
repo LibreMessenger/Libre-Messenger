@@ -26,25 +26,21 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.ui.UpdaterActivity;
 
+import static de.pixart.messenger.http.HttpConnectionManager.getProxy;
 import static de.pixart.messenger.services.NotificationService.UPDATE_NOTIFICATION_ID;
 
 public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapper> {
-    public UpdateService (){
-    }
-
+    XmppConnectionService mXmppConnectionService;
+    private boolean mUseTor;
     private Context context;
     private boolean playstore;
+    public UpdateService() {
+    }
 
     public UpdateService(Context context, boolean PlayStore) {
         this.context = context;
         this.playstore = PlayStore;
-    }
-
-    public class Wrapper
-    {
-        public boolean UpdateAvailable = false;
-        public boolean NoUpdate = false;
-        public boolean isError = false;
+        this.mUseTor = mXmppConnectionService.useTorToConnect();
     }
 
     @Override
@@ -60,9 +56,13 @@ public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapp
 
         HttpsURLConnection connection = null;
 
-        try  {
+        try {
             URL url = new URL(Config.UPDATE_URL);
-            connection = (HttpsURLConnection)url.openConnection();
+            if (mUseTor) {
+                connection = (HttpsURLConnection) url.openConnection(getProxy());
+            } else {
+                connection = (HttpsURLConnection) url.openConnection();
+            }
             connection.setConnectTimeout(Config.SOCKET_TIMEOUT * 1000);
             connection.setReadTimeout(Config.SOCKET_TIMEOUT * 1000);
             connection.setRequestProperty("User-Agent", context.getString(R.string.app_name));
@@ -128,18 +128,14 @@ public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapp
             return;
         }
         Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
-
-            @Override
-            public void run() {
-                String ToastMessage = "";
-                if (error) {
-                    ToastMessage = context.getString(R.string.failed);
-                } else {
-                    ToastMessage = context.getString(R.string.no_update_available);
-                }
-                Toast.makeText(context, ToastMessage, Toast.LENGTH_LONG).show();
+        handler.post(() -> {
+            String ToastMessage = "";
+            if (error) {
+                ToastMessage = context.getString(R.string.failed);
+            } else {
+                ToastMessage = context.getString(R.string.no_update_available);
             }
+            Toast.makeText(context, ToastMessage, Toast.LENGTH_LONG).show();
         });
     }
 
@@ -210,5 +206,11 @@ public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapp
             return Integer.signum(remote.length - installed.length);
         }
         return 0;
+    }
+
+    public class Wrapper {
+        public boolean UpdateAvailable = false;
+        public boolean NoUpdate = false;
+        public boolean isError = false;
     }
 }
