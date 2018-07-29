@@ -562,7 +562,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
                     if (!installFromUnknownSourceAllowed() && !xmppConnectionService.installedFromPlayStore()) {
                         openInstallFromUnknownSourcesDialogIfNeeded();
                     } else {
-                        UpdateService task = new UpdateService(this, xmppConnectionService.installedFromPlayStore());
+                        UpdateService task = new UpdateService(this, xmppConnectionService.installedFromPlayStore(), xmppConnectionService);
                         task.executeOnExecutor(UpdateService.THREAD_POOL_EXECUTOR, "true");
                         Log.d(Config.LOGTAG, "AppUpdater started");
                     }
@@ -957,7 +957,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
             if (!installFromUnknownSourceAllowed() && !PlayStore) {
                 openInstallFromUnknownSourcesDialogIfNeeded();
             } else {
-                UpdateService task = new UpdateService(this, PlayStore);
+                UpdateService task = new UpdateService(this, PlayStore, xmppConnectionService);
                 task.executeOnExecutor(UpdateService.THREAD_POOL_EXECUTOR, "false");
                 Log.d(Config.LOGTAG, "AppUpdater started");
             }

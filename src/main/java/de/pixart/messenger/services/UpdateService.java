@@ -30,14 +30,13 @@ import static de.pixart.messenger.http.HttpConnectionManager.getProxy;
 import static de.pixart.messenger.services.NotificationService.UPDATE_NOTIFICATION_ID;
 
 public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapper> {
-    XmppConnectionService mXmppConnectionService;
     private boolean mUseTor;
     private Context context;
     private boolean playstore;
     public UpdateService() {
     }
 
-    public UpdateService(Context context, boolean PlayStore) {
+    public UpdateService(Context context, boolean PlayStore, XmppConnectionService mXmppConnectionService) {
         this.context = context;
         this.playstore = PlayStore;
         this.mUseTor = mXmppConnectionService.useTorToConnect();
