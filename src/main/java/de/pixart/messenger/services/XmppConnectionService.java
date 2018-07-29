@@ -262,15 +262,19 @@ public class XmppConnectionService extends Service {
     private final OnMessageAcknowledged mOnMessageAcknowledgedListener = new OnMessageAcknowledged() {
 
         @Override
-        public void onMessageAcknowledged(Account account, String uuid) {
+        public boolean onMessageAcknowledged(Account account, String uuid) {
             for (final Conversation conversation : getConversations()) {
                 if (conversation.getAccount() == account) {
                     Message message = conversation.findUnsentMessageWithUuid(uuid);
                     if (message != null) {
-                        markMessage(message, Message.STATUS_SEND);
+                        message.setStatus(Message.STATUS_SEND);
+                        message.setErrorMessage(null);
+                        databaseBackend.updateMessage(message, false);
+                        return true;
                     }
                 }
             }
+            return false;
         }
     };
 
@@ -1227,10 +1231,13 @@ public class XmppConnectionService extends Service {
     public void scheduleWakeUpCall(int seconds, int requestCode) {
         final long timeToWake = SystemClock.elapsedRealtime() + (seconds < 0 ? 1 : seconds + 1) * 1000;
         final AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, EventReceiver.class);
+        if (alarmManager == null) {
+            return;
+        }
+        final Intent intent = new Intent(this, EventReceiver.class);
         intent.setAction("ping");
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCode, intent, 0);
         try {
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, requestCode, intent, 0);
             alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToWake, pendingIntent);
         } catch (RuntimeException e) {
             Log.e(Config.LOGTAG, "unable to schedule alarm for ping", e);
@@ -1243,10 +1250,13 @@ public class XmppConnectionService extends Service {
     private void scheduleNextIdlePing() {
         final long timeToWake = SystemClock.elapsedRealtime() + (Config.IDLE_PING_INTERVAL * 1000);
         final AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, EventReceiver.class);
+        if (alarmManager == null) {
+            return;
+        }
+        final Intent intent = new Intent(this, EventReceiver.class);
         intent.setAction(ACTION_IDLE_PING);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
         try {
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
             alarmManager.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToWake, pendingIntent);
         } catch (RuntimeException e) {
             Log.d(Config.LOGTAG, "unable to schedule alarm for idle ping", e);
@@ -3828,6 +3838,8 @@ public class XmppConnectionService extends Service {
         final XmppConnection connection = account.getXmppConnection();
         if (connection != null) {
             connection.sendIqPacket(packet, callback);
+        } else if (callback != null) {
+            callback.onIqPacketReceived(account, new IqPacket(IqPacket.TYPE.TIMEOUT));
         }
     }
 
