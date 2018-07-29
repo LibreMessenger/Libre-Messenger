@@ -238,7 +238,7 @@ public class UpdaterActivity extends XmppActivity {
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        if (!downloadTask.getStatus().equals(AsyncTask.Status.FINISHED)) {
+                        if (downloadTask != null && !downloadTask.getStatus().equals(AsyncTask.Status.FINISHED)) {
                             downloadTask.cancel(true);
                         }
                         if (mProgressDialog.isShowing()) {
