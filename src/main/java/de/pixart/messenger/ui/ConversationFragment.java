@@ -1136,7 +1136,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         final MenuItem menuNeedHelp = menu.findItem(R.id.action_create_issue);
         final MenuItem menuSearchUpdates = menu.findItem(R.id.action_check_updates);
         final MenuItem menuArchiveChat = menu.findItem(R.id.action_archive_chat);
-        final MenuItem menuEditProfiles = menu.findItem(R.id.action_accounts);
 
         if (conversation != null) {
             if (conversation.getMode() == Conversation.MODE_MULTI) {
@@ -1146,7 +1145,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 menuInviteContact.setVisible(false);
                 menuArchiveChat.setTitle(R.string.action_end_conversation);
             }
-            menuEditProfiles.setVisible(false);
             menuNeedHelp.setVisible(true);
             menuSearchUpdates.setVisible(false);
             ConversationMenuConfigurator.configureAttachmentMenu(conversation, menu);
