@@ -25,4 +25,13 @@
   <string name="minutes_ago">преди %ld минути</string>
   <string name="unread_conversations">непрочетени Съобщения</string>
   <string name="sending">изпращане…</string>
+  <string name="message_decrypting">Разсифрова писмото. Чакаи...</string>
+  <string name="pgp_message">Криптирано писмо със OpenPGP</string>
+  <string name="nick_in_use">Името е вече използвано.</string>
+  <string name="admin">Админ</string>
+  <string name="owner">Собственик</string>
+  <string name="moderator">Модератор</string>
+  <string name="participant">Участник</string>
+  <string name="visitor">Посетител</string>
+  <string name="remove_contact_text">Изкате ли да изтриете %s от любими ? Разговорът свързан със този контакт нема да бъди изтрит.</string>
 </resources>
