@@ -47,4 +47,8 @@
   <string name="start_conversation">Започни Разговор</string>
   <string name="invite_contact">Покани Контакт</string>
   <string name="contacts">Контакти</string>
+  <string name="contact_has_no_pgp_key">Пих-Арт Писмо \" Pix-Art Messenger \"неможе да криптира писмота ти, щота твоят контакт не е сложиш неговят публичен OpenPGP ключ. \n\n<small>Кажи на твоят контакт да настрои OpenPGP.</small></string>
+  <string name="no_pgp_keys">Не е намерен OpenPGP ключ</string>
+  <string name="pref_general">Основни</string>
+  <string name="pref_accept_files_wifi">Приеми фаилове само на безжични връзки \"  WiFi\"</string>
 </resources>
