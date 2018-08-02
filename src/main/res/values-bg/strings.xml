@@ -51,4 +51,8 @@
   <string name="no_pgp_keys">Не е намерен OpenPGP ключ</string>
   <string name="pref_general">Основни</string>
   <string name="pref_accept_files_wifi">Приеми фаилове само на безжични връзки \"  WiFi\"</string>
+  <string name="pref_accept_files_summary_wifi">Когато си вързан на безжична връзка \"WiFI\" автоматично приеми фаилове по малки от...</string>
+  <string name="pref_accept_files_mobile">Приеми фаилове само на мобилни връзки</string>
+  <string name="pref_accept_files_summary_mobile">Когато си вързан на мобилна връзка автоматично приеми фаилове по малки от...</string>
+  <string name="pref_accept_files_mobileroaming">Приеми фаилове във извън страната\" roaming \" мобилни връзки</string>
 </resources>
