@@ -1482,13 +1482,7 @@ public class XmppConnectionService extends Service {
     }
 
     private void sendUnsentMessages(final Conversation conversation) {
-        conversation.findWaitingMessages(new Conversation.OnMessageFound() {
-
-            @Override
-            public void onMessageFound(Message message) {
-                resendMessage(message, true);
-            }
-        });
+        conversation.findWaitingMessages(message -> resendMessage(message, true));
     }
 
     private void resendFailedFileMessages(final Conversation conversation) {
@@ -3470,13 +3464,7 @@ public class XmppConnectionService extends Service {
         Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": reset 'sending' messages to 'waiting'");
         for (Conversation conversation : getConversations()) {
             if (conversation.getAccount() == account) {
-                conversation.findUnsentTextMessages(new Conversation.OnMessageFound() {
-
-                    @Override
-                    public void onMessageFound(Message message) {
-                        markMessage(message, Message.STATUS_WAITING);
-                    }
-                });
+                conversation.findUnsentTextMessages(message -> markMessage(message, Message.STATUS_WAITING));
             }
         }
     }
