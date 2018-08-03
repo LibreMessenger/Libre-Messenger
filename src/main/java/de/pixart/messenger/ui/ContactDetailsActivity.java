@@ -1,5 +1,6 @@
 package de.pixart.messenger.ui;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -116,12 +117,14 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
         public void onClick(DialogInterface dialog, int which) {
             Intent intent = new Intent(Intent.ACTION_INSERT_OR_EDIT);
             intent.setType(Contacts.CONTENT_ITEM_TYPE);
-            intent.putExtra(Intents.Insert.IM_HANDLE, contact.getJid().toString());
-            intent.putExtra(Intents.Insert.IM_PROTOCOL,
-                    CommonDataKinds.Im.PROTOCOL_JABBER);
+            intent.putExtra(Intents.Insert.IM_HANDLE, contact.getJid().toEscapedString());
+            intent.putExtra(Intents.Insert.IM_PROTOCOL, CommonDataKinds.Im.PROTOCOL_JABBER);
             intent.putExtra("finishActivityOnSaveCompleted", true);
-            ContactDetailsActivity.this.startActivityForResult(intent, 0);
-            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+            try {
+                ContactDetailsActivity.this.startActivityForResult(intent, 0);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(ContactDetailsActivity.this, R.string.no_application_found_to_view_contact, Toast.LENGTH_SHORT).show();
+            }
         }
     };
 
@@ -308,8 +311,12 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
                     Intent intent = new Intent(Intent.ACTION_EDIT);
                     intent.setDataAndType(systemAccount, Contacts.CONTENT_ITEM_TYPE);
                     intent.putExtra("finishActivityOnSaveCompleted", true);
-                    startActivity(intent);
-                    overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+                    try {
+                        startActivity(intent);
+                        overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+                    } catch (ActivityNotFoundException e) {
+                        Toast.makeText(ContactDetailsActivity.this, R.string.no_application_found_to_view_contact, Toast.LENGTH_SHORT).show();
+                    }
                 }
                 break;
             case R.id.action_block:

@@ -805,4 +805,5 @@
     <string name="conference_resource_constraint">Resource constraint</string>
     <string name="delete_message">Delete message</string>
     <string name="conference_destroyed">This group chat has been destroyed</string>
+    <string name="no_application_found_to_view_contact">No application found to view contact</string>
 </resources>
