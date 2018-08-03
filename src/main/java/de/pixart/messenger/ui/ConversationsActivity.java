@@ -93,6 +93,7 @@ import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 
+import static de.pixart.messenger.services.XmppConnectionService.PlayStore;
 import static de.pixart.messenger.ui.ConversationFragment.REQUEST_DECRYPT_PGP;
 import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
 
@@ -193,9 +194,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
         if (xmppConnectionService.getAccounts().size() != 0) {
             if (xmppConnectionService.hasInternetConnection()) {
                 if (xmppConnectionService.isWIFI() || (xmppConnectionService.isMobile() && !xmppConnectionService.isMobileRoaming())) {
-                    if (!xmppConnectionService.installedFromFDroid()) {
-                        AppUpdate(xmppConnectionService.installedFromPlayStore());
-                    }
+                    AppUpdate(xmppConnectionService.installedFrom());
                 }
             }
         }
@@ -559,10 +558,10 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
                 return true;
             case R.id.action_check_updates:
                 if (xmppConnectionService.hasInternetConnection()) {
-                    if (!installFromUnknownSourceAllowed() && !xmppConnectionService.installedFromPlayStore()) {
+                    if (!installFromUnknownSourceAllowed() && !xmppConnectionService.installedFrom().equals(PlayStore)) {
                         openInstallFromUnknownSourcesDialogIfNeeded();
                     } else {
-                        UpdateService task = new UpdateService(this, xmppConnectionService.installedFromPlayStore(), xmppConnectionService);
+                        UpdateService task = new UpdateService(this, xmppConnectionService.installedFrom(), xmppConnectionService);
                         task.executeOnExecutor(UpdateService.THREAD_POOL_EXECUTOR, "true");
                         Log.d(Config.LOGTAG, "AppUpdater started");
                     }
@@ -940,8 +939,8 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
         runOnUiThread(() -> Toast.makeText(this, resId, Toast.LENGTH_SHORT).show());
     }
 
-    protected void AppUpdate(boolean PlayStore) {
-        if (PlayStore) {
+    protected void AppUpdate(String Store) {
+        if (Store == null) {
             return;
         }
         String PREFS_NAME = "UpdateTimeStamp";
@@ -954,10 +953,10 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
             editor.putLong("lastUpdateTime", lastUpdateTime);
             editor.apply();
             Log.d(Config.LOGTAG, "AppUpdater: CurrentTime: " + lastUpdateTime);
-            if (!installFromUnknownSourceAllowed() && !PlayStore) {
+            if (!installFromUnknownSourceAllowed() && !Store.equals(PlayStore)) {
                 openInstallFromUnknownSourcesDialogIfNeeded();
             } else {
-                UpdateService task = new UpdateService(this, PlayStore, xmppConnectionService);
+                UpdateService task = new UpdateService(this, Store, xmppConnectionService);
                 task.executeOnExecutor(UpdateService.THREAD_POOL_EXECUTOR, "false");
                 Log.d(Config.LOGTAG, "AppUpdater started");
             }

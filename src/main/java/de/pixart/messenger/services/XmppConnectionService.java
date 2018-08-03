@@ -169,6 +169,9 @@ public class XmppConnectionService extends Service {
     public static final String ACTION_FCM_MESSAGE_RECEIVED = "fcm_message_received";
     private static final String ACTION_MERGE_PHONE_CONTACTS = "merge_phone_contacts";
     private static final String SETTING_LAST_ACTIVITY_TS = "last_activity_timestamp";
+    public static final String FDroid = "org.fdroid.fdroid";
+    public static final String PlayStore = "com.android.vending";
+    public static final String Yalp = "com.github.yeriomin.yalpstore";
 
     static {
         URL.setURLStreamHandlerFactory(new CustomURLStreamHandlerFactory());
@@ -4307,20 +4310,16 @@ public class XmppConnectionService extends Service {
         }
     }
 
-    public boolean installedFromFDroid() {
+    public String installedFrom() {
         final PackageManager packageManager = this.getPackageManager();
         final String packageID = BuildConfig.APPLICATION_ID;
         final String installedFrom = packageManager.getInstallerPackageName(packageID);
         Log.d(Config.LOGTAG, "Messenger installed from " + installedFrom);
-        return installedFrom != null && installedFrom.contains("org.fdroid.fdroid");
-    }
-
-    public boolean installedFromPlayStore() {
-        final PackageManager packageManager = this.getPackageManager();
-        final String packageID = BuildConfig.APPLICATION_ID;
-        final String installedFrom = packageManager.getInstallerPackageName(packageID);
-        Log.d(Config.LOGTAG, "Messenger installed from " + installedFrom);
-        return installedFrom != null && (installedFrom.contains("com.android.vending") || installedFrom.contains("com.github.yeriomin.yalpstore"));
+        if (installedFrom != null) {
+            return installedFrom;
+        } else {
+            return null;
+        }
     }
 
     public ShortcutService getShortcutService() {

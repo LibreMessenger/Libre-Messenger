@@ -32,13 +32,13 @@ import static de.pixart.messenger.services.NotificationService.UPDATE_NOTIFICATI
 public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapper> {
     private boolean mUseTor;
     private Context context;
-    private boolean playstore;
+    private String store;
     public UpdateService() {
     }
 
-    public UpdateService(Context context, boolean PlayStore, XmppConnectionService mXmppConnectionService) {
+    public UpdateService(Context context, String Store, XmppConnectionService mXmppConnectionService) {
         this.context = context;
-        this.playstore = PlayStore;
+        this.store = Store;
         this.mUseTor = mXmppConnectionService.useTorToConnect();
     }
 
@@ -94,7 +94,7 @@ public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapp
                 if (checkVersion(version, ownVersion) >= 1) {
                     Log.d(Config.LOGTAG, "AppUpdater: Version " + ownVersion + " should be updated to " + version);
                     UpdateAvailable = true;
-                    showNotification(url, changelog, version, filesize, playstore);
+                    showNotification(url, changelog, version, filesize, store);
                 } else {
                     Log.d(Config.LOGTAG, "AppUpdater: Version " + ownVersion + " is up to date");
                     UpdateAvailable = false;
@@ -138,12 +138,12 @@ public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapp
         });
     }
 
-    private void showNotification(String url, String changelog, String version, String filesize, boolean playstore) {
+    private void showNotification(String url, String changelog, String version, String filesize, String store) {
         Intent intent = new Intent(context, UpdaterActivity.class);
         intent.putExtra("update", "PixArtMessenger_UpdateService");
         intent.putExtra("url", url);
         intent.putExtra("changelog", changelog);
-        intent.putExtra("playstore", playstore);
+        intent.putExtra("store", store);
         PendingIntent pi = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
