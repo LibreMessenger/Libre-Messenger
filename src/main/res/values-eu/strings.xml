@@ -215,7 +215,6 @@
   <string name="delete_bookmark">Laster-marka ezabatu</string>
   <string name="bookmark_already_exists">Laster-marka hau existitzen da dagoeneko</string>
   <string name="action_edit_subject">Taldearen gaia editatu</string>
-  <string name="edit_subject_hint">Talde honen gaia</string>
   <string name="joining_conference">Taldera batzen...</string>
   <string name="leave">Alde egin</string>
   <string name="contact_added_you">Kontaktuak bere zerrendara gehitu zaitu</string>
@@ -406,10 +405,6 @@
     <item quantity="one">Ziurtagiri %d ezabatua</item>
     <item quantity="other">%d ziurtagiri ezabatuak</item>
   </plurals>
-  <plurals name="select_contact">
-    <item quantity="one">Hautatu kontaktu %d</item>
-    <item quantity="other">Hautatu %d kontaktu</item>
-  </plurals>
   <string name="pref_quick_action_summary">Bidaltze botoia ekintza azkar batekin aldatu</string>
   <string name="pref_quick_action">Ekintza azkarra</string>
   <string name="none">Bat ere ez</string>
@@ -484,7 +479,6 @@
   <string name="correct_message">Mezua zuzendu</string>
   <string name="send_corrected_message">Mezu zuzendua bidali</string>
   <string name="no_keys_just_confirm">Kontaktu honetaz fidatzen zara dagoeneko. \'Eginda\' hautatuz %s talde honen kidea dela egiaztatzen duzu besterik gabe.</string>
-  <string name="select_image_and_crop">Irudia hautatu eta moztu</string>
   <string name="contacts_have_no_pgp_keys">Conversations ez da zure mezuak enkriptatzeko gai zure kontaktuak haien gako publikoa jakinarazten ez daudelako.\n\n<small>Mesedez eskatu ezaiezu zure kontakuei OpenPGP konfigura dezaten.</small></string>
   <string name="this_account_is_disabled">Kontu hau ezgaitu duzu</string>
   <string name="security_error_invalid_file_access">Segurtasun akatsa: fitxategi sarrera baliogabea</string>

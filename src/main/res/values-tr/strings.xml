@@ -229,7 +229,6 @@
   <string name="delete_bookmark">Yer imini sil</string>
   <string name="bookmark_already_exists">Bu yer işareti zaten var</string>
   <string name="action_edit_subject">Grup sohbetinin konusunu düzenle</string>
-  <string name="edit_subject_hint">Sohbet grubun konusu</string>
   <string name="joining_conference">Sohbet Grubuna bağlanılıyor…</string>
   <string name="leave">Ayrıl</string>
   <string name="contact_added_you">Kişi sizi listesine ekledi</string>
@@ -424,10 +423,6 @@
     <item quantity="one">%d sertifika silindi</item>
     <item quantity="other">%d sertifikalar silindi</item>
   </plurals>
-  <plurals name="select_contact">
-    <item quantity="one">Bağlantı %d seçin</item>
-    <item quantity="other">Bağlantılar %d seçin</item>
-  </plurals>
   <string name="pref_quick_action_summary">Gönderme düğmesini hızlı eylemle değiştirin</string>
   <string name="pref_quick_action">Hızlı İşlem</string>
   <string name="none">Yok</string>
@@ -522,7 +517,6 @@
   <string name="correct_message">Doğru mesaj</string>
   <string name="send_corrected_message">Düzeltilmiş mesaj gönder</string>
   <string name="no_keys_just_confirm">Bu kişiye zaten güvenin. \'tamam\' seçeneğini seçerseniz, yalnızca%s, bu grup sohbetinin bir parçası olduğunu onaylıyorsunuz demektir.</string>
-  <string name="select_image_and_crop">Resim seç ve kırp</string>
   <string name="contacts_have_no_pgp_keys">Kişileriniz genel anahtarlarını duyurmadığı için Pix-Art Messenger mesajlarınızı şifreleyemiyor.\n\n</string>
   <string name="this_account_is_disabled">Bu hesabı devre dışı bıraktınız</string>
   <string name="security_error_invalid_file_access">Güvenlik hatası: Geçersiz dosya erişimi</string>

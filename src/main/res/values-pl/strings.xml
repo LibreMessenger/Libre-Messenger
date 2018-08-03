@@ -446,7 +446,6 @@
   <string name="this_field_is_required">To pole jest wymagane</string>
   <string name="correct_message">Popraw wiadomość</string>
   <string name="send_corrected_message">Wyślij poprawioną wiadomość</string>
-  <string name="select_image_and_crop">Wybierz i przytnij obraz</string>
   <string name="this_account_is_disabled">Wyłączyłeś to konto</string>
   <string name="security_error_invalid_file_access">Błąd bezpieczeństwa: nieprawidłowy dostęp do pliku</string>
   <string name="no_application_to_share_uri">Nie odnaleziono aplikacji skojarzonej z URI</string>

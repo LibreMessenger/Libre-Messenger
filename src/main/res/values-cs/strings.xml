@@ -427,7 +427,6 @@
   <string name="this_field_is_required">Toto pole je vyžadováno</string>
   <string name="correct_message">Opravit zprávu</string>
   <string name="send_corrected_message">Odeslat opravenou zprávu</string>
-  <string name="select_image_and_crop">Vybrat obrázek a oříznout</string>
   <string name="contacts_have_no_pgp_keys">Není možné zašifrovat zprávy v aplikaci Konverzace, protože kontakty neoznamují svůj veřejný klíč.\n\n<small>Požádejte své kontakty ať si nastaví OpenPGP.</small></string>
   <string name="this_account_is_disabled">Tento účet byl vypnut</string>
   <string name="security_error_invalid_file_access">Chyba zabezpečení: Neplatný přístup k souboru</string>
