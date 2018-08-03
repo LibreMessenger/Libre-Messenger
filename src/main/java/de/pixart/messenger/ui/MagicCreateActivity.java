@@ -67,9 +67,11 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher, Ad
         final List<String> domains = Arrays.asList(getResources().getStringArray(R.array.domains));
         Collections.sort(domains, String::compareToIgnoreCase);
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_selectable_list_item, domains);
+        int defaultServer = adapter.getPosition("blabber.im");
         mUsername = findViewById(R.id.username);
         mServer = findViewById(R.id.server);
         mServer.setAdapter(adapter);
+        mServer.setSelection(defaultServer);
         mServer.setOnItemSelectedListener(this);
         adapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
         mRandom = new SecureRandom();

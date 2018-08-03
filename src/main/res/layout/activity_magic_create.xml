@@ -54,9 +54,9 @@
                     style="@style/Widget.Conversations.EditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="@string/username_hint"
                     android:imeOptions="actionNext"
                     android:inputType="text"
-                    android:hint="@string/username_hint"
                     android:textColor="?attr/text_Color_Main" />
 
                 <TextView
@@ -82,6 +82,14 @@
                     android:text="@string/your_full_jid_will_be"
                     android:textAppearance="@style/TextAppearance.Conversations.Caption"
                     android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/server_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/welcome_server_info"
+                    android:textAppearance="@style/TextAppearance.Conversations.Caption" />
 
                 <Button
                     android:id="@+id/create_account"

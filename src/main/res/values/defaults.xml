@@ -21,6 +21,7 @@
 			along with this program. If not, see https://www.gnu.org/licenses
 			\n\nDownload the full original source code at https://github.com/siacs/Conversations (Copyright © 2014-2018 Daniel Gultsch)
 			\n\nDownload the modified source code at https://github.com/kriztan/Pix-Art-Messenger
+            \n\n\n\Pix-Art Messenger recommends blabber.im as provider. More information can be found at https://blabber.im
 	</string>
     <string name="pref_about_libraries" translatable="false"><b>Libraries</b>
 			\n\nhttps://www.bouncycastle.org\n(The MIT License (MIT))
@@ -225,8 +226,8 @@
         <item>chat.hipchat.com</item>
         <item>googlemail.com</item>
         <item>nsa.li</item>
-	<item>blabber.im</item>
-	<item>buzon.uy</item>
+        <item>blabber.im</item>
+        <item>buzon.uy</item>
     </string-array>
 </resources>
 
