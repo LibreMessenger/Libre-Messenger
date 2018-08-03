@@ -302,9 +302,5 @@
     <item quantity="one">%d πιστοποιητικο διαγραφθηκε</item>
     <item quantity="other">%d πιστοποιητικά διαγραφθηκαν</item>
   </plurals>
-  <plurals name="select_contact">
-    <item quantity="one">Επιλογή %d επαφής</item>
-    <item quantity="other">Επιλογή %d επαφών</item>
-  </plurals>
   <string name="contact_has_read_up_to_this_point">Η επαφή %s έχει διαβάσει μέχρι αυτό το σημείο</string>
 </resources>

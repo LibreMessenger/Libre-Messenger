@@ -215,7 +215,6 @@
   <string name="delete_bookmark">Eliminar de favorits</string>
   <string name="bookmark_already_exists">Aquesta llista de favorits ja existeix</string>
   <string name="action_edit_subject">Edita el tema del xat de grup</string>
-  <string name="edit_subject_hint">El tema d\'aquest xat de grup</string>
   <string name="joining_conference">S\'està unint al xat de grup...</string>
   <string name="leave">Sortir</string>
   <string name="contact_added_you">Afegir un contacte a la llista de contactes</string>
@@ -409,10 +408,6 @@ mentrestant.</string>
     <item quantity="one">%d certificat esborrat</item>
     <item quantity="other">%d certificats esborrats</item>
   </plurals>
-  <plurals name="select_contact">
-    <item quantity="one">Seleccionar %d contacte</item>
-    <item quantity="other">Seleccionar %d contactes</item>
-  </plurals>
   <string name="pref_quick_action_summary">Reemplaça el botó d\'enviar per una acció ràpida</string>
   <string name="pref_quick_action">Acció ràpida</string>
   <string name="none">Cap</string>
@@ -495,7 +490,6 @@ missatges.\n\nAra se us demanarà que desactiveu-las.</string>
   <string name="correct_message">Corregeix el missatge</string>
   <string name="send_corrected_message">Envia el missatge corregit</string>
   <string name="no_keys_just_confirm">Ja confieu en aquest contacte. Si seleccioneu \"fet\", només confirma que forma %s part d\'aquest xat en grup.</string>
-  <string name="select_image_and_crop">Seleccioneu la imatge i retalleu</string>
   <string name="contacts_have_no_pgp_keys">Coversations no és possible xifrar les teves converses perquè els teus contactes no han mostrat la seva clau pública.\n\n<small> Si us plau, pregunti als seus contactes per configurar OpenPGP .</small></string>
   <string name="this_account_is_disabled">Heu desactivat aquest compte</string>
   <string name="security_error_invalid_file_access">Error de seguretat: accés d\'arxiu no vàlid</string>

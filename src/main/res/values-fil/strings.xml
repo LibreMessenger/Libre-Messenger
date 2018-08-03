@@ -229,7 +229,6 @@
   <string name="delete_bookmark">Burahin na bookmark</string>
   <string name="bookmark_already_exists">Umiiral na ang bookmark</string>
   <string name="action_edit_subject">I-edit ang paksa sa grupo ng chat</string>
-  <string name="edit_subject_hint">Ang paksa ng pang grupong chat</string>
   <string name="joining_conference">Sumali sa pang grupong chat…</string>
   <string name="leave">Iwanan</string>
   <string name="contact_added_you">Ikaw ay idinagdag ni kontak sa listahan ng kontak</string>
@@ -424,10 +423,6 @@
     <item quantity="one">%d naburang katibayan</item>
     <item quantity="other">%d naburang mga katibayan</item>
   </plurals>
-  <plurals name="select_contact">
-    <item quantity="one">Piliin %d kontak</item>
-    <item quantity="other">Piliin %d kontaks</item>
-  </plurals>
   <string name="pref_quick_action_summary">Palitan ang pindutan ng pagpapadala sa mabilis na aksyon</string>
   <string name="pref_quick_action">Mabilis na aksyon</string>
   <string name="none">Wala</string>
@@ -522,7 +517,6 @@
   <string name="correct_message">Tamang mensahe</string>
   <string name="send_corrected_message">Magpadala ng naitama na mensahe</string>
   <string name="no_keys_just_confirm">Na pinagkakatiwalaan mo ang contact na ito. Sa pamamagitan ng pagpili ng \'tapos na\' pinapatunayan mo lang na ang %s s ay bahagi ng grupo ng chat na ito.</string>
-  <string name="select_image_and_crop">Pumili ng imahe at i-crop</string>
   <string name="contacts_have_no_pgp_keys">Hindi ma-encrypt ng Pix-Art Messenger ang iyong mga mensahe dahil hindi nagpapahayag ng iyong mga contact ang kanilang mga pampublikong key. \n\n</string>
   <string name="this_account_is_disabled">Pinigilan mo ang account na ito</string>
   <string name="security_error_invalid_file_access">Error sa seguridad: Di-wastong pag-access ng file</string>
