@@ -1308,7 +1308,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             if (!m.isFileOrImage() && !encrypted && !m.isGeoUri() && !m.treatAsDownloadable()) {
                 copyMessage.setVisible(true);
                 quoteMessage.setVisible(MessageUtils.prepareQuote(m).length() > 0);
-                deleteMessage.setVisible(true);
+                //temporarily hide single message deletion in chat view
+                deleteMessage.setVisible(false);
+                // deleteMessage.setVisible(true);
                 String body = m.getMergedBody().toString();
                 if (ShareUtil.containsXmppUri(body)) {
                     copyLink.setTitle(R.string.copy_jabber_id);
