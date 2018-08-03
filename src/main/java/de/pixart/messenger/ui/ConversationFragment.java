@@ -2540,7 +2540,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                             if (!ReadByMarker.contains(marker, addedMarkers)) {
                                 addedMarkers.add(marker); //may be put outside this condition. set should do dedup anyway
                                 MucOptions.User user = mucOptions.findUser(marker);
-                                shownMarkers.add(user);
+                                if (user != null && !users.contains(user)) {
+                                    shownMarkers.add(user);
+                                }
                             }
                         }
                         final ReadByMarker markerForSender = ReadByMarker.from(messageList.get(i));
