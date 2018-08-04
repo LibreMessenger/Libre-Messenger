@@ -1,16 +1,20 @@
 package de.pixart.messenger.ui;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import de.pixart.messenger.Config;
 
 public abstract class LocationActivity extends XmppActivity implements LocationListener {
     private LocationManager locationManager;
+    public static final int REQUEST_LOCATION_PERMISSION = 0x682f41;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -60,7 +64,8 @@ public abstract class LocationActivity extends XmppActivity implements LocationL
     public void onResume() {
         super.onResume();
         this.setmLastLocation(null);
-
-        requestLocationUpdates();
+        if (hasLocationPermission(REQUEST_LOCATION_PERMISSION)) {
+            requestLocationUpdates();
+        }
     }
 }

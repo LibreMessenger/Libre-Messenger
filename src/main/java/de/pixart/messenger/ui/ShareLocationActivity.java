@@ -105,11 +105,15 @@ public class ShareLocationActivity extends LocationActivity implements LocationL
             this.snackBar = Snackbar.make(snackBarCoordinator, R.string.location_sharing_disabled, Snackbar.LENGTH_INDEFINITE);
             snackBar.setAction(R.string.enable, view -> {
                 if (isLocationEnabled()) {
-                    requestLocationUpdates();
+                    if (hasLocationPermission(LocationActivity.REQUEST_LOCATION_PERMISSION)) {
+                        requestLocationUpdates();
+                    }
                 } else {
                     showLocation(null, null);
                     setShareButtonEnabled(false);
-                    requestLocationUpdates();
+                    if (hasLocationPermission(LocationActivity.REQUEST_LOCATION_PERMISSION)) {
+                        requestLocationUpdates();
+                    }
                     startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                     overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                 }
