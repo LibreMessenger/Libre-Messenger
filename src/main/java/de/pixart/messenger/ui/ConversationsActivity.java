@@ -93,6 +93,7 @@ import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 
+import static de.pixart.messenger.services.XmppConnectionService.FDroid;
 import static de.pixart.messenger.services.XmppConnectionService.PlayStore;
 import static de.pixart.messenger.ui.ConversationFragment.REQUEST_DECRYPT_PGP;
 import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
@@ -937,9 +938,6 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
     }
 
     protected void AppUpdate(String Store) {
-        if (Store == null) {
-            return;
-        }
         String PREFS_NAME = "UpdateTimeStamp";
         SharedPreferences UpdateTimeStamp = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         long lastUpdateTime = UpdateTimeStamp.getLong("lastUpdateTime", 0);
@@ -950,8 +948,10 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
             editor.putLong("lastUpdateTime", lastUpdateTime);
             editor.apply();
             Log.d(Config.LOGTAG, "AppUpdater: CurrentTime: " + lastUpdateTime);
-            if (!installFromUnknownSourceAllowed() && !Store.equals(PlayStore)) {
+            if (!installFromUnknownSourceAllowed() && Store == null) {
                 openInstallFromUnknownSourcesDialogIfNeeded();
+            } else if (Store != null && (Store.equals(PlayStore) || Store.equals(FDroid))) {
+                Log.d(Config.LOGTAG, "AppUpdater aborted because app store is " + Store);
             } else {
                 UpdateService task = new UpdateService(this, Store, xmppConnectionService);
                 task.executeOnExecutor(UpdateService.THREAD_POOL_EXECUTOR, "false");
