@@ -807,4 +807,5 @@
   <string name="conference_destroyed">Dieser Gruppenchat wurde aufgelöst</string>
   <string name="no_application_found_to_view_contact">Keine Anwendung zum Anzeigen von Kontakten gefunden</string>
   <string name="welcome_server_info">Wir empfehlen dir blabber.im als Anbieter.</string>
+  <string name="no_location_permission">Pix-Art Messenger benötigt Zugriff auf die Standortdienste</string>
 </resources>
