@@ -802,6 +802,10 @@
   <string name="providing_a_name_is_optional">Die Angabe eines Namens ist optional</string>
   <string name="create_dialog_group_chat_name">Gruppenchat-Name</string>
   <string name="everyone_has_read_up_to_this_point">Alle haben bis hierher gelesen</string>
+  <string name="conference_resource_constraint">Ressourcenbeschränkung</string>
   <string name="delete_message">Nachricht löschen</string>
   <string name="conference_destroyed">Dieser Gruppenchat wurde aufgelöst</string>
+  <string name="no_application_found_to_view_contact">Keine Anwendung zum Anzeigen von Kontakten gefunden</string>
+  <string name="welcome_server_info">Wir empfehlen dir blabber.im als Anbieter.</string>
+  <string name="no_location_permission">Pix-Art Messenger benötigt Zugriff auf die Standortdienste</string>
 </resources>
