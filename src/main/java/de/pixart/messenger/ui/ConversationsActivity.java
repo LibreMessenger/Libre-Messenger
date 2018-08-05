@@ -842,22 +842,19 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
         }
         PopupMenu popup = new PopupMenu(this, view);
         popup.inflate(R.menu.verification_choices);
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                Intent intent = new Intent(ConversationsActivity.this, VerifyOTRActivity.class);
-                intent.setAction(VerifyOTRActivity.ACTION_VERIFY_CONTACT);
-                intent.putExtra("contact", conversation.getContact().getJid().asBareJid().toString());
-                intent.putExtra(EXTRA_ACCOUNT, conversation.getAccount().getJid().asBareJid().toString());
-                switch (menuItem.getItemId()) {
-                    case R.id.ask_question:
-                        intent.putExtra("mode", VerifyOTRActivity.MODE_ASK_QUESTION);
-                        break;
-                }
-                startActivity(intent);
-                overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
-                return true;
+        popup.setOnMenuItemClickListener(menuItem -> {
+            Intent intent = new Intent(ConversationsActivity.this, VerifyOTRActivity.class);
+            intent.setAction(VerifyOTRActivity.ACTION_VERIFY_CONTACT);
+            intent.putExtra("contact", conversation.getContact().getJid().asBareJid().toString());
+            intent.putExtra(EXTRA_ACCOUNT, conversation.getAccount().getJid().asBareJid().toString());
+            switch (menuItem.getItemId()) {
+                case R.id.ask_question:
+                    intent.putExtra("mode", VerifyOTRActivity.MODE_ASK_QUESTION);
+                    break;
             }
+            startActivity(intent);
+            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+            return true;
         });
         popup.show();
     }

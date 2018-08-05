@@ -58,6 +58,9 @@
         <item name="ic_send_picture_offline" type="reference">@drawable/ic_send_picture_offline
         </item>
         <item name="ic_send_text_offline" type="reference">@drawable/ic_send_text_offline</item>
+        <item name="ic_send_attachment_offline" type="reference">
+            @drawable/ic_send_attachment_offline
+        </item>
         <item name="ic_send_videocam_offline" type="reference">@drawable/ic_send_videocam_offline
         </item>
         <item name="ic_send_voice_offline" type="reference">@drawable/ic_send_voice_offline</item>
@@ -196,6 +199,9 @@
             @drawable/ic_send_picture_offline_white
         </item>
         <item name="ic_send_text_offline" type="reference">@drawable/ic_send_text_offline_white
+        </item>
+        <item name="ic_send_attachment_offline" type="reference">
+            @drawable/ic_send_attachment_offline_white
         </item>
         <item name="ic_send_videocam_offline" type="reference">
             @drawable/ic_send_videocam_offline_white

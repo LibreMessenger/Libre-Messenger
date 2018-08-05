@@ -53,9 +53,21 @@ public class ConversationMenuConfigurator {
         locationAvailable = context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS) || context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_LOCATION_NETWORK);
     }
 
-    public static void configureAttachmentMenu(@NonNull Conversation conversation, Menu menu) {
-        final MenuItem menuAttach = menu.findItem(R.id.action_attach_file);
+    public static void configureQuickShareAttachmentMenu(@NonNull Conversation conversation, Menu menu) {
+        final boolean visible = SendButtonTool.AttachmentsVisible(conversation);
+        if (!visible) {
+            return;
+        }
+        menu.findItem(R.id.attach_record_voice).setVisible(microphoneAvailable);
+        menu.findItem(R.id.attach_location).setVisible(locationAvailable);
+    }
 
+    public static void configureAttachmentMenu(@NonNull Conversation conversation, Menu menu, Boolean Quick_share_attachment_choice) {
+        final MenuItem menuAttach = menu.findItem(R.id.action_attach_file);
+        if (Quick_share_attachment_choice) {
+            menuAttach.setVisible(false);
+            return;
+        }
         final boolean visible;
         if (conversation.getMode() == Conversation.MODE_MULTI) {
             visible = conversation.getAccount().httpUploadAvailable() && conversation.getMucOptions().participating();

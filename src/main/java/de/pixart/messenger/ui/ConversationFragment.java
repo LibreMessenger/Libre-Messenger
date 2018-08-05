@@ -30,6 +30,9 @@ import android.support.media.ExifInterface;
 import android.support.v13.view.inputmethod.InputConnectionCompat;
 import android.support.v13.view.inputmethod.InputContentInfoCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.view.menu.MenuBuilder;
+import android.support.v7.view.menu.MenuPopupHelper;
+import android.support.v7.widget.PopupMenu;
 import android.text.Editable;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -53,7 +56,6 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupMenu;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
@@ -136,6 +138,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     public static final int REQUEST_TRUST_KEYS_MENU = 0x0209;
     public static final int REQUEST_START_DOWNLOAD = 0x0210;
     public static final int REQUEST_ADD_EDITOR_CONTENT = 0x0211;
+    public static final int ATTACHMENT_CHOICE = 0x0300;
     public static final int ATTACHMENT_CHOICE_CHOOSE_IMAGE = 0x0301;
     public static final int ATTACHMENT_CHOICE_TAKE_FROM_CAMERA = 0x0302;
     public static final int ATTACHMENT_CHOICE_CHOOSE_FILE = 0x0303;
@@ -449,6 +452,8 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             if (tag instanceof SendButtonAction) {
                 SendButtonAction action = (SendButtonAction) tag;
                 switch (action) {
+                    case CHOOSE_ATTACHMENT:
+                        choose_attachment(v);
                     case TAKE_FROM_CAMERA:
                     case SEND_LOCATION:
                     case RECORD_VOICE:
@@ -477,6 +482,31 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             }
         }
     };
+
+    @SuppressLint("RestrictedApi")
+    private void choose_attachment(View v) {
+        PopupMenu popup = new PopupMenu(activity, v);
+        popup.inflate(R.menu.choose_attachment);
+        Menu menu = popup.getMenu();
+        ConversationMenuConfigurator.configureQuickShareAttachmentMenu(conversation, menu);
+        popup.setOnMenuItemClickListener(attachmentItem -> {
+            switch (attachmentItem.getItemId()) {
+                case R.id.attach_choose_picture:
+                case R.id.attach_take_picture:
+                case R.id.attach_choose_file:
+                case R.id.attach_record_voice:
+                case R.id.attach_location:
+                    Log.d(Config.LOGTAG, "ATTACHMENT: " + attachmentItem.getTitle());
+                    handleAttachmentSelection(attachmentItem);
+                default:
+                    return false;
+            }
+        });
+        MenuPopupHelper menuHelper = new MenuPopupHelper(getActivity(), (MenuBuilder) menu, v);
+        menuHelper.setForceShowIcon(true);
+        menuHelper.show();
+    }
+
     private View.OnLongClickListener mSendButtonLongListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
@@ -1147,7 +1177,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             }
             menuNeedHelp.setVisible(true);
             menuSearchUpdates.setVisible(false);
-            ConversationMenuConfigurator.configureAttachmentMenu(conversation, menu);
+            ConversationMenuConfigurator.configureAttachmentMenu(conversation, menu, Config.QUICK_SHARE_ATTACHMENT_CHOICE);
             ConversationMenuConfigurator.configureEncryptionMenu(conversation, menu);
         } else {
             menuNeedHelp.setVisible(false);

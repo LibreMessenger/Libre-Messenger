@@ -29,13 +29,14 @@
 
 package de.pixart.messenger.ui.util;
 
+import static de.pixart.messenger.ui.ConversationFragment.ATTACHMENT_CHOICE;
 import static de.pixart.messenger.ui.ConversationFragment.ATTACHMENT_CHOICE_CHOOSE_IMAGE;
 import static de.pixart.messenger.ui.ConversationFragment.ATTACHMENT_CHOICE_LOCATION;
 import static de.pixart.messenger.ui.ConversationFragment.ATTACHMENT_CHOICE_RECORD_VOICE;
 import static de.pixart.messenger.ui.ConversationFragment.ATTACHMENT_CHOICE_TAKE_FROM_CAMERA;
 
 public enum SendButtonAction {
-    TEXT, TAKE_FROM_CAMERA, SEND_LOCATION, RECORD_VOICE, CANCEL, CHOOSE_PICTURE;
+    TEXT, TAKE_FROM_CAMERA, SEND_LOCATION, RECORD_VOICE, CANCEL, CHOOSE_PICTURE, CHOOSE_ATTACHMENT;
 
     public static SendButtonAction valueOfOrDefault(String setting, SendButtonAction text) {
         try {
@@ -55,6 +56,8 @@ public enum SendButtonAction {
                 return TAKE_FROM_CAMERA;
             case ATTACHMENT_CHOICE_CHOOSE_IMAGE:
                 return CHOOSE_PICTURE;
+            case ATTACHMENT_CHOICE:
+                return CHOOSE_ATTACHMENT;
             default:
                 throw new IllegalArgumentException("Not a known attachment choice");
         }
@@ -70,6 +73,8 @@ public enum SendButtonAction {
                 return ATTACHMENT_CHOICE_RECORD_VOICE;
             case CHOOSE_PICTURE:
                 return ATTACHMENT_CHOICE_CHOOSE_IMAGE;
+            case CHOOSE_ATTACHMENT:
+                return ATTACHMENT_CHOICE;
             default:
                 return 0;
         }

@@ -86,6 +86,8 @@ public final class Config {
     public static final Bitmap.CompressFormat IMAGE_FORMAT = Bitmap.CompressFormat.JPEG;
     public static final int IMAGE_QUALITY = 75;
 
+    public static final boolean QUICK_SHARE_ATTACHMENT_CHOICE = true; // set to true to use attachment choice instead of quick share for send button
+
     public static final int DEFAULT_ZOOM = 15; //for locations
     public final static long LOCATION_FIX_TIME_DELTA = 1000 * 10; // ms
     public final static float LOCATION_FIX_SPACE_DELTA = 10; // m

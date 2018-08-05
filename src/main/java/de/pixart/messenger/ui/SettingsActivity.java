@@ -116,6 +116,7 @@ public class SettingsActivity extends XmppActivity implements
         }
 
         PreferenceScreen mainPreferenceScreen = (PreferenceScreen) mSettingsFragment.findPreference("main_screen");
+        PreferenceScreen UIPreferenceScreen = (PreferenceScreen) mSettingsFragment.findPreference("userinterface");
 
         //this feature is only available on Huawei Android 6.
         PreferenceScreen huaweiPreferenceScreen = (PreferenceScreen) mSettingsFragment.findPreference("huawei");
@@ -170,6 +171,12 @@ public class SettingsActivity extends XmppActivity implements
             }
             quickAction.setEntries(entries.toArray(new CharSequence[entries.size()]));
             quickAction.setEntryValues(entryValues.toArray(new CharSequence[entryValues.size()]));
+        }
+
+        if (Config.QUICK_SHARE_ATTACHMENT_CHOICE) {
+            if (UIPreferenceScreen != null && quickAction != null) {
+                UIPreferenceScreen.removePreference(quickAction);
+            }
         }
 
         final Preference removeCertsPreference = mSettingsFragment.findPreference("remove_trusted_certificates");

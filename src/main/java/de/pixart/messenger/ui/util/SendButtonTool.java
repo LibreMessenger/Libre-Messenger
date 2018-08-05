@@ -40,6 +40,8 @@ import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.ui.ConversationFragment;
 import de.pixart.messenger.utils.UIHelper;
 
+import static de.pixart.messenger.Config.QUICK_SHARE_ATTACHMENT_CHOICE;
+
 public class SendButtonTool {
 
     public static SendButtonAction getAction(Activity activity, Conversation c, String text) {
@@ -59,15 +61,21 @@ public class SendButtonTool {
                 if (conference && c.getNextCounterpart() != null) {
                     return SendButtonAction.CANCEL;
                 } else {
-                    String setting = preferences.getString("quick_action", activity.getResources().getString(R.string.quick_action));
-                    if (!setting.equals("none") && UIHelper.receivedLocationQuestion(c.getLatestMessage())) {
-                        return SendButtonAction.SEND_LOCATION;
+                    if (QUICK_SHARE_ATTACHMENT_CHOICE && AttachmentsVisible(c)) {
+                        return SendButtonAction.CHOOSE_ATTACHMENT;
+                    } else if (QUICK_SHARE_ATTACHMENT_CHOICE && !AttachmentsVisible(c)) {
+                        return SendButtonAction.TEXT;
                     } else {
-                        if (setting.equals("recent")) {
-                            setting = preferences.getString(ConversationFragment.RECENTLY_USED_QUICK_ACTION, SendButtonAction.TEXT.toString());
-                            return SendButtonAction.valueOfOrDefault(setting, SendButtonAction.TEXT);
+                        String setting = preferences.getString("quick_action", activity.getResources().getString(R.string.quick_action));
+                        if (!setting.equals("none") && UIHelper.receivedLocationQuestion(c.getLatestMessage())) {
+                            return SendButtonAction.SEND_LOCATION;
                         } else {
-                            return SendButtonAction.valueOfOrDefault(setting, SendButtonAction.TEXT);
+                            if (setting.equals("recent")) {
+                                setting = preferences.getString(ConversationFragment.RECENTLY_USED_QUICK_ACTION, SendButtonAction.TEXT.toString());
+                                return SendButtonAction.valueOfOrDefault(setting, SendButtonAction.TEXT);
+                            } else {
+                                return SendButtonAction.valueOfOrDefault(setting, SendButtonAction.TEXT);
+                            }
                         }
                     }
                 }
@@ -75,6 +83,12 @@ public class SendButtonTool {
                 return SendButtonAction.TEXT;
             }
         }
+    }
+
+    public static boolean AttachmentsVisible(Conversation conversation) {
+        final boolean visible;
+        visible = conversation.getMode() != Conversation.MODE_MULTI || conversation.getAccount().httpUploadAvailable() && conversation.getMucOptions().participating();
+        return visible;
     }
 
     public static int getSendButtonImageResource(Activity activity, SendButtonAction action, Presence.Status status) {
@@ -156,6 +170,20 @@ public class SendButtonTool {
                         return R.drawable.ic_send_picture_dnd;
                     default:
                         return getThemeResource(activity, R.attr.ic_send_picture_offline, R.drawable.ic_send_picture_offline);
+                }
+
+            case CHOOSE_ATTACHMENT:
+                switch (status) {
+                    case CHAT:
+                    case ONLINE:
+                        return R.drawable.ic_send_attachment_online;
+                    case AWAY:
+                        return R.drawable.ic_send_attachment_away;
+                    case XA:
+                    case DND:
+                        return R.drawable.ic_send_attachment_dnd;
+                    default:
+                        return getThemeResource(activity, R.attr.ic_send_attachment_offline, R.drawable.ic_send_attachment_offline);
                 }
         }
         return getThemeResource(activity, R.attr.ic_send_text_offline, R.drawable.ic_send_text_offline);
