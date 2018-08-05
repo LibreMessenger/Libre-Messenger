@@ -1,6 +1,6 @@
 ### Changelog
 
-#### Version 2.1.0 (not yet released)
+#### Version 2.1.0
 * use group chat name as primary identifier
 * upload group chat avatar on compatible servers
 * show group name and subject in group chat details
