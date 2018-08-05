@@ -53,10 +53,13 @@ public class ConversationMenuConfigurator {
         locationAvailable = context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS) || context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_LOCATION_NETWORK);
     }
 
-    public static void configureQuickShareAttachmentMenu(@NonNull Conversation conversation, Menu menu) {
+    public static void configureQuickShareAttachmentMenu(@NonNull Conversation conversation, Menu menu, boolean hideVoice) {
         final boolean visible = SendButtonTool.AttachmentsVisible(conversation);
         if (!visible) {
             return;
+        }
+        if (hideVoice) {
+            microphoneAvailable = false;
         }
         menu.findItem(R.id.attach_record_voice).setVisible(microphoneAvailable);
         menu.findItem(R.id.attach_location).setVisible(locationAvailable);

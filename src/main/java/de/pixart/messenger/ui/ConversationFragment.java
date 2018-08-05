@@ -444,6 +444,14 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         }
     };
 
+    private OnClickListener mRecordVoiceButtonListener = new OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            attachFile(ATTACHMENT_CHOICE_RECORD_VOICE);
+        }
+    };
+
     private OnClickListener mSendButtonListener = new OnClickListener() {
 
         @Override
@@ -485,10 +493,12 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 
     @SuppressLint("RestrictedApi")
     private void choose_attachment(View v) {
+        SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(activity);
+        final boolean hideVoice = p.getBoolean("show_record_voice_btn", activity.getResources().getBoolean(R.bool.show_record_voice_btn));
         PopupMenu popup = new PopupMenu(activity, v);
         popup.inflate(R.menu.choose_attachment);
         Menu menu = popup.getMenu();
-        ConversationMenuConfigurator.configureQuickShareAttachmentMenu(conversation, menu);
+        ConversationMenuConfigurator.configureQuickShareAttachmentMenu(conversation, menu, hideVoice);
         popup.setOnMenuItemClickListener(attachmentItem -> {
             switch (attachmentItem.getItemId()) {
                 case R.id.attach_choose_picture:
@@ -496,7 +506,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 case R.id.attach_choose_file:
                 case R.id.attach_record_voice:
                 case R.id.attach_location:
-                    Log.d(Config.LOGTAG, "ATTACHMENT: " + attachmentItem.getTitle());
                     handleAttachmentSelection(attachmentItem);
                 default:
                     return false;
@@ -1199,6 +1208,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         binding.textSendButton.setOnClickListener(this.mSendButtonListener);
         binding.textSendButton.setOnLongClickListener(this.mSendButtonLongListener);
         binding.scrollToBottomButton.setOnClickListener(this.mScrollButtonListener);
+        binding.recordVoiceButton.setOnClickListener(this.mRecordVoiceButtonListener);
 
         binding.messagesView.setOnScrollListener(mOnScrollListener);
         binding.messagesView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
@@ -1287,6 +1297,18 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 inputMethodManager.showSoftInput(binding.textinput, InputMethodManager.SHOW_IMPLICIT);
             }
         }
+    }
+
+    private void showRecordVoiceButton() {
+        SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(activity);
+        final boolean ShowRecordVoiceButton = p.getBoolean("show_record_voice_btn", activity.getResources().getBoolean(R.bool.show_record_voice_btn));
+        Log.d(Config.LOGTAG, "Recorder " + ShowRecordVoiceButton);
+        if (ShowRecordVoiceButton) {
+            binding.recordVoiceButton.setVisibility(View.VISIBLE);
+        } else {
+            binding.recordVoiceButton.setVisibility(View.GONE);
+        }
+        binding.recordVoiceButton.setImageResource(activity.getThemeResource(R.attr.ic_send_voice_offline, R.drawable.ic_send_voice_offline));
     }
 
     private void quoteMessage(Message message) {
@@ -2178,6 +2200,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         this.binding.textSendButton.setContentDescription(activity.getString(R.string.send_message_to_x, conversation.getName()));
         this.binding.textinput.setKeyboardListener(null);
         this.binding.textinput.setText("");
+        showRecordVoiceButton();
         final boolean participating = conversation.getMode() == Conversational.MODE_SINGLE || conversation.getMucOptions().participating();
         if (participating) {
             this.binding.textinput.append(this.conversation.getNextMessage());

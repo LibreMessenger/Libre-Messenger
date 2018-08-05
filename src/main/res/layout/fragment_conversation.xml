@@ -57,6 +57,7 @@
 
             <RelativeLayout
                 android:id="@+id/textsend"
+
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -66,13 +67,24 @@
                 android:paddingLeft="2dp"
                 android:paddingTop="2dp">
 
+                <ImageButton
+                    android:id="@+id/recordVoiceButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:background="?attr/color_background_secondary"
+                    android:contentDescription="@string/attach_record_voice"
+                    android:src="@drawable/ic_send_voice_offline"
+                    android:visibility="gone" />
+
                 <de.pixart.messenger.ui.widget.EditMessage
                     android:id="@+id/textinput"
                     style="@style/Widget.Conversations.EditText"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
                     android:layout_toLeftOf="@+id/textSendButton"
+                    android:layout_toRightOf="@+id/recordVoiceButton"
                     android:background="@drawable/message_bubble_sent_blue"
                     android:ems="10"
                     android:imeOptions="flagNoExtractUi|actionSend"

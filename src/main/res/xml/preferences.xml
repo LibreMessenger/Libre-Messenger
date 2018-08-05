@@ -47,6 +47,11 @@
             android:summary="@string/pref_quick_action_summary"
             android:title="@string/pref_quick_action" />
         <CheckBoxPreference
+            android:defaultValue="@bool/show_record_voice_btn"
+            android:key="show_record_voice_btn"
+            android:summary="@string/pref_show_record_voice_btn_summary"
+            android:title="@string/pref_show_record_voice_btn" />
+        <CheckBoxPreference
             android:defaultValue="@bool/use_max_brightness"
             android:key="use_max_brightness"
             android:summary="@string/pref_use_max_brightness_summary"
