@@ -1658,6 +1658,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     res = R.string.no_microphone_permission;
                 } else if (Manifest.permission.CAMERA.equals(firstDenied)) {
                     res = R.string.no_camera_permission;
+                } else if (Manifest.permission.ACCESS_COARSE_LOCATION.equals(firstDenied)
+                        || Manifest.permission.ACCESS_FINE_LOCATION.equals(firstDenied)) {
+                    res = R.string.no_location_permission;
                 } else {
                     res = R.string.no_storage_permission;
                 }
