@@ -559,7 +559,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
                 return true;
             case R.id.action_check_updates:
                 if (xmppConnectionService.hasInternetConnection()) {
-                    if (!installFromUnknownSourceAllowed() && !xmppConnectionService.installedFrom().equals(PlayStore)) {
+                    if (!installFromUnknownSourceAllowed() && (xmppConnectionService.installedFrom() != null && !xmppConnectionService.installedFrom().equals(PlayStore))) {
                         openInstallFromUnknownSourcesDialogIfNeeded();
                     } else {
                         UpdateService task = new UpdateService(this, xmppConnectionService.installedFrom(), xmppConnectionService);
