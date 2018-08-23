@@ -463,6 +463,12 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
         if (prev != null) {
             ft.remove(prev);
         }
+        boolean multiAccount = false;
+        try {
+            multiAccount = xmppConnectionService.multipleAccounts();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ft.addToBackStack(null);
         EnterJidDialog dialog = EnterJidDialog.newInstance(
                 mActivatedAccounts,
@@ -471,7 +477,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
                 prefilledJid,
                 null,
                 invite == null || !invite.hasFingerprints(),
-                xmppConnectionService.multipleAccounts()
+                multiAccount
         );
 
         dialog.setOnEnterJidDialogPositiveListener((accountJid, contactJid) -> {
