@@ -138,6 +138,13 @@ public class IqGenerator extends AbstractGenerator {
         return publish("urn:xmpp:avatar:data", item);
     }
 
+    public IqPacket publishElement(final String namespace, final Element element, final Bundle options) {
+        final Element item = new Element("item");
+        item.setAttribute("id", "current");
+        item.addChild(element);
+        return publish(namespace, item, options);
+    }
+
     public IqPacket publishAvatarMetadata(final Avatar avatar) {
         final Element item = new Element("item");
         item.setAttribute("id", avatar.sha1sum);

@@ -150,6 +150,7 @@ import de.pixart.messenger.xmpp.jingle.OnJinglePacketReceived;
 import de.pixart.messenger.xmpp.jingle.stanzas.JinglePacket;
 import de.pixart.messenger.xmpp.mam.MamReference;
 import de.pixart.messenger.xmpp.pep.Avatar;
+import de.pixart.messenger.xmpp.pep.PublishOptions;
 import de.pixart.messenger.xmpp.stanzas.IqPacket;
 import de.pixart.messenger.xmpp.stanzas.MessagePacket;
 import de.pixart.messenger.xmpp.stanzas.PresencePacket;
@@ -167,11 +168,11 @@ public class XmppConnectionService extends Service {
     public static final String ACTION_IDLE_PING = "idle_ping";
     public static final String ACTION_FCM_TOKEN_REFRESH = "fcm_token_refresh";
     public static final String ACTION_FCM_MESSAGE_RECEIVED = "fcm_message_received";
-    private static final String ACTION_MERGE_PHONE_CONTACTS = "merge_phone_contacts";
-    private static final String SETTING_LAST_ACTIVITY_TS = "last_activity_timestamp";
     public static final String FDroid = "org.fdroid.fdroid";
     public static final String PlayStore = "com.android.vending";
     public static final String Yalp = "com.github.yeriomin.yalpstore";
+    private static final String ACTION_MERGE_PHONE_CONTACTS = "merge_phone_contacts";
+    private static final String SETTING_LAST_ACTIVITY_TS = "last_activity_timestamp";
 
     static {
         URL.setURLStreamHandlerFactory(new CustomURLStreamHandlerFactory());
@@ -198,7 +199,45 @@ public class XmppConnectionService extends Service {
             }
         }
     };
+    //Ui callback listeners
+    private final Set<OnConversationUpdate> mOnConversationUpdates = Collections.newSetFromMap(new WeakHashMap<OnConversationUpdate, Boolean>());
+    private final Set<OnShowErrorToast> mOnShowErrorToasts = Collections.newSetFromMap(new WeakHashMap<OnShowErrorToast, Boolean>());
+    private final Set<OnAccountUpdate> mOnAccountUpdates = Collections.newSetFromMap(new WeakHashMap<OnAccountUpdate, Boolean>());
+    private final Set<OnCaptchaRequested> mOnCaptchaRequested = Collections.newSetFromMap(new WeakHashMap<OnCaptchaRequested, Boolean>());
+    private final Set<OnRosterUpdate> mOnRosterUpdates = Collections.newSetFromMap(new WeakHashMap<OnRosterUpdate, Boolean>());
+    private final Set<OnUpdateBlocklist> mOnUpdateBlocklist = Collections.newSetFromMap(new WeakHashMap<OnUpdateBlocklist, Boolean>());
+    private final Set<OnMucRosterUpdate> mOnMucRosterUpdate = Collections.newSetFromMap(new WeakHashMap<OnMucRosterUpdate, Boolean>());
+    private final Set<OnKeyStatusUpdated> mOnKeyStatusUpdated = Collections.newSetFromMap(new WeakHashMap<OnKeyStatusUpdated, Boolean>());
+    private final Object LISTENER_LOCK = new Object();
     public DatabaseBackend databaseBackend;
+    private final OnMessageAcknowledged mOnMessageAcknowledgedListener = new OnMessageAcknowledged() {
+
+        @Override
+        public boolean onMessageAcknowledged(Account account, String uuid) {
+            for (final Conversation conversation : getConversations()) {
+                if (conversation.getAccount() == account) {
+                    Message message = conversation.findUnsentMessageWithUuid(uuid);
+                    if (message != null) {
+                        message.setStatus(Message.STATUS_SEND);
+                        message.setErrorMessage(null);
+                        databaseBackend.updateMessage(message, false);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+    };
+    public FileBackend fileBackend = new FileBackend(this);
+    private final ConversationsFileObserver fileObserver = new ConversationsFileObserver(
+            Environment.getExternalStorageDirectory().getAbsolutePath()
+    ) {
+        @Override
+        public void onEvent(int event, String path) {
+            markFileDeleted(path);
+        }
+    };
+    public HttpConnectionManager mHttpConnectionManager = new HttpConnectionManager(this);
     private ReplacingSerialSingleThreadExecutor mContactMergerExecutor = new ReplacingSerialSingleThreadExecutor(true);
     private long mLastActivity = 0;
     private ContentObserver contactObserver = new ContentObserver(null) {
@@ -211,7 +250,6 @@ public class XmppConnectionService extends Service {
             startService(intent);
         }
     };
-    public FileBackend fileBackend = new FileBackend(this);
     private MemorizingTrustManager mMemorizingTrustManager;
     private NotificationService mNotificationService = new NotificationService(this);
     private ShortcutService mShortcutService = new ShortcutService(this);
@@ -221,6 +259,9 @@ public class XmppConnectionService extends Service {
     private OnPresencePacketReceived mPresenceParser = new PresenceParser(this);
     private IqParser mIqParser = new IqParser(this);
     private MessageGenerator mMessageGenerator = new MessageGenerator(this);
+    private PresenceGenerator mPresenceGenerator = new PresenceGenerator(this);
+    private List<Account> accounts;
+    private JingleConnectionManager mJingleConnectionManager = new JingleConnectionManager(this);
     public OnContactStatusChanged onContactStatusChanged = (contact, online) -> {
         Conversation conversation = find(getConversations(), contact);
         if (conversation != null) {
@@ -240,9 +281,6 @@ public class XmppConnectionService extends Service {
             }
         }
     };
-    private PresenceGenerator mPresenceGenerator = new PresenceGenerator(this);
-    private List<Account> accounts;
-    private JingleConnectionManager mJingleConnectionManager = new JingleConnectionManager(this);
     private final OnJinglePacketReceived jingleListener = new OnJinglePacketReceived() {
 
         @Override
@@ -250,51 +288,9 @@ public class XmppConnectionService extends Service {
             mJingleConnectionManager.deliverPacket(account, packet);
         }
     };
-    public HttpConnectionManager mHttpConnectionManager = new HttpConnectionManager(this);
     private AvatarService mAvatarService = new AvatarService(this);
     private MessageArchiveService mMessageArchiveService = new MessageArchiveService(this);
     private PushManagementService mPushManagementService = new PushManagementService(this);
-    private final ConversationsFileObserver fileObserver = new ConversationsFileObserver(
-            Environment.getExternalStorageDirectory().getAbsolutePath()
-    ) {
-        @Override
-        public void onEvent(int event, String path) {
-            markFileDeleted(path);
-        }
-    };
-    private final OnMessageAcknowledged mOnMessageAcknowledgedListener = new OnMessageAcknowledged() {
-
-        @Override
-        public boolean onMessageAcknowledged(Account account, String uuid) {
-            for (final Conversation conversation : getConversations()) {
-                if (conversation.getAccount() == account) {
-                    Message message = conversation.findUnsentMessageWithUuid(uuid);
-                    if (message != null) {
-                        message.setStatus(Message.STATUS_SEND);
-                        message.setErrorMessage(null);
-                        databaseBackend.updateMessage(message, false);
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-    };
-
-    private int unreadCount = -1;
-
-    //Ui callback listeners
-    private final Set<OnConversationUpdate> mOnConversationUpdates = Collections.newSetFromMap(new WeakHashMap<OnConversationUpdate, Boolean>());
-    private final Set<OnShowErrorToast> mOnShowErrorToasts = Collections.newSetFromMap(new WeakHashMap<OnShowErrorToast, Boolean>());
-    private final Set<OnAccountUpdate> mOnAccountUpdates = Collections.newSetFromMap(new WeakHashMap<OnAccountUpdate, Boolean>());
-    private final Set<OnCaptchaRequested> mOnCaptchaRequested = Collections.newSetFromMap(new WeakHashMap<OnCaptchaRequested, Boolean>());
-    private final Set<OnRosterUpdate> mOnRosterUpdates = Collections.newSetFromMap(new WeakHashMap<OnRosterUpdate, Boolean>());
-    private final Set<OnUpdateBlocklist> mOnUpdateBlocklist = Collections.newSetFromMap(new WeakHashMap<OnUpdateBlocklist, Boolean>());
-    private final Set<OnMucRosterUpdate> mOnMucRosterUpdate = Collections.newSetFromMap(new WeakHashMap<OnMucRosterUpdate, Boolean>());
-    private final Set<OnKeyStatusUpdated> mOnKeyStatusUpdated = Collections.newSetFromMap(new WeakHashMap<OnKeyStatusUpdated, Boolean>());
-
-    private final Object LISTENER_LOCK = new Object();
-
     private final OnBindListener mOnBindListener = new OnBindListener() {
 
         @Override
@@ -315,7 +311,9 @@ public class XmppConnectionService extends Service {
             account.getRoster().clearPresences();
             mJingleConnectionManager.cancelInTransmission();
             fetchRosterFromServer(account);
-            fetchBookmarks(account);
+            if (!account.getXmppConnection().getFeatures().bookmarksConversion()) {
+                fetchBookmarks(account);
+            }
             final boolean flexible = account.getXmppConnection().getFeatures().flexibleOfflineMessageRetrieval();
             final boolean catchup = getMessageArchiveService().inCatchup(account);
             if (flexible && catchup) {
@@ -333,6 +331,7 @@ public class XmppConnectionService extends Service {
             syncDirtyContacts(account);
         }
     };
+    private int unreadCount = -1;
     private AtomicLong mLastExpiryRun = new AtomicLong(0);
     private SecureRandom mRandom;
     private LruCache<Pair<String, String>, ServiceDiscoveryResult> discoCache = new LruCache<>(20);
@@ -1494,7 +1493,7 @@ public class XmppConnectionService extends Service {
             @Override
             public void onMessageFound(Message message) {
                 if (mHttpConnectionManager.getAutoAcceptFileSize() >= message.getFileParams().size) {
-                    Log.d(Config.LOGTAG, "Resend failed message with size " + message.getFileParams().size  + " bytes for " + conversation.getJid());
+                    Log.d(Config.LOGTAG, "Resend failed message with size " + message.getFileParams().size + " bytes for " + conversation.getJid());
                     resendMessage(message, true);
                 }
             }
@@ -1520,45 +1519,53 @@ public class XmppConnectionService extends Service {
     public void fetchBookmarks(final Account account) {
         final IqPacket iqPacket = new IqPacket(IqPacket.TYPE.GET);
         final Element query = iqPacket.query("jabber:iq:private");
-        query.addChild("storage", "storage:bookmarks");
-        final OnIqPacketReceived callback = new OnIqPacketReceived() {
-
-            @Override
-            public void onIqPacketReceived(final Account account, final IqPacket packet) {
-                if (packet.getType() == IqPacket.TYPE.RESULT) {
-                    final Element query = packet.query();
-                    final HashMap<Jid, Bookmark> bookmarks = new HashMap<>();
-                    final Element storage = query.findChild("storage", "storage:bookmarks");
-                    final boolean autojoin = respectAutojoin();
-                    if (storage != null) {
-                        for (final Element item : storage.getChildren()) {
-                            if (item.getName().equals("conference")) {
-                                final Bookmark bookmark = Bookmark.parse(item, account);
-                                Bookmark old = bookmarks.put(bookmark.getJid(), bookmark);
-                                if (old != null && old.getBookmarkName() != null && bookmark.getBookmarkName() == null) {
-                                    bookmark.setBookmarkName(old.getBookmarkName());
-                                }
-                                Conversation conversation = find(bookmark);
-                                if (conversation != null) {
-                                    bookmark.setConversation(conversation);
-                                } else if (bookmark.autojoin() && bookmark.getJid() != null && autojoin) {
-                                    conversation = findOrCreateConversation(account, bookmark.getJid(), true, true, false);
-                                    bookmark.setConversation(conversation);
-                                }
-                            }
-                        }
-                    }
-                    account.setBookmarks(new CopyOnWriteArrayList<>(bookmarks.values()));
-                } else {
-                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": could not fetch bookmarks");
-                }
+        query.addChild("storage", Namespace.BOOKMARKS);
+        final OnIqPacketReceived callback = (a, response) -> {
+            if (response.getType() == IqPacket.TYPE.RESULT) {
+                final Element query1 = response.query();
+                final Element storage = query1.findChild("storage", "storage:bookmarks");
+                processBookmarks(a, storage);
+            } else {
+                Log.d(Config.LOGTAG, a.getJid().asBareJid() + ": could not fetch bookmarks");
             }
         };
         sendIqPacket(account, iqPacket, callback);
     }
 
+    public void processBookmarks(Account account, Element storage) {
+        final HashMap<Jid, Bookmark> bookmarks = new HashMap<>();
+        final boolean autojoin = respectAutojoin();
+        if (storage != null) {
+            for (final Element item : storage.getChildren()) {
+                if (item.getName().equals("conference")) {
+                    final Bookmark bookmark = Bookmark.parse(item, account);
+                    Bookmark old = bookmarks.put(bookmark.getJid(), bookmark);
+                    if (old != null && old.getBookmarkName() != null && bookmark.getBookmarkName() == null) {
+                        bookmark.setBookmarkName(old.getBookmarkName());
+                    }
+                    Conversation conversation = find(bookmark);
+                    if (conversation != null) {
+                        bookmark.setConversation(conversation);
+                    } else if (bookmark.autojoin() && bookmark.getJid() != null && autojoin) {
+                        conversation = findOrCreateConversation(account, bookmark.getJid(), true, true, false);
+                        bookmark.setConversation(conversation);
+                    }
+                }
+            }
+        }
+        account.setBookmarks(new CopyOnWriteArrayList<>(bookmarks.values()));
+    }
+
     public void pushBookmarks(Account account) {
-        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": pushing bookmarks");
+        if (account.getXmppConnection().getFeatures().bookmarksConversion()) {
+            pushBookmarksPep(account);
+        } else {
+            pushBookmarksPrivateXml(account);
+        }
+    }
+
+    private void pushBookmarksPrivateXml(Account account) {
+        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": pushing bookmarks via private xml");
         IqPacket iqPacket = new IqPacket(IqPacket.TYPE.SET);
         Element query = iqPacket.query("jabber:iq:private");
         Element storage = query.addChild("storage", "storage:bookmarks");
@@ -1566,6 +1573,46 @@ public class XmppConnectionService extends Service {
             storage.addChild(bookmark);
         }
         sendIqPacket(account, iqPacket, mDefaultIqHandler);
+    }
+
+    private void pushBookmarksPep(Account account) {
+        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": pushing bookmarks via pep");
+        Element storage = new Element("storage", "storage:bookmarks");
+        for (Bookmark bookmark : account.getBookmarks()) {
+            storage.addChild(bookmark);
+        }
+        pushNodeAndEnforcePublishOptions(account, Namespace.BOOKMARKS, storage, PublishOptions.persistentWhitelistAccess());
+    }
+
+    private void pushNodeAndEnforcePublishOptions(final Account account, final String node, final Element element, final Bundle options) {
+        pushNodeAndEnforcePublishOptions(account, node, element, options, true);
+    }
+
+    private void pushNodeAndEnforcePublishOptions(final Account account, final String node, final Element element, final Bundle options, final boolean retry) {
+        IqPacket packet = mIqGenerator.publishElement(node, element, options);
+        Log.d(Config.LOGTAG, packet.toString());
+        sendIqPacket(account, packet, (a, response) -> {
+            if (response.getType() == IqPacket.TYPE.RESULT) {
+                return;
+            }
+            final Element error = response.getType() == IqPacket.TYPE.ERROR ? response.findChild("error") : null;
+            final boolean preconditionNotMet = error != null && error.hasChild("precondition-not-met", Namespace.PUBSUB_ERROR);
+            if (retry && preconditionNotMet) {
+                pushNodeConfiguration(account, node, options, new OnConfigurationPushed() {
+                    @Override
+                    public void onPushSucceeded() {
+                        pushNodeAndEnforcePublishOptions(account, node, element, options, false);
+                    }
+
+                    @Override
+                    public void onPushFailed() {
+                        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": unable to push node configuration (" + node + ")");
+                    }
+                });
+            } else {
+                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": error publishing bookmarks (retry=" + Boolean.toString(retry) + ") " + response);
+            }
+        });
     }
 
     private void restoreFromDatabase() {
@@ -1860,7 +1907,7 @@ public class XmppConnectionService extends Service {
                     conversation.setContactJid(jid.asBareJid());
                 }
                 databaseBackend.updateConversation(conversation);
-                loadMessagesFromDb = conversation.messagesLoaded.compareAndSet(true,false);
+                loadMessagesFromDb = conversation.messagesLoaded.compareAndSet(true, false);
             } else {
                 String conversationName;
                 Contact contact = account.getRoster().getContact(jid);
@@ -1934,7 +1981,7 @@ public class XmppConnectionService extends Service {
                     conversation.setContactJid(jid.asBareJid());
                 }
                 databaseBackend.updateConversation(conversation);
-                loadMessagesFromDb = conversation.messagesLoaded.compareAndSet(true,false);
+                loadMessagesFromDb = conversation.messagesLoaded.compareAndSet(true, false);
             } else {
                 String conversationName;
                 Contact contact = account.getRoster().getContact(jid);
@@ -2147,7 +2194,7 @@ public class XmppConnectionService extends Service {
         synchronized (LISTENER_LOCK) {
             remainingListeners = checkListeners();
             if (!this.mOnConversationUpdates.add(listener)) {
-                Log.w(Config.LOGTAG,listener.getClass().getName()+" is already registered as ConversationListChangedListener");
+                Log.w(Config.LOGTAG, listener.getClass().getName() + " is already registered as ConversationListChangedListener");
             }
             this.mNotificationService.setIsInForeground(this.mOnConversationUpdates.size() > 0);
         }
@@ -2173,7 +2220,7 @@ public class XmppConnectionService extends Service {
         synchronized (LISTENER_LOCK) {
             remainingListeners = checkListeners();
             if (!this.mOnShowErrorToasts.add(listener)) {
-                Log.w(Config.LOGTAG,listener.getClass().getName()+" is already registered as OnShowErrorToastListener");
+                Log.w(Config.LOGTAG, listener.getClass().getName() + " is already registered as OnShowErrorToastListener");
             }
         }
         if (remainingListeners) {
@@ -2197,7 +2244,7 @@ public class XmppConnectionService extends Service {
         synchronized (LISTENER_LOCK) {
             remainingListeners = checkListeners();
             if (!this.mOnAccountUpdates.add(listener)) {
-                Log.w(Config.LOGTAG,listener.getClass().getName()+" is already registered as OnAccountListChangedtListener");
+                Log.w(Config.LOGTAG, listener.getClass().getName() + " is already registered as OnAccountListChangedtListener");
             }
         }
         if (remainingListeners) {
@@ -2221,7 +2268,7 @@ public class XmppConnectionService extends Service {
         synchronized (LISTENER_LOCK) {
             remainingListeners = checkListeners();
             if (!this.mOnCaptchaRequested.add(listener)) {
-                Log.w(Config.LOGTAG,listener.getClass().getName()+" is already registered as OnCaptchaRequestListener");
+                Log.w(Config.LOGTAG, listener.getClass().getName() + " is already registered as OnCaptchaRequestListener");
             }
         }
         if (remainingListeners) {
@@ -2245,7 +2292,7 @@ public class XmppConnectionService extends Service {
         synchronized (LISTENER_LOCK) {
             remainingListeners = checkListeners();
             if (!this.mOnRosterUpdates.add(listener)) {
-                Log.w(Config.LOGTAG,listener.getClass().getName()+" is already registered as OnRosterUpdateListener");
+                Log.w(Config.LOGTAG, listener.getClass().getName() + " is already registered as OnRosterUpdateListener");
             }
         }
         if (remainingListeners) {
@@ -2269,7 +2316,7 @@ public class XmppConnectionService extends Service {
         synchronized (LISTENER_LOCK) {
             remainingListeners = checkListeners();
             if (!this.mOnUpdateBlocklist.add(listener)) {
-                Log.w(Config.LOGTAG,listener.getClass().getName()+" is already registered as OnUpdateBlocklistListener");
+                Log.w(Config.LOGTAG, listener.getClass().getName() + " is already registered as OnUpdateBlocklistListener");
             }
         }
         if (remainingListeners) {
@@ -2293,7 +2340,7 @@ public class XmppConnectionService extends Service {
         synchronized (LISTENER_LOCK) {
             remainingListeners = checkListeners();
             if (!this.mOnKeyStatusUpdated.add(listener)) {
-                Log.w(Config.LOGTAG,listener.getClass().getName()+" is already registered as OnKeyStatusUpdateListener");
+                Log.w(Config.LOGTAG, listener.getClass().getName() + " is already registered as OnKeyStatusUpdateListener");
             }
         }
         if (remainingListeners) {
@@ -2317,7 +2364,7 @@ public class XmppConnectionService extends Service {
         synchronized (LISTENER_LOCK) {
             remainingListeners = checkListeners();
             if (!this.mOnMucRosterUpdate.add(listener)) {
-                Log.w(Config.LOGTAG,listener.getClass().getName()+" is already registered as OnMucRosterListener");
+                Log.w(Config.LOGTAG, listener.getClass().getName() + " is already registered as OnMucRosterListener");
             }
         }
         if (remainingListeners) {
@@ -2581,7 +2628,7 @@ public class XmppConnectionService extends Service {
     }
 
     private boolean hasEnabledAccounts() {
-        for(Account account : this.accounts) {
+        for (Account account : this.accounts) {
             if (account.isEnabled()) {
                 return true;
             }
@@ -2744,13 +2791,13 @@ public class XmppConnectionService extends Service {
                 if (callback != null) {
                     callback.error(R.string.conference_creation_failed, null);
                 }
-                return true;
+                return false;
             }
         } else {
             if (callback != null) {
                 callback.error(R.string.not_connected_try_again, null);
             }
-            return true;
+            return false;
         }
     }
 
@@ -2796,6 +2843,7 @@ public class XmppConnectionService extends Service {
     }
 
     public void pushNodeConfiguration(Account account, final String node, final Bundle options, final OnConfigurationPushed callback) {
+        Log.d(Config.LOGTAG, "pushing node configuration");
         pushNodeConfiguration(account, account.getJid().asBareJid(), node, options, callback);
     }
 
@@ -3172,7 +3220,7 @@ public class XmppConnectionService extends Service {
                                     getAvatarService().clear(account);
                                     databaseBackend.updateAccount(account);
                                 }
-                                Log.d(Config.LOGTAG,account.getJid().asBareJid()+": published avatar "+(avatar.size/1024)+"KiB");
+                                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": published avatar " + (avatar.size / 1024) + "KiB");
                                 if (callback != null) {
                                     callback.onAvatarPublicationSucceeded();
                                 }
@@ -3185,7 +3233,7 @@ public class XmppConnectionService extends Service {
                     });
                 } else {
                     Element error = result.findChild("error");
-                    Log.d(Config.LOGTAG,account.getJid().asBareJid()+": server rejected avatar "+(avatar.size/1024)+"KiB "+(error!=null?error.toString():""));
+                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": server rejected avatar " + (avatar.size / 1024) + "KiB " + (error != null ? error.toString() : ""));
                     if (callback != null) {
                         callback.onAvatarPublicationFailed(R.string.error_publish_avatar_server_reject);
                     }
@@ -3539,7 +3587,7 @@ public class XmppConnectionService extends Service {
     public long getLongPreference(String name, @IntegerRes int res) {
         long defaultValue = getResources().getInteger(res);
         try {
-            return Long.parseLong(getPreferences().getString(name,String.valueOf(defaultValue)));
+            return Long.parseLong(getPreferences().getString(name, String.valueOf(defaultValue)));
         } catch (NumberFormatException e) {
             return defaultValue;
         }
@@ -3777,7 +3825,7 @@ public class XmppConnectionService extends Service {
 
     public void updateMemorizingTrustmanager() {
         final MemorizingTrustManager tm;
-        final boolean dontTrustSystemCAs = getPreferences().getBoolean("dont_trust_system_cas", getResources().getBoolean(R.bool.dont_trust_system_cas));
+        final boolean dontTrustSystemCAs = getBooleanPreference("dont_trust_system_cas", R.bool.dont_trust_system_cas);
         if (dontTrustSystemCAs) {
             tm = new MemorizingTrustManager(getApplicationContext(), null);
         } else {
@@ -4270,11 +4318,11 @@ public class XmppConnectionService extends Service {
     }
 
     public boolean blindTrustBeforeVerification() {
-        return getPreferences().getBoolean(SettingsActivity.BLIND_TRUST_BEFORE_VERIFICATION, getResources().getBoolean(R.bool.btbv));
+        return getBooleanPreference(SettingsActivity.BLIND_TRUST_BEFORE_VERIFICATION, R.bool.btbv);
     }
 
     public boolean showForegroundService() {
-        return getPreferences().getBoolean(SettingsActivity.SHOW_FOREGROUND_SERVICE, getResources().getBoolean(R.bool.show_foreground_service));
+        return getBooleanPreference(SettingsActivity.SHOW_FOREGROUND_SERVICE, R.bool.show_foreground_service);
     }
 
     public void ScheduleAutomaticExport() {
@@ -4293,7 +4341,7 @@ public class XmppConnectionService extends Service {
                 if (timetoexport.before(now)) {
                     SimpleDateFormat newDate = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
                     timetoexport.add(Calendar.DAY_OF_YEAR, 1); //DATE or DAY_OF_MONTH
-                    Log.d(Config.LOGTAG, "Schedule automatic export logs, for today, the export time is in the past, scheduling first export run for the next day ("+ newDate.format(timetoexport.getTimeInMillis()) +").");
+                    Log.d(Config.LOGTAG, "Schedule automatic export logs, for today, the export time is in the past, scheduling first export run for the next day (" + newDate.format(timetoexport.getTimeInMillis()) + ").");
                 }
                 final PendingIntent ScheduleExportIntent = PendingIntent.getBroadcast(this, AlarmReceiver.SCHEDULE_ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 ((AlarmManager) getSystemService(ALARM_SERVICE)).setInexactRepeating(AlarmManager.RTC_WAKEUP, timetoexport.getTimeInMillis(), AlarmManager.INTERVAL_DAY, ScheduleExportIntent);
