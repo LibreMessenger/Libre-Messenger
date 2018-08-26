@@ -791,6 +791,7 @@
   <string name="show_termsofuse">Nutzungsbedingungen</string>
   <string name="p1_s3_filetransfer">HTTP Dateitransfer für S3</string>
   <string name="pref_start_search">Direktsuche</string>
+  <string name="pref_start_search_summary">Bei \'Unterhaltung beginnen\' direkt die Suche starten</string>
   <string name="paste_as_quote">Als Zitat einfügen</string>
   <string name="group_chat_avatar">Gruppenchat-Avatar</string>
   <string name="host_does_not_support_group_chat_avatars">Host unterstützt keine Gruppenchat-Avatare</string>
