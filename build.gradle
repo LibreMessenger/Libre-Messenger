@@ -64,6 +64,7 @@ dependencies {
     implementation 'com.googlecode.ez-vcard:ez-vcard:0.10.3'
     implementation 'in.championswimmer:SimpleFingerGestures_Android_Library:1.2'
     implementation 'rocks.xmpp:xmpp-addr:0.8.0'
+    implementation 'org.hsluv:hsluv:0.2'
 }
 
 ext {

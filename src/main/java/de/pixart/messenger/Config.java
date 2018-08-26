@@ -77,6 +77,8 @@ public final class Config {
     public static final int CONNECT_DISCO_TIMEOUT = 30;
     public static final int MINI_GRACE_PERIOD = 750;
 
+    public static final boolean XEP_0392 = false; //enables a variant of XEP-0392 that is based on HSLUV
+
     public static final int FILE_SIZE = 1048576; // 1 MiB
 
     public static final int AVATAR_SIZE = 480;
