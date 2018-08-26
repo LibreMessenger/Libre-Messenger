@@ -126,6 +126,7 @@ import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.ui.XmppActivity.EXTRA_ACCOUNT;
 import static de.pixart.messenger.ui.XmppActivity.REQUEST_INVITE_TO_CONVERSATION;
+import static de.pixart.messenger.ui.util.SendButtonAction.TEXT;
 import static de.pixart.messenger.ui.util.SoftKeyboardUtils.hideSoftKeyboard;
 import static de.pixart.messenger.xmpp.Patches.ENCRYPTION_EXCEPTIONS;
 
@@ -1186,7 +1187,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             }
             menuNeedHelp.setVisible(true);
             menuSearchUpdates.setVisible(false);
-            ConversationMenuConfigurator.configureAttachmentMenu(conversation, menu, Config.QUICK_SHARE_ATTACHMENT_CHOICE);
+            ConversationMenuConfigurator.configureAttachmentMenu(conversation, menu, activity.xmppConnectionService.getAttachmentChoicePreference());
             ConversationMenuConfigurator.configureEncryptionMenu(conversation, menu);
         } else {
             menuNeedHelp.setVisible(false);
@@ -2557,7 +2558,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         final Conversation c = this.conversation;
         final Presence.Status status;
         final String text = this.binding.textinput == null ? "" : this.binding.textinput.getText().toString();
-        final SendButtonAction action = SendButtonTool.getAction(getActivity(), c, text);
+        SendButtonAction action = SendButtonTool.getAction(getActivity(), c, text);
         if (useSendButtonToIndicateStatus && c.getAccount().getStatus() == Account.State.ONLINE) {
             if (activity.xmppConnectionService != null && activity.xmppConnectionService.getMessageArchiveService().isCatchingUp(c)) {
                 status = Presence.Status.OFFLINE;
@@ -2568,6 +2569,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             }
         } else {
             status = Presence.Status.OFFLINE;
+        }
+        if (action.toString().equals("CHOOSE_ATTACHMENT") && !activity.xmppConnectionService.getAttachmentChoicePreference()) {
+            action = TEXT;
         }
         this.binding.textSendButton.setTag(action);
         this.binding.textSendButton.setImageResource(SendButtonTool.getSendButtonImageResource(getActivity(), action, status));

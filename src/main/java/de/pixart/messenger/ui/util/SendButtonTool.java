@@ -38,9 +38,8 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.ui.ConversationFragment;
+import de.pixart.messenger.ui.SettingsActivity;
 import de.pixart.messenger.utils.UIHelper;
-
-import static de.pixart.messenger.Config.QUICK_SHARE_ATTACHMENT_CHOICE;
 
 public class SendButtonTool {
 
@@ -61,12 +60,13 @@ public class SendButtonTool {
                 if (conference && c.getNextCounterpart() != null) {
                     return SendButtonAction.CANCEL;
                 } else {
-                    if (QUICK_SHARE_ATTACHMENT_CHOICE && AttachmentsVisible(c)) {
+                    boolean quickShareChoice = preferences.getBoolean(SettingsActivity.QUICK_SHARE_ATTACHMENT_CHOICE, activity.getResources().getBoolean(R.bool.quick_share_attachment_choice));
+                    String setting = preferences.getString("quick_action", activity.getResources().getString(R.string.quick_action));
+                    if (quickShareChoice && AttachmentsVisible(c)) {
                         return SendButtonAction.CHOOSE_ATTACHMENT;
-                    } else if (QUICK_SHARE_ATTACHMENT_CHOICE && !AttachmentsVisible(c)) {
+                    } else if (quickShareChoice && !AttachmentsVisible(c)) {
                         return SendButtonAction.TEXT;
                     } else {
-                        String setting = preferences.getString("quick_action", activity.getResources().getString(R.string.quick_action));
                         if (!setting.equals("none") && UIHelper.receivedLocationQuestion(c.getLatestMessage())) {
                             return SendButtonAction.SEND_LOCATION;
                         } else {
@@ -198,5 +198,4 @@ public class SendButtonTool {
 
         return res;
     }
-
 }

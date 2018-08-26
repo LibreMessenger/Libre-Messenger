@@ -38,6 +38,11 @@
             android:key="presence_colored_names"
             android:summary="@string/pref_use_colored_names_to_indicate_status_summary"
             android:title="@string/pref_use_colored_names_to_indicate_status" />
+        <CheckBoxPreference
+            android:defaultValue="@bool/quick_share_attachment_choice"
+            android:key="quick_share_attachment_choice"
+            android:summary="@string/pref_use_quick_share_attachment_choice_summary"
+            android:title="@string/pref_quick_share_attachment_choice" />
         <ListPreference
             android:defaultValue="@string/quick_action"
             android:dialogTitle="@string/choose_quick_action"

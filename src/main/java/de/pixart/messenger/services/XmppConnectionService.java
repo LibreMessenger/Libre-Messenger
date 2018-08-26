@@ -924,6 +924,10 @@ public class XmppConnectionService extends Service {
         }
     }
 
+    public boolean getAttachmentChoicePreference() {
+        return getBooleanPreference(SettingsActivity.QUICK_SHARE_ATTACHMENT_CHOICE, R.bool.quick_share_attachment_choice);
+    }
+
     private Presence.Status getTargetPresence() {
         if (dndOnSilentMode() && isPhoneSilenced()) {
             return Presence.Status.DND;

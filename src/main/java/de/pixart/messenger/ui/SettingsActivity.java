@@ -58,12 +58,15 @@ public class SettingsActivity extends XmppActivity implements
     public static final String SHOW_FOREGROUND_SERVICE = "show_foreground_service";
     public static final String USE_BUNDLED_EMOJIS = "use_bundled_emoji";
     public static final String USE_MULTI_ACCOUNTS = "use_multi_accounts";
+    public static final String QUICK_SHARE_ATTACHMENT_CHOICE = "quick_share_attachment_choice";
 
     public static final int REQUEST_WRITE_LOGS = 0xbf8701;
     Preference multiAccountPreference;
     Preference BundledEmojiPreference;
+    Preference QuickShareAttachmentChoicePreference;
     boolean isMultiAccountChecked = false;
     boolean isBundledEmojiChecked;
+    boolean isQuickShareAttachmentChoiceChecked = false;
     private SettingsFragment mSettingsFragment;
 
     @Override
@@ -103,6 +106,15 @@ public class SettingsActivity extends XmppActivity implements
         BundledEmojiPreference = mSettingsFragment.findPreference("use_bundled_emoji");
         if (BundledEmojiPreference != null) {
             isBundledEmojiChecked = ((CheckBoxPreference) BundledEmojiPreference).isChecked();
+        }
+
+        QuickShareAttachmentChoicePreference = mSettingsFragment.findPreference("quick_share_attachment_choice");
+        if (QuickShareAttachmentChoicePreference != null) {
+            QuickShareAttachmentChoicePreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                recreate();
+                return true;
+            });
+            isQuickShareAttachmentChoiceChecked = ((CheckBoxPreference) QuickShareAttachmentChoicePreference).isChecked();
         }
 
         changeOmemoSettingSummary();
@@ -173,7 +185,7 @@ public class SettingsActivity extends XmppActivity implements
             quickAction.setEntryValues(entryValues.toArray(new CharSequence[entryValues.size()]));
         }
 
-        if (Config.QUICK_SHARE_ATTACHMENT_CHOICE) {
+        if (isQuickShareAttachmentChoiceChecked) {
             if (UIPreferenceScreen != null && quickAction != null) {
                 UIPreferenceScreen.removePreference(quickAction);
             }
