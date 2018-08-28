@@ -943,7 +943,11 @@ public abstract class XmppActivity extends ActionBarActivity {
     }
 
     public void inviteUser() {
-        if (xmppConnectionServiceBound && !xmppConnectionService.multipleAccounts()) {
+        if (!xmppConnectionServiceBound) {
+            Toast.makeText(this, R.string.not_connected_try_again, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!xmppConnectionService.multipleAccounts()) {
             Account mAccount = xmppConnectionService.getAccounts().get(0);
             String user = Jid.of(mAccount.getJid()).getLocal();
             String domain = Jid.of(mAccount.getJid()).getDomain();
