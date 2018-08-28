@@ -810,4 +810,6 @@
   <string name="no_location_permission">Pix-Art Messenger benötigt Zugriff auf die Standortdienste</string>
   <string name="pref_show_record_voice_btn_summary">Zeige Sprachaufnahme-Taste als Schnell-Taste in den Chats</string>
   <string name="pref_show_record_voice_btn">Zeige Sprachaufnahme-Taste</string>
+  <string name="pref_use_quick_share_attachment_choice_summary">Ersetze Absende-Knopf durch Anlagen-Auswahl, wenn keine Nachricht eingetippt wurde. Andernfalls zeige Schnell-Tasten, welche in der folgenden Einstellung konfiguriert werden können.</string>
+  <string name="pref_quick_share_attachment_choice">Anlagen-Auswahl</string>
 </resources>
