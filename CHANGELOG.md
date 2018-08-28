@@ -1,5 +1,10 @@
 ### Changelog
 
+#### Version 2.1.1
+* make quick actions/attachment choice configurable
+* add a hideable separate quick button for voice messages
+* bug fixes
+
 #### Version 2.1.0
 * use group chat name as primary identifier
 * upload group chat avatar on compatible servers
