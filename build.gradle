@@ -76,6 +76,7 @@ dependencies {
     implementation 'in.championswimmer:SimpleFingerGestures_Android_Library:1.2'
     implementation 'rocks.xmpp:xmpp-addr:0.8.0'
     implementation 'org.hsluv:hsluv:0.2'
+    implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
 }
 
 ext {

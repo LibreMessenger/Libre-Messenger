@@ -60,6 +60,7 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import net.java.otr4j.session.SessionStatus;
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 
 import java.io.File;
 import java.io.IOException;
@@ -176,6 +177,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     private Toast messageLoaderToast;
     private ConversationsActivity activity;
     private boolean reInitRequiredOnStart = true;
+    private boolean KeyboardOpen = false;
 
     private SimpleFingerGestures gesturesDetector = new SimpleFingerGestures();
 
@@ -445,13 +447,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         }
     };
 
-    private OnClickListener mRecordVoiceButtonListener = new OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            attachFile(ATTACHMENT_CHOICE_RECORD_VOICE);
-        }
-    };
+    private OnClickListener mRecordVoiceButtonListener = v -> attachFile(ATTACHMENT_CHOICE_RECORD_VOICE);
 
     private OnClickListener mSendButtonListener = new OnClickListener() {
 
@@ -1167,6 +1163,13 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        KeyboardVisibilityEvent.setEventListener(
+                getActivity(),
+                isOpen -> {
+                    Log.d(Config.LOGTAG, "Keyboard open " + isOpen);
+                    KeyboardOpen = isOpen;
+                    showRecordVoiceButton();
+                });
     }
 
     @Override
@@ -1302,11 +1305,15 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     }
 
     private void showRecordVoiceButton() {
+        if (!isAdded()) {
+            return;
+        }
         SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(activity);
         final boolean ShowRecordVoiceButton = p.getBoolean("show_record_voice_btn", activity.getResources().getBoolean(R.bool.show_record_voice_btn));
-        Log.d(Config.LOGTAG, "Recorder " + ShowRecordVoiceButton);
-        if (ShowRecordVoiceButton) {
+        if (ShowRecordVoiceButton && !KeyboardOpen) {
             binding.recordVoiceButton.setVisibility(View.VISIBLE);
+        } else if (KeyboardOpen) {
+            binding.recordVoiceButton.setVisibility(View.GONE);
         } else {
             binding.recordVoiceButton.setVisibility(View.GONE);
         }

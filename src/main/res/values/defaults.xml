@@ -52,6 +52,7 @@
             \n\nhttps://www.openstreetmap.org/\n(Open Database License)
             \n\nhttp://xmpp.rocks/\n(The MIT License (MIT))
             \n\nhttps://github.com/championswimmer/SimpleFingerGestures_Android_Library/\n(Apache License, Version 2.0)
+            \n\nhttps://github.com/yshrsmz/KeyboardVisibilityEvent/\n(Apache License, Version 2.0)
     </string>
 
     <string name="default_resource" translatable="false">Phone</string>
