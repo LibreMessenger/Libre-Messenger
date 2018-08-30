@@ -22,6 +22,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
@@ -327,6 +328,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 
         @Override
         public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
+            updatePortLayout();
             updateSaveButton();
             updateInfoButtons();
         }
@@ -443,6 +445,11 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         }
     }
 
+    private void updatePortLayout() {
+        String hostname = this.binding.hostname.getText().toString();
+        this.binding.portLayout.setEnabled(!TextUtils.isEmpty(hostname));
+    }
+
     protected void updateSaveButton() {
         boolean accountInfoEdited = accountInfoEdited();
 
@@ -552,6 +559,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         final OnCheckedChangeListener OnCheckedShowConfirmPassword = new OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
+                updatePortLayout();
                 updateSaveButton();
                 updateInfoButtons();
             }

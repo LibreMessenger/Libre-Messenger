@@ -128,7 +128,7 @@
                                             style="@style/Widget.Conversations.EditText"
                                             android:layout_width="fill_parent"
                                             android:layout_height="wrap_content"
-                                            android:inputType="textNoSuggestions" />
+                                            android:inputType="textWebEmailAddress" />
                                     </android.support.design.widget.TextInputLayout>
                                 </LinearLayout>
 
