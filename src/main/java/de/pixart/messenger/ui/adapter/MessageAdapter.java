@@ -112,8 +112,8 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
     public MessageAdapter(XmppActivity activity, List<Message> messages) {
         super(activity, 0, messages);
-        this.audioPlayer = new AudioPlayer(this);
         this.activity = activity;
+        this.audioPlayer = new AudioPlayer(this);
         metrics = getContext().getResources().getDisplayMetrics();
         updatePreferences();
     }
@@ -147,6 +147,14 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         for (View view : views) {
             view.setOnClickListener(null);
         }
+    }
+
+    public void flagDisableInputs() {
+        activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+    }
+
+    public void flagEnableInputs() {
+        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
     }
 
     public void flagScreenOn() {
