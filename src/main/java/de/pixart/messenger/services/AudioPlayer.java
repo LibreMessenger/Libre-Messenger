@@ -346,11 +346,10 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
                 try {
                     ViewHolder currentViewHolder = getCurrentViewHolder();
                     if (currentViewHolder != null) {
-                        Log.d(Config.LOGTAG, "AudioPlayer start playing - progress: " + progress);
                         play(currentViewHolder, currentlyPlayingMessage, streamType == AudioManager.STREAM_VOICE_CALL, progress);
                     }
                 } catch (Exception e) {
-                    Log.w(Config.LOGTAG, "AudioPlayer Exception: " + e);
+                    Log.d(Config.LOGTAG, "AudioPlayer Exception: " + e);
                 }
             }
         }
