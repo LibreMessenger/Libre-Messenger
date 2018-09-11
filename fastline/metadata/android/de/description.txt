@@ -23,4 +23,4 @@ Features:
 * Status Nachrichten
 * tägliches Backup der Datenbank auf den lokalen Speicher
 
-Benötigst du Hilfe? Bitte trette doch einfach den Support Gruppenchat support@room.pix-art.de bei
+Benötigst du Hilfe? Bitte trette doch einfach den Support Gruppenchat [xmpp:support@room.pix-art.de?join support@room.pix-art.de] bei.
