@@ -1135,6 +1135,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
                 && !contact.isOwnServer()
                 && !contact.showInRoster()
                 && !contact.isSelf()
+                && !contact.showInPhoneBook()
                 && sentMessagesCount() == 0;
     }
 
