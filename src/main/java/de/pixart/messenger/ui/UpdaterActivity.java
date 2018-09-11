@@ -134,7 +134,7 @@ public class UpdaterActivity extends XmppActivity {
                         //ask for permissions on devices >= SDK 23
                         if (isStoragePermissionGranted() && isNetworkAvailable(getApplicationContext())) {
                             //start downloading the file using the download manager
-                            if (store.equals(PlayStore)) {
+                            if (store.equalsIgnoreCase(PlayStore)) {
                                 Uri uri = Uri.parse("market://details?id=de.pixart.messenger");
                                 Intent marketIntent = new Intent(Intent.ACTION_VIEW, uri);
                                 PackageManager manager = getApplicationContext().getPackageManager();
@@ -148,7 +148,7 @@ public class UpdaterActivity extends XmppActivity {
                                     startActivity(browserIntent);
                                     overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                                 }
-                            } else if (store.equals(FDroid)) {
+                            } else if (store.equalsIgnoreCase(FDroid)) {
                                 Uri uri = Uri.parse("https://f-droid.org/de/packages/de.pixart.messenger/");
                                 Intent marketIntent = new Intent(Intent.ACTION_VIEW, uri);
                                 PackageManager manager = getApplicationContext().getPackageManager();

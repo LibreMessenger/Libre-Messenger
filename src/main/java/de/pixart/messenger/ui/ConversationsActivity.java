@@ -559,7 +559,9 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
                 return true;
             case R.id.action_check_updates:
                 if (xmppConnectionService.hasInternetConnection()) {
-                    if (!installFromUnknownSourceAllowed() && (xmppConnectionService.installedFrom() != null && !xmppConnectionService.installedFrom().equals(PlayStore))) {
+                    if (!installFromUnknownSourceAllowed() && xmppConnectionService.installedFrom() == null) {
+                        openInstallFromUnknownSourcesDialogIfNeeded();
+                    } else if (!installFromUnknownSourceAllowed() && (xmppConnectionService.installedFrom() != null && !xmppConnectionService.installedFrom().equalsIgnoreCase(PlayStore))) {
                         openInstallFromUnknownSourcesDialogIfNeeded();
                     } else {
                         UpdateService task = new UpdateService(this, xmppConnectionService.installedFrom(), xmppConnectionService);
@@ -950,7 +952,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
             Log.d(Config.LOGTAG, "AppUpdater: CurrentTime: " + lastUpdateTime);
             if (!installFromUnknownSourceAllowed() && Store == null) {
                 openInstallFromUnknownSourcesDialogIfNeeded();
-            } else if (Store != null && (Store.equals(PlayStore) || Store.equals(FDroid))) {
+            } else if (Store != null && (Store.equalsIgnoreCase(PlayStore) || Store.equalsIgnoreCase(FDroid))) {
                 Log.d(Config.LOGTAG, "AppUpdater aborted because app store is " + Store);
             } else {
                 UpdateService task = new UpdateService(this, Store, xmppConnectionService);
