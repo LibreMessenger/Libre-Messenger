@@ -850,7 +850,12 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         }
         final Conversation conversation_preview = conversation;
         final Uri uri_preview = uri;
-        Bitmap bitmap = BitmapFactory.decodeFile(FileUtils.getPath(activity, uri));
+        Bitmap bitmap = null;
+        try {
+            bitmap = BitmapFactory.decodeFile(FileUtils.getPath(activity, uri));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         File file = null;
         ExifInterface exif = null;
         int orientation = 0;
@@ -870,7 +875,11 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         Log.d(Config.LOGTAG, "EXIF: " + orientation);
         Bitmap rotated_image = null;
         Log.d(Config.LOGTAG, "Rotate image");
-        rotated_image = FileBackend.rotateBitmap(file, bitmap, orientation);
+        try {
+            rotated_image = FileBackend.rotateBitmap(file, bitmap, orientation);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (rotated_image != null) {
             int scaleSize = 600;
             int originalWidth = rotated_image.getWidth();
@@ -891,28 +900,36 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 newWidth = scaleSize;
             }
             Log.d(Config.LOGTAG, "Scaling preview image from " + originalHeight + "px x " + originalWidth + "px to " + newHeight + "px x " + newWidth + "px");
-            Bitmap preview = Bitmap.createScaledBitmap(rotated_image, newWidth, newHeight, false);
-            ImageView ImagePreview = new ImageView(activity);
-            LinearLayout.LayoutParams vp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            ImagePreview.setLayoutParams(vp);
-            ImagePreview.setMaxWidth(newWidth);
-            ImagePreview.setMaxHeight(newHeight);
-            //ImagePreview.setScaleType(ImageView.ScaleType.FIT_XY);
-            //ImagePreview.setAdjustViewBounds(true);
-            ImagePreview.setPadding(5, 5, 5, 5);
-            ImagePreview.setImageBitmap(preview);
-            getActivity().runOnUiThread(() -> {
-                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                builder.setView(ImagePreview);
-                builder.setTitle(R.string.send_image);
-                builder.setPositiveButton(R.string.ok, (dialog, which) -> sendImage(conversation_preview, uri_preview));
-                builder.setOnCancelListener(dialog -> mPendingImageUris.clear());
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    builder.setOnDismissListener(dialog -> mPendingImageUris.clear());
-                }
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-            });
+            Bitmap preview = null;
+
+            try {
+                preview = Bitmap.createScaledBitmap(rotated_image, newWidth, newHeight, false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (preview != null) {
+                ImageView ImagePreview = new ImageView(activity);
+                LinearLayout.LayoutParams vp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                ImagePreview.setLayoutParams(vp);
+                ImagePreview.setMaxWidth(newWidth);
+                ImagePreview.setMaxHeight(newHeight);
+                ImagePreview.setPadding(5, 5, 5, 5);
+                ImagePreview.setImageBitmap(preview);
+                getActivity().runOnUiThread(() -> {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    builder.setView(ImagePreview);
+                    builder.setTitle(R.string.send_image);
+                    builder.setPositiveButton(R.string.ok, (dialog, which) -> sendImage(conversation_preview, uri_preview));
+                    builder.setOnCancelListener(dialog -> mPendingImageUris.clear());
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                        builder.setOnDismissListener(dialog -> mPendingImageUris.clear());
+                    }
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                });
+            } else {
+                getActivity().runOnUiThread(() -> Toast.makeText(getActivity(), getText(R.string.error_file_not_found), Toast.LENGTH_LONG).show());
+            }
         } else {
             getActivity().runOnUiThread(() -> Toast.makeText(getActivity(), getText(R.string.error_file_not_found), Toast.LENGTH_LONG).show());
         }
