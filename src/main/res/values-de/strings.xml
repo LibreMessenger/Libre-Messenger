@@ -812,4 +812,6 @@
   <string name="pref_show_record_voice_btn">Zeige Sprachaufnahme-Taste</string>
   <string name="pref_use_quick_share_attachment_choice_summary">Ersetze Absende-Knopf durch Anlagen-Auswahl, wenn keine Nachricht eingetippt wurde. Andernfalls zeige Schnell-Tasten, welche in der folgenden Einstellung konfiguriert werden können.</string>
   <string name="pref_quick_share_attachment_choice">Anlagen-Auswahl</string>
+  <string name="phone_book">Adressbuch</string>
+  <string name="unable_to_save_recording">Aufnahme kann nicht gespeichert werden</string>
 </resources>
