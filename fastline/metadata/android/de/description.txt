@@ -1,0 +1,26 @@
+Pix-Art Messenger ist ein Fork der offiziellen Android-App Conversations mit einigen Änderungen,
+ insbesondere zur Verbesserung der Benutzerfreundlichkeit, um den Umstieg von oftmals vorinstallierten Messengern zu erleichtern.
+
+Verbindungssicherheit und der Schutz persönlicher Daten ist uns sehr wichtig,
+ deshalb erzwingen wir verschlüsselte Verbindungen zwischen Messenger und Server,
+ was es nahezu unmöglich macht, deine Nachrichten durch Fremde abzufangen und zu lesen.
+Wem das nicht genug ist, kann auf die integrierte Nachrichtenverschlüsselung von Ende-zu-Ende,
+ wie OMEMO, OTR oder OpenPGP, zurückgreifen.
+Damit lassen sich Nachrichten auf dem Sendegerät verschlüsseln und nur durch das für den Empfang bestimmte Empfangsgerät entschlüsseln.
+Seit Version 1.20.0 wird ein Hinweis direkt im Chat angezeigt,
+ sofern du unverschlüsselt schreibst und eine Verschlüsselung möglich ist.
+
+Features:
+* Ende-zu-Ende Verschlüsselung entweder mit [http://conversations.im/omemo/ OMEMO], [https://otr.cypherpunks.ca/ OTR] oder [http://openpgp.org/about/ OpenPGP]
+* Austausch von Bildern sowie anderen Dateien
+* Standorte senden und empfangen
+* Sprachnachrichten senden und empfangen
+* Integration von Profilbildern (Avatare) deiner Kontakte
+* Synchronisiere Nachrichtenverlauf mit anderen Clients
+* Konferenzen bzw. Gruppenchats
+* Adressbuchintegration (ein Austausch deines Adressbuches mit dem Server findet nicht statt)
+* sehr geringe Akku-Belastung
+* Status Nachrichten
+* tägliches Backup der Datenbank auf den lokalen Speicher
+
+Benötigst du Hilfe? Bitte trette doch einfach den Support Gruppenchat [xmpp:support@room.pix-art.de?join support@room.pix-art.de] bei.
