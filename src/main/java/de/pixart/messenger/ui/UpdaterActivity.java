@@ -57,7 +57,10 @@ public class UpdaterActivity extends XmppActivity {
 
         //set activity
         setContentView(R.layout.activity_updater);
-        this.mUseTor = mXmppConnectionService.useTorToConnect();
+        this.mUseTor = false;
+        if (mXmppConnectionService != null) {
+            this.mUseTor = mXmppConnectionService.useTorToConnect();
+        }
         this.mTheme = findTheme();
         setTheme(this.mTheme);
 
