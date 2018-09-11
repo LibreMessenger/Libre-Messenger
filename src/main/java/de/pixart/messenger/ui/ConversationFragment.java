@@ -2131,6 +2131,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     public void onStop() {
         super.onStop();
         final Activity activity = getActivity();
+        messageListAdapter.unregisterListenerInAudioPlayer();
         if (activity == null || !activity.isChangingConfigurations()) {
             hideSoftKeyboard(activity);
             messageListAdapter.stopAudioPlayer();

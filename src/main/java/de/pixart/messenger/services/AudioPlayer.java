@@ -12,6 +12,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -42,18 +43,34 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
     private final WeakReferenceSet<RelativeLayout> audioPlayerLayouts = new WeakReferenceSet<>();
     private final SensorManager sensorManager;
     private final Sensor proximitySensor;
+    private static PowerManager.WakeLock wakeLock;
 
     private final PendingItem<WeakReference<ImageButton>> pendingOnClickView = new PendingItem<>();
 
     private final Handler handler = new Handler();
 
     public AudioPlayer(MessageAdapter adapter) {
+        final Context context = adapter.getContext();
         this.messageAdapter = adapter;
-        this.sensorManager = (SensorManager) adapter.getActivity().getSystemService(Context.SENSOR_SERVICE);
-        this.proximitySensor = sensorManager != null ? sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY) : null;
+        this.sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        this.proximitySensor = this.sensorManager == null ? null : this.sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        if (Build.VERSION.SDK_INT >= 21) {
+            synchronized (AudioPlayer.LOCK) {
+                if (AudioPlayer.wakeLock == null) {
+                    final PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+                    AudioPlayer.wakeLock = powerManager == null ? null : powerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, AudioPlayer.class.getSimpleName());
+                    AudioPlayer.wakeLock.setReferenceCounted(false);
+                }
+            }
+        } else {
+            AudioPlayer.wakeLock = null;
+        }
         synchronized (AudioPlayer.LOCK) {
             if (AudioPlayer.player != null) {
                 AudioPlayer.player.setOnCompletionListener(this);
+                if (AudioPlayer.player.isPlaying() && sensorManager != null) {
+                    sensorManager.registerListener(this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
+                }
             }
         }
     }
@@ -103,6 +120,7 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
             viewHolder.progress.setProgress(0);
             viewHolder.progress.setEnabled(false);
             messageAdapter.flagScreenOff();
+            releaseProximityWakeLock();
             messageAdapter.flagEnableInputs();
             return false;
         }
@@ -139,12 +157,14 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
             viewHolder.progress.setEnabled(false);
             player.pause();
             messageAdapter.flagScreenOff();
+            releaseProximityWakeLock();
             messageAdapter.flagEnableInputs();
             viewHolder.playPause.setImageResource(viewHolder.darkBackground ? R.drawable.ic_play_arrow_white_36dp : R.drawable.ic_play_arrow_black_36dp);
         } else {
             viewHolder.progress.setEnabled(true);
             player.start();
             messageAdapter.flagScreenOn();
+            acquireProximityWakeLock();
             this.stopRefresher(true);
             viewHolder.playPause.setImageResource(viewHolder.darkBackground ? R.drawable.ic_pause_white_36dp : R.drawable.ic_pause_black_36dp);
         }
@@ -167,6 +187,7 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
             AudioPlayer.player.prepare();
             AudioPlayer.player.start();
             messageAdapter.flagScreenOn();
+            acquireProximityWakeLock();
             if (earpiece) {
                 messageAdapter.flagDisableInputs();
             } else {
@@ -178,6 +199,7 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
             return true;
         } catch (Exception e) {
             messageAdapter.flagScreenOff();
+            releaseProximityWakeLock();
             messageAdapter.flagEnableInputs();
             AudioPlayer.currentlyPlayingMessage = null;
             sensorManager.unregisterListener(this);
@@ -211,6 +233,7 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
         }
         AudioPlayer.player.release();
         messageAdapter.flagScreenOff();
+        releaseProximityWakeLock();
         messageAdapter.flagEnableInputs();
         AudioPlayer.player = null;
         resetPlayerUi();
@@ -238,7 +261,7 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
     }
 
     @Override
-    public void onCompletion(MediaPlayer mediaPlayer) {
+    public void onCompletion(android.media.MediaPlayer mediaPlayer) {
         synchronized (AudioPlayer.LOCK) {
             this.stopRefresher(false);
             if (AudioPlayer.player == mediaPlayer) {
@@ -247,6 +270,7 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
             }
             mediaPlayer.release();
             messageAdapter.flagScreenOff();
+            releaseProximityWakeLock();
             messageAdapter.flagEnableInputs();
             resetPlayerUi();
             sensorManager.unregisterListener(this);
@@ -284,6 +308,11 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
                 stopCurrent();
             }
             AudioPlayer.currentlyPlayingMessage = null;
+            sensorManager.unregisterListener(this);
+            if (wakeLock != null && wakeLock.isHeld()) {
+                wakeLock.release();
+            }
+            wakeLock = null;
         }
     }
 
@@ -291,6 +320,12 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
         this.handler.removeCallbacks(this);
         if (runOnceMore) {
             this.handler.post(this);
+        }
+    }
+
+    public void unregisterListener() {
+        if (sensorManager != null) {
+            sensorManager.unregisterListener(this);
         }
     }
 
@@ -358,7 +393,20 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
     }
-
+    private void acquireProximityWakeLock() {
+        synchronized (AudioPlayer.LOCK) {
+            if (wakeLock != null) {
+                wakeLock.acquire();
+            }
+        }
+    }
+    private void releaseProximityWakeLock() {
+        synchronized (AudioPlayer.LOCK) {
+            if (wakeLock != null && wakeLock.isHeld()) {
+                wakeLock.release();
+            }
+        }
+    }
     private ViewHolder getCurrentViewHolder() {
         for (WeakReference<RelativeLayout> audioPlayer : audioPlayerLayouts) {
             final Message message = (Message) audioPlayer.get().getTag();
