@@ -812,4 +812,5 @@
     <string name="pref_show_record_voice_btn">Show record voice button</string>
     <string name="pref_use_quick_share_attachment_choice_summary">Replace send button with attachment choice if no message is typed. Otherwise show quick actions, which can be cofigured in the following setting.</string>
     <string name="pref_quick_share_attachment_choice">Attachment choice</string>
+    <string name="phone_book">Address book</string>
 </resources>
