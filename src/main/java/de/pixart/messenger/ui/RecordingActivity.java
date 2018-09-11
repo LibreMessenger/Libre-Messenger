@@ -65,7 +65,8 @@ public class RecordingActivity extends Activity implements View.OnClickListener 
         super.onStart();
         if (!startRecording()) {
             this.binding.shareButton.setEnabled(false);
-            Toast.makeText(this, R.string.unable_to_start_recording, Toast.LENGTH_SHORT).show();
+            this.binding.timer.setTextAppearance(this, R.style.TextAppearance_Conversations_Title);
+            this.binding.timer.setText(R.string.unable_to_start_recording);
         }
     }
 
@@ -108,12 +109,15 @@ public class RecordingActivity extends Activity implements View.OnClickListener 
         mShouldFinishAfterWrite = saveFile;
         try {
             mRecorder.stop();
-        } catch (RuntimeException stopException) {
-            //handle cleanup here
+            mRecorder.release();
+        } catch (Exception e) {
+            if (saveFile) {
+                Toast.makeText(this,R.string.unable_to_save_recording, Toast.LENGTH_SHORT).show();
+            }
+        } finally {
+            mRecorder = null;
+            mStartTime = 0;
         }
-        mRecorder.release();
-        mRecorder = null;
-        mStartTime = 0;
         if (!saveFile && mOutputFile != null) {
             if (mOutputFile.delete()) {
                 Log.d(Config.LOGTAG,"deleted canceled recording");

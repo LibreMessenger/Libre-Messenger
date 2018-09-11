@@ -46,6 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            android:layout_margin="8dp"
             android:text="0:00.0"
             android:textColor="?attr/colorAccent"
             android:textSize="50sp"
