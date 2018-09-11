@@ -152,6 +152,8 @@ public class WelcomeActivity extends XmppActivity {
                                                 checkDatabase(password);
                                             } catch (IOException e) {
                                                 e.printStackTrace();
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
                                             }
                                             pd.dismiss();
                                         }
@@ -225,6 +227,9 @@ public class WelcomeActivity extends XmppActivity {
         } catch (IOException e) {
             Log.d(Config.LOGTAG, "Database importer: decryption failed (IO) with " + e);
             e.printStackTrace();
+        } catch (Exception e) {
+            Log.d(Config.LOGTAG, "Database importer: Error " + e);
+            e.printStackTrace();
         }
 
         SQLiteDatabase checkDB = null;
@@ -236,10 +241,11 @@ public class WelcomeActivity extends XmppActivity {
             checkDB = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READONLY);
             Backup_DB_Version = checkDB.getVersion();
             Log.d(Config.LOGTAG, "Backup found: " + checkDB + " Version: " + checkDB.getVersion());
-
         } catch (SQLiteException e) {
             //database does't exist yet.
             Log.d(Config.LOGTAG, "No backup found: " + checkDB);
+        } catch (Exception e) {
+            Log.d(Config.LOGTAG, "Error importing backup: " + e);
         }
 
         if (checkDB != null) {
