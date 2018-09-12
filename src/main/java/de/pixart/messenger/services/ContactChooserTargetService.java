@@ -32,7 +32,6 @@ public class ContactChooserTargetService extends ChooserTargetService implements
     public List<ChooserTarget> onGetChooserTargets(ComponentName targetActivityName, IntentFilter matchedFilter) {
         Intent intent = new Intent(this, XmppConnectionService.class);
         intent.setAction("contact_chooser");
-        startService(intent);
         bindService(intent, this, Context.BIND_AUTO_CREATE);
         ArrayList<ChooserTarget> chooserTargets = new ArrayList<>();
         try {

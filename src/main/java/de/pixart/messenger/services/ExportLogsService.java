@@ -1,7 +1,5 @@
 package de.pixart.messenger.services;
 
-import android.app.NotificationManager;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,7 +8,6 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.preference.PreferenceManager;
 import android.support.annotation.BoolRes;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import java.io.BufferedWriter;
@@ -41,19 +38,17 @@ import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.ui.SettingsActivity.USE_MULTI_ACCOUNTS;
 
-public class ExportLogsService extends Service {
+public class ExportLogsService extends XmppConnectionService {
 
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     private static final String DIRECTORY_STRING_FORMAT = FileBackend.getConversationsDirectory("Chats", false) + "%s";
     private static final String MESSAGE_STRING_FORMAT = "(%s) %s: %s\n";
-    private static final int NOTIFICATION_ID = 1;
     private static AtomicBoolean running = new AtomicBoolean(false);
+    boolean ReadableLogsEnabled = false;
     private DatabaseBackend mDatabaseBackend;
     private List<Account> mAccounts;
-    boolean ReadableLogsEnabled = false;
     private WakeLock wakeLock;
     private PowerManager pm;
-    XmppConnectionService mXmppConnectionService;
 
     @Override
     public void onCreate() {
@@ -63,20 +58,19 @@ public class ExportLogsService extends Service {
         ReadableLogsEnabled = ReadableLogs.getBoolean("export_plain_text_logs", getResources().getBoolean(R.bool.plain_text_logs));
         pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "ExportLogsService");
+        this.startForeground(NotificationService.FOREGROUND_NOTIFICATION_ID, getNotificationService().exportLogsNotification());
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (running.compareAndSet(false, true)) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    export();
-                    stopForeground(true);
-                    WakeLockHelper.release(wakeLock);
-                    running.set(false);
-                    stopSelf();
-                }
+            new Thread(() -> {
+                startForcingForegroundNotification();
+                export();
+                stopForcingForegroundNotification();
+                WakeLockHelper.release(wakeLock);
+                running.set(false);
+                stopSelf();
             }).start();
         }
         return START_NOT_STICKY;
@@ -84,16 +78,9 @@ public class ExportLogsService extends Service {
 
     private void export() {
         wakeLock.acquire();
+        getNotificationService().exportLogsServiceNotification(getNotificationService().exportLogsNotification());
         List<Conversation> conversations = mDatabaseBackend.getConversations(Conversation.STATUS_AVAILABLE);
         conversations.addAll(mDatabaseBackend.getConversations(Conversation.STATUS_ARCHIVED));
-        NotificationManager mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getBaseContext());
-        mBuilder.setContentTitle(getString(R.string.app_name))
-                .setContentText(getString(R.string.notification_export_logs_title))
-                .setSmallIcon(R.drawable.ic_import_export_white_24dp)
-                .setProgress(0, 0, true);
-        startForeground(NOTIFICATION_ID, mBuilder.build());
-        mNotifyManager.notify(NOTIFICATION_ID, mBuilder.build());
         if (ReadableLogsEnabled) {
             for (Conversation conversation : conversations) {
                 writeToFile(conversation);

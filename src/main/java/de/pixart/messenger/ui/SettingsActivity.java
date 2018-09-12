@@ -17,6 +17,7 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -541,7 +542,7 @@ public class SettingsActivity extends XmppActivity implements
     }
 
     private void startExport() {
-        startService(new Intent(getApplicationContext(), ExportLogsService.class));
+        ContextCompat.startForegroundService(this, new Intent(this, ExportLogsService.class));
     }
 
     private void displayToast(final String msg) {

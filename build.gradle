@@ -85,11 +85,11 @@ ext {
 
 android {
 
-    compileSdkVersion 27
+    compileSdkVersion 28
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 28
 
         versionCode 239
         versionName "2.1.1 beta (2018-08-28)"
@@ -139,7 +139,6 @@ android {
         }
         buildTypes {
             debug {
-                minSdkVersion 14
                 debuggable true
                 buildTypes.release.signingConfig = null
             }

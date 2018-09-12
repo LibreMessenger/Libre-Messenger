@@ -1,14 +1,11 @@
 package de.pixart.messenger.services;
 
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -27,12 +24,12 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.ui.UpdaterActivity;
 
 import static de.pixart.messenger.http.HttpConnectionManager.getProxy;
-import static de.pixart.messenger.services.NotificationService.UPDATE_NOTIFICATION_ID;
 
 public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapper> {
     private boolean mUseTor;
     private Context context;
     private String store;
+    private NotificationService getNotificationService;
     public UpdateService() {
     }
 
@@ -40,6 +37,7 @@ public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapp
         this.context = context;
         this.store = Store;
         this.mUseTor = mXmppConnectionService.useTorToConnect();
+        this.getNotificationService = mXmppConnectionService.getNotificationService();
     }
 
     @Override
@@ -145,14 +143,7 @@ public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapp
         intent.putExtra("changelog", changelog);
         intent.putExtra("store", store);
         PendingIntent pi = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context);
-        mBuilder.setContentTitle(context.getString(R.string.update_service));
-        mBuilder.setContentText(String.format(context.getString(R.string.update_available), version, filesize));
-        mBuilder.setSmallIcon(R.drawable.ic_update_notification);
-        mBuilder.setContentIntent(pi);
-        Notification notification = mBuilder.build();
-        notificationManager.notify(UPDATE_NOTIFICATION_ID, notification);
+        getNotificationService.AppUpdateServiceNotification(getNotificationService.AppUpdateNotification(pi, version, filesize));
     }
 
     private int checkVersion(String remoteVersion, String installedVersion) {

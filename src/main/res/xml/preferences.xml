@@ -152,6 +152,20 @@
             android:key="notifications_from_strangers"
             android:summary="@string/pref_notifications_from_strangers_summary"
             android:title="@string/pref_notifications_from_strangers" />
+        <PreferenceScreen
+            android:dependency="show_notification"
+            android:key="more_notification_settings"
+            android:summary="@string/pref_more_notification_settings_summary"
+            android:title="@string/pref_more_notification_settings">
+            <intent android:action="android.settings.CHANNEL_NOTIFICATION_SETTINGS">
+                <extra
+                    android:name="android.provider.extra.APP_PACKAGE"
+                    android:value="@string/applicationId" />
+                <extra
+                    android:name="android.provider.extra.CHANNEL_ID"
+                    android:value="messages" />
+            </intent>
+        </PreferenceScreen>
     </PreferenceScreen>
     <!--Attachments-->
     <PreferenceScreen

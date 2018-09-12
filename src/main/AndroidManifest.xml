@@ -18,6 +18,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -235,8 +236,7 @@
             android:label="@string/share_location" />
         <activity
             android:name=".ui.ShowLocationActivity"
-            android:label="@string/show_location">
-        </activity>
+            android:label="@string/show_location"></activity>
         <activity
             android:name=".ui.SearchActivity"
             android:label="@string/search_messages" />

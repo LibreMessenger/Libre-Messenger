@@ -162,7 +162,6 @@ public class BarcodeProvider extends ContentProvider implements ServiceConnectio
             synchronized (this) {
                 if (mXmppConnectionService == null && !mBindingInProcess) {
                     Log.d(Config.LOGTAG, "calling to bind service");
-                    context.startService(intent);
                     context.bindService(intent, this, Context.BIND_AUTO_CREATE);
                     this.mBindingInProcess = true;
                 }

@@ -10,6 +10,7 @@ import android.text.TextUtils;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.utils.Compatibility;
 
 public class SettingsFragment extends PreferenceFragment {
 
@@ -30,6 +31,7 @@ public class SettingsFragment extends PreferenceFragment {
                 mCategory.removePreference(cleanPrivateStorage);
             }
         }
+        Compatibility.removeUnusedPreferences(this);
 
         if (!TextUtils.isEmpty(page)) {
             openPreferenceScreen(page);
