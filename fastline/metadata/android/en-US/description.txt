@@ -1,14 +1,14 @@
 Pix-Art Messenger is a fork of [[eu.siacs.conversations]] with some changes,
- to improve usability.
+to improve usability.
 
-Connection security and the protection of personal data are very important for us,
- so we enforce encrypted connections between messenger and server,
- making it almost impossible to intercept and read your messages by strangers.
-If that's not enough for you,
- end-to-end message encryption such as OMEMO, OTR or OpenPGP can be used.
-This allows messages to be encrypted on the sending device and decrypted only by the receiving device intended for reception.
-Since version 1.20.0, a hint is displayed directly in the chat,
- as long as you write unencrypted and encryption is possible.
+Connection security and the protection of personal data are very important for
+us, so we enforce encrypted connections between messenger and server, making it
+almost impossible to intercept and read your messages by strangers.
+If that's not enough for you, end-to-end message encryption such as OMEMO, OTR
+or OpenPGP can be used. This allows messages to be encrypted on the sending
+device and decrypted only by the receiving device intended for reception.
+Since version 1.20.0, a hint is displayed directly in the chat, as long as you
+write unencrypted and encryption is possible.
 
 Features:
 * End-to-end encryption with either [http://conversations.im/omemo/ OMEMO], [https://otr.cypherpunks.ca/ OTR] or [http://openpgp.org/about/ OpenPGP]

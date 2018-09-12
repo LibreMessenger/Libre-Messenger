@@ -1,1 +1,1 @@
-is a Open Source XMPP/Jabber Messenger for Android
+is an Open Source XMPP/Jabber Messenger for Android
