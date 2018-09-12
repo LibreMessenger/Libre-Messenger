@@ -176,6 +176,7 @@ public class ExportLogsService extends Service {
     }
 
     public void ExportDatabase() throws IOException {
+        Log.d(Config.LOGTAG, "ExportLogsService: start creating backup");
         Account mAccount = mAccounts.get(0);
         String EncryptionKey = null;
         // Get hold of the db:
@@ -189,8 +190,9 @@ public class ExportLogsService extends Service {
         //Delete old database export file
         File temp_db_file = new File(directory + "/database.bak");
         if (temp_db_file.exists()) {
-            Log.d(Config.LOGTAG, "Delete temp database backup file from " + temp_db_file.toString());
-            temp_db_file.delete();
+            Log.d(Config.LOGTAG, "ExportLogsService: Delete temp database backup file from " + temp_db_file.toString());
+            boolean temp_db_file_deleted = temp_db_file.delete();
+            Log.d(Config.LOGTAG, "ExportLogsService: old backup file deleted " + temp_db_file_deleted);
         }
         // Set the output file stream up:
         FileOutputStream OutputFile = new FileOutputStream(directory.getPath() + "/database.db.crypt");
@@ -199,25 +201,24 @@ public class ExportLogsService extends Service {
             EncryptionKey = mAccount.getPassword(); //get account password
         } else {
             SharedPreferences multiaccount_prefs = getApplicationContext().getSharedPreferences(USE_MULTI_ACCOUNTS, Context.MODE_PRIVATE);
-            String password = multiaccount_prefs.getString("BackupPW", null);
-            if (password == null) {
-                Log.d(Config.LOGTAG, "Database exporter: failed to write encryted backup to sdcard because of missing password");
-                return;
-            }
-            EncryptionKey = password; //get previously set backup password
+            EncryptionKey = multiaccount_prefs.getString("BackupPW", null);
+        }
+        if (EncryptionKey == null) {
+            Log.d(Config.LOGTAG, "ExportLogsService: Database exporter: failed to write encryted backup to sdcard because of missing password");
+            return;
         }
 
         // encrypt database from the input file to the output file
         try {
             EncryptDecryptFile.encrypt(InputFile, OutputFile, EncryptionKey);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-            Log.d(Config.LOGTAG, "Database exporter: encryption failed with " + e);
+            Log.d(Config.LOGTAG, "ExportLogsService: Database exporter: encryption failed with " + e);
             e.printStackTrace();
         } catch (InvalidKeyException e) {
-            Log.d(Config.LOGTAG, "Database exporter: encryption failed (invalid key) with " + e);
+            Log.d(Config.LOGTAG, "ExportLogsService: Database exporter: encryption failed (invalid key) with " + e);
             e.printStackTrace();
         } catch (IOException e) {
-            Log.d(Config.LOGTAG, "Database exporter: encryption failed (IO) with " + e);
+            Log.d(Config.LOGTAG, "ExportLogsService: Database exporter: encryption failed (IO) with " + e);
             e.printStackTrace();
         }
     }
@@ -236,6 +237,6 @@ public class ExportLogsService extends Service {
     }
 
     public boolean multipleAccounts() {
-        return getBooleanPreference("enable_multi_accounts", R.bool.confirm_messages);
+        return getBooleanPreference("enable_multi_accounts", R.bool.enable_multi_accounts);
     }
 }
