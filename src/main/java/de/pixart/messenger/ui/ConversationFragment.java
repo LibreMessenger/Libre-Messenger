@@ -88,6 +88,7 @@ import de.pixart.messenger.entities.Conversational;
 import de.pixart.messenger.entities.DownloadableFile;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.MucOptions;
+import de.pixart.messenger.entities.MucOptions.User;
 import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.entities.ReadByMarker;
 import de.pixart.messenger.entities.Transferable;
@@ -103,6 +104,7 @@ import de.pixart.messenger.ui.util.ConversationMenuConfigurator;
 import de.pixart.messenger.ui.util.DateSeparator;
 import de.pixart.messenger.ui.util.EditMessageActionModeCallback;
 import de.pixart.messenger.ui.util.ListViewUtils;
+import de.pixart.messenger.ui.util.MucDetailsContextMenuHelper;
 import de.pixart.messenger.ui.util.PendingItem;
 import de.pixart.messenger.ui.util.PresenceSelector;
 import de.pixart.messenger.ui.util.ScrollState;
@@ -150,7 +152,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 
     public static final String RECENTLY_USED_QUICK_ACTION = "recently_used_quick_action";
     public static final String STATE_CONVERSATION_UUID = ConversationFragment.class.getName() + ".uuid";
-	public static final String STATE_SCROLL_POSITION = ConversationFragment.class.getName() + ".scroll_position";
+    public static final String STATE_SCROLL_POSITION = ConversationFragment.class.getName() + ".scroll_position";
     public static final String STATE_PHOTO_URI = ConversationFragment.class.getName() + ".take_photo_uri";
     public static final String STATE_VIDEO_URI = ConversationFragment.class.getName() + ".take_video_uri";
 
@@ -161,7 +163,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     private String lastMessageUuid = null;
     public Uri mPendingEditorContent = null;
     private final PendingItem<ActivityResult> postponedActivityResult = new PendingItem<>();
-	private final PendingItem<String> pendingConversationsUuid = new PendingItem<>();
+    private final PendingItem<String> pendingConversationsUuid = new PendingItem<>();
     private final PendingItem<Bundle> pendingExtras = new PendingItem<>();
     private final PendingItem<Uri> pendingTakePhotoUri = new PendingItem<>();
     private final PendingItem<Uri> pendingTakeVideoUri = new PendingItem<>();
@@ -170,7 +172,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     private final PendingItem<Message> pendingMessage = new PendingItem<>();
     protected MessageAdapter messageListAdapter;
     private Conversation conversation;
-	public FragmentConversationBinding binding;
+    public FragmentConversationBinding binding;
     protected Message lastHistoryMessage = null;
     SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd. MMM yyyy", Locale.getDefault());
     private Toast messageLoaderToast;
@@ -1264,21 +1266,28 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             }
             activity.switchToAccount(message.getConversation().getAccount(), fingerprint);
         });
-        messageListAdapter.setOnContactPictureLongClicked(message -> {
+        messageListAdapter.setOnContactPictureLongClicked((v, message) -> {
             if (message.getStatus() <= Message.STATUS_RECEIVED) {
                 if (message.getConversation().getMode() == Conversation.MODE_MULTI) {
-                    final MucOptions mucOptions = conversation.getMucOptions();
-                    if (!mucOptions.allowPm()) {
-                        Toast.makeText(getActivity(), R.string.private_messages_are_disabled, Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    Jid user = message.getCounterpart();
-                    if (user != null && !user.isBareJid()) {
-                        if (mucOptions.isUserInRoom(user)) {
-                            privateMessageWith(user);
-                        } else {
-                            Toast.makeText(getActivity(), activity.getString(R.string.user_has_left_conference, user.getResource()), Toast.LENGTH_SHORT).show();
-                        }
+                    Jid tcp = message.getTrueCounterpart();
+                    Jid cp = message.getCounterpart();
+                    if (cp != null && !cp.isBareJid()) {
+                        User userByRealJid = conversation.getMucOptions().findOrCreateUserByRealJid(tcp);
+                        final User user = userByRealJid != null ? userByRealJid : conversation.getMucOptions().findUserByFullJid(cp);
+                        final PopupMenu popupMenu = new PopupMenu(getActivity(), v);
+                        popupMenu.inflate(R.menu.muc_details_context);
+                        final Menu menu = popupMenu.getMenu();
+                        final boolean advancedMode = activity.getPreferences().getBoolean("advanced_muc_mode", false);
+                        MucDetailsContextMenuHelper.configureMucDetailsContextMenu(menu, conversation, user, advancedMode);
+                        final MucOptions mucOptions = ((Conversation) message.getConversation()).getMucOptions();
+                        popupMenu.setOnMenuItemClickListener(menuItem -> {
+                            if (menuItem.getItemId() == R.id.send_private_message) {
+                                privateMessageWith(cp);
+                                return true;
+                            }
+                            return MucDetailsContextMenuHelper.onContextItemSelected(menuItem, user, conversation, activity, activity, activity);
+                        });
+                        popupMenu.show();
                     }
                 }
             } else {
@@ -1864,7 +1873,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             }
         };
         if (account.httpUploadAvailable() || attachmentChoice == ATTACHMENT_CHOICE_LOCATION) {
-        if ((account.httpUploadAvailable() || attachmentChoice == ATTACHMENT_CHOICE_LOCATION) && encryption != Message.ENCRYPTION_OTR) {
+            if ((account.httpUploadAvailable() || attachmentChoice == ATTACHMENT_CHOICE_LOCATION) && encryption != Message.ENCRYPTION_OTR) {
                 conversation.setNextCounterpart(null);
                 callback.onPresenceSelected();
             } else {

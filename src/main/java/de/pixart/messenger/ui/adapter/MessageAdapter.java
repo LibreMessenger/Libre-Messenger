@@ -878,7 +878,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 .setOnLongClickListener(v -> {
                     if (MessageAdapter.this.mOnContactPictureLongClickedListener != null) {
                         MessageAdapter.this.mOnContactPictureLongClickedListener
-                                .onContactPictureLongClicked(message);
+                                .onContactPictureLongClicked(v, message);
                         return true;
                     } else {
                         return false;
@@ -1151,7 +1151,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     }
 
     public interface OnContactPictureLongClicked {
-        void onContactPictureLongClicked(Message message);
+        void onContactPictureLongClicked(View v, Message message);
     }
 
     private static class ViewHolder {

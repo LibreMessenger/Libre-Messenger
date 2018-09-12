@@ -92,13 +92,14 @@ import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
+import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.services.XmppConnectionService.FDroid;
 import static de.pixart.messenger.services.XmppConnectionService.PlayStore;
 import static de.pixart.messenger.ui.ConversationFragment.REQUEST_DECRYPT_PGP;
 import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
 
-public class ConversationsActivity extends XmppActivity implements OnConversationSelected, OnConversationArchived, OnConversationsListItemUpdated, OnConversationRead, XmppConnectionService.OnAccountUpdate, XmppConnectionService.OnConversationUpdate, XmppConnectionService.OnRosterUpdate, OnUpdateBlocklist, XmppConnectionService.OnShowErrorToast {
+public class ConversationsActivity extends XmppActivity implements OnConversationSelected, OnConversationArchived, OnConversationsListItemUpdated, OnConversationRead, XmppConnectionService.OnAccountUpdate, XmppConnectionService.OnConversationUpdate, XmppConnectionService.OnRosterUpdate, OnUpdateBlocklist, XmppConnectionService.OnShowErrorToast, XmppConnectionService.OnAffiliationChanged, XmppConnectionService.OnRoleChanged {
 
     public static final String ACTION_VIEW_CONVERSATION = "de.pixart.messenger.VIEW";
     public static final String EXTRA_CONVERSATION = "conversationUuid";
@@ -487,6 +488,28 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
             return;
         }
         openConversation(conversation, null);
+    }
+
+    private void displayToast(final String msg) {
+        runOnUiThread(() -> Toast.makeText(ConversationsActivity.this, msg, Toast.LENGTH_SHORT).show());
+    }
+
+    @Override
+    public void onAffiliationChangedSuccessful(Jid jid) {
+    }
+
+    @Override
+    public void onAffiliationChangeFailed(Jid jid, int resId) {
+        displayToast(getString(resId, jid.asBareJid().toString()));
+    }
+
+    @Override
+    public void onRoleChangedSuccessful(String nick) {
+    }
+
+    @Override
+    public void onRoleChangeFailed(String nick, int resId) {
+        displayToast(getString(resId, nick));
     }
 
     private void openConversation(Conversation conversation, Bundle extras) {
