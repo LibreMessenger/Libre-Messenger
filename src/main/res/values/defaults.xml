@@ -62,7 +62,6 @@
     <integer name="auto_accept_filesize_wifi">10485760</integer>
     <integer name="auto_accept_filesize_mobile">524288</integer>
     <integer name="auto_accept_filesize_roaming">0</integer>
-    <bool name="show_notification">true</bool>
     <bool name="vibrate_on_notification">true</bool>
     <bool name="led">true</bool>
     <string name="notification_ringtone">content://settings/system/notification_sound</string>
