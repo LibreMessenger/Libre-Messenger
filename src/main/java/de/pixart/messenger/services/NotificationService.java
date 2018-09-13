@@ -934,11 +934,16 @@ public class NotificationService {
         mBuilder.setProgress(100, current, false);
         mBuilder.setSmallIcon(R.drawable.ic_hourglass_empty_white_24dp);
         mBuilder.setContentIntent(createContentIntent(message.getConversation()));
+        mBuilder.setOngoing(true);
         if (Compatibility.twentySix()) {
             mBuilder.setChannelId(VIDEOCOMPRESSION_CHANNEL_ID);
         }
         Notification notification = mBuilder.build();
         notify(FOREGROUND_NOTIFICATION_ID, notification);
+    }
+
+    public void dismissForcedForegroundNotification() {
+        cancel(FOREGROUND_NOTIFICATION_ID);
     }
 
     public Notification exportLogsNotification() {
@@ -947,6 +952,7 @@ public class NotificationService {
         mBuilder.setContentText(mXmppConnectionService.getString(R.string.notification_export_logs_title));
         mBuilder.setProgress(0, 0, true);
         mBuilder.setSmallIcon(R.drawable.ic_import_export_white_24dp);
+        mBuilder.setOngoing(true);
         if (Compatibility.twentySix()) {
             mBuilder.setChannelId(BACKUP_CHANNEL_ID);
         }
@@ -964,6 +970,7 @@ public class NotificationService {
         mBuilder.setContentText(String.format(mXmppConnectionService.getString(R.string.update_available), version, filesize));
         mBuilder.setSmallIcon(R.drawable.ic_update_notification);
         mBuilder.setContentIntent(intent);
+        mBuilder.setOngoing(true);
         if (Compatibility.twentySix()) {
             mBuilder.setChannelId(UPDATE_CHANNEL_ID);
         }
