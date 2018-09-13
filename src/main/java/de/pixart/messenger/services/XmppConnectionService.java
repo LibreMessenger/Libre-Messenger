@@ -241,15 +241,6 @@ public class XmppConnectionService extends Service {
     public HttpConnectionManager mHttpConnectionManager = new HttpConnectionManager(this);
     private ReplacingSerialSingleThreadExecutor mContactMergerExecutor = new ReplacingSerialSingleThreadExecutor(true);
     private long mLastActivity = 0;
-    private ContentObserver contactObserver = new ContentObserver(null) {
-        @Override
-        public void onChange(boolean selfChange) {
-            super.onChange(selfChange);
-            if (restoredFromDatabaseLatch.getCount() == 0) {
-                loadPhoneContacts();
-            }
-        }
-    };
     private MemorizingTrustManager mMemorizingTrustManager;
     private NotificationService mNotificationService = new NotificationService(this);
     private ShortcutService mShortcutService = new ShortcutService(this);
@@ -1119,8 +1110,7 @@ public class XmppConnectionService extends Service {
         restoreFromDatabase();
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            //TODO get this restarted if users gives permission
-            getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, contactObserver);
+            startContactObserver();
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             Log.d(Config.LOGTAG, "starting file observer");
@@ -1160,6 +1150,18 @@ public class XmppConnectionService extends Service {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             registerReceiver(this.mEventReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         }
+    }
+
+    public void startContactObserver() {
+        getContentResolver().registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, new ContentObserver(null) {
+            @Override
+            public void onChange(boolean selfChange) {
+                super.onChange(selfChange);
+                if (restoredFromDatabaseLatch.getCount() == 0) {
+                    loadPhoneContacts();
+                }
+            }
+        });
     }
 
     @Override
@@ -1729,7 +1731,7 @@ public class XmppConnectionService extends Service {
                 }
                 Log.d(Config.LOGTAG, "finished merging phone contacts");
                 mShortcutService.refresh(mInitialAddressbookSyncCompleted.compareAndSet(false, true));
-                updateAccountUi();
+                updateRosterUi();
             }
         }));
     }

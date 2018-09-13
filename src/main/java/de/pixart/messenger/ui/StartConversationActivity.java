@@ -690,21 +690,11 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
                         AlertDialog.Builder builder = new AlertDialog.Builder(this);
                         builder.setTitle(R.string.sync_with_contacts);
                         builder.setMessage(R.string.sync_with_contacts_long);
-                        builder.setPositiveButton(R.string.next, (dialog, which) -> {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_SYNC_CONTACTS);
-                            }
-                        });
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                            builder.setOnDismissListener(dialog -> {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                    requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_SYNC_CONTACTS);
-                                }
-                            });
-                        }
+                        builder.setPositiveButton(R.string.next, (dialog, which) -> requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_SYNC_CONTACTS));
+                        builder.setOnDismissListener(dialog -> requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_SYNC_CONTACTS));
                         builder.create().show();
                     } else {
-                        requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, 0);
+                        requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_SYNC_CONTACTS);
                     }
                 }
             }
@@ -717,7 +707,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 ScanActivity.onRequestPermissionResult(this, requestCode, grantResults);
                 if (requestCode == REQUEST_SYNC_CONTACTS && xmppConnectionServiceBound) {
-                    xmppConnectionService.loadPhoneContacts();
+                    xmppConnectionService.startContactObserver();
                 }
             }
         }
