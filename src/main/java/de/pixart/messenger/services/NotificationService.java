@@ -158,7 +158,7 @@ public class NotificationService {
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                 .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
                 .build());
-        messagesChannel.setLightColor(0xff00ff00);
+        messagesChannel.setLightColor(0xff0080FF);
         final int dat = 70;
         final long[] pattern = {0, 3 * dat, dat, dat};
         messagesChannel.setVibrationPattern(pattern);
@@ -172,7 +172,7 @@ public class NotificationService {
                 NotificationManager.IMPORTANCE_LOW);
         silentMessagesChannel.setDescription(c.getString(R.string.silent_messages_channel_description));
         silentMessagesChannel.setShowBadge(true);
-        silentMessagesChannel.setLightColor(0xff00ff00);
+        silentMessagesChannel.setLightColor(0xff0080FF);
         silentMessagesChannel.enableLights(true);
         silentMessagesChannel.setGroup("chats");
         notificationManager.createNotificationChannel(silentMessagesChannel);
@@ -935,7 +935,7 @@ public class NotificationService {
         mBuilder.setSmallIcon(R.drawable.ic_hourglass_empty_white_24dp);
         mBuilder.setContentIntent(createContentIntent(message.getConversation()));
         if (Compatibility.twentySix()) {
-            mBuilder.setChannelId(FOREGROUND_CHANNEL_ID);
+            mBuilder.setChannelId(VIDEOCOMPRESSION_CHANNEL_ID);
         }
         Notification notification = mBuilder.build();
         notify(FOREGROUND_NOTIFICATION_ID, notification);
@@ -948,7 +948,7 @@ public class NotificationService {
         mBuilder.setProgress(0, 0, true);
         mBuilder.setSmallIcon(R.drawable.ic_import_export_white_24dp);
         if (Compatibility.twentySix()) {
-            mBuilder.setChannelId(FOREGROUND_CHANNEL_ID);
+            mBuilder.setChannelId(BACKUP_CHANNEL_ID);
         }
         return mBuilder.build();
     }
@@ -965,7 +965,7 @@ public class NotificationService {
         mBuilder.setSmallIcon(R.drawable.ic_update_notification);
         mBuilder.setContentIntent(intent);
         if (Compatibility.twentySix()) {
-            mBuilder.setChannelId(FOREGROUND_CHANNEL_ID);
+            mBuilder.setChannelId(UPDATE_CHANNEL_ID);
         }
         return mBuilder.build();
     }
