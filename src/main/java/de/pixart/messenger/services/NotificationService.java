@@ -71,6 +71,9 @@ public class NotificationService {
     public static final int ERROR_NOTIFICATION_ID = NOTIFICATION_ID_MULTIPLIER * 6;
     public static final String MESSAGES_CHANNEL_ID = "messages";
     public static final String FOREGROUND_CHANNEL_ID = "foreground";
+    public static final String BACKUP_CHANNEL_ID = "backup";
+    public static final String UPDATE_CHANNEL_ID = "appupdate";
+    public static final String VIDEOCOMPRESSION_CHANNEL_ID = "compression";
     public static final String ERROR_CHANNEL_ID = "error";
 
     private final XmppConnectionService mXmppConnectionService;
@@ -117,6 +120,27 @@ public class NotificationService {
         foregroundServiceChannel.setShowBadge(false);
         foregroundServiceChannel.setGroup("status");
         notificationManager.createNotificationChannel(foregroundServiceChannel);
+
+        final NotificationChannel backupChannel = new NotificationChannel(BACKUP_CHANNEL_ID,
+                c.getString(R.string.backup_channel_name),
+                NotificationManager.IMPORTANCE_LOW);
+        backupChannel.setShowBadge(false);
+        backupChannel.setGroup("status");
+        notificationManager.createNotificationChannel(backupChannel);
+
+        final NotificationChannel videoCompressionChannel = new NotificationChannel(VIDEOCOMPRESSION_CHANNEL_ID,
+                c.getString(R.string.video_compression_channel_name),
+                NotificationManager.IMPORTANCE_LOW);
+        videoCompressionChannel.setShowBadge(false);
+        videoCompressionChannel.setGroup("status");
+        notificationManager.createNotificationChannel(videoCompressionChannel);
+
+        final NotificationChannel AppUpdateChannel = new NotificationChannel(UPDATE_CHANNEL_ID,
+                c.getString(R.string.app_update_channel_name),
+                NotificationManager.IMPORTANCE_LOW);
+        AppUpdateChannel.setShowBadge(false);
+        AppUpdateChannel.setGroup("status");
+        notificationManager.createNotificationChannel(AppUpdateChannel);
 
         final NotificationChannel errorChannel = new NotificationChannel(ERROR_CHANNEL_ID,
                 c.getString(R.string.error_channel_name),
