@@ -81,17 +81,19 @@ public class ExportLogsService extends XmppConnectionService {
         getNotificationService().exportLogsServiceNotification(getNotificationService().exportLogsNotification());
         List<Conversation> conversations = mDatabaseBackend.getConversations(Conversation.STATUS_AVAILABLE);
         conversations.addAll(mDatabaseBackend.getConversations(Conversation.STATUS_ARCHIVED));
-        if (ReadableLogsEnabled) {
-            for (Conversation conversation : conversations) {
-                writeToFile(conversation);
+        if (mAccounts.size() >= 1) {
+            if (ReadableLogsEnabled) {
+                for (Conversation conversation : conversations) {
+                    writeToFile(conversation);
+                }
             }
-        }
-        if (mAccounts.size() == 1) {
             try {
                 ExportDatabase();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else {
+            Log.d(Config.LOGTAG, "ExportLogsService: no accounts, aborting export");
         }
     }
 
@@ -172,7 +174,8 @@ public class ExportLogsService extends XmppConnectionService {
         File directory = new File(FileBackend.getConversationsDirectory("Database", false));
         // Create the folder if it doesn't exist:
         if (!directory.exists()) {
-            directory.mkdirs();
+            boolean directory_created = directory.mkdirs();
+            Log.d(Config.LOGTAG, "ExportLogsService: backup directory created " + directory_created);
         }
         //Delete old database export file
         File temp_db_file = new File(directory + "/database.bak");
@@ -198,6 +201,7 @@ public class ExportLogsService extends XmppConnectionService {
         // encrypt database from the input file to the output file
         try {
             EncryptDecryptFile.encrypt(InputFile, OutputFile, EncryptionKey);
+            Log.d(Config.LOGTAG, "ExportLogsService: starting encrypted output to " + OutputFile.toString());
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
             Log.d(Config.LOGTAG, "ExportLogsService: Database exporter: encryption failed with " + e);
             e.printStackTrace();
@@ -207,6 +211,8 @@ public class ExportLogsService extends XmppConnectionService {
         } catch (IOException e) {
             Log.d(Config.LOGTAG, "ExportLogsService: Database exporter: encryption failed (IO) with " + e);
             e.printStackTrace();
+        } finally {
+            Log.d(Config.LOGTAG, "ExportLogsService: backup job finished");
         }
     }
 
