@@ -106,8 +106,6 @@
   <string name="pref_accept_files_summary_mobileroaming">Kung konektado sa mobile nga data sa roaming awtomatik nga ang modawat sa mga file kay mas gamay pa sa…</string>
   <string name="pref_attachments">Mga naka-buyon uban</string>
   <string name="pref_notification_settings">Pagpahibalo</string>
-  <string name="pref_notifications">Mga pagpahibalo</string>
-  <string name="pref_notifications_summary">Pahibal-a ko kung naay bag-o nga mensahe ang maabot</string>
   <string name="pref_vibrate">Nikurog</string>
   <string name="pref_vibrate_summary">Mukurog kung naay bag-o nga mensahe ang maabot</string>
   <string name="pref_led">LED nga pagpahibalo</string>
@@ -615,7 +613,6 @@
   <string name="yesterday">Kagahapon</string>
   <string name="pref_validate_hostname">I-balido ang hostname kauban sa DNSSEC</string>
   <string name="pref_validate_hostname_summary">Ang mga sertipiko sa mga server nga naglangkob sa balido nga hostname giisip nga napamatud-an</string>
-  <string name="network_is_unreachable">Ang network dili ma-abot</string>
   <string name="certificate_does_not_contain_jid">Ang sertipiko wala maglangkob sa Jabber ID</string>
   <string name="error_no_keys_to_trust_presence">Walay mga yawe nga magamit alang niining kontak.\nSiguraduha nga ikaw adunay subskripsyon sa presensya sa usag usa.</string>
   <string name="mark_as_read">Markahi ug nabasa na</string>
