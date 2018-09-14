@@ -100,8 +100,6 @@
   <string name="pref_general">General</string>
   <string name="pref_attachments">Atașamente</string>
   <string name="pref_notification_settings">Notificare</string>
-  <string name="pref_notifications">Notificări</string>
-  <string name="pref_notifications_summary">Notifică atunci când este primit un mesaj nou</string>
   <string name="pref_vibrate">Vibrează</string>
   <string name="pref_vibrate_summary">Vibrează când este primit un mesaj nou</string>
   <string name="pref_led">Notificare LED</string>
@@ -600,7 +598,6 @@ sau chiar pierderea mesajelor.\nÎn continuare veți fi rugați să dezactivați
   <string name="yesterday">Ieri</string>
   <string name="pref_validate_hostname">Validează numele domeniului cu ajutorul DNSSEC</string>
   <string name="pref_validate_hostname_summary">Certificatele serverelor care conțin nume de domenii validate sunt considerate verificate</string>
-  <string name="network_is_unreachable">Rețeaua nu este accesibilă </string>
   <string name="certificate_does_not_contain_jid">Certificatul nu conține un ID Jabber</string>
   <string name="error_no_keys_to_trust_presence">Nu există chei disponibile ce pot fi folosite pentru acest contact.\nAsigurați-vă că ați activat trimiterea de actualizări de prezență reciproce.</string>
   <string name="server_info_partial">parțial</string>
