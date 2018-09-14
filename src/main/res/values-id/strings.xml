@@ -106,8 +106,6 @@
   <string name="pref_accept_files_summary_mobileroaming">Saat terhubung dengan data telepon genggam otomatis menjelajah dan menerima berkas lebih kecil dari…</string>
   <string name="pref_attachments">Lampiran</string>
   <string name="pref_notification_settings">Pemberitahuan</string>
-  <string name="pref_notifications">Pemberitahuan</string>
-  <string name="pref_notifications_summary">Beritahu ketika ada pesan terbaru</string>
   <string name="pref_vibrate">Bergetar</string>
   <string name="pref_vibrate_summary">Bergetar ketika ada pesan baru</string>
   <string name="pref_led">Pemberitahuan LED</string>
@@ -659,7 +657,6 @@
   <string name="yesterday">Kemarin</string>
   <string name="pref_validate_hostname">Pengesahan nama perangkat dengan DNSSEC</string>
   <string name="pref_validate_hostname_summary">Sertifikat server yang berisi nama perangkat yang divalidasi dianggap telah diverifikasi</string>
-  <string name="network_is_unreachable">Jaringan tidak terjangkau</string>
   <string name="certificate_does_not_contain_jid">Sertifikat tidak mengandung ID Jabber</string>
   <string name="error_no_keys_to_trust_presence">Tidak ada kunci yang bisa digunakan untuk kontak ini.\nPastikan Anda memiliki langganan kehadiran bersama.</string>
   <string name="mark_as_read">Tandai sudah dibaca</string>
