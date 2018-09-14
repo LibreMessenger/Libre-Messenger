@@ -150,9 +150,9 @@
         <item name="colorControlActivated">@color/accent</item>
         <item name="text_Color_Main">@color/realwhite</item>
 
-        <item name="color_background_primary">@color/grey800</item>
-        <item name="color_background_secondary">@color/grey900</item>
-        <item name="color_background_tertiary">@color/grey700</item>
+        <item name="color_background_primary">@color/grey700</item>
+        <item name="color_background_secondary">@color/grey800</item>
+        <item name="color_background_tertiary">@color/grey900</item>
         <item name="color_warning">@color/red_a700</item>
         <item name="TextColorOnline">@color/green500</item>
         <item name="TextColorError">@color/red500</item>

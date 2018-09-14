@@ -99,7 +99,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         if (conversation == ConversationFragment.getConversation(activity)) {
             viewHolder.frame.setBackgroundColor(Color.get(activity, R.attr.color_background_tertiary));
         } else {
-            viewHolder.frame.setBackgroundColor(Color.get(activity,R.attr.color_background_primary));
+            viewHolder.frame.setBackgroundColor(Color.get(activity, R.attr.color_background_primary));
         }
 
         Message message = conversation.getLatestMessage();

@@ -5,7 +5,7 @@
     <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/color_background_secondary"
+        android:background="?attr/color_background_tertiary"
         android:clickable="false">
 
         <ListView
@@ -15,7 +15,7 @@
             android:layout_above="@+id/snackbar"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:background="?attr/color_background_secondary"
+            android:background="?attr/color_background_tertiary"
             android:divider="@null"
             android:dividerHeight="0dp"
             android:listSelector="@android:color/transparent"
@@ -61,7 +61,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:background="?attr/color_background_secondary"
+                android:background="?attr/color_background_tertiary"
                 android:clickable="true"
                 android:paddingBottom="2dp"
                 android:paddingLeft="2dp"
@@ -73,7 +73,7 @@
                     android:layout_height="48dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:background="?attr/color_background_secondary"
+                    android:background="?attr/color_background_tertiary"
                     android:contentDescription="@string/attach_record_voice"
                     android:src="@drawable/ic_send_voice_offline"
                     android:visibility="gone" />
@@ -107,7 +107,7 @@
                     android:layout_height="48dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:background="?attr/color_background_secondary"
+                    android:background="?attr/color_background_tertiary"
                     android:contentDescription="@string/send_message"
                     android:src="@drawable/ic_send_text_offline" />
             </RelativeLayout>
