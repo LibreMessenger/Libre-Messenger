@@ -812,7 +812,7 @@
     <string name="phone_book">Address book</string>
     <string name="unable_to_save_recording">Unable to save recording</string>
     <string name="foreground_service_channel_name">Foreground service</string>
-    <string name="foreground_service_channel_description">This notification category is used to display a permanent notification indicating that Conversations is running.</string>
+    <string name="foreground_service_channel_description">This notification category is used to display a permanent notification indicating that Pix-Art Messenger is running.</string>
     <string name="notification_group_status_information">Status Information</string>
     <string name="error_channel_name">Connectivity Problems</string>
     <string name="error_channel_description">This notification category is used to display a notification in case there is a problem connecting to an account.</string>
