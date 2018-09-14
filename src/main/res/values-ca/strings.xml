@@ -98,8 +98,6 @@
   <string name="pref_general">General</string>
   <string name="pref_attachments">Fitxers adjunts</string>
   <string name="pref_notification_settings">Notificació</string>
-  <string name="pref_notifications">Notificacions</string>
-  <string name="pref_notifications_summary">Notifica quan arriba un nou missatge</string>
   <string name="pref_vibrate">Vibra</string>
   <string name="pref_vibrate_summary">Vibra quan arribi un missatge nou</string>
   <string name="pref_led">Notificació LED</string>
@@ -595,7 +593,6 @@ d\'altres proveïdors donant-los la vostra ID Jabber completa.</string>
   <string name="yesterday">Ahir</string>
   <string name="pref_validate_hostname">Valideu el nom del servidor amb DNSSEC</string>
   <string name="pref_validate_hostname_summary">Els certificats de servidor que contenen el nom de host validat es consideren verificats</string>
-  <string name="network_is_unreachable">No es pot accedir a la xarxa</string>
   <string name="certificate_does_not_contain_jid">El certificat no conté una identificació de Jabber</string>
   <string name="error_no_keys_to_trust_presence">No hi ha claus disponibles per a aquest contacte.\nAssegureu-vos que teniu una subscripció de presència mútua.</string>
   <string name="server_info_partial">parcial</string>
