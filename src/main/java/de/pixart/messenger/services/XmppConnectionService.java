@@ -727,6 +727,7 @@ public class XmppConnectionService extends Service {
     }
 
     private boolean processAccountState(Account account, boolean interactive, boolean isUiAction, boolean isAccountPushed, HashSet<Account> pingCandidates) {
+        storeNumberOfAccounts(this.getAccounts().size());
         boolean pingNow = false;
         if (account.getStatus().isAttemptReconnect()) {
             if (!hasInternetConnection()) {
@@ -800,6 +801,14 @@ public class XmppConnectionService extends Service {
             }
         }
         return pingNow;
+    }
+
+    private void storeNumberOfAccounts(int accounts) {
+        //write No of accounts to file
+        final SharedPreferences.Editor editor = getPreferences().edit();
+        Log.d(Config.LOGTAG, "Number of accounts is " + accounts);
+        editor.putInt(SettingsActivity.NUMBER_OF_ACCOUNTS, accounts);
+        editor.apply();
     }
 
     public boolean isDataSaverDisabled() {
