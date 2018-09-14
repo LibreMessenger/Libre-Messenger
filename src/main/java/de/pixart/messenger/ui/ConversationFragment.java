@@ -1207,14 +1207,20 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         final MenuItem menuNeedHelp = menu.findItem(R.id.action_create_issue);
         final MenuItem menuSearchUpdates = menu.findItem(R.id.action_check_updates);
         final MenuItem menuArchiveChat = menu.findItem(R.id.action_archive_chat);
+        final MenuItem menuGroupDetails = menu.findItem(R.id.action_group_details);
+        final MenuItem menuContactDetails = menu.findItem(R.id.action_contact_details);
 
         if (conversation != null) {
             if (conversation.getMode() == Conversation.MODE_MULTI) {
                 menuInviteContact.setVisible(true);
                 menuArchiveChat.setTitle(R.string.action_end_conversation_muc);
+                menuGroupDetails.setVisible(true);
+                menuContactDetails.setVisible(false);
             } else {
                 menuInviteContact.setVisible(false);
                 menuArchiveChat.setTitle(R.string.action_end_conversation);
+                menuGroupDetails.setVisible(false);
+                menuContactDetails.setVisible(true);
             }
             menuNeedHelp.setVisible(true);
             menuSearchUpdates.setVisible(false);
@@ -1223,6 +1229,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         } else {
             menuNeedHelp.setVisible(false);
             menuSearchUpdates.setVisible(true);
+            menuInviteContact.setVisible(false);
+            menuGroupDetails.setVisible(false);
+            menuContactDetails.setVisible(false);
         }
         super.onCreateOptionsMenu(menu, menuInflater);
     }
@@ -1540,6 +1549,15 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 break;
             case R.id.action_clear_history:
                 clearHistoryDialog(conversation);
+                break;
+            case R.id.action_group_details:
+                    Intent intent = new Intent(activity, ConferenceDetailsActivity.class);
+                    intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
+                    intent.putExtra("uuid", conversation.getUuid());
+                    startActivity(intent);
+                break;
+            case R.id.action_contact_details:
+                activity.switchToContactDetails(conversation.getContact());
                 break;
             case R.id.action_block:
             case R.id.action_unblock:

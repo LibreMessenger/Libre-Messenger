@@ -77,4 +77,16 @@
         android:orderInCategory="100"
         app:showAsAction="never"
         android:title="@string/create_issue" />
+    <item
+        android:id="@+id/action_group_details"
+        android:orderInCategory="100"
+        android:title="@string/action_group_details"
+        android:icon="@drawable/ic_group_white_24dp"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_contact_details"
+        android:orderInCategory="100"
+        android:title="@string/action_contact_details"
+        android:icon="@drawable/ic_contact_white_24dp"
+        app:showAsAction="always" />
 </menu>

@@ -825,4 +825,5 @@
     <string name="video_compression_channel_name">Video compression</string>
     <string name="backup_channel_name">Database backup</string>
     <string name="app_update_channel_name">App update</string>
+    <string name="action_group_details">Group details</string>
 </resources>
