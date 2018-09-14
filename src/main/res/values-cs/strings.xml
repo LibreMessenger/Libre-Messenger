@@ -95,8 +95,6 @@
   <string name="pref_general">Obecné</string>
   <string name="pref_attachments">Přílohy</string>
   <string name="pref_notification_settings">Upozornění</string>
-  <string name="pref_notifications">Upozornění</string>
-  <string name="pref_notifications_summary">Upozornit při přijetí nové zprávy</string>
   <string name="pref_vibrate">Vibrovat</string>
   <string name="pref_vibrate_summary">Vibrovat při přijetí nové zprávy</string>
   <string name="pref_led">LED upozornění</string>
