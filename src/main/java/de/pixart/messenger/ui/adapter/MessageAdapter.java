@@ -498,7 +498,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         } else {
             viewHolder.messageBody.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Body1);
         }
-        viewHolder.messageBody.setHighlightColor(darkBackground ? type == SENT ? ContextCompat.getColor(activity, R.color.black26) : ContextCompat.getColor(activity, R.color.grey800) : ContextCompat.getColor(activity, R.color.grey500));
+        viewHolder.messageBody.setHighlightColor(darkBackground ? type == SENT ? ContextCompat.getColor(activity, R.color.accent) : ContextCompat.getColor(activity, R.color.accent) : ContextCompat.getColor(activity, R.color.accent));
         viewHolder.messageBody.setTypeface(null, Typeface.NORMAL);
         if (message.getBody() != null) {
             final String nick = UIHelper.getMessageDisplayName(message);
