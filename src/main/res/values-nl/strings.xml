@@ -98,8 +98,6 @@
   <string name="pref_general">Algemeen</string>
   <string name="pref_attachments">Bijlagen</string>
   <string name="pref_notification_settings">Melding</string>
-  <string name="pref_notifications">Meldingen</string>
-  <string name="pref_notifications_summary">Melding wanneer een nieuw bericht ontvangen wordt</string>
   <string name="pref_vibrate">Trillen</string>
   <string name="pref_vibrate_summary">Trillen wanneer een nieuw bericht ontvangen wordt</string>
   <string name="pref_led">LED-melding</string>
@@ -578,7 +576,6 @@
   <string name="yesterday">Gisteren</string>
   <string name="pref_validate_hostname">Valideer hostnaam met DNSSEC</string>
   <string name="pref_validate_hostname_summary">Servercertificaten die de gevalideerde hostnaam bevatten worden beschouwd als geverifieerd</string>
-  <string name="network_is_unreachable">Netwerk niet bereikbaar</string>
   <string name="certificate_does_not_contain_jid">Certificaat bevat geen Jabber-ID</string>
   <string name="error_no_keys_to_trust_presence">Er zijn geen bruikbare sleutels beschikbaar voor dit contact.\nZorg dat je allebei op elkaars aanwezigheidsupdates bent geabonneerd.</string>
   <string name="server_info_partial">gedeeltelijk</string>
