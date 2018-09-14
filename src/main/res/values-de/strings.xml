@@ -814,4 +814,13 @@
   <string name="foreground_service_channel_name">Vordergrunddienst</string>
   <string name="notification_group_status_information">Statusinformation</string>
   <string name="error_channel_name">Verbindungsprobleme</string>
+  <string name="error_channel_description">Diese Benachrichtigungskategorie zeigt eine Benachrichtigung, wenn ein Verbindungsproblem besteht.</string>
+  <string name="notification_group_messages">Nachrichten</string>
+  <string name="messages_channel_name">Nachrichten</string>
+  <string name="silent_messages_channel_name">Stille Nachrichten</string>
+  <string name="pref_more_notification_settings">Benachrichtigungseinstellungen</string>
+  <string name="pref_more_notification_settings_summary">Wichtigkeit, Töne, Vibration</string>
+  <string name="video_compression_channel_name">Video-Komprimierung</string>
+  <string name="backup_channel_name">Datenbanksicherung</string>
+  <string name="app_update_channel_name">App Aktualisierung</string>
 </resources>
