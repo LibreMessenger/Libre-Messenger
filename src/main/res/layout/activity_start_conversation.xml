@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/tab_layout"
-            android:background="?attr/color_background_primary" />
+            android:background="?attr/color_background_secondary" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"

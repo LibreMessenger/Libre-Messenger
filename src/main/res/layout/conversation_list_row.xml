@@ -8,7 +8,7 @@
         android:id="@+id/frame"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/color_background_primary">
+        android:background="?attr/color_background_secondary">
 
         <RelativeLayout
             android:layout_width="fill_parent"
