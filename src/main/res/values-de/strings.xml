@@ -812,6 +812,7 @@
   <string name="phone_book">Adressbuch</string>
   <string name="unable_to_save_recording">Aufnahme kann nicht gespeichert werden</string>
   <string name="foreground_service_channel_name">Vordergrunddienst</string>
+  <string name="foreground_service_channel_description">Diese Benachrichtigungskategorie zeigt eine Benachrichtigung, wenn Pix-Art Messenger ausgeführt wird.</string>
   <string name="notification_group_status_information">Statusinformation</string>
   <string name="error_channel_name">Verbindungsprobleme</string>
   <string name="error_channel_description">Diese Benachrichtigungskategorie zeigt eine Benachrichtigung, wenn ein Verbindungsproblem besteht.</string>
@@ -823,4 +824,5 @@
   <string name="video_compression_channel_name">Video-Komprimierung</string>
   <string name="backup_channel_name">Datenbanksicherung</string>
   <string name="app_update_channel_name">App Aktualisierung</string>
+  <string name="action_group_details">Gruppenchat-Details</string>
 </resources>
