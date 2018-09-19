@@ -33,4 +33,8 @@
   <string name="pgp_message">Зашифрованное OpenPGP сообщение</string>
   <string name="nick_in_use">Псевдоним уже используется</string>
   <string name="admin">Администратор</string>
+  <string name="owner">Владелец</string>
+  <string name="moderator">Модератор</string>
+  <string name="participant">Участник</string>
+  <string name="visitor">Посетитель</string>
 </resources>
