@@ -69,6 +69,17 @@
   <string name="attach_file">Прикрепить файл</string>
   <string name="not_in_roster">Контакт не находится в вашем ростере. Добавить его?</string>
   <string name="add_contact">Добавить контакт</string>
+  <string name="send_failed">доставка не удалась</string>
+  <string name="preparing_image">Подготовка изображения к передаче</string>
+  <string name="preparing_images">Подготовка изображений к передаче</string>
+  <string name="sharing_files_please_wait">Расшаривание файлов. Пожалуйста, подождите…</string>
+  <string name="action_clear_history">Очистить историю</string>
+  <string name="clear_conversation_history">Очистить Историю Разговора</string>
+  <string name="delete_messages">Удалить сообщения</string>
+  <string name="also_end_conversation">Потом закончить этот разговор</string>
+  <string name="choose_presence">Выбрать устройство</string>
+  <string name="send_unencrypted_message">Отправить сообщение без шифрования</string>
+  <string name="send_message_to_x">Отправить сообщение %s</string>
   <string name="pref_accept_files_summary_wifi">При подключении по wifi автоматически принимать файлы меньше чем…</string>
   <string name="pref_accept_files_mobile">Принимать файлы по сотовой сети</string>
   <string name="pref_accept_files_summary_mobile">При подключении по сотовой сети автоматически принимать файлы меньше чем…</string>
