@@ -153,4 +153,16 @@
   <string name="omemo_fingerprint">OMEMO отпечаток</string>
   <string name="omemo_fingerprint_x509">v\\OMEMO отпечаток</string>
   <string name="omemo_fingerprint_selected_message">OMEMO отпечаток сообщения</string>
+  <string name="omemo_fingerprint_x509_selected_message">v\\OMEMO отпечаток сообщения</string>
+  <string name="other_devices">Другие устройства</string>
+  <string name="trust_omemo_fingerprints">Доверенные OMEMO Отпечатки</string>
+  <string name="fetching_keys">Получение ключей…</string>
+  <string name="done">Готово</string>
+  <string name="verify">Подтверждение</string>
+  <string name="decrypt">Расшифровать</string>
+  <string name="conferences">Групповые чаты</string>
+  <string name="search">Поиск</string>
+  <string name="create_contact">Создать Контакт</string>
+  <string name="pref_expert_options">Продвинутые настройки</string>
+  <string name="title_activity_about">О программе</string>
 </resources>
