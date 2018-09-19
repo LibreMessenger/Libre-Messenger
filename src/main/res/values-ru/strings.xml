@@ -88,6 +88,13 @@
   <string name="send_unencrypted">Отправить незашифрованным</string>
   <string name="decryption_failed">Расшифровка не удалась. Возможно, у вас нет правильного приватного ключа.</string>
   <string name="openkeychain_required">OpenKeychain</string>
+  <string name="openkeychain_required_long">Pix-Art Messenger использует стороннее приложение <b>OpenKeychain</b> для шифрования и расшифровки сообщений, а также для управления вашими публичными ключами.\n\nOpenKeychain лицензирован под GPLv3 и доступен в F-Droid и Google Play.\n\n<small>(Пожалуйста, перезапустите Pix-Art Messenger впоследствии.)</small></string>
+  <string name="restart">Перезапуск</string>
+  <string name="install">Установка</string>
+  <string name="openkeychain_not_installed">Пожалуйста, установите OpenKeychain</string>
+  <string name="offering">предложение…</string>
+  <string name="waiting">ожидание…</string>
+  <string name="no_pgp_key">Не найден ключ OpenPGP</string>
   <string name="pref_accept_files_summary_wifi">При подключении по wifi автоматически принимать файлы меньше чем…</string>
   <string name="pref_accept_files_mobile">Принимать файлы по сотовой сети</string>
   <string name="pref_accept_files_summary_mobile">При подключении по сотовой сети автоматически принимать файлы меньше чем…</string>
