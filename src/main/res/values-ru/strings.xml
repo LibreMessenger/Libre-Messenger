@@ -95,6 +95,10 @@
   <string name="offering">предложение…</string>
   <string name="waiting">ожидание…</string>
   <string name="no_pgp_key">Не найден ключ OpenPGP</string>
+  <string name="contact_has_no_pgp_key">Pix-Art Messenger не может зашифровать ваше сообщение, потому что ваш собеседник не анонсировал свой публичный ключ.\n\n<small>Пожалуйста, попросите вашего собеседника установить OpenPGP.</small></string>
+  <string name="no_pgp_keys">Не найдены ключи OpenPGP</string>
+  <string name="pref_general">Общее</string>
+  <string name="pref_accept_files_wifi">Принимать файлы по WiFi</string>
   <string name="pref_accept_files_summary_wifi">При подключении по wifi автоматически принимать файлы меньше чем…</string>
   <string name="pref_accept_files_mobile">Принимать файлы по сотовой сети</string>
   <string name="pref_accept_files_summary_mobile">При подключении по сотовой сети автоматически принимать файлы меньше чем…</string>
@@ -109,4 +113,10 @@
   <string name="pref_sound">Рингтон</string>
   <string name="pref_sound_summary">Воспроизводить звук, когда получено новое сообщение</string>
   <string name="pref_send_crash">Отправлять отчёты о сбоях</string>
+  <string name="attach_record_voice">Записать голосовое сообщение</string>
+  <string name="account_settings_jabber_id">Jabber-ID</string>
+  <string name="account_settings_password">Пароль</string>
+  <string name="account_settings_example_jabber_id">username@pix-art.de</string>
+  <string name="password">Пароль</string>
+  <string name="confirm_password">Подтверждение пароля</string>
 </resources>
