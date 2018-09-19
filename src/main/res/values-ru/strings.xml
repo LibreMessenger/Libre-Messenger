@@ -119,4 +119,14 @@
   <string name="account_settings_example_jabber_id">username@pix-art.de</string>
   <string name="password">Пароль</string>
   <string name="confirm_password">Подтверждение пароля</string>
+  <string name="passwords_do_not_match">Пароли не совпадают</string>
+  <string name="invalid_jid">Недействительный Jabber-ID</string>
+  <string name="error_out_of_memory">Недостаточно памяти. Изображение слишком большое</string>
+  <string name="add_phone_book_text">Хотите добавить %s в вашу адресную книгу?</string>
+  <string name="server_info_show_more">Информация о сервере</string>
+  <string name="server_info_mam">XEP-0313: MAM</string>
+  <string name="server_info_carbon_messages">XEP-0280: Message Carbons</string>
+  <string name="server_info_csi">XEP-0352: Client State Indication</string>
+  <string name="server_info_blocking">XEP-0191: Blocking Command</string>
+  <string name="server_info_roster_version">XEP-0237: Roster Versioning</string>
 </resources>
