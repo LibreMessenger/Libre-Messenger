@@ -30,4 +30,7 @@
   <string name="unread_conversations">непрочитанные Разговоры</string>
   <string name="sending">отправка…</string>
   <string name="message_decrypting">Расшифровка сообщения. Пожалуйста подождите…</string>
+  <string name="pgp_message">Зашифрованное OpenPGP сообщение</string>
+  <string name="nick_in_use">Псевдоним уже используется</string>
+  <string name="admin">Администратор</string>
 </resources>
