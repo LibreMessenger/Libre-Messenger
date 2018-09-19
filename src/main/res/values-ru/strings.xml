@@ -55,4 +55,14 @@
   <string name="pref_accept_files_mobile">Принимать файлы по сотовой сети</string>
   <string name="pref_accept_files_summary_mobile">При подключении по сотовой сети автоматически принимать файлы меньше чем…</string>
   <string name="pref_accept_files_mobileroaming">Принимать файлы по сотовой сети в роуминге</string>
+  <string name="pref_accept_files_summary_mobileroaming">При подключении по сотовой сети в роуминге автоматически принимать файлы меньше чем…</string>
+  <string name="pref_attachments">Вложения</string>
+  <string name="pref_notification_settings">Уведомление</string>
+  <string name="pref_vibrate">Вибрация</string>
+  <string name="pref_vibrate_summary">Вибрировать при получении нового сообщения</string>
+  <string name="pref_led">LED уведомление</string>
+  <string name="pref_led_summary">Мигать светодиодом при получении нового сообщения</string>
+  <string name="pref_sound">Рингтон</string>
+  <string name="pref_sound_summary">Воспроизводить звук, когда получено новое сообщение</string>
+  <string name="pref_send_crash">Отправлять отчёты о сбоях</string>
 </resources>
