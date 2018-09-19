@@ -37,4 +37,11 @@
   <string name="moderator">Модератор</string>
   <string name="participant">Участник</string>
   <string name="visitor">Посетитель</string>
+  <string name="remove_contact_text">Вы действительно хотите удалить %s из вашего ростера? Разговор, связанный с этим контактом, не будет удалён.</string>
+  <string name="block_contact_text">Вы действительно хотите заблокировать отправку вам сообщений от %s?</string>
+  <string name="unblock_contact_text">Вы действительно хотите разблокировать %s и разрешить отправку вам сообщений?</string>
+  <string name="block_domain_text">Блокировать все контакты от %s?</string>
+  <string name="unblock_domain_text">Разблокировать все контакты от %s?</string>
+  <string name="contact_blocked">Контакт заблокирован</string>
+  <string name="blocked">Заблокирован</string>
 </resources>
