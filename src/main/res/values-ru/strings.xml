@@ -51,6 +51,15 @@
   <string name="start_conversation">Начать Разговор</string>
   <string name="invite_contact">Пригласить Контакт</string>
   <string name="contacts">Контакты</string>
+  <string name="cancel">Отмена</string>
+  <string name="set">Применить</string>
+  <string name="add">Добавить</string>
+  <string name="edit">Изменить</string>
+  <string name="delete">Удалить</string>
+  <string name="block">Блокировать</string>
+  <string name="unblock">Разблокировать</string>
+  <string name="save">Сохранить</string>
+  <string name="ok">OK</string>
   <string name="pref_accept_files_summary_wifi">При подключении по wifi автоматически принимать файлы меньше чем…</string>
   <string name="pref_accept_files_mobile">Принимать файлы по сотовой сети</string>
   <string name="pref_accept_files_summary_mobile">При подключении по сотовой сети автоматически принимать файлы меньше чем…</string>
