@@ -53,4 +53,5 @@
   <string name="contacts">Контакты</string>
   <string name="pref_accept_files_summary_wifi">При подключении по wifi автоматически принимать файлы меньше чем…</string>
   <string name="pref_accept_files_mobile">Принимать файлы по сотовой сети</string>
+  <string name="pref_accept_files_summary_mobile">При подключении по сотовой сети автоматически принимать файлы меньше чем…</string>
 </resources>
