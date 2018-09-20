@@ -117,6 +117,14 @@
   <string name="openpgp_error">OpenKeychain сообщает об ошибке</string>
   <string name="accept">Принять</string>
   <string name="your_account">Ваш аккаунт</string>
+  <string name="send_presence_updates">Посылать обновления присутствия</string>
+  <string name="receive_presence_updates">Принимать обновления присутствия</string>
+  <string name="ask_for_presence_updates">Запрашивать обновления присутствия</string>
+  <string name="attach_choose_picture">Выберите изображение</string>
+  <string name="attach_take_from_camera">Снять на камеру</string>
+  <string name="error_not_an_image_file">Выбранный файл не является изображением</string>
+  <string name="error_compressing_image">Ошибка конвертации изображения</string>
+  <string name="error_file_not_found">Файл не найден</string>
   <string name="encryption_choice_otr">OTR</string>
   <string name="encryption_choice_pgp">OpenPGP</string>
   <string name="encryption_choice_omemo">OMEMO</string>
