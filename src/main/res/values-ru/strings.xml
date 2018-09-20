@@ -113,6 +113,10 @@
   <string name="pref_sound">Рингтон</string>
   <string name="pref_sound_summary">Воспроизводить звук, когда получено новое сообщение</string>
   <string name="pref_send_crash">Отправлять отчёты о сбоях</string>
+  <string name="pref_ui_options">Интерфейс</string>
+  <string name="openpgp_error">OpenKeychain сообщает об ошибке</string>
+  <string name="accept">Принять</string>
+  <string name="your_account">Ваш аккаунт</string>
   <string name="encryption_choice_otr">OTR</string>
   <string name="encryption_choice_pgp">OpenPGP</string>
   <string name="encryption_choice_omemo">OMEMO</string>
