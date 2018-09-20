@@ -139,6 +139,9 @@
   <string name="account_status_regis_success">Регистрация завершена</string>
   <string name="account_status_regis_not_sup">Сервер не поддерживает регистрацию</string>
   <string name="account_status_tls_error">Согласование TLS не удалось</string>
+  <string name="account_status_incompatible_server">Несовместимый сервер</string>
+  <string name="account_status_stream_error">Ошибка потока</string>
+  <string name="encryption_choice_unencrypted">Не зашифровано</string>
   <string name="encryption_choice_otr">OTR</string>
   <string name="encryption_choice_pgp">OpenPGP</string>
   <string name="encryption_choice_omemo">OMEMO</string>
