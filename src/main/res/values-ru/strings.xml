@@ -116,7 +116,8 @@
   <string name="encryption_choice_otr">OTR</string>
   <string name="encryption_choice_pgp">OpenPGP</string>
   <string name="encryption_choice_omemo">OMEMO</string>
-  <string name="mgmt_account_edit">Изменить учётную запись</string>
+  <string name="mgmt_account_edit">Изменить аккаунт</string>
+  <string name="mgmt_account_delete">Удалить аккаунт</string>
   <string name="attach_record_voice">Записать голосовое сообщение</string>
   <string name="account_settings_jabber_id">Jabber-ID</string>
   <string name="account_settings_password">Пароль</string>
