@@ -153,6 +153,7 @@
   <string name="mgmt_account_publish_avatar">Опубликовать аватар</string>
   <string name="mgmt_account_publish_pgp">Опубликовать публичный OpenPGP ключ</string>
   <string name="unpublish_pgp">Удалить публичный OpenPGP ключ</string>
+  <string name="mgmt_account_are_you_sure">Вы уверены?</string>
   <string name="attach_record_voice">Записать голосовое сообщение</string>
   <string name="account_settings_jabber_id">Jabber-ID</string>
   <string name="account_settings_password">Пароль</string>
@@ -203,6 +204,15 @@
   <string name="conferences">Групповые чаты</string>
   <string name="search">Поиск</string>
   <string name="create_contact">Создать Контакт</string>
+  <string name="join_conference">Присоединиться к групповому чату</string>
+  <string name="delete_contact">Удалить Контакт</string>
+  <string name="view_contact_details">Просмотреть детали контакта</string>
+  <string name="block_contact">Заблокировать контакт</string>
+  <string name="unblock_contact">Разблокировать контакт</string>
+  <string name="create">Создать</string>
+  <string name="select">Выбрать</string>
+  <string name="contact_already_exists">Контакт уже существует</string>
+  <string name="join">Присоединиться</string>
   <string name="pref_expert_options">Продвинутые настройки</string>
   <string name="title_activity_about">О программе</string>
 </resources>
