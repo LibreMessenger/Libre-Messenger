@@ -213,6 +213,18 @@
   <string name="select">Выбрать</string>
   <string name="contact_already_exists">Контакт уже существует</string>
   <string name="join">Присоединиться</string>
+  <string name="conference_address">Адрес группового чата</string>
+  <string name="conference_address_example">groupchat@room.pix-art.de</string>
+  <string name="save_as_bookmark">Сохранить как закладку</string>
+  <string name="delete_bookmark">Удалить закладку</string>
+  <string name="bookmark_already_exists">Эта закладка уже создана</string>
+  <string name="topic">Тема</string>
+  <string name="joining_conference">Подключение к групповому чату…</string>
+  <string name="leave">Покинуть</string>
+  <string name="publish">Опубликовать</string>
+  <string name="touch_to_choose_picture">Дотроньтесь до аватара для выбора изображения из галлереи</string>
+  <string name="publishing">Публикация…</string>
+  <string name="error_saving_avatar">Невозможно сохранить аватар на диск</string>
   <string name="pref_expert_options">Продвинутые настройки</string>
   <string name="title_activity_about">О программе</string>
 </resources>
