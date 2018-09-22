@@ -153,6 +153,8 @@
   <string name="mgmt_account_publish_avatar">Опубликовать аватар</string>
   <string name="mgmt_account_publish_pgp">Опубликовать публичный OpenPGP ключ</string>
   <string name="unpublish_pgp">Удалить публичный OpenPGP ключ</string>
+  <string name="unpublish_pgp_message">Вы уверены, что хотите удалить ваш публичный OpenGPG ключ из вашего уведомления о присутствии?\nВаши контакты больше не смогут посылать вам зашифрованные OpenPGP сообщения.</string>
+  <string name="openpgp_has_been_published">Публичный OpenPGP ключ был опубликован.</string>
   <string name="mgmt_account_are_you_sure">Вы уверены?</string>
   <string name="attach_record_voice">Записать голосовое сообщение</string>
   <string name="account_settings_jabber_id">Jabber-ID</string>
