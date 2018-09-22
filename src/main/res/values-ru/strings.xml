@@ -156,6 +156,7 @@
   <string name="unpublish_pgp_message">Вы уверены, что хотите удалить ваш публичный OpenGPG ключ из вашего уведомления о присутствии?\nВаши контакты больше не смогут посылать вам зашифрованные OpenPGP сообщения.</string>
   <string name="openpgp_has_been_published">Публичный OpenPGP ключ был опубликован.</string>
   <string name="mgmt_account_are_you_sure">Вы уверены?</string>
+  <string name="mgmt_account_delete_confirm_text">Если вы удалите свой аккаунт, то история разговора будет потеряна</string>
   <string name="attach_record_voice">Записать голосовое сообщение</string>
   <string name="account_settings_jabber_id">Jabber-ID</string>
   <string name="account_settings_password">Пароль</string>
@@ -206,6 +207,7 @@
   <string name="conferences">Групповые чаты</string>
   <string name="search">Поиск</string>
   <string name="create_contact">Создать Контакт</string>
+  <string name="enter_contact">Введите Контакт</string>
   <string name="join_conference">Присоединиться к групповому чату</string>
   <string name="delete_contact">Удалить Контакт</string>
   <string name="view_contact_details">Просмотреть детали контакта</string>
