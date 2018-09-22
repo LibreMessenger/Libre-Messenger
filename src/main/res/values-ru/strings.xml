@@ -225,9 +225,11 @@
   <string name="topic">Тема</string>
   <string name="joining_conference">Подключение к групповому чату…</string>
   <string name="leave">Покинуть</string>
+  <string name="contact_added_you">Контакт добавил вас в список контактов</string>
   <string name="publish">Опубликовать</string>
   <string name="touch_to_choose_picture">Дотроньтесь до аватара для выбора изображения из галлереи</string>
   <string name="publishing">Публикация…</string>
+  <string name="error_publish_avatar_server_reject">Сервер отклонил вашу публикацию</string>
   <string name="error_saving_avatar">Невозможно сохранить аватар на диск</string>
   <string name="pref_expert_options">Продвинутые настройки</string>
   <string name="title_activity_about">О программе</string>
