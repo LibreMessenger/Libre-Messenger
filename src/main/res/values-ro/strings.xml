@@ -605,8 +605,6 @@ sau chiar pierderea mesajelor.\nÎn continuare veți fi rugați să dezactivați
   <string name="contacts_have_read_up_to_this_point">%s au citit până aici</string>
   <string name="contact_has_read_up_to_this_point">%s a citit până aici</string>
   <string name="contacts_and_n_more_have_read_up_to_this_point">%1$s și încă %2$d au citit până aici</string>
-  <string name="pref_return_to_previous">Partajare rapidă</string>
-  <string name="pref_return_to_previous_summary">După ce ați partajat ceva, întoarce-te la activitatea precedentă în loc să deschizi conversația</string>
   <string name="invalid_muc_nick">Nume invalid</string>
   <string name="title_activity_share_via_account">Partajează cu cont</string>
 </resources>
