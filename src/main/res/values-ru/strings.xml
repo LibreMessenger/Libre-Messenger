@@ -247,4 +247,10 @@
   <string name="title_pref_quiet_hours">Тихие часы</string>
   <string name="title_pref_quiet_hours_start_time">Время начала</string>
   <string name="title_pref_quiet_hours_end_time">Время окончания</string>
+  <string name="title_pref_enable_quiet_hours">Включить тихие часы</string>
+  <string name="pref_quiet_hours_summary">Уведомления будут приглушены во время тихих часов</string>
+  <string name="pref_use_send_button_to_indicate_status">Кнопка отправить показывает статус</string>
+  <string name="pref_use_colored_names_to_indicate_status">Расцветка имён показывает статус</string>
+  <string name="pref_use_indicate_received">Запрашивать получение сообщений</string>
+  <string name="pref_use_indicate_received_summary">Если поддерживается, полученные сообщения будут помечены зелёной галкой</string>
 </resources>
