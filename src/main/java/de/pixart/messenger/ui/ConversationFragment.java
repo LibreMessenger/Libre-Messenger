@@ -146,41 +146,40 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     public static final String RECENTLY_USED_QUICK_ACTION = "recently_used_quick_action";
     public static final String STATE_CONVERSATION_UUID = ConversationFragment.class.getName() + ".uuid";
     public static final String STATE_SCROLL_POSITION = ConversationFragment.class.getName() + ".scroll_position";
-    public static final String STATE_PHOTO_URI = ConversationFragment.class.getName() + ".take_photo_uri";
-    public static final String STATE_VIDEO_URI = ConversationFragment.class.getName() + ".take_video_uri";
+    public static final String STATE_PHOTO_URI = ConversationFragment.class.getName() + ".media_previews";
+    public static final String STATE_VIDEO_URI = ConversationFragment.class.getName() + ".media_previews";
+    public static final String STATE_MEDIA_PREVIEWS = ConversationFragment.class.getName() + ".take_photo_uri";
 
     private static final String STATE_LAST_MESSAGE_UUID = "state_last_message_uuid";
 
     private final List<Message> messageList = new ArrayList<>();
-    final private List<Uri> mPendingImageUris = new ArrayList<>();
-    private String lastMessageUuid = null;
-    public Uri mPendingEditorContent = null;
     private final PendingItem<ActivityResult> postponedActivityResult = new PendingItem<>();
     private final PendingItem<String> pendingConversationsUuid = new PendingItem<>();
+    private final PendingItem<ArrayList<Attachment>> pendingMediaPreviews = new PendingItem<>();
     private final PendingItem<Bundle> pendingExtras = new PendingItem<>();
     private final PendingItem<Uri> pendingTakePhotoUri = new PendingItem<>();
     private final PendingItem<Uri> pendingTakeVideoUri = new PendingItem<>();
     private final PendingItem<ScrollState> pendingScrollState = new PendingItem<>();
     private final PendingItem<String> pendingLastMessageUuid = new PendingItem<>();
     private final PendingItem<Message> pendingMessage = new PendingItem<>();
-    protected MessageAdapter messageListAdapter;
-    private Conversation conversation;
+    public Uri mPendingEditorContent = null;
     public FragmentConversationBinding binding;
+    protected MessageAdapter messageListAdapter;
     protected Message lastHistoryMessage = null;
     SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd. MMM yyyy", Locale.getDefault());
+    private String lastMessageUuid = null;
+    private Conversation conversation;
     private Toast messageLoaderToast;
     private ConversationsActivity activity;
-    private boolean reInitRequiredOnStart = true;
-    private MediaPreviewAdapter mediaPreviewAdapter;
-
-    private SimpleFingerGestures gesturesDetector = new SimpleFingerGestures();
-
     protected OnClickListener clickToVerify = new OnClickListener() {
         @Override
         public void onClick(View v) {
             activity.verifyOtrSessionDialog(conversation, v);
         }
     };
+    private boolean reInitRequiredOnStart = true;
+    private MediaPreviewAdapter mediaPreviewAdapter;
+    private SimpleFingerGestures gesturesDetector = new SimpleFingerGestures();
     private OnClickListener clickToMuc = new OnClickListener() {
 
         @Override
@@ -487,32 +486,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             }
         }
     };
-
-    @SuppressLint("RestrictedApi")
-    private void choose_attachment(View v) {
-        SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(activity);
-        final boolean hideVoice = p.getBoolean("show_record_voice_btn", activity.getResources().getBoolean(R.bool.show_record_voice_btn));
-        PopupMenu popup = new PopupMenu(activity, v);
-        popup.inflate(R.menu.choose_attachment);
-        Menu menu = popup.getMenu();
-        ConversationMenuConfigurator.configureQuickShareAttachmentMenu(conversation, menu, hideVoice);
-        popup.setOnMenuItemClickListener(attachmentItem -> {
-            switch (attachmentItem.getItemId()) {
-                case R.id.attach_choose_picture:
-                case R.id.attach_take_picture:
-                case R.id.attach_choose_file:
-                case R.id.attach_record_voice:
-                case R.id.attach_location:
-                    handleAttachmentSelection(attachmentItem);
-                default:
-                    return false;
-            }
-        });
-        MenuPopupHelper menuHelper = new MenuPopupHelper(getActivity(), (MenuBuilder) menu, v);
-        menuHelper.setForceShowIcon(true);
-        menuHelper.show();
-    }
-
     private View.OnLongClickListener mSendButtonLongListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
@@ -642,6 +615,31 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         } else {
             return false;
         }
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void choose_attachment(View v) {
+        SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(activity);
+        final boolean hideVoice = p.getBoolean("show_record_voice_btn", activity.getResources().getBoolean(R.bool.show_record_voice_btn));
+        PopupMenu popup = new PopupMenu(activity, v);
+        popup.inflate(R.menu.choose_attachment);
+        Menu menu = popup.getMenu();
+        ConversationMenuConfigurator.configureQuickShareAttachmentMenu(conversation, menu, hideVoice);
+        popup.setOnMenuItemClickListener(attachmentItem -> {
+            switch (attachmentItem.getItemId()) {
+                case R.id.attach_choose_picture:
+                case R.id.attach_take_picture:
+                case R.id.attach_choose_file:
+                case R.id.attach_record_voice:
+                case R.id.attach_location:
+                    handleAttachmentSelection(attachmentItem);
+                default:
+                    return false;
+            }
+        });
+        MenuPopupHelper menuHelper = new MenuPopupHelper(getActivity(), (MenuBuilder) menu, v);
+        menuHelper.setForceShowIcon(true);
+        menuHelper.show();
     }
 
     private void toggleScrollDownButton() {
@@ -1470,10 +1468,10 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 clearHistoryDialog(conversation);
                 break;
             case R.id.action_group_details:
-                    Intent intent = new Intent(activity, ConferenceDetailsActivity.class);
-                    intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
-                    intent.putExtra("uuid", conversation.getUuid());
-                    startActivity(intent);
+                Intent intent = new Intent(activity, ConferenceDetailsActivity.class);
+                intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
+                intent.putExtra("uuid", conversation.getUuid());
+                startActivity(intent);
                 break;
             case R.id.action_contact_details:
                 activity.switchToContactDetails(conversation.getContact());
@@ -2034,6 +2032,10 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             if (scrollState != null) {
                 outState.putParcelable(STATE_SCROLL_POSITION, scrollState);
             }
+            final ArrayList<Attachment> attachments = mediaPreviewAdapter.getAttachments();
+            if (attachments.size() > 0) {
+                outState.putParcelableArrayList(STATE_MEDIA_PREVIEWS, attachments);
+            }
         }
     }
 
@@ -2044,10 +2046,14 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             return;
         }
         String uuid = savedInstanceState.getString(STATE_CONVERSATION_UUID);
+        ArrayList<Attachment> attachments = savedInstanceState.getParcelableArrayList(STATE_MEDIA_PREVIEWS);
         pendingLastMessageUuid.push(savedInstanceState.getString(STATE_LAST_MESSAGE_UUID, null));
         if (uuid != null) {
             QuickLoader.set(uuid);
             this.pendingConversationsUuid.push(uuid);
+            if (attachments != null && attachments.size() > 0) {
+                this.pendingMediaPreviews.push(attachments);
+            }
             String takePhotoUri = savedInstanceState.getString(STATE_PHOTO_URI);
             if (takePhotoUri != null) {
                 pendingTakePhotoUri.push(Uri.parse(takePhotoUri));
@@ -3044,8 +3050,14 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         reInit(conversation);
         ScrollState scrollState = pendingScrollState.pop();
         String lastMessageUuid = pendingLastMessageUuid.pop();
+        List<Attachment> attachments = pendingMediaPreviews.pop();
         if (scrollState != null) {
             setScrollPosition(scrollState, lastMessageUuid);
+        }
+        if (attachments != null && attachments.size() > 0) {
+            Log.d(Config.LOGTAG, "had attachments on restore");
+            mediaPreviewAdapter.addMediaPreviews(attachments);
+            toggleInputMethod();
         }
         return true;
     }
@@ -3059,7 +3071,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             Log.e(Config.LOGTAG, "cleared pending photo uri");
         }
     }
-
 
 
     public Conversation getConversation() {
