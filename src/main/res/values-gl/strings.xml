@@ -586,8 +586,6 @@
   <string name="contacts_have_read_up_to_this_point">%s leu ate este punto</string>
   <string name="contact_has_read_up_to_this_point">%s leeu ate este punto</string>
   <string name="contacts_and_n_more_have_read_up_to_this_point">%1$s +%2$d máis leron ate este punto</string>
-  <string name="pref_return_to_previous">Compartición rápida</string>
-  <string name="pref_return_to_previous_summary">Voltar inmediatamente a actividade anterior no lugar de abrir a conversa despois de compartir algo</string>
   <string name="invalid_muc_nick">Alcume non válido</string>
   <string name="title_activity_share_via_account">Compartir coa conta</string>
 </resources>
