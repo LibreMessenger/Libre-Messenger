@@ -674,8 +674,6 @@
   <string name="contacts_have_read_up_to_this_point">%s nabasa hanggang sa puntong ito</string>
   <string name="contact_has_read_up_to_this_point">%s ay nagbasa hanggang sa puntong ito</string>
   <string name="contacts_and_n_more_have_read_up_to_this_point">Ang %1$s at %2$d pa ay nagbasa hanggang sa puntong ito</string>
-  <string name="pref_return_to_previous">Mabilis na Pamamahagi</string>
-  <string name="pref_return_to_previous_summary">Kaagad na bumalik sa nakaraang aktibidad sa halip na buksan ang pag-uusap pagkatapos magbahagi ng isang bagay</string>
   <string name="conversation_unencrypted_hint">Hindi naka-encrypt ang chat na ito, para sa mga kadahilanang pang-seguridad na dapat mong isaaktibo ang pag-encrypt ng mensahe sa pamamagitan ng paggamit ng icon ng lock. Ang mas mainam na pag-encrypt ay OMEMO.</string>
   <string name="pref_warn_unencrypted_chat">Mag-babala kung hindi naka-encrypt ang chat</string>
   <string name="pref_warn_unencrypted_chat_summary">Kung magagamit ang pag-encrypt ng mensahe, dapat mong gamitin ito. Kung hindi mo ginagamit ang pag-encrypt ng mensahe, magpakita ng mensahe ng babala sa loob ng chat.</string>
