@@ -586,8 +586,6 @@
   <string name="contacts_have_read_up_to_this_point">%s(e)k puntu honetaraino irakurri du</string>
   <string name="contact_has_read_up_to_this_point">%s(e)k puntu honetaraino irakurri du</string>
   <string name="contacts_and_n_more_have_read_up_to_this_point">%1$s +%2$d gehiago puntu honetaraino irakurri dute</string>
-  <string name="pref_return_to_previous">Partekatze azkarra</string>
-  <string name="pref_return_to_previous_summary">Zuzenean aurreko aktibitatera itzuli elkarrizketa ireki beharrean zerbait partekatu ondoren</string>
   <string name="invalid_muc_nick">Ezizen ez balioduna</string>
   <string name="title_activity_share_via_account">Kontu bidez partekatu</string>
 </resources>
