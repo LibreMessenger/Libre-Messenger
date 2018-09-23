@@ -56,12 +56,11 @@ import de.pixart.messenger.services.MessageSearchTask;
 import de.pixart.messenger.ui.adapter.MessageAdapter;
 import de.pixart.messenger.ui.interfaces.OnSearchResultsAvailable;
 import de.pixart.messenger.ui.util.ChangeWatcher;
-import de.pixart.messenger.ui.util.StyledAttributes;
 import de.pixart.messenger.ui.util.DateSeparator;
-import de.pixart.messenger.ui.util.Drawable;
 import de.pixart.messenger.ui.util.ListViewUtils;
 import de.pixart.messenger.ui.util.PendingItem;
 import de.pixart.messenger.ui.util.ShareUtil;
+import de.pixart.messenger.ui.util.StyledAttributes;
 import de.pixart.messenger.utils.FtsUtils;
 import de.pixart.messenger.utils.MessageUtils;
 

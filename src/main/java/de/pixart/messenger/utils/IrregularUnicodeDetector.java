@@ -73,7 +73,7 @@ public class IrregularUnicodeDetector {
     }
 
     public static Spannable style(Context context, Jid jid) {
-        return style(jid, StyledAttributes.get(context, R.attr.color_warning));
+        return style(jid, StyledAttributes.getColor(context, R.attr.color_warning));
     }
 
     private static Spannable style(Jid jid, @ColorInt int color) {

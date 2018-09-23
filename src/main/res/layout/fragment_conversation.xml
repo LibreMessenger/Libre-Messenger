@@ -86,6 +86,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_toStartOf="@+id/textSendButton"
+                    android:background="@drawable/message_bubble_sent_blue"
                     android:orientation="horizontal"
                     android:paddingTop="8dp"
                     android:requiresFadingEdge="horizontal"

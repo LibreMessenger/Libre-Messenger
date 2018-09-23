@@ -105,16 +105,16 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
             }
         }
         if (offline) {
-            viewHolder.name.setTextColor(StyledAttributes.get(activity, R.attr.text_Color_Main));
+            viewHolder.name.setTextColor(StyledAttributes.getColor(activity, R.attr.text_Color_Main));
             viewHolder.name.setAlpha(INACTIVE_ALPHA);
             viewHolder.jid.setAlpha(INACTIVE_ALPHA);
             viewHolder.avatar.setAlpha(INACTIVE_ALPHA);
             viewHolder.tags.setAlpha(INACTIVE_ALPHA);
         } else {
             if (ShowPresenceColoredNames()) {
-                viewHolder.name.setTextColor(color != 0 ? color : StyledAttributes.get(activity, R.attr.text_Color_Main));
+                viewHolder.name.setTextColor(color != 0 ? color : StyledAttributes.getColor(activity, R.attr.text_Color_Main));
             } else {
-                viewHolder.name.setTextColor(StyledAttributes.get(activity, R.attr.text_Color_Main));
+                viewHolder.name.setTextColor(StyledAttributes.getColor(activity, R.attr.text_Color_Main));
             }
             viewHolder.name.setAlpha(ACTIVE_ALPHA);
             viewHolder.jid.setAlpha(ACTIVE_ALPHA);

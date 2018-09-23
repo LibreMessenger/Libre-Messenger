@@ -38,6 +38,7 @@ import de.pixart.messenger.crypto.OmemoSetting;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.services.ExportLogsService;
 import de.pixart.messenger.services.MemorizingTrustManager;
+import de.pixart.messenger.ui.util.StyledAttributes;
 import de.pixart.messenger.utils.TimeframeUtils;
 import rocks.xmpp.addr.Jid;
 

@@ -171,6 +171,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     private Conversation conversation;
     private Toast messageLoaderToast;
     private ConversationsActivity activity;
+    private Menu mOptionsMenu;
     protected OnClickListener clickToVerify = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -1068,6 +1069,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         boolean hasAttachments = mediaPreviewAdapter.hasAttachments();
         binding.textinput.setVisibility(hasAttachments ? View.GONE : View.VISIBLE);
         binding.mediaPreview.setVisibility(hasAttachments ? View.VISIBLE : View.GONE);
+        ConversationMenuConfigurator.configureAttachmentMenu(conversation, mOptionsMenu, activity.xmppConnectionService.getAttachmentChoicePreference(), hasAttachments);
         updateSendButton();
     }
 
@@ -1117,6 +1119,8 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        mOptionsMenu = menu;
+        boolean hasAttachments = mediaPreviewAdapter != null && mediaPreviewAdapter.hasAttachments();
         menuInflater.inflate(R.menu.fragment_conversation, menu);
         final MenuItem menuInviteContact = menu.findItem(R.id.action_invite);
         final MenuItem menuNeedHelp = menu.findItem(R.id.action_create_issue);
@@ -1139,7 +1143,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             }
             menuNeedHelp.setVisible(true);
             menuSearchUpdates.setVisible(false);
-            ConversationMenuConfigurator.configureAttachmentMenu(conversation, menu, activity.xmppConnectionService.getAttachmentChoicePreference());
+            ConversationMenuConfigurator.configureAttachmentMenu(conversation, menu, activity.xmppConnectionService.getAttachmentChoicePreference(), hasAttachments);
             ConversationMenuConfigurator.configureEncryptionMenu(conversation, menu);
         } else {
             menuNeedHelp.setVisible(false);
@@ -1159,7 +1163,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         binding.textinput.addTextChangedListener(new StylingHelper.MessageEditorStyler(binding.textinput));
         binding.textinput.setOnEditorActionListener(mEditorActionListener);
         binding.textinput.setRichContentListener(new String[]{"image/*"}, mEditorContentListener);
-        binding.textinput.setBackgroundResource(activity.isDarkTheme() ? R.drawable.message_bubble_sent_blue_dark : R.drawable.message_bubble_sent_blue);
+        binding.textinput.setBackgroundResource(messageInputBubble());
 
         binding.textSendButton.setOnClickListener(this.mSendButtonListener);
         binding.textSendButton.setOnLongClickListener(this.mSendButtonLongListener);
@@ -1170,6 +1174,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         binding.messagesView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
         mediaPreviewAdapter = new MediaPreviewAdapter(this);
         binding.mediaPreview.setAdapter(mediaPreviewAdapter);
+        binding.mediaPreview.setBackgroundResource(messageInputBubble());
         messageListAdapter = new MessageAdapter((XmppActivity) getActivity(), this.messageList);
         messageListAdapter.setOnContactPictureClicked(message -> {
             String fingerprint;
@@ -3072,6 +3077,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         }
     }
 
+    private int messageInputBubble() {
+        return activity.isDarkTheme() ? R.drawable.message_bubble_sent_blue_dark : R.drawable.message_bubble_sent_blue;
+    }
 
     public Conversation getConversation() {
         return conversation;
