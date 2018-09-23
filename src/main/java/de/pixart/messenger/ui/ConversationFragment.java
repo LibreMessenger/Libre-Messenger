@@ -2131,6 +2131,8 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         }
         updateChatState(this.conversation, msg);
         messageListAdapter.stopAudioPlayer();
+        mediaPreviewAdapter.clearPreviews();
+        toggleInputMethod();
     }
 
     public void reInit(Conversation conversation, Bundle extras) {

@@ -179,6 +179,11 @@ public class MediaPreviewAdapter extends RecyclerView.Adapter<MediaPreviewAdapte
         }
     }
 
+    public void clearPreviews() {
+        this.mediaPreviews.clear();
+    }
+
+
     class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 
         private final MediaPreviewBinding binding;
