@@ -431,7 +431,6 @@ public class XmppConnectionService extends Service {
     public void stopForcingForegroundNotification() {
         mForceForegroundService.set(false);
         toggleForegroundService();
-        mNotificationService.dismissForcedForegroundNotification();
     }
 
     public boolean areMessagesInitialized() {
@@ -1233,19 +1232,21 @@ public class XmppConnectionService extends Service {
     }
 
     public void toggleForegroundService() {
+        final boolean status;
         if (mForceForegroundService.get() || (Compatibility.keepForegroundService(this) && hasEnabledAccounts())) {
             startForeground(NotificationService.FOREGROUND_NOTIFICATION_ID, this.mNotificationService.createForegroundNotification());
-            Log.d(Config.LOGTAG, "started foreground service");
+            status = true;
         } else {
             stopForeground(true);
-            Log.d(Config.LOGTAG, "stopped foreground service");
+            mNotificationService.dismissForcedForegroundNotification(); //if the channel was changed the previous call might fail
+            status = false;
         }
+        Log.d(Config.LOGTAG, "ForegroundService: " + (status ? "on" : "off"));
     }
 
     @Override
     public void onTaskRemoved(final Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
-        //TODO check for accounts enabled
         if ((Compatibility.keepForegroundService(this) && hasEnabledAccounts()) || mForceForegroundService.get()) {
             Log.d(Config.LOGTAG, "ignoring onTaskRemoved because foreground service is activated");
         } else {
@@ -2670,7 +2671,7 @@ public class XmppConnectionService extends Service {
 
     private boolean hasEnabledAccounts() {
         if (this.accounts == null) {
-            return true; // set to true if accounts could not be fetched - used for notifications
+            return false; // set to false if accounts could not be fetched - used for notifications
         }
         for (Account account : this.accounts) {
             if (account.isEnabled()) {
