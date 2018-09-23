@@ -670,8 +670,6 @@
   <string name="contacts_have_read_up_to_this_point">%s telah membaca sampai saat ini</string>
   <string name="contact_has_read_up_to_this_point">%s telah membaca sampai saat ini</string>
   <string name="contacts_and_n_more_have_read_up_to_this_point">%1$s dan %2$d lebih banyak membaca sampai saat ini</string>
-  <string name="pref_return_to_previous">Berbagi Cepat</string>
-  <string name="pref_return_to_previous_summary">Segera kembali ke aktivitas sebelumnya, sebelum membuka percakapan setelah berbagi sesuatu</string>
   <string name="conversation_unencrypted_hint">Chat ini tidak terenkripsi, untuk alasan keamanan Anda harus mengaktifkan enkripsi pesan dengan menggunakan ikon kunci. Enkripsi yang lebih baik adalah OMEMO.</string>
   <string name="pref_warn_unencrypted_chat">Peringatkan jika obrolan tidak terenkripsi</string>
   <string name="pref_warn_unencrypted_chat_summary">Jika enkripsi pesan tersedia, Anda harus menggunakannya. Jika Anda tidak menggunakan enkripsi pesan, tampilkan pesan peringatan di dalam obrolan.</string>
