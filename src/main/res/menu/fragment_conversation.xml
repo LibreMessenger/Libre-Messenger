@@ -5,8 +5,8 @@
         android:id="@+id/action_security"
         android:icon="?attr/icon_not_secure"
         android:orderInCategory="20"
-        app:showAsAction="always"
-        android:title="@string/action_secure" >
+        android:title="@string/action_secure"
+        app:showAsAction="always">
         <menu>
             <group android:checkableBehavior="single">
                 <item
@@ -28,8 +28,8 @@
         android:id="@+id/action_attach_file"
         android:icon="?attr/icon_new_attachment"
         android:orderInCategory="30"
-        app:showAsAction="always"
-        android:title="@string/attach_file" >
+        android:title="@string/attach_file"
+        app:showAsAction="always">
         <menu>
 
             <item
@@ -45,7 +45,13 @@
             <item
                 android:id="@+id/attach_take_picture"
                 android:icon="?attr/ic_attach_camera"
-                android:title="@string/attach_take_from_camera" />
+                android:title="@string/action_take_photo" />
+
+            <item
+                android:id="@+id/attach_record_video"
+                android:icon="?attr/ic_attach_videocam"
+                android:title="@string/action_take_video" />
+
             <item
                 android:id="@+id/attach_record_voice"
                 android:icon="?attr/ic_attach_record"
@@ -60,33 +66,33 @@
     <item
         android:id="@+id/action_invite"
         android:orderInCategory="45"
-        app:showAsAction="never"
-        android:title="@string/invite_contact" />
+        android:title="@string/invite_contact"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_clear_history"
         android:orderInCategory="50"
-        app:showAsAction="never"
-        android:title="@string/action_clear_history" />
+        android:title="@string/action_clear_history"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_archive_chat"
         android:orderInCategory="60"
-        app:showAsAction="never"
-        android:title="@string/action_end_conversation" />
+        android:title="@string/action_end_conversation"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_create_issue"
         android:orderInCategory="100"
-        app:showAsAction="never"
-        android:title="@string/create_issue" />
+        android:title="@string/create_issue"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_group_details"
+        android:icon="@drawable/ic_group_white_24dp"
         android:orderInCategory="100"
         android:title="@string/action_group_details"
-        android:icon="@drawable/ic_group_white_24dp"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_contact_details"
+        android:icon="@drawable/ic_contact_white_24dp"
         android:orderInCategory="100"
         android:title="@string/action_contact_details"
-        android:icon="@drawable/ic_contact_white_24dp"
         app:showAsAction="always" />
 </menu>

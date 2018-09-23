@@ -105,7 +105,20 @@ public class SendButtonTool {
                     default:
                         return getThemeResource(activity, R.attr.ic_send_text_offline, R.drawable.ic_send_text_offline);
                 }
-            case TAKE_FROM_CAMERA:
+            case RECORD_VIDEO:
+                switch (status) {
+                    case CHAT:
+                    case ONLINE:
+                        return R.drawable.ic_send_videocam_online;
+                    case AWAY:
+                        return R.drawable.ic_send_videocam_away;
+                    case XA:
+                    case DND:
+                        return R.drawable.ic_send_videocam_dnd;
+                    default:
+                        return getThemeResource(activity, R.attr.ic_send_videocam_offline, R.drawable.ic_send_videocam_offline);
+                }
+            case TAKE_PHOTO:
                 switch (status) {
                     case CHAT:
                     case ONLINE:

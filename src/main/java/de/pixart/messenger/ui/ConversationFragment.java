@@ -136,18 +136,18 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     public static final int REQUEST_ADD_EDITOR_CONTENT = 0x0211;
     public static final int ATTACHMENT_CHOICE = 0x0300;
     public static final int ATTACHMENT_CHOICE_CHOOSE_IMAGE = 0x0301;
-    public static final int ATTACHMENT_CHOICE_TAKE_FROM_CAMERA = 0x0302;
+    public static final int ATTACHMENT_CHOICE_TAKE_PHOTO = 0x0302;
     public static final int ATTACHMENT_CHOICE_CHOOSE_FILE = 0x0303;
     public static final int ATTACHMENT_CHOICE_RECORD_VOICE = 0x0304;
     public static final int ATTACHMENT_CHOICE_LOCATION = 0x0305;
     public static final int ATTACHMENT_CHOICE_CHOOSE_VIDEO = 0x0306;
+    public static final int ATTACHMENT_CHOICE_RECORD_VIDEO = 0x0307;
     public static final int ATTACHMENT_CHOICE_INVALID = 0x0399;
 
     public static final String RECENTLY_USED_QUICK_ACTION = "recently_used_quick_action";
     public static final String STATE_CONVERSATION_UUID = ConversationFragment.class.getName() + ".uuid";
     public static final String STATE_SCROLL_POSITION = ConversationFragment.class.getName() + ".scroll_position";
     public static final String STATE_PHOTO_URI = ConversationFragment.class.getName() + ".media_previews";
-    public static final String STATE_VIDEO_URI = ConversationFragment.class.getName() + ".media_previews";
     public static final String STATE_MEDIA_PREVIEWS = ConversationFragment.class.getName() + ".take_photo_uri";
 
     private static final String STATE_LAST_MESSAGE_UUID = "state_last_message_uuid";
@@ -459,7 +459,8 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 switch (action) {
                     case CHOOSE_ATTACHMENT:
                         choose_attachment(v);
-                    case TAKE_FROM_CAMERA:
+                    case TAKE_PHOTO:
+                    case RECORD_VIDEO:
                     case SEND_LOCATION:
                     case RECORD_VOICE:
                     case CHOOSE_PICTURE:
@@ -630,6 +631,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             switch (attachmentItem.getItemId()) {
                 case R.id.attach_choose_picture:
                 case R.id.attach_take_picture:
+                case R.id.attach_record_video:
                 case R.id.attach_choose_file:
                 case R.id.attach_record_voice:
                 case R.id.attach_location:
@@ -1005,7 +1007,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 mediaPreviewAdapter.addMediaPreviews(imageUris);
                 toggleInputMethod();
                 break;
-            case ATTACHMENT_CHOICE_TAKE_FROM_CAMERA:
+            case ATTACHMENT_CHOICE_TAKE_PHOTO:
                 final Uri takePhotoUri = pendingTakePhotoUri.pop();
                 if (takePhotoUri != null) {
                     mediaPreviewAdapter.addMediaPreviews(Attachment.of(getActivity(), takePhotoUri, Attachment.Type.IMAGE));
@@ -1015,6 +1017,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 }
                 break;
             case ATTACHMENT_CHOICE_CHOOSE_FILE:
+            case ATTACHMENT_CHOICE_RECORD_VIDEO:
             case ATTACHMENT_CHOICE_RECORD_VOICE:
                 final Attachment.Type type = requestCode == ATTACHMENT_CHOICE_RECORD_VOICE ? Attachment.Type.RECORDING : Attachment.Type.FILE;
                 final List<Attachment> fileUris = Attachment.extractAttachments(getActivity(), data, type);
@@ -1444,6 +1447,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 break;
             case R.id.attach_choose_picture:
             case R.id.attach_take_picture:
+            case R.id.attach_record_video:
             case R.id.attach_choose_file:
             case R.id.attach_record_voice:
             case R.id.attach_location:
@@ -1500,7 +1504,10 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 attachFile(ATTACHMENT_CHOICE_CHOOSE_IMAGE);
                 break;
             case R.id.attach_take_picture:
-                attachFile(ATTACHMENT_CHOICE_TAKE_FROM_CAMERA);
+                attachFile(ATTACHMENT_CHOICE_TAKE_PHOTO);
+                break;
+            case R.id.attach_record_video:
+                attachFile(ATTACHMENT_CHOICE_RECORD_VIDEO);
                 break;
             case R.id.attach_choose_file:
                 attachFile(ATTACHMENT_CHOICE_CHOOSE_FILE);
@@ -1560,7 +1567,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             if (!hasPermissions(attachmentChoice, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO)) {
                 return;
             }
-        } else if (attachmentChoice == ATTACHMENT_CHOICE_TAKE_FROM_CAMERA) {
+        } else if (attachmentChoice == ATTACHMENT_CHOICE_TAKE_PHOTO || attachmentChoice == ATTACHMENT_CHOICE_RECORD_VIDEO) {
             if (!hasPermissions(attachmentChoice, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)) {
                 return;
             }
@@ -1746,7 +1753,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         final int encryption = conversation.getNextEncryption();
         final Account account = conversation.getAccount();
         final PresenceSelector.OnPresenceSelected callback = () -> {
-            final Intent intent = new Intent();
+            Intent intent = new Intent();
             boolean chooser = false;
             switch (attachmentChoice) {
                 case ATTACHMENT_CHOICE_CHOOSE_IMAGE:
@@ -1763,32 +1770,16 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     intent.addCategory(Intent.CATEGORY_OPENABLE);
                     intent.setAction(Intent.ACTION_GET_CONTENT);
                     break;
-                case ATTACHMENT_CHOICE_TAKE_FROM_CAMERA:
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle(getString(R.string.attach_take_from_camera));
-                    builder.setNegativeButton(getString(R.string.action_take_photo),
-                            (dialog, which) -> {
-                                final Uri uri = activity.xmppConnectionService.getFileBackend().getTakePhotoUri();
-                                pendingTakePhotoUri.push(uri);
-                                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-                                startActivityForResult(intent, attachmentChoice);
-                                activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
-                            });
-                    builder.setPositiveButton(getString(R.string.action_take_video),
-                            (dialog, which) -> {
-                                final Uri uri = activity.xmppConnectionService.getFileBackend().getTakeVideoUri();
-                                pendingTakeVideoUri.push(uri);
-                                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                intent.setAction(MediaStore.ACTION_VIDEO_CAPTURE);
-                                startActivityForResult(intent, attachmentChoice);
-                                activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
-                            });
-                    builder.create().show();
+                case ATTACHMENT_CHOICE_RECORD_VIDEO:
+                    intent.setAction(MediaStore.ACTION_VIDEO_CAPTURE);
+                    break;
+                case ATTACHMENT_CHOICE_TAKE_PHOTO:
+                    final Uri uri = activity.xmppConnectionService.getFileBackend().getTakePhotoUri();
+                    pendingTakePhotoUri.push(uri);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                    intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
                     break;
                 case ATTACHMENT_CHOICE_CHOOSE_FILE:
                     chooser = true;
@@ -1798,12 +1789,10 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     intent.setAction(Intent.ACTION_GET_CONTENT);
                     break;
                 case ATTACHMENT_CHOICE_RECORD_VOICE:
-                    startActivityForResult(new Intent(getActivity(), RecordingActivity.class), attachmentChoice);
-                    activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+                    intent = new Intent(getActivity(), RecordingActivity.class);
                     break;
                 case ATTACHMENT_CHOICE_LOCATION:
-                    startActivityForResult(new Intent(getActivity(), ShareLocationActivity.class), attachmentChoice);
-                    activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+                    intent = new Intent(getActivity(), ShareLocationActivity.class);
                     break;
             }
             if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -1812,8 +1801,10 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     startActivityForResult(
                             Intent.createChooser(intent, getString(R.string.perform_action_with)),
                             attachmentChoice);
+                    activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                 } else {
                     startActivityForResult(intent, attachmentChoice);
+                    activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                 }
             }
         };
@@ -2025,13 +2016,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         if (conversation != null) {
             outState.putString(STATE_CONVERSATION_UUID, conversation.getUuid());
             outState.putString(STATE_LAST_MESSAGE_UUID, lastMessageUuid);
-            final Uri PhotoUri = pendingTakePhotoUri.peek();
-            final Uri VideoUri = pendingTakeVideoUri.peek();
-            if (PhotoUri != null) {
-                outState.putString(STATE_PHOTO_URI, PhotoUri.toString());
-            }
-            if (VideoUri != null) {
-                outState.putString(STATE_VIDEO_URI, VideoUri.toString());
+            final Uri uri = pendingTakePhotoUri.peek();
+            if (uri != null) {
+                outState.putString(STATE_PHOTO_URI, uri.toString());
             }
             final ScrollState scrollState = getScrollPosition();
             if (scrollState != null) {
@@ -2062,10 +2049,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             String takePhotoUri = savedInstanceState.getString(STATE_PHOTO_URI);
             if (takePhotoUri != null) {
                 pendingTakePhotoUri.push(Uri.parse(takePhotoUri));
-            }
-            String takeVideoUri = savedInstanceState.getString(STATE_VIDEO_URI);
-            if (takeVideoUri != null) {
-                pendingTakeVideoUri.push(Uri.parse(takeVideoUri));
             }
             pendingScrollState.push(savedInstanceState.getParcelable(STATE_SCROLL_POSITION));
         }
