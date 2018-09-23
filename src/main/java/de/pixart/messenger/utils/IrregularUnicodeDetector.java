@@ -50,7 +50,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.pixart.messenger.R;
-import de.pixart.messenger.ui.util.Color;
+import de.pixart.messenger.ui.util.StyledAttributes;
 import rocks.xmpp.addr.Jid;
 
 public class IrregularUnicodeDetector {
@@ -73,7 +73,7 @@ public class IrregularUnicodeDetector {
     }
 
     public static Spannable style(Context context, Jid jid) {
-        return style(jid, Color.get(context, R.attr.color_warning));
+        return style(jid, StyledAttributes.get(context, R.attr.color_warning));
     }
 
     private static Spannable style(Jid jid, @ColorInt int color) {

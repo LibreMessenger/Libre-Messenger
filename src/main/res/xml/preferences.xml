@@ -203,11 +203,6 @@
             android:key="video_compression"
             android:summary="@string/pref_video_compression_summary"
             android:title="@string/pref_video_compression" />
-        <CheckBoxPreference
-            android:defaultValue="@bool/return_to_previous"
-            android:key="return_to_previous"
-            android:summary="@string/pref_return_to_previous_summary"
-            android:title="@string/pref_return_to_previous" />
     </PreferenceScreen>
     <!--status-->
     <PreferenceScreen

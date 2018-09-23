@@ -31,7 +31,7 @@ import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.Transferable;
 import de.pixart.messenger.ui.ConversationFragment;
 import de.pixart.messenger.ui.XmppActivity;
-import de.pixart.messenger.ui.util.Color;
+import de.pixart.messenger.ui.util.StyledAttributes;
 import de.pixart.messenger.ui.widget.UnreadCountCustomView;
 import de.pixart.messenger.utils.EmojiWrapper;
 import de.pixart.messenger.utils.IrregularUnicodeDetector;
@@ -97,9 +97,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         }
 
         if (conversation == ConversationFragment.getConversation(activity)) {
-            viewHolder.frame.setBackgroundColor(Color.get(activity, R.attr.color_background_tertiary));
+            viewHolder.frame.setBackgroundColor(StyledAttributes.getColor(activity, R.attr.color_background_tertiary));
         } else {
-            viewHolder.frame.setBackgroundColor(Color.get(activity, R.attr.color_background_secondary));
+            viewHolder.frame.setBackgroundColor(StyledAttributes.getColor(activity, R.attr.color_background_secondary));
         }
 
         Message message = conversation.getLatestMessage();
@@ -250,11 +250,11 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                     viewHolder.name.setTextColor(ContextCompat.getColor(activity, R.color.notavailable));
                     break;
                 default:
-                    viewHolder.name.setTextColor(Color.get(activity, R.attr.text_Color_Main));
+                    viewHolder.name.setTextColor(StyledAttributes.getColor(activity, R.attr.text_Color_Main));
                     break;
             }
         } else {
-            viewHolder.name.setTextColor(Color.get(activity, R.attr.text_Color_Main));
+            viewHolder.name.setTextColor(StyledAttributes.getColor(activity, R.attr.text_Color_Main));
         }
 
         if (activity.xmppConnectionService.indicateReceived()) {

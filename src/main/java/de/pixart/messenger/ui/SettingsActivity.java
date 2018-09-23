@@ -38,7 +38,6 @@ import de.pixart.messenger.crypto.OmemoSetting;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.services.ExportLogsService;
 import de.pixart.messenger.services.MemorizingTrustManager;
-import de.pixart.messenger.ui.util.Color;
 import de.pixart.messenger.utils.TimeframeUtils;
 import rocks.xmpp.addr.Jid;
 
@@ -85,7 +84,7 @@ public class SettingsActivity extends XmppActivity implements
             fm.beginTransaction().replace(R.id.settings_content, mSettingsFragment).commit();
         }
         mSettingsFragment.setActivityIntent(getIntent());
-        getWindow().getDecorView().setBackgroundColor(Color.get(this, R.attr.color_background_secondary));
+        getWindow().getDecorView().setBackgroundColor(StyledAttributes.getColor(this, R.attr.color_background_secondary));
         setSupportActionBar(findViewById(R.id.toolbar));
         configureActionBar(getSupportActionBar());
     }

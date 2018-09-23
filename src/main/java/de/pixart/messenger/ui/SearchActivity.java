@@ -56,7 +56,7 @@ import de.pixart.messenger.services.MessageSearchTask;
 import de.pixart.messenger.ui.adapter.MessageAdapter;
 import de.pixart.messenger.ui.interfaces.OnSearchResultsAvailable;
 import de.pixart.messenger.ui.util.ChangeWatcher;
-import de.pixart.messenger.ui.util.Color;
+import de.pixart.messenger.ui.util.StyledAttributes;
 import de.pixart.messenger.ui.util.DateSeparator;
 import de.pixart.messenger.ui.util.Drawable;
 import de.pixart.messenger.ui.util.ListViewUtils;
@@ -213,12 +213,12 @@ public class SearchActivity extends XmppActivity implements TextWatcher, OnSearc
     private void changeBackground(boolean hasSearch, boolean hasResults) {
         if (hasSearch) {
             if (hasResults) {
-                binding.searchResults.setBackgroundColor(Color.get(this, R.attr.color_background_secondary));
+                binding.searchResults.setBackgroundColor(StyledAttributes.getColor(this, R.attr.color_background_secondary));
             } else {
-                binding.searchResults.setBackground(Drawable.get(this, R.attr.activity_background_no_results));
+                binding.searchResults.setBackground(StyledAttributes.getDrawable(this, R.attr.activity_background_no_results));
             }
         } else {
-            binding.searchResults.setBackground(Drawable.get(this, R.attr.activity_background_search));
+            binding.searchResults.setBackground(StyledAttributes.getDrawable(this, R.attr.activity_background_search));
         }
     }
 

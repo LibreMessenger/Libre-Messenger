@@ -24,7 +24,7 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.ui.ManageAccountActivity;
 import de.pixart.messenger.ui.XmppActivity;
-import de.pixart.messenger.ui.util.Color;
+import de.pixart.messenger.ui.util.StyledAttributes;
 import de.pixart.messenger.utils.UIHelper;
 
 public class AccountAdapter extends ArrayAdapter<Account> {
@@ -65,14 +65,14 @@ public class AccountAdapter extends ArrayAdapter<Account> {
         statusView.setText(getContext().getString(account.getStatus().getReadableId()));
         switch (account.getStatus()) {
             case ONLINE:
-                statusView.setTextColor(Color.get(activity, R.attr.TextColorOnline));
+                statusView.setTextColor(StyledAttributes.getColor(activity, R.attr.TextColorOnline));
                 break;
             case DISABLED:
             case CONNECTING:
-                statusView.setTextColor(Color.get(activity, android.R.attr.textColorSecondary));
+                statusView.setTextColor(StyledAttributes.getColor(activity, android.R.attr.textColorSecondary));
                 break;
             default:
-                statusView.setTextColor(Color.get(activity, R.attr.TextColorError));
+                statusView.setTextColor(StyledAttributes.getColor(activity, R.attr.TextColorError));
                 break;
         }
         final SwitchCompat tglAccountState = view.findViewById(R.id.tgl_account_status);

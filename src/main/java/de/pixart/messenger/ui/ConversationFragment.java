@@ -15,8 +15,6 @@ import android.content.IntentSender.SendIntentException;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,7 +25,6 @@ import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
-import android.support.media.ExifInterface;
 import android.support.v13.view.inputmethod.InputConnectionCompat;
 import android.support.v13.view.inputmethod.InputContentInfoCompat;
 import android.support.v7.app.AlertDialog;
@@ -54,16 +51,12 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import net.java.otr4j.session.SessionStatus;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -98,9 +91,10 @@ import de.pixart.messenger.http.HttpDownloadConnection;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.services.MessageArchiveService;
 import de.pixart.messenger.services.XmppConnectionService;
+import de.pixart.messenger.ui.adapter.MediaPreviewAdapter;
 import de.pixart.messenger.ui.adapter.MessageAdapter;
 import de.pixart.messenger.ui.util.ActivityResult;
-import de.pixart.messenger.ui.util.AttachmentTool;
+import de.pixart.messenger.ui.util.Attachment;
 import de.pixart.messenger.ui.util.ConversationMenuConfigurator;
 import de.pixart.messenger.ui.util.DateSeparator;
 import de.pixart.messenger.ui.util.EditMessageActionModeCallback;
@@ -113,7 +107,6 @@ import de.pixart.messenger.ui.util.SendButtonAction;
 import de.pixart.messenger.ui.util.SendButtonTool;
 import de.pixart.messenger.ui.util.ShareUtil;
 import de.pixart.messenger.ui.widget.EditMessage;
-import de.pixart.messenger.utils.FileUtils;
 import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import de.pixart.messenger.utils.MessageUtils;
 import de.pixart.messenger.utils.NickValidityChecker;
@@ -129,7 +122,6 @@ import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.ui.XmppActivity.EXTRA_ACCOUNT;
 import static de.pixart.messenger.ui.XmppActivity.REQUEST_INVITE_TO_CONVERSATION;
-import static de.pixart.messenger.ui.util.SendButtonAction.TEXT;
 import static de.pixart.messenger.ui.util.SoftKeyboardUtils.hideSoftKeyboard;
 import static de.pixart.messenger.xmpp.Patches.ENCRYPTION_EXCEPTIONS;
 
@@ -179,6 +171,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     private Toast messageLoaderToast;
     private ConversationsActivity activity;
     private boolean reInitRequiredOnStart = true;
+    private MediaPreviewAdapter mediaPreviewAdapter;
 
     private SimpleFingerGestures gesturesDetector = new SimpleFingerGestures();
 
@@ -851,111 +844,19 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     }
 
     public void attachEditorContentToConversation(Uri uri) {
-        this.attachFileToConversation(conversation, uri, null);
+        mediaPreviewAdapter.addMediaPreviews(Attachment.of(getActivity(), uri, Attachment.Type.FILE));
+        toggleInputMethod();
     }
 
-    private void attachImageToConversation(Conversation conversation, Uri uri, boolean sendAsIs) {
+    private void attachImageToConversation(Conversation conversation, Uri uri) {
         if (conversation == null) {
             return;
         }
-        if (sendAsIs) {
-            sendImage(conversation, uri);
-            return;
-        }
-        final Conversation conversation_preview = conversation;
-        final Uri uri_preview = uri;
-        Bitmap bitmap = null;
-        try {
-            bitmap = BitmapFactory.decodeFile(FileUtils.getPath(activity, uri));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        File file = null;
-        ExifInterface exif = null;
-        int orientation = 0;
-        try {
-            file = new File(FileUtils.getPath(activity, uri));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (file != null) {
-            try {
-                exif = new ExifInterface(file.toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            orientation = exif != null ? exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL) : 0;
-        }
-        Log.d(Config.LOGTAG, "EXIF: " + orientation);
-        Bitmap rotated_image = null;
-        Log.d(Config.LOGTAG, "Rotate image");
-        try {
-            rotated_image = FileBackend.rotateBitmap(file, bitmap, orientation);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (rotated_image != null) {
-            int scaleSize = 600;
-            int originalWidth = rotated_image.getWidth();
-            int originalHeight = rotated_image.getHeight();
-            int newWidth = -1;
-            int newHeight = -1;
-            float multFactor;
-            if (originalHeight > originalWidth) {
-                newHeight = scaleSize;
-                multFactor = (float) originalWidth / (float) originalHeight;
-                newWidth = (int) (newHeight * multFactor);
-            } else if (originalWidth > originalHeight) {
-                newWidth = scaleSize;
-                multFactor = (float) originalHeight / (float) originalWidth;
-                newHeight = (int) (newWidth * multFactor);
-            } else if (originalHeight == originalWidth) {
-                newHeight = scaleSize;
-                newWidth = scaleSize;
-            }
-            Log.d(Config.LOGTAG, "Scaling preview image from " + originalHeight + "px x " + originalWidth + "px to " + newHeight + "px x " + newWidth + "px");
-            Bitmap preview = null;
-
-            try {
-                preview = Bitmap.createScaledBitmap(rotated_image, newWidth, newHeight, false);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (preview != null) {
-                ImageView ImagePreview = new ImageView(activity);
-                LinearLayout.LayoutParams vp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                ImagePreview.setLayoutParams(vp);
-                ImagePreview.setMaxWidth(newWidth);
-                ImagePreview.setMaxHeight(newHeight);
-                ImagePreview.setPadding(5, 5, 5, 5);
-                ImagePreview.setImageBitmap(preview);
-                getActivity().runOnUiThread(() -> {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                    builder.setView(ImagePreview);
-                    builder.setTitle(R.string.send_image);
-                    builder.setPositiveButton(R.string.ok, (dialog, which) -> sendImage(conversation_preview, uri_preview));
-                    builder.setOnCancelListener(dialog -> mPendingImageUris.clear());
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                        builder.setOnDismissListener(dialog -> mPendingImageUris.clear());
-                    }
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                });
-            } else {
-                getActivity().runOnUiThread(() -> Toast.makeText(getActivity(), getText(R.string.error_file_not_found), Toast.LENGTH_LONG).show());
-            }
-        } else {
-            getActivity().runOnUiThread(() -> Toast.makeText(getActivity(), getText(R.string.error_file_not_found), Toast.LENGTH_LONG).show());
-        }
-    }
-
-    private void sendImage(Conversation conversation, Uri uri) {
         final Toast prepareFileToast = Toast.makeText(getActivity(), getText(R.string.preparing_image), Toast.LENGTH_LONG);
         prepareFileToast.show();
         activity.delegateUriPermissionsToService(uri);
         activity.xmppConnectionService.attachImageToConversation(conversation, uri,
                 new UiCallback<Message>() {
-
                     @Override
                     public void userInputRequried(PendingIntent pi, Message object) {
                         hidePrepareFileToast(prepareFileToast);
@@ -981,6 +882,10 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     }
 
     private void sendMessage() {
+        if (mediaPreviewAdapter.hasAttachments()) {
+            commitAttachments();
+            return;
+        }
         final String body = binding.textinput.getText().toString();
         final Conversation conversation = this.conversation;
         if (body.length() == 0 || conversation == null) {
@@ -1086,7 +991,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     }
 
     private void handlePositiveActivityResult(int requestCode, final Intent data) {
-        final String type = data == null ? null : data.getType();
         switch (requestCode) {
             case REQUEST_TRUST_KEYS_TEXT:
                 final String body = binding.textinput.getText().toString();
@@ -1098,51 +1002,32 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 selectPresenceToAttachFile(choice);
                 break;
             case ATTACHMENT_CHOICE_CHOOSE_IMAGE:
-                final List<Uri> imageUris = AttachmentTool.extractUriFromIntent(data);
-                final int ImageUrisCount = imageUris.size();
-                Log.d(Config.LOGTAG, "ConversationsActivity.onActivityResult() - attaching image - number of uris: " + ImageUrisCount);
-                if (ImageUrisCount == 1) {
-                    Uri uri = imageUris.get(0);
-                    Log.d(Config.LOGTAG, "ConversationsActivity.onActivityResult() - attaching image to conversations. CHOOSE_IMAGE");
-                    attachImageToConversation(conversation, uri, false);
-                } else {
-                    for (Iterator<Uri> i = imageUris.iterator(); i.hasNext(); i.remove()) {
-                        Log.d(Config.LOGTAG, "ConversationsActivity.onActivityResult() - attaching images to conversations. CHOOSE_IMAGES");
-                        attachImagesToConversation(conversation, i.next());
-                    }
-                }
+                final List<Attachment> imageUris = Attachment.extractAttachments(getActivity(), data, Attachment.Type.IMAGE);
+                mediaPreviewAdapter.addMediaPreviews(imageUris);
+                toggleInputMethod();
                 break;
             case ATTACHMENT_CHOICE_TAKE_FROM_CAMERA:
                 final Uri takePhotoUri = pendingTakePhotoUri.pop();
-                final Uri takeVideoUri = pendingTakeVideoUri.pop();
                 if (takePhotoUri != null) {
-                    attachPhotoToConversation(conversation, takePhotoUri);
-                } else if (takeVideoUri != null) {
-                    attachFileToConversation(conversation, takeVideoUri, type);
+                    mediaPreviewAdapter.addMediaPreviews(Attachment.of(getActivity(), takePhotoUri, Attachment.Type.IMAGE));
+                    toggleInputMethod();
                 } else {
-                    Log.d(Config.LOGTAG, "lost take uri. unable to to attach");
+                    Log.d(Config.LOGTAG, "lost take photo uri. unable to to attach");
                 }
                 break;
             case ATTACHMENT_CHOICE_CHOOSE_FILE:
             case ATTACHMENT_CHOICE_RECORD_VOICE:
-                final List<Uri> fileUris = AttachmentTool.extractUriFromIntent(data);
-                final PresenceSelector.OnPresenceSelected callback = () -> {
-                    for (Iterator<Uri> i = fileUris.iterator(); i.hasNext(); i.remove()) {
-                        Log.d(Config.LOGTAG, "ConversationsActivity.onActivityResult() - attaching file to conversations. CHOOSE_FILE/RECORD_VOICE");
-                        attachFileToConversation(conversation, i.next(), type);
-                    }
-                };
-                if (conversation == null || conversation.getMode() == Conversation.MODE_MULTI || FileBackend.allFilesUnderSize(getActivity(), fileUris, getMaxHttpUploadSize(conversation))) {
-                    callback.onPresenceSelected();
-                } else {
-                    activity.selectPresence(conversation, callback);
-                }
+                final Attachment.Type type = requestCode == ATTACHMENT_CHOICE_RECORD_VOICE ? Attachment.Type.RECORDING : Attachment.Type.FILE;
+                final List<Attachment> fileUris = Attachment.extractAttachments(getActivity(), data, type);
+                mediaPreviewAdapter.addMediaPreviews(fileUris);
+                toggleInputMethod();
                 break;
             case ATTACHMENT_CHOICE_LOCATION:
                 double latitude = data.getDoubleExtra("latitude", 0);
                 double longitude = data.getDoubleExtra("longitude", 0);
                 Uri geo = Uri.parse("geo:" + String.valueOf(latitude) + "," + String.valueOf(longitude));
-                attachLocationToConversation(conversation, geo);
+                mediaPreviewAdapter.addMediaPreviews(Attachment.of(getActivity(), geo, Attachment.Type.LOCATION));
+                toggleInputMethod();
                 break;
             case REQUEST_INVITE_TO_CONVERSATION:
                 XmppActivity.ConferenceInvite invite = XmppActivity.ConferenceInvite.parse(data);
@@ -1154,6 +1039,38 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 }
                 break;
         }
+    }
+
+    private void commitAttachments() {
+        final List<Attachment> attachments = mediaPreviewAdapter.getAttachments();
+        final PresenceSelector.OnPresenceSelected callback = () -> {
+            for (Iterator<Attachment> i = attachments.iterator(); i.hasNext(); i.remove()) {
+                final Attachment attachment = i.next();
+                if (attachment.getType() == Attachment.Type.LOCATION) {
+                    attachLocationToConversation(conversation, attachment.getUri());
+                } else if (attachment.getType() == Attachment.Type.IMAGE) {
+                    Log.d(Config.LOGTAG, "ConversationsActivity.commitAttachments() - attaching image to conversations. CHOOSE_IMAGE");
+                    attachImageToConversation(conversation, attachment.getUri());
+                } else {
+                    Log.d(Config.LOGTAG, "ConversationsActivity.commitAttachments() - attaching file to conversations. CHOOSE_FILE/RECORD_VOICE/RECORD_VIDEO");
+                    attachFileToConversation(conversation, attachment.getUri(), attachment.getMime());
+                }
+            }
+            mediaPreviewAdapter.notifyDataSetChanged();
+            toggleInputMethod();
+        };
+        if (conversation == null || conversation.getMode() == Conversation.MODE_MULTI || FileBackend.allFilesUnderSize(getActivity(), attachments, getMaxHttpUploadSize(conversation))) {
+            callback.onPresenceSelected();
+        } else {
+            activity.selectPresence(conversation, callback);
+        }
+    }
+
+    public void toggleInputMethod() {
+        boolean hasAttachments = mediaPreviewAdapter.hasAttachments();
+        binding.textinput.setVisibility(hasAttachments ? View.GONE : View.VISIBLE);
+        binding.mediaPreview.setVisibility(hasAttachments ? View.VISIBLE : View.GONE);
+        updateSendButton();
     }
 
     private void handleNegativeActivityResult(int requestCode) {
@@ -1253,6 +1170,8 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 
         binding.messagesView.setOnScrollListener(mOnScrollListener);
         binding.messagesView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
+        mediaPreviewAdapter = new MediaPreviewAdapter(this);
+        binding.mediaPreview.setAdapter(mediaPreviewAdapter);
         messageListAdapter = new MessageAdapter((XmppActivity) getActivity(), this.messageList);
         messageListAdapter.setOnContactPictureClicked(message -> {
             String fingerprint;
@@ -1871,6 +1790,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 case ATTACHMENT_CHOICE_CHOOSE_FILE:
                     chooser = true;
                     intent.setType("*/*");
+                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                     intent.addCategory(Intent.CATEGORY_OPENABLE);
                     intent.setAction(Intent.ACTION_GET_CONTENT);
                     break;
@@ -2361,6 +2281,12 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         final String nick = extras.getString(ConversationsActivity.EXTRA_NICK);
         final boolean asQuote = extras.getBoolean(ConversationsActivity.EXTRA_AS_QUOTE);
         final boolean pm = extras.getBoolean(ConversationsActivity.EXTRA_IS_PRIVATE_MESSAGE, false);
+        final List<Uri> uris = extractUris(extras);
+        if (uris != null && uris.size() > 0) {
+            mediaPreviewAdapter.addMediaPreviews(Attachment.of(getActivity(), uris));
+            toggleInputMethod();
+            return;
+        }
         if (nick != null) {
             if (pm) {
                 Jid jid = conversation.getJid();
@@ -2386,6 +2312,19 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         final Message message = downloadUuid == null ? null : conversation.findMessageWithFileAndUuid(downloadUuid);
         if (message != null) {
             startDownloadable(message);
+        }
+    }
+
+    private List<Uri> extractUris(Bundle extras) {
+        final List<Uri> uris = extras.getParcelableArrayList(Intent.EXTRA_STREAM);
+        if (uris != null) {
+            return uris;
+        }
+        final Uri uri = extras.getParcelable(Intent.EXTRA_STREAM);
+        if (uri != null) {
+            return Collections.singletonList(uri);
+        } else {
+            return null;
         }
     }
 
@@ -2603,11 +2542,17 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     }
 
     public void updateSendButton() {
+        boolean hasAttachments = mediaPreviewAdapter != null && mediaPreviewAdapter.hasAttachments();
         boolean useSendButtonToIndicateStatus = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("send_button_status", getResources().getBoolean(R.bool.send_button_status));
         final Conversation c = this.conversation;
         final Presence.Status status;
         final String text = this.binding.textinput == null ? "" : this.binding.textinput.getText().toString();
-        SendButtonAction action = SendButtonTool.getAction(getActivity(), c, text);
+        final SendButtonAction action;
+        if (hasAttachments) {
+            action = SendButtonAction.TEXT;
+        } else {
+            action = SendButtonTool.getAction(getActivity(), c, text);
+        }
         if (useSendButtonToIndicateStatus && c.getAccount().getStatus() == Account.State.ONLINE) {
             if (activity.xmppConnectionService != null && activity.xmppConnectionService.getMessageArchiveService().isCatchingUp(c)) {
                 status = Presence.Status.OFFLINE;
@@ -2618,9 +2563,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             }
         } else {
             status = Presence.Status.OFFLINE;
-        }
-        if (action.toString().equals("CHOOSE_ATTACHMENT") && !activity.xmppConnectionService.getAttachmentChoicePreference()) {
-            action = TEXT;
         }
         this.binding.textSendButton.setTag(action);
         this.binding.textSendButton.setImageResource(SendButtonTool.getSendButtonImageResource(getActivity(), action, status));
