@@ -231,6 +231,20 @@
   <string name="publishing">Публикация…</string>
   <string name="error_publish_avatar_server_reject">Сервер отклонил вашу публикацию</string>
   <string name="error_saving_avatar">Невозможно сохранить аватар на диск</string>
+  <string name="account_already_exists">Этот аккаунт уже существует</string>
+  <string name="next">Далее</string>
+  <string name="server_info_session_established">Текущая сессия установлена</string>
+  <string name="skip">Пропустить</string>
+  <string name="disable_notifications">Отключить уведомления</string>
+  <string name="enable">Включить</string>
+  <string name="conference_requires_password">Групповой чат требует пароль</string>
+  <string name="enter_password">Введите пароль</string>
+  <string name="request_now">Запросить сейчас</string>
+  <string name="ignore">Игнорировать</string>
+  <string name="pref_allow_message_correction">Разрешить коррекцию сообщений</string>
   <string name="pref_expert_options">Продвинутые настройки</string>
   <string name="title_activity_about">О программе</string>
+  <string name="title_pref_quiet_hours">Тихие часы</string>
+  <string name="title_pref_quiet_hours_start_time">Время начала</string>
+  <string name="title_pref_quiet_hours_end_time">Время окончания</string>
 </resources>
