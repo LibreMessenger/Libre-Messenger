@@ -598,6 +598,4 @@ d\'altres proveïdors donant-los la vostra ID Jabber completa.</string>
   <string name="server_info_partial">parcial</string>
   <string name="no_application_found_to_open_link">No s\'ha trobat cap aplicació per obrir el vincle</string>
   <string name="contact_has_read_up_to_this_point">%s ha llegit fins aquest punt</string>
-  <string name="pref_return_to_previous">Compartició ràpida</string>
-  <string name="pref_return_to_previous_summary">Torneu immediatament a l\'activitat anterior en comptes d\'obrir la conversa després d\'haver compartit alguna cosa</string>
 </resources>
