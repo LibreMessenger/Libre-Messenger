@@ -250,6 +250,7 @@
   <string name="pref_allow_message_correction">Разрешить коррекцию сообщений</string>
   <string name="pref_expert_options">Продвинутые настройки</string>
   <string name="title_activity_about">О программе</string>
+  <string name="pref_about_conversations_summary">Информация о сборке и лицензии</string>
   <string name="title_pref_quiet_hours">Тихие часы</string>
   <string name="title_pref_quiet_hours_start_time">Время начала</string>
   <string name="title_pref_quiet_hours_end_time">Время окончания</string>
