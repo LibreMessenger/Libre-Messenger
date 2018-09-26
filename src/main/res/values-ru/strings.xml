@@ -241,6 +241,7 @@
   <string name="error_saving_avatar">Невозможно сохранить аватар на диск</string>
   <string name="or_long_press_for_default">(Или используйте долгое нажатие, чтобы вернуть значение по умолчанию)</string>
   <string name="error_publish_avatar_no_server_support">Ваш сервер не поддерживает публикацию аватаров</string>
+  <string name="private_message_to">к %s</string>
   <string name="send_private_message_to">Отправить личное сообщение для %s</string>
   <string name="connect">Подключиться</string>
   <string name="account_already_exists">Этот аккаунт уже существует</string>
@@ -273,6 +274,11 @@
   <string name="pref_use_colored_names_to_indicate_status_summary">Раскрасить имена контактов для индикации статуса контакта</string>
   <string name="pref_expert_options_other">Другие</string>
   <string name="pref_autojoin">Автоматически присоединяться к групповым чатам</string>
+  <string name="toast_message_otr_fingerprint">OTR отпечаток был скопирован в буфер обмена!</string>
+  <string name="toast_message_omemo_fingerprint">OMEMO отпечаток был скопирован в буфер обмена!</string>
+  <string name="conference_banned">Вы заблокированы в этом групповом чате</string>
+  <string name="conference_kicked">Вас отключили от этого группового чата</string>
+  <string name="conference_shutdown">Этот групповой чат был закрыт</string>
   <string name="view_media">Просмотреть медиа</string>
   <string name="media_browser">Медиа браузер</string>
 </resources>
