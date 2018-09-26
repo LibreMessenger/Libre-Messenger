@@ -824,6 +824,6 @@
     <string name="backup_channel_name">Database backup</string>
     <string name="app_update_channel_name">App update</string>
     <string name="action_group_details">Group details</string>
-    <string name="show_media">Show media</string>
+    <string name="view_media">View media</string>
     <string name="media_browser">Media browser</string>
 </resources>
