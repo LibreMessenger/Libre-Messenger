@@ -1234,14 +1234,14 @@ public class XmppConnectionService extends Service {
 
     public void toggleForegroundService() {
         final boolean status;
-        if (mForceForegroundService.get() || (Compatibility.keepForegroundService(this) && hasEnabledAccounts())) {
+        if (mForceForegroundService.get() || (Compatibility.keepForegroundService(this)/* && hasEnabledAccounts()*/)) {
             startForeground(NotificationService.FOREGROUND_NOTIFICATION_ID, this.mNotificationService.createForegroundNotification());
             status = true;
         } else {
             stopForeground(true);
-            mNotificationService.dismissForcedForegroundNotification(); //if the channel was changed the previous call might fail
             status = false;
         }
+        mNotificationService.dismissForcedForegroundNotification(); //if the channel was changed the previous call might fail
         Log.d(Config.LOGTAG, "ForegroundService: " + (status ? "on" : "off"));
     }
 
