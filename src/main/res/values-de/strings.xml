@@ -823,4 +823,6 @@
   <string name="backup_channel_name">Datenbanksicherung</string>
   <string name="app_update_channel_name">App Aktualisierung</string>
   <string name="action_group_details">Gruppenchat-Details</string>
+  <string name="view_media">Medien anzeigen</string>
+  <string name="media_browser">Medien-Browser</string>
 </resources>
