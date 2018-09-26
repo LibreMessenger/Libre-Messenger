@@ -15,6 +15,7 @@ import java.util.List;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.persistance.FileBackend;
+import de.pixart.messenger.ui.ShowFullscreenMessageActivity;
 
 public class ViewUtil {
 
@@ -25,7 +26,6 @@ public class ViewUtil {
     }
 
     public static void view(Context context, File file, String mime) {
-        Intent openIntent = new Intent(Intent.ACTION_VIEW);
         Uri uri;
         try {
             uri = FileBackend.getUriForFile(context, file);
@@ -34,17 +34,39 @@ public class ViewUtil {
             Toast.makeText(context, context.getString(R.string.no_permission_to_access_x, file.getAbsolutePath()), Toast.LENGTH_SHORT).show();
             return;
         }
-        openIntent.setDataAndType(uri, mime);
-        openIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        PackageManager manager = context.getPackageManager();
-        List<ResolveInfo> info = manager.queryIntentActivities(openIntent, 0);
-        if (info.size() == 0) {
-            openIntent.setDataAndType(uri, "*/*");
-        }
-        try {
-            context.startActivity(openIntent);
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(context, R.string.no_application_found_to_open_file, Toast.LENGTH_SHORT).show();
+        // use internal viewer for images and videos
+        if (mime.startsWith("image/")) {
+            Intent intent = new Intent(context, ShowFullscreenMessageActivity.class);
+            intent.putExtra("image", Uri.fromFile(file));
+            try {
+                context.startActivity(intent);
+                return;
+            } catch (ActivityNotFoundException e) {
+                //ignored
+            }
+        } else if (mime.startsWith("video/")) {
+            Intent intent = new Intent(context, ShowFullscreenMessageActivity.class);
+            intent.putExtra("video", Uri.fromFile(file));
+            try {
+                context.startActivity(intent);
+                return;
+            } catch (ActivityNotFoundException e) {
+                //ignored
+            }
+        } else {
+            Intent openIntent = new Intent(Intent.ACTION_VIEW);
+            openIntent.setDataAndType(uri, mime);
+            openIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            PackageManager manager = context.getPackageManager();
+            List<ResolveInfo> info = manager.queryIntentActivities(openIntent, 0);
+            if (info.size() == 0) {
+                openIntent.setDataAndType(uri, "*/*");
+            }
+            try {
+                context.startActivity(openIntent);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(context, R.string.no_application_found_to_open_file, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

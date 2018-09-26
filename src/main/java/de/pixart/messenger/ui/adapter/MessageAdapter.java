@@ -2,7 +2,6 @@ package de.pixart.messenger.ui.adapter;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -70,7 +69,6 @@ import de.pixart.messenger.services.MessageArchiveService;
 import de.pixart.messenger.services.NotificationService;
 import de.pixart.messenger.ui.ConversationFragment;
 import de.pixart.messenger.ui.ConversationsActivity;
-import de.pixart.messenger.ui.ShowFullscreenMessageActivity;
 import de.pixart.messenger.ui.XmppActivity;
 import de.pixart.messenger.ui.text.DividerSpan;
 import de.pixart.messenger.ui.text.QuoteSpan;
@@ -1046,27 +1044,6 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             return;
         }
         String mime = file.getMimeType();
-        if (mime.startsWith("image/")) {
-            Intent intent = new Intent(getContext(), ShowFullscreenMessageActivity.class);
-            intent.putExtra("image", Uri.fromFile(file));
-            try {
-                activity.startActivity(intent);
-                activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
-                return;
-            } catch (ActivityNotFoundException e) {
-                //ignored
-            }
-        } else if (mime.startsWith("video/")) {
-            Intent intent = new Intent(getContext(), ShowFullscreenMessageActivity.class);
-            intent.putExtra("video", Uri.fromFile(file));
-            try {
-                activity.startActivity(intent);
-                activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
-                return;
-            } catch (ActivityNotFoundException e) {
-                //ignored
-            }
-        }
         if (mime == null) {
             mime = "*/*";
         }
