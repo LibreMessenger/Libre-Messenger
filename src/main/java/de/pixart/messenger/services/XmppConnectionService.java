@@ -2687,6 +2687,10 @@ public class XmppConnectionService extends Service {
     }
 
     public void getAttachments(final Account account, final Jid jid, final int limit, final OnMediaLoaded onMediaLoaded) {
+        getAttachments(account.getUuid(), jid.asBareJid(), limit, onMediaLoaded);
+    }
+
+    public void getAttachments(final String account, final Jid jid, final int limit, final OnMediaLoaded onMediaLoaded) {
         new Thread(() -> onMediaLoaded.onMediaLoaded(fileBackend.convertToAttachments(databaseBackend.getRelativeFilePaths(account, jid, limit)))).start();
     }
 

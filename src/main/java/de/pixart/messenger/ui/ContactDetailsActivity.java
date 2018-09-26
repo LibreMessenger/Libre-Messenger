@@ -669,6 +669,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             }
             final int limit = GridManager.getCurrentColumnCount(this.binding.media);
             xmppConnectionService.getAttachments(account, contact.getJid().asBareJid(), limit, this);
+            this.binding.showMedia.setOnClickListener((v) -> MediaBrowserActivity.launch(this, contact));
             populateView();
         }
     }
