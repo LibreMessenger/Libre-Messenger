@@ -2,12 +2,14 @@ package de.pixart.messenger.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.support.annotation.BoolRes;
+import android.support.v4.content.ContextCompat;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,6 +27,10 @@ public class Compatibility {
             "notification_headsup",
             "vibrate_on_notification");
     private static final List<String> UNUESD_SETTINGS_PRE_TWENTYSIX = Collections.singletonList("more_notification_settings");
+
+    public static boolean hasStoragePermission(Context context) {
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.M || ContextCompat.checkSelfPermission(context, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+    }
 
     public static boolean twentySix() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;

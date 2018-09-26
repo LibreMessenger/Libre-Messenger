@@ -57,6 +57,7 @@ import de.pixart.messenger.ui.util.GridManager;
 import de.pixart.messenger.ui.util.MucDetailsContextMenuHelper;
 import de.pixart.messenger.ui.util.MyLinkify;
 import de.pixart.messenger.ui.util.SoftKeyboardUtils;
+import de.pixart.messenger.utils.Compatibility;
 import de.pixart.messenger.utils.EmojiWrapper;
 import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import de.pixart.messenger.utils.StringUtils;
@@ -337,6 +338,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         if (this.mTheme != theme) {
             recreate();
         }
+        binding.mediaWrapper.setVisibility(Compatibility.hasStoragePermission(this) ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -521,9 +523,11 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         if (uuid != null) {
             this.mConversation = xmppConnectionService.findConversationByUuid(uuid);
             if (this.mConversation != null) {
-                final int limit = GridManager.getCurrentColumnCount(this.binding.media);
-                xmppConnectionService.getAttachments(this.mConversation, limit, this);
-                this.binding.showMedia.setOnClickListener((v) -> MediaBrowserActivity.launch(this, mConversation));
+                if (Compatibility.hasStoragePermission(this)) {
+                    final int limit = GridManager.getCurrentColumnCount(this.binding.media);
+                    xmppConnectionService.getAttachments(this.mConversation, limit, this);
+                    this.binding.showMedia.setOnClickListener((v) -> MediaBrowserActivity.launch(this, mConversation));
+                }
                 updateView();
             }
         }

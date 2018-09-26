@@ -51,6 +51,7 @@ import de.pixart.messenger.ui.adapter.MediaAdapter;
 import de.pixart.messenger.ui.interfaces.OnMediaLoaded;
 import de.pixart.messenger.ui.util.Attachment;
 import de.pixart.messenger.ui.util.GridManager;
+import de.pixart.messenger.utils.Compatibility;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.IrregularUnicodeDetector;
 import de.pixart.messenger.utils.MenuDoubleTabUtil;
@@ -289,6 +290,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             this.showDynamicTags = preferences.getBoolean(SettingsActivity.SHOW_DYNAMIC_TAGS, false);
             this.showLastSeen = preferences.getBoolean("last_activity", false);
         }
+        binding.mediaWrapper.setVisibility(Compatibility.hasStoragePermission(this) ? View.VISIBLE : View.GONE);
         mMediaAdapter.setAttachments(Collections.emptyList());
     }
 
@@ -676,9 +678,11 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
                 processFingerprintVerification(mPendingFingerprintVerificationUri);
                 mPendingFingerprintVerificationUri = null;
             }
-            final int limit = GridManager.getCurrentColumnCount(this.binding.media);
-            xmppConnectionService.getAttachments(account, contact.getJid().asBareJid(), limit, this);
-            this.binding.showMedia.setOnClickListener((v) -> MediaBrowserActivity.launch(this, contact));
+            if (Compatibility.hasStoragePermission(this)) {
+                final int limit = GridManager.getCurrentColumnCount(this.binding.media);
+                xmppConnectionService.getAttachments(account, contact.getJid().asBareJid(), limit, this);
+                this.binding.showMedia.setOnClickListener((v) -> MediaBrowserActivity.launch(this, contact));
+            }
             populateView();
         }
     }

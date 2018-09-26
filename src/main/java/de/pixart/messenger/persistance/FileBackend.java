@@ -1092,7 +1092,9 @@ public class FileBackend {
                 bitmap = withGifOverlay;
             }
         }
-        cache.put(key, bitmap);
+        if (bitmap != null) {
+            cache.put(key, bitmap);
+        }
         return bitmap;
     }
 

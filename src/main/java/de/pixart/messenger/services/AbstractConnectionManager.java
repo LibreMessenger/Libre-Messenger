@@ -1,9 +1,6 @@
 package de.pixart.messenger.services;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.util.Pair;
@@ -21,7 +18,6 @@ import javax.crypto.CipherOutputStream;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.DownloadableFile;
 import de.pixart.messenger.utils.Compatibility;
@@ -128,11 +124,7 @@ public class AbstractConnectionManager {
     }
 
     public boolean hasStoragePermission() {
-        if (!Config.ONLY_INTERNAL_STORAGE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return mXmppConnectionService.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-        } else {
-            return true;
-        }
+        return Compatibility.hasStoragePermission(mXmppConnectionService);
     }
 
     public void updateConversationUi(boolean force) {
