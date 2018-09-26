@@ -32,6 +32,7 @@ import org.openintents.openpgp.util.OpenPgpUtils;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -49,6 +50,10 @@ import de.pixart.messenger.entities.MucOptions.User;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.services.XmppConnectionService.OnConversationUpdate;
 import de.pixart.messenger.services.XmppConnectionService.OnMucRosterUpdate;
+import de.pixart.messenger.ui.adapter.MediaAdapter;
+import de.pixart.messenger.ui.interfaces.OnMediaLoaded;
+import de.pixart.messenger.ui.util.Attachment;
+import de.pixart.messenger.ui.util.GridManager;
 import de.pixart.messenger.ui.util.MucDetailsContextMenuHelper;
 import de.pixart.messenger.ui.util.MyLinkify;
 import de.pixart.messenger.ui.util.SoftKeyboardUtils;
@@ -64,7 +69,7 @@ import rocks.xmpp.addr.Jid;
 import static de.pixart.messenger.entities.Bookmark.printableValue;
 import static de.pixart.messenger.utils.StringUtils.changed;
 
-public class ConferenceDetailsActivity extends XmppActivity implements OnConversationUpdate, OnMucRosterUpdate, XmppConnectionService.OnAffiliationChanged, XmppConnectionService.OnRoleChanged, XmppConnectionService.OnConfigurationPushed, TextWatcher {
+public class ConferenceDetailsActivity extends XmppActivity implements OnConversationUpdate, OnMucRosterUpdate, XmppConnectionService.OnAffiliationChanged, XmppConnectionService.OnRoleChanged, XmppConnectionService.OnConfigurationPushed, TextWatcher, OnMediaLoaded {
     public static final String ACTION_VIEW_MUC = "view_muc";
     private static final float INACTIVE_ALPHA = 0.4684f; //compromise between dark and light theme
     private Conversation mConversation;
@@ -96,6 +101,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         }
     };
     private ActivityMucDetailsBinding binding;
+    private MediaAdapter mMediaAdapter;
     private String uuid = null;
     private User mSelectedUser = null;
 
@@ -319,6 +325,9 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         this.binding.mucEditTitle.addTextChangedListener(this);
         this.binding.mucEditSubject.addTextChangedListener(this);
         this.binding.mucEditSubject.addTextChangedListener(new StylingHelper.MessageEditorStyler(this.binding.mucEditSubject));
+        mMediaAdapter = new MediaAdapter(this, R.dimen.media_size);
+        this.binding.media.setAdapter(mMediaAdapter);
+        GridManager.setupLayoutManager(this, this.binding.media, R.dimen.media_size);
     }
 
     @Override
@@ -475,6 +484,15 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         return true;
     }
 
+    @Override
+    public void onMediaLoaded(List<Attachment> attachments) {
+        runOnUiThread(() -> {
+            int limit = GridManager.getCurrentColumnCount(binding.media);
+            mMediaAdapter.setAttachments(attachments.subList(0, Math.min(limit, attachments.size())));
+            binding.mediaWrapper.setVisibility(attachments.size() > 0 ? View.VISIBLE : View.GONE);
+        });
+    }
+
     protected void saveAsBookmark() {
         xmppConnectionService.saveConversationAsBookmark(mConversation, mConversation.getMucOptions().getName());
         updateView();
@@ -503,6 +521,8 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         if (uuid != null) {
             this.mConversation = xmppConnectionService.findConversationByUuid(uuid);
             if (this.mConversation != null) {
+                final int limit = GridManager.getCurrentColumnCount(this.binding.media);
+                xmppConnectionService.getAttachments(this.mConversation, limit, this);
                 updateView();
             }
         }

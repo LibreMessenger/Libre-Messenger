@@ -114,7 +114,7 @@ public class UpdaterActivity extends XmppActivity {
                 store = null;
             }
             //delete old downloaded localVersion files
-            File dir = new File(FileBackend.getConversationsDirectory("Update", false));
+            File dir = new File(FileBackend.getAppUpdateDirectory());
             if (dir.isDirectory()) {
                 String[] children = dir.list();
                 for (String aChildren : children) {
@@ -291,7 +291,7 @@ public class UpdaterActivity extends XmppActivity {
 
     private class DownloadTask extends AsyncTask<String, Integer, String> {
 
-        File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + FileBackend.getDirectoryName("Update", false));
+        File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + FileBackend.getAppUpdateDirectory());
         File file = new File(dir, FileName);
         private Context context;
         private PowerManager.WakeLock mWakeLock;

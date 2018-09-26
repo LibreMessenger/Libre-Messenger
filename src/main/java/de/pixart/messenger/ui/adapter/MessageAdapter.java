@@ -6,7 +6,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -29,7 +28,6 @@ import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.Base64;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -77,6 +75,7 @@ import de.pixart.messenger.ui.XmppActivity;
 import de.pixart.messenger.ui.text.DividerSpan;
 import de.pixart.messenger.ui.text.QuoteSpan;
 import de.pixart.messenger.ui.util.MyLinkify;
+import de.pixart.messenger.ui.util.ViewUtil;
 import de.pixart.messenger.ui.widget.ClickableMovementMethod;
 import de.pixart.messenger.ui.widget.CopyTextView;
 import de.pixart.messenger.ui.widget.ListSelectionManager;
@@ -1068,31 +1067,10 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 //ignored
             }
         }
-        Intent openIntent = new Intent(Intent.ACTION_VIEW);
         if (mime == null) {
             mime = "*/*";
         }
-        Uri uri;
-        try {
-            uri = FileBackend.getUriForFile(activity, file);
-        } catch (SecurityException e) {
-            Log.d(Config.LOGTAG, "No permission to access " + file.getAbsolutePath(), e);
-            Toast.makeText(activity, activity.getString(R.string.no_permission_to_access_x, file.getAbsolutePath()), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        openIntent.setDataAndType(uri, mime);
-        openIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        PackageManager manager = activity.getPackageManager();
-        List<ResolveInfo> info = manager.queryIntentActivities(openIntent, 0);
-        if (info.size() == 0) {
-            openIntent.setDataAndType(uri,"*/*");
-        }
-        try {
-            getContext().startActivity(openIntent);
-            activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(activity, R.string.no_application_found_to_open_file, Toast.LENGTH_SHORT).show();
-        }
+        ViewUtil.view(activity, file, mime);
     }
 
     public void showLocation(Message message) {

@@ -116,6 +116,7 @@ import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.ui.SettingsActivity;
 import de.pixart.messenger.ui.UiCallback;
 import de.pixart.messenger.ui.interfaces.OnAvatarPublication;
+import de.pixart.messenger.ui.interfaces.OnMediaLoaded;
 import de.pixart.messenger.ui.interfaces.OnSearchResultsAvailable;
 import de.pixart.messenger.utils.Compatibility;
 import de.pixart.messenger.utils.ConversationsFileObserver;
@@ -2679,6 +2680,14 @@ public class XmppConnectionService extends Service {
             }
         }
         return false;
+    }
+
+    public void getAttachments(final Conversation conversation, int limit, final OnMediaLoaded onMediaLoaded) {
+        getAttachments(conversation.getAccount(), conversation.getJid().asBareJid(), limit, onMediaLoaded);
+    }
+
+    public void getAttachments(final Account account, final Jid jid, final int limit, final OnMediaLoaded onMediaLoaded) {
+        new Thread(() -> onMediaLoaded.onMediaLoaded(fileBackend.convertToAttachments(databaseBackend.getRelativeFilePaths(account, jid, limit)))).start();
     }
 
     public void persistSelfNick(MucOptions.User self) {

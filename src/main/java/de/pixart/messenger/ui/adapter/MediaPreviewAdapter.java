@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,7 +16,6 @@ import android.widget.ImageView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 
@@ -26,18 +24,8 @@ import de.pixart.messenger.databinding.MediaPreviewBinding;
 import de.pixart.messenger.ui.ConversationFragment;
 import de.pixart.messenger.ui.XmppActivity;
 import de.pixart.messenger.ui.util.Attachment;
-import de.pixart.messenger.ui.util.StyledAttributes;
 
 public class MediaPreviewAdapter extends RecyclerView.Adapter<MediaPreviewAdapter.MediaPreviewViewHolder> {
-
-    private static final List<String> DOCUMENT_MIMES = Arrays.asList(
-            "application/pdf",
-            "application/vnd.oasis.opendocument.text",
-            "application/msword",
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            "text/x-tex",
-            "text/plain"
-    );
 
     private final ArrayList<Attachment> mediaPreviews = new ArrayList<>();
 
@@ -89,34 +77,7 @@ public class MediaPreviewAdapter extends RecyclerView.Adapter<MediaPreviewAdapte
             loadPreview(attachment, holder.binding.mediaPreview);
         } else {
             cancelPotentialWork(attachment, holder.binding.mediaPreview);
-            holder.binding.mediaPreview.setBackgroundColor(StyledAttributes.getColor(context, R.attr.color_background_tertiary));
-            holder.binding.mediaPreview.setImageAlpha(Math.round(StyledAttributes.getFloat(context, R.attr.icon_alpha) * 255));
-            final @AttrRes int attr;
-            if (attachment.getType() == Attachment.Type.LOCATION) {
-                attr = R.attr.media_preview_location;
-            } else if (attachment.getType() == Attachment.Type.RECORDING) {
-                attr = R.attr.media_preview_recording;
-            } else {
-                final String mime = attachment.getMime();
-                if (mime == null) {
-                    attr = R.attr.media_preview_unknown;
-                } else if (mime.startsWith("audio/")) {
-                    attr = R.attr.media_preview_audio;
-                } else if (mime.equals("text/calendar") || (mime.equals("text/x-vcalendar"))) {
-                    attr = R.attr.media_preview_calendar;
-                } else if (mime.equals("text/x-vcard")) {
-                    attr = R.attr.media_preview_contact;
-                } else if (mime.equals("application/vnd.android.package-archive")) {
-                    attr = R.attr.media_preview_app;
-                } else if (mime.equals("application/zip") || mime.equals("application/rar")) {
-                    attr = R.attr.media_preview_archive;
-                } else if (DOCUMENT_MIMES.contains(mime)) {
-                    attr = R.attr.media_preview_document;
-                } else {
-                    attr = R.attr.media_preview_unknown;
-                }
-            }
-            holder.binding.mediaPreview.setImageDrawable(StyledAttributes.getDrawable(context, attr));
+            MediaAdapter.renderPreview(context, attachment, holder.binding.mediaPreview);
         }
         holder.binding.deleteButton.setOnClickListener(v -> {
             int pos = mediaPreviews.indexOf(attachment);
@@ -166,6 +127,10 @@ public class MediaPreviewAdapter extends RecyclerView.Adapter<MediaPreviewAdapte
         return mediaPreviews;
     }
 
+    public void clearPreviews() {
+        this.mediaPreviews.clear();
+    }
+
     static class AsyncDrawable extends BitmapDrawable {
         private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
 
@@ -178,11 +143,6 @@ public class MediaPreviewAdapter extends RecyclerView.Adapter<MediaPreviewAdapte
             return bitmapWorkerTaskReference.get();
         }
     }
-
-    public void clearPreviews() {
-        this.mediaPreviews.clear();
-    }
-
 
     class MediaPreviewViewHolder extends RecyclerView.ViewHolder {
 

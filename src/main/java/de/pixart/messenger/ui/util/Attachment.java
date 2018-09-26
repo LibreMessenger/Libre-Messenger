@@ -37,6 +37,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -61,12 +62,21 @@ public class Attachment implements Parcelable {
     private final Type type;
     private final UUID uuid;
     private final String mime;
+
     Attachment(Parcel in) {
         uri = in.readParcelable(Uri.class.getClassLoader());
         mime = in.readString();
         uuid = UUID.fromString(in.readString());
         type = Type.valueOf(in.readString());
     }
+
+    private Attachment(UUID uuid, Uri uri, Type type, String mime) {
+        this.uri = uri;
+        this.type = type;
+        this.mime = mime;
+        this.uuid = uuid;
+    }
+
     private Attachment(Uri uri, Type type, String mime) {
         this.uri = uri;
         this.type = type;
@@ -86,6 +96,10 @@ public class Attachment implements Parcelable {
             attachments.add(new Attachment(uri, mime != null && mime.startsWith("image/") ? Type.IMAGE : Type.FILE, mime));
         }
         return attachments;
+    }
+
+    public static Attachment of(UUID uuid, final File file, String mime) {
+        return new Attachment(uuid, Uri.fromFile(file), mime != null && (mime.startsWith("image/") || mime.startsWith("video/")) ? Type.IMAGE : Type.FILE, mime);
     }
 
     public static List<Attachment> extractAttachments(final Context context, final Intent intent, Type type) {

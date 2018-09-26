@@ -11,6 +11,7 @@
     <dimen name="avatar_item_distance">16dp</dimen>
 
     <dimen name="media_preview_size">80dp</dimen>
+    <dimen name="media_size">64dp</dimen>
     <dimen name="toolbar_elevation">4dp</dimen>
 
     <dimen name="publish_avatar_top_margin">8dp</dimen>
@@ -25,6 +26,6 @@
     <dimen name="scan_dot_size">8dp</dimen>
 
     <dimen name="background_image_opacity">0.12</dimen>
-    
+
     <dimen name="rounded_image_border">5dp</dimen>
 </resources>
