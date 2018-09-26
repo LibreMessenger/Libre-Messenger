@@ -121,6 +121,7 @@
   <string name="pref_ui_options">Интерфейс</string>
   <string name="openpgp_error">OpenKeychain сообщает об ошибке</string>
   <string name="accept">Принять</string>
+  <string name="error">Произошла ошибка</string>
   <string name="your_account">Ваш аккаунт</string>
   <string name="send_presence_updates">Посылать обновления присутствия</string>
   <string name="receive_presence_updates">Принимать обновления присутствия</string>
@@ -145,6 +146,7 @@
   <string name="account_status_regis_success">Регистрация завершена</string>
   <string name="account_status_regis_not_sup">Сервер не поддерживает регистрацию</string>
   <string name="account_status_tls_error">Согласование TLS не удалось</string>
+  <string name="account_status_policy_violation">Нарушение правил</string>
   <string name="account_status_incompatible_server">Несовместимый сервер</string>
   <string name="account_status_stream_error">Ошибка потока</string>
   <string name="encryption_choice_unencrypted">Не зашифровано</string>
@@ -225,15 +227,20 @@
   <string name="save_as_bookmark">Сохранить как закладку</string>
   <string name="delete_bookmark">Удалить закладку</string>
   <string name="bookmark_already_exists">Эта закладка уже создана</string>
+  <string name="action_edit_subject">Изменить тему группового чата</string>
   <string name="topic">Тема</string>
   <string name="joining_conference">Подключение к групповому чату…</string>
   <string name="leave">Покинуть</string>
   <string name="contact_added_you">Контакт добавил вас в список контактов</string>
+  <string name="add_back">Добавить обратно</string>
   <string name="publish">Опубликовать</string>
   <string name="touch_to_choose_picture">Дотроньтесь до аватара для выбора изображения из галлереи</string>
   <string name="publishing">Публикация…</string>
   <string name="error_publish_avatar_server_reject">Сервер отклонил вашу публикацию</string>
+  <string name="error_publish_avatar_converting">Что-то пошло не так при конвертации вашего изображения</string>
   <string name="error_saving_avatar">Невозможно сохранить аватар на диск</string>
+  <string name="or_long_press_for_default">(Или используйте долгое нажатие, чтобы вернуть значение по умолчанию)</string>
+  <string name="error_publish_avatar_no_server_support">Ваш сервер не поддерживает публикацию аватаров</string>
   <string name="send_private_message_to">Отправить личное сообщение для %s</string>
   <string name="connect">Подключиться</string>
   <string name="account_already_exists">Этот аккаунт уже существует</string>
