@@ -266,4 +266,6 @@
   <string name="pref_use_colored_names_to_indicate_status_summary">Раскрасить имена контактов для индикации статуса контакта</string>
   <string name="pref_expert_options_other">Другие</string>
   <string name="pref_autojoin">Автоматически присоединяться к групповым чатам</string>
+  <string name="view_media">Просмотреть медиа</string>
+  <string name="media_browser">Медиа браузер</string>
 </resources>
