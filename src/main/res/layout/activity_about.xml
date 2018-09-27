@@ -1,8 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/color_background_secondary"
+    android:background="?attr/color_background_tertiary"
     android:orientation="vertical"
     tools:context="de.pixart.messenger.ui.AboutActivity">
 
@@ -24,7 +25,7 @@
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:background="?attr/color_background_primary">
+                card_view:cardBackgroundColor="?attr/color_background_secondary">
 
                 <ImageView
                     android:id="@+id/logo"
@@ -45,8 +46,8 @@
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:background="?attr/color_background_primary"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                card_view:cardBackgroundColor="?attr/color_background_secondary">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -101,7 +102,7 @@
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:background="?attr/color_background_primary">
+                card_view:cardBackgroundColor="?attr/color_background_secondary">
 
                 <TextView
                     android:id="@+id/libraries"

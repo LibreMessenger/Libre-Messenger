@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
     xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/color_background_secondary">
+        android:background="?attr/color_background_tertiary">
 
         <include
             android:id="@+id/toolbar"
@@ -32,9 +33,9 @@
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
-                    android:background="@drawable/infocard_border"
                     android:orientation="vertical"
-                    android:padding="@dimen/card_padding_regular">
+                    android:padding="@dimen/card_padding_regular"
+                    card_view:cardBackgroundColor="?attr/color_background_secondary">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -203,7 +204,8 @@
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    card_view:cardBackgroundColor="?attr/color_background_secondary">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -652,7 +654,8 @@
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    card_view:cardBackgroundColor="?attr/color_background_secondary">
 
                     <LinearLayout
                         android:layout_width="match_parent"

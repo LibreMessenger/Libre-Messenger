@@ -28,7 +28,7 @@
                 android:id="@+id/foreign_keys_details"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"></LinearLayout>
+                android:orientation="vertical" />
 
             <TextView
                 android:id="@+id/no_keys_to_accept"

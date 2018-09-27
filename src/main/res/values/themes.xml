@@ -258,7 +258,7 @@
         <item name="icon_save" type="reference">@drawable/ic_save_white_24dp</item>
         <item name="icon_done" type="reference">@drawable/ic_done_black_24dp</item>
         <item name="icon_group" type="reference">@drawable/ic_group_white_24dp</item>
-        <item name="icon_new" type="reference">@drawable/ic_add_white_24dp</item>
+        <item name="icon_new" type="reference">@drawable/ic_contacts_white_24dp</item>
         <item name="icon_quote" type="reference">@drawable/ic_reply_white_24dp</item>
         <item name="icon_refresh" type="reference">@drawable/ic_refresh_white_24dp</item>
         <item name="icon_new_attachment" type="reference">@drawable/ic_attach_file_white_24dp</item>
@@ -318,7 +318,7 @@
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorAccent">@color/accent</item>
-        <item name="color_background_primary">@color/grey800</item>
+        <item name="color_background_primary">@color/grey700</item>
         <item name="divider">@color/white12</item>
         <item name="TextSizeBody2">14sp</item>
         <item name="TextSizeDisplay2">45sp</item>

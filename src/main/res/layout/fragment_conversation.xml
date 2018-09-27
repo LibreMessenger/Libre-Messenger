@@ -22,7 +22,7 @@
             android:listSelector="@android:color/transparent"
             android:stackFromBottom="true"
             android:transcriptMode="normal"
-            tools:listitem="@layout/message_sent"></ListView>
+            tools:listitem="@layout/message_sent" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/scroll_to_bottom_button"
@@ -92,7 +92,7 @@
                     android:requiresFadingEdge="horizontal"
                     android:visibility="gone"
                     app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-                    tools:listitem="@layout/media_preview"></android.support.v7.widget.RecyclerView>
+                    tools:listitem="@layout/media_preview" />
 
                 <de.pixart.messenger.ui.widget.EditMessage
                     android:id="@+id/textinput"

@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/color_background_secondary">
+    android:background="?attr/color_background_tertiary">
 
     <include
         android:id="@+id/toolbar"
@@ -18,7 +18,7 @@
         <WebView
             android:id="@+id/webView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></WebView>
+            android:layout_height="match_parent" />
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton

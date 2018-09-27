@@ -42,7 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="-2dp"
-                android:orientation="horizontal"></com.wefika.flowlayout.FlowLayout>
+                android:orientation="horizontal" />
 
             <TextView
                 android:id="@+id/key"
