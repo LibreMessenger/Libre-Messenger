@@ -106,8 +106,6 @@
   <string name="pref_accept_files_summary_mobileroaming">Mobil veriye bağlandığında otomatik olarak…dan daha küçük dosyaları kabul et…</string>
   <string name="pref_attachments">Ekler</string>
   <string name="pref_notification_settings">Bildirim</string>
-  <string name="pref_notifications">Bildirimler</string>
-  <string name="pref_notifications_summary">Yeni bir mesaj geldiğinde bildir</string>
   <string name="pref_vibrate">Titreşim</string>
   <string name="pref_vibrate_summary">Yeni bir mesaj geldiğinde titreşimle</string>
   <string name="pref_led">LED bildirimleri</string>
@@ -663,7 +661,6 @@
   <string name="yesterday">Dün</string>
   <string name="pref_validate_hostname">DNSSEC ile sunucu adını doğrula</string>
   <string name="pref_validate_hostname_summary">Onaylanmış ana makine adını içeren sunucu sertifikaları doğrulanmış olarak kabul edilir</string>
-  <string name="network_is_unreachable">Ağa erişilemiyor</string>
   <string name="certificate_does_not_contain_jid">Sertifika bir Jabber ID içermiyor</string>
   <string name="error_no_keys_to_trust_presence">Bu kişinin kullanabileceği kullanılabilir bir anahtar yok.\n Karşılıklı abone olduğunuzdan emin olun.</string>
   <string name="mark_as_read">Okundu olarak işaretle</string>
@@ -677,8 +674,6 @@
   <string name="contacts_have_read_up_to_this_point">%s bu noktaya kadar okudu</string>
   <string name="contact_has_read_up_to_this_point">%s bu noktaya kadar okudu</string>
   <string name="contacts_and_n_more_have_read_up_to_this_point">%1$s ve %2$d daha fazla bu noktaya kadar okudu</string>
-  <string name="pref_return_to_previous">Hızlı Paylaşım</string>
-  <string name="pref_return_to_previous_summary">Bir şeyi paylaştıktan sonra sohbeti açmadan hemen önceki etkinliğinize geri dönün</string>
   <string name="conversation_unencrypted_hint">Bu sohbet şifrelenmemiş, güvenlik nedeniyle mesaj şifrelenmesini kilit ikonunu kullanarak aktif edemezsiniz. Tercih edilen şifreleme OMEMO\'dur.</string>
   <string name="pref_warn_unencrypted_chat">Sohbet şifrelenmemişse uyar</string>
   <string name="pref_warn_unencrypted_chat_summary">Mesaj şifreleme özelliği varsa, bunu kullanmalısınız. Mesaj şifrelemeyi kullanmıyorsanız sohbetin içinde bir uyarı mesajı gösterin.</string>

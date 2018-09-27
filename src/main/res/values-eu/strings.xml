@@ -98,8 +98,6 @@
   <string name="pref_general">Orokorrak</string>
   <string name="pref_attachments">Eranskinak</string>
   <string name="pref_notification_settings">Jakinarazpena</string>
-  <string name="pref_notifications">Jakinarazpenak</string>
-  <string name="pref_notifications_summary">Mezu berri bat heltzerakoan jakinarazi</string>
   <string name="pref_vibrate">Dardaratu</string>
   <string name="pref_vibrate_summary">Mezu berri bat heltzerakoan dardartu</string>
   <string name="pref_led">LED jakinarazpena</string>
@@ -581,7 +579,6 @@
   <string name="yesterday">Atzo</string>
   <string name="pref_validate_hostname">Ostalariaren izena DNSSECekin balioztatu</string>
   <string name="pref_validate_hostname_summary">Ostalariaren izena balioztatuta daukaten zerbitzarien ziurtagiriak egiaztatutzat hartzen dira</string>
-  <string name="network_is_unreachable">Ezin da sarera heldu</string>
   <string name="certificate_does_not_contain_jid">Ziurtagiriak ez dauka Jabber ID baliodun bat</string>
   <string name="error_no_keys_to_trust_presence">Ez dago gako erabilgarririk kontaktu honetarako.\nEgiaztatu ezazu bien arteko presentzia harpidetza duzuela.</string>
   <string name="server_info_partial">partziala</string>
@@ -589,8 +586,6 @@
   <string name="contacts_have_read_up_to_this_point">%s(e)k puntu honetaraino irakurri du</string>
   <string name="contact_has_read_up_to_this_point">%s(e)k puntu honetaraino irakurri du</string>
   <string name="contacts_and_n_more_have_read_up_to_this_point">%1$s +%2$d gehiago puntu honetaraino irakurri dute</string>
-  <string name="pref_return_to_previous">Partekatze azkarra</string>
-  <string name="pref_return_to_previous_summary">Zuzenean aurreko aktibitatera itzuli elkarrizketa ireki beharrean zerbait partekatu ondoren</string>
   <string name="invalid_muc_nick">Ezizen ez balioduna</string>
   <string name="title_activity_share_via_account">Kontu bidez partekatu</string>
 </resources>
