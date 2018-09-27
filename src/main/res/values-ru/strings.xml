@@ -252,6 +252,7 @@
   <string name="enable">Включить</string>
   <string name="conference_requires_password">Групповой чат требует пароль</string>
   <string name="enter_password">Введите пароль</string>
+  <string name="request_presence_updates">Пожалуйста, вначале запросите обновления присутствияу вашего контакта.\n\n<small>Это будет использоваться для определения того, какой клиент использует ваш контакт.</small></string>
   <string name="request_now">Запросить сейчас</string>
   <string name="delete_fingerprint">Удалить отпечаток</string>
   <string name="sure_delete_fingerprint">Вы уверены, что хотите удалить этот отпечаток?</string>
