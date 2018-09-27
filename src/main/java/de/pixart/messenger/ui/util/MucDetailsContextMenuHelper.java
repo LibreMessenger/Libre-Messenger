@@ -25,6 +25,8 @@ import rocks.xmpp.addr.Jid;
 public final class MucDetailsContextMenuHelper {
     public static void configureMucDetailsContextMenu(Activity activity, Menu menu, Conversation conversation, User user) {
         final boolean advancedMode = PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("advanced_muc_mode", false);
+        final MucOptions mucOptions = conversation.getMucOptions();
+        MenuItem sendPrivateMessage = menu.findItem(R.id.send_private_message);
         if (user != null && user.getRealJid() != null) {
             MenuItem showContactDetails = menu.findItem(R.id.action_contact_details);
             MenuItem startConversation = menu.findItem(R.id.start_conversation);
@@ -35,6 +37,7 @@ public final class MucDetailsContextMenuHelper {
             MenuItem removeFromRoom = menu.findItem(R.id.remove_from_room);
             MenuItem banFromConference = menu.findItem(R.id.ban_from_conference);
             MenuItem invite = menu.findItem(R.id.invite);
+            MenuItem highlightInMuc = menu.findItem(R.id.highlight_in_muc);
             startConversation.setVisible(true);
             final Contact contact = user.getContact();
             final User self = conversation.getMucOptions().getSelf();
@@ -43,6 +46,11 @@ public final class MucDetailsContextMenuHelper {
             }
             if (activity instanceof ConferenceDetailsActivity && user.getRole() == MucOptions.Role.NONE) {
                 invite.setVisible(true);
+            }
+            if (activity instanceof ConversationsActivity) {
+                highlightInMuc.setVisible(false);
+            } else if (activity instanceof ConferenceDetailsActivity) {
+                highlightInMuc.setVisible(true);
             }
             if (self.getAffiliation().ranks(MucOptions.Affiliation.ADMIN) &&
                     self.getAffiliation().outranks(user.getAffiliation())) {
@@ -66,9 +74,9 @@ public final class MucDetailsContextMenuHelper {
                     removeAdminPrivileges.setVisible(true);
                 }
             }
+            sendPrivateMessage.setVisible(true);
+            sendPrivateMessage.setEnabled(mucOptions.allowPm());
         } else {
-            final MucOptions mucOptions = conversation.getMucOptions();
-            MenuItem sendPrivateMessage = menu.findItem(R.id.send_private_message);
             sendPrivateMessage.setVisible(true);
             sendPrivateMessage.setEnabled(user != null && mucOptions.allowPm() && user.getRole().ranks(MucOptions.Role.VISITOR));
         }
@@ -121,6 +129,9 @@ public final class MucDetailsContextMenuHelper {
                 return true;
             case R.id.invite:
                 activity.xmppConnectionService.directInvite(conversation, jid);
+                return true;
+            case R.id.highlight_in_muc:
+                activity.highlightInMuc(conversation, user.getName());
                 return true;
             default:
                 return false;

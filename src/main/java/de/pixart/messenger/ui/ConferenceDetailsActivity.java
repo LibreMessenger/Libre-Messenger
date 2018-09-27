@@ -470,9 +470,6 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                 name = user.getName();
             }
             menu.setHeaderTitle(name);
-            MenuItem sendPrivateMessage = menu.findItem(R.id.send_private_message);
-            MenuItem highlightInMuc = menu.findItem(R.id.highlight_in_muc);
-            highlightInMuc.setVisible(true);
             MucDetailsContextMenuHelper.configureMucDetailsContextMenu(this, menu, mConversation, user);
         }
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -695,12 +692,8 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         Collections.sort(users);
         for (final User user : users) {
             ContactBinding binding = DataBindingUtil.inflate(inflater, R.layout.contact, this.binding.mucMembers, false);
-            final Contact contact = user.getContact();
-            final String name = user.getName();
             this.setListItemBackgroundOnView(binding.getRoot());
-            if (contact != null && contact.showInRoster()) {
-                binding.getRoot().setOnClickListener((OnClickListener) view -> switchToContactDetails(contact));
-            }
+            binding.getRoot().setOnClickListener(view1 -> highlightInMuc(mConversation, user.getName()));
             registerForContextMenu(binding.getRoot());
             binding.getRoot().setTag(user);
             if (mAdvancedMode && user.getPgpKeyId() != 0) {
@@ -708,6 +701,8 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                 binding.key.setOnClickListener(v -> viewPgpKey(user));
                 binding.key.setText(OpenPgpUtils.convertKeyIdToHex(user.getPgpKeyId()));
             }
+            Contact contact = user.getContact();
+            String name = user.getName();
             if (contact != null) {
                 binding.contactDisplayName.setText(contact.getDisplayName());
                 binding.contactJid.setText((name != null ? name + " \u2022 " : "") + getStatus(user));
@@ -718,9 +713,9 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             }
             loadAvatar(user, binding.contactPhoto);
             if (user.getRole() == MucOptions.Role.NONE) {
-                binding.contactDisplayName.setAlpha(INACTIVE_ALPHA);
-                binding.key.setAlpha(INACTIVE_ALPHA);
                 binding.contactJid.setAlpha(INACTIVE_ALPHA);
+                binding.key.setAlpha(INACTIVE_ALPHA);
+                binding.contactDisplayName.setAlpha(INACTIVE_ALPHA);
                 binding.contactPhoto.setAlpha(INACTIVE_ALPHA);
             }
             this.binding.mucMembers.addView(binding.getRoot());
