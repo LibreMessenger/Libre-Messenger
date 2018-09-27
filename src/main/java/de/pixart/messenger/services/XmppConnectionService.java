@@ -116,6 +116,7 @@ import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.ui.SettingsActivity;
 import de.pixart.messenger.ui.UiCallback;
 import de.pixart.messenger.ui.interfaces.OnAvatarPublication;
+import de.pixart.messenger.ui.interfaces.OnMediaLoaded;
 import de.pixart.messenger.ui.interfaces.OnSearchResultsAvailable;
 import de.pixart.messenger.utils.Compatibility;
 import de.pixart.messenger.utils.ConversationsFileObserver;
@@ -431,7 +432,6 @@ public class XmppConnectionService extends Service {
     public void stopForcingForegroundNotification() {
         mForceForegroundService.set(false);
         toggleForegroundService();
-        mNotificationService.dismissForcedForegroundNotification();
     }
 
     public boolean areMessagesInitialized() {
@@ -727,6 +727,7 @@ public class XmppConnectionService extends Service {
     }
 
     private boolean processAccountState(Account account, boolean interactive, boolean isUiAction, boolean isAccountPushed, HashSet<Account> pingCandidates) {
+        storeNumberOfAccounts(this.getAccounts().size());
         boolean pingNow = false;
         if (account.getStatus().isAttemptReconnect()) {
             if (!hasInternetConnection()) {
@@ -800,6 +801,14 @@ public class XmppConnectionService extends Service {
             }
         }
         return pingNow;
+    }
+
+    private void storeNumberOfAccounts(int accounts) {
+        //write No of accounts to file
+        final SharedPreferences.Editor editor = getPreferences().edit();
+        Log.d(Config.LOGTAG, "Number of accounts is " + accounts);
+        editor.putInt(SettingsActivity.NUMBER_OF_ACCOUNTS, accounts);
+        editor.apply();
     }
 
     public boolean isDataSaverDisabled() {
@@ -1126,7 +1135,7 @@ public class XmppConnectionService extends Service {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
             startContactObserver();
         }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        if (Compatibility.hasStoragePermission(this)) {
             Log.d(Config.LOGTAG, "starting file observer");
             new Thread(fileObserver::startWatching).start();
         }
@@ -1224,19 +1233,21 @@ public class XmppConnectionService extends Service {
     }
 
     public void toggleForegroundService() {
-        if (mForceForegroundService.get() || (Compatibility.keepForegroundService(this) && hasEnabledAccounts())) {
+        final boolean status;
+        if (mForceForegroundService.get() || (Compatibility.keepForegroundService(this)/* && hasEnabledAccounts()*/)) {
             startForeground(NotificationService.FOREGROUND_NOTIFICATION_ID, this.mNotificationService.createForegroundNotification());
-            Log.d(Config.LOGTAG, "started foreground service");
+            status = true;
         } else {
             stopForeground(true);
-            Log.d(Config.LOGTAG, "stopped foreground service");
+            status = false;
         }
+        mNotificationService.dismissForcedForegroundNotification(); //if the channel was changed the previous call might fail
+        Log.d(Config.LOGTAG, "ForegroundService: " + (status ? "on" : "off"));
     }
 
     @Override
     public void onTaskRemoved(final Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
-        //TODO check for accounts enabled
         if ((Compatibility.keepForegroundService(this) && hasEnabledAccounts()) || mForceForegroundService.get()) {
             Log.d(Config.LOGTAG, "ignoring onTaskRemoved because foreground service is activated");
         } else {
@@ -2661,7 +2672,7 @@ public class XmppConnectionService extends Service {
 
     private boolean hasEnabledAccounts() {
         if (this.accounts == null) {
-            return true; // set to true if accounts could not be fetched - used for notifications
+            return false; // set to false if accounts could not be fetched - used for notifications
         }
         for (Account account : this.accounts) {
             if (account.isEnabled()) {
@@ -2669,6 +2680,18 @@ public class XmppConnectionService extends Service {
             }
         }
         return false;
+    }
+
+    public void getAttachments(final Conversation conversation, int limit, final OnMediaLoaded onMediaLoaded) {
+        getAttachments(conversation.getAccount(), conversation.getJid().asBareJid(), limit, onMediaLoaded);
+    }
+
+    public void getAttachments(final Account account, final Jid jid, final int limit, final OnMediaLoaded onMediaLoaded) {
+        getAttachments(account.getUuid(), jid.asBareJid(), limit, onMediaLoaded);
+    }
+
+    public void getAttachments(final String account, final Jid jid, final int limit, final OnMediaLoaded onMediaLoaded) {
+        new Thread(() -> onMediaLoaded.onMediaLoaded(fileBackend.convertToAttachments(databaseBackend.getRelativeFilePaths(account, jid, limit)))).start();
     }
 
     public void persistSelfNick(MucOptions.User self) {

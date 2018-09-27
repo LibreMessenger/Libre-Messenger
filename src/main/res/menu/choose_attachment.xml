@@ -14,7 +14,12 @@
     <item
         android:id="@+id/attach_take_picture"
         android:icon="?attr/ic_attach_camera"
-        android:title="@string/attach_take_from_camera" />
+        android:title="@string/action_take_photo" />
+
+    <item
+        android:id="@+id/attach_record_video"
+        android:icon="?attr/ic_attach_videocam"
+        android:title="@string/action_take_video" />
     <item
         android:id="@+id/attach_record_voice"
         android:icon="?attr/ic_attach_record"

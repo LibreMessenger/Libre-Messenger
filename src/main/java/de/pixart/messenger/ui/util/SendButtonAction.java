@@ -33,10 +33,11 @@ import static de.pixart.messenger.ui.ConversationFragment.ATTACHMENT_CHOICE;
 import static de.pixart.messenger.ui.ConversationFragment.ATTACHMENT_CHOICE_CHOOSE_IMAGE;
 import static de.pixart.messenger.ui.ConversationFragment.ATTACHMENT_CHOICE_LOCATION;
 import static de.pixart.messenger.ui.ConversationFragment.ATTACHMENT_CHOICE_RECORD_VOICE;
-import static de.pixart.messenger.ui.ConversationFragment.ATTACHMENT_CHOICE_TAKE_FROM_CAMERA;
+import static de.pixart.messenger.ui.ConversationFragment.ATTACHMENT_CHOICE_RECORD_VIDEO;
+import static de.pixart.messenger.ui.ConversationFragment.ATTACHMENT_CHOICE_TAKE_PHOTO;
 
 public enum SendButtonAction {
-    TEXT, TAKE_FROM_CAMERA, SEND_LOCATION, RECORD_VOICE, CANCEL, CHOOSE_PICTURE, CHOOSE_ATTACHMENT;
+    TEXT, TAKE_PHOTO, SEND_LOCATION, RECORD_VOICE, CANCEL, CHOOSE_PICTURE, RECORD_VIDEO, CHOOSE_ATTACHMENT;
 
     public static SendButtonAction valueOfOrDefault(String setting, SendButtonAction text) {
         try {
@@ -52,8 +53,10 @@ public enum SendButtonAction {
                 return SEND_LOCATION;
             case ATTACHMENT_CHOICE_RECORD_VOICE:
                 return RECORD_VOICE;
-            case ATTACHMENT_CHOICE_TAKE_FROM_CAMERA:
-                return TAKE_FROM_CAMERA;
+            case ATTACHMENT_CHOICE_RECORD_VIDEO:
+                return RECORD_VIDEO;
+            case ATTACHMENT_CHOICE_TAKE_PHOTO:
+                return TAKE_PHOTO;
             case ATTACHMENT_CHOICE_CHOOSE_IMAGE:
                 return CHOOSE_PICTURE;
             case ATTACHMENT_CHOICE:
@@ -65,8 +68,10 @@ public enum SendButtonAction {
 
     public int toChoice() {
         switch (this) {
-            case TAKE_FROM_CAMERA:
-                return ATTACHMENT_CHOICE_TAKE_FROM_CAMERA;
+            case TAKE_PHOTO:
+                return ATTACHMENT_CHOICE_TAKE_PHOTO;
+            case RECORD_VIDEO:
+                return ATTACHMENT_CHOICE_RECORD_VIDEO;
             case SEND_LOCATION:
                 return ATTACHMENT_CHOICE_LOCATION;
             case RECORD_VOICE:

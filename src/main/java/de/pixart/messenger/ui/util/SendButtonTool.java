@@ -44,7 +44,6 @@ import de.pixart.messenger.utils.UIHelper;
 public class SendButtonTool {
 
     public static SendButtonAction getAction(Activity activity, Conversation c, String text) {
-        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity);
         final boolean empty = text.length() == 0;
         final boolean conference = c.getMode() == Conversation.MODE_MULTI;
         if (c.getCorrectingMessage() != null && (empty || text.equals(c.getCorrectingMessage().getBody()))) {
@@ -57,14 +56,14 @@ public class SendButtonTool {
             }
         } else {
             if (empty) {
+                final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity);
                 if (conference && c.getNextCounterpart() != null) {
                     return SendButtonAction.CANCEL;
                 } else {
-                    boolean quickShareChoice = preferences.getBoolean(SettingsActivity.QUICK_SHARE_ATTACHMENT_CHOICE, activity.getResources().getBoolean(R.bool.quick_share_attachment_choice));
                     String setting = preferences.getString("quick_action", activity.getResources().getString(R.string.quick_action));
-                    if (quickShareChoice && AttachmentsVisible(c)) {
+                    if (quickShareChoice(activity) && AttachmentsVisible(c)) {
                         return SendButtonAction.CHOOSE_ATTACHMENT;
-                    } else if (quickShareChoice && !AttachmentsVisible(c)) {
+                    } else if (quickShareChoice(activity) && !AttachmentsVisible(c)) {
                         return SendButtonAction.TEXT;
                     } else {
                         if (!setting.equals("none") && UIHelper.receivedLocationQuestion(c.getLatestMessage())) {
@@ -106,7 +105,20 @@ public class SendButtonTool {
                     default:
                         return getThemeResource(activity, R.attr.ic_send_text_offline, R.drawable.ic_send_text_offline);
                 }
-            case TAKE_FROM_CAMERA:
+            case RECORD_VIDEO:
+                switch (status) {
+                    case CHAT:
+                    case ONLINE:
+                        return R.drawable.ic_send_videocam_online;
+                    case AWAY:
+                        return R.drawable.ic_send_videocam_away;
+                    case XA:
+                    case DND:
+                        return R.drawable.ic_send_videocam_dnd;
+                    default:
+                        return getThemeResource(activity, R.attr.ic_send_videocam_offline, R.drawable.ic_send_videocam_offline);
+                }
+            case TAKE_PHOTO:
                 switch (status) {
                     case CHAT:
                     case ONLINE:
@@ -197,5 +209,10 @@ public class SendButtonTool {
         ta.recycle();
 
         return res;
+    }
+
+    public static boolean quickShareChoice(Activity activity) {
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity);
+        return preferences.getBoolean(SettingsActivity.QUICK_SHARE_ATTACHMENT_CHOICE, activity.getResources().getBoolean(R.bool.quick_share_attachment_choice));
     }
 }

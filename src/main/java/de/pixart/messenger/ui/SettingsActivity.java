@@ -38,7 +38,7 @@ import de.pixart.messenger.crypto.OmemoSetting;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.services.ExportLogsService;
 import de.pixart.messenger.services.MemorizingTrustManager;
-import de.pixart.messenger.ui.util.Color;
+import de.pixart.messenger.ui.util.StyledAttributes;
 import de.pixart.messenger.utils.TimeframeUtils;
 import rocks.xmpp.addr.Jid;
 
@@ -60,6 +60,7 @@ public class SettingsActivity extends XmppActivity implements
     public static final String USE_BUNDLED_EMOJIS = "use_bundled_emoji";
     public static final String USE_MULTI_ACCOUNTS = "use_multi_accounts";
     public static final String QUICK_SHARE_ATTACHMENT_CHOICE = "quick_share_attachment_choice";
+    public static final String NUMBER_OF_ACCOUNTS = "number_of_accounts";
 
     public static final int REQUEST_WRITE_LOGS = 0xbf8701;
     Preference multiAccountPreference;
@@ -75,6 +76,7 @@ public class SettingsActivity extends XmppActivity implements
         super.onCreate(savedInstanceState);
         this.mTheme = findTheme();
         setTheme(this.mTheme);
+        updateTheme();
         setContentView(R.layout.activity_settings);
         FragmentManager fm = getFragmentManager();
         mSettingsFragment = (SettingsFragment) fm.findFragmentById(R.id.settings_content);
@@ -83,7 +85,7 @@ public class SettingsActivity extends XmppActivity implements
             fm.beginTransaction().replace(R.id.settings_content, mSettingsFragment).commit();
         }
         mSettingsFragment.setActivityIntent(getIntent());
-        getWindow().getDecorView().setBackgroundColor(Color.get(this, R.attr.color_background_secondary));
+        getWindow().getDecorView().setBackgroundColor(StyledAttributes.getColor(this, R.attr.color_background_secondary));
         setSupportActionBar(findViewById(R.id.toolbar));
         configureActionBar(getSupportActionBar());
     }
@@ -96,12 +98,11 @@ public class SettingsActivity extends XmppActivity implements
     @Override
     public void onStart() {
         super.onStart();
-        updateTheme();
-
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
         multiAccountPreference = mSettingsFragment.findPreference("enable_multi_accounts");
         if (multiAccountPreference != null) {
             isMultiAccountChecked = ((CheckBoxPreference) multiAccountPreference).isChecked();
+            handleMultiAccountChanges();
         }
 
         BundledEmojiPreference = mSettingsFragment.findPreference("use_bundled_emoji");
@@ -112,7 +113,7 @@ public class SettingsActivity extends XmppActivity implements
         QuickShareAttachmentChoicePreference = mSettingsFragment.findPreference("quick_share_attachment_choice");
         if (QuickShareAttachmentChoicePreference != null) {
             QuickShareAttachmentChoicePreference.setOnPreferenceChangeListener((preference, newValue) -> {
-                recreate();
+                refreshUiReal();
                 return true;
             });
             isQuickShareAttachmentChoiceChecked = ((CheckBoxPreference) QuickShareAttachmentChoicePreference).isChecked();
@@ -287,20 +288,19 @@ public class SettingsActivity extends XmppActivity implements
             Log.d(Config.LOGTAG, "Multi account checkbox checked: " + isMultiAccountChecked);
             if (isMultiAccountChecked) {
                 enableMultiAccountsPreference.setEnabled(false);
-            if (xmppConnectionService != null) {
-                final List<Account> accounts = xmppConnectionService.getAccounts();
-                Log.d(Config.LOGTAG, "Disabled multi account: Number of accounts " + accounts.size());
-                if (accounts.size() > 1) {
-                    Log.d(Config.LOGTAG, "Disabled multi account not possible because you have more than one account");
+                int accounts = getNumberOfAccounts();
+                Log.d(Config.LOGTAG, "Disabled multi account: Number of accounts " + accounts);
+                if (accounts > 1) {
+                    Log.d(Config.LOGTAG, "Disabling multi account not possible because you have more than one account");
                     enableMultiAccountsPreference.setEnabled(false);
                 } else {
-                    Log.d(Config.LOGTAG, "Disabled multi account possible because you have one account");
+                    Log.d(Config.LOGTAG, "Disabling multi account possible because you have only one account");
                     enableMultiAccountsPreference.setEnabled(true);
+                    enableMultiAccountsPreference.setOnPreferenceClickListener(preference -> {
+                        refreshUiReal();
+                        return true;
+                    });
                 }
-            } else {
-                Log.d(Config.LOGTAG, "Disabled multi account not possible because XmppConnectionService == null");
-                enableMultiAccountsPreference.setEnabled(false);
-            }
             } else {
                 enableMultiAccountsPreference.setEnabled(true);
                 enableMultiAccountsPreference.setOnPreferenceClickListener(preference -> {
@@ -314,7 +314,7 @@ public class SettingsActivity extends XmppActivity implements
     private void updateTheme() {
         final int theme = findTheme();
         if (this.mTheme != theme) {
-            recreate();
+            refreshUiReal();
         }
     }
 
@@ -478,12 +478,17 @@ public class SettingsActivity extends XmppActivity implements
                                 SharedPreferences multiaccount_prefs = getApplicationContext().getSharedPreferences(USE_MULTI_ACCOUNTS, Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = multiaccount_prefs.edit();
                                 editor.putString("BackupPW", pw1);
-                                editor.commit();
+                                boolean passwordstored = editor.commit();
+                                Log.d(Config.LOGTAG, "saving multiaccount password " + passwordstored);
+                                if (passwordstored) {
+                                    recreate();
+                                } else {
+                                    handleMultiAccountChanges();
+                                }
                             }
                         })
                 .setNegativeButton(R.string.cancel, null);
         alertDialogBuilder.create().show();
-
     }
 
 
@@ -558,6 +563,39 @@ public class SettingsActivity extends XmppActivity implements
     }
 
     public void refreshUiReal() {
-        //nothing to do. This Activity doesn't implement any listeners
+        recreate();
+        handleMultiAccountChanges();
+    }
+
+    private void handleMultiAccountChanges() {
+        multiAccountPreference = mSettingsFragment.findPreference("enable_multi_accounts");
+        if (multiAccountPreference != null) {
+            //check if password = null
+            final SharedPreferences multiaccount_prefs = getApplicationContext().getSharedPreferences(USE_MULTI_ACCOUNTS, Context.MODE_PRIVATE);
+            if (multiaccount_prefs != null && multiaccount_prefs.getString("BackupPW", null) == null) {
+                Log.d(Config.LOGTAG, "uncheck multiaccount because password = null");
+                if (multiAccountPreference != null) {
+                    ((CheckBoxPreference) multiAccountPreference).setChecked(false);
+                }
+            }
+            //if multiAccountDisabled reset password
+            final Preference enableMultiAccountsPreference = mSettingsFragment.findPreference("enable_multi_accounts");
+            if (enableMultiAccountsPreference != null && !isMultiAccountChecked) {
+                SharedPreferences.Editor editor = multiaccount_prefs.edit();
+                editor.putString("BackupPW", null);
+                if (editor.commit()) {
+                    Log.d(Config.LOGTAG, "resetting multiaccount password because multiaccount = unchecked");
+                } else {
+                    Log.d(Config.LOGTAG, "resetting multiaccount password failed");
+                }
+            }
+        }
+    }
+
+    private int getNumberOfAccounts() {
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        int NumberOfAccounts = preferences.getInt(NUMBER_OF_ACCOUNTS, 0);
+        Log.d(Config.LOGTAG, "Get number of accounts from file: " + NumberOfAccounts);
+        return NumberOfAccounts;
     }
 }

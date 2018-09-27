@@ -712,8 +712,6 @@
     <string name="contacts_have_read_up_to_this_point">%s have read up to this point</string>
     <string name="contact_has_read_up_to_this_point">%s has read up to this point</string>
     <string name="contacts_and_n_more_have_read_up_to_this_point">%1$s and %2$d more have read up to this point</string>
-    <string name="pref_return_to_previous">Quick Sharing</string>
-    <string name="pref_return_to_previous_summary">Immediately return to previous activity instead of opening the conversation after sharing something</string>
     <string name="conversation_unencrypted_hint">This chat is unencrypted, for security reasons you should activate message encryption by using the lock icon. The preferable encryption is OMEMO.</string>
     <string name="pref_warn_unencrypted_chat">Warn if chat is unencrypted</string>
     <string name="pref_warn_unencrypted_chat_summary">If message encryption is available, you should use it. If you don\'t use message encryption, show a warning message inside the chat.</string>
@@ -812,17 +810,20 @@
     <string name="phone_book">Address book</string>
     <string name="unable_to_save_recording">Unable to save recording</string>
     <string name="foreground_service_channel_name">Foreground service</string>
-    <string name="foreground_service_channel_description">This notification category is used to display a permanent notification indicating that Conversations is running.</string>
+    <string name="foreground_service_channel_description">This notification category is used to display a permanent notification indicating that Pix-Art Messenger is running.</string>
     <string name="notification_group_status_information">Status Information</string>
     <string name="error_channel_name">Connectivity Problems</string>
     <string name="error_channel_description">This notification category is used to display a notification in case there is a problem connecting to an account.</string>
     <string name="notification_group_messages">Messages</string>
     <string name="messages_channel_name">Messages</string>
     <string name="silent_messages_channel_name">Silent messages</string>
-    <string name="silent_messages_channel_description">This notification group is used to display notifications that should not trigger any sound. For example when being active on another device (Grace Period).</string>
+    <string name="silent_messages_channel_description">This notification category is used to display notifications that should not trigger any sound. For example when being active on another device (Grace Period).</string>
     <string name="pref_more_notification_settings">Notification Settings</string>
     <string name="pref_more_notification_settings_summary">Importance, Sound, Vibrate</string>
     <string name="video_compression_channel_name">Video compression</string>
     <string name="backup_channel_name">Database backup</string>
     <string name="app_update_channel_name">App update</string>
+    <string name="action_group_details">Group details</string>
+    <string name="view_media">View media</string>
+    <string name="media_browser">Media browser</string>
 </resources>

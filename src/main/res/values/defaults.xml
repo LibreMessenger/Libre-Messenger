@@ -86,7 +86,6 @@
     <bool name="btbv">true</bool>
     <bool name="send_button_status">true</bool>
     <string name="quick_action">recent</string>
-    <bool name="return_to_previous">false</bool>
     <bool name="display_enter_key">false</bool>
     <bool name="show_dynamic_tags">false</bool>
     <integer name="grace_period">144</integer>

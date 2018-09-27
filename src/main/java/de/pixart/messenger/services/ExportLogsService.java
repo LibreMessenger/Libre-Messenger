@@ -41,7 +41,7 @@ import static de.pixart.messenger.ui.SettingsActivity.USE_MULTI_ACCOUNTS;
 public class ExportLogsService extends XmppConnectionService {
 
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-    private static final String DIRECTORY_STRING_FORMAT = FileBackend.getConversationsDirectory("Chats", false) + "%s";
+    private static final String DIRECTORY_STRING_FORMAT = FileBackend.getAppLogsDirectory() + "%s";
     private static final String MESSAGE_STRING_FORMAT = "(%s) %s: %s\n";
     private static AtomicBoolean running = new AtomicBoolean(false);
     boolean ReadableLogsEnabled = false;
@@ -171,7 +171,7 @@ public class ExportLogsService extends XmppConnectionService {
         // Get hold of the db:
         FileInputStream InputFile = new FileInputStream(this.getDatabasePath(DatabaseBackend.DATABASE_NAME));
         // Set the output folder on the SDcard
-        File directory = new File(FileBackend.getConversationsDirectory("Database", false));
+        File directory = new File(FileBackend.getBackupDirectory());
         // Create the folder if it doesn't exist:
         if (!directory.exists()) {
             boolean directory_created = directory.mkdirs();
