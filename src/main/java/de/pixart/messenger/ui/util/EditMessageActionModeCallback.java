@@ -32,6 +32,7 @@ package de.pixart.messenger.ui.util;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -52,12 +53,14 @@ public class EditMessageActionModeCallback implements ActionMode.Callback {
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-        MenuInflater inflater = mode.getMenuInflater();
+        final MenuInflater inflater = mode.getMenuInflater();
         inflater.inflate(R.menu.edit_message_actions, menu);
-        MenuItem pasteAsQuote = menu.findItem(R.id.paste_as_quote);
-        ClipData primaryClip = clipboardManager.getPrimaryClip();
+        final MenuItem pasteAsQuote = menu.findItem(R.id.paste_as_quote);
+        final ClipData primaryClip = clipboardManager.getPrimaryClip();
         if (primaryClip != null && primaryClip.getItemCount() >= 0) {
-            pasteAsQuote.setVisible(primaryClip.getDescription().getMimeType(0).startsWith("text/") && primaryClip.getItemAt(0).getText() != null);
+            pasteAsQuote.setVisible(primaryClip.getDescription().getMimeType(0).startsWith("text/") && !TextUtils.isEmpty(primaryClip.getItemAt(0).getText()));
+        } else {
+            pasteAsQuote.setVisible(false);
         }
         return true;
     }
