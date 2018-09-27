@@ -25,7 +25,31 @@ import rocks.xmpp.addr.Jid;
 @SuppressLint("DefaultLocale")
 public class MucOptions {
 
+    public static final String STATUS_CODE_SELF_PRESENCE = "110";
+    public static final String STATUS_CODE_ROOM_CREATED = "201";
+    public static final String STATUS_CODE_BANNED = "301";
+    public static final String STATUS_CODE_CHANGED_NICK = "303";
+    public static final String STATUS_CODE_KICKED = "307";
+    public static final String STATUS_CODE_AFFILIATION_CHANGE = "321";
+    public static final String STATUS_CODE_LOST_MEMBERSHIP = "322";
+    public static final String STATUS_CODE_SHUTDOWN = "332";
+    private final Set<User> users = new HashSet<>();
+    private final Conversation conversation;
+    public OnRenameListener onRenameListener = null;
     private boolean mAutoPushConfiguration = true;
+    private Account account;
+    private ServiceDiscoveryResult serviceDiscoveryResult;
+    private boolean isOnline = false;
+    private Error error = Error.NONE;
+    private User self;
+    private String password = null;
+    public MucOptions(Conversation conversation) {
+        this.account = conversation.getAccount();
+        this.conversation = conversation;
+        this.self = new User(this, createJoinJid(getProposedNick()));
+        this.self.affiliation = Affiliation.of(conversation.getAttribute("affiliation"));
+        this.self.role = Role.of(conversation.getAttribute("role"));
+    }
 
     public Account getAccount() {
         return this.conversation.getAccount();
@@ -75,302 +99,6 @@ public class MucOptions {
         return MessageArchiveService.Version.has(getFeatures());
     }
 
-    public enum Affiliation {
-        OWNER(4, R.string.owner),
-        ADMIN(3, R.string.admin),
-        MEMBER(2, R.string.member),
-        OUTCAST(0, R.string.outcast),
-        NONE(1, R.string.no_affiliation);
-
-        Affiliation(int rank, int resId) {
-            this.resId = resId;
-            this.rank = rank;
-        }
-
-        private int resId;
-        private int rank;
-
-        public int getResId() {
-            return resId;
-        }
-
-        @Override
-        public String toString() {
-            return name().toLowerCase(Locale.US);
-        }
-
-        public boolean outranks(Affiliation affiliation) {
-            return rank > affiliation.rank;
-        }
-
-        public boolean ranks(Affiliation affiliation) {
-            return rank >= affiliation.rank;
-        }
-
-        public static Affiliation of(@Nullable String value) {
-            if (value == null) {
-                return NONE;
-            }
-            try {
-                return Affiliation.valueOf(value.toUpperCase(Locale.US));
-            } catch (IllegalArgumentException e) {
-                return NONE;
-            }
-        }
-    }
-
-    public enum Role {
-        MODERATOR(R.string.moderator, 3),
-        VISITOR(R.string.visitor, 1),
-        PARTICIPANT(R.string.participant, 2),
-        NONE(R.string.no_role, 0);
-
-        Role(int resId, int rank) {
-            this.resId = resId;
-            this.rank = rank;
-        }
-
-        private int resId;
-        private int rank;
-
-        public int getResId() {
-            return resId;
-        }
-
-        @Override
-        public String toString() {
-            return name().toLowerCase(Locale.US);
-        }
-
-        public boolean ranks(Role role) {
-            return rank >= role.rank;
-        }
-
-        public static Role of(@Nullable String value) {
-            if (value == null) {
-                return NONE;
-            }
-            try {
-                return Role.valueOf(value.toUpperCase(Locale.US));
-            } catch (IllegalArgumentException e) {
-                return NONE;
-            }
-        }
-    }
-
-    public enum Error {
-        NO_RESPONSE,
-        SERVER_NOT_FOUND,
-        NONE,
-        NICK_IN_USE,
-        PASSWORD_REQUIRED,
-        BANNED,
-        MEMBERS_ONLY,
-        RESOURCE_CONSTRAINT,
-        KICKED,
-        SHUTDOWN,
-        DESTROYED,
-        INVALID_NICK,
-        UNKNOWN
-    }
-
-    public static final String STATUS_CODE_SELF_PRESENCE = "110";
-    public static final String STATUS_CODE_ROOM_CREATED = "201";
-    public static final String STATUS_CODE_BANNED = "301";
-    public static final String STATUS_CODE_CHANGED_NICK = "303";
-    public static final String STATUS_CODE_KICKED = "307";
-    public static final String STATUS_CODE_AFFILIATION_CHANGE = "321";
-    public static final String STATUS_CODE_LOST_MEMBERSHIP = "322";
-    public static final String STATUS_CODE_SHUTDOWN = "332";
-
-    private interface OnEventListener {
-        void onSuccess();
-
-        void onFailure();
-    }
-
-    public interface OnRenameListener extends OnEventListener {
-
-    }
-
-    public static class User implements Comparable<User> {
-        private Role role = Role.NONE;
-        private Affiliation affiliation = Affiliation.NONE;
-        private Jid realJid;
-        private Jid fullJid;
-        private long pgpKeyId = 0;
-        private Avatar avatar;
-        private MucOptions options;
-        private ChatState chatState = Config.DEFAULT_CHATSTATE;
-
-        public User(MucOptions options, Jid from) {
-            this.options = options;
-            this.fullJid = from;
-        }
-
-        public String getName() {
-            return fullJid == null ? null : fullJid.getResource();
-        }
-
-        public void setRealJid(Jid jid) {
-            this.realJid = jid != null ? jid.asBareJid() : null;
-        }
-
-        public Role getRole() {
-            return this.role;
-        }
-
-        public void setRole(String role) {
-            this.role = Role.of(role);
-        }
-
-        public Affiliation getAffiliation() {
-            return this.affiliation;
-        }
-
-        public void setAffiliation(String affiliation) {
-            this.affiliation = Affiliation.of(affiliation);
-        }
-
-        public void setPgpKeyId(long id) {
-            this.pgpKeyId = id;
-        }
-
-        public long getPgpKeyId() {
-            if (this.pgpKeyId != 0) {
-                return this.pgpKeyId;
-            } else if (realJid != null) {
-                return getAccount().getRoster().getContact(realJid).getPgpKeyId();
-            } else {
-                return 0;
-            }
-        }
-
-        public Contact getContact() {
-            if (fullJid != null) {
-                return getAccount().getRoster().getContactFromRoster(realJid);
-            } else if (realJid != null) {
-                return getAccount().getRoster().getContact(realJid);
-            } else {
-                return null;
-            }
-        }
-
-        public boolean setAvatar(Avatar avatar) {
-            if (this.avatar != null && this.avatar.equals(avatar)) {
-                return false;
-            } else {
-                this.avatar = avatar;
-                return true;
-            }
-        }
-
-        public String getAvatar() {
-            return avatar == null ? null : avatar.getFilename();
-        }
-
-        public Account getAccount() {
-            return options.getAccount();
-        }
-
-        public Conversation getConversation() {
-            return options.getConversation();
-        }
-
-        public Jid getFullJid() {
-            return fullJid;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            User user = (User) o;
-
-            if (role != user.role) return false;
-            if (affiliation != user.affiliation) return false;
-            if (realJid != null ? !realJid.equals(user.realJid) : user.realJid != null)
-                return false;
-            return fullJid != null ? fullJid.equals(user.fullJid) : user.fullJid == null;
-
-        }
-
-        public boolean isDomain() {
-            return realJid != null && realJid.getLocal() == null && role == Role.NONE;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = role != null ? role.hashCode() : 0;
-            result = 31 * result + (affiliation != null ? affiliation.hashCode() : 0);
-            result = 31 * result + (realJid != null ? realJid.hashCode() : 0);
-            result = 31 * result + (fullJid != null ? fullJid.hashCode() : 0);
-            return result;
-        }
-
-        @Override
-        public String toString() {
-            return "[fulljid:" + String.valueOf(fullJid) + ",realjid:" + String.valueOf(realJid) + ",affiliation" + affiliation.toString() + "]";
-        }
-
-        public boolean realJidMatchesAccount() {
-            return realJid != null && realJid.equals(options.account.getJid().asBareJid());
-        }
-
-        @Override
-        public int compareTo(@NonNull User another) {
-            if (another.getAffiliation().outranks(getAffiliation())) {
-                return 1;
-            } else if (getAffiliation().outranks(another.getAffiliation())) {
-                return -1;
-            } else {
-                return getComparableName().compareToIgnoreCase(another.getComparableName());
-            }
-        }
-
-
-        private String getComparableName() {
-            Contact contact = getContact();
-            if (contact != null) {
-                return contact.getDisplayName();
-            } else {
-                String name = getName();
-                return name == null ? "" : name;
-            }
-        }
-
-        public Jid getRealJid() {
-            return realJid;
-        }
-
-        public boolean setChatState(ChatState chatState) {
-            if (this.chatState == chatState) {
-                return false;
-            }
-            this.chatState = chatState;
-            return true;
-        }
-    }
-
-    private Account account;
-    private final Set<User> users = new HashSet<>();
-    private ServiceDiscoveryResult serviceDiscoveryResult;
-    private final Conversation conversation;
-    private boolean isOnline = false;
-    private Error error = Error.NONE;
-    public OnRenameListener onRenameListener = null;
-    private User self;
-    private String password = null;
-
-    public MucOptions(Conversation conversation) {
-        this.account = conversation.getAccount();
-        this.conversation = conversation;
-        this.self = new User(this, createJoinJid(getProposedNick()));
-        this.self.affiliation = Affiliation.of(conversation.getAttribute("affiliation"));
-        this.self.role = Role.of(conversation.getAttribute("role"));
-    }
-
     public boolean updateConfiguration(ServiceDiscoveryResult serviceDiscoveryResult) {
         this.serviceDiscoveryResult = serviceDiscoveryResult;
         String name;
@@ -400,7 +128,7 @@ public class MucOptions {
     }
 
     public String getAvatar() {
-        return account.getRoster().getContact(conversation.getJid()).getAvatar();
+        return account.getRoster().getContact(conversation.getJid()).getAvatarFilename();
     }
 
     public boolean hasFeature(String feature) {
@@ -559,10 +287,10 @@ public class MucOptions {
         return null;
     }
 
-    public User findOrCreateUserByRealJid(Jid jid) {
+    public User findOrCreateUserByRealJid(Jid jid, Jid fullJid) {
         User user = findUserByRealJid(jid);
         if (user == null) {
-            user = new User(this, null);
+            user = new User(this, fullJid);
             user.setRealJid(jid);
         }
         return user;
@@ -570,12 +298,7 @@ public class MucOptions {
 
     public User findUser(ReadByMarker readByMarker) {
         if (readByMarker.getRealJid() != null) {
-            User user = findUserByRealJid(readByMarker.getRealJid().asBareJid());
-            if (user == null) {
-                user = new User(this, readByMarker.getFullJid());
-                user.setRealJid(readByMarker.getRealJid());
-            }
-            return user;
+            return findOrCreateUserByRealJid(readByMarker.getRealJid().asBareJid(), readByMarker.getFullJid());
         } else if (readByMarker.getFullJid() != null) {
             return findUserByFullJid(readByMarker.getFullJid());
         } else {
@@ -589,11 +312,6 @@ public class MucOptions {
 
     public boolean isUserInRoom(Jid jid) {
         return findUserByFullJid(jid) != null;
-    }
-
-    public void setError(Error error) {
-        this.isOnline = isOnline && error == Error.NONE;
-        this.error = error;
     }
 
     public boolean setOnline() {
@@ -638,7 +356,7 @@ public class MucOptions {
         HashSet<Jid> jids = new HashSet<>();
         jids.add(account.getJid().asBareJid());
         synchronized (users) {
-            for(User user : users) {
+            for (User user : users) {
                 if (user.getRealJid() == null || (user.getRealJid().getLocal() != null && jids.add(user.getRealJid()))) {
                     subset.add(user);
                 }
@@ -682,6 +400,11 @@ public class MucOptions {
 
     public Error getError() {
         return this.error;
+    }
+
+    public void setError(Error error) {
+        this.isOnline = isOnline && error == Error.NONE;
+        this.error = error;
     }
 
     public void setOnRenameListener(OnRenameListener listener) {
@@ -732,21 +455,18 @@ public class MucOptions {
         return users;
     }
 
-
     public int NumberOfUsers() {
         List<User> users = getUsersRelevantForNameAndAvatar();
         if (users.size() >= 1) {
-            return users.size();
+            return users.size() + 1; // add 1 for yourself
         } else {
-            return 0;
+            return 1;
         }
     }
 
-
-
     public String createNameFromParticipants() {
         List<User> users = getUsersRelevantForNameAndAvatar();
-        if (users.size() >= 1) {
+        if (users.size() >= 2) {
             StringBuilder builder = new StringBuilder();
             for (User user : users) {
                 if (builder.length() != 0) {
@@ -849,5 +569,275 @@ public class MucOptions {
             }
         }
         return members;
+    }
+
+    public enum Affiliation {
+        OWNER(4, R.string.owner),
+        ADMIN(3, R.string.admin),
+        MEMBER(2, R.string.member),
+        OUTCAST(0, R.string.outcast),
+        NONE(1, R.string.no_affiliation);
+
+        private int resId;
+        private int rank;
+        Affiliation(int rank, int resId) {
+            this.resId = resId;
+            this.rank = rank;
+        }
+
+        public static Affiliation of(@Nullable String value) {
+            if (value == null) {
+                return NONE;
+            }
+            try {
+                return Affiliation.valueOf(value.toUpperCase(Locale.US));
+            } catch (IllegalArgumentException e) {
+                return NONE;
+            }
+        }
+
+        public int getResId() {
+            return resId;
+        }
+
+        @Override
+        public String toString() {
+            return name().toLowerCase(Locale.US);
+        }
+
+        public boolean outranks(Affiliation affiliation) {
+            return rank > affiliation.rank;
+        }
+
+        public boolean ranks(Affiliation affiliation) {
+            return rank >= affiliation.rank;
+        }
+    }
+
+    public enum Role {
+        MODERATOR(R.string.moderator, 3),
+        VISITOR(R.string.visitor, 1),
+        PARTICIPANT(R.string.participant, 2),
+        NONE(R.string.no_role, 0);
+
+        private int resId;
+        private int rank;
+        Role(int resId, int rank) {
+            this.resId = resId;
+            this.rank = rank;
+        }
+
+        public static Role of(@Nullable String value) {
+            if (value == null) {
+                return NONE;
+            }
+            try {
+                return Role.valueOf(value.toUpperCase(Locale.US));
+            } catch (IllegalArgumentException e) {
+                return NONE;
+            }
+        }
+
+        public int getResId() {
+            return resId;
+        }
+
+        @Override
+        public String toString() {
+            return name().toLowerCase(Locale.US);
+        }
+
+        public boolean ranks(Role role) {
+            return rank >= role.rank;
+        }
+    }
+
+    public enum Error {
+        NO_RESPONSE,
+        SERVER_NOT_FOUND,
+        NONE,
+        NICK_IN_USE,
+        PASSWORD_REQUIRED,
+        BANNED,
+        MEMBERS_ONLY,
+        RESOURCE_CONSTRAINT,
+        KICKED,
+        SHUTDOWN,
+        DESTROYED,
+        INVALID_NICK,
+        UNKNOWN
+    }
+
+    private interface OnEventListener {
+        void onSuccess();
+
+        void onFailure();
+    }
+
+    public interface OnRenameListener extends OnEventListener {
+
+    }
+
+    public static class User implements Comparable<User> {
+        private Role role = Role.NONE;
+        private Affiliation affiliation = Affiliation.NONE;
+        private Jid realJid;
+        private Jid fullJid;
+        private long pgpKeyId = 0;
+        private Avatar avatar;
+        private MucOptions options;
+        private ChatState chatState = Config.DEFAULT_CHATSTATE;
+
+        public User(MucOptions options, Jid from) {
+            this.options = options;
+            this.fullJid = from;
+        }
+
+        public String getName() {
+            return fullJid == null ? null : fullJid.getResource();
+        }
+
+        public Role getRole() {
+            return this.role;
+        }
+
+        public void setRole(String role) {
+            this.role = Role.of(role);
+        }
+
+        public Affiliation getAffiliation() {
+            return this.affiliation;
+        }
+
+        public void setAffiliation(String affiliation) {
+            this.affiliation = Affiliation.of(affiliation);
+        }
+
+        public long getPgpKeyId() {
+            if (this.pgpKeyId != 0) {
+                return this.pgpKeyId;
+            } else if (realJid != null) {
+                return getAccount().getRoster().getContact(realJid).getPgpKeyId();
+            } else {
+                return 0;
+            }
+        }
+
+        public void setPgpKeyId(long id) {
+            this.pgpKeyId = id;
+        }
+
+        public Contact getContact() {
+            if (fullJid != null) {
+                return getAccount().getRoster().getContactFromRoster(realJid);
+            } else if (realJid != null) {
+                return getAccount().getRoster().getContact(realJid);
+            } else {
+                return null;
+            }
+        }
+
+        public boolean setAvatar(Avatar avatar) {
+            if (this.avatar != null && this.avatar.equals(avatar)) {
+                return false;
+            } else {
+                this.avatar = avatar;
+                return true;
+            }
+        }
+
+        public String getAvatar() {
+            if (avatar != null) {
+                return avatar.getFilename();
+            }
+            Avatar avatar = realJid != null ? getAccount().getRoster().getContact(realJid).getAvatar() : null;
+            return avatar == null ? null : avatar.getFilename();
+        }
+
+        public Account getAccount() {
+            return options.getAccount();
+        }
+
+        public Conversation getConversation() {
+            return options.getConversation();
+        }
+
+        public Jid getFullJid() {
+            return fullJid;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            User user = (User) o;
+
+            if (role != user.role) return false;
+            if (affiliation != user.affiliation) return false;
+            if (realJid != null ? !realJid.equals(user.realJid) : user.realJid != null)
+                return false;
+            return fullJid != null ? fullJid.equals(user.fullJid) : user.fullJid == null;
+
+        }
+
+        public boolean isDomain() {
+            return realJid != null && realJid.getLocal() == null && role == Role.NONE;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = role != null ? role.hashCode() : 0;
+            result = 31 * result + (affiliation != null ? affiliation.hashCode() : 0);
+            result = 31 * result + (realJid != null ? realJid.hashCode() : 0);
+            result = 31 * result + (fullJid != null ? fullJid.hashCode() : 0);
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return "[fulljid:" + String.valueOf(fullJid) + ",realjid:" + String.valueOf(realJid) + ",affiliation" + affiliation.toString() + "]";
+        }
+
+        public boolean realJidMatchesAccount() {
+            return realJid != null && realJid.equals(options.account.getJid().asBareJid());
+        }
+
+        @Override
+        public int compareTo(@NonNull User another) {
+            if (another.getAffiliation().outranks(getAffiliation())) {
+                return 1;
+            } else if (getAffiliation().outranks(another.getAffiliation())) {
+                return -1;
+            } else {
+                return getComparableName().compareToIgnoreCase(another.getComparableName());
+            }
+        }
+
+        private String getComparableName() {
+            Contact contact = getContact();
+            if (contact != null) {
+                return contact.getDisplayName();
+            } else {
+                String name = getName();
+                return name == null ? "" : name;
+            }
+        }
+
+        public Jid getRealJid() {
+            return realJid;
+        }
+
+        public void setRealJid(Jid jid) {
+            this.realJid = jid != null ? jid.asBareJid() : null;
+        }
+
+        public boolean setChatState(ChatState chatState) {
+            if (this.chatState == chatState) {
+                return false;
+            }
+            this.chatState = chatState;
+            return true;
+        }
     }
 }

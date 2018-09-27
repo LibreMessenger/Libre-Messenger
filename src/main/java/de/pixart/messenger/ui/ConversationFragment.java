@@ -1221,7 +1221,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     Jid tcp = message.getTrueCounterpart();
                     Jid cp = message.getCounterpart();
                     if (cp != null && !cp.isBareJid()) {
-                        User userByRealJid = tcp != null ? conversation.getMucOptions().findOrCreateUserByRealJid(tcp) : null;
+                        User userByRealJid = tcp != null ? conversation.getMucOptions().findOrCreateUserByRealJid(tcp, cp) : null;
                         final User user = userByRealJid != null ? userByRealJid : conversation.getMucOptions().findUserByFullJid(cp);
                         final PopupMenu popupMenu = new PopupMenu(getActivity(), v);
                         popupMenu.inflate(R.menu.muc_details_context);

@@ -80,8 +80,8 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
         if (avatar != null || cachedOnly) {
             return avatar;
         }
-        if (avatar == null && contact.getAvatar() != null) {
-            avatar = mXmppConnectionService.getFileBackend().getAvatar(contact.getAvatar(), size);
+        if (avatar == null && contact.getAvatarFilename() != null) {
+            avatar = mXmppConnectionService.getFileBackend().getAvatar(contact.getAvatarFilename(), size);
         }
         if (avatar == null && contact.getProfilePhoto() != null) {
             try {
@@ -146,7 +146,7 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
 
     public Bitmap get(final MucOptions.User user, final int size, boolean cachedOnly) {
         Contact c = user.getContact();
-        if (c != null && (c.getProfilePhoto() != null || c.getAvatar() != null || user.getAvatar() == null)) {
+        if (c != null && (c.getProfilePhoto() != null || c.getAvatarFilename() != null || user.getAvatar() == null)) {
             return get(c, size, cachedOnly);
         } else {
             return getImpl(user, size, cachedOnly);
@@ -183,6 +183,10 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
             }
         }
         for (Conversation conversation : mXmppConnectionService.findAllConferencesWith(contact)) {
+            MucOptions.User user = conversation.getMucOptions().findUserByRealJid(contact.getJid().asBareJid());
+            if (user != null) {
+                clear(user);
+            }
             clear(conversation);
         }
     }
@@ -234,7 +238,7 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
                 Jid jid = bookmark.getJid();
                 Account account = bookmark.getAccount();
                 Contact contact = jid == null ? null : account.getRoster().getContact(jid);
-                if (contact != null && contact.getAvatar() != null) {
+                if (contact != null && contact.getAvatarFilename() != null) {
                     return get(contact, size, cachedOnly);
                 }
                 String seed = jid != null ? jid.asBareJid().toString() : null;
@@ -414,14 +418,14 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
             return get(message.getCounterparts(), size, cachedOnly);
         } else if (message.getStatus() == Message.STATUS_RECEIVED) {
             Contact c = message.getContact();
-            if (c != null && (c.getProfilePhoto() != null || c.getAvatar() != null)) {
+            if (c != null && (c.getProfilePhoto() != null || c.getAvatarFilename() != null)) {
                 return get(c, size, cachedOnly);
             } else if (conversation instanceof Conversation && message.getConversation().getMode() == Conversation.MODE_MULTI) {
                 final Jid trueCounterpart = message.getTrueCounterpart();
                 final MucOptions mucOptions = ((Conversation) conversation).getMucOptions();
                 MucOptions.User user;
                 if (trueCounterpart != null) {
-                    user = mucOptions.findUserByRealJid(trueCounterpart);
+                    user = mucOptions.findOrCreateUserByRealJid(trueCounterpart, message.getCounterpart());
                 } else {
                     user = mucOptions.findUserByFullJid(message.getCounterpart());
                 }
@@ -520,11 +524,11 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
         Contact contact = user.getContact();
         if (contact != null) {
             Uri uri = null;
-            if (contact.getAvatar() != null) {
-                uri = mXmppConnectionService.getFileBackend().getAvatarUri(
-                        contact.getAvatar());
-            } else if (contact.getProfilePhoto() != null) {
+            if (contact.getProfilePhoto() != null) {
                 uri = Uri.parse(contact.getProfilePhoto());
+            } else if (contact.getAvatarFilename() != null) {
+                uri = mXmppConnectionService.getFileBackend().getAvatarUri(
+                        contact.getAvatarFilename());
             }
             if (drawTile(canvas, uri, left, top, right, bottom)) {
                 return true;
