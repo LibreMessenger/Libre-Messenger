@@ -3,6 +3,13 @@
 #### Version 2.1.1
 * make quick actions/attachment choice configurable
 * add a hideable separate quick button for voice messages
+* switch between speaker/earpiece while playing audios/voice messages
+* store bookmarks in PEP if server has ability to convert to old bookmarks
+* show Jabber IDs from address book in Start Conversation screen
+* preview and ask for confirmation before sending media files
+* view per conversation media files in contact and conference details screens
+* enable foreground service by default for Android 8 (notification can be disabled by long pressing it)
+* UI improvements
 * bug fixes
 
 #### Version 2.1.0
