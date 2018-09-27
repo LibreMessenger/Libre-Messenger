@@ -9,7 +9,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -37,14 +36,13 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
 
     private static final int REFRESH_INTERVAL = 250;
     private static final Object LOCK = new Object();
-    private static MediaPlayerWrapper player = null;
+    private static MediaPlayer player = null;
     private static Message currentlyPlayingMessage = null;
+    private static PowerManager.WakeLock wakeLock;
     private final MessageAdapter messageAdapter;
     private final WeakReferenceSet<RelativeLayout> audioPlayerLayouts = new WeakReferenceSet<>();
     private final SensorManager sensorManager;
     private final Sensor proximitySensor;
-    private static PowerManager.WakeLock wakeLock;
-
     private final PendingItem<WeakReference<ImageButton>> pendingOnClickView = new PendingItem<>();
 
     private final Handler handler = new Handler();
@@ -54,17 +52,7 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
         this.messageAdapter = adapter;
         this.sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         this.proximitySensor = this.sensorManager == null ? null : this.sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
-        if (Build.VERSION.SDK_INT >= 21) {
-            synchronized (AudioPlayer.LOCK) {
-                if (AudioPlayer.wakeLock == null) {
-                    final PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-                    AudioPlayer.wakeLock = powerManager == null ? null : powerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, AudioPlayer.class.getSimpleName());
-                    AudioPlayer.wakeLock.setReferenceCounted(false);
-                }
-            }
-        } else {
-            AudioPlayer.wakeLock = null;
-        }
+        initializeProximityWakeLock(context);
         synchronized (AudioPlayer.LOCK) {
             if (AudioPlayer.player != null) {
                 AudioPlayer.player.setOnCompletionListener(this);
@@ -77,6 +65,20 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
 
     private static String formatTime(int ms) {
         return String.format(Locale.ENGLISH, "%d:%02d", ms / 60000, Math.min(Math.round((ms % 60000) / 1000f), 59));
+    }
+
+    private void initializeProximityWakeLock(Context context) {
+        if (Build.VERSION.SDK_INT >= 21) {
+            synchronized (AudioPlayer.LOCK) {
+                if (AudioPlayer.wakeLock == null) {
+                    final PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+                    AudioPlayer.wakeLock = powerManager == null ? null : powerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, AudioPlayer.class.getSimpleName());
+                    AudioPlayer.wakeLock.setReferenceCounted(false);
+                }
+            }
+        } else {
+            AudioPlayer.wakeLock = null;
+        }
     }
 
     public void init(RelativeLayout audioPlayer, Message message) {
@@ -119,9 +121,6 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
             viewHolder.runtime.setText(formatTime(message.getFileParams().runtime));
             viewHolder.progress.setProgress(0);
             viewHolder.progress.setEnabled(false);
-            messageAdapter.flagScreenOff();
-            releaseProximityWakeLock();
-            messageAdapter.flagEnableInputs();
             return false;
         }
     }
@@ -141,6 +140,7 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
             ActivityCompat.requestPermissions(messageAdapter.getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, ConversationsActivity.REQUEST_PLAY_PAUSE);
             return;
         }
+        initializeProximityWakeLock(playPause.getContext());
         final RelativeLayout audioPlayer = (RelativeLayout) playPause.getParent();
         final ViewHolder viewHolder = ViewHolder.get(audioPlayer);
         final Message message = (Message) audioPlayer.getTag();
@@ -158,7 +158,6 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
             player.pause();
             messageAdapter.flagScreenOff();
             releaseProximityWakeLock();
-            messageAdapter.flagEnableInputs();
             viewHolder.playPause.setImageResource(viewHolder.darkBackground ? R.drawable.ic_play_arrow_white_36dp : R.drawable.ic_play_arrow_black_36dp);
         } else {
             viewHolder.progress.setEnabled(true);
@@ -178,7 +177,7 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
     }
 
     private boolean play(ViewHolder viewHolder, Message message, boolean earpiece) {
-        AudioPlayer.player = new MediaPlayerWrapper();
+        AudioPlayer.player = new MediaPlayer();
         try {
             AudioPlayer.currentlyPlayingMessage = message;
             AudioPlayer.player.setAudioStreamType(earpiece ? AudioManager.STREAM_VOICE_CALL : AudioManager.STREAM_MUSIC);
@@ -188,11 +187,6 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
             AudioPlayer.player.start();
             messageAdapter.flagScreenOn();
             acquireProximityWakeLock();
-            if (earpiece) {
-                messageAdapter.flagDisableInputs();
-            } else {
-                messageAdapter.flagEnableInputs();
-            }
             viewHolder.progress.setEnabled(true);
             viewHolder.playPause.setImageResource(viewHolder.darkBackground ? R.drawable.ic_pause_white_36dp : R.drawable.ic_pause_black_36dp);
             sensorManager.registerListener(this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
@@ -200,7 +194,6 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
         } catch (Exception e) {
             messageAdapter.flagScreenOff();
             releaseProximityWakeLock();
-            messageAdapter.flagEnableInputs();
             AudioPlayer.currentlyPlayingMessage = null;
             sensorManager.unregisterListener(this);
             return false;
@@ -234,10 +227,8 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
         AudioPlayer.player.release();
         messageAdapter.flagScreenOff();
         releaseProximityWakeLock();
-        messageAdapter.flagEnableInputs();
         AudioPlayer.player = null;
         resetPlayerUi();
-        sensorManager.unregisterListener(this);
     }
 
     private void resetPlayerUi() {
@@ -271,7 +262,6 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
             mediaPlayer.release();
             messageAdapter.flagScreenOff();
             releaseProximityWakeLock();
-            messageAdapter.flagEnableInputs();
             resetPlayerUi();
             sensorManager.unregisterListener(this);
         }
@@ -293,12 +283,10 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-
     }
 
     public void stop() {
@@ -393,6 +381,7 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
     }
+
     private void acquireProximityWakeLock() {
         synchronized (AudioPlayer.LOCK) {
             if (wakeLock != null) {
@@ -400,6 +389,7 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
             }
         }
     }
+
     private void releaseProximityWakeLock() {
         synchronized (AudioPlayer.LOCK) {
             if (wakeLock != null && wakeLock.isHeld()) {
@@ -407,6 +397,7 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
             }
         }
     }
+
     private ViewHolder getCurrentViewHolder() {
         for (WeakReference<RelativeLayout> audioPlayer : audioPlayerLayouts) {
             final Message message = (Message) audioPlayer.get().getTag();
@@ -437,20 +428,6 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
 
         public void setDarkBackground(boolean darkBackground) {
             this.darkBackground = darkBackground;
-        }
-    }
-
-    private static class MediaPlayerWrapper extends MediaPlayer {
-        private int streamType;
-
-        private int getAudioStreamType() {
-            return streamType;
-        }
-
-        @Override
-        public void setAudioStreamType(int streamType) {
-            this.streamType = streamType;
-            super.setAudioStreamType(streamType);
         }
     }
 }
