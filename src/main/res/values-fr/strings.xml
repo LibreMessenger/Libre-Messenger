@@ -95,7 +95,6 @@
   <string name="no_pgp_keys">Aucune clef OpenPGP n\'a été trouvée.</string>
   <string name="pref_general">Général</string>
   <string name="pref_attachments">Pièces jointes</string>
-  <string name="pref_notifications_summary">Notifier lors de la réception d\'un message</string>
   <string name="pref_vibrate">Vibration</string>
   <string name="pref_vibrate_summary">Vibrer lors de la réception d\'un message</string>
   <string name="pref_led">Notification LED</string>
@@ -542,7 +541,6 @@
   <string name="yesterday">Hier</string>
   <string name="pref_validate_hostname">Valider le nom de domaine avec DNSSEC</string>
   <string name="pref_validate_hostname_summary">Les certificats serveur qui comportent le nom de domaine validé sont considérés comme validés</string>
-  <string name="network_is_unreachable">Réseau inaccessible</string>
   <string name="certificate_does_not_contain_jid">Le certificat ne contient pas d\'ID Jabber</string>
   <string name="error_no_keys_to_trust_presence">Il n\'y a aucune clé utilisable disponible pour ce contact.\nAssurez-vous d\'avoir un abonnement de présence mutuelle.</string>
   <string name="server_info_partial">partiel</string>

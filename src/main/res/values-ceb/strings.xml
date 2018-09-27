@@ -106,8 +106,6 @@
   <string name="pref_accept_files_summary_mobileroaming">Kung konektado sa mobile nga data sa roaming awtomatik nga ang modawat sa mga file kay mas gamay pa sa…</string>
   <string name="pref_attachments">Mga naka-buyon uban</string>
   <string name="pref_notification_settings">Pagpahibalo</string>
-  <string name="pref_notifications">Mga pagpahibalo</string>
-  <string name="pref_notifications_summary">Pahibal-a ko kung naay bag-o nga mensahe ang maabot</string>
   <string name="pref_vibrate">Nikurog</string>
   <string name="pref_vibrate_summary">Mukurog kung naay bag-o nga mensahe ang maabot</string>
   <string name="pref_led">LED nga pagpahibalo</string>
@@ -615,7 +613,6 @@
   <string name="yesterday">Kagahapon</string>
   <string name="pref_validate_hostname">I-balido ang hostname kauban sa DNSSEC</string>
   <string name="pref_validate_hostname_summary">Ang mga sertipiko sa mga server nga naglangkob sa balido nga hostname giisip nga napamatud-an</string>
-  <string name="network_is_unreachable">Ang network dili ma-abot</string>
   <string name="certificate_does_not_contain_jid">Ang sertipiko wala maglangkob sa Jabber ID</string>
   <string name="error_no_keys_to_trust_presence">Walay mga yawe nga magamit alang niining kontak.\nSiguraduha nga ikaw adunay subskripsyon sa presensya sa usag usa.</string>
   <string name="mark_as_read">Markahi ug nabasa na</string>
@@ -629,8 +626,6 @@
   <string name="contacts_have_read_up_to_this_point">%s ang nabasa kutob dire nga punto</string>
   <string name="contact_has_read_up_to_this_point">%s ang nabasa kutob dire nga punto</string>
   <string name="contacts_and_n_more_have_read_up_to_this_point">%1$s ug %2$d uban pang nakabasa hantud diri nga punto</string>
-  <string name="pref_return_to_previous">Paspas sa Pagpakigbahin</string>
-  <string name="pref_return_to_previous_summary">Diha-diha dayon mobalik sa gelabyang mga kalihokan inay nga ablihan ang panag-istoryahan human sa pagpaambit sa usa ka butang</string>
   <string name="conversation_unencrypted_hint">Ang kini nga chat kay naka-encrypt, para sa seguridad kinahanglan ug mga rason para ma aktibo ang mensahe nga naka-encrypt gamit ug lock nga icon. Ang mas maayo nga encryption mao ang OMEMO.</string>
   <string name="pref_warn_unencrypted_chat">Pasidan-i kung ang chat wala naka-encrypt</string>
   <string name="pref_warn_unencrypted_chat_summary">Kon ang mensahe nga naka-encrypt kay anaa, kinahanglan nimo kini gamiton. Kon dili ka magamit sa pag-encrypt sa mensahe, ipakita ang usa ka pasidaan nga mensahe sulod sa chat.</string>
