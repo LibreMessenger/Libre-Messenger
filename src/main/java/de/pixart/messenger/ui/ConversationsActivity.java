@@ -105,7 +105,6 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
     public static final String ACTION_VIEW_CONVERSATION = "de.pixart.messenger.VIEW";
     public static final String EXTRA_CONVERSATION = "conversationUuid";
     public static final String EXTRA_DOWNLOAD_UUID = "de.pixart.messenger.download_uuid";
-    public static final String EXTRA_TEXT = "text";
     public static final String EXTRA_AS_QUOTE = "as_quote";
     public static final String EXTRA_NICK = "nick";
     public static final String EXTRA_IS_PRIVATE_MESSAGE = "pm";
