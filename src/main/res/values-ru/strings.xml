@@ -281,8 +281,21 @@
   <string name="toast_message_otr_fingerprint">OTR отпечаток был скопирован в буфер обмена!</string>
   <string name="toast_message_omemo_fingerprint">OMEMO отпечаток был скопирован в буфер обмена!</string>
   <string name="conference_banned">Вы заблокированы в этом групповом чате</string>
+  <string name="conference_members_only">Этот групповой чат только для его членов</string>
   <string name="conference_kicked">Вас отключили от этого группового чата</string>
   <string name="conference_shutdown">Этот групповой чат был закрыт</string>
+  <string name="using_account">используется аккаунт %s</string>
+  <string name="checking_x">Проверяется %s по HTTP хосту</string>
+  <string name="not_connected_try_again">Вы не подключены. Попробуйте ещё раз позднее</string>
+  <string name="check_x_filesize">Проверить %s размер</string>
+  <string name="check_x_filesize_on_host">Проверить %1$s размер по %2$s</string>
+  <string name="message_options">Параметры сообщения</string>
+  <string name="copy_original_url">Копировать оригинальный URL</string>
+  <string name="send_again">Отправить снова</string>
+  <string name="file_url">URL файла</string>
+  <string name="url_copied_to_clipboard">URL скопирован в буфер обмена</string>
+  <string name="scan_qr_code">Сканировать штрих-код</string>
+  <string name="show_qr_code">Показать штрих-код</string>
   <string name="view_media">Просмотреть медиа</string>
   <string name="media_browser">Медиа браузер</string>
 </resources>
