@@ -845,7 +845,7 @@ public class NotificationService {
     public Notification createForegroundNotification() {
         final Notification.Builder mBuilder = new Notification.Builder(mXmppConnectionService);
         mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.conversations_foreground_service));
-        if (Compatibility.twentySix() || Config.SHOW_CONNECTED_ACCOUNTS) {
+        if (Compatibility.runsAndTargetsTwentySix(mXmppConnectionService) || Config.SHOW_CONNECTED_ACCOUNTS) {
             List<Account> accounts = mXmppConnectionService.getAccounts();
             int enabled = 0;
             int connected = 0;
@@ -896,7 +896,7 @@ public class NotificationService {
         mBuilder.setWhen(0);
         mBuilder.setPriority(Notification.PRIORITY_LOW);
         mBuilder.setSmallIcon(R.drawable.ic_link_white_24dp);
-        if (Compatibility.twentySix()) {
+        if (Compatibility.runsTwentySix()) {
             mBuilder.setChannelId(FOREGROUND_CHANNEL_ID);
         }
         return mBuilder.build();
@@ -949,7 +949,7 @@ public class NotificationService {
                 145,
                 new Intent(mXmppConnectionService, ManageAccountActivity.class),
                 PendingIntent.FLAG_UPDATE_CURRENT));
-        if (Compatibility.twentySix()) {
+        if (Compatibility.runsTwentySix()) {
             mBuilder.setChannelId(ERROR_CHANNEL_ID);
         }
         notify(ERROR_NOTIFICATION_ID, mBuilder.build());
@@ -962,7 +962,7 @@ public class NotificationService {
         mBuilder.setSmallIcon(R.drawable.ic_hourglass_empty_white_24dp);
         mBuilder.setContentIntent(createContentIntent(message.getConversation()));
         mBuilder.setOngoing(true);
-        if (Compatibility.twentySix()) {
+        if (Compatibility.runsTwentySix()) {
             mBuilder.setChannelId(VIDEOCOMPRESSION_CHANNEL_ID);
         }
         Notification notification = mBuilder.build();
@@ -980,7 +980,7 @@ public class NotificationService {
         mBuilder.setProgress(0, 0, true);
         mBuilder.setSmallIcon(R.drawable.ic_import_export_white_24dp);
         mBuilder.setOngoing(true);
-        if (Compatibility.twentySix()) {
+        if (Compatibility.runsTwentySix()) {
             mBuilder.setChannelId(BACKUP_CHANNEL_ID);
         }
         return mBuilder.build();
@@ -998,7 +998,7 @@ public class NotificationService {
         mBuilder.setSmallIcon(R.drawable.ic_update_notification);
         mBuilder.setContentIntent(intent);
         mBuilder.setOngoing(true);
-        if (Compatibility.twentySix()) {
+        if (Compatibility.runsTwentySix()) {
             mBuilder.setChannelId(UPDATE_CHANNEL_ID);
         }
         return mBuilder.build();

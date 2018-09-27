@@ -1103,7 +1103,7 @@ public class XmppConnectionService extends Service {
         Resolver.init(this);
         this.mRandom = new SecureRandom();
         updateMemorizingTrustmanager();
-        if (Compatibility.twentySix()) {
+        if (Compatibility.runsTwentySix()) {
             mNotificationService.initializeChannels();
         }
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
