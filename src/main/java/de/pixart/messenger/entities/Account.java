@@ -59,197 +59,34 @@ public class Account extends AbstractEntity {
     public static final int OPTION_USECOMPRESSION = 3;
     public static final int OPTION_MAGIC_CREATE = 4;
     public static final int OPTION_REQUIRES_ACCESS_MODE_CHANGE = 5;
- 	public static final int OPTION_LOGGED_IN_SUCCESSFULLY = 6;
+    public static final int OPTION_LOGGED_IN_SUCCESSFULLY = 6;
     public static final int OPTION_HTTP_UPLOAD_AVAILABLE = 7;
-    public final HashSet<Pair<String, String>> inProgressDiscoFetches = new HashSet<>();
-
-    public boolean httpUploadAvailable(long filesize) {
-        return xmppConnection != null && (xmppConnection.getFeatures().httpUpload(filesize) || xmppConnection.getFeatures().p1S3FileTransfer());
-    }
-
-    public boolean httpUploadAvailable() {
-        return isOptionSet(OPTION_HTTP_UPLOAD_AVAILABLE) || httpUploadAvailable(0);
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public XmppConnection.Identity getServerIdentity() {
-        if (xmppConnection == null) {
-            return XmppConnection.Identity.UNKNOWN;
-        } else {
-            return xmppConnection.getServerIdentity();
-        }
-    }
-
-    public Contact getSelfContact() {
-        return getRoster().getContact(jid);
-    }
-
-    public boolean hasPendingPgpIntent(Conversation conversation) {
-        return pgpDecryptionService != null && pgpDecryptionService.hasPendingIntent(conversation);
-    }
-
-    public boolean isPgpDecryptionServiceConnected() {
-        return pgpDecryptionService != null && pgpDecryptionService.isConnected();
-    }
-
-    public boolean setShowErrorNotification(boolean newValue) {
-        boolean oldValue = showErrorNotification();
-        setKey("show_error", Boolean.toString(newValue));
-        return newValue != oldValue;
-    }
-
-    public boolean showErrorNotification() {
-        String key = getKey("show_error");
-        return key == null || Boolean.parseBoolean(key);
-    }
-
-    public boolean isEnabled() {
-        return !isOptionSet(Account.OPTION_DISABLED);
-    }
-
-    public enum State {
-        DISABLED(false, false),
-        OFFLINE(false),
-        CONNECTING(false),
-        ONLINE(false),
-        NO_INTERNET(false),
-        UNAUTHORIZED,
-        SERVER_NOT_FOUND,
-        REGISTRATION_SUCCESSFUL(false),
-        REGISTRATION_FAILED(true, false),
-        REGISTRATION_WEB(true, false),
-        REGISTRATION_CONFLICT(true, false),
-        REGISTRATION_NOT_SUPPORTED(true, false),
-        REGISTRATION_PLEASE_WAIT(true, false),
-        REGISTRATION_PASSWORD_TOO_WEAK(true, false),
-        TLS_ERROR,
-        INCOMPATIBLE_SERVER,
-        TOR_NOT_AVAILABLE,
-        DOWNGRADE_ATTACK,
-        SESSION_FAILURE,
-        BIND_FAILURE,
-        HOST_UNKNOWN,
-        STREAM_ERROR,
-        POLICY_VIOLATION,
-        PAYMENT_REQUIRED,
-        MISSING_INTERNET_PERMISSION(false);
-
-        private final boolean isError;
-        private final boolean attemptReconnect;
-
-        public boolean isError() {
-            return this.isError;
-        }
-
-        public boolean isAttemptReconnect() {
-            return this.attemptReconnect;
-        }
-
-        State(final boolean isError) {
-            this(isError, true);
-        }
-
-        State(final boolean isError, final boolean reconnect) {
-            this.isError = isError;
-            this.attemptReconnect = reconnect;
-        }
-
-        State() {
-            this(true, true);
-        }
-
-        public int getReadableId() {
-            switch (this) {
-                case DISABLED:
-                    return R.string.account_status_disabled;
-                case ONLINE:
-                    return R.string.account_status_online;
-                case CONNECTING:
-                    return R.string.account_status_connecting;
-                case OFFLINE:
-                    return R.string.account_status_offline;
-                case UNAUTHORIZED:
-                    return R.string.account_status_unauthorized;
-                case SERVER_NOT_FOUND:
-                    return R.string.account_status_not_found;
-                case NO_INTERNET:
-                    return R.string.account_status_no_internet;
-                case REGISTRATION_FAILED:
-                    return R.string.account_status_regis_fail;
-                case REGISTRATION_WEB:
-                    return R.string.account_status_regis_web;
-                case REGISTRATION_CONFLICT:
-                    return R.string.account_status_regis_conflict;
-                case REGISTRATION_SUCCESSFUL:
-                    return R.string.account_status_regis_success;
-                case REGISTRATION_NOT_SUPPORTED:
-                    return R.string.account_status_regis_not_sup;
-                case TLS_ERROR:
-                    return R.string.account_status_tls_error;
-                case INCOMPATIBLE_SERVER:
-                    return R.string.account_status_incompatible_server;
-                case TOR_NOT_AVAILABLE:
-                    return R.string.account_status_tor_unavailable;
-                case BIND_FAILURE:
-                    return R.string.account_status_bind_failure;
-                case SESSION_FAILURE:
-                    return R.string.session_failure;
-                case DOWNGRADE_ATTACK:
-                    return R.string.sasl_downgrade;
-                case HOST_UNKNOWN:
-                    return R.string.account_status_host_unknown;
-                case POLICY_VIOLATION:
-                    return R.string.account_status_policy_violation;
-                case REGISTRATION_PLEASE_WAIT:
-                    return R.string.registration_please_wait;
-                case REGISTRATION_PASSWORD_TOO_WEAK:
-                    return R.string.registration_password_too_weak;
-                case STREAM_ERROR:
-                    return R.string.account_status_stream_error;
-                case PAYMENT_REQUIRED:
-                    return R.string.payment_required;
-                case MISSING_INTERNET_PERMISSION:
-                    return R.string.missing_internet_permission;
-                default:
-                    return R.string.account_status_unknown;
-            }
-        }
-    }
-
-    public List<Conversation> pendingConferenceJoins = new CopyOnWriteArrayList<>();
-    public List<Conversation> pendingConferenceLeaves = new CopyOnWriteArrayList<>();
-
     private static final String KEY_PGP_SIGNATURE = "pgp_signature";
     private static final String KEY_PGP_ID = "pgp_id";
-
+    public final HashSet<Pair<String, String>> inProgressDiscoFetches = new HashSet<>();
+    protected final JSONObject keys;
+    private final Roster roster = new Roster(this);
+    private final Collection<Jid> blocklist = new CopyOnWriteArraySet<>();
+    public List<Conversation> pendingConferenceJoins = new CopyOnWriteArrayList<>();
+    public List<Conversation> pendingConferenceLeaves = new CopyOnWriteArrayList<>();
     protected Jid jid;
     protected String password;
     protected int options = 0;
-    private String rosterVersion;
     protected State status = State.OFFLINE;
-    protected final JSONObject keys;
     protected String resource;
     protected String avatar;
-    protected String displayName = null;
     protected String hostname = null;
     protected int port = 5222;
     protected boolean online = false;
     private OtrService mOtrService = null;
+    private String rosterVersion;
+    private String displayName = null;
     private AxolotlService axolotlService = null;
     private PgpDecryptionService pgpDecryptionService = null;
     private XmppConnection xmppConnection = null;
     private long mEndGracePeriod = 0L;
     private String otrFingerprint;
-    private final Roster roster = new Roster(this);
     private List<Bookmark> bookmarks = new CopyOnWriteArrayList<>();
-    private final Collection<Jid> blocklist = new CopyOnWriteArraySet<>();
     private Presence.Status presenceStatus = Presence.Status.ONLINE;
     private String presenceStatusMessage = null;
 
@@ -308,6 +145,57 @@ public class Account extends AbstractEntity {
                 cursor.getString(cursor.getColumnIndex(STATUS_MESSAGE)));
     }
 
+    public boolean httpUploadAvailable(long filesize) {
+        return xmppConnection != null && (xmppConnection.getFeatures().httpUpload(filesize) || xmppConnection.getFeatures().p1S3FileTransfer());
+    }
+
+    public boolean httpUploadAvailable() {
+        return isOptionSet(OPTION_HTTP_UPLOAD_AVAILABLE) || httpUploadAvailable(0);
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public XmppConnection.Identity getServerIdentity() {
+        if (xmppConnection == null) {
+            return XmppConnection.Identity.UNKNOWN;
+        } else {
+            return xmppConnection.getServerIdentity();
+        }
+    }
+
+    public Contact getSelfContact() {
+        return getRoster().getContact(jid);
+    }
+
+    public boolean hasPendingPgpIntent(Conversation conversation) {
+        return pgpDecryptionService != null && pgpDecryptionService.hasPendingIntent(conversation);
+    }
+
+    public boolean isPgpDecryptionServiceConnected() {
+        return pgpDecryptionService != null && pgpDecryptionService.isConnected();
+    }
+
+    public boolean setShowErrorNotification(boolean newValue) {
+        boolean oldValue = showErrorNotification();
+        setKey("show_error", Boolean.toString(newValue));
+        return newValue != oldValue;
+    }
+
+    public boolean showErrorNotification() {
+        String key = getKey("show_error");
+        return key == null || Boolean.parseBoolean(key);
+    }
+
+    public boolean isEnabled() {
+        return !isOptionSet(Account.OPTION_DISABLED);
+    }
+
     public boolean isOptionSet(final int option) {
         return ((options & (1 << option)) != 0);
     }
@@ -354,12 +242,12 @@ public class Account extends AbstractEntity {
         this.password = password;
     }
 
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
-    }
-
     public String getHostname() {
         return this.hostname == null ? "" : this.hostname;
+    }
+
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
     }
 
     public boolean isOnion() {
@@ -367,12 +255,12 @@ public class Account extends AbstractEntity {
         return server != null && server.endsWith(".onion");
     }
 
-    public void setPort(int port) {
-        this.port = port;
-    }
-
     public int getPort() {
         return this.port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 
     public State getStatus() {
@@ -383,12 +271,12 @@ public class Account extends AbstractEntity {
         }
     }
 
-    public State getTrueStatus() {
-        return this.status;
-    }
-
     public void setStatus(final State status) {
         this.status = status;
+    }
+
+    public State getTrueStatus() {
+        return this.status;
     }
 
     public boolean errorStatus() {
@@ -401,20 +289,20 @@ public class Account extends AbstractEntity {
                 && getXmppConnection().getAttempt() >= 3;
     }
 
-    public void setPresenceStatus(Presence.Status status) {
-        this.presenceStatus = status;
-    }
-
     public Presence.Status getPresenceStatus() {
         return this.presenceStatus;
     }
 
-    public void setPresenceStatusMessage(String message) {
-        this.presenceStatusMessage = message;
+    public void setPresenceStatus(Presence.Status status) {
+        this.presenceStatus = status;
     }
 
     public String getPresenceStatusMessage() {
         return this.presenceStatusMessage;
+    }
+
+    public void setPresenceStatusMessage(String message) {
+        this.presenceStatusMessage = message;
     }
 
     public String getResource() {
@@ -613,7 +501,7 @@ public class Account extends AbstractEntity {
         return getBookmark(conferenceJid) != null;
     }
 
-    public Bookmark getBookmark(final Jid jid) {
+    Bookmark getBookmark(final Jid jid) {
         for (final Bookmark bookmark : this.bookmarks) {
             if (bookmark.getJid() != null && jid.asBareJid().equals(bookmark.getJid().asBareJid())) {
                 return bookmark;
@@ -653,16 +541,17 @@ public class Account extends AbstractEntity {
         List<XmppUri.Fingerprint> fingerprints = this.getFingerprints();
         String uri = "xmpp:" + this.getJid().asBareJid().toEscapedString();
         if (fingerprints.size() > 0) {
-            return XmppUri.getFingerprintUri(uri,fingerprints,';');
+            return XmppUri.getFingerprintUri(uri, fingerprints, ';');
         } else {
             return uri;
         }
     }
+
     public String getShareableLink() {
         List<XmppUri.Fingerprint> fingerprints = this.getFingerprints();
         String uri = Config.inviteUserURL + XmppUri.lameUrlEncode(this.getJid().asBareJid().toEscapedString());
         if (fingerprints.size() > 0) {
-            return XmppUri.getFingerprintUri(uri,fingerprints,'&');
+            return XmppUri.getFingerprintUri(uri, fingerprints, '&');
         } else {
             return uri;
         }
@@ -705,5 +594,117 @@ public class Account extends AbstractEntity {
 
     public boolean isOnlineAndConnected() {
         return this.getStatus() == State.ONLINE && this.getXmppConnection() != null;
+    }
+
+    public enum State {
+        DISABLED(false, false),
+        OFFLINE(false),
+        CONNECTING(false),
+        ONLINE(false),
+        NO_INTERNET(false),
+        UNAUTHORIZED,
+        SERVER_NOT_FOUND,
+        REGISTRATION_SUCCESSFUL(false),
+        REGISTRATION_FAILED(true, false),
+        REGISTRATION_WEB(true, false),
+        REGISTRATION_CONFLICT(true, false),
+        REGISTRATION_NOT_SUPPORTED(true, false),
+        REGISTRATION_PLEASE_WAIT(true, false),
+        REGISTRATION_PASSWORD_TOO_WEAK(true, false),
+        TLS_ERROR,
+        INCOMPATIBLE_SERVER,
+        TOR_NOT_AVAILABLE,
+        DOWNGRADE_ATTACK,
+        SESSION_FAILURE,
+        BIND_FAILURE,
+        HOST_UNKNOWN,
+        STREAM_ERROR,
+        STREAM_OPENING_ERROR,
+        POLICY_VIOLATION,
+        PAYMENT_REQUIRED,
+        MISSING_INTERNET_PERMISSION(false);
+
+        private final boolean isError;
+        private final boolean attemptReconnect;
+
+        State(final boolean isError) {
+            this(isError, true);
+        }
+
+        State(final boolean isError, final boolean reconnect) {
+            this.isError = isError;
+            this.attemptReconnect = reconnect;
+        }
+
+        State() {
+            this(true, true);
+        }
+
+        public boolean isError() {
+            return this.isError;
+        }
+
+        public boolean isAttemptReconnect() {
+            return this.attemptReconnect;
+        }
+
+        public int getReadableId() {
+            switch (this) {
+                case DISABLED:
+                    return R.string.account_status_disabled;
+                case ONLINE:
+                    return R.string.account_status_online;
+                case CONNECTING:
+                    return R.string.account_status_connecting;
+                case OFFLINE:
+                    return R.string.account_status_offline;
+                case UNAUTHORIZED:
+                    return R.string.account_status_unauthorized;
+                case SERVER_NOT_FOUND:
+                    return R.string.account_status_not_found;
+                case NO_INTERNET:
+                    return R.string.account_status_no_internet;
+                case REGISTRATION_FAILED:
+                    return R.string.account_status_regis_fail;
+                case REGISTRATION_WEB:
+                    return R.string.account_status_regis_web;
+                case REGISTRATION_CONFLICT:
+                    return R.string.account_status_regis_conflict;
+                case REGISTRATION_SUCCESSFUL:
+                    return R.string.account_status_regis_success;
+                case REGISTRATION_NOT_SUPPORTED:
+                    return R.string.account_status_regis_not_sup;
+                case TLS_ERROR:
+                    return R.string.account_status_tls_error;
+                case INCOMPATIBLE_SERVER:
+                    return R.string.account_status_incompatible_server;
+                case TOR_NOT_AVAILABLE:
+                    return R.string.account_status_tor_unavailable;
+                case BIND_FAILURE:
+                    return R.string.account_status_bind_failure;
+                case SESSION_FAILURE:
+                    return R.string.session_failure;
+                case DOWNGRADE_ATTACK:
+                    return R.string.sasl_downgrade;
+                case HOST_UNKNOWN:
+                    return R.string.account_status_host_unknown;
+                case POLICY_VIOLATION:
+                    return R.string.account_status_policy_violation;
+                case REGISTRATION_PLEASE_WAIT:
+                    return R.string.registration_please_wait;
+                case REGISTRATION_PASSWORD_TOO_WEAK:
+                    return R.string.registration_password_too_weak;
+                case STREAM_ERROR:
+                    return R.string.account_status_stream_error;
+                case STREAM_OPENING_ERROR:
+                    return R.string.account_status_stream_opening_error;
+                case PAYMENT_REQUIRED:
+                    return R.string.payment_required;
+                case MISSING_INTERNET_PERMISSION:
+                    return R.string.missing_internet_permission;
+                default:
+                    return R.string.account_status_unknown;
+            }
+        }
     }
 }

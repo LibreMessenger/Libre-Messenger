@@ -423,6 +423,9 @@ public class XmppConnection implements Runnable {
                             break; // successfully connected to server that speaks xmpp
                         } else {
                             localSocket.close();
+                            if (!iterator.hasNext()) {
+                                throw new StateChangingException(Account.State.STREAM_OPENING_ERROR);
+                            }
                         }
                     } catch (final StateChangingException e) {
                         throw e;
@@ -545,7 +548,7 @@ public class XmppConnection implements Runnable {
                 if (tag != null && tag.isStart("stream")) {
                     processStream();
                 } else {
-                    throw new IOException("server didn't restart stream after successful auth");
+                    throw new StateChangingException(Account.State.STREAM_OPENING_ERROR);
                 }
                 break;
             } else if (nextTag.isStart("failure")) {
@@ -887,7 +890,7 @@ public class XmppConnection implements Runnable {
                 SSLSocketHelper.log(account, sslSocket);
                 processStream();
             } else {
-                throw new IOException("server didn't restart stream after STARTTLS");
+                throw new StateChangingException(Account.State.STREAM_OPENING_ERROR);
             }
             sslSocket.close();
         } catch (final NoSuchAlgorithmException | KeyManagementException e1) {
