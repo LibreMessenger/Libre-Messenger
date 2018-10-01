@@ -34,7 +34,7 @@ abstract class ScramMechanism extends SaslMechanism {
                 // Map keys are "bytesToHex(JID),bytesToHex(password),bytesToHex(salt),iterations,SASL-Mechanism".
                 // Changing any of these values forces a cache miss. `CryptoHelper.bytesToHex()'
                 // is applied to prevent commas in the strings breaking things.
-                final String[] kparts = k.split(",", 4);
+                final String[] kparts = k.split(",", 5);
                 try {
                     final byte[] saltedPassword, serverKey, clientKey;
                     saltedPassword = hi(CryptoHelper.hexToString(kparts[1]).getBytes(),
@@ -145,12 +145,12 @@ abstract class ScramMechanism extends SaslMechanism {
                                 break;
                             case 'm':
                                 /*
-								 * RFC 5802:
-								 * m: This attribute is reserved for future extensibility.  In this
-								 * version of SCRAM, its presence in a client or a server message
-								 * MUST cause authentication failure when the attribute is parsed by
-								 * the other end.
-								 */
+                                 * RFC 5802:
+                                 * m: This attribute is reserved for future extensibility.  In this
+                                 * version of SCRAM, its presence in a client or a server message
+                                 * MUST cause authentication failure when the attribute is parsed by
+                                 * the other end.
+                                 */
                                 throw new AuthenticationException("Server sent reserved token: `m'");
                         }
                     }
@@ -176,7 +176,7 @@ abstract class ScramMechanism extends SaslMechanism {
                         CryptoHelper.bytesToHex(account.getJid().asBareJid().toString().getBytes()) + ","
                                 + CryptoHelper.bytesToHex(account.getPassword().getBytes()) + ","
                                 + CryptoHelper.bytesToHex(salt.getBytes()) + ","
-                                + String.valueOf(iterationCount)
+                                + String.valueOf(iterationCount) + ","
                                 + getMechanism()
                 );
                 if (keys == null) {
