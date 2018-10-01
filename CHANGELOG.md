@@ -10,6 +10,7 @@
 * view per conversation media files in contact and conference details screens
 * enable foreground service by default for Android 8 (notification can be disabled by long pressing it)
 * UI improvements
+* support TLSv1.3 (ejabberd ≤ 18.06 is incompatible with openssl 1.1.1 - Update ejabberd or downgrade openssl if you get ›Stream opening error‹)
 * bug fixes
 
 #### Version 2.1.0
