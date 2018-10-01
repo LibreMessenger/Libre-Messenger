@@ -590,7 +590,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         } else {
             this.binding.mucSubject.setVisibility(View.GONE);
         }
-        this.binding.mucYourNick.setText(mucOptions.getActualNick());
+        this.binding.mucYourNick.setText(EmojiWrapper.transform(mucOptions.getActualNick()));
         if (mucOptions.online()) {
             this.binding.mucMoreDetails.setVisibility(View.VISIBLE);
             this.binding.mucSettings.setVisibility(View.VISIBLE);
@@ -704,10 +704,10 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             Contact contact = user.getContact();
             String name = user.getName();
             if (contact != null) {
-                binding.contactDisplayName.setText(contact.getDisplayName());
-                binding.contactJid.setText((name != null ? name + " \u2022 " : "") + getStatus(user));
+                binding.contactDisplayName.setText(EmojiWrapper.transform(contact.getDisplayName()));
+                binding.contactJid.setText((name != null ? EmojiWrapper.transform(name) + " \u2022 " : "") + getStatus(user));
             } else {
-                binding.contactDisplayName.setText(name == null ? "" : name);
+                binding.contactDisplayName.setText(name == null ? "" : EmojiWrapper.transform(name));
                 binding.contactJid.setText(getStatus(user));
 
             }

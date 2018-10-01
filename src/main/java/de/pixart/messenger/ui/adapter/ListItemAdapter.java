@@ -8,7 +8,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.support.text.emoji.widget.EmojiTextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +27,7 @@ import de.pixart.messenger.entities.ListItem;
 import de.pixart.messenger.ui.SettingsActivity;
 import de.pixart.messenger.ui.XmppActivity;
 import de.pixart.messenger.ui.util.StyledAttributes;
+import de.pixart.messenger.utils.EmojiWrapper;
 import de.pixart.messenger.utils.IrregularUnicodeDetector;
 import de.pixart.messenger.utils.UIHelper;
 import rocks.xmpp.addr.Jid;
@@ -97,7 +97,7 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
         } else {
             viewHolder.jid.setVisibility(View.GONE);
         }
-        viewHolder.name.setText(item.getDisplayName());
+        viewHolder.name.setText(EmojiWrapper.transform(item.getDisplayName()));
         if (tags.size() != 0) {
             for (ListItem.Tag tag : tags) {
                 offline = tag.getOffline() == 1;
@@ -220,7 +220,7 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
     }
 
     private static class ViewHolder {
-        private EmojiTextView name;
+        private TextView name;
         private TextView jid;
         private ImageView avatar;
         private FlowLayout tags;

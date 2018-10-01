@@ -839,7 +839,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             } else {
                 viewHolder.status_message.setVisibility(View.VISIBLE);
                 viewHolder.load_more_messages.setVisibility(View.GONE);
-                viewHolder.status_message.setText(message.getBody());
+                viewHolder.status_message.setText(EmojiWrapper.transform(message.getBody()));
                 boolean showAvatar;
                 if (conversation.getMode() == Conversation.MODE_SINGLE) {
                     showAvatar = true;

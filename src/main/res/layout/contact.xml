@@ -25,7 +25,7 @@
             android:orientation="vertical"
             android:paddingLeft="@dimen/avatar_item_distance">
 
-            <android.support.text.emoji.widget.EmojiTextView
+            <TextView
                 android:id="@+id/contact_display_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

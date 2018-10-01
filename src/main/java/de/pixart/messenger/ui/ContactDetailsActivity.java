@@ -53,6 +53,7 @@ import de.pixart.messenger.ui.util.Attachment;
 import de.pixart.messenger.ui.util.GridManager;
 import de.pixart.messenger.utils.Compatibility;
 import de.pixart.messenger.utils.CryptoHelper;
+import de.pixart.messenger.utils.EmojiWrapper;
 import de.pixart.messenger.utils.IrregularUnicodeDetector;
 import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import de.pixart.messenger.utils.Namespace;
@@ -393,7 +394,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
                 ab.setDisplayShowCustomEnabled(true);
                 TextView abtitle = findViewById(android.R.id.text1);
                 TextView absubtitle = findViewById(android.R.id.text2);
-                abtitle.setText(contact.getDisplayName());
+                abtitle.setText(EmojiWrapper.transform(contact.getDisplayName()));
                 abtitle.setSelected(true);
                 abtitle.setClickable(false);
                 absubtitle.setVisibility(View.GONE);
@@ -443,7 +444,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
                         builder.append("\n");
                     }
                 }
-                binding.statusMessage.setText(builder);
+                binding.statusMessage.setText(EmojiWrapper.transform(builder));
             }
 
             String resources = contact.getPresences().getMostAvailableResource();

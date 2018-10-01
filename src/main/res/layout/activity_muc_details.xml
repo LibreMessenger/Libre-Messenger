@@ -373,7 +373,7 @@
                                     android:orientation="vertical"
                                     android:paddingLeft="@dimen/avatar_item_distance">
 
-                                    <android.support.text.emoji.widget.EmojiTextView
+                                    <TextView
                                         android:id="@+id/muc_your_nick"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
