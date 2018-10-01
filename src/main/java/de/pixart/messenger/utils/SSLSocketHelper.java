@@ -1,6 +1,6 @@
 package de.pixart.messenger.utils;
 
-import android.os.Build;
+import android.util.Log;
 
 import java.lang.reflect.Method;
 import java.security.NoSuchAlgorithmException;
@@ -9,12 +9,16 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
+import de.pixart.messenger.Config;
+import de.pixart.messenger.entities.Account;
+
 public class SSLSocketHelper {
 
-    public static void setSecurity(final SSLSocket sslSocket) throws NoSuchAlgorithmException {
+    public static void setSecurity(final SSLSocket sslSocket) {
         final String[] supportProtocols;
         final Collection<String> supportedProtocols = new LinkedList<>(
                 Arrays.asList(sslSocket.getSupportedProtocols()));
@@ -31,14 +35,8 @@ public class SSLSocketHelper {
     }
 
     public static void setSNIHost(final SSLSocketFactory factory, final SSLSocket socket, final String hostname) {
-        if (factory instanceof android.net.SSLCertificateSocketFactory && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        if (factory instanceof android.net.SSLCertificateSocketFactory) {
             ((android.net.SSLCertificateSocketFactory) factory).setHostname(socket, hostname);
-        } else {
-            try {
-                socket.getClass().getMethod("setHostname", String.class).invoke(socket, hostname);
-            } catch (Throwable e) {
-                // ignore any error, we just can't set the hostname...
-            }
         }
     }
 
@@ -64,10 +62,11 @@ public class SSLSocketHelper {
     }
 
     public static SSLContext getSSLContext() throws NoSuchAlgorithmException {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            return SSLContext.getInstance("TLSv1.2");
-        } else {
-            return SSLContext.getInstance("TLS");
-        }
+        return SSLContext.getInstance("TLSv1.3");
+    }
+
+    public static void log(Account account, SSLSocket socket) {
+        SSLSession session = socket.getSession();
+        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": protocol=" + session.getProtocol() + " cipher=" + session.getCipherSuite());
     }
 }

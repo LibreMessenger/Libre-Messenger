@@ -47,12 +47,14 @@ import net.java.otr4j.session.SessionID;
 import net.java.otr4j.session.SessionImpl;
 import net.java.otr4j.session.SessionStatus;
 
+import org.conscrypt.Conscrypt;
 import org.openintents.openpgp.IOpenPgpService2;
 import org.openintents.openpgp.util.OpenPgpApi;
 import org.openintents.openpgp.util.OpenPgpServiceConnection;
 
 import java.net.URL;
 import java.security.SecureRandom;
+import java.security.Security;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
@@ -125,7 +127,6 @@ import de.pixart.messenger.utils.ExceptionHelper;
 import de.pixart.messenger.utils.MimeUtils;
 import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.utils.OnPhoneContactsLoadedListener;
-import de.pixart.messenger.utils.PRNGFixes;
 import de.pixart.messenger.utils.PhoneHelper;
 import de.pixart.messenger.utils.QuickLoader;
 import de.pixart.messenger.utils.ReplacingSerialSingleThreadExecutor;
@@ -1100,7 +1101,7 @@ public class XmppConnectionService extends Service {
     public void onCreate() {
         OmemoSetting.load(this);
         ExceptionHelper.init(getApplicationContext());
-        PRNGFixes.apply();
+        Security.insertProviderAt(Conscrypt.newProvider(), 1);
         Resolver.init(this);
         this.mRandom = new SecureRandom();
         updateMemorizingTrustmanager();
