@@ -107,7 +107,7 @@ public class NotificationService {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void initializeChannels() {
         final Context c = mXmppConnectionService;
-        NotificationManager notificationManager = c.getSystemService(NotificationManager.class);
+        final NotificationManager notificationManager = c.getSystemService(NotificationManager.class);
         if (notificationManager == null) {
             return;
         }
