@@ -708,6 +708,8 @@ public class Message extends AbstractEntity {
                 extension = MimeUtils.extractRelevantExtension(url);
             } catch (MalformedURLException e) {
                 return null;
+            } catch (Exception e) {
+                return null;
             }
         }
         return MimeUtils.guessMimeTypeFromExtension(extension);
