@@ -66,6 +66,9 @@ public class ConversationMenuConfigurator {
     }
 
     public static void configureAttachmentMenu(@NonNull Conversation conversation, Menu menu, Boolean Quick_share_attachment_choice, boolean hasAttachments) {
+        if (menu == null) {
+            return;
+        }
         final MenuItem menuAttach = menu.findItem(R.id.action_attach_file);
         if (Quick_share_attachment_choice && !hasAttachments) {
             menuAttach.setVisible(false);
