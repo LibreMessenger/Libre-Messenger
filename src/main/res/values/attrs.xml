@@ -58,6 +58,7 @@
     <attr name="icon_chat" format="reference" />
     <attr name="icon_copy" format="reference" />
     <attr name="icon_discard" format="reference" />
+    <attr name="icon_show_qr_code" format="reference" />
     <attr name="icon_download" format="reference" />
     <attr name="icon_edit" format="reference" />
     <attr name="icon_edit_body" format="reference" />

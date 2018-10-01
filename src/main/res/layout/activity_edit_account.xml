@@ -557,8 +557,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
                                 android:layout_centerVertical="true"
-                                android:layout_toLeftOf="@+id/action_copy_to_clipboard"
+                                android:layout_toLeftOf="@+id/key_actions"
+                                android:layout_toStartOf="@+id/key_actions"
                                 android:orientation="vertical">
 
                                 <TextView
@@ -576,17 +578,35 @@
 
                             </LinearLayout>
 
-                            <ImageButton
-                                android:id="@+id/action_copy_to_clipboard"
+                            <LinearLayout
+                                android:id="@+id/key_actions"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:background="?attr/selectableItemBackgroundBorderless"
-                                android:contentDescription="@string/copy_otr_clipboard_description"
-                                android:padding="@dimen/image_button_padding"
-                                android:src="?attr/icon_copy"
-                                android:visibility="visible" />
+                                android:orientation="horizontal">
+
+                                <ImageButton
+                                    android:id="@+id/action_copy_to_clipboard"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:contentDescription="@string/copy_otr_clipboard_description"
+                                    android:padding="@dimen/image_button_padding"
+                                    android:src="?attr/icon_copy"
+                                    android:visibility="visible" />
+
+                                <ImageButton
+                                    android:id="@+id/action_show_qr_code"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:contentDescription="@string/show_qr_code"
+                                    android:padding="@dimen/image_button_padding"
+                                    android:src="?attr/icon_show_qr_code"
+                                    android:visibility="visible" />
+                            </LinearLayout>
                         </RelativeLayout>
 
                         <RelativeLayout
@@ -599,8 +619,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
                                 android:layout_centerVertical="true"
                                 android:layout_toLeftOf="@+id/axolotl_actions"
+                                android:layout_toStartOf="@+id/axolotl_actions"
                                 android:orientation="vertical">
 
                                 <TextView
@@ -620,9 +642,10 @@
                                 android:id="@+id/axolotl_actions"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:orientation="vertical">
+                                android:orientation="horizontal">
 
                                 <ImageButton
                                     android:id="@+id/action_copy_axolotl_to_clipboard"
@@ -632,6 +655,16 @@
                                     android:contentDescription="@string/copy_omemo_clipboard_description"
                                     android:padding="@dimen/image_button_padding"
                                     android:src="?attr/icon_copy"
+                                    android:visibility="visible" />
+
+                                <ImageButton
+                                    android:id="@+id/action_show_axoloqr_code"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:contentDescription="@string/copy_omemo_clipboard_description"
+                                    android:padding="@dimen/image_button_padding"
+                                    android:src="?attr/icon_show_qr_code"
                                     android:visibility="visible" />
 
                                 <ImageButton

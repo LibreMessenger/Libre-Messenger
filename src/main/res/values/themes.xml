@@ -80,6 +80,7 @@
         <item name="icon_cancel" type="reference">@drawable/ic_cancel_black_24dp</item>
         <item name="icon_chat" type="reference">@drawable/ic_action_chat</item>
         <item name="icon_copy" type="reference">@drawable/ic_content_copy_grey600_24dp</item>
+        <item name="icon_show_qr_code" type="reference">@drawable/ic_qrcode_grey600_24dp</item>
         <item name="icon_discard" type="reference">@drawable/ic_delete_white_24dp</item>
         <item name="icon_download" type="reference">@drawable/ic_file_download_white_24dp</item>
         <item name="icon_edit" type="reference">@drawable/ic_edit_white_24dp</item>
@@ -251,6 +252,7 @@
         <item name="icon_add_person" type="reference">@drawable/ic_person_add_white_24dp</item>
         <item name="icon_cancel" type="reference">@drawable/ic_cancel_white_24dp</item>
         <item name="icon_copy" type="reference">@drawable/ic_content_copy_white_24dp</item>
+        <item name="icon_show_qr_code" type="reference">@drawable/ic_qrcode_white_24dp</item>
         <item name="icon_discard" type="reference">@drawable/ic_delete_white_24dp</item>
         <item name="icon_download" type="reference">@drawable/ic_file_download_white_24dp</item>
         <item name="icon_edit" type="reference">@drawable/ic_edit_white_24dp</item>
