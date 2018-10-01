@@ -320,7 +320,7 @@
   <string name="delete_x_file">Burahin %s</string>
   <string name="file">kikil</string>
   <string name="open_x_file">Buksan %s</string>
-  <string name="sending_file">pagpapadala (%1$d% nakumpleto)</string>
+  <string name="sending_file">pagpapadala (%1$d%% nakumpleto)</string>
   <string name="preparing_file">Paghahanda sa kikil para sa transmisyon</string>
   <string name="x_file_offered_for_download">%s inaalok para idownload</string>
   <string name="cancel_transmission">Kansel transmisyon</string>

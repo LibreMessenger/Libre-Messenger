@@ -436,7 +436,7 @@
   <string name="download_failed_could_not_write_file">İndirme başarısız: Dosya yazılamadı</string>
   <string name="action_check_update">Güncellemeleri kontrol et</string>
   <string name="title_activity_updater">Servisi güncelle</string>
-  <string name="update_available">Sürüm% 1 $ s mevcut. \ N \ nFilesize:% 2 $ s \ n \ n% 1 $ s sürümüne şimdi mi güncelleştiniz?</string>
+  <string name="update_available">Sürüm %1$s mevcut.\n\nFilesize: %2$s \n\n%1$s sürümüne şimdi mi güncelleştiniz?</string>
   <string name="remind_later">sonra</string>
   <string name="update">güncelle</string>
   <string name="no_update_available">Güncelleme mevcut değil</string>
