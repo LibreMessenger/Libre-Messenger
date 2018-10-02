@@ -146,7 +146,7 @@
                     android:visibility="gone"
                     app:backgroundColor="?attr/colorAccent" />
 
-                <de.pixart.messenger.ui.widget.UnreadCountCustomView
+                <de.pixart.messenger.ui.widget.FailedCountCustomView
                     android:id="@+id/conversation_failed"
                     android:layout_width="?attr/IconSize"
                     android:layout_height="?attr/IconSize"

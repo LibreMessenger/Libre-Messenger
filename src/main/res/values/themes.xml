@@ -13,7 +13,7 @@
         <item name="color_background_primary">@color/grey50</item>
         <item name="color_background_secondary">@color/grey200</item>
         <item name="color_background_tertiary">@color/grey300</item>
-        <item name="color_warning">@color/red_a700</item>
+        <item name="color_warning">@color/red700</item>
         <item name="TextColorOnline">@color/green500</item>
         <item name="TextColorError">@color/red800</item>
 
@@ -166,7 +166,7 @@
         <item name="color_background_primary">@color/grey700</item>
         <item name="color_background_secondary">@color/grey800</item>
         <item name="color_background_tertiary">@color/grey900</item>
-        <item name="color_warning">@color/red_a700</item>
+        <item name="color_warning">@color/red700</item>
         <item name="TextColorOnline">@color/green500</item>
         <item name="TextColorError">@color/red500</item>
 

@@ -32,6 +32,7 @@ import de.pixart.messenger.entities.Transferable;
 import de.pixart.messenger.ui.ConversationFragment;
 import de.pixart.messenger.ui.XmppActivity;
 import de.pixart.messenger.ui.util.StyledAttributes;
+import de.pixart.messenger.ui.widget.FailedCountCustomView;
 import de.pixart.messenger.ui.widget.UnreadCountCustomView;
 import de.pixart.messenger.utils.EmojiWrapper;
 import de.pixart.messenger.utils.IrregularUnicodeDetector;
@@ -125,7 +126,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         }
         if (failedCount > 0) {
             viewHolder.failedCount.setVisibility(View.VISIBLE);
-            viewHolder.failedCount.setUnreadCount(failedCount);
+            viewHolder.failedCount.setFailedCount(failedCount);
         } else {
             viewHolder.failedCount.setVisibility(View.GONE);
         }
@@ -356,7 +357,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         private TextView sender;
         private ImageView notificationIcon;
         private UnreadCountCustomView unreadCount;
-        private UnreadCountCustomView failedCount;
+        private FailedCountCustomView failedCount;
         private ImageView receivedStatus;
         private ImageView readStatus;
         private ImageView avatar;
