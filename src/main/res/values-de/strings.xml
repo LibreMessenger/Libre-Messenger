@@ -817,6 +817,7 @@
   <string name="notification_group_messages">Nachrichten</string>
   <string name="messages_channel_name">Nachrichten</string>
   <string name="silent_messages_channel_name">Stille Nachrichten</string>
+  <string name="silent_messages_channel_description">Diese Benachrichtigungskategorie wird benutzt, um Benachrichtigungen anzuzeigen, die keinen Ton auslösen sollen, z.B. wenn aktiv auf einem anderen Gerät (Schonfrist).</string>
   <string name="pref_more_notification_settings">Benachrichtigungseinstellungen</string>
   <string name="pref_more_notification_settings_summary">Wichtigkeit, Töne, Vibration</string>
   <string name="video_compression_channel_name">Video-Komprimierung</string>
