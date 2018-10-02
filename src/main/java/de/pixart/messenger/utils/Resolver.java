@@ -63,14 +63,26 @@ public class Resolver {
             final Field useHardcodedDnsServers = DNSClient.class.getDeclaredField("useHardcodedDnsServers");
             useHardcodedDnsServers.setAccessible(true);
             useHardcodedDnsServers.setBoolean(dnsClient, false);
-        } catch (NoSuchFieldException e) {
-            Log.e(Config.LOGTAG, "Unable to disable hardcoded DNS servers", e);
-        } catch (IllegalAccessException e) {
+        } catch (NoSuchFieldException | IllegalAccessException e) {
             Log.e(Config.LOGTAG, "Unable to disable hardcoded DNS servers", e);
         }
     }
 
+    public static List<Result> fromHardCoded(String hostname, int port) {
+        Result result = new Result();
+        result.hostname = DNSName.from(hostname);
+        result.port = port;
+        result.directTls = port == 443 || port == 5223;
+        result.authenticated = true;
+        return Collections.singletonList(result);
+    }
+
+
     public static List<Result> resolve(String domain) {
+        final List<Result> ipResults = fromIpAddress(domain);
+        if (ipResults.size() > 0) {
+            return ipResults;
+        }
         final List<Result> results = new ArrayList<>();
         final List<Result> fallbackResults = new ArrayList<>();
         Thread[] threads = new Thread[3];
@@ -125,9 +137,21 @@ public class Resolver {
             for (Thread thread : threads) {
                 thread.interrupt();
             }
-            synchronized (results) {
-                return new ArrayList<>(results);
-            }
+            return Collections.emptyList();
+        }
+    }
+
+    private static List<Result> fromIpAddress(String domain) {
+        if (!IP.matches(domain)) {
+            return Collections.emptyList();
+        }
+        try {
+            Result result = new Result();
+            result.ip = InetAddress.getByName(domain);
+            result.port = 5222;
+            return Collections.singletonList(result);
+        } catch (UnknownHostException e) {
+            return Collections.emptyList();
         }
     }
 
@@ -377,5 +401,4 @@ public class Resolver {
             return contentValues;
         }
     }
-
 }
