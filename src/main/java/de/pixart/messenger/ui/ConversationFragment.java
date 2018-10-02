@@ -1139,13 +1139,21 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             if (conversation.getMode() == Conversation.MODE_MULTI) {
                 menuInviteContact.setVisible(true);
                 menuArchiveChat.setTitle(R.string.action_end_conversation_muc);
-                menuGroupDetails.setVisible(true);
-                menuContactDetails.setVisible(false);
             } else {
                 menuInviteContact.setVisible(false);
                 menuArchiveChat.setTitle(R.string.action_end_conversation);
+            }
+            if (getFragmentManager().findFragmentById(R.id.secondary_fragment) != null) {
+                if (conversation.getMode() == Conversation.MODE_MULTI) {
+                    menuGroupDetails.setVisible(true);
+                    menuContactDetails.setVisible(false);
+                } else {
+                    menuGroupDetails.setVisible(false);
+                    menuContactDetails.setVisible(true);
+                }
+            } else {
                 menuGroupDetails.setVisible(false);
-                menuContactDetails.setVisible(true);
+                menuContactDetails.setVisible(false);
             }
             menuNeedHelp.setVisible(true);
             menuSearchUpdates.setVisible(false);
