@@ -26,11 +26,10 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
-                    android:orientation="vertical"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     card_view:cardBackgroundColor="?attr/color_background_secondary">
 
                     <LinearLayout
@@ -53,10 +52,10 @@
                                     android:id="@+id/muc_display"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_alignParentLeft="true"
                                     android:layout_alignParentStart="true"
-                                    android:layout_toLeftOf="@+id/edit_muc_name_button"
+                                    android:layout_alignParentLeft="true"
                                     android:layout_toStartOf="@+id/edit_muc_name_button"
+                                    android:layout_toLeftOf="@+id/edit_muc_name_button"
                                     android:orientation="vertical">
 
                                     <TextView
@@ -76,8 +75,8 @@
                                         android:id="@+id/jid"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_alignParentLeft="true"
                                         android:layout_below="@+id/muc_subject"
+                                        android:layout_alignParentLeft="true"
                                         android:text="@string/account_settings_example_jabber_id"
                                         android:textAppearance="@style/TextAppearance.Conversations.Body1"
                                         android:textIsSelectable="true"
@@ -89,10 +88,10 @@
                                     android:id="@+id/muc_editor"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_alignParentLeft="true"
                                     android:layout_alignParentStart="true"
-                                    android:layout_toLeftOf="@+id/edit_muc_name_button"
+                                    android:layout_alignParentLeft="true"
                                     android:layout_toStartOf="@+id/edit_muc_name_button"
+                                    android:layout_toLeftOf="@+id/edit_muc_name_button"
                                     android:orientation="vertical"
                                     android:visibility="gone">
 
@@ -130,9 +129,9 @@
                                     android:id="@+id/edit_muc_name_button"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_alignParentTop="true"
                                     android:layout_alignParentEnd="true"
                                     android:layout_alignParentRight="true"
-                                    android:layout_alignParentTop="true"
                                     android:alpha="?attr/icon_alpha"
                                     android:background="?attr/selectableItemBackgroundBorderless"
                                     android:padding="@dimen/image_button_padding"
@@ -153,8 +152,8 @@
                                     android:layout_marginEnd="@dimen/avatar_item_distance"
                                     android:layout_marginRight="@dimen/avatar_item_distance"
                                     android:adjustViewBounds="true"
-                                    android:maxHeight="384dp"
                                     android:maxWidth="384dp"
+                                    android:maxHeight="384dp"
                                     android:padding="1dp"
                                     android:scaleType="centerCrop"
                                     app:riv_border_color="?attr/color_border"
@@ -281,12 +280,12 @@
 
                 <android.support.v7.widget.CardView
                     android:id="@+id/media_wrapper"
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     card_view:cardBackgroundColor="?attr/color_background_secondary">
 
                     <LinearLayout
@@ -301,10 +300,10 @@
                             android:layout_marginEnd="-2dp"
                             android:layout_marginStart="-2dp"
                             android:orientation="horizontal"
-                            android:paddingBottom="@dimen/card_padding_list"
-                            android:paddingEnd="@dimen/card_padding_regular"
                             android:paddingStart="@dimen/card_padding_regular"
-                            android:paddingTop="@dimen/card_padding_regular" />
+                            android:paddingTop="@dimen/card_padding_regular"
+                            android:paddingEnd="@dimen/card_padding_regular"
+                            android:paddingBottom="@dimen/card_padding_list" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -329,11 +328,10 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
-                    android:orientation="vertical"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     card_view:cardBackgroundColor="?attr/color_background_secondary">
 
                     <LinearLayout
@@ -357,8 +355,8 @@
                                     android:id="@+id/your_photo"
                                     android:layout_width="72dp"
                                     android:layout_height="72dp"
-                                    android:layout_alignParentEnd="false"
                                     android:layout_alignParentLeft="true"
+                                    android:layout_alignParentEnd="false"
                                     android:layout_alignParentRight="false"
                                     android:padding="1dp"
                                     app:riv_border_color="?attr/color_border"
@@ -433,11 +431,10 @@
                     android:id="@+id/muc_more_details"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
-                    android:orientation="vertical"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     card_view:cardBackgroundColor="?attr/color_background_secondary">
 
                     <LinearLayout
@@ -462,7 +459,7 @@
                             android:layout_weight="1"
                             android:divider="?android:dividerHorizontal"
                             android:orientation="vertical"
-                            android:showDividers="middle"></LinearLayout>
+                            android:showDividers="middle" />
                     </LinearLayout>
 
                 </android.support.v7.widget.CardView>

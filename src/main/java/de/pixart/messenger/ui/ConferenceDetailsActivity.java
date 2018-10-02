@@ -528,7 +528,6 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                 updateView();
             }
         }
-        this.binding.detailsMucAvatar.setImageBitmap(avatarService().get(mConversation, getPixel(Config.AVATAR_SIZE)));
     }
 
     @Override
@@ -563,6 +562,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         } else {
             this.binding.detailsAccount.setVisibility(View.GONE);
         }
+        this.binding.detailsMucAvatar.setImageBitmap(avatarService().get(mConversation, getPixel(Config.AVATAR_SIZE)));
         this.binding.yourPhoto.setImageBitmap(avatarService().get(mConversation.getAccount(), getPixel(48)));
         String roomName = mucOptions.getName();
         String subject = mucOptions.getSubject();
