@@ -22,7 +22,7 @@
   <string name="title_activity_sharewith">Mit Unterhaltung teilen</string>
   <string name="title_activity_start_conversation">Unterhaltung beginnen</string>
   <string name="title_activity_choose_contact">Kontakt auswählen</string>
-  <string name="title_activity_choose_contacts">Kontakte wählen</string>
+  <string name="title_activity_choose_contacts">Kontakte auswählen</string>
   <string name="title_activity_block_list">Sperrliste</string>
   <string name="just_now">gerade</string>
   <string name="minute_ago">vor einer Minute</string>
@@ -826,4 +826,5 @@
   <string name="action_group_details">Gruppenchat-Details</string>
   <string name="view_media">Medien anzeigen</string>
   <string name="media_browser">Medien-Browser</string>
+  <string name="account_status_stream_opening_error">Fehler beim Öffnen des Streams</string>
 </resources>
