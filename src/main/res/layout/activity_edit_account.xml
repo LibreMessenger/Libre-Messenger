@@ -29,10 +29,10 @@
                     android:id="@+id/editor"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     android:orientation="vertical"
                     android:padding="@dimen/card_padding_regular"
                     card_view:cardBackgroundColor="?attr/color_background_secondary">
@@ -51,8 +51,8 @@
                             android:layout_marginBottom="@dimen/avatar_item_distance"
                             android:adjustViewBounds="true"
                             android:contentDescription="@string/account_image_description"
-                            android:maxHeight="384dp"
                             android:maxWidth="384dp"
+                            android:maxHeight="384dp"
                             android:padding="1dp"
                             app:riv_border_color="?attr/color_border"
                             app:riv_border_width="1dp"
@@ -179,8 +179,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerHorizontal="true"
                                 android:layout_gravity="center_horizontal"
-                                android:layout_marginBottom="4dp"
                                 android:layout_marginTop="4dp"
+                                android:layout_marginBottom="4dp"
                                 android:text="@string/show_privacy"
                                 android:visibility="gone" />
 
@@ -190,8 +190,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerHorizontal="true"
                                 android:layout_gravity="center_horizontal"
-                                android:layout_marginBottom="4dp"
                                 android:layout_marginTop="4dp"
+                                android:layout_marginBottom="4dp"
                                 android:text="@string/show_termsofuse"
                                 android:visibility="gone" />
                         </LinearLayout>
@@ -202,10 +202,10 @@
                     android:id="@+id/os_optimization"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     android:visibility="gone"
                     card_view:cardBackgroundColor="?attr/color_background_secondary">
 
@@ -260,10 +260,10 @@
                     android:id="@+id/stats"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     android:background="@drawable/infocard_border"
                     android:orientation="vertical"
                     android:padding="@dimen/card_padding_regular"
@@ -556,11 +556,11 @@
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentLeft="true"
                                 android:layout_alignParentStart="true"
+                                android:layout_alignParentLeft="true"
                                 android:layout_centerVertical="true"
-                                android:layout_toLeftOf="@+id/key_actions"
                                 android:layout_toStartOf="@+id/key_actions"
+                                android:layout_toLeftOf="@+id/key_actions"
                                 android:orientation="vertical">
 
                                 <TextView
@@ -596,16 +596,6 @@
                                     android:padding="@dimen/image_button_padding"
                                     android:src="?attr/icon_copy"
                                     android:visibility="visible" />
-
-                                <ImageButton
-                                    android:id="@+id/action_show_qr_code"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:background="?attr/selectableItemBackgroundBorderless"
-                                    android:contentDescription="@string/show_qr_code"
-                                    android:padding="@dimen/image_button_padding"
-                                    android:src="?attr/icon_show_qr_code"
-                                    android:visibility="visible" />
                             </LinearLayout>
                         </RelativeLayout>
 
@@ -618,11 +608,11 @@
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentLeft="true"
                                 android:layout_alignParentStart="true"
+                                android:layout_alignParentLeft="true"
                                 android:layout_centerVertical="true"
-                                android:layout_toLeftOf="@+id/axolotl_actions"
                                 android:layout_toStartOf="@+id/axolotl_actions"
+                                android:layout_toLeftOf="@+id/axolotl_actions"
                                 android:orientation="vertical">
 
                                 <TextView
@@ -658,16 +648,6 @@
                                     android:visibility="visible" />
 
                                 <ImageButton
-                                    android:id="@+id/action_show_axoloqr_code"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:background="?attr/selectableItemBackgroundBorderless"
-                                    android:contentDescription="@string/copy_omemo_clipboard_description"
-                                    android:padding="@dimen/image_button_padding"
-                                    android:src="?attr/icon_show_qr_code"
-                                    android:visibility="visible" />
-
-                                <ImageButton
                                     android:id="@+id/action_regenerate_omemo_key"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -685,10 +665,10 @@
                     android:id="@+id/other_device_keys_card"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     android:visibility="gone"
                     card_view:cardBackgroundColor="?attr/color_background_secondary">
 
@@ -729,11 +709,11 @@
             android:id="@+id/button_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentStart="true">
+            android:layout_alignParentBottom="true">
 
             <Button
                 android:id="@+id/cancel_button"
@@ -746,8 +726,8 @@
             <View
                 android:layout_width="1dp"
                 android:layout_height="fill_parent"
-                android:layout_marginBottom="7dp"
-                android:layout_marginTop="7dp" />
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="7dp" />
 
             <Button
                 android:id="@+id/save_button"

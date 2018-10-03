@@ -22,7 +22,7 @@ public class XmppUri {
     private String name;
     private String action;
     private boolean safeSource = true;
-    private static final String OMEMO_URI_PARAM = "omemo-sid-";
+    public static final String OMEMO_URI_PARAM = "omemo-sid-";
     private static final String OTR_URI_PARAM = "otr-fingerprint";
     public static final String ACTION_JOIN = "join";
     public static final String ACTION_MESSAGE = "message";

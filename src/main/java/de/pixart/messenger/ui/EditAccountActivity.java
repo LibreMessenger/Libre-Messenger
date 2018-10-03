@@ -9,8 +9,6 @@ import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -75,6 +73,7 @@ import de.pixart.messenger.xmpp.XmppConnection.Features;
 import de.pixart.messenger.xmpp.forms.Data;
 import de.pixart.messenger.xmpp.pep.Avatar;
 import rocks.xmpp.addr.Jid;
+
 public class EditAccountActivity extends OmemoActivity implements OnAccountUpdate, OnUpdateBlocklist,
         OnKeyStatusUpdated, OnCaptchaRequested, KeyChainAliasCallback, XmppConnectionService.OnShowErrorToast, XmppConnectionService.OnMamPreferencesFetched {
 
@@ -1098,22 +1097,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                                         Toast.LENGTH_SHORT).show();
                             }
                         });
-                this.binding.actionShowQrCode.setVisibility(View.VISIBLE);
-                this.binding.actionShowQrCode.setOnClickListener(v -> {
-                    if (otrFingerprint == null || otrFingerprint.isEmpty()) {
-                        return;
-                    }
-                    Point size = new Point();
-                    getWindowManager().getDefaultDisplay().getSize(size);
-                    final int width = (size.x < size.y ? size.x : size.y);
-                    Bitmap bitmap = BarcodeProvider.create2dBarcodeBitmap(otrFingerprint, width);
-                    ImageView view = new ImageView(this);
-                    view.setBackgroundColor(Color.WHITE);
-                    view.setImageBitmap(bitmap);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setView(view);
-                    builder.create().show();
-                });
             } else {
                 this.binding.otrFingerprintBox.setVisibility(View.GONE);
             }
@@ -1130,22 +1113,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 this.binding.axolotlFingerprint.setText(CryptoHelper.prettifyFingerprint(ownAxolotlFingerprint.substring(2)));
                 this.binding.actionCopyAxolotlToClipboard.setVisibility(View.VISIBLE);
                 this.binding.actionCopyAxolotlToClipboard.setOnClickListener(v -> copyOmemoFingerprint(ownAxolotlFingerprint));
-                this.binding.actionShowAxoloqrCode.setVisibility(View.VISIBLE);
-                this.binding.actionShowAxoloqrCode.setOnClickListener(v -> {
-                    if (otrFingerprint == null || otrFingerprint.isEmpty()) {
-                        return;
-                    }
-                    Point size = new Point();
-                    getWindowManager().getDefaultDisplay().getSize(size);
-                    final int width = (size.x < size.y ? size.x : size.y);
-                    Bitmap bitmap = BarcodeProvider.create2dBarcodeBitmap(ownAxolotlFingerprint, width);
-                    ImageView view = new ImageView(this);
-                    view.setBackgroundColor(Color.WHITE);
-                    view.setImageBitmap(bitmap);
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setView(view);
-                    builder.create().show();
-                });
             } else {
                 this.binding.axolotlFingerprintBox.setVisibility(View.GONE);
             }
