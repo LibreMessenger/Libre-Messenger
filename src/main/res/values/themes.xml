@@ -101,7 +101,7 @@
         </item>
         <item name="icon_delete" type="reference">@drawable/ic_delete_black_24dp</item>
         <item name="icon_share" type="reference">@drawable/ic_share_black_24dp</item>
-        <item name="icon_scan_qr_code" type="reference">@drawable/ic_barcode_scan_white_24dp</item>
+        <item name="icon_scan_qr_code" type="reference">@drawable/ic_qrcode_scan_white_24dp</item>
         <item name="icon_scroll_down" type="reference">@drawable/ic_scroll_to_end_black</item>
 
         <!-- settings-->
@@ -274,7 +274,7 @@
         </item>
         <item name="icon_delete" type="reference">@drawable/ic_delete_white_24dp</item>
         <item name="icon_share" type="reference">@drawable/ic_share_white_24dp</item>
-        <item name="icon_scan_qr_code" type="reference">@drawable/ic_barcode_scan_white_24dp</item>
+        <item name="icon_scan_qr_code" type="reference">@drawable/ic_qrcode_scan_white_24dp</item>
         <item name="icon_scroll_down" type="reference">@drawable/ic_scroll_to_end_white</item>
 
         <item name="icon_notifications" type="reference">@drawable/ic_notifications_white_24dp
