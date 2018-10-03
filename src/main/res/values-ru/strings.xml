@@ -317,4 +317,5 @@
   <string name="choose_file">Выберите файл</string>
   <string name="view_media">Просмотреть медиа</string>
   <string name="media_browser">Медиа браузер</string>
+  <string name="account_status_stream_opening_error">Ошибка открытия потока</string>
 </resources>
