@@ -75,6 +75,7 @@
     <attr name="icon_secure" format="reference" />
     <attr name="icon_settings" format="reference" />
     <attr name="icon_share" format="reference" />
+    <attr name="icon_delete" format="reference" />
     <attr name="icon_import_export" format="reference" />
     <attr name="icon_scan_qr_code" format="reference" />
     <attr name="icon_enable_undecided_device" format="reference" />

@@ -4,6 +4,8 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,37 +15,40 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
+import android.support.v7.view.menu.MenuBuilder;
+import android.support.v7.view.menu.MenuPopupHelper;
+import android.support.v7.widget.PopupMenu;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
-import com.github.chrisbanes.photoview.PhotoView;
-import com.github.chrisbanes.photoview.PhotoViewAttacher;
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.github.rtoshiro.view.video.FullscreenVideoLayout;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.utils.ExifHelper;
+import de.pixart.messenger.utils.MimeUtils;
 
 import static de.pixart.messenger.persistance.FileBackend.close;
 
-public class ShowFullscreenMessageActivity extends XmppActivity {
+public class MediaViewerActivity extends XmppActivity {
 
     Integer oldOrientation;
-    PhotoView mImage;
+    SubsamplingScaleImageView mImage;
     FullscreenVideoLayout mVideo;
     ImageView mFullscreenbutton;
     Uri mFileUri;
@@ -52,6 +57,22 @@ public class ShowFullscreenMessageActivity extends XmppActivity {
     int height = 0;
     int width = 0;
     int rotation = 0;
+    boolean isImage = false;
+    boolean isVideo = false;
+
+    public static String getMimeType(String path) {
+        try {
+            String type = null;
+            String extension = path.substring(path.lastIndexOf(".") + 1, path.length());
+            if (extension != null) {
+                type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+            }
+            return type;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,18 +94,59 @@ public class ShowFullscreenMessageActivity extends XmppActivity {
         getWindow().setAttributes(layout);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_fullscreen_message);
+        setContentView(R.layout.activity_media_viewer);
         mImage = findViewById(R.id.message_image_view);
         mVideo = findViewById(R.id.message_video_view);
         mFullscreenbutton = findViewById(R.id.vcv_img_fullscreen);
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(v -> {
-            mVideo.reset();
-            shareWith(mFile);
+            PopupMenu popup = new PopupMenu(MediaViewerActivity.this, v);
+            popup.inflate(R.menu.media_viewer);
+            final Menu menu = popup.getMenu();
+            MenuItem delete = menu.findItem(R.id.action_delete);
+            MenuItem open = menu.findItem(R.id.action_open);
+            Log.d(Config.LOGTAG, "Path = " + mFile.toString());
+            if (mFile == null || !mFile.toString().startsWith("/") || mFile.toString().contains(FileBackend.getConversationsDirectory("null"))) {
+                delete.setVisible(true);
+            } else {
+                delete.setVisible(false);
+            }
+            if (isVideo) {
+                if (isDarkTheme()) {
+                    open.setIcon(R.drawable.ic_video_white_24dp);
+                } else {
+                    open.setIcon(R.drawable.ic_video_black_24dp);
+                }
+            } else if (isImage) {
+                if (isDarkTheme()) {
+                    open.setIcon(R.drawable.ic_image_white_24dp);
+                } else {
+                    open.setIcon(R.drawable.ic_image_black_24dp);
+                }
+            }
+            popup.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.action_share:
+                        share();
+                        break;
+                    case R.id.action_open:
+                        open();
+                        break;
+                    case R.id.action_delete:
+                        deleteFile();
+                        break;
+                    default:
+                        return false;
+                }
+                return true;
+            });
+            MenuPopupHelper menuHelper = new MenuPopupHelper(MediaViewerActivity.this, (MenuBuilder) menu, v);
+            menuHelper.setForceShowIcon(true);
+            menuHelper.show();
         });
     }
 
-    private void shareWith(File mFile) {
+    private void share() {
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType(getMimeType(mFile.toString()));
         share.putExtra(Intent.EXTRA_STREAM, FileBackend.getUriForFile(this, mFile));
@@ -96,18 +158,35 @@ public class ShowFullscreenMessageActivity extends XmppActivity {
         }
     }
 
-    public static String getMimeType(String path) {
+    private void deleteFile() {
+        this.xmppConnectionService.getFileBackend().deleteFile(mFile);
+        finish();
+    }
+
+    private void open() {
+        Uri uri;
         try {
-            String type = null;
-            String extension = path.substring(path.lastIndexOf(".") + 1, path.length());
-            if (extension != null) {
-                type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-            }
-            return type;
-        } catch (Exception e) {
-            e.printStackTrace();
+            uri = FileBackend.getUriForFile(this, mFile);
+        } catch (SecurityException e) {
+            Log.d(Config.LOGTAG, "No permission to access " + mFile.getAbsolutePath(), e);
+            Toast.makeText(this, this.getString(R.string.no_permission_to_access_x, mFile.getAbsolutePath()), Toast.LENGTH_SHORT).show();
+            return;
         }
-        return null;
+        String mime = MimeUtils.guessMimeTypeFromUri(this, uri);
+        Intent openIntent = new Intent(Intent.ACTION_VIEW);
+        openIntent.setDataAndType(uri, mime);
+        openIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        PackageManager manager = this.getPackageManager();
+        List<ResolveInfo> info = manager.queryIntentActivities(openIntent, 0);
+        if (info.size() == 0) {
+            openIntent.setDataAndType(uri, "*/*");
+        }
+        try {
+            this.startActivity(openIntent);
+            finish();
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, R.string.no_application_found_to_open_file, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -125,34 +204,38 @@ public class ShowFullscreenMessageActivity extends XmppActivity {
                 mFile = new File(mFileUri.getPath());
                 if (mFileUri != null && mFile.exists() && mFile.length() > 0) {
                     try {
-                        DisplayImage(mFile);
+                        isImage = true;
+                        DisplayImage(mFile, mFileUri);
                     } catch (Exception e) {
+                        isImage = false;
                         Log.d(Config.LOGTAG, "Illegal exeption :" + e);
-                        Toast.makeText(ShowFullscreenMessageActivity.this, getString(R.string.error_file_corrupt), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MediaViewerActivity.this, getString(R.string.error_file_corrupt), Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 } else {
-                    Toast.makeText(ShowFullscreenMessageActivity.this, getString(R.string.file_deleted), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MediaViewerActivity.this, getString(R.string.file_deleted), Toast.LENGTH_SHORT).show();
                 }
             } else if (intent.hasExtra("video")) {
                 mFileUri = intent.getParcelableExtra("video");
                 mFile = new File(mFileUri.getPath());
                 if (mFileUri != null && mFile.exists() && mFile.length() > 0) {
                     try {
+                        isVideo = true;
                         DisplayVideo(mFileUri);
                     } catch (Exception e) {
+                        isVideo = false;
                         Log.d(Config.LOGTAG, "Illegal exeption :" + e);
-                        Toast.makeText(ShowFullscreenMessageActivity.this, getString(R.string.error_file_corrupt), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MediaViewerActivity.this, getString(R.string.error_file_corrupt), Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 } else {
-                    Toast.makeText(ShowFullscreenMessageActivity.this, getString(R.string.file_deleted), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MediaViewerActivity.this, getString(R.string.file_deleted), Toast.LENGTH_SHORT).show();
                 }
             }
         }
     }
 
-    private void DisplayImage(final File file) {
+    private void DisplayImage(final File file, final Uri FileUri) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(new File(file.getPath()).getAbsolutePath(), options);
@@ -163,19 +246,9 @@ public class ShowFullscreenMessageActivity extends XmppActivity {
         if (useAutoRotateScreen()) {
             rotateScreen(width, height, rotation);
         }
-        final PhotoViewAttacher mAttacher = new PhotoViewAttacher(mImage);
         mImage.setVisibility(View.VISIBLE);
         try {
-            Glide.with(this)
-                    .load(file)
-                    .dontAnimate()
-                    .into(new GlideDrawableImageViewTarget(mImage) {
-                        @Override
-                        public void onResourceReady(GlideDrawable resource,  GlideAnimation<? super GlideDrawable> animation) {
-                            super.onResourceReady(resource, animation);
-                            mAttacher.update();
-                        }
-                    });
+            mImage.setImage(ImageSource.uri(FileUri));
         } catch (Exception e) {
             Toast.makeText(this, getString(R.string.error_file_corrupt), Toast.LENGTH_LONG).show();
             e.printStackTrace();

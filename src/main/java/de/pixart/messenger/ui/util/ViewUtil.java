@@ -15,7 +15,7 @@ import java.util.List;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.persistance.FileBackend;
-import de.pixart.messenger.ui.ShowFullscreenMessageActivity;
+import de.pixart.messenger.ui.MediaViewerActivity;
 
 public class ViewUtil {
 
@@ -36,7 +36,7 @@ public class ViewUtil {
         }
         // use internal viewer for images and videos
         if (mime.startsWith("image/")) {
-            Intent intent = new Intent(context, ShowFullscreenMessageActivity.class);
+            Intent intent = new Intent(context, MediaViewerActivity.class);
             intent.putExtra("image", Uri.fromFile(file));
             try {
                 context.startActivity(intent);
@@ -45,7 +45,7 @@ public class ViewUtil {
                 //ignored
             }
         } else if (mime.startsWith("video/")) {
-            Intent intent = new Intent(context, ShowFullscreenMessageActivity.class);
+            Intent intent = new Intent(context, MediaViewerActivity.class);
             intent.putExtra("video", Uri.fromFile(file));
             try {
                 context.startActivity(intent);

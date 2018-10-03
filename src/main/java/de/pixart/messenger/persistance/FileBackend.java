@@ -111,14 +111,18 @@ public class FileBackend {
         }
     }
 
-    public boolean deleteFile(Message message) {
-        File file = getFile(message);
+    public boolean deleteFile(File file) {
         if (file.delete()) {
             updateMediaScanner(file);
             return true;
         } else {
             return false;
         }
+    }
+
+    public boolean deleteFile(Message message) {
+        File file = getFile(message);
+        return deleteFile(file);
     }
 
     public DownloadableFile getFile(Message message) {
@@ -219,8 +223,8 @@ public class FileBackend {
     }
 
     public static String getConversationsDirectory(final String type) {
-        if (type.equalsIgnoreCase("null") || type == null) {
-            return getAppMediaDirectory() + "Pix-Art Messenger" + "/";
+        if (type.equalsIgnoreCase("null")) {
+            return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "Pix-Art Messenger" + "/";
         } else {
             return getAppMediaDirectory() + "Pix-Art Messenger" + " " + type + "/";
         }

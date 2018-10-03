@@ -104,8 +104,8 @@
             android:name=".ui.ConversationsActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:minHeight="300dp"
             android:minWidth="300dp"
+            android:minHeight="300dp"
             android:windowSoftInputMode="stateHidden"></activity>
         <activity
             android:name=".ui.ScanActivity"
@@ -238,7 +238,7 @@
             android:name=".ui.SearchActivity"
             android:label="@string/search_messages" />
         <activity
-            android:name=".ui.ShowFullscreenMessageActivity"
+            android:name=".ui.MediaViewerActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/ConversationsTheme.FullScreen"></activity>
         <activity

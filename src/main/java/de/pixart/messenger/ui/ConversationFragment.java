@@ -625,7 +625,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         final boolean hideVoice = p.getBoolean("show_record_voice_btn", activity.getResources().getBoolean(R.bool.show_record_voice_btn));
         PopupMenu popup = new PopupMenu(activity, v);
         popup.inflate(R.menu.choose_attachment);
-        Menu menu = popup.getMenu();
+        final Menu menu = popup.getMenu();
         ConversationMenuConfigurator.configureQuickShareAttachmentMenu(conversation, menu, hideVoice);
         popup.setOnMenuItemClickListener(attachmentItem -> {
             switch (attachmentItem.getItemId()) {
