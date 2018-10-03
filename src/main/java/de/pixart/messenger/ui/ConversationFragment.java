@@ -117,7 +117,6 @@ import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.XmppConnection;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 import de.pixart.messenger.xmpp.jingle.JingleConnection;
-import in.championswimmer.sfg.lib.SimpleFingerGestures;
 import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.ui.XmppActivity.EXTRA_ACCOUNT;
@@ -180,7 +179,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     };
     private boolean reInitRequiredOnStart = true;
     private MediaPreviewAdapter mediaPreviewAdapter;
-    private SimpleFingerGestures gesturesDetector = new SimpleFingerGestures();
     private OnClickListener clickToMuc = new OnClickListener() {
 
         @Override
@@ -2215,48 +2213,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         this.binding.messagesView.post(this::fireReadEvent);
         //TODO if we only do this when this fragment is running on main it won't *bing* in tablet layout which might be unnecessary since we can *see* it
         activity.xmppConnectionService.getNotificationService().setOpenConversation(this.conversation);
-
-        // todo temporarly disable swipe gestures
-        /*
-        gesturesDetector.setOnFingerGestureListener(new SimpleFingerGestures.OnFingerGestureListener() {
-            @Override
-            public boolean onSwipeUp(int fingers, long gestureDuration, double gestureDistance) {
-                return false;
-            }
-
-            @Override
-            public boolean onSwipeDown(int fingers, long gestureDuration, double gestureDistance) {
-                return false;
-            }
-
-            @Override
-            public boolean onSwipeLeft(int fingers, long gestureDuration, double gestureDistance) {
-                return false;
-            }
-
-            @Override
-            public boolean onSwipeRight(int fingers, long gestureDuration, double gestureDistance) {
-                activity.onBackPressed();
-                return false;
-            }
-
-            @Override
-            public boolean onPinch(int fingers, long gestureDuration, double gestureDistance) {
-                return false;
-            }
-
-            @Override
-            public boolean onUnpinch(int fingers, long gestureDuration, double gestureDistance) {
-                return false;
-            }
-
-            @Override
-            public boolean onDoubleTap(int fingers) {
-                return false;
-            }
-        });
-        this.binding.messagesView.setOnTouchListener(gesturesDetector);
-        */
         return true;
     }
 
