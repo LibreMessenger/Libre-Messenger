@@ -34,9 +34,9 @@ import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
 
 public class ShowLocationActivity extends XmppActivity {
+    FloatingActionButton fab;
     private Location location;
     private String mLocationName;
-    FloatingActionButton fab;
 
     private static String getAddress(Context context, Location location) {
         double longitude = location.getLongitude();
@@ -159,6 +159,22 @@ public class ShowLocationActivity extends XmppActivity {
         }
     }
 
+    private void navigate(Location location) {
+        if (location == null) {
+            Log.d(Config.LOGTAG, "No location given");
+            return;
+        }
+        double longitude = location.getLongitude();
+        double latitude = location.getLatitude();
+        try {
+            Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + String.valueOf(latitude) + "," + String.valueOf(longitude)));
+            startActivity(intent);
+            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, R.string.no_application_found_to_display_location, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private class getAddressAsync extends AsyncTask<Void, Void, Void> {
         String address = null;
 
@@ -184,22 +200,6 @@ public class ShowLocationActivity extends XmppActivity {
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             showLocation(location, address);
-        }
-    }
-
-    private void navigate (Location location) {
-        if (location == null) {
-            Log.d(Config.LOGTAG, "No location given");
-            return;
-        }
-        double longitude = location.getLongitude();
-        double latitude = location.getLatitude();
-        try {
-            Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse("geo:" + String.valueOf(latitude) + "," + String.valueOf(longitude)));
-            startActivity(intent);
-            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(this, R.string.no_application_found_to_display_location, Toast.LENGTH_SHORT).show();
         }
     }
 }
