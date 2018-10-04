@@ -656,7 +656,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             hideUnreadMessagesCount();
         } else {
             binding.scrollToBottomButton.setEnabled(true);
-            binding.scrollToBottomButton.setVisibility(View.VISIBLE);
+            binding.scrollToBottomButton.show();
             if (lastMessageUuid == null) {
                 lastMessageUuid = conversation.getLatestMessage().getUuid();
             }
@@ -2223,7 +2223,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             return;
         }
         this.binding.scrollToBottomButton.setEnabled(false);
-        this.binding.scrollToBottomButton.setVisibility(View.GONE);
+        this.binding.scrollToBottomButton.hide();
         this.binding.unreadCountCustomView.setVisibility(View.GONE);
     }
 
