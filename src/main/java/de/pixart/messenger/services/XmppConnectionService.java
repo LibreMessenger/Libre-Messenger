@@ -491,11 +491,6 @@ public class XmppConnectionService extends Service {
     }
 
     public void attachFileToConversation(final Conversation conversation, final Uri uri, final String type, final UiCallback<Message> callback) {
-        if (FileBackend.weOwnFile(this, uri)) {
-            Log.d(Config.LOGTAG, "trying to attach file that belonged to us");
-            callback.error(R.string.security_error_invalid_file_access, null);
-            return;
-        }
         final Message message;
         if (conversation.getNextEncryption() == Message.ENCRYPTION_PGP) {
             message = new Message(conversation, "", Message.ENCRYPTION_DECRYPTED);
@@ -513,11 +508,6 @@ public class XmppConnectionService extends Service {
     }
 
     public void attachImageToConversation(final Conversation conversation, final Uri uri, final UiCallback<Message> callback) {
-        if (FileBackend.weOwnFile(this, uri)) {
-            Log.d(Config.LOGTAG, "trying to attach file that belonged to us");
-            callback.error(R.string.security_error_invalid_file_access, null);
-            return;
-        }
         final String mimeType = MimeUtils.guessMimeTypeFromUri(this, uri);
         final String compressPictures = getCompressPicturesPreference();
 
@@ -1161,7 +1151,7 @@ public class XmppConnectionService extends Service {
         }
 
         this.pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        this.wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "XmppConnectionService");
+        this.wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, Config.LOGTAG + ":Service");
         toggleForegroundService();
         updateUnreadCountBadge();
         toggleScreenEventReceiver();

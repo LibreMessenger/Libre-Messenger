@@ -2245,7 +2245,8 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         final boolean pm = extras.getBoolean(ConversationsActivity.EXTRA_IS_PRIVATE_MESSAGE, false);
         final List<Uri> uris = extractUris(extras);
         if (uris != null && uris.size() > 0) {
-            mediaPreviewAdapter.addMediaPreviews(Attachment.of(getActivity(), uris));
+            final List<Uri> cleanedUris = cleanUris(new ArrayList<>(uris));
+            mediaPreviewAdapter.addMediaPreviews(Attachment.of(getActivity(), cleanedUris));
             toggleInputMethod();
             return;
         }
@@ -2288,6 +2289,18 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         } else {
             return null;
         }
+    }
+
+    private List<Uri> cleanUris(List<Uri> uris) {
+        Iterator<Uri> iterator = uris.iterator();
+        while (iterator.hasNext()) {
+            final Uri uri = iterator.next();
+            if (FileBackend.weOwnFile(getActivity(), uri)) {
+                iterator.remove();
+                Toast.makeText(getActivity(), R.string.security_violation_not_attaching_file, Toast.LENGTH_SHORT).show();
+            }
+        }
+        return uris;
     }
 
     private boolean showBlockSubmenu(View view) {
