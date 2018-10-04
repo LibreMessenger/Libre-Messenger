@@ -318,4 +318,6 @@
   <string name="view_media">Просмотреть медиа</string>
   <string name="media_browser">Медиа браузер</string>
   <string name="account_status_stream_opening_error">Ошибка открытия потока</string>
+  <string name="action_open">Открыть</string>
+  <string name="action_delete">Удалить</string>
 </resources>
