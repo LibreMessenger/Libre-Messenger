@@ -827,4 +827,6 @@
   <string name="view_media">Medien anzeigen</string>
   <string name="media_browser">Medien-Browser</string>
   <string name="account_status_stream_opening_error">Fehler beim Öffnen des Streams</string>
+  <string name="action_open">Öffnen</string>
+  <string name="action_delete">Löschen</string>
 </resources>
