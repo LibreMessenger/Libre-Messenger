@@ -294,8 +294,6 @@
   <string name="send_again">Отправить снова</string>
   <string name="file_url">URL файла</string>
   <string name="url_copied_to_clipboard">URL скопирован в буфер обмена</string>
-  <string name="scan_qr_code">Сканировать штрих-код</string>
-  <string name="show_qr_code">Показать штрих-код</string>
   <string name="show_block_list">Показать чёрный список</string>
   <string name="account_details">Детали аккаунта</string>
   <string name="verify_otr">Проверка OTR</string>
