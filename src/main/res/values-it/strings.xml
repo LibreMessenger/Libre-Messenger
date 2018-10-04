@@ -277,8 +277,6 @@
   <string name="send_again">Invia di nuovo</string>
   <string name="file_url">URL del file</string>
   <string name="url_copied_to_clipboard">URL copiato</string>
-  <string name="scan_qr_code">Scansiona codice a barre 2D</string>
-  <string name="show_qr_code">Mostra codice a barre 2D</string>
   <string name="show_block_list">Mostra la lista nera</string>
   <string name="account_details">Dettagli account</string>
   <string name="verify_otr">Verifica OTR</string>
@@ -530,18 +528,14 @@
   <string name="this_device_has_been_verified">Questo dispositivo è stato verificato</string>
   <string name="copy_fingerprint">Copia impronta</string>
   <string name="all_omemo_keys_have_been_verified">Tutte le chiavi OMEMO sono state verificate</string>
-  <string name="barcode_does_not_contain_fingerprints_for_this_conversation">Il codice a barre non contiene impronte per questa conversazione.</string>
   <string name="verified_fingerprints">Impronte verificate</string>
-  <string name="use_camera_icon_to_scan_barcode">Usa la fotocamera per scansionare il codice a barre di un contatto</string>
   <string name="please_wait_for_keys_to_be_fetched">Attendi la ricezione delle chiavi</string>
-  <string name="share_as_barcode">Condividi come codice a barre</string>
   <string name="share_as_uri">Condividi come URI XMPP</string>
   <string name="share_as_http">Condividi come link HTTP</string>
   <string name="blindly_trusted_omemo_keys">Chiavi OMEMO fidate ciecamente</string>
   <string name="pref_blind_trust_before_verification">Fiducia cieca prima della verifica</string>
   <string name="pref_blind_trust_before_verification_summary">Fidati automaticamente di tutti i nuovi dispositivi di contatti che non sono stati verificati e chiedi una conferma manuale ogni volta che un contatto verificato aggiunge un dispositivo.</string>
   <string name="not_trusted">Non fidato</string>
-  <string name="invalid_barcode">Codice a barre 2D non valido</string>
   <string name="i_followed_this_link_from_a_trusted_source">Ho seguito questo link da una fonte fidata</string>
   <string name="verifying_omemo_keys_trusted_source">Stai per verificare le chiavi OMEMO di %1$s cliccando un link. Questo metodo è sicuro solo se hai seguito il link da una fonte fidata dove solo %2$s può averlo pubblicato.</string>
   <string name="verify_omemo_keys">Verifica chiavi OMEMO</string>
