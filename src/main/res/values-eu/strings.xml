@@ -277,8 +277,6 @@
   <string name="send_again">Berriro bidali</string>
   <string name="file_url">Fitxategiaren URLa</string>
   <string name="url_copied_to_clipboard">URLa arbelera kopiatu da</string>
-  <string name="scan_qr_code">2D barra kodea eskaneatu</string>
-  <string name="show_qr_code">2D barra kodea erakutsi</string>
   <string name="show_block_list">Blokeatutakoen zerrenda ikusi</string>
   <string name="account_details">Kontuaren xehetasunak</string>
   <string name="verify_otr">OTR egiaztatu</string>
@@ -533,18 +531,14 @@
   <string name="this_device_has_been_verified">Gailu hau egiaztatu da</string>
   <string name="copy_fingerprint">Hatz-marka kopiatu</string>
   <string name="all_omemo_keys_have_been_verified">OMEMO gako guztiak egiaztatu dira</string>
-  <string name="barcode_does_not_contain_fingerprints_for_this_conversation">Barra kodeak ez du hatz-markarik elkarrizketa honetarako.</string>
   <string name="verified_fingerprints">Egiaztatutako hatz-markak</string>
-  <string name="use_camera_icon_to_scan_barcode">Kamera erabili kontaktuaren barra kodea eskaneatzeko</string>
   <string name="please_wait_for_keys_to_be_fetched">Mesedez itxaron gakoak ekarri arte</string>
-  <string name="share_as_barcode">Barra kode bezala partekatu</string>
   <string name="share_as_uri">XMPP URI bezala partekatu</string>
   <string name="share_as_http">HTTP link bezala partekatu</string>
   <string name="blindly_trusted_omemo_keys">Itsuki fidatutako OMEMO gakoak</string>
   <string name="pref_blind_trust_before_verification">Egiaztatu aurreko fidagarritasun itsua</string>
   <string name="pref_blind_trust_before_verification_summary">Aurretik egiaztatu ez diren kontaktuen gailu berri guztietaz automatikoki fidatu, eta eskuzko baieztapen bila galdetu egiaztatutako kontaktuek gailu berri bat gehitzen duten bakoitzean.</string>
   <string name="not_trusted">Ez fidagarria</string>
-  <string name="invalid_barcode">2D barra kodea baliogabea</string>
   <string name="i_followed_this_link_from_a_trusted_source">Lotura hau jatorri fidagarri batetik jarraitu dut</string>
   <string name="verifying_omemo_keys_trusted_source">%1$s(r)en OMEMO gakoak egiaztatuko dira lotura batean sakatu ondoren. Hau segurua da soilik lotura hau jatorri fidagarri batetik jarraitu baduzu eta soilik %2$s(e)k argitaratu izan ahal badu.</string>
   <string name="verify_omemo_keys">OMEMO gakoak egiaztatu</string>
