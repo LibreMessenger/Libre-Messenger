@@ -15,6 +15,7 @@ import java.security.NoSuchAlgorithmException;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.entities.DownloadableFile;
 import de.pixart.messenger.persistance.FileBackend;
+import de.pixart.messenger.services.AbstractConnectionManager;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.SocksSocketFactory;
 import de.pixart.messenger.utils.WakeLockHelper;
@@ -94,11 +95,12 @@ public class JingleSocks5Transport extends JingleTransport {
                     callback.onFileTransferAborted();
                     return;
                 }
+                final InputStream innerInputStream = AbstractConnectionManager.upgrade(file, fileInputStream, false);
                 long size = file.getExpectedSize();
                 long transmitted = 0;
                 int count;
                 byte[] buffer = new byte[8192];
-                while ((count = fileInputStream.read(buffer)) > 0) {
+                while ((count = innerInputStream.read(buffer)) > 0) {
                     outputStream.write(buffer, 0, count);
                     digest.update(buffer, 0, count);
                     transmitted += count;

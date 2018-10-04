@@ -2,9 +2,8 @@ package de.pixart.messenger.http;
 
 import android.os.PowerManager;
 import android.util.Log;
-import android.util.Pair;
 
-import java.io.FileNotFoundException;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -30,7 +29,7 @@ import de.pixart.messenger.utils.WakeLockHelper;
 
 public class HttpUploadConnection implements Transferable {
 
-    public static final List<String> WHITE_LISTED_HEADERS = Arrays.asList(
+    static final List<String> WHITE_LISTED_HEADERS = Arrays.asList(
             "Authorization",
             "Cookie",
             "Expires"
@@ -50,8 +49,6 @@ public class HttpUploadConnection implements Transferable {
     private byte[] key = null;
 
     private long transmitted = 0;
-
-    private InputStream mFileInputStream;
 
     public HttpUploadConnection(Method method, HttpConnectionManager httpConnectionManager) {
         this.method = method;
@@ -93,7 +90,6 @@ public class HttpUploadConnection implements Transferable {
         mHttpConnectionManager.finishUploadConnection(this);
         message.setTransferable(null);
         mXmppConnectionService.markMessage(message, Message.STATUS_SEND_FAILED, errorMessage);
-        FileBackend.close(mFileInputStream);
     }
 
     public void init(Message message, boolean delay) {
@@ -118,7 +114,7 @@ public class HttpUploadConnection implements Transferable {
 
         if (method == Method.P1_S3) {
             try {
-                md5 = Checksum.md5(AbstractConnectionManager.createInputStream(file, true).first);
+                md5 = Checksum.md5(AbstractConnectionManager.upgrade(file, new FileInputStream(file), true));
             } catch (Exception e) {
                 Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": unable to calculate md5()", e);
                 fail(e.getMessage());
@@ -127,18 +123,8 @@ public class HttpUploadConnection implements Transferable {
         } else {
             md5 = null;
         }
-
-        Pair<InputStream, Integer> pair;
-        try {
-            pair = AbstractConnectionManager.createInputStream(file, true);
-        } catch (FileNotFoundException e) {
-            Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": could not find file to upload - " + e.getMessage());
-            fail(e.getMessage());
-            return;
-        }
-        this.file.setExpectedSize(pair.second);
+        this.file.setExpectedSize(file.getSize() + (file.getKey() != null ? 16 : 0));
         message.resetFileParams();
-        this.mFileInputStream = pair.first;
         this.mSlotRequester.request(method, account, file, mime, md5, new SlotRequester.OnSlotRequested() {
             @Override
             public void success(SlotRequester.Slot slot) {
@@ -159,9 +145,11 @@ public class HttpUploadConnection implements Transferable {
 
     private void upload() {
         OutputStream os = null;
+        InputStream fileInputStream = null;
         HttpURLConnection connection = null;
         PowerManager.WakeLock wakeLock = mHttpConnectionManager.createWakeLock("http_upload_" + message.getUuid());
         try {
+            fileInputStream = new FileInputStream(file);
             final int expectedFileSize = (int) file.getExpectedSize();
             final int readTimeout = (expectedFileSize / 2048) + Config.SOCKET_TIMEOUT; //assuming a minimum transfer speed of 16kbit/s
             wakeLock.acquire(readTimeout);
@@ -188,18 +176,18 @@ public class HttpUploadConnection implements Transferable {
             connection.setConnectTimeout(Config.SOCKET_TIMEOUT * 1000);
             connection.setReadTimeout(readTimeout * 1000);
             connection.connect();
+            final InputStream innerInputStream = AbstractConnectionManager.upgrade(file, fileInputStream, true);
             os = connection.getOutputStream();
             transmitted = 0;
             int count;
             byte[] buffer = new byte[4096];
-            while (((count = mFileInputStream.read(buffer)) != -1) && !canceled) {
+            while (((count = innerInputStream.read(buffer)) != -1) && !canceled) {
                 transmitted += count;
                 os.write(buffer, 0, count);
                 mHttpConnectionManager.updateConversationUi(false);
             }
             os.flush();
             os.close();
-            mFileInputStream.close();
             int code = connection.getResponseCode();
             InputStream is = connection.getErrorStream();
             if (is != null) {
@@ -234,7 +222,7 @@ public class HttpUploadConnection implements Transferable {
             Log.d(Config.LOGTAG, "http upload failed " + e.getMessage());
             fail(e.getMessage());
         } finally {
-            FileBackend.close(mFileInputStream);
+            FileBackend.close(fileInputStream);
             FileBackend.close(os);
             if (connection != null) {
                 connection.disconnect();

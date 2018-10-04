@@ -2,8 +2,8 @@ package de.pixart.messenger.xmpp.jingle;
 
 import android.util.Base64;
 import android.util.Log;
-import android.util.Pair;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -489,36 +489,32 @@ public class JingleConnection implements Transferable {
         if (message.getType() == Message.TYPE_IMAGE || message.getType() == Message.TYPE_FILE) {
             content.setTransportId(this.transportId);
             this.file = this.mXmppConnectionService.getFileBackend().getFile(message, false);
-            Pair<InputStream, Integer> pair;
-            try {
-                if (message.getEncryption() == Message.ENCRYPTION_OTR) {
-                    Conversational conversation = this.message.getConversation();
-                    if (!this.mXmppConnectionService.renewSymmetricKey((Conversation) conversation)) {
-                        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": could not set symmetric key");
-                        cancel();
-                    }
-                    Conversation c = (Conversation) this.message.getConversation();
-                    this.file.setKeyAndIv(c.getSymmetricKey());
-                    pair = AbstractConnectionManager.createInputStream(this.file, false);
-                    this.file.setExpectedSize(pair.second);
-                    content.setFileOffer(this.file, true, this.ftVersion);
-                } else if (message.getEncryption() == Message.ENCRYPTION_AXOLOTL) {
-                    this.file.setKey(mXmppAxolotlMessage.getInnerKey());
-                    this.file.setIv(mXmppAxolotlMessage.getIV());
-                    pair = AbstractConnectionManager.createInputStream(this.file, true);
-                    this.file.setExpectedSize(pair.second);
-                    content.setFileOffer(this.file, false, this.ftVersion).addChild(mXmppAxolotlMessage.toElement());
-                } else {
-                    pair = AbstractConnectionManager.createInputStream(this.file, false);
-                    this.file.setExpectedSize(pair.second);
-                    content.setFileOffer(this.file, false, this.ftVersion);
+            if (message.getEncryption() == Message.ENCRYPTION_OTR) {
+                Conversational conversation = this.message.getConversation();
+                if (!this.mXmppConnectionService.renewSymmetricKey((Conversation) conversation)) {
+                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": could not set symmetric key");
+                    cancel();
                 }
+                Conversation c = (Conversation) this.message.getConversation();
+                this.file.setKeyAndIv(c.getSymmetricKey());
+                this.file.setExpectedSize((file.getSize() / 16 + 1) * 16);
+                content.setFileOffer(this.file, true, this.ftVersion);
+            } else if (message.getEncryption() == Message.ENCRYPTION_AXOLOTL) {
+                this.file.setKey(mXmppAxolotlMessage.getInnerKey());
+                this.file.setIv(mXmppAxolotlMessage.getIV());
+                this.file.setExpectedSize(file.getSize() + 16);
+                content.setFileOffer(this.file, false, this.ftVersion).addChild(mXmppAxolotlMessage.toElement());
+            } else {
+                this.file.setExpectedSize(file.getSize());
+                content.setFileOffer(this.file, false, this.ftVersion);
+            }
+            message.resetFileParams();
+            try {
+                this.mFileInputStream = new FileInputStream(file);
             } catch (FileNotFoundException e) {
                 cancel();
                 return;
             }
-            message.resetFileParams();
-            this.mFileInputStream = pair.first;
             content.setTransportId(this.transportId);
             content.socks5transport().setChildren(getCandidatesAsElements());
             packet.setContent(content);
