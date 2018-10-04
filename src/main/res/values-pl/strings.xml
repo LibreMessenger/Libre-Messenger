@@ -262,8 +262,6 @@
   <string name="send_again">Wyślij ponownie</string>
   <string name="file_url">URL pliku</string>
   <string name="url_copied_to_clipboard">URL obrazu został skopiowany do schowka</string>
-  <string name="scan_qr_code">Zeskanuj kod</string>
-  <string name="show_qr_code">Pokaż kod QR</string>
   <string name="show_block_list">Wyświetl listę banów</string>
   <string name="account_details">Szczegóły konta</string>
   <string name="verify_otr">Weryfikuj OTR</string>
@@ -496,18 +494,14 @@ Pix-Art Messenger będzie wciąż ograniczał transfer danych, kiedy tylko to je
   <string name="this_device_has_been_verified">To urządzenie zostało zweryfikowane</string>
   <string name="copy_fingerprint">Skopiuj odcisk</string>
   <string name="all_omemo_keys_have_been_verified">Wszystkie odciski OMEMO zostały zweryfikowane</string>
-  <string name="barcode_does_not_contain_fingerprints_for_this_conversation">Kod kreskowy nie zawiera odcisków dla tej rozmowy.</string>
   <string name="verified_fingerprints">Zaufane odciski</string>
-  <string name="use_camera_icon_to_scan_barcode">Użyj aparatu, aby zeskanować kod kreskowy kontaktu.</string>
   <string name="please_wait_for_keys_to_be_fetched">Proszę czekać na ściągnięcie kluczy</string>
-  <string name="share_as_barcode">Udostępnij przez Kod Kreskowy</string>
   <string name="share_as_uri">Udostępnij przez URI XMPP</string>
   <string name="share_as_http">Udostępnij przez link HTTP</string>
   <string name="blindly_trusted_omemo_keys">Ślepo ufaj kluczom OMEMO</string>
   <string name="pref_blind_trust_before_verification">Ślepo Ufaj Przed Weryfikacją</string>
   <string name="pref_blind_trust_before_verification_summary">Automatycznie ufaj wszystkim nowym urządzeniom kontaktów, którzy nie zostali zweryfikowani wcześniej, i poproś o ręczne potwierdzenie za każdym, kiedy zweryfikowany kontakt dodaje nowe urządzenie.</string>
   <string name="not_trusted">Niezaufane</string>
-  <string name="invalid_barcode">Nieprawidłowy kod kreskowy 2D</string>
   <string name="i_followed_this_link_from_a_trusted_source">Trafiłem na ten link w zaufanym źródle</string>
   <string name="verifying_omemo_keys_trusted_source">Zaraz zweryfikujesz klucz OMEMO %1$s klikając w link. Jest to bezpieczne jedynie, kiedy link pochodzi z zaufanego źródła gdzie tylko %2$s mógł go opublikować.</string>
   <string name="verify_omemo_keys">Zweryfikuj klucze OMEMO</string>
