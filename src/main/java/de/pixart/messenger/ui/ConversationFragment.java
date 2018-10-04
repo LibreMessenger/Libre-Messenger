@@ -885,9 +885,13 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             commitAttachments();
             return;
         }
-        final String body = binding.textinput.getText().toString();
+        final Editable text = this.binding.textinput.getText();
+        final String body = text == null ? "" : text.toString();
         final Conversation conversation = this.conversation;
         if (body.length() == 0 || conversation == null) {
+            return;
+        }
+        if (conversation.getNextEncryption() == Message.ENCRYPTION_AXOLOTL && trustKeysIfNeeded(REQUEST_TRUST_KEYS_TEXT)) {
             return;
         }
         final Message message;
@@ -913,11 +917,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 break;
             case Message.ENCRYPTION_PGP:
                 sendPgpMessage(message);
-                break;
-            case Message.ENCRYPTION_AXOLOTL:
-                if (!trustKeysIfNeeded(REQUEST_TRUST_KEYS_TEXT)) {
-                    sendMessage(message);
-                }
                 break;
             default:
                 sendMessage(message);
@@ -987,9 +986,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     private void handlePositiveActivityResult(int requestCode, final Intent data) {
         switch (requestCode) {
             case REQUEST_TRUST_KEYS_TEXT:
-                final String body = binding.textinput.getText().toString();
-                Message message = new Message(conversation, body, conversation.getNextEncryption());
-                sendMessage(message);
+                sendMessage();
                 break;
             case REQUEST_TRUST_KEYS_ATTACHMENTS:
                 commitAttachments();
