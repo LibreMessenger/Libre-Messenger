@@ -6,82 +6,89 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/color_background_tertiary">
+        android:background="?attr/color_background_tertiary"
+        android:orientation="vertical">
 
         <include
             android:id="@+id/toolbar"
             layout="@layout/toolbar" />
 
-        <android.support.v7.widget.CardView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/toolbar"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            card_view:cardBackgroundColor="?attr/color_background_secondary">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/button_bar"
+            android:layout_below="@id/toolbar">
 
-            <LinearLayout
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:padding="@dimen/card_padding_regular">
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                card_view:cardBackgroundColor="?attr/color_background_secondary">
 
-                <FrameLayout
-                    android:id="@+id/account_image_wrapper"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="@dimen/publish_avatar_top_margin">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="@dimen/card_padding_regular">
 
-                    <com.makeramen.roundedimageview.RoundedImageView
-                        android:id="@+id/account_image"
+                    <FrameLayout
+                        android:id="@+id/account_image_wrapper"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
-                        android:maxHeight="384dp"
-                        android:maxWidth="384dp"
-                        android:padding="1dp"
-                        android:scaleType="centerCrop"
-                        app:riv_border_color="?attr/color_border"
-                        app:riv_border_width="1dp"
-                        app:riv_corner_radius="@dimen/rounded_image_border" />
-                </FrameLayout>
+                        android:layout_marginTop="@dimen/publish_avatar_top_margin"
+                        android:layout_marginBottom="8dp">
 
-                <TextView
-                    android:id="@+id/hint"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/touch_to_choose_picture"
-                    android:textAppearance="@style/TextAppearance.Conversations.Body1" />
+                        <com.makeramen.roundedimageview.RoundedImageView
+                            android:id="@+id/account_image"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true"
+                            android:maxWidth="384dp"
+                            android:maxHeight="384dp"
+                            android:padding="1dp"
+                            android:scaleType="centerCrop"
+                            app:riv_border_color="?attr/color_border"
+                            app:riv_border_width="1dp"
+                            app:riv_corner_radius="@dimen/rounded_image_border" />
+                    </FrameLayout>
 
-                <TextView
-                    android:id="@+id/secondary_hint"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/or_long_press_for_default"
-                    android:textAppearance="@style/TextAppearance.Conversations.Body1" />
+                    <TextView
+                        android:id="@+id/hint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/touch_to_choose_picture"
+                        android:textAppearance="@style/TextAppearance.Conversations.Body1" />
 
-                <TextView
-                    android:id="@+id/hint_or_warning"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="8dp"
-                    android:textAppearance="@style/TextAppearance.Conversations.Body1" />
+                    <TextView
+                        android:id="@+id/secondary_hint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/or_long_press_for_default"
+                        android:textAppearance="@style/TextAppearance.Conversations.Body1" />
 
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
+                    <TextView
+                        android:id="@+id/hint_or_warning"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:textAppearance="@style/TextAppearance.Conversations.Body1" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </ScrollView>
 
         <LinearLayout
             android:id="@+id/button_bar"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true">
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true">
 
             <Button
                 android:id="@+id/cancel_button"
@@ -94,8 +101,8 @@
             <View
                 android:layout_width="1dp"
                 android:layout_height="fill_parent"
-                android:layout_marginBottom="7dp"
                 android:layout_marginTop="7dp"
+                android:layout_marginBottom="7dp"
                 android:background="?attr/divider" />
 
             <Button
