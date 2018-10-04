@@ -40,14 +40,14 @@ public class AbstractConnectionManager {
     public static InputStream upgrade(DownloadableFile file, InputStream is, boolean gcm) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, InvalidKeyException, NoSuchPaddingException, NoSuchProviderException {
         if (file.getKey() != null && file.getIv() != null) {
             if (gcm) {
-                Cipher cipher = Compatibility.twentyTwo() ? Cipher.getInstance(CIPHERMODE) : Cipher.getInstance(CIPHERMODE, PROVIDER);
+                final Cipher cipher = Compatibility.twentyTwo() ? Cipher.getInstance(CIPHERMODE) : Cipher.getInstance(CIPHERMODE, PROVIDER);
                 SecretKeySpec keySpec = new SecretKeySpec(file.getKey(), KEYTYPE);
                 IvParameterSpec ivSpec = new IvParameterSpec(file.getIv());
                 cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);
                 return new CipherInputStream(is, cipher);
             } else {
                 IvParameterSpec ips = new IvParameterSpec(file.getIv());
-                Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+                final Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
                 cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(file.getKey(), KEYTYPE), ips);
                 return new CipherInputStream(is, cipher);
             }
@@ -77,14 +77,14 @@ public class AbstractConnectionManager {
         }
         try {
             if (gcm) {
-                Cipher cipher = Compatibility.twentyTwo() ? Cipher.getInstance(CIPHERMODE) : Cipher.getInstance(CIPHERMODE, PROVIDER);
+                final Cipher cipher = Compatibility.twentyTwo() ? Cipher.getInstance(CIPHERMODE) : Cipher.getInstance(CIPHERMODE, PROVIDER);
                 SecretKeySpec keySpec = new SecretKeySpec(file.getKey(), KEYTYPE);
                 IvParameterSpec ivSpec = new IvParameterSpec(file.getIv());
                 cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
                 return new CipherOutputStream(os, cipher);
             } else {
                 IvParameterSpec ips = new IvParameterSpec(file.getIv());
-                Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+                final Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
                 cipher.init(Cipher.DECRYPT_MODE, new SecretKeySpec(file.getKey(), KEYTYPE), ips);
                 return new CipherOutputStream(os, cipher);
             }
