@@ -294,6 +294,8 @@
   <string name="send_again">Отправить снова</string>
   <string name="file_url">URL файла</string>
   <string name="url_copied_to_clipboard">URL скопирован в буфер обмена</string>
+  <string name="scan_qr_code">Сканировать QR-код</string>
+  <string name="show_qr_code">Показать QR код</string>
   <string name="show_block_list">Показать чёрный список</string>
   <string name="account_details">Детали аккаунта</string>
   <string name="verify_otr">Проверка OTR</string>
@@ -313,6 +315,11 @@
   <string name="pref_export_logs_summary">Записать логи истории разговоров на SD карту</string>
   <string name="notification_export_logs_title">Записываются разговоры на SD карту</string>
   <string name="choose_file">Выберите файл</string>
+  <string name="barcode_does_not_contain_fingerprints_for_this_conversation">QR код не содержит отпечатки для этого разговора.</string>
+  <string name="use_camera_icon_to_scan_barcode">Используйте камеру для сканирования QR кода контактов</string>
+  <string name="share_as_barcode">Поделиться QR кодом</string>
+  <string name="invalid_barcode">Неверный QR-код</string>
+  <string name="verify_with_qr_code">подтвердить QR кодом</string>
   <string name="view_media">Просмотреть медиа</string>
   <string name="media_browser">Медиа браузер</string>
   <string name="account_status_stream_opening_error">Ошибка открытия потока</string>
