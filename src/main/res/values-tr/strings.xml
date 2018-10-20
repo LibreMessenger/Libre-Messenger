@@ -74,7 +74,6 @@
   <string name="sharing_files_please_wait">Dosyalar paylaşılıyor. Lütfen bekleyin…</string>
   <string name="action_clear_history">Geçmişi sil</string>
   <string name="clear_conversation_history">Konuşma Geçmişini Sil</string>
-  <string name="clear_histor_msg">Bu İleti Dizisindeki tüm iletileri silmek istiyor musunuz?\n\n<b>Uyarı:</b> Bu, diğer cihazlarda veya sunucularda saklanan iletileri etkilemeyecektir.</string>
   <string name="delete_messages">Mesajları silin</string>
   <string name="also_end_conversation">Bu sohbeti daha sonra sonlandır</string>
   <string name="choose_presence">Cihazı seçin</string>
