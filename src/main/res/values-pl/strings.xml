@@ -71,7 +71,6 @@
   <string name="sharing_files_please_wait">Udostępnianie plików. Proszę czekać...</string>
   <string name="action_clear_history">Wyczyść historię</string>
   <string name="clear_conversation_history">Wyczyść historię konwersacji</string>
-  <string name="clear_histor_msg">Czy na pewno usunąć wszystkie wiadomości powiązane z konwersacją?\n\n<b>Uwaga:</b> Działanie nie wpływa na wiadomości przechowywane na innych urządzeniach lub serwerach.</string>
   <string name="delete_messages">Usuń wiadomości</string>
   <string name="also_end_conversation">po czym zakończ tę rozmowę</string>
   <string name="choose_presence">Wybierz urządzenie</string>
