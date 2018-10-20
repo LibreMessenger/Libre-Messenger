@@ -22,6 +22,7 @@ import java.util.List;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
+import de.pixart.messenger.utils.CryptoHelper;
 import rocks.xmpp.addr.Jid;
 
 public class MagicCreateActivity extends XmppActivity implements TextWatcher, AdapterView.OnItemSelectedListener {
@@ -29,11 +30,7 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher, Ad
     private TextView mFullJidDisplay;
     private EditText mUsername;
     private Spinner mServer;
-    private SecureRandom mRandom;
     String domain = null;
-
-    private static final String CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456780+-/#$!?";
-    private static final int PW_LENGTH = 10;
 
     @Override
     protected void refreshUiReal() {
@@ -74,7 +71,6 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher, Ad
         mServer.setSelection(defaultServer);
         mServer.setOnItemSelectedListener(this);
         adapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
-        mRandom = new SecureRandom();
         Button next = findViewById(R.id.create_account);
         next.setOnClickListener(v -> {
             try {
@@ -90,7 +86,7 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher, Ad
                     mUsername.setError(null);
                     Account account = xmppConnectionService.findAccountByJid(jid);
                     if (account == null) {
-                        account = new Account(jid, createPassword());
+                        account = new Account(jid, CryptoHelper.createPassword(new SecureRandom()));
                         account.setOption(Account.OPTION_REGISTER, true);
                         account.setOption(Account.OPTION_DISABLED, true);
                         account.setOption(Account.OPTION_MAGIC_CREATE, true);
@@ -113,14 +109,6 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher, Ad
             }
         });
         mUsername.addTextChangedListener(this);
-    }
-
-    private String createPassword() {
-        StringBuilder builder = new StringBuilder(PW_LENGTH);
-        for (int i = 0; i < PW_LENGTH; ++i) {
-            builder.append(CHARS.charAt(mRandom.nextInt(CHARS.length() - 1)));
-        }
-        return builder.toString();
     }
 
     @Override

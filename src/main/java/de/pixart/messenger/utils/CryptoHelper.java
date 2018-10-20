@@ -35,14 +35,14 @@ import rocks.xmpp.addr.Jid;
 
 public final class CryptoHelper {
 
-    private static final char[] VOWELS = "aeiou".toCharArray();
-    private static final char[] CONSONANTS = "bcfghjklmnpqrstvwxyz".toCharArray();
-
-    public static final String FILETRANSFER = "?FILETRANSFERv1:";
-    private final static char[] hexArray = "0123456789abcdef".toCharArray();
-
     public static final Pattern UUID_PATTERN = Pattern.compile("[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}");
     final public static byte[] ONE = new byte[]{0, 0, 0, 1};
+    private static final char[] CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz123456789+-/#$!?".toCharArray();
+    private static final int PW_LENGTH = 10;
+    private static final char[] VOWELS = "aeiou".toCharArray();
+    private static final char[] CONSONANTS = "bcfghjklmnpqrstvwxyz".toCharArray();
+    public static final String FILETRANSFER = "?FILETRANSFERv1:";
+    private final static char[] hexArray = "0123456789abcdef".toCharArray();
 
     public static String bytesToHex(byte[] bytes) {
         char[] hexChars = new char[bytes.length * 2];
@@ -52,6 +52,14 @@ public final class CryptoHelper {
             hexChars[j * 2 + 1] = hexArray[v & 0x0F];
         }
         return new String(hexChars);
+    }
+
+    public static String createPassword(SecureRandom random) {
+        StringBuilder builder = new StringBuilder(PW_LENGTH);
+        for (int i = 0; i < PW_LENGTH; ++i) {
+            builder.append(CHARS[random.nextInt(CHARS.length - 1)]);
+        }
+        return builder.toString();
     }
 
     public static String pronounceable(SecureRandom random) {
