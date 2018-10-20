@@ -5,11 +5,11 @@
 * add a hideable separate quick button for voice messages
 * switch between speaker/earpiece while playing audios/voice messages
 * store bookmarks in PEP if server has ability to convert to old bookmarks
-* show Jabber IDs from address book in Start Conversation screen
+* show Jabber IDs from address book in address book
 * preview and ask for confirmation before sending media files
 * view per conversation media files in contact and conference details screens
 * enable foreground service by default for Android 8 (notification can be disabled by long pressing it)
-* UI improvements
+* reworked MediaViewer
 * support TLSv1.3 (ejabberd ≤ 18.06 is incompatible with openssl 1.1.1 - Update ejabberd or downgrade openssl if you get ›Stream opening error‹)
 * bug fixes
 
@@ -20,10 +20,10 @@
 * UI improvements
 * introduce Expert Setting to enable direct search
 * introduce Paste As Quote on Android 6+
-* fixed issues with HTTP Upload
-* fixed connection problems with TLS1.3 servers
 * attempt to delete broken bundles from PEP
 * offer Paste as quote for HTML content
+* use SNI on STARTTLS to fix gtalk
+* use Consistent Color Generation (XEP-0392)
 * bug fixes
 
 #### Version 2.0.2

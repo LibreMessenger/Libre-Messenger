@@ -6,7 +6,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0'
+        classpath 'com.android.tools.build:gradle:3.2.1'
     }
 }
 
@@ -59,10 +59,11 @@ dependencies {
     implementation 'org.whispersystems:signal-protocol-java:2.6.2'
     implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation 'jetty:javax.servlet:5.1.12'
-    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.android.support:multidex:1.0.3'
     implementation "com.android.support:support-v13:$supportLibVersion"
     implementation "com.android.support:appcompat-v7:$supportLibVersion"
+    implementation "com.android.support:exifinterface:$supportLibVersion"
     implementation "com.android.support:support-v4:$supportLibVersion"
     implementation "com.android.support:support-emoji:$supportLibVersion"
     implementation "com.android.support:support-emoji-bundled:$supportLibVersion"
@@ -92,10 +93,10 @@ android {
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 25
+        targetSdkVersion 26
 
-        versionCode 242
-        versionName "2.1.1 beta (2018-09-27)"
+        versionCode 243
+        versionName "2.1.1"
 
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"
