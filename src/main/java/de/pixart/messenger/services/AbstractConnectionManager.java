@@ -3,6 +3,7 @@ package de.pixart.messenger.services;
 import android.content.Context;
 import android.os.PowerManager;
 import android.os.SystemClock;
+import android.util.Log;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -21,6 +22,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.DownloadableFile;
 import de.pixart.messenger.utils.Compatibility;
@@ -73,6 +75,7 @@ public class AbstractConnectionManager {
                 return os;
             }
         } catch (FileNotFoundException e) {
+            Log.d(Config.LOGTAG, "unable to create output stream", e);
             return null;
         }
         try {
@@ -89,7 +92,8 @@ public class AbstractConnectionManager {
                 return new CipherOutputStream(os, cipher);
             }
         } catch (Exception e) {
-            throw new AssertionError(e);
+            Log.d(Config.LOGTAG, "unable to create cipher output stream", e);
+            return null;
         }
     }
 
