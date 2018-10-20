@@ -408,10 +408,15 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.download_button.setText(add_contact);
         viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_account_card_details_grey600_48dp, 0, 0, 0);
         viewHolder.download_button.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(body));
-            activity.startActivity(intent);
-            activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(body));
+                activity.startActivity(intent);
+                activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+            } catch (Exception e) {
+                Toast.makeText(activity, R.string.no_application_found_to_view_contact, Toast.LENGTH_LONG).show();
+            }
+
         });
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.GONE);
@@ -635,7 +640,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 e.printStackTrace();
             }
         }
-        viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_file_grey600_48dp, 0, 0, 0);
+        viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_android_grey600_48dp, 0, 0, 0);
         viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message) + APKName));
     }
 
