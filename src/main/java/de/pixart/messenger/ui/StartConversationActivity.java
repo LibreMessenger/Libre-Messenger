@@ -493,7 +493,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
                 contact.setServerName(invite.getName());
             }
             if (contact.isSelf()) {
-                switchToConversation(contact, null);
+                switchToConversation(contact);
                 return true;
             } else if (contact.showInRoster()) {
                 throw new EnterJidDialog.JidError(getString(R.string.contact_already_exists));
@@ -502,7 +502,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
                 if (invite != null && invite.hasFingerprints()) {
                     xmppConnectionService.verifyFingerprints(contact, invite.getFingerprints());
                 }
-                switchToConversation(contact, invite == null ? null : invite.getBody());
+                switchToConversationDoNotAppend(contact, invite == null ? null : invite.getBody());
                 return true;
             }
         });
@@ -550,9 +550,14 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
         return xmppConnectionService.findAccountByJid(jid);
     }
 
-    protected void switchToConversation(Contact contact, String body) {
+    protected void switchToConversation(Contact contact) {
         Conversation conversation = xmppConnectionService.findOrCreateConversation(contact.getAccount(), contact.getJid(), false, true);
-        switchToConversation(conversation, body);
+        switchToConversation(conversation);
+    }
+
+    protected void switchToConversationDoNotAppend(Contact contact, String body) {
+        Conversation conversation = xmppConnectionService.findOrCreateConversation(contact.getAccount(), contact.getJid(), false, true);
+        switchToConversationDoNotAppend(conversation, body);
     }
 
     @Override
@@ -788,7 +793,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
         if (invite.isAction(XmppUri.ACTION_JOIN)) {
             Conversation muc = xmppConnectionService.findFirstMuc(invite.getJid());
             if (muc != null) {
-                switchToConversation(muc, invite.getBody());
+                switchToConversationDoNotAppend(muc, invite.getBody());
                 return true;
             } else {
                 showJoinConferenceDialog(invite.getJid().asBareJid().toString());
@@ -810,7 +815,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
                 if (invite.account != null) {
                     xmppConnectionService.getShortcutService().report(contact);
                 }
-                switchToConversation(contact, invite.getBody());
+                switchToConversationDoNotAppend(contact, invite.getBody());
             }
             return true;
         } else {
@@ -838,7 +843,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
             if (isTrustedSource.isChecked() && invite.hasFingerprints()) {
                 xmppConnectionService.verifyFingerprints(contact, invite.getFingerprints());
             }
-            switchToConversation(contact, invite.getBody());
+            switchToConversationDoNotAppend(contact, invite.getBody());
         });
         builder.setNegativeButton(R.string.cancel, (dialog, which) -> StartConversationActivity.this.finish());
         AlertDialog dialog = builder.create();

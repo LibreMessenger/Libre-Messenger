@@ -108,6 +108,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
     public static final String EXTRA_AS_QUOTE = "as_quote";
     public static final String EXTRA_NICK = "nick";
     public static final String EXTRA_IS_PRIVATE_MESSAGE = "pm";
+    public static final String EXTRA_DO_NOT_APPEND = "do_not_append";
     public static final String ACTION_DESTROY_MUC = "de.pixart.messenger.DESTROY_MUC";
     public static final int REQUEST_OPEN_MESSAGE = 0x9876;
     public static final int REQUEST_PLAY_PAUSE = 0x5432;
