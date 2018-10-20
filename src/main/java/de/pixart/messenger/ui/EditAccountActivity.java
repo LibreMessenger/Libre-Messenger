@@ -264,7 +264,8 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         if (mAccount != null
                 && mAccount.getStatus() != Account.State.ONLINE
                 && mFetchingAvatar) {
-            startActivity(new Intent(getApplicationContext(), ManageAccountActivity.class));
+            //TODO: maybe better redirect to StartConversationActivity
+            startActivity(new Intent(this, ManageAccountActivity.class));
             overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
             finish();
         } else if (mInitMode && mAccount != null && mAccount.getStatus() == Account.State.ONLINE) {
