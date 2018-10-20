@@ -832,5 +832,6 @@
     <string name="security_violation_not_attaching_file">File omitted due to security violation.</string>
     <string name="delete_file_dialog">Delete file</string>
     <string name="delete_file_dialog_msg">Are you sure you want to delete this file?\n\n<b>Warning:</b> This will not delete copies of this file that are stored on other devices or servers. </string>
+    <string name="cancelled">cancelled</string>
 
 </resources>

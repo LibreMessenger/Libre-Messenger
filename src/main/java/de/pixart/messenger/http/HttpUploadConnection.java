@@ -40,7 +40,7 @@ public class HttpUploadConnection implements Transferable {
     private final SlotRequester mSlotRequester;
     private final Method method;
     private final boolean mUseTor;
-    private boolean canceled = false;
+    private boolean cancelled = false;
     private boolean delayed = false;
     private DownloadableFile file;
     private Message message;
@@ -83,13 +83,13 @@ public class HttpUploadConnection implements Transferable {
 
     @Override
     public void cancel() {
-        this.canceled = true;
+        this.cancelled = true;
     }
 
     private void fail(String errorMessage) {
         mHttpConnectionManager.finishUploadConnection(this);
         message.setTransferable(null);
-        mXmppConnectionService.markMessage(message, Message.STATUS_SEND_FAILED, errorMessage);
+        mXmppConnectionService.markMessage(message, Message.STATUS_SEND_FAILED, cancelled ? Message.ERROR_MESSAGE_CANCELLED : errorMessage);
     }
 
     public void init(Message message, boolean delay) {
@@ -128,7 +128,7 @@ public class HttpUploadConnection implements Transferable {
         this.mSlotRequester.request(method, account, file, mime, md5, new SlotRequester.OnSlotRequested() {
             @Override
             public void success(SlotRequester.Slot slot) {
-                if (!canceled) {
+                if (!cancelled) {
                     HttpUploadConnection.this.slot = slot;
                     new Thread(HttpUploadConnection.this::upload).start();
                 }
@@ -181,7 +181,7 @@ public class HttpUploadConnection implements Transferable {
             transmitted = 0;
             int count;
             byte[] buffer = new byte[4096];
-            while (((count = innerInputStream.read(buffer)) != -1) && !canceled) {
+            while (((count = innerInputStream.read(buffer)) != -1) && !cancelled) {
                 transmitted += count;
                 os.write(buffer, 0, count);
                 mHttpConnectionManager.updateConversationUi(false);
