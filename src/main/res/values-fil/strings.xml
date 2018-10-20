@@ -169,7 +169,7 @@
   <string name="passwords_do_not_match">Ang password ay hindi magkatugma</string>
   <string name="invalid_jid">Hindi ito balido na Jabber-ID</string>
   <string name="error_out_of_memory">Wala ng memorya. Ang imahe ay napakalaki</string>
-  <string name="add_phone_book_text">Gusto mo bang magdagdag sa iyong address book?</string>
+  <string name="add_phone_book_text">Gusto mo bang %s magdagdag sa iyong address book?</string>
   <string name="server_info_show_more">Impormasyon sa server</string>
   <string name="server_info_mam">XEP-0313: MAM</string>
   <string name="server_info_carbon_messages">XEP-0280: Mensagheng karbon</string>
@@ -185,7 +185,7 @@
   <string name="missing_public_keys">Nawalang public key na mga anunsyo</string>
   <string name="last_seen_now">online</string>
   <string name="last_seen_min">1 minutong nakalipas</string>
-  <string name="last_seen_mins">minutong nakalipas</string>
+  <string name="last_seen_mins">%d minutong nakalipas</string>
   <string name="last_seen_hour">1 oras na ang nakalipas</string>
   <string name="last_seen_hours">%d oras na nakalipas</string>
   <string name="last_seen_day">1 araw na nakalipas</string>

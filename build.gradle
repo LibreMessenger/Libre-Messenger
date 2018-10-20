@@ -128,7 +128,6 @@ android {
     productFlavors {
         standardPush {
             dimension "distribution"
-            versionNameSuffix "+p"
         }
         standard
     }
@@ -168,7 +167,6 @@ android {
 
     lintOptions {
         disable 'ExtraTranslation', 'MissingTranslation', 'InvalidPackage', 'MissingQuantity', 'AppCompatResource', 'RestrictedApi'
-        checkReleaseBuilds false
     }
 
     subprojects {

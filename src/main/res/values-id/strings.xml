@@ -78,7 +78,7 @@
   <string name="also_end_conversation">Akhiri pembicaraan setelahnya</string>
   <string name="choose_presence">Pilih perangkat</string>
   <string name="send_unencrypted_message">Kirim pesan tidak terenkripsi</string>
-  <string name="send_message_to_x">Kirim pesan ke% s</string>
+  <string name="send_message_to_x">Kirim pesan ke %s</string>
   <string name="send_otr_message">Kirim pesan terenkripsi OTR</string>
   <string name="send_omemo_message">Kirim pesan terenkripsi OMEMO</string>
   <string name="send_omemo_x509_message">Kirim pesan terenkripsi v\\OMEMO</string>
@@ -282,7 +282,7 @@
   <string name="conference_members_only">Obrolan kelompok ini hanya untuk anggota saja</string>
   <string name="conference_kicked">Anda telah dikeluarkan dari obrolan kelompok ini</string>
   <string name="conference_shutdown">Obrolan kelompok dimatikan</string>
-  <string name="using_account">menggunakan akun% s</string>
+  <string name="using_account">menggunakan akun %s</string>
   <string name="checking_x">Memeriksa %s di HTTP host</string>
   <string name="not_connected_try_again">Anda tidak dapat terhubung. Coba lagi nanti</string>
   <string name="check_x_filesize">Periksa %s ukuran</string>
