@@ -72,7 +72,6 @@
   <string name="sharing_files_please_wait">Compartindo ficheiros. Por favor agarde...</string>
   <string name="action_clear_history">Limpar historial</string>
   <string name="clear_conversation_history">Limpar historial de conversa</string>
-  <string name="clear_histor_msg">¿Queres borrar todas as mensaxes desta conversa?\n\n<b>Ollo:</b> Isto non afectará ás mensaxes gardadas noutros dispositivos ou servidores.</string>
   <string name="delete_messages">Borrar mensaxes</string>
   <string name="also_end_conversation">Finalizar esta conversación tras o proceso</string>
   <string name="choose_presence">Escoller dispositivo</string>
@@ -277,8 +276,6 @@
   <string name="send_again">Enviar de novo</string>
   <string name="file_url">URL do ficheiro</string>
   <string name="url_copied_to_clipboard">URL copiado ao portapapeis</string>
-  <string name="scan_qr_code">Escanear código de barras 2D</string>
-  <string name="show_qr_code">Mostar código de barras 2D</string>
   <string name="show_block_list">Mostrar lista de bloqueo</string>
   <string name="account_details">Detalles da conta</string>
   <string name="verify_otr">Verificar OTR</string>
@@ -533,18 +530,14 @@
   <string name="this_device_has_been_verified">Este dispositivo foi verificado</string>
   <string name="copy_fingerprint">Copiar pegada dixital</string>
   <string name="all_omemo_keys_have_been_verified">Todas as chaves OMEMO foron verificadas</string>
-  <string name="barcode_does_not_contain_fingerprints_for_this_conversation">O código de barras non contén pegadas para esta conversa.</string>
   <string name="verified_fingerprints">Pegadas dixitais verificadas</string>
-  <string name="use_camera_icon_to_scan_barcode">Utilice a cámara para escanear o código de barras do contacto</string>
   <string name="please_wait_for_keys_to_be_fetched">Por favor agarde mentras se obteñen as chaves</string>
-  <string name="share_as_barcode">Compartir como código de barras</string>
   <string name="share_as_uri">Compartir como URI XMPP</string>
   <string name="share_as_http">Compartir como ligazón HTTP</string>
   <string name="blindly_trusted_omemo_keys">Chaves OMEMO con confianza cega</string>
   <string name="pref_blind_trust_before_verification">Confianza cega antes da verificación</string>
   <string name="pref_blind_trust_before_verification_summary">Confiar de xeito automático en todos os novos dispositivos de contactos que aínda non fosen verificados antes, e solicitar confirmación manual cada ocasión que un contacto verificado engada un novo dispositivo.</string>
   <string name="not_trusted">Non confiables</string>
-  <string name="invalid_barcode">Código de barras 2D non válido</string>
   <string name="i_followed_this_link_from_a_trusted_source">Seguín esta ligazón desde unha fonte de confianza</string>
   <string name="verifying_omemo_keys_trusted_source">Vai verificar as chaves OMEMO de %1$s despois de pulsar na ligazón. Esto só é seguro si sigueu esta ligazón desde unha fonte de confianza onde só %2$s a podería ter publicado.</string>
   <string name="verify_omemo_keys">Validar chaves OMEMO</string>

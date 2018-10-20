@@ -22,7 +22,7 @@
   <string name="title_activity_sharewith">Mit Unterhaltung teilen</string>
   <string name="title_activity_start_conversation">Unterhaltung beginnen</string>
   <string name="title_activity_choose_contact">Kontakt auswählen</string>
-  <string name="title_activity_choose_contacts">Kontakte wählen</string>
+  <string name="title_activity_choose_contacts">Kontakte auswählen</string>
   <string name="title_activity_block_list">Sperrliste</string>
   <string name="just_now">gerade</string>
   <string name="minute_ago">vor einer Minute</string>
@@ -76,7 +76,7 @@
   <string name="sharing_files_please_wait">Teile Dateien. Bitte warten…</string>
   <string name="action_clear_history">Verlauf löschen</string>
   <string name="clear_conversation_history">Verlauf löschen</string>
-  <string name="clear_histor_msg">Möchtest du alle Nachrichten in dieser Unterhaltung löschen?\n\n<b>Achtung:</b> Dies beeinflusst nicht Nachrichten, die auf anderen Geräten oder Servern gespeichert sind.</string>
+  <string name="clear_histor_msg">Bist du sicher, dass du alle Nachrichten in dieser Unterhaltung löschen möchtest?\n\n<b>Achtung:</b> Dies löscht keine Nachrichten, die auf anderen Geräten oder Servern gespeichert sind.</string>
   <string name="delete_messages">Nachrichten löschen</string>
   <string name="also_end_conversation">Diese Unterhaltung danach beenden</string>
   <string name="choose_presence">Ressource des Kontakts auswählen</string>
@@ -296,8 +296,8 @@
   <string name="send_again">Erneut senden</string>
   <string name="file_url">Datei-URL</string>
   <string name="url_copied_to_clipboard">URL in Zwischenablage kopiert</string>
-  <string name="scan_qr_code">Barcode scannen</string>
-  <string name="show_qr_code">Barcode anzeigen</string>
+  <string name="scan_qr_code">QR-Code scannen</string>
+  <string name="show_qr_code">QR-Code anzeigen</string>
   <string name="show_block_list">Sperrliste anzeigen</string>
   <string name="account_details">Mein Profil</string>
   <string name="verify_otr">OTR prüfen</string>
@@ -611,19 +611,19 @@
   <string name="this_device_has_been_verified">Dieses Gerät wurde verifiziert</string>
   <string name="copy_fingerprint">Fingerabdruck kopieren</string>
   <string name="all_omemo_keys_have_been_verified">Alle OMEMO-Fingerabdrücke wurden verifiziert</string>
-  <string name="barcode_does_not_contain_fingerprints_for_this_conversation">Barcode enthält keine Fingerabdrücke für diese Unterhaltung.</string>
+  <string name="barcode_does_not_contain_fingerprints_for_this_conversation">Der QR-Code enthält keine Fingerabdrücke für diese Konversation.</string>
   <string name="verified_fingerprints">Überprüfte Fingerabdrücke</string>
-  <string name="use_camera_icon_to_scan_barcode">Nutze Kamera, um Barcodes deiner Kontakte zu scannen</string>
+  <string name="use_camera_icon_to_scan_barcode">Benutze die Kamera, um einen QR-Code eines Kontakts zu scannen</string>
   <string name="please_wait_for_keys_to_be_fetched">Bitte warten bis Schlüssel abgerufen werden…</string>
-  <string name="share_as_barcode">Als Barcode teilen</string>
+  <string name="share_as_barcode">Als QR-Code teilen</string>
   <string name="share_as_uri">Als XMPP URI teilen</string>
   <string name="share_as_http">Als HTTP Link teilen</string>
   <string name="blindly_trusted_omemo_keys">Blind vertraute OMEMO-Fingerabdrücke</string>
   <string name="pref_blind_trust_before_verification">Blind vertraute OMEMO-Fingerabdrücke</string>
   <string name="pref_blind_trust_before_verification_summary">Vertraue automatisch allen neuen Geräten von Kontakten, die vorher bereits überprüft wurden.</string>
   <string name="not_trusted">Nicht vertraut</string>
-  <string name="invalid_barcode">Barcode ungültig</string>
-  <string name="verify_with_qr_code">mit Barcode verifizieren</string>
+  <string name="invalid_barcode">Ungültiger QR-Code</string>
+  <string name="verify_with_qr_code">Mit QR-Code verifizieren</string>
   <string name="i_followed_this_link_from_a_trusted_source">Ich bin diesem Link von einer vertrauenswürdigen Quelle gefolgt</string>
   <string name="verifying_omemo_keys_trusted_source">Du bestätigst den OMEMO Fingerabdruck von %1$s nachdem du diesen Link angeklickt hast. Dies ist nur dann sicher, wenn du den Link von einer vertrauenswürdigen Quelle hast, auf die %2$s den Link veröffentlichen konnte.</string>
   <string name="verify_omemo_keys">Verifiziere OMEMO Fingerabdrücke</string>
@@ -817,6 +817,7 @@
   <string name="notification_group_messages">Nachrichten</string>
   <string name="messages_channel_name">Nachrichten</string>
   <string name="silent_messages_channel_name">Stille Nachrichten</string>
+  <string name="silent_messages_channel_description">Diese Benachrichtigungskategorie wird benutzt, um Benachrichtigungen anzuzeigen, die keinen Ton auslösen sollen, z.B. wenn aktiv auf einem anderen Gerät (Schonfrist).</string>
   <string name="pref_more_notification_settings">Benachrichtigungseinstellungen</string>
   <string name="pref_more_notification_settings_summary">Wichtigkeit, Töne, Vibration</string>
   <string name="video_compression_channel_name">Video-Komprimierung</string>
@@ -825,4 +826,13 @@
   <string name="action_group_details">Gruppenchat-Details</string>
   <string name="view_media">Medien anzeigen</string>
   <string name="media_browser">Medien-Browser</string>
+  <string name="account_status_stream_opening_error">Fehler beim Öffnen des Streams</string>
+  <string name="action_open">Öffnen</string>
+  <string name="action_delete">Löschen</string>
+  <string name="security_violation_not_attaching_file">Datei aufgrund von Sicherheitsverletzungen ausgelassen.</string>
+  <string name="delete_file_dialog">Datei löschen</string>
+  <string name="delete_file_dialog_msg">Bist du sicher, dass du diese Datei löschen möchtest?\n\n<b>Achtung:</b>Dies löscht keine Dateien, die auf anderen Geräten oder Servern gespeichert sind.</string>
+  <string name="cancelled">abgebrochen</string>
+  <string name="remote_server_timeout">Timeout des Servers</string>
+  <string name="already_drafting_message">Du bist bereits dabei, eine Nachricht zu schreiben.</string>
 </resources>

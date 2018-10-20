@@ -70,7 +70,6 @@
   <string name="sharing_files_please_wait">Partage des fichiers. Veuillez patienter...</string>
   <string name="action_clear_history">Vider l\'historique</string>
   <string name="clear_conversation_history">Vider l\'historique de la conversation</string>
-  <string name="clear_histor_msg">Voulez-vous supprimer tous les messages de cette conversation?\n\n<b>Attention:</b> Les messages seront supprimés uniquement sur cet appareil.</string>
   <string name="delete_messages">Supprimer les messages</string>
   <string name="also_end_conversation">Fermer cette conversation ensuite</string>
   <string name="choose_presence">Choisir l\'appareil</string>
@@ -263,8 +262,6 @@
   <string name="send_again">Envoyer de nouveau</string>
   <string name="file_url">URL du fichier</string>
   <string name="url_copied_to_clipboard">URL copiée dans le presse-papier</string>
-  <string name="scan_qr_code">Scanner le code-barres 2D</string>
-  <string name="show_qr_code">Montrer le code-barres 2D</string>
   <string name="show_block_list">Afficher la liste des contacts bloqués</string>
   <string name="account_details">Détails du compte</string>
   <string name="verify_otr">Vérifier l\'OTR</string>
@@ -495,18 +492,14 @@
   <string name="this_device_has_been_verified">Cet appareil a été vérifié</string>
   <string name="copy_fingerprint">Copier l\'empreinte</string>
   <string name="all_omemo_keys_have_been_verified">Toutes les clefs OMEMO ont étés vérifiées</string>
-  <string name="barcode_does_not_contain_fingerprints_for_this_conversation">Le code-barres ne contient pas d\'empreintes pour cette conversation.</string>
   <string name="verified_fingerprints">Empreintes vérifiées</string>
-  <string name="use_camera_icon_to_scan_barcode">Utilisez l\'appareil photo pour scanner le code-barres d\'un contact</string>
   <string name="please_wait_for_keys_to_be_fetched">Veuillez attendre que les clefs soient récupérées</string>
-  <string name="share_as_barcode">Partager par code-barres</string>
   <string name="share_as_uri">Partager par URI XMPP</string>
   <string name="share_as_http">Partager par lien HTTP</string>
   <string name="blindly_trusted_omemo_keys">Faire aveuglément confiance aux clefs OMEMO</string>
   <string name="pref_blind_trust_before_verification">Faire aveuglément confiance avant vérification</string>
   <string name="pref_blind_trust_before_verification_summary">Faire automatiquement confiance aux nouveaux appareils des contacts qui n\'ont pas été vérifiés auparavant, et requérir une confirmation manuelle à chaque fois qu\'un contact vérifié auparavant utilise un nouvel appareil.</string>
   <string name="not_trusted">Non approuvée</string>
-  <string name="invalid_barcode">Code-barres 2D invalide</string>
   <string name="i_followed_this_link_from_a_trusted_source">J\'ai obtenu ce lien d\'une source de confiance</string>
   <string name="verifying_omemo_keys_trusted_source">Vous êtes sur le point de vérifier les clefs OMEMO de %1$s en cliquant sur un lien. Cette procédure n\'est sécurisée que si le lien en question n\'a pu être publié que par %2$s et que vous l\'avez obtenu d\'une source digne de confiance.</string>
   <string name="verify_omemo_keys">Vérifier les clefs OMEMO</string>

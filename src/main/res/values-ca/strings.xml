@@ -72,7 +72,6 @@
   <string name="sharing_files_please_wait">Compartint fitxers. Espereu ...</string>
   <string name="action_clear_history">Netejar historial</string>
   <string name="clear_conversation_history">Netejar historial de conversa</string>
-  <string name="clear_histor_msg">Vols esborrar tots els missatges d\'aquesta conversa?\n\n<b>Avís:</b> Això no afectarà els missatges desats en altres dispositius o servidors.</string>
   <string name="delete_messages">Esborrar missatges</string>
   <string name="also_end_conversation">Finalitza aquesta conversa després</string>
   <string name="choose_presence">Tria el dispositiu</string>
@@ -277,8 +276,6 @@
   <string name="send_again">Envia una altra vegada</string>
   <string name="file_url">URL del fitxer</string>
   <string name="url_copied_to_clipboard">URL copiada al portapapers</string>
-  <string name="scan_qr_code">Escaneja el codi de barres 2D</string>
-  <string name="show_qr_code">Mostra el codi de barres 2D</string>
   <string name="show_block_list">Mostra la llista de bloqueig</string>
   <string name="account_details">Detalls del compte</string>
   <string name="verify_otr">Verificar OTR</string>
@@ -547,18 +544,14 @@ d\'altres proveïdors donant-los la vostra ID Jabber completa.</string>
   <string name="this_device_has_been_verified">S\'ha verificat aquest dispositiu</string>
   <string name="copy_fingerprint">Copieu l\'empremta digital</string>
   <string name="all_omemo_keys_have_been_verified">S\'han verificat totes les claus OMEMO</string>
-  <string name="barcode_does_not_contain_fingerprints_for_this_conversation">El codi de barres no conté empremtes digitals per a aquesta conversa.</string>
   <string name="verified_fingerprints">Empremtes digitals verificades</string>
-  <string name="use_camera_icon_to_scan_barcode">Utilitzeu la càmera per escanejar el codi de barres d\'un contacte</string>
   <string name="please_wait_for_keys_to_be_fetched">Espereu que es puguin obtenir les claus</string>
-  <string name="share_as_barcode">Comparteix com a codi de barres</string>
   <string name="share_as_uri">Comparteix com a XMPP URI</string>
   <string name="share_as_http">Comparteix com a enllaç HTTP</string>
   <string name="blindly_trusted_omemo_keys">Tecles OMEMO de confiança cega</string>
   <string name="pref_blind_trust_before_verification">Confiança cega abans de la verificació</string>
   <string name="pref_blind_trust_before_verification_summary">Confiï automàticament en tots els dispositius nous de contactes que no s\'hagin verificat abans, i sol·liciteu la confirmació manual cada vegada que un contacte verificat afegeix un nou dispositiu.</string>
   <string name="not_trusted">No confiable</string>
-  <string name="invalid_barcode">Codi de barres 2D no vàlid</string>
   <string name="i_followed_this_link_from_a_trusted_source">He seguit aquest enllaç des d\'una font de confiança</string>
   <string name="verifying_omemo_keys_trusted_source">Esteu a punt de verificar les claus OMEMO de %1$sdesprés de fer clic a un enllaç. Això només és segur si seguiu aquest enllaç des d\'una font de confiança on només %2$s podria haver publicat aquest enllaç.</string>
   <string name="verify_omemo_keys">Comproveu les claus OMEMO</string>

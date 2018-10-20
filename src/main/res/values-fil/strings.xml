@@ -74,7 +74,6 @@
   <string name="sharing_files_please_wait">Pagbahagi ng mga dokumento. Pakihintay…</string>
   <string name="action_clear_history">Burahin ang nangyari</string>
   <string name="clear_conversation_history">Burahin ang nakaraang paguusap</string>
-  <string name="clear_histor_msg">Gusto mo bang burahin lahat ng mga mensahi sa loob ng usapang ito? <b>Babala:</b> Ito ay hindi mga mensahing implowensya na nakaimbak sa ibang mga aparato o servers.</string>
   <string name="delete_messages">Burahin ang mga mensahe</string>
   <string name="also_end_conversation">Tapusin itong usapan mamaya</string>
   <string name="choose_presence">Pumili ng instrumento</string>
@@ -293,8 +292,6 @@
   <string name="send_again">Ipadala ulit</string>
   <string name="file_url">Kikilin na URL</string>
   <string name="url_copied_to_clipboard">URL ay nakopya sa clipboard</string>
-  <string name="scan_qr_code">Suriin ang barcode</string>
-  <string name="show_qr_code">Ipakita ang barcode</string>
   <string name="show_block_list">Ipakita ang block list</string>
   <string name="account_details">Mga detalye sa account</string>
   <string name="verify_otr">Beripikahin ang OTR</string>
@@ -599,19 +596,14 @@
   <string name="this_device_has_been_verified">Na-verify ang aparato na ito</string>
   <string name="copy_fingerprint">Kopyahin ang tatak ng daliri</string>
   <string name="all_omemo_keys_have_been_verified">Na-verify ang lahat ng mga key ng OMEMO</string>
-  <string name="barcode_does_not_contain_fingerprints_for_this_conversation">Ang barcode ay hindi naglalaman ng mga fingerprint para sa pag-uusap na ito.</string>
   <string name="verified_fingerprints">Na-verify na mga tatak ng kamay</string>
-  <string name="use_camera_icon_to_scan_barcode">Gamitin ang camera upang i-scan ang isang barcode ng mga contact</string>
   <string name="please_wait_for_keys_to_be_fetched">Mangyaring maghintay para sa mga key na makuha</string>
-  <string name="share_as_barcode">Ibahagi bilang Barcode</string>
   <string name="share_as_uri">Ibahagi bilang XMPP URI</string>
   <string name="share_as_http">Ibahagi bilang HTTP na link</string>
   <string name="blindly_trusted_omemo_keys">Nagwawalang-bahala ang mga key ng OMEMO</string>
   <string name="pref_blind_trust_before_verification">Blind Trust Bago Pag-verify</string>
   <string name="pref_blind_trust_before_verification_summary">Awtomatikong pinagkakatiwalaan ang lahat ng mga bagong device mula sa mga contact na hindi pa napatotohanan bago.</string>
   <string name="not_trusted">Walang sinuman</string>
-  <string name="invalid_barcode">Di-wastong barcode</string>
-  <string name="verify_with_qr_code">e-verify sa barcode</string>
   <string name="i_followed_this_link_from_a_trusted_source">Sinundan ko ang link na ito mula sa pinagkakatiwalaang pinagmulan</string>
   <string name="verifying_omemo_keys_trusted_source">Susubukan mong i-verify ang mga key ng OMEMO ng %1$s pagkatapos ng pag-click sa isang link. Ligtas na lamang ito kung sinunod mo ang link na ito mula sa pinagkakatiwalaang pinagmulan kung saan maaaring ma-publish lamang ang %2$s sa link na ito.</string>
   <string name="verify_omemo_keys">I-verify ang mga fingerprint ng OMEMO</string>

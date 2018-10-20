@@ -72,7 +72,6 @@
   <string name="sharing_files_please_wait">Bestanden delen. Even geduld…</string>
   <string name="action_clear_history">Geschiedenis wissen</string>
   <string name="clear_conversation_history">Gespreksgeschiedenis wissen</string>
-  <string name="clear_histor_msg">Wil je alle berichten in dit gesprek verwijderen?\n\n<b>Waarschuwing:</b> Dit zal geen invloed hebben op de berichten opgeslagen op andere apparaten of servers.</string>
   <string name="delete_messages">Berichten verwijderen</string>
   <string name="also_end_conversation">Dit gesprek na afloop beëindigen</string>
   <string name="choose_presence">Apparaat kiezen</string>
@@ -277,8 +276,6 @@
   <string name="send_again">Opnieuw versturen</string>
   <string name="file_url">Bestands-URL</string>
   <string name="url_copied_to_clipboard">URL gekopieerd naar klembord</string>
-  <string name="scan_qr_code">2D-streepjescode scannen</string>
-  <string name="show_qr_code">2D-streepjescode tonen</string>
   <string name="show_block_list">Geblokkeerde contacten weergeven</string>
   <string name="account_details">Accountgegevens</string>
   <string name="verify_otr">OTR verifiëren</string>
@@ -530,18 +527,14 @@
   <string name="this_device_has_been_verified">Dit apparaat is geverifieerd</string>
   <string name="copy_fingerprint">Vingerafdruk kopiëren</string>
   <string name="all_omemo_keys_have_been_verified">Alle OMEMO-sleutels zijn geverifieerd</string>
-  <string name="barcode_does_not_contain_fingerprints_for_this_conversation">Streepjescode bevat geen vingerafdruk voor dit gesprek.</string>
   <string name="verified_fingerprints">Geverifieerde vingerafdrukken</string>
-  <string name="use_camera_icon_to_scan_barcode">Gebruik de camera om de streepjescode van een contact te scannen</string>
   <string name="please_wait_for_keys_to_be_fetched">De sleutels worden opgehaald. Even geduld.</string>
-  <string name="share_as_barcode">Delen als streepjescode</string>
   <string name="share_as_uri">Delen als XMPP-URI</string>
   <string name="share_as_http">Delen als HTTP-link</string>
   <string name="blindly_trusted_omemo_keys">Blindelings vertrouwde OMEMO-sleutels</string>
   <string name="pref_blind_trust_before_verification">Blindelings vertrouwen vóór verificatie</string>
   <string name="pref_blind_trust_before_verification_summary">Automatisch alle nieuwe ongeverifieerde apparaten van contacten vertrouwen en in het vervolg elke keer dat een contact een nieuw apparaat toevoegt vragen om bevestiging.</string>
   <string name="not_trusted">Onvertrouwd</string>
-  <string name="invalid_barcode">Ongeldige 2D-streepjescode</string>
   <string name="i_followed_this_link_from_a_trusted_source">Ik heb deze link gevolgd vanuit een betrouwbare bron</string>
   <string name="verifying_omemo_keys_trusted_source">Je staat op het punt de OMEMO-sleutels van %1$s te verifiëren door op een link te klikken. Dit is enkel veilig als je de link van een betrouwbare bron hebt gevolgd, waarbij enkel %2$s de link gepubliceerd kan hebben.</string>
   <string name="verify_omemo_keys">OMEMO-sleutels verifiëren</string>

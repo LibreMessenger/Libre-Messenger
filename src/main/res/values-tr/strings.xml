@@ -74,7 +74,6 @@
   <string name="sharing_files_please_wait">Dosyalar paylaşılıyor. Lütfen bekleyin…</string>
   <string name="action_clear_history">Geçmişi sil</string>
   <string name="clear_conversation_history">Konuşma Geçmişini Sil</string>
-  <string name="clear_histor_msg">Bu İleti Dizisindeki tüm iletileri silmek istiyor musunuz?\n\n<b>Uyarı:</b> Bu, diğer cihazlarda veya sunucularda saklanan iletileri etkilemeyecektir.</string>
   <string name="delete_messages">Mesajları silin</string>
   <string name="also_end_conversation">Bu sohbeti daha sonra sonlandır</string>
   <string name="choose_presence">Cihazı seçin</string>
@@ -293,8 +292,6 @@
   <string name="send_again">Tekrar Gönder</string>
   <string name="file_url">Dosya URL\'si</string>
   <string name="url_copied_to_clipboard">URL panoya kopyalandı</string>
-  <string name="scan_qr_code">Barkodu tara</string>
-  <string name="show_qr_code">Barkodu göster</string>
   <string name="show_block_list">Engelli listesini göster</string>
   <string name="account_details">Hesap Detayları</string>
   <string name="verify_otr">OTR\'yi doğrula</string>
@@ -599,19 +596,14 @@
   <string name="this_device_has_been_verified">Bu cihaz onaylanmıştr</string>
   <string name="copy_fingerprint">Parmak izini kopyala</string>
   <string name="all_omemo_keys_have_been_verified">Tüm OMEMO anahtarları onaylandı</string>
-  <string name="barcode_does_not_contain_fingerprints_for_this_conversation">Barkod, bu konuşma için parmak izi içermiyor.</string>
   <string name="verified_fingerprints">Doğrulanmış parmak izleri</string>
-  <string name="use_camera_icon_to_scan_barcode">Bir Kişi barkodunu taratmak için kamerayı kullan</string>
   <string name="please_wait_for_keys_to_be_fetched">Lütfen anahtarların alınması için bekleyin</string>
-  <string name="share_as_barcode">Barkod olarak paylaş</string>
   <string name="share_as_uri">XMPP URI olarak paylaş</string>
   <string name="share_as_http">HTTP bağlantısı olarak paylaş</string>
   <string name="blindly_trusted_omemo_keys">Görmeden güvenilen OMEMO anahtarları</string>
   <string name="pref_blind_trust_before_verification">Doğrulama Öncesi Görmeden Güven</string>
   <string name="pref_blind_trust_before_verification_summary">Daha önce doğrulanmamış kişilerdeki tüm yeni cihazlara otomatik olarak güvenin.</string>
   <string name="not_trusted">Güvenli Olmayan</string>
-  <string name="invalid_barcode">Geçersiz barkod</string>
-  <string name="verify_with_qr_code">barkod ile doğrula</string>
   <string name="i_followed_this_link_from_a_trusted_source">Bu bağlantıyı güvenilir bir kaynaktan takip ettim</string>
   <string name="verifying_omemo_keys_trusted_source">Bir bağlantıyı tıkladıktan sonra %1$s ürününün OMEMO tuşlarını doğrulamak üzeresin. Yalnızca %2$s tarafından bu bağlantıyı yayınlayabildiğiniz güvenilir bir kaynaktan bu bağlantıyı izlerseniz güvenli olur.</string>
   <string name="verify_omemo_keys">OMEMO parmak izlerini doğrulayın</string>
