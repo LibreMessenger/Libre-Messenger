@@ -2,7 +2,12 @@ package de.pixart.messenger.services;
 
 import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.firebase.iid.FirebaseInstanceId;
+
 import de.pixart.messenger.Config;
+import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.utils.PhoneHelper;
@@ -14,8 +19,6 @@ import rocks.xmpp.addr.Jid;
 
 public class PushManagementService {
 
-    private static final Jid APP_SERVER = Jid.of("p2.siacs.eu");
-
     protected final XmppConnectionService mXmppConnectionService;
 
     PushManagementService(XmppConnectionService service) {
@@ -26,7 +29,8 @@ public class PushManagementService {
         Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": has push support");
         retrieveFcmInstanceToken(token -> {
             final String androidId = PhoneHelper.getAndroidId(mXmppConnectionService);
-            IqPacket packet = mXmppConnectionService.getIqGenerator().pushTokenToAppServer(APP_SERVER, token, androidId);
+            final Jid appServer = Jid.of(mXmppConnectionService.getString(R.string.app_server));
+            IqPacket packet = mXmppConnectionService.getIqGenerator().pushTokenToAppServer(appServer, token, androidId);
             mXmppConnectionService.sendIqPacket(account, packet, (a, p) -> {
                 Element command = p.findChild("command", "http://jabber.org/protocol/commands");
                 if (p.getType() == IqPacket.TYPE.RESULT && command != null) {

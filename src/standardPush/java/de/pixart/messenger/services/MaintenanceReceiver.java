@@ -32,5 +32,6 @@ public class MaintenanceReceiver extends BroadcastReceiver {
                 Log.d(Config.LOGTAG, "unable to renew instance token", e);
             }
         }).start();
+
     }
 }

@@ -1,6 +1,7 @@
 package de.pixart.messenger.services;
 
 import android.content.Intent;
+
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
 public class InstanceIdService extends FirebaseInstanceIdService {

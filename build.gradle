@@ -33,7 +33,7 @@ repositories {
 }
 
 configurations {
-    standardPushimplementation
+    standardPushImplementation
 }
 
 ext {
@@ -42,11 +42,14 @@ ext {
 
 dependencies {
     implementation project(':libs:android-transcoder')
-    standardPushimplementation('com.google.firebase:firebase-messaging:15.0.2') {
+    standardPushImplementation ('com.google.firebase:firebase-messaging:15.0.2') {
         exclude group: 'com.google.firebase', module: 'firebase-core'
     }
     implementation 'org.sufficientlysecure:openpgp-api:10.0'
-    implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.0'
+    implementation('com.theartofdev.edmodo:android-image-cropper:2.7.+') {
+        exclude group: 'com.android.support', module: 'appcompat-v7'
+        exclude group: 'com.android.support', module: 'exifinterface'
+    }
     implementation 'org.bouncycastle:bcmail-jdk15on:1.58'
     implementation 'org.jitsi:org.otr4j:0.22'
     implementation 'org.gnu.inet:libidn:1.15'
@@ -122,7 +125,10 @@ android {
     flavorDimensions("distribution")
 
     productFlavors {
-        standardPush
+        standardPush {
+            dimension "distribution"
+            versionNameSuffix "+p"
+        }
         standard
     }
     if (project.hasProperty('mStoreFile') &&
@@ -138,11 +144,6 @@ android {
             }
         }
         buildTypes {
-            debug {
-                debuggable true
-                buildTypes.release.signingConfig = null
-            }
-
             release {
                 debuggable false
                 signingConfig = signingConfigs.release
@@ -151,11 +152,22 @@ android {
                 runProguard true
                 proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             }
+
+            debug {
+                debuggable true
+                buildTypes.release.signingConfig = null
+                minifyEnabled true
+                shrinkResources true
+                runProguard true
+                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            }
+
         }
     }
 
     lintOptions {
         disable 'ExtraTranslation', 'MissingTranslation', 'InvalidPackage', 'MissingQuantity', 'AppCompatResource', 'RestrictedApi'
+        checkReleaseBuilds false
     }
 
     subprojects {
