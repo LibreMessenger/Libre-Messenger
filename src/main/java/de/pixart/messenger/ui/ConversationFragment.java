@@ -1719,7 +1719,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         }
         builder.setView(dialogView);
         builder.setNegativeButton(getString(R.string.cancel), null);
-        builder.setPositiveButton(getString(R.string.delete_messages), (dialog, which) -> {
+        builder.setPositiveButton(getString(R.string.confirm), (dialog, which) -> {
             this.activity.xmppConnectionService.clearConversationHistory(conversation);
             if (endConversationCheckBox.isChecked()) {
                 this.activity.xmppConnectionService.archiveConversation(conversation);
@@ -1882,12 +1882,19 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         refresh();
     }
 
-    private void deleteFile(Message message) {
-        if (activity.xmppConnectionService.getFileBackend().deleteFile(message)) {
-            message.setTransferable(new TransferablePlaceholder(Transferable.STATUS_DELETED));
-            activity.onConversationsListItemUpdated();
-            refresh();
-        }
+    private void deleteFile(final Message message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.setTitle(R.string.delete_file_dialog);
+        builder.setMessage(R.string.delete_file_dialog_msg);
+        builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
+            if (activity.xmppConnectionService.getFileBackend().deleteFile(message)) {
+                message.setTransferable(new TransferablePlaceholder(Transferable.STATUS_DELETED));
+                activity.onConversationsListItemUpdated();
+                refresh();
+            }
+        });
+        builder.create().show();
     }
 
     public void resendMessage(final Message message) {
