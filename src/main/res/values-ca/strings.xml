@@ -72,7 +72,6 @@
   <string name="sharing_files_please_wait">Compartint fitxers. Espereu ...</string>
   <string name="action_clear_history">Netejar historial</string>
   <string name="clear_conversation_history">Netejar historial de conversa</string>
-  <string name="clear_histor_msg">Vols esborrar tots els missatges d\'aquesta conversa?\n\n<b>Avís:</b> Això no afectarà els missatges desats en altres dispositius o servidors.</string>
   <string name="delete_messages">Esborrar missatges</string>
   <string name="also_end_conversation">Finalitza aquesta conversa després</string>
   <string name="choose_presence">Tria el dispositiu</string>
