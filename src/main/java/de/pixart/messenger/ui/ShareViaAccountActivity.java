@@ -53,7 +53,7 @@ public class ShareViaAccountActivity extends XmppActivity {
                 final Jid contact = Jid.of(getIntent().getStringExtra(EXTRA_CONTACT));
                 final Conversation conversation = xmppConnectionService.findOrCreateConversation(
                         account, contact, false, false);
-                switchToConversation(conversation, body, false);
+                switchToConversation(conversation, body);
             } catch (IllegalArgumentException e) {
                 // ignore error
             }
@@ -83,7 +83,7 @@ public class ShareViaAccountActivity extends XmppActivity {
                 final Jid contact = Jid.of(getIntent().getStringExtra(EXTRA_CONTACT));
                 final Conversation conversation = xmppConnectionService.findOrCreateConversation(
                         account, contact, false, false);
-                switchToConversation(conversation, body, false);
+                switchToConversation(conversation, body);
             } catch (IllegalArgumentException e) {
                 // ignore error
             }
