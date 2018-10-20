@@ -1870,8 +1870,7 @@ public class XmppConnectionService extends Service {
     public List<Conversation> findAllConferencesWith(Contact contact) {
         ArrayList<Conversation> results = new ArrayList<>();
         for (final Conversation c : conversations) {
-            if (c.getMode() == Conversation.MODE_MULTI
-                    && (c.getJid().asBareJid().equals(c.getJid().asBareJid()) || c.getMucOptions().isContactInRoom(contact))) {
+            if (c.getMode() == Conversation.MODE_MULTI && c.getMucOptions().isContactInRoom(contact)) {
                 results.add(c);
             }
         }
