@@ -1091,7 +1091,11 @@ public class XmppConnectionService extends Service {
     public void onCreate() {
         OmemoSetting.load(this);
         ExceptionHelper.init(getApplicationContext());
-        Security.insertProviderAt(Conscrypt.newProvider(), 1);
+        try {
+            Security.insertProviderAt(Conscrypt.newProvider(), 1);
+        } catch (Throwable throwable) {
+            Log.e(Config.LOGTAG, "unable to initialize security provider", throwable);
+        }
         Resolver.init(this);
         this.mRandom = new SecureRandom();
         updateMemorizingTrustmanager();
