@@ -74,7 +74,6 @@
   <string name="sharing_files_please_wait">Pagbahagi ng mga dokumento. Pakihintay…</string>
   <string name="action_clear_history">Burahin ang nangyari</string>
   <string name="clear_conversation_history">Burahin ang nakaraang paguusap</string>
-  <string name="clear_histor_msg">Gusto mo bang burahin lahat ng mga mensahi sa loob ng usapang ito? <b>Babala:</b> Ito ay hindi mga mensahing implowensya na nakaimbak sa ibang mga aparato o servers.</string>
   <string name="delete_messages">Burahin ang mga mensahe</string>
   <string name="also_end_conversation">Tapusin itong usapan mamaya</string>
   <string name="choose_presence">Pumili ng instrumento</string>
