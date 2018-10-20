@@ -862,6 +862,7 @@ public class FileBackend {
                 return cropCenterSquare(input, size);
             }
         } catch (FileNotFoundException | SecurityException e) {
+            Log.d(Config.LOGTAG, "unable to open file " + image.toString(), e);
             return null;
         } finally {
             close(is);
@@ -1101,7 +1102,7 @@ public class FileBackend {
             drawOverlay(bitmap, R.drawable.play_video, 0.75f);
         } else {
             bitmap = cropCenterSquare(attachment.getUri(), size);
-            if ("image/gif".equals(attachment.getMime())) {
+            if (bitmap != null && "image/gif".equals(attachment.getMime())) {
                 Bitmap withGifOverlay = bitmap.copy(Bitmap.Config.ARGB_8888, true);
                 drawOverlay(withGifOverlay, R.drawable.play_gif, 1.0f);
                 bitmap.recycle();
