@@ -74,7 +74,6 @@
   <string name="sharing_files_please_wait">Pagpakigbahin sa mga file. Palihug pag hulat…</string>
   <string name="action_clear_history">Hawana ang kasaysayan</string>
   <string name="clear_conversation_history">Hawana ang gepanag-estoryahan nga kasaysayan</string>
-  <string name="clear_histor_msg">Gusto ba nimong papason ang tanan nga mga mensahe sulod niining Pag-istoryahanay?\n\n<b>Pasidaan:</b> Kini dili mag-impluwensya sa mga mensahe nga gitapigan sa ubang mga device o mga serber.</string>
   <string name="delete_messages">Tangtanga ang mga mensahe</string>
   <string name="also_end_conversation">Undanga kining panag-estoryahay nigkahuman</string>
   <string name="choose_presence">Pili ug device</string>
