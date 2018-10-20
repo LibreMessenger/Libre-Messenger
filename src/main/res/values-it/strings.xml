@@ -72,7 +72,6 @@
   <string name="sharing_files_please_wait">Condivisione file. Attendere prego...</string>
   <string name="action_clear_history">Pulisci la cronologia</string>
   <string name="clear_conversation_history">Pulisci la cronologia della conversazione</string>
-  <string name="clear_histor_msg">Vuoi cancellare tutti i messaggi di questa Conversazione?\n\n<b>Attenzione:</b> Questo non influenzerà i messaggi presenti su altri dispositivi o server.</string>
   <string name="delete_messages">Elimina messaggi</string>
   <string name="also_end_conversation">Termina questa conversazione successivamente</string>
   <string name="choose_presence">Scegli un dispositivo</string>
