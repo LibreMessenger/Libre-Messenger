@@ -47,6 +47,7 @@ import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.MucOptions.User;
+import de.pixart.messenger.services.EmojiService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.services.XmppConnectionService.OnConversationUpdate;
 import de.pixart.messenger.services.XmppConnectionService.OnMucRosterUpdate;
@@ -68,6 +69,7 @@ import de.pixart.messenger.utils.XmppUri;
 import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.entities.Bookmark.printableValue;
+import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
 import static de.pixart.messenger.utils.StringUtils.changed;
 
 public class ConferenceDetailsActivity extends XmppActivity implements OnConversationUpdate, OnMucRosterUpdate, XmppConnectionService.OnAffiliationChanged, XmppConnectionService.OnRoleChanged, XmppConnectionService.OnConfigurationPushed, TextWatcher, OnMediaLoaded {
@@ -284,6 +286,8 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        boolean useBundledEmoji = getPreferences().getBoolean(USE_BUNDLED_EMOJIS, getResources().getBoolean(R.bool.use_bundled_emoji));
+        new EmojiService(this).init(useBundledEmoji);
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_muc_details);
         this.binding.changeConferenceButton.setOnClickListener(this.mChangeConferenceSettings);
         this.binding.invite.setOnClickListener(inviteListener);
