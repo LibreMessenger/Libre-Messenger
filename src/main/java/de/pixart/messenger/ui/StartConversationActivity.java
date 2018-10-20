@@ -26,10 +26,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextWatcher;
-import android.text.style.TypefaceSpan;
 import android.util.Log;
 import android.util.Pair;
 import android.view.ContextMenu;
@@ -71,6 +68,7 @@ import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.services.XmppConnectionService.OnRosterUpdate;
 import de.pixart.messenger.ui.adapter.ListItemAdapter;
 import de.pixart.messenger.ui.interfaces.OnBackendConnected;
+import de.pixart.messenger.ui.util.JidDialog;
 import de.pixart.messenger.ui.util.PendingItem;
 import de.pixart.messenger.ui.util.SoftKeyboardUtils;
 import de.pixart.messenger.utils.MenuDoubleTabUtil;
@@ -429,7 +427,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setNegativeButton(R.string.cancel, null);
         builder.setTitle(R.string.action_delete_contact);
-        builder.setMessage(getString(R.string.remove_contact_text, contact.getJid()));
+        builder.setMessage(JidDialog.style(this, R.string.remove_contact_text, contact.getJid().toEscapedString()));
         builder.setPositiveButton(R.string.delete, (dialog, which) -> {
             xmppConnectionService.deleteContactOnServer(contact);
             filter(mSearchEditText.getText().toString());
@@ -444,7 +442,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setNegativeButton(R.string.cancel, null);
         builder.setTitle(R.string.delete_bookmark);
-        builder.setMessage(getString(R.string.remove_bookmark_text, bookmark.getJid()));
+        builder.setMessage(JidDialog.style(this, R.string.remove_bookmark_text, bookmark.getJid().toEscapedString()));
         builder.setPositiveButton(R.string.delete, (dialog, which) -> {
             bookmark.setConversation(null);
             Account account = bookmark.getAccount();
@@ -834,13 +832,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
         View view = getLayoutInflater().inflate(R.layout.dialog_verify_fingerprints, null);
         final CheckBox isTrustedSource = view.findViewById(R.id.trusted_source);
         TextView warning = view.findViewById(R.id.warning);
-        String jid = contact.getJid().asBareJid().toString();
-        SpannableString spannable = new SpannableString(getString(R.string.verifying_omemo_keys_trusted_source, jid, contact.getDisplayName()));
-        int start = spannable.toString().indexOf(jid);
-        if (start >= 0) {
-            spannable.setSpan(new TypefaceSpan("monospace"), start, start + jid.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        warning.setText(spannable);
+        warning.setText(JidDialog.style(this, R.string.verifying_omemo_keys_trusted_source, contact.getJid().asBareJid().toEscapedString(), contact.getDisplayName()));
         builder.setView(view);
         builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
             if (isTrustedSource.isChecked() && invite.hasFingerprints()) {

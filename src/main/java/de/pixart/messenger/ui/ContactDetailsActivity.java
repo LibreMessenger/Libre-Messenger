@@ -51,6 +51,7 @@ import de.pixart.messenger.ui.adapter.MediaAdapter;
 import de.pixart.messenger.ui.interfaces.OnMediaLoaded;
 import de.pixart.messenger.ui.util.Attachment;
 import de.pixart.messenger.ui.util.GridManager;
+import de.pixart.messenger.ui.util.JidDialog;
 import de.pixart.messenger.utils.Compatibility;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.EmojiWrapper;
@@ -420,10 +421,10 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
 
             binding.addContactButton.setOnClickListener(view -> {
                 final AlertDialog.Builder deleteFromRosterDialog = new AlertDialog.Builder(ContactDetailsActivity.this);
-                deleteFromRosterDialog.setNegativeButton(getString(R.string.cancel), null);
-                deleteFromRosterDialog.setTitle(getString(R.string.action_delete_contact));
-                deleteFromRosterDialog.setMessage(getString(R.string.remove_contact_text, contact.getJid().toString()));
-                deleteFromRosterDialog.setPositiveButton(getString(R.string.delete), removeFromRoster).create().show();
+                deleteFromRosterDialog.setNegativeButton(getString(R.string.cancel), null)
+                .setTitle(getString(R.string.action_delete_contact))
+                .setMessage(JidDialog.style(this, R.string.remove_contact_text, contact.getJid().toEscapedString()))
+                .setPositiveButton(getString(R.string.delete), removeFromRoster).create().show();
             });
             binding.detailsSendPresence.setOnCheckedChangeListener(null);
             binding.detailsReceivePresence.setOnCheckedChangeListener(null);
