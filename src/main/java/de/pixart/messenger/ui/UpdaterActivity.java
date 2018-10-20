@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.PowerManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -48,8 +47,6 @@ public class UpdaterActivity extends XmppActivity {
     String store;
     ProgressDialog mProgressDialog;
     DownloadTask downloadTask;
-    XmppConnectionService mXmppConnectionService;
-    private boolean mUseTor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +54,6 @@ public class UpdaterActivity extends XmppActivity {
 
         //set activity
         setContentView(R.layout.activity_updater);
-        this.mUseTor = false;
-        if (mXmppConnectionService != null) {
-            this.mUseTor = mXmppConnectionService.useTorToConnect();
-        }
         this.mTheme = findTheme();
         setTheme(this.mTheme);
 
@@ -291,11 +284,13 @@ public class UpdaterActivity extends XmppActivity {
 
     private class DownloadTask extends AsyncTask<String, Integer, String> {
 
-        File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + FileBackend.getAppUpdateDirectory());
+        File dir = new File(FileBackend.getAppUpdateDirectory());
         File file = new File(dir, FileName);
         private Context context;
         private PowerManager.WakeLock mWakeLock;
         private long startTime = 0;
+        XmppConnectionService xmppConnectionService;
+        private boolean mUseTor;
 
         public DownloadTask(Context context) {
             this.context = context;
@@ -311,6 +306,7 @@ public class UpdaterActivity extends XmppActivity {
             if (pm != null) {
                 mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, getClass().getName());
                 mWakeLock.acquire();
+                mUseTor = xmppConnectionService != null && xmppConnectionService.useTorToConnect();
             }
             mProgressDialog.show();
         }
