@@ -42,7 +42,7 @@ public class AbstractConnectionManager {
     public static InputStream upgrade(DownloadableFile file, InputStream is, boolean gcm) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, InvalidKeyException, NoSuchPaddingException, NoSuchProviderException {
         if (file.getKey() != null && file.getIv() != null) {
             if (gcm) {
-                final Cipher cipher = Compatibility.twentyTwo() ? Cipher.getInstance(CIPHERMODE) : Cipher.getInstance(CIPHERMODE, PROVIDER);
+                final Cipher cipher = Compatibility.twentyEight() ? Cipher.getInstance(CIPHERMODE) : Cipher.getInstance(CIPHERMODE, PROVIDER);
                 SecretKeySpec keySpec = new SecretKeySpec(file.getKey(), KEYTYPE);
                 IvParameterSpec ivSpec = new IvParameterSpec(file.getIv());
                 cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);
@@ -80,7 +80,7 @@ public class AbstractConnectionManager {
         }
         try {
             if (gcm) {
-                final Cipher cipher = Compatibility.twentyTwo() ? Cipher.getInstance(CIPHERMODE) : Cipher.getInstance(CIPHERMODE, PROVIDER);
+                final Cipher cipher = Compatibility.twentyEight() ? Cipher.getInstance(CIPHERMODE) : Cipher.getInstance(CIPHERMODE, PROVIDER);
                 SecretKeySpec keySpec = new SecretKeySpec(file.getKey(), KEYTYPE);
                 IvParameterSpec ivSpec = new IvParameterSpec(file.getIv());
                 cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
