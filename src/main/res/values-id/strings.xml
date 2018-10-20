@@ -74,7 +74,6 @@
   <string name="sharing_files_please_wait">Berbagi berkas. Mohon tunggu…</string>
   <string name="action_clear_history">Hapus riwayat</string>
   <string name="clear_conversation_history">Hapus Riwayat Percakapan</string>
-  <string name="clear_histor_msg">Apakah anda ingin menghapus semua pesan dalam percakapan ini?\n\n<b>Peringatan:</b> Tindakan ini tidak akan mempengaruhi pesan yang tersimpan pada perangkat atau server lain.</string>
   <string name="delete_messages">Hapus pesan</string>
   <string name="also_end_conversation">Akhiri pembicaraan setelahnya</string>
   <string name="choose_presence">Pilih perangkat</string>
