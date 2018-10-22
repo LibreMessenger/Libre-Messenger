@@ -20,6 +20,13 @@
             android:adjustViewBounds="true"
             android:visibility="gone" />
 
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@id/message_gif_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:visibility="gone" />
+
         <com.github.rtoshiro.view.video.FullscreenVideoLayout
             android:id="@id/message_video_view"
             android:layout_width="match_parent"

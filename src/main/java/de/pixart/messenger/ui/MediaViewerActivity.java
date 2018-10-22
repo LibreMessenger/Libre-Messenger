@@ -42,6 +42,7 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.utils.ExifHelper;
 import de.pixart.messenger.utils.MimeUtils;
+import pl.droidsonroids.gif.GifImageView;
 
 import static de.pixart.messenger.persistance.FileBackend.close;
 
@@ -49,6 +50,7 @@ public class MediaViewerActivity extends XmppActivity {
 
     Integer oldOrientation;
     SubsamplingScaleImageView mImage;
+    GifImageView mGIF;
     FullscreenVideoLayout mVideo;
     ImageView mFullscreenbutton;
     Uri mFileUri;
@@ -96,6 +98,7 @@ public class MediaViewerActivity extends XmppActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_media_viewer);
         mImage = findViewById(R.id.message_image_view);
+        mGIF = findViewById(R.id.message_gif_view);
         mVideo = findViewById(R.id.message_video_view);
         mFullscreenbutton = findViewById(R.id.vcv_img_fullscreen);
         fab = findViewById(R.id.fab);
@@ -236,6 +239,8 @@ public class MediaViewerActivity extends XmppActivity {
     }
 
     private void DisplayImage(final File file, final Uri FileUri) {
+        boolean gif = false;
+        gif = "image/gif".equalsIgnoreCase(getMimeType(file.toString()));
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(new File(file.getPath()).getAbsolutePath(), options);
@@ -246,9 +251,14 @@ public class MediaViewerActivity extends XmppActivity {
         if (useAutoRotateScreen()) {
             rotateScreen(width, height, rotation);
         }
-        mImage.setVisibility(View.VISIBLE);
         try {
-            mImage.setImage(ImageSource.uri(FileUri));
+            if (gif) {
+                mGIF.setVisibility(View.VISIBLE);
+                mGIF.setImageURI(FileUri);
+            } else {
+                mImage.setVisibility(View.VISIBLE);
+                mImage.setImage(ImageSource.uri(FileUri));
+            }
         } catch (Exception e) {
             Toast.makeText(this, getString(R.string.error_file_corrupt), Toast.LENGTH_LONG).show();
             e.printStackTrace();
