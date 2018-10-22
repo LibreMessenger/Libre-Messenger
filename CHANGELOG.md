@@ -1,5 +1,8 @@
 ### Changelog
 
+#### Version 2.1.2
+* fix crash with updater
+
 #### Version 2.1.1
 * make quick actions/attachment choice configurable
 * add a hideable separate quick button for voice messages
