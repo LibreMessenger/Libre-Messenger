@@ -74,6 +74,7 @@ import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.Presences;
 import de.pixart.messenger.services.AvatarService;
 import de.pixart.messenger.services.BarcodeProvider;
+import de.pixart.messenger.services.UpdateService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.services.XmppConnectionService.XmppConnectionBinder;
 import de.pixart.messenger.ui.util.PresenceSelector;
@@ -1236,7 +1237,7 @@ public abstract class XmppActivity extends ActionBarActivity {
     }
 
     protected void openInstallFromUnknownSourcesDialogIfNeeded() {
-        if (!installFromUnknownSourceAllowed()) {
+        if (!installFromUnknownSourceAllowed() && xmppConnectionService.installedFrom() == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.install_from_unknown_sources_disabled);
             builder.setMessage(R.string.install_from_unknown_sources_disabled_dialog);
@@ -1254,6 +1255,10 @@ public abstract class XmppActivity extends ActionBarActivity {
                     startActivityForResult(intent, REQUEST_UNKNOWN_SOURCE_OP);
                 } catch (ActivityNotFoundException e) {
                     Toast.makeText(XmppActivity.this, R.string.device_does_not_support_battery_op, Toast.LENGTH_SHORT).show();
+                } finally {
+                    UpdateService task = new UpdateService(this, xmppConnectionService.installedFrom(), xmppConnectionService);
+                    task.executeOnExecutor(UpdateService.THREAD_POOL_EXECUTOR, "true");
+                    Log.d(Config.LOGTAG, "AppUpdater started");
                 }
             });
             builder.create().show();

@@ -3,7 +3,6 @@ package de.pixart.messenger.ui;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -157,8 +156,7 @@ public class UpdaterActivity extends XmppActivity {
                                 }
                             } else {
                                 Toast.makeText(getApplicationContext(), getText(R.string.download_started), Toast.LENGTH_LONG).show();
-                                downloadTask = new DownloadTask(UpdaterActivity.this) {
-                                };
+                                downloadTask = new DownloadTask(UpdaterActivity.this);
                                 downloadTask.execute(appURI);
                             }
                         } else {
@@ -166,13 +164,18 @@ public class UpdaterActivity extends XmppActivity {
                         }
                     })
                     .setNeutralButton(R.string.changelog, (dialog, id) -> {
-                        Uri uri = Uri.parse(Config.CHANGELOG_URL); // missing 'http://' will cause crashed
-                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
-                        //restart updater to show dialog again after coming back after opening changelog
-                        recreate();
+                        Uri uri = Uri.parse(Config.CHANGELOG_URL); // missing 'http://' will cause crash
+                        try {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        } finally {
+                            //restart updater to show dialog again after coming back after opening changelog
+                            recreate();
+                        }
                     })
                     .setNegativeButton(R.string.remind_later, (dialog, id) -> {
                         // User cancelled the dialog
@@ -212,8 +215,8 @@ public class UpdaterActivity extends XmppActivity {
         if (connectivity != null) {
             NetworkInfo[] info = connectivity.getAllNetworkInfo();
             if (info != null) {
-                for (int i = 0; i < info.length; i++) {
-                    if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+                for (NetworkInfo anInfo : info) {
+                    if (anInfo.getState() == NetworkInfo.State.CONNECTED) {
                         return true;
                     }
                 }
@@ -247,17 +250,14 @@ public class UpdaterActivity extends XmppActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.cancel_update)
                 .setCancelable(false)
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        if (downloadTask != null && !downloadTask.getStatus().equals(AsyncTask.Status.FINISHED)) {
-                            downloadTask.cancel(true);
-                        }
-                        if (mProgressDialog.isShowing()) {
-                            mProgressDialog.dismiss();
-                        }
-                        UpdaterActivity.this.finish();
+                .setPositiveButton(R.string.yes, (dialog, id) -> {
+                    if (downloadTask != null && !downloadTask.getStatus().equals(AsyncTask.Status.FINISHED)) {
+                        downloadTask.cancel(true);
                     }
+                    if (mProgressDialog.isShowing()) {
+                        mProgressDialog.dismiss();
+                    }
+                    UpdaterActivity.this.finish();
                 })
                 .setNegativeButton(R.string.no, (dialog, id) -> dialog.cancel());
         AlertDialog alert = builder.create();
@@ -286,13 +286,13 @@ public class UpdaterActivity extends XmppActivity {
 
         File dir = new File(FileBackend.getAppUpdateDirectory());
         File file = new File(dir, FileName);
+        XmppConnectionService xmppConnectionService;
         private Context context;
         private PowerManager.WakeLock mWakeLock;
         private long startTime = 0;
-        XmppConnectionService xmppConnectionService;
         private boolean mUseTor;
 
-        public DownloadTask(Context context) {
+        DownloadTask(Context context) {
             this.context = context;
         }
 
@@ -409,6 +409,5 @@ public class UpdaterActivity extends XmppActivity {
                 UpdaterActivity.this.finish();
             }
         }
-
     }
 }

@@ -95,8 +95,6 @@ import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 import rocks.xmpp.addr.Jid;
 
-import static de.pixart.messenger.services.XmppConnectionService.FDroid;
-import static de.pixart.messenger.services.XmppConnectionService.PlayStore;
 import static de.pixart.messenger.ui.ConversationFragment.REQUEST_DECRYPT_PGP;
 import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
 
@@ -596,15 +594,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
                 return true;
             case R.id.action_check_updates:
                 if (xmppConnectionService.hasInternetConnection()) {
-                    if (!installFromUnknownSourceAllowed() && xmppConnectionService.installedFrom() == null) {
-                        openInstallFromUnknownSourcesDialogIfNeeded();
-                    } else if (!installFromUnknownSourceAllowed() && (xmppConnectionService.installedFrom() != null && !xmppConnectionService.installedFrom().equalsIgnoreCase(PlayStore))) {
-                        openInstallFromUnknownSourcesDialogIfNeeded();
-                    } else {
-                        UpdateService task = new UpdateService(this, xmppConnectionService.installedFrom(), xmppConnectionService);
-                        task.executeOnExecutor(UpdateService.THREAD_POOL_EXECUTOR, "true");
-                        Log.d(Config.LOGTAG, "AppUpdater started");
-                    }
+                    openInstallFromUnknownSourcesDialogIfNeeded();
                 } else {
                     Toast.makeText(this, R.string.account_status_no_internet, Toast.LENGTH_LONG).show();
                 }
@@ -987,18 +977,14 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
             editor.putLong("lastUpdateTime", lastUpdateTime);
             editor.apply();
             Log.d(Config.LOGTAG, "AppUpdater: CurrentTime: " + lastUpdateTime);
-            if (!installFromUnknownSourceAllowed() && Store == null) {
+            if (Store == null) {
+                Log.d(Config.LOGTAG, "AppUpdater started");
                 openInstallFromUnknownSourcesDialogIfNeeded();
-            } else if (Store != null && (Store.equalsIgnoreCase(PlayStore) || Store.equalsIgnoreCase(FDroid))) {
-                Log.d(Config.LOGTAG, "AppUpdater aborted because app store is " + Store);
-            } else {
                 UpdateService task = new UpdateService(this, Store, xmppConnectionService);
                 task.executeOnExecutor(UpdateService.THREAD_POOL_EXECUTOR, "false");
-                Log.d(Config.LOGTAG, "AppUpdater started");
             }
         } else {
             Log.d(Config.LOGTAG, "AppUpdater stopped");
-            return;
         }
     }
 }

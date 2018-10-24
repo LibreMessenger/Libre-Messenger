@@ -42,7 +42,7 @@ public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapp
 
     @Override
     protected Wrapper doInBackground(String... params) {
-        String jsonString = "";
+        StringBuilder jsonString = new StringBuilder();
         boolean UpdateAvailable = false;
         boolean showNoUpdateToast = false;
         boolean isError = false;
@@ -66,9 +66,8 @@ public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapp
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {
-                jsonString += line;
+                jsonString.append(line);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
             isError = true;
@@ -79,7 +78,7 @@ public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapp
         }
 
         try {
-            JSONObject json = new JSONObject(jsonString);
+            JSONObject json = new JSONObject(jsonString.toString());
             if (json.getBoolean("success") && json.has("latestVersion") && json.has("appURI") && json.has("filesize")) {
                 String version = json.getString("latestVersion");
                 String ownVersion = BuildConfig.VERSION_NAME;
@@ -198,9 +197,9 @@ public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapp
         return 0;
     }
 
-    public class Wrapper {
-        public boolean UpdateAvailable = false;
-        public boolean NoUpdate = false;
-        public boolean isError = false;
+    class Wrapper {
+        boolean UpdateAvailable = false;
+        boolean NoUpdate = false;
+        boolean isError = false;
     }
 }
