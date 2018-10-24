@@ -74,7 +74,6 @@ import de.pixart.messenger.services.MemorizingTrustManager;
 import de.pixart.messenger.services.MessageArchiveService;
 import de.pixart.messenger.services.NotificationService;
 import de.pixart.messenger.services.XmppConnectionService;
-import de.pixart.messenger.ui.EditAccountActivity;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.utils.Patterns;
@@ -117,7 +116,7 @@ public class XmppConnection implements Runnable {
                 final List<String> PASSWORD_TOO_WEAK_MSGS = Arrays.asList(
                         "The password is too weak",
                         "Please use a longer password.");
-                final Element error = packet.findChild("error");
+                Element error = packet.findChild("error");
                 Account.State state = Account.State.REGISTRATION_FAILED;
                 mXmppConnectionService.deleteAccount(account);
                 if (error != null) {
@@ -142,17 +141,17 @@ public class XmppConnection implements Runnable {
     };
     protected final Account account;
     private final Features features = new Features(this);
-	private final HashMap<Jid, ServiceDiscoveryResult> disco = new HashMap<>();
-	private final SparseArray<AbstractAcknowledgeableStanza> mStanzaQueue = new SparseArray<>();
-	private final Hashtable<String, Pair<IqPacket, OnIqPacketReceived>> packetCallbacks = new Hashtable<>();
+    private final HashMap<Jid, ServiceDiscoveryResult> disco = new HashMap<>();
+    private final SparseArray<AbstractAcknowledgeableStanza> mStanzaQueue = new SparseArray<>();
+    private final Hashtable<String, Pair<IqPacket, OnIqPacketReceived>> packetCallbacks = new Hashtable<>();
     private final Set<OnAdvancedStreamFeaturesLoaded> advancedStreamFeaturesLoadedListeners = new HashSet<>();
     private final XmppConnectionService mXmppConnectionService;
     private Socket socket;
     private XmlReader tagReader;
     private TagWriter tagWriter = new TagWriter();
-    private boolean isBound = false;
     private boolean shouldAuthenticate = true;
     private boolean inSmacksSession = false;
+    private boolean isBound = false;
     private Element streamFeatures;
     private String streamId = null;
     private int smVersion = 3;
@@ -166,7 +165,7 @@ public class XmppConnection implements Runnable {
     private AtomicInteger mPendingServiceDiscoveries = new AtomicInteger(0);
     private AtomicBoolean mWaitForDisco = new AtomicBoolean(true);
     private AtomicBoolean mWaitingForSmCatchup = new AtomicBoolean(false);
- 	private AtomicInteger mSmCatchupMessageCounter = new AtomicInteger(0);
+    private AtomicInteger mSmCatchupMessageCounter = new AtomicInteger(0);
     private boolean mInteractive = false;
     private int attempt = 0;
     public static String errorMessage = null;
@@ -177,12 +176,12 @@ public class XmppConnection implements Runnable {
     private OnStatusChanged statusListener = null;
     private OnBindListener bindListener = null;
     private OnMessageAcknowledged acknowledgedListener = null;
-    private EditAccountActivity mEditAccountActivity = null;
     private SaslMechanism saslMechanism;
     private URL redirectionUrl = null;
     private String verifiedHostname = null;
     private volatile Thread mThread;
- 	private CountDownLatch mStreamCountDownLatch;
+    private CountDownLatch mStreamCountDownLatch;
+
 
     public XmppConnection(final Account account, final XmppConnectionService service) {
         this.account = account;
@@ -1265,32 +1264,28 @@ public class XmppConnection implements Runnable {
         final IqPacket iq = new IqPacket(IqPacket.TYPE.GET);
         iq.setTo(Jid.ofDomain(server.getDomain()));
         iq.query("http://jabber.org/protocol/disco#items");
-        this.sendIqPacket(iq, new OnIqPacketReceived() {
-
-            @Override
-            public void onIqPacketReceived(final Account account, final IqPacket packet) {
-                if (packet.getType() == IqPacket.TYPE.RESULT) {
-                    HashSet<Jid> items = new HashSet<Jid>();
-                    final List<Element> elements = packet.query().getChildren();
-                    for (final Element element : elements) {
-                        if (element.getName().equals("item")) {
-                            final Jid jid = InvalidJid.getNullForInvalid(element.getAttributeAsJid("jid"));
-                            if (jid != null && !jid.equals(account.getServer())) {
-                                items.add(jid);
-                            }
+        this.sendIqPacket(iq, (account, packet) -> {
+            if (packet.getType() == IqPacket.TYPE.RESULT) {
+                HashSet<Jid> items = new HashSet<Jid>();
+                final List<Element> elements = packet.query().getChildren();
+                for (final Element element : elements) {
+                    if (element.getName().equals("item")) {
+                        final Jid jid = InvalidJid.getNullForInvalid(element.getAttributeAsJid("jid"));
+                        if (jid != null && !jid.equals(Jid.of(account.getServer()))) {
+                            items.add(jid);
                         }
                     }
-                    for (Jid jid : items) {
-                        sendServiceDiscoveryInfo(jid);
-                    }
-                } else {
-                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": could not query disco items of " + server);
                 }
-                if (packet.getType() != IqPacket.TYPE.TIMEOUT) {
-                    if (mPendingServiceDiscoveries.decrementAndGet() == 0
-                            && mWaitForDisco.compareAndSet(true, false)) {
-                        finalizeBind();
-                    }
+                for (Jid jid : items) {
+                    sendServiceDiscoveryInfo(jid);
+                }
+            } else {
+                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": could not query disco items of " + server);
+            }
+            if (packet.getType() != IqPacket.TYPE.TIMEOUT) {
+                if (mPendingServiceDiscoveries.decrementAndGet() == 0
+                        && mWaitForDisco.compareAndSet(true, false)) {
+                    finalizeBind();
                 }
             }
         });
@@ -1484,7 +1479,7 @@ public class XmppConnection implements Runnable {
 
     public void disconnect(final boolean force) {
         interrupt();
-        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": disconnecting force=" + Boolean.valueOf(force));
+        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": disconnecting force=" + Boolean.toString(force));
         if (force) {
             forceCloseSocket();
         } else {
@@ -1744,8 +1739,6 @@ public class XmppConnection implements Runnable {
         private boolean encryptionEnabled = false;
         private boolean blockListRequested = false;
 
-        public String http_upload_namespace = Namespace.HTTP_UPLOAD;
-
         public Features(final XmppConnection connection) {
             this.connection = connection;
         }
@@ -1805,7 +1798,7 @@ public class XmppConnection implements Runnable {
         }
 
         public boolean pepPublishOptions() {
-            return hasDiscoFeature(account.getJid().asBareJid(),Namespace.PUBSUB_PUBLISH_OPTIONS);
+            return hasDiscoFeature(account.getJid().asBareJid(), Namespace.PUBSUB_PUBLISH_OPTIONS);
         }
 
         public boolean pepOmemoWhitelisted() {
