@@ -193,7 +193,7 @@ public class WelcomeActivity extends XmppActivity {
 
     private boolean BackupAvailable() {
         // Set the folder on the SDcard
-        File filePath = new File(FileBackend.getBackupDirectory() + "database.db.crypt");
+        File filePath = new File(FileBackend.getBackupDirectory() + "/database.db.crypt");
         Log.d(Config.LOGTAG, "DB Path: " + filePath.toString());
         if (filePath.exists()) {
             Log.d(Config.LOGTAG, "DB Path existing");
@@ -208,7 +208,7 @@ public class WelcomeActivity extends XmppActivity {
         // Set the folder on the SDcard
         File directory = new File(FileBackend.getBackupDirectory());
         // Set the input file stream up:
-        FileInputStream InputFile = new FileInputStream(directory.getPath() + "database.db.crypt");
+        FileInputStream InputFile = new FileInputStream(directory.getPath() + "/database.db.crypt");
         // Temp output for DB checks
         File TempFile = new File(directory.getPath() + "database.bak");
         FileOutputStream OutputTemp = new FileOutputStream(TempFile);
