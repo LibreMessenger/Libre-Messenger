@@ -975,7 +975,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
 
         if (type == SENT) {
-            viewHolder.message_box.setBackgroundResource(activity.isDarkTheme() ? R.drawable.message_bubble_sent_blue_dark : R.drawable.message_bubble_sent_blue);
+            viewHolder.message_box.setBackgroundResource(activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark : R.drawable.message_bubble_sent);
         }
 
         displayStatus(viewHolder, message, type, darkBackground);
