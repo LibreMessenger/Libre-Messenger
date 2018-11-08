@@ -835,5 +835,6 @@
     <string name="cancelled">cancelled</string>
     <string name="remote_server_timeout">Remote server timeout</string>
     <string name="already_drafting_message">You are already drafting a message.</string>
+    <string name="bad_key_for_encryption">Bad key for encryption.</string>
 
 </resources>
