@@ -505,7 +505,7 @@ public class NotificationService {
         mBuilder.setContentText(names.toString());
         mBuilder.setStyle(style);
         if (conversation != null) {
-            mBuilder.setContentIntent(createContentIntent(conversation));
+            mBuilder.setContentIntent(createOpenConversationsIntent());
         }
         mBuilder.setGroupSummary(true);
         mBuilder.setGroup(CONVERSATIONS_GROUP);
