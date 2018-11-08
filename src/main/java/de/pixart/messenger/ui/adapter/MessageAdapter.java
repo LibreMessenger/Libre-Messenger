@@ -211,6 +211,14 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
     }
 
+    private int getWarningTextColor(boolean onDark) {
+        if (onDark) {
+            return ContextCompat.getColor(activity, R.color.white70);
+        } else {
+            return ContextCompat.getColor(activity, R.color.black26);
+        }
+    }
+
     private void displayStatus(ViewHolder viewHolder, final Message message, int type, boolean darkBackground) {
         String filesize = null;
         String info = null;
@@ -965,7 +973,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             } else {
                 viewHolder.message_box.setBackgroundResource(darkBackground ? R.drawable.message_bubble_received_warning_dark: R.drawable.message_bubble_received_warning);
                 viewHolder.encryption.setVisibility(View.VISIBLE);
-                viewHolder.encryption.setTextColor(activity.getWarningTextColor());
+                viewHolder.encryption.setTextColor(this.getWarningTextColor(darkBackground));
                 if (omemoEncryption && !message.isTrusted()) {
                     viewHolder.encryption.setText(R.string.not_trusted);
                 } else {
