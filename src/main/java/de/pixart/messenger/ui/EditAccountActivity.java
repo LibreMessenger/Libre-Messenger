@@ -440,10 +440,14 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 
     protected void updateInfoButtons() {
         if (this.binding.accountRegisterNew.isChecked() && this.binding.accountJid.getText().length() > 0 && !this.binding.accountJid.getText().toString().contains("@")) {
-            final String jid = this.binding.accountJid.getText().toString();
-            if (!mUsernameMode && Jid.of(jid).getDomain().toLowerCase().equals("pix-art.de")) {
-                this.binding.showPrivacyPolicy.setVisibility(View.VISIBLE);
-                this.binding.showTermsOfUse.setVisibility(View.VISIBLE);
+            try {
+                final String jid = this.binding.accountJid.getText().toString();
+                if (!mUsernameMode && Jid.of(jid).getDomain().toLowerCase().equals("pix-art.de")) {
+                    this.binding.showPrivacyPolicy.setVisibility(View.VISIBLE);
+                    this.binding.showTermsOfUse.setVisibility(View.VISIBLE);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         } else {
             this.binding.showPrivacyPolicy.setVisibility(View.GONE);
