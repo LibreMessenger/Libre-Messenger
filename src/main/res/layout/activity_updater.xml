@@ -18,7 +18,6 @@
         android:layout_below="@id/toolbar"
         android:layout_centerHorizontal="true"
         android:padding="@dimen/card_padding_regular"
-        android:text="Current"
         android:textAppearance="@style/TextAppearance.Conversations.Body1"
         android:textStyle="normal" />
 

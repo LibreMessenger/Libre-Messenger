@@ -46,6 +46,7 @@ public class UpdaterActivity extends XmppActivity {
     String store;
     ProgressDialog mProgressDialog;
     DownloadTask downloadTask;
+    TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +57,7 @@ public class UpdaterActivity extends XmppActivity {
         this.mTheme = findTheme();
         setTheme(this.mTheme);
 
-        TextView textView = findViewById(R.id.updater);
-        textView.setText(R.string.update_info);
+        textView = findViewById(R.id.updater);
 
         mProgressDialog = new ProgressDialog(UpdaterActivity.this) {
             //show warning on back pressed
@@ -85,6 +85,7 @@ public class UpdaterActivity extends XmppActivity {
         this.mTheme = findTheme();
         setTheme(this.mTheme);
         setTitle(getString(R.string.update_service));
+        textView.setText(R.string.update_info);
         setSupportActionBar(findViewById(R.id.toolbar));
         configureActionBar(getSupportActionBar());
         if (getIntent() != null && getIntent().getStringExtra("update").equals("PixArtMessenger_UpdateService")) {
