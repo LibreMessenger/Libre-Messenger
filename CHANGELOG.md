@@ -1,5 +1,12 @@
 ### Changelog
 
+#### Version 2.1.3
+* bring back gif support in internal mediaviewer
+* fixed group chat mentions when nick ends in . (dot)
+* fixed not asking for permissions after direct share
+* fixed CVE-2018-18467
+* bug fixes
+
 #### Version 2.1.2
 * fix crash with updater
 
