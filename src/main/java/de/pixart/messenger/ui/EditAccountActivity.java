@@ -604,6 +604,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         final MenuItem changePresence = menu.findItem(R.id.action_change_presence);
         final MenuItem actionShare = menu.findItem(R.id.action_share);
         final MenuItem shareBarcode = menu.findItem(R.id.action_share_barcode);
+        final MenuItem shareQRCode = menu.findItem(R.id.action_show_qr_code);
         final MenuItem announcePGP = menu.findItem(R.id.mgmt_account_announce_pgp);
         renewCertificate.setVisible(mAccount != null && mAccount.getPrivateKeyAlias() != null);
 
@@ -628,6 +629,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             changePresence.setVisible(false);
             actionShare.setVisible(false);
             shareBarcode.setVisible(false);
+            shareQRCode.setVisible(false);
         }
 
         if (mAccount != null) {
