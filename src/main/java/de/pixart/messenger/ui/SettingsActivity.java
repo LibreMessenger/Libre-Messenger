@@ -39,6 +39,7 @@ import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.services.ExportLogsService;
 import de.pixart.messenger.services.MemorizingTrustManager;
 import de.pixart.messenger.ui.util.StyledAttributes;
+import de.pixart.messenger.utils.Compatibility;
 import de.pixart.messenger.utils.TimeframeUtils;
 import rocks.xmpp.addr.Jid;
 
@@ -547,7 +548,15 @@ public class SettingsActivity extends XmppActivity implements
     }
 
     private void startExport() {
-        ContextCompat.startForegroundService(this, new Intent(this, ExportLogsService.class));
+        try {
+            if (Compatibility.runsAndTargetsTwentySix(this)) {
+                ContextCompat.startForegroundService(this, new Intent(this, ExportLogsService.class));
+            } else {
+                this.startService(new Intent(this, ExportLogsService.class));
+            }
+        } catch (RuntimeException e) {
+            Log.d(Config.LOGTAG, "SettingsActivity was unable to start ExportLogsService");
+        }
     }
 
     private void displayToast(final String msg) {
