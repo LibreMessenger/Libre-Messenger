@@ -41,6 +41,7 @@ import org.openintents.openpgp.util.OpenPgpUtils;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -53,6 +54,7 @@ import de.pixart.messenger.databinding.DialogPresenceBinding;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.entities.PresenceTemplate;
+import de.pixart.messenger.entities.ServiceDiscoveryResult;
 import de.pixart.messenger.services.BarcodeProvider;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.services.XmppConnectionService.OnAccountUpdate;
@@ -63,6 +65,7 @@ import de.pixart.messenger.ui.util.PendingItem;
 import de.pixart.messenger.ui.util.SoftKeyboardUtils;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.MenuDoubleTabUtil;
+import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xml.Element;
@@ -1053,7 +1056,11 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 this.binding.serverInfoPep.setText(R.string.server_info_unavailable);
             }
             if (features.httpUpload(0)) {
-                this.binding.serverInfoHttpUpload.setText(R.string.server_info_available);
+                if (getHttpUploadMaxFileSize().equals("0")) {
+                    this.binding.serverInfoHttpUpload.setText(R.string.server_info_available);
+                } else {
+                    this.binding.serverInfoHttpUpload.setText(getString(R.string.server_info_available_with, getHttpUploadMaxFileSize()));
+                }
             } else if (features.p1S3FileTransfer()) {
                 this.binding.serverInfoHttpUploadDescription.setText(R.string.p1_s3_filetransfer);
                 this.binding.serverInfoHttpUpload.setText(R.string.server_info_available);
@@ -1161,6 +1168,28 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             this.binding.stats.setVisibility(View.GONE);
             this.binding.otherDeviceKeysCard.setVisibility(View.GONE);
         }
+    }
+
+    private String getHttpUploadMaxFileSize() {
+        XmppConnection connection = mAccount.getXmppConnection();
+        for (String namespace : new String[]{Namespace.HTTP_UPLOAD, Namespace.HTTP_UPLOAD_LEGACY}) {
+            List<Map.Entry<Jid, ServiceDiscoveryResult>> items = connection.findDiscoItemsByFeature(namespace);
+            if (items.size() > 0) {
+                try {
+                    long maxsize = Long.parseLong(items.get(0).getValue().getExtendedDiscoInformation(namespace, "max-file-size"));
+                    if (maxsize > (1 * 1024 * 1024)) {
+                        return Math.round(maxsize * 1f / (1024 * 1024)) + " MiB";
+                    } else if (maxsize >= (1 * 1024)) {
+                        return Math.round(maxsize * 1f / 1024) + " KiB";
+                    } else if (maxsize > 0){
+                        return maxsize + " B";
+                    }
+                } catch (Exception e) {
+                    return "0";
+                }
+            }
+        }
+        return "0";
     }
 
     private void removeErrorsOnAllBut(TextInputLayout exception) {

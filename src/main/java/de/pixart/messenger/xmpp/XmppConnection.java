@@ -1516,7 +1516,7 @@ public class XmppConnection implements Runnable {
         this.streamId = null;
     }
 
-    private List<Entry<Jid, ServiceDiscoveryResult>> findDiscoItemsByFeature(final String feature) {
+    public List<Entry<Jid, ServiceDiscoveryResult>> findDiscoItemsByFeature(final String feature) {
         synchronized (this.disco) {
             final List<Entry<Jid, ServiceDiscoveryResult>> items = new ArrayList<>();
             for (final Entry<Jid, ServiceDiscoveryResult> cursor : this.disco.entrySet()) {
