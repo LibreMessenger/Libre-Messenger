@@ -101,7 +101,7 @@ public class NotificationService {
     }
 
     public static Pattern generateNickHighlightPattern(final String nick) {
-        return Pattern.compile("(?<=(^|\\s))" + Pattern.quote(nick) + "\\b");
+        return Pattern.compile("(?<=(^|\\s))" + Pattern.quote(nick) + "(?=\\s|$|\\p{Punct})");
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
