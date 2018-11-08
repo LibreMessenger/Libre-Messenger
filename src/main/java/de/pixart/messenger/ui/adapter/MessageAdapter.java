@@ -413,12 +413,17 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     private void displayXmppMessage(final ViewHolder viewHolder, final String body) {
         String contact = body.toLowerCase();
         contact = contact.split(":")[1];
+        boolean group = (contact.split("\\?")[1]) != null && (contact.split("\\?")[1]).length() > 0 && (contact.split("\\?")[1]).equalsIgnoreCase("join");
         contact = contact.split("\\?")[0];
         String add_contact = activity.getString(R.string.add_to_contact_list) + " (" + contact + ")";
         viewHolder.audioPlayer.setVisibility(View.GONE);
         viewHolder.download_button.setVisibility(View.VISIBLE);
         viewHolder.download_button.setText(add_contact);
-        viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_account_card_details_grey600_48dp, 0, 0, 0);
+        if (group) {
+            viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_account_multiple_plus_grey600_48dp, 0, 0, 0);
+        } else {
+            viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_account_plus_grey600_48dp, 0, 0, 0);
+        }
         viewHolder.download_button.setOnClickListener(v -> {
             try {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
