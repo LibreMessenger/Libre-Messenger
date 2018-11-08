@@ -3091,7 +3091,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     }
 
     private int messageInputBubble() {
-        return activity.isDarkTheme() ? R.drawable.message_bubble_sent_blue_dark : R.drawable.message_bubble_sent_blue;
+        return activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark : R.drawable.message_bubble_sent;
     }
 
     public Conversation getConversation() {
