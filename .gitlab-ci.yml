@@ -4,6 +4,7 @@ cache:
   paths:
     - .gradle/wrapper
     - .gradle/caches
+    - .android
 
 stages:
   - build
@@ -23,7 +24,7 @@ build:
     paths:
     - build/outputs/
 
-build:
+test:
   stage: test
   script:
   - ./gradlew lint

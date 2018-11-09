@@ -6,7 +6,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: gradle
+          key: gradle-{{ checksum "build.gradle" }}-{{ checksum ".circleci/config.yml" }}
       - run: export GRADLE_USER_HOME=$PWD/.gradle
       - run: echo y | sdkmanager "platforms;android-$(sed -n 's,.*compileSdkVersion\s*\([0-9][0-9]*\).*,\1,p' build.gradle)" > /dev/null
       - run: ./gradlew lint
@@ -14,7 +14,7 @@ jobs:
           paths:
             - .gradle/caches
             - .gradle/wrapper
-          key: gradle
+          key: gradle-{{ checksum "build.gradle" }}-{{ checksum ".circleci/config.yml" }}
       - store_artifacts:
           path: build/outputs/apk/standard
           destination: apk
@@ -24,22 +24,21 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: gradle
+          key: android
       - run: export GRADLE_USER_HOME=$PWD/.gradle
       - run: echo y | sdkmanager "platforms;android-$(sed -n 's,.*compileSdkVersion\s*\([0-9][0-9]*\).*,\1,p' build.gradle)" > /dev/null
       - run: ./gradlew assembleStandard
       - save_cache:
           paths:
-            - .gradle/caches
-            - .gradle/wrapper
-          key: gradle
+            - ~/.android
+          key: android
       - store_artifacts:
           path: build/outputs/apk/standard
           destination: apk
 
 workflows:
   version: 2
-  build_only:
+  build_test:
     jobs:
     - build
     - test
