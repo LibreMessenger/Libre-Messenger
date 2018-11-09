@@ -7,6 +7,7 @@ cache:
 
 stages:
   - build
+  - test
 
 before_script:
   - export GRADLE_USER_HOME=$PWD/.gradle
@@ -18,6 +19,14 @@ build:
   stage: build
   script:
   - ./gradlew assembleStandard
+  artifacts:
+    paths:
+    - build/outputs/
+
+build:
+  stage: test
+  script:
+  - ./gradlew lint
   artifacts:
     paths:
     - build/outputs/
