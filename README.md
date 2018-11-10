@@ -1,5 +1,5 @@
 ![logo](/art/icon.png) 
-# Pix-Art Messenger
+# Pix-Art Messenger [![CircleCI](https://circleci.com/gh/kriztan/Pix-Art-Messenger/tree/master.svg?style=shield)](https://circleci.com/gh/kriztan/Pix-Art-Messenger/tree/master)
 
 Pix-Art Messenger ist eine Kopie der offiziellen Android-App [Conversations](https://github.com/siacs/Conversations) mit einigen Änderungen, insbesondere zur Verbesserung der Benutzerfreundlichkeit, um den Umstieg von oftmals vorinstallierten Messengern zu erleichtern.
 
@@ -17,7 +17,7 @@ Alternativ kannst du den Messenger direkt aus hier von GitHub unter [Releases](h
 #### Ich habe Probleme, was soll ich tun?
 Am einfachsten ist es, wenn du unserer Support-Gruppe beitrittst, dort werden deine Probleme mit Sicherheit schnell gelöst. 
 
-[support@room.pix-art.de](https://jabber.pix-art.de/j/support@room.pix-art.de?join) 
+[![Users in muc](https://inverse.chat/badge.svg?room=support@room.pix-art.de)](https://jabber.pix-art.de/j/support@room.pix-art.de?join): [support@room.pix-art.de](https://jabber.pix-art.de/j/support@room.pix-art.de?join) 
 
 oder scanne den QR-Code:
 
