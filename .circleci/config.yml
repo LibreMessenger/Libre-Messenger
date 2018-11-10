@@ -9,7 +9,7 @@ jobs:
           key: gradle-{{ checksum "build.gradle" }}-{{ checksum ".circleci/config.yml" }}
       - run: export GRADLE_USER_HOME=$PWD/.gradle
       - run: echo y | sdkmanager "platforms;android-$(sed -n 's,.*compileSdkVersion\s*\([0-9][0-9]*\).*,\1,p' build.gradle)" > /dev/null
-      - run: ./gradlew lint StandardDebug
+      - run: ./gradlew lintStandardDebug
       - save_cache:
           paths:
             - .gradle/caches
