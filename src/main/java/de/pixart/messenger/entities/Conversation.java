@@ -222,6 +222,20 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
         }
     }
 
+    public void findDeletedMessages(final OnMessageFound onMessageFound) {
+        final ArrayList<Message> results = new ArrayList<>();
+        synchronized (this.messages) {
+            for (final Message m : this.messages) {
+                if (m.isDeleted()) {
+                    results.add(m);
+                }
+            }
+        }
+        for (Message result : results) {
+            onMessageFound.onMessageFound(result);
+        }
+    }
+
     public Message findMessageWithFileAndUuid(final String uuid) {
         synchronized (this.messages) {
             for (final Message message : this.messages) {

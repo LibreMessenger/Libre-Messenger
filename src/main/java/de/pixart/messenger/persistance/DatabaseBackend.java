@@ -60,7 +60,7 @@ import rocks.xmpp.addr.Jid;
 public class DatabaseBackend extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "history";
-    public static final int DATABASE_VERSION = 43; // = Conversations DATABASE_VERSION + 1
+    public static final int DATABASE_VERSION = 44; // = Conversations DATABASE_VERSION + 2
     private static DatabaseBackend instance = null;
 
     private static String CREATE_CONTATCS_STATEMENT = "create table "
@@ -228,6 +228,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
                 + Message.CARBON + " INTEGER, "
                 + Message.EDITED + " TEXT, "
                 + Message.READ + " NUMBER DEFAULT 1, "
+                + Message.DELETED + " NUMBER DEFAULT 0, "
                 + Message.OOB + " INTEGER, "
                 + Message.ERROR_MESSAGE + " TEXT,"
                 + Message.READ_BY_MARKERS + " TEXT,"
@@ -527,8 +528,12 @@ public class DatabaseBackend extends SQLiteOpenHelper {
             db.execSQL(COPY_PREEXISTING_ENTRIES);
         }
 
-        if (oldVersion < 42 && newVersion >= 42) {
+        if (oldVersion < 43 && newVersion >= 43) {
             db.execSQL("DROP TRIGGER IF EXISTS after_message_delete");
+        }
+
+        if (oldVersion < 44 && newVersion >= 44) {
+            db.execSQL("ALTER TABLE " + Message.TABLENAME + " ADD COLUMN " + Message.DELETED + " NUMBER DEFAULT 0");
         }
     }
 
@@ -716,21 +721,19 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         return getMessages(conversations, limit, -1);
     }
 
-    public ArrayList<Message> getMessages(Conversation conversation, int limit,
-                                          long timestamp) {
+    public ArrayList<Message> getMessages(Conversation conversation, int limit, long timestamp) {
         ArrayList<Message> list = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor;
         if (timestamp == -1) {
-            String[] selectionArgs = {conversation.getUuid()};
+            String[] selectionArgs = {conversation.getUuid(), "1"};
             cursor = db.query(Message.TABLENAME, null, Message.CONVERSATION
-                    + "=?", selectionArgs, null, null, Message.TIME_SENT
+                    + "=? and " + Message.DELETED + "<?", selectionArgs, null, null, Message.TIME_SENT
                     + " DESC", String.valueOf(limit));
         } else {
-            String[] selectionArgs = {conversation.getUuid(),
-                    Long.toString(timestamp)};
+            String[] selectionArgs = {conversation.getUuid(), Long.toString(timestamp), "1"};
             cursor = db.query(Message.TABLENAME, null, Message.CONVERSATION
-                            + "=? and " + Message.TIME_SENT + "<?", selectionArgs,
+                            + "=? and " + Message.TIME_SENT + "<? and " + Message.DELETED + "<?", selectionArgs,
                     null, null, Message.TIME_SENT + " DESC",
                     String.valueOf(limit));
         }
@@ -738,7 +741,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
             cursor.moveToLast();
             do {
                 Message message = Message.fromCursor(cursor, conversation);
-                if (message != null) {
+                if (message != null && !message.isMessageDeleted()) {
                     list.add(message);
                 }
             } while (cursor.moveToPrevious());
@@ -944,12 +947,11 @@ public class DatabaseBackend extends SQLiteOpenHelper {
     public void deleteMessageInConversation(Message message) {
         long start = SystemClock.elapsedRealtime();
         final SQLiteDatabase db = this.getWritableDatabase();
-        db.beginTransaction();
+        ContentValues values = new ContentValues();
+        values.put(Message.DELETED, "1");
         String[] args = {message.getUuid()};
-        db.delete("messages_index", "uuid =?", args);
-        db.setTransactionSuccessful();
-        db.endTransaction();
-        Log.d(Config.LOGTAG, "deleted single message in " + (SystemClock.elapsedRealtime() - start) + "ms");
+        int rows = db.update("messages", values, "uuid =?", args);
+        Log.d(Config.LOGTAG, "deleted " + rows + " message in " + (SystemClock.elapsedRealtime() - start) + "ms");
     }
 
     public void deleteMessagesInConversation(Conversation conversation) {

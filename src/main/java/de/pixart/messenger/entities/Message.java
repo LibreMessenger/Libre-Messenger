@@ -68,6 +68,7 @@ public class Message extends AbstractEntity {
     public static final String RELATIVE_FILE_PATH = "relativeFilePath";
     public static final String FINGERPRINT = "axolotl_fingerprint";
     public static final String READ = "read";
+    public static final String DELETED = "deleted";
     public static final String ERROR_MESSAGE = "errorMsg";
     public static final String READ_BY_MARKERS = "readByMarkers";
     public static final String MARKABLE = "markable";
@@ -89,6 +90,7 @@ public class Message extends AbstractEntity {
     protected String edited = null;
     protected String relativeFilePath;
     protected boolean read = true;
+    protected boolean deleted = false;
     protected String remoteMsgId = null;
     protected String serverMsgId = null;
     private final Conversational conversation;
@@ -131,6 +133,7 @@ public class Message extends AbstractEntity {
                 null,
                 null,
                 true,
+                false,
                 null,
                 false,
                 null,
@@ -142,7 +145,7 @@ public class Message extends AbstractEntity {
                     final Jid trueCounterpart, final String body, final long timeSent,
                     final int encryption, final int status, final int type, final boolean carbon,
                     final String remoteMsgId, final String relativeFilePath,
-                    final String serverMsgId, final String fingerprint, final boolean read,
+                    final String serverMsgId, final String fingerprint, final boolean read, final boolean deleted,
                     final String edited, final boolean oob, final String errorMessage, final Set<ReadByMarker> readByMarkers,
                     final boolean markable) {
         this.conversation = conversation;
@@ -161,6 +164,7 @@ public class Message extends AbstractEntity {
         this.serverMsgId = serverMsgId;
         this.axolotlFingerprint = fingerprint;
         this.read = read;
+        this.deleted = deleted;
         this.edited = edited;
         this.oob = oob;
         this.errorMessage = errorMessage;
@@ -209,6 +213,7 @@ public class Message extends AbstractEntity {
                 cursor.getString(cursor.getColumnIndex(SERVER_MSG_ID)),
                 cursor.getString(cursor.getColumnIndex(FINGERPRINT)),
                 cursor.getInt(cursor.getColumnIndex(READ)) > 0,
+                cursor.getInt(cursor.getColumnIndex(DELETED)) > 0,
                 cursor.getString(cursor.getColumnIndex(EDITED)),
                 cursor.getInt(cursor.getColumnIndex(OOB)) > 0,
                 cursor.getString(cursor.getColumnIndex(ERROR_MESSAGE)),
@@ -257,6 +262,7 @@ public class Message extends AbstractEntity {
         values.put(SERVER_MSG_ID, serverMsgId);
         values.put(FINGERPRINT, axolotlFingerprint);
         values.put(READ, read ? 1 : 0);
+        values.put(DELETED, deleted ? 1 : 0);
         values.put(EDITED, edited);
         values.put(OOB, oob ? 1 : 0);
         values.put(ERROR_MESSAGE, errorMessage);
@@ -377,6 +383,10 @@ public class Message extends AbstractEntity {
 
     public boolean isRead() {
         return this.read;
+    }
+
+    public boolean isMessageDeleted() {
+        return this.deleted;
     }
 
     public void markRead() {

@@ -1334,12 +1334,10 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             MenuItem downloadFile = menu.findItem(R.id.download_file);
             MenuItem deleteFile = menu.findItem(R.id.delete_file);
             MenuItem showErrorMessage = menu.findItem(R.id.show_error_message);
+            deleteMessage.setVisible(true);
             if (!m.isFileOrImage() && !encrypted && !m.isGeoUri() && !m.treatAsDownloadable()) {
                 copyMessage.setVisible(true);
                 quoteMessage.setVisible(MessageUtils.prepareQuote(m).length() > 0);
-                //temporarily hide single message deletion in chat view
-                deleteMessage.setVisible(false);
-                // deleteMessage.setVisible(true);
                 String body = m.getMergedBody().toString();
                 if (ShareUtil.containsXmppUri(body)) {
                     copyLink.setTitle(R.string.copy_jabber_id);
@@ -1891,9 +1889,16 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 
     private void deleteMessage(Message message) {
         final Conversation conversation = (Conversation) message.getConversation();
-        activity.xmppConnectionService.deleteMessage(conversation, message);
-        activity.onConversationsListItemUpdated();
-        refresh();
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.setTitle(R.string.delete_message_dialog);
+        builder.setMessage(R.string.delete_message_dialog_msg);
+        builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
+            activity.xmppConnectionService.deleteMessage(conversation, message);
+            activity.onConversationsListItemUpdated();
+            refresh();
+        });
+        builder.create().show();
     }
 
     private void deleteFile(final Message message) {
