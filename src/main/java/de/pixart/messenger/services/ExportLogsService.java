@@ -57,7 +57,7 @@ public class ExportLogsService extends XmppConnectionService {
         final SharedPreferences ReadableLogs = PreferenceManager.getDefaultSharedPreferences(this);
         ReadableLogsEnabled = ReadableLogs.getBoolean("export_plain_text_logs", getResources().getBoolean(R.bool.plain_text_logs));
         pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "ExportLogsService");
+        wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, Config.LOGTAG + ": ExportLogsService");
         this.startForeground(NotificationService.FOREGROUND_NOTIFICATION_ID, getNotificationService().exportLogsNotification());
     }
 

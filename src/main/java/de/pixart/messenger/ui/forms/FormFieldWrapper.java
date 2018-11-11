@@ -58,7 +58,7 @@ public abstract class FormFieldWrapper {
             int start = label.length();
             int end = label.length() + 2;
             spannableString.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), start, end, 0);
-            spannableString.setSpan(new ForegroundColorSpan(StyledAttributes.getColor(context, R.color.accent)), start, end, 0);
+            spannableString.setSpan(new ForegroundColorSpan(StyledAttributes.getColor(context, R.attr.colorAccent)), start, end, 0);
         }
         return spannableString;
     }

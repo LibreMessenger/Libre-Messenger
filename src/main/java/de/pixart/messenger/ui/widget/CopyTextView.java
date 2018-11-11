@@ -1,5 +1,6 @@
 package de.pixart.messenger.ui.widget;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -8,6 +9,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
+@SuppressLint("AppCompatCustomView")
 public class CopyTextView extends TextView {
 
     public CopyTextView(Context context) {
@@ -19,13 +21,13 @@ public class CopyTextView extends TextView {
     }
 
     public CopyTextView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs); //, defStyleAttr);
+        super(context, attrs, defStyleAttr);
     }
 
     @SuppressWarnings("unused")
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public CopyTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs); //, defStyleAttr); //, defStyleRes);
+        super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     public interface CopyHandler {
