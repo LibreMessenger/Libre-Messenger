@@ -385,7 +385,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             if (owner || printableValue(name)) {
                 this.binding.mucEditTitle.setVisibility(View.VISIBLE);
                 if (name != null) {
-                    this.binding.mucEditTitle.append(name);
+                    this.binding.mucEditTitle.append(EmojiWrapper.transform(name));
                 }
             } else {
                 this.binding.mucEditTitle.setVisibility(View.GONE);
@@ -394,7 +394,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             final String subject = mucOptions.getSubject();
             this.binding.mucEditSubject.setText("");
             if (subject != null) {
-                this.binding.mucEditSubject.append(subject);
+                this.binding.mucEditSubject.append(EmojiWrapper.transform(subject));
             }
             this.binding.mucEditSubject.setEnabled(mucOptions.canChangeSubject());
             if (!owner) {
