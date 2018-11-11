@@ -103,7 +103,7 @@ public class SettingsActivity extends XmppActivity implements
         multiAccountPreference = mSettingsFragment.findPreference("enable_multi_accounts");
         if (multiAccountPreference != null) {
             isMultiAccountChecked = ((CheckBoxPreference) multiAccountPreference).isChecked();
-            handleMultiAccountChanges();
+            //handleMultiAccountChanges();
         }
 
         BundledEmojiPreference = mSettingsFragment.findPreference("use_bundled_emoji");
@@ -290,7 +290,7 @@ public class SettingsActivity extends XmppActivity implements
             if (isMultiAccountChecked) {
                 enableMultiAccountsPreference.setEnabled(false);
                 int accounts = getNumberOfAccounts();
-                Log.d(Config.LOGTAG, "Disabled multi account: Number of accounts " + accounts);
+                Log.d(Config.LOGTAG, "Disable multi account: Number of accounts " + accounts);
                 if (accounts > 1) {
                     Log.d(Config.LOGTAG, "Disabling multi account not possible because you have more than one account");
                     enableMultiAccountsPreference.setEnabled(false);
@@ -484,7 +484,7 @@ public class SettingsActivity extends XmppActivity implements
                                 if (passwordstored) {
                                     recreate();
                                 } else {
-                                    handleMultiAccountChanges();
+                                    //handleMultiAccountChanges();
                                 }
                             }
                         })
@@ -573,7 +573,7 @@ public class SettingsActivity extends XmppActivity implements
 
     public void refreshUiReal() {
         recreate();
-        handleMultiAccountChanges();
+        //handleMultiAccountChanges();
     }
 
     private void handleMultiAccountChanges() {

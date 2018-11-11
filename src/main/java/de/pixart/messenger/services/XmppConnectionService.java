@@ -800,7 +800,7 @@ public class XmppConnectionService extends Service {
         final SharedPreferences.Editor editor = getPreferences().edit();
         Log.d(Config.LOGTAG, "Number of accounts is " + accounts);
         editor.putInt(SettingsActivity.NUMBER_OF_ACCOUNTS, accounts);
-        editor.apply();
+        editor.commit();
     }
 
     public boolean isDataSaverDisabled() {
