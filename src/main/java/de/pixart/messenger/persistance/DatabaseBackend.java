@@ -761,9 +761,9 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         return () -> {
             class MessageIterator implements Iterator<Message> {
                 SQLiteDatabase db = getReadableDatabase();
-                String[] selectionArgs = {conversation.getUuid()};
+                String[] selectionArgs = {conversation.getUuid(), "1"};
                 Cursor cursor = db.query(Message.TABLENAME, null, Message.CONVERSATION
-                        + "=?", selectionArgs, null, null, Message.TIME_SENT
+                        + "=? and " + Message.DELETED + "<?", selectionArgs, null, null, Message.TIME_SENT
                         + " ASC", null);
 
                 public MessageIterator() {
