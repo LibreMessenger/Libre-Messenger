@@ -5,6 +5,7 @@
 * fixed group chat mentions when nick ends in . (dot)
 * fixed not asking for permissions after direct share
 * fixed CVE-2018-18467
+* implement message deletion
 * bug fixes
 
 #### Version 2.1.2
