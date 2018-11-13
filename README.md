@@ -22,8 +22,7 @@ Am einfachsten ist es, wenn du unserer Support-Gruppe beitrittst, dort werden de
 [Für Themen die sich um Development drehen, bitte hier schreiben](development@room.pix-art.de)
 
 oder scanne den QR-Code:
-
-![support-group-qr-code](art/qr-code_suport_small.png)
+<img src="art/qr-code_suport_small.png" width="400">
 
 Solltest du dort nicht weiter kommen kannst du hier ein Issue erstellen, in welchem du dein Problem genau beschreibst und welche Schritte erforderlich sind, um zu dem Problem zu gelangen. 
 
