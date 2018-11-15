@@ -590,7 +590,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
         MenuItem menuHideOffline = menu.findItem(R.id.action_hide_offline);
         MenuItem menuActionAccounts = menu.findItem(R.id.action_accounts);
         if (xmppConnectionService != null && xmppConnectionService.getAccounts().size() == 1 && !xmppConnectionService.multipleAccounts()) {
-            menuActionAccounts.setTitle(R.string.mgmt_account_edit);
+            menuActionAccounts.setTitle(R.string.action_account);
         } else {
             menuActionAccounts.setTitle(R.string.action_accounts);
         }

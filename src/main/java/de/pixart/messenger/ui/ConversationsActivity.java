@@ -456,7 +456,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
             }
         }
         if (xmppConnectionServiceBound && xmppConnectionService.getAccounts().size() == 1 && !xmppConnectionService.multipleAccounts()) {
-            menuEditProfiles.setTitle(R.string.mgmt_account_edit);
+            menuEditProfiles.setTitle(R.string.action_account);
         } else {
             menuEditProfiles.setTitle(R.string.action_accounts);
         }
