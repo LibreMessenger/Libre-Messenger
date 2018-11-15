@@ -54,8 +54,10 @@ import de.pixart.messenger.entities.Conversational;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.ui.ConversationsActivity;
+import de.pixart.messenger.ui.EditAccountActivity;
 import de.pixart.messenger.ui.ManageAccountActivity;
 import de.pixart.messenger.ui.TimePreference;
+import de.pixart.messenger.utils.AccountUtils;
 import de.pixart.messenger.utils.Compatibility;
 import de.pixart.messenger.utils.GeoHelper;
 import de.pixart.messenger.utils.UIHelper;
@@ -961,10 +963,14 @@ public class NotificationService {
             mBuilder.setLocalOnly(true);
         }
         mBuilder.setPriority(Notification.PRIORITY_LOW);
-        mBuilder.setContentIntent(PendingIntent.getActivity(mXmppConnectionService,
-                145,
-                new Intent(mXmppConnectionService, ManageAccountActivity.class),
-                PendingIntent.FLAG_UPDATE_CURRENT));
+        final Intent intent;
+        if (AccountUtils.MANAGE_ACCOUNT_ACTIVITY != null) {
+            intent = new Intent(mXmppConnectionService, AccountUtils.MANAGE_ACCOUNT_ACTIVITY);
+        } else {
+            intent = new Intent(mXmppConnectionService, EditAccountActivity.class);
+            intent.putExtra("jid", errors.get(0).getJid().asBareJid().toEscapedString());
+        }
+        mBuilder.setContentIntent(PendingIntent.getActivity(mXmppConnectionService, 145, intent, PendingIntent.FLAG_UPDATE_CURRENT));
         if (Compatibility.runsTwentySix()) {
             mBuilder.setChannelId(ERROR_CHANNEL_ID);
         }

@@ -81,6 +81,8 @@ import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
 
 public class StartConversationActivity extends XmppActivity implements XmppConnectionService.OnConversationUpdate, OnRosterUpdate, OnUpdateBlocklist, CreateConferenceDialog.CreateConferenceDialogListener, JoinConferenceDialog.JoinConferenceDialogListener {
 
+    public static final String EXTRA_INVITE_URI = "eu.siacs.conversations.invite_uri";
+
     private final int REQUEST_SYNC_CONTACTS = 0x28cf;
     private final int REQUEST_CREATE_CONFERENCE = 0x39da;
     private final PendingItem<Intent> pendingViewIntent = new PendingItem<>();
@@ -235,7 +237,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
     }
 
     private static boolean isViewIntent(final Intent i) {
-        return i != null && (Intent.ACTION_VIEW.equals(i.getAction()) || Intent.ACTION_SENDTO.equals(i.getAction()) || i.hasExtra(WelcomeActivity.EXTRA_INVITE_URI));
+        return i != null && (Intent.ACTION_VIEW.equals(i.getAction()) || Intent.ACTION_SENDTO.equals(i.getAction()) || i.hasExtra(EXTRA_INVITE_URI));
     }
 
     protected void hideToast() {
@@ -762,7 +764,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
     }
 
     protected boolean processViewIntent(@NonNull Intent intent) {
-        final String inviteUri = intent.getStringExtra(WelcomeActivity.EXTRA_INVITE_URI);
+        final String inviteUri = intent.getStringExtra(EXTRA_INVITE_URI);
         if (inviteUri != null) {
             Invite invite = new Invite(inviteUri);
             if (invite.isJidValid()) {
@@ -1180,6 +1182,12 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
                 fragments[position] = listFragment;
             }
             return fragments[position];
+        }
+    }
+
+    public static void addInviteUri(Intent to, Intent from) {
+        if (from != null && from.hasExtra(EXTRA_INVITE_URI)) {
+            to.putExtra(EXTRA_INVITE_URI, from.getStringExtra(EXTRA_INVITE_URI));
         }
     }
 

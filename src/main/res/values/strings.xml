@@ -839,5 +839,6 @@
     <string name="server_info_available_with">yes, %s</string>
     <string name="delete_message_dialog">Delete message</string>
     <string name="delete_message_dialog_msg">Are you sure you want to delete this message?\n\n<b>Warning:</b> This will not delete copies of this message that are stored on other devices or servers.</string>
+    <string name="feature_not_implemented">Feature not implemented</string>
 
 </resources>

@@ -79,6 +79,7 @@ import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.services.XmppConnectionService.XmppConnectionBinder;
 import de.pixart.messenger.ui.util.PresenceSelector;
 import de.pixart.messenger.ui.util.SoftKeyboardUtils;
+import de.pixart.messenger.utils.AccountUtils;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.ExceptionHelper;
 import de.pixart.messenger.utils.MenuDoubleTabUtil;
@@ -365,8 +366,7 @@ public abstract class XmppActivity extends ActionBarActivity {
                     startActivity(intent);
                     overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                 } else {
-                    final Intent intent = new Intent(getApplicationContext(), ManageAccountActivity.class);
-                    startActivity(intent);
+                    AccountUtils.launchManageAccounts(this);
                     overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                 }
                 break;

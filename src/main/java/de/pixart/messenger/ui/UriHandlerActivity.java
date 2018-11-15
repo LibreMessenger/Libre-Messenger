@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -18,6 +19,7 @@ import java.util.regex.Pattern;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.persistance.DatabaseBackend;
+import de.pixart.messenger.utils.SignupUtils;
 import de.pixart.messenger.utils.XmppUri;
 import rocks.xmpp.addr.Jid;
 
@@ -26,17 +28,16 @@ public class UriHandlerActivity extends AppCompatActivity {
     public static final String ACTION_SCAN_QR_CODE = "scan_qr_code";
     private static final int REQUEST_SCAN_QR_CODE = 0x1234;
     private static final int REQUEST_CAMERA_PERMISSIONS_TO_SCAN = 0x6789;
-
     private boolean handled = false;
 
     public static void scan(Activity activity) {
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || ContextCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             Intent intent = new Intent(activity, UriHandlerActivity.class);
             intent.setAction(UriHandlerActivity.ACTION_SCAN_QR_CODE);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             activity.startActivity(intent);
         } else {
-            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSIONS_TO_SCAN);
+            activity.requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSIONS_TO_SCAN);
         }
     }
 
@@ -86,29 +87,36 @@ public class UriHandlerActivity extends AppCompatActivity {
         final Intent intent;
         final XmppUri xmppUri = new XmppUri(uri);
         final List<Jid> accounts = DatabaseBackend.getInstance(this).getAccountJids(); //TODO only look at enabled accounts
-
-        if (!xmppUri.isJidValid()) {
-            Toast.makeText(this, R.string.invalid_jid, Toast.LENGTH_SHORT).show();
+        if (accounts.size() == 0) {
+            if (xmppUri.isJidValid()) {
+                intent = SignupUtils.getSignUpIntent(this);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, R.string.invalid_jid, Toast.LENGTH_SHORT).show();
+            }
             return;
         }
-
-        if (accounts.size() == 0 && Config.MAGIC_CREATE_DOMAIN != null) {
-            intent = new Intent(getApplicationContext(), WelcomeActivity.class);
-            WelcomeActivity.addInviteUri(intent, xmppUri);
-            startActivity(intent);
-            return;
-        }
-
         if (xmppUri.isAction(XmppUri.ACTION_MESSAGE)) {
             final Jid jid = xmppUri.getJid();
             final String body = xmppUri.getBody();
-
             if (jid != null) {
-                intent = new Intent(getApplicationContext(), ShareViaAccountActivity.class);
-                intent.putExtra(ShareViaAccountActivity.EXTRA_CONTACT, jid.toString());
-                intent.putExtra(ShareViaAccountActivity.EXTRA_BODY, body);
+                Class clazz;
+                try {
+                    clazz = Class.forName("eu.siacs.conversations.ui.ShareViaAccountActivity");
+                } catch (ClassNotFoundException e) {
+                    clazz = null;
+                }
+                if (clazz != null) {
+                    intent = new Intent(this, clazz);
+                    intent.putExtra("contact", jid.toEscapedString());
+                    intent.putExtra("body", body);
+                } else {
+                    intent = new Intent(this, StartConversationActivity.class);
+                    intent.setData(uri);
+                    intent.putExtra("account", accounts.get(0).toEscapedString());
+                }
             } else {
-                intent = new Intent(getApplicationContext(), ShareWithActivity.class);
+                intent = new Intent(this, ShareWithActivity.class);
                 intent.setAction(Intent.ACTION_SEND);
                 intent.setType("text/plain");
                 intent.putExtra(Intent.EXTRA_TEXT, body);
@@ -119,14 +127,16 @@ public class UriHandlerActivity extends AppCompatActivity {
             intent.putExtra("jid", xmppUri.getJid().asBareJid().toString());
             intent.setData(uri);
             intent.putExtra("scanned", scanned);
-        } else {
+        } else if (xmppUri.isJidValid()) {
             intent = new Intent(getApplicationContext(), StartConversationActivity.class);
             intent.setAction(Intent.ACTION_VIEW);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             intent.putExtra("scanned", scanned);
             intent.setData(uri);
+        } else {
+            Toast.makeText(this, R.string.invalid_jid, Toast.LENGTH_SHORT).show();
+            return;
         }
-
         startActivity(intent);
     }
 
@@ -138,9 +148,7 @@ public class UriHandlerActivity extends AppCompatActivity {
             finish();
             return;
         }
-
         handled = true;
-
         switch (data.getAction()) {
             case Intent.ACTION_VIEW:
             case Intent.ACTION_SENDTO:
@@ -151,7 +159,6 @@ public class UriHandlerActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_SCAN_QR_CODE);
                 return;
         }
-
         finish();
     }
 
