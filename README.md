@@ -19,9 +19,10 @@ Am einfachsten ist es, wenn du unserer Support-Gruppe beitrittst, dort werden de
 
 [![Users in muc](https://inverse.chat/badge.svg?room=support@room.pix-art.de)](https://jabber.pix-art.de/j/support@room.pix-art.de?join): [support@room.pix-art.de](https://jabber.pix-art.de/j/support@room.pix-art.de?join) 
 
-oder scanne den QR-Code:
+[Für Themen die sich um Development drehen, bitte hier schreiben](development@room.pix-art.de)
 
-![support-group-qr-code](art/qr-code_suport_small.png)
+oder scanne den QR-Code:
+<img src="art/qr-code_suport_small.png" width="400">
 
 Solltest du dort nicht weiter kommen kannst du hier ein Issue erstellen, in welchem du dein Problem genau beschreibst und welche Schritte erforderlich sind, um zu dem Problem zu gelangen. 
 
