@@ -99,6 +99,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
     private EditText mSearchEditText;
     private AtomicBoolean mRequestedContactsPermission = new AtomicBoolean(false);
     private boolean mHideOfflineContacts = false;
+    private boolean createdByViewIntent = false;
     private MenuItem.OnActionExpandListener mOnActionExpandListener = new MenuItem.OnActionExpandListener() {
 
         @Override
@@ -302,6 +303,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
         if (savedInstanceState == null) {
             intent = getIntent();
         } else {
+            createdByViewIntent = savedInstanceState.getBoolean("created_by_view_intent", false);
             final String search = savedInstanceState.getString("search");
             if (search != null) {
                 mInitialSearchValue.push(search);
@@ -311,6 +313,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
 
         if (isViewIntent(intent)) {
             pendingViewIntent.push(intent);
+            createdByViewIntent = true;
             setIntent(createLauncherIntent(this));
         } else if (startSearching && mInitialSearchValue.peek() == null) {
             mInitialSearchValue.push("");
@@ -321,6 +324,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
     public void onSaveInstanceState(Bundle savedInstanceState) {
         Intent pendingIntent = pendingViewIntent.peek();
         savedInstanceState.putParcelable("intent", pendingIntent != null ? pendingIntent : getIntent());
+        savedInstanceState.putBoolean("created_by_view_intent", createdByViewIntent);
         if (mMenuSearchView != null && mMenuSearchView.isActionViewExpanded()) {
             savedInstanceState.putString("search", mSearchEditText != null ? mSearchEditText.getText().toString() : null);
         }
@@ -723,7 +727,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
         if (actionBar == null) {
             return;
         }
-        boolean openConversations = !xmppConnectionService.isConversationsListEmpty(null);
+        boolean openConversations = !createdByViewIntent && !xmppConnectionService.isConversationsListEmpty(null);
         actionBar.setDisplayHomeAsUpEnabled(openConversations);
         actionBar.setDisplayHomeAsUpEnabled(openConversations);
 
@@ -937,7 +941,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
     }
 
     private void navigateBack() {
-        if (xmppConnectionService != null && !xmppConnectionService.isConversationsListEmpty(null)) {
+        if (!createdByViewIntent && xmppConnectionService != null && !xmppConnectionService.isConversationsListEmpty(null)) {
             Intent intent = new Intent(this, ConversationsActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);

@@ -295,7 +295,7 @@ public class HttpDownloadConnection implements Transferable {
                 }
                 connection.setUseCaches(false);
                 Log.d(Config.LOGTAG, "url: " + connection.getURL().toString());
-                connection.setRequestProperty("User-Agent", mXmppConnectionService.getIqGenerator().getIdentityName());
+                connection.setRequestProperty("User-Agent", mXmppConnectionService.getIqGenerator().getUserAgent());
                 connection.setRequestProperty("Accept-Encoding", "identity");
                 if (connection instanceof HttpsURLConnection) {
                     mHttpConnectionManager.setupTrustManager((HttpsURLConnection) connection, interactive);
@@ -377,7 +377,7 @@ public class HttpDownloadConnection implements Transferable {
                     mHttpConnectionManager.setupTrustManager((HttpsURLConnection) connection, interactive);
                 }
                 connection.setUseCaches(false);
-                connection.setRequestProperty("User-Agent", mXmppConnectionService.getIqGenerator().getIdentityName());
+                connection.setRequestProperty("User-Agent", mXmppConnectionService.getIqGenerator().getUserAgent());
                 connection.setRequestProperty("Accept-Encoding", "identity");
                 final boolean tryResume = file.exists() && file.getKey() == null && file.getSize() > 0;
                 long resumeSize = 0;
@@ -392,7 +392,7 @@ public class HttpDownloadConnection implements Transferable {
                 connection.connect();
                 is = new BufferedInputStream(connection.getInputStream());
                 final String contentRange = connection.getHeaderField("Content-Range");
-                boolean serverResumed = tryResume && contentRange != null && contentRange.startsWith("bytes "+resumeSize+"-");
+                boolean serverResumed = tryResume && contentRange != null && contentRange.startsWith("bytes " + resumeSize + "-");
                 long transmitted = 0;
                 if (tryResume && serverResumed) {
                     Log.d(Config.LOGTAG, "server resumed");

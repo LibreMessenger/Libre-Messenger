@@ -29,6 +29,14 @@ public class AccountUtils {
         return null;
     }
 
+    public static Account getFirst(XmppConnectionService service) {
+        final List<Account> accounts = service.getAccounts();
+        for (Account account : accounts) {
+            return account;
+        }
+        return null;
+    }
+
     public static Account getPendingAccount(XmppConnectionService service) {
         Account pending = null;
         for (Account account : service.getAccounts()) {
