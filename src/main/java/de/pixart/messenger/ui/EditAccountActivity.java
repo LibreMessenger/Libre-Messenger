@@ -81,6 +81,8 @@ import rocks.xmpp.addr.Jid;
 public class EditAccountActivity extends OmemoActivity implements OnAccountUpdate, OnUpdateBlocklist,
         OnKeyStatusUpdated, OnCaptchaRequested, KeyChainAliasCallback, XmppConnectionService.OnShowErrorToast, XmppConnectionService.OnMamPreferencesFetched {
 
+    public static final String EXTRA_OPENED_FROM_NOTIFICATION = "opened_from_notification";
+
     private static final int REQUEST_DATA_SAVER = 0xf244;
     private static final int REQUEST_CHANGE_STATUS = 0xee11;
 
@@ -673,23 +675,17 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 }
             }
             boolean init = intent.getBooleanExtra("init", false);
+            boolean openedFromNotification = intent.getBooleanExtra(EXTRA_OPENED_FROM_NOTIFICATION, false);
             this.mInitMode = init || this.jidToEdit == null;
             this.messageFingerprint = intent.getStringExtra("fingerprint");
             if (!mInitMode) {
                 this.binding.accountRegisterNew.setVisibility(View.GONE);
-                if (getSupportActionBar() != null) {
-                    getSupportActionBar().setTitle(getString(R.string.account_details));
-                }
+                setTitle(getString(R.string.account_details));
+                configureActionBar(getSupportActionBar(), !openedFromNotification);
             } else {
-                binding.avater.setVisibility(View.GONE);
-                ActionBar ab = getSupportActionBar();
-                if (ab != null) {
-                    if (init && Config.MAGIC_CREATE_DOMAIN == null) {
-                        ab.setDisplayShowHomeEnabled(false);
-                        ab.setDisplayHomeAsUpEnabled(false);
-                    }
-                    ab.setTitle(R.string.action_add_account);
-                }
+                this.binding.avater.setVisibility(View.GONE);
+                configureActionBar(getSupportActionBar(), !(init && Config.MAGIC_CREATE_DOMAIN == null));
+                setTitle(R.string.action_add_account);
             }
         }
         SharedPreferences preferences = getPreferences();
