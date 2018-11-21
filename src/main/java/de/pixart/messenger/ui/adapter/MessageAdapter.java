@@ -413,7 +413,12 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     private void displayXmppMessage(final ViewHolder viewHolder, final String body) {
         String contact = body.toLowerCase();
         contact = contact.split(":")[1];
-        boolean group = (contact.split("\\?")[1]) != null && (contact.split("\\?")[1]).length() > 0 && (contact.split("\\?")[1]).equalsIgnoreCase("join");
+        boolean group;
+        try {
+            group = ((contact.split("\\?")[1]) != null && (contact.split("\\?")[1]).length() > 0 && (contact.split("\\?")[1]).equalsIgnoreCase("join"));
+        } catch (Exception e) {
+            group = false;
+        }
         contact = contact.split("\\?")[0];
         String add_contact = activity.getString(R.string.add_to_contact_list) + " (" + contact + ")";
         viewHolder.audioPlayer.setVisibility(View.GONE);
