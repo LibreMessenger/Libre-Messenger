@@ -1,5 +1,8 @@
 ### Changelog
 
+#### Version 2.1.4
+* fix crash with xmpp uris
+ 
 #### Version 2.1.3
 * bring back gif support in internal mediaviewer
 * fixed group chat mentions when nick ends in . (dot)
