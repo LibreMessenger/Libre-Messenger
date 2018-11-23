@@ -12,6 +12,7 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.LruCache;
@@ -406,7 +407,8 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
         }
         avatar = mXmppConnectionService.getFileBackend().getAvatar(account.getAvatar(), size);
         if (avatar == null) {
-            avatar = get(account.getJid().asBareJid().toString(), null, size, false);
+            final String jid = account.getJid().asBareJid().toEscapedString();
+            avatar = get(jid, null, size, false);
         }
         mXmppConnectionService.getBitmapCache().put(KEY, avatar);
         return avatar;
