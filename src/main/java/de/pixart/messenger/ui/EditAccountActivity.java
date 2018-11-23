@@ -203,7 +203,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 }
             }
             if (mAccount != null) {
-                if (mInitMode && mAccount.isOptionSet(Account.OPTION_MAGIC_CREATE)) {
+                if (mAccount.isOptionSet(Account.OPTION_MAGIC_CREATE)) {
                     mAccount.setOption(Account.OPTION_MAGIC_CREATE, mAccount.getPassword().contains(password));
                 }
                 mAccount.setJid(jid);
