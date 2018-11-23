@@ -295,7 +295,7 @@ public class Message extends AbstractEntity {
                 return null;
             } else {
                 return this.conversation.getAccount().getRoster()
-                        .getContactFromRoster(this.trueCounterpart);
+                        .getContactFromContactList(this.trueCounterpart);
             }
         }
     }
