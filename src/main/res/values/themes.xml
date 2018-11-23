@@ -16,6 +16,7 @@
         <item name="color_warning">@color/red700</item>
         <item name="TextColorOnline">@color/green500</item>
         <item name="TextColorError">@color/red800</item>
+        <item name="edit_text_color">@color/black87</item>
 
         <item name="activity_background_search">@drawable/search_background_light</item>
         <item name="activity_background_no_results">@drawable/no_results_background_light</item>
@@ -170,6 +171,7 @@
         <item name="color_warning">@color/red700</item>
         <item name="TextColorOnline">@color/green500</item>
         <item name="TextColorError">@color/red500</item>
+        <item name="edit_text_color">@color/white</item>
 
         <item name="activity_background_search">@drawable/search_background_dark</item>
         <item name="activity_background_no_results">@drawable/no_results_background_dark</item>
