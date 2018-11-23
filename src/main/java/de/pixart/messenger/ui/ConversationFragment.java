@@ -1334,10 +1334,11 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             MenuItem downloadFile = menu.findItem(R.id.download_file);
             MenuItem deleteFile = menu.findItem(R.id.delete_file);
             MenuItem showErrorMessage = menu.findItem(R.id.show_error_message);
+            final boolean showError = m.getStatus() == Message.STATUS_SEND_FAILED && m.getErrorMessage() != null && !Message.ERROR_MESSAGE_CANCELLED.equals(m.getErrorMessage());
             deleteMessage.setVisible(true);
             if (!m.isFileOrImage() && !encrypted && !m.isGeoUri() && !m.treatAsDownloadable()) {
                 copyMessage.setVisible(true);
-                quoteMessage.setVisible(MessageUtils.prepareQuote(m).length() > 0);
+                quoteMessage.setVisible(!showError && MessageUtils.prepareQuote(m).length() > 0);
                 String body = m.getMergedBody().toString();
                 if (ShareUtil.containsXmppUri(body)) {
                     copyLink.setTitle(R.string.copy_jabber_id);
@@ -1349,7 +1350,8 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             if (m.getEncryption() == Message.ENCRYPTION_DECRYPTION_FAILED) {
                 retryDecryption.setVisible(true);
             }
-            if (relevantForCorrection.getType() == Message.TYPE_TEXT
+            if (!showError
+                    && relevantForCorrection.getType() == Message.TYPE_TEXT
                     && relevantForCorrection.isLastCorrectableMessage()
                     && m.getConversation() instanceof Conversation
                     && (((Conversation) m.getConversation()).getMucOptions().nonanonymous() || m.getConversation().getMode() == Conversation.MODE_SINGLE)) {
@@ -1388,7 +1390,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     deleteFile.setTitle(activity.getString(R.string.delete_x_file, UIHelper.getFileDescriptionString(activity, m)));
                 }
             }
-            if (m.getStatus() == Message.STATUS_SEND_FAILED && m.getErrorMessage() != null && !Message.ERROR_MESSAGE_CANCELLED.equals(m.getErrorMessage())) {
+            if (showError) {
                 showErrorMessage.setVisible(true);
             }
         }
@@ -1883,6 +1885,10 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.error_message);
         builder.setMessage(message.getErrorMessage());
+        builder.setNegativeButton(R.string.copy_to_clipboard, (dialog, which) -> {
+            activity.copyTextToClipboard(message.getErrorMessage(), R.string.error_message);
+            Toast.makeText(activity, R.string.error_message_copied_to_clipboard, Toast.LENGTH_SHORT).show();
+        });
         builder.setPositiveButton(R.string.ok, null);
         builder.create().show();
     }

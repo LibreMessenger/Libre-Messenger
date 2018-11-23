@@ -842,5 +842,6 @@
     <string name="feature_not_implemented">Feature not implemented</string>
     <string name="device_does_not_support_unknown_source_op">Your device does not support allowing app installs from unknon sources.</string>
     <string name="reject_request">Reject request</string>
+    <string name="error_message_copied_to_clipboard">Copied error message to clipboard</string>
 
 </resources>
