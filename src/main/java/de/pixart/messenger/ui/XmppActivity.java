@@ -1242,7 +1242,7 @@ public abstract class XmppActivity extends ActionBarActivity {
             builder.setTitle(R.string.install_from_unknown_sources_disabled);
             builder.setMessage(R.string.install_from_unknown_sources_disabled_dialog);
             builder.setPositiveButton(R.string.next, (dialog, which) -> {
-                Intent intent = null;
+                Intent intent;
                 if (android.os.Build.VERSION.SDK_INT >= 26) {
                     intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES);
                     Uri uri = Uri.parse("package:" + getPackageName());
@@ -1254,7 +1254,7 @@ public abstract class XmppActivity extends ActionBarActivity {
                 try {
                     startActivityForResult(intent, REQUEST_UNKNOWN_SOURCE_OP);
                 } catch (ActivityNotFoundException e) {
-                    Toast.makeText(XmppActivity.this, R.string.device_does_not_support_battery_op, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(XmppActivity.this, R.string.device_does_not_support_unknown_source_op, Toast.LENGTH_SHORT).show();
                 } finally {
                     UpdateService task = new UpdateService(this, xmppConnectionService.installedFrom(), xmppConnectionService);
                     task.executeOnExecutor(UpdateService.THREAD_POOL_EXECUTOR, "true");
@@ -1262,6 +1262,10 @@ public abstract class XmppActivity extends ActionBarActivity {
                 }
             });
             builder.create().show();
+        } else {
+            UpdateService task = new UpdateService(this, xmppConnectionService.installedFrom(), xmppConnectionService);
+            task.executeOnExecutor(UpdateService.THREAD_POOL_EXECUTOR, "true");
+            Log.d(Config.LOGTAG, "AppUpdater started");
         }
     }
 }

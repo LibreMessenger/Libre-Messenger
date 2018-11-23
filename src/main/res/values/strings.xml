@@ -840,5 +840,6 @@
     <string name="delete_message_dialog">Delete message</string>
     <string name="delete_message_dialog_msg">Are you sure you want to delete this message?\n\n<b>Warning:</b> This will not delete copies of this message that are stored on other devices or servers.</string>
     <string name="feature_not_implemented">Feature not implemented</string>
+    <string name="device_does_not_support_unknown_source_op">Your device does not support allowing app installs from unknon sources.</string>
 
 </resources>
