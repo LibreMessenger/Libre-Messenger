@@ -1058,7 +1058,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
                 if (contact.isSelf()) {
                     showContactDetailsItem.setVisible(false);
                 }
-                deleteContactMenuItem.setVisible(contact.showInRoster());
+                deleteContactMenuItem.setVisible(contact.showInRoster() && !contact.getOption(Contact.Options.SYNCED_VIA_OTHER));
                 XmppConnection xmpp = contact.getAccount().getXmppConnection();
                 if (xmpp != null && xmpp.getFeatures().blocking() && !contact.isSelf()) {
                     if (contact.isBlocked()) {
@@ -1105,10 +1105,10 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
     }
 
     public class ListPagerAdapter extends PagerAdapter {
-        FragmentManager fragmentManager;
-        MyListFragment[] fragments;
+        private final FragmentManager fragmentManager;
+        private final MyListFragment[] fragments;
 
-        public ListPagerAdapter(FragmentManager fm) {
+        ListPagerAdapter(FragmentManager fm) {
             fragmentManager = fm;
             fragments = new MyListFragment[2];
         }
