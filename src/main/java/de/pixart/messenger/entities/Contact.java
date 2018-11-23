@@ -166,9 +166,6 @@ public class Contact implements ListItem, Blockable {
         if (isBlocked()) {
             tags.add(new Tag(context.getString(R.string.blocked), 0xff2e2f3b, 0));
         }
-        if (showInPhoneBook()) {
-            tags.add(new Tag(context.getString(R.string.phone_book), 0xFF1E88E5, 0));
-        }
         return tags;
     }
 
@@ -387,8 +384,8 @@ public class Contact implements ListItem, Blockable {
                 || (this.getOption(Contact.Options.DIRTY_PUSH));
     }
 
-    public boolean showInPhoneBook() {
-        return systemAccount != null;
+    public boolean showInContactList() {
+        return showInRoster() || getOption(Options.SYNCED_VIA_OTHER);
     }
 
     public void parseSubscriptionFromElement(Element item) {
