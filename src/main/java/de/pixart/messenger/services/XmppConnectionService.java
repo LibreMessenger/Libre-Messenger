@@ -1606,7 +1606,7 @@ public class XmppConnectionService extends Service {
                     if (conversation != null) {
                         bookmark.setConversation(conversation);
                     } else if (bookmark.autojoin() && bookmark.getJid() != null && autojoin) {
-                        conversation = findOrCreateConversation(account, bookmark.getJid(), true, true, false);
+                        conversation = findOrCreateConversation(account, bookmark.getFullJid(), true, true, false);
                         bookmark.setConversation(conversation);
                     }
                 }
@@ -2702,15 +2702,17 @@ public class XmppConnectionService extends Service {
 
     public void persistSelfNick(MucOptions.User self) {
         final Conversation conversation = self.getConversation();
+        final boolean tookProposedNickFromBookmark = conversation.getMucOptions().isTookProposedNickFromBookmark();
         Jid full = self.getFullJid();
         if (!full.equals(conversation.getJid())) {
             Log.d(Config.LOGTAG, "nick changed. updating");
             conversation.setContactJid(full);
             databaseBackend.updateConversation(conversation);
         }
-
-        Bookmark bookmark = conversation.getBookmark();
-        if (bookmark != null && !full.getResource().equals(bookmark.getNick())) {
+        final Bookmark bookmark = conversation.getBookmark();
+        final String bookmarkedNick = bookmark == null ? null : bookmark.getNick();
+        if (bookmark != null && (tookProposedNickFromBookmark || TextUtils.isEmpty(bookmarkedNick)) && !full.getResource().equals(bookmarkedNick)) {
+            Log.d(Config.LOGTAG, conversation.getAccount().getJid().asBareJid() + ": persist nick '" + full.getResource() + "' into bookmark for " + conversation.getJid().asBareJid());
             bookmark.setNick(full.getResource());
             pushBookmarks(bookmark.getAccount());
         }

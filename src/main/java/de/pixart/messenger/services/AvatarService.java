@@ -235,7 +235,7 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
             if (bookmark.getConversation() != null) {
                 return get(bookmark.getConversation(), size, cachedOnly);
             } else {
-                Jid jid = bookmark.getJid();
+                final Jid jid = bookmark.getFullJid();
                 Account account = bookmark.getAccount();
                 Contact contact = jid == null ? null : account.getRoster().getContact(jid);
                 if (contact != null && contact.getAvatarFilename() != null) {
