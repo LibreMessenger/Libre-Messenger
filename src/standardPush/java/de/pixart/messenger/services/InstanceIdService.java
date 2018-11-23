@@ -15,11 +15,15 @@ public class InstanceIdService extends FirebaseInstanceIdService {
     public void onTokenRefresh() {
         final Intent intent = new Intent(this, XmppConnectionService.class);
         intent.setAction(XmppConnectionService.ACTION_FCM_TOKEN_REFRESH);
-        if (Compatibility.runsAndTargetsTwentySix(this)) {
-            intent.putExtra(EventReceiver.EXTRA_NEEDS_FOREGROUND_SERVICE, true);
-            ContextCompat.startForegroundService(this, intent);
-        } else {
-            startService(intent);
+        try {
+            if (Compatibility.runsAndTargetsTwentySix(this)) {
+                intent.putExtra(EventReceiver.EXTRA_NEEDS_FOREGROUND_SERVICE, true);
+                ContextCompat.startForegroundService(this, intent);
+            } else {
+                startService(intent);
+            }
+        } catch (IllegalStateException e) {
+            Log.e(Config.LOGTAG, "InstanceIdService is not allowed to start service");
         }
     }
 }

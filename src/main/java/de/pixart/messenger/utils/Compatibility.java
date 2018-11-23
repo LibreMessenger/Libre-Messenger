@@ -56,6 +56,8 @@ public class Compatibility {
             return applicationInfo == null || applicationInfo.targetSdkVersion >= 26;
         } catch (PackageManager.NameNotFoundException e) {
             return true; //when in doubt…
+        } catch (RuntimeException e) {
+            return true; //when in doubt…
         }
     }
 
