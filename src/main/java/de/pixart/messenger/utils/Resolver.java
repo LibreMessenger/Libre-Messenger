@@ -37,6 +37,7 @@ import de.pixart.messenger.services.XmppConnectionService;
 
 public class Resolver {
 
+    public static final int DEFAULT_PORT_XMPP = 5222;
     private static final String DIRECT_TLS_SERVICE = "_xmpps-client";
     private static final String STARTTLS_SERICE = "_xmpp-client";
 
@@ -150,7 +151,7 @@ public class Resolver {
         try {
             Result result = new Result();
             result.ip = InetAddress.getByName(domain);
-            result.port = 5222;
+            result.port = DEFAULT_PORT_XMPP;
             return Collections.singletonList(result);
         } catch (UnknownHostException e) {
             return Collections.emptyList();
@@ -270,7 +271,7 @@ public class Resolver {
         public static final String AUTHENTICATED = "authenticated";
         private InetAddress ip;
         private DNSName hostname;
-        private int port = 5222;
+        private int port = DEFAULT_PORT_XMPP;
         private boolean directTls = false;
         private boolean authenticated = false;
         private int priority;
@@ -286,7 +287,7 @@ public class Resolver {
 
         static Result createDefault(DNSName hostname, InetAddress ip) {
             Result result = new Result();
-            result.port = 5222;
+            result.port = DEFAULT_PORT_XMPP;
             result.hostname = hostname;
             result.ip = ip;
             return result;
