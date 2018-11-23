@@ -286,16 +286,11 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                     mXmppConnectionService.fetchAvatar(account, avatar);
                 }
             }
-        } else if ("http://jabber.org/protocol/nick".equals(node)) {
+        } else if (Namespace.NICK.equals(node)) {
             final Element i = items.findChild("item");
             final String nick = i == null ? null : i.findChildContent("nick", Namespace.NICK);
             if (nick != null) {
-                Contact contact = account.getRoster().getContact(from);
-                if (contact.setPresenceName(nick)) {
-                    mXmppConnectionService.getAvatarService().clear(contact);
-                }
-                mXmppConnectionService.updateConversationUi();
-                mXmppConnectionService.updateAccountUi();
+                setNick(account, from, nick);
             }
         } else if (AxolotlService.PEP_DEVICE_LIST.equals(node)) {
             Element item = items.findChild("item");
@@ -311,6 +306,31 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                 mXmppConnectionService.processBookmarks(account, storage);
             }
         }
+    }
+
+    private void parseDeleteEvent(final Element event, final Jid from, final Account account) {
+        final Element delete = event.findChild("delete");
+        if (delete == null) {
+            return;
+        }
+        String node = delete.getAttribute("node");
+        if (Namespace.NICK.equals(node)) {
+            Log.d(Config.LOGTAG, "parsing nick delete event from " + from);
+            setNick(account, from, null);
+        }
+    }
+
+    private void setNick(Account account, Jid user, String nick) {
+        if (user.asBareJid().equals(account.getJid().asBareJid())) {
+            account.setDisplayName(nick);
+        } else {
+            Contact contact = account.getRoster().getContact(user);
+            if (contact.setPresenceName(nick)) {
+                mXmppConnectionService.getAvatarService().clear(contact);
+            }
+        }
+        mXmppConnectionService.updateConversationUi();
+        mXmppConnectionService.updateAccountUi();
     }
 
     private boolean handleErrorMessage(Account account, MessagePacket packet) {
@@ -784,7 +804,9 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                         }
                     } else if ("item".equals(child.getName())) {
                         MucOptions.User user = AbstractParser.parseItem(conversation, child);
-                        Log.d(Config.LOGTAG, account.getJid() + ": changing affiliation for " + user.getRealJid() + " to " + user.getAffiliation() + " in " + conversation.getJid().asBareJid());
+                        Log.d(Config.LOGTAG, account.getJid() + ": changing affiliation for "
+                                + user.getRealJid() + " to " + user.getAffiliation() + " in "
+                                + conversation.getJid().asBareJid());
                         if (!user.realJidMatchesAccount()) {
                             boolean isNew = conversation.getMucOptions().updateUser(user);
                             mXmppConnectionService.getAvatarService().clear(conversation);
@@ -850,17 +872,6 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                             if (message.addReadByMarker(readByMarker)) {
                                 Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": added read by (" + readByMarker.getRealJid() + ") to message '" + message.getBody() + "'");
                                 mXmppConnectionService.updateMessage(message, false);
-                                final Message displayedMessage = mXmppConnectionService.markMessage(account, from.asBareJid(), id, Message.STATUS_SEND_DISPLAYED);
-                                Message m = displayedMessage == null ? null : displayedMessage.prev();
-                                while (m != null
-                                        && m.getStatus() == Message.STATUS_SEND_RECEIVED
-                                        && m.getTimeSent() < displayedMessage.getTimeSent()) {
-                                    mXmppConnectionService.markMessage(m, Message.STATUS_SEND_DISPLAYED);
-                                    m = m.prev();
-                                }
-                                if (displayedMessage != null && selfAddressed) {
-                                    dismissNotification(account, counterpart, query);
-                                }
                             }
                         }
                     }
@@ -881,9 +892,13 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
             }
         }
 
-        Element event = original.findChild("event", "http://jabber.org/protocol/pubsub#event");
+        final Element event = original.findChild("event", "http://jabber.org/protocol/pubsub#event");
         if (event != null && InvalidJid.hasValidFrom(original)) {
-            parseEvent(event, original.getFrom(), account);
+            if (event.hasChild("items")) {
+                parseEvent(event, original.getFrom(), account);
+            } else if (event.hasChild("delete")) {
+                parseDeleteEvent(event, original.getFrom(), account);
+            }
         }
 
         final String nick = packet.findChildContent("nick", Namespace.NICK);

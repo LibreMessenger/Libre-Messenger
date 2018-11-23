@@ -744,6 +744,7 @@ public abstract class XmppActivity extends ActionBarActivity {
             SoftKeyboardUtils.hideSoftKeyboard(binding.inputEditText);
             dialog.dismiss();
         }));
+        dialog.setCanceledOnTouchOutside(false);
         dialog.setOnDismissListener(dialog1 -> {
             SoftKeyboardUtils.hideSoftKeyboard(binding.inputEditText);
         });
