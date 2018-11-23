@@ -4041,6 +4041,10 @@ public class XmppConnectionService extends Service {
         return this.mMessageArchiveService;
     }
 
+    public QuickConversationsService getQuickConversationsService() {
+        return this.mQuickConversationsService;
+    }
+
     public List<Contact> findContacts(Jid jid, String accountJid) {
         ArrayList<Contact> contacts = new ArrayList<>();
         for (Account account : getAccounts()) {
