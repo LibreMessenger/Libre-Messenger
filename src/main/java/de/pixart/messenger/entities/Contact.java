@@ -611,6 +611,6 @@ public class Contact implements ListItem, Blockable {
         public static final int DIRTY_PUSH = 6;
         public static final int DIRTY_DELETE = 7;
         private static final int SYNCED_VIA_ADDRESSBOOK = 8;
-        private static final int SYNCED_VIA_OTHER = 9;
+        public static final int SYNCED_VIA_OTHER = 9;
     }
 }
