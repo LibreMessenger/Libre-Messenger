@@ -1046,7 +1046,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 if (getHttpUploadMaxFileSize().equals("0")) {
                     this.binding.serverInfoHttpUpload.setText(R.string.server_info_available);
                 } else {
-                    this.binding.serverInfoHttpUpload.setText(getString(R.string.server_info_available_with, getHttpUploadMaxFileSize()));
+                    this.binding.serverInfoHttpUpload.setText(getHttpUploadMaxFileSize());
                 }
             } else if (features.p1S3FileTransfer()) {
                 this.binding.serverInfoHttpUploadDescription.setText(R.string.p1_s3_filetransfer);

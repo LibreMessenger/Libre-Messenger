@@ -326,5 +326,4 @@
     <string name="delete_file_dialog">Удалить файл</string>
     <string name="cancelled">отменён</string>
     <string name="bad_key_for_encryption">Неправильный ключ для шифрования.</string>
-    <string name="server_info_available_with">да, %s</string>
 </resources>
