@@ -13,6 +13,7 @@ import de.pixart.messenger.utils.Compatibility;
 public class EventReceiver extends BroadcastReceiver {
 
     public static final String SETTING_ENABLED_ACCOUNTS = "enabled_accounts";
+    public static final String EXTRA_NEEDS_FOREGROUND_SERVICE = "needs_foreground_service";
 
     @Override
     public void onReceive(final Context context, final Intent originalIntent) {
@@ -26,6 +27,7 @@ public class EventReceiver extends BroadcastReceiver {
         if (action.equals("ui") || hasEnabledAccounts(context)) {
             try {
                 if (Compatibility.runsAndTargetsTwentySix(context)) {
+                    intentForService.putExtra(EXTRA_NEEDS_FOREGROUND_SERVICE, true);
                     ContextCompat.startForegroundService(context, intentForService);
                 } else {
                     context.startService(intentForService);
