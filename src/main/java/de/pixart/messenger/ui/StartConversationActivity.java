@@ -886,16 +886,6 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
         mContactsAdapter.notifyDataSetChanged();
     }
 
-    private static boolean isSingleAccountActive(final List<Account> accounts) {
-        int i = 0;
-        for(Account account : accounts) {
-            if (account.getStatus() != Account.State.DISABLED) {
-                ++i;
-            }
-        }
-        return i == 1;
-    }
-
     protected void filterConferences(String needle) {
         this.conferences.clear();
         for (Account account : xmppConnectionService.getAccounts()) {

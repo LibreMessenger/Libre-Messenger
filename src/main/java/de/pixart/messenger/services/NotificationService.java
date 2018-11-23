@@ -860,7 +860,7 @@ public class NotificationService {
         return SystemClock.elapsedRealtime() < (this.mLastNotification + miniGrace);
     }
 
-    public Notification createForegroundNotification() {
+    Notification createForegroundNotification() {
         final Notification.Builder mBuilder = new Notification.Builder(mXmppConnectionService);
         mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.conversations_foreground_service));
         if (Compatibility.runsAndTargetsTwentySix(mXmppConnectionService) || Config.SHOW_CONNECTED_ACCOUNTS) {
