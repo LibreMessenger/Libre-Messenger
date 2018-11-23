@@ -81,6 +81,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import de.pixart.messenger.BuildConfig;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.android.JabberIdContact;
 import de.pixart.messenger.crypto.OmemoSetting;
 import de.pixart.messenger.crypto.PgpDecryptionService;
 import de.pixart.messenger.crypto.PgpEngine;
@@ -243,7 +244,7 @@ public class XmppConnectionService extends Service {
         }
     };
     public HttpConnectionManager mHttpConnectionManager = new HttpConnectionManager(this);
-    private ReplacingSerialSingleThreadExecutor mContactMergerExecutor = new ReplacingSerialSingleThreadExecutor(true);
+    private ReplacingSerialSingleThreadExecutor mContactMergerExecutor = new ReplacingSerialSingleThreadExecutor("ContactMerger");
     private long mLastActivity = 0;
     private MemorizingTrustManager mMemorizingTrustManager;
     private NotificationService mNotificationService = new NotificationService(this);
@@ -286,6 +287,7 @@ public class XmppConnectionService extends Service {
     private AvatarService mAvatarService = new AvatarService(this);
     private MessageArchiveService mMessageArchiveService = new MessageArchiveService(this);
     private PushManagementService mPushManagementService = new PushManagementService(this);
+    private QuickConversationsService mQuickConversationsService = new QuickConversationsService(this);
     private final OnBindListener mOnBindListener = new OnBindListener() {
 
         @Override
@@ -1720,45 +1722,35 @@ public class XmppConnectionService extends Service {
     }
 
     public void loadPhoneContacts() {
-        mContactMergerExecutor.execute(() -> PhoneHelper.loadPhoneContacts(XmppConnectionService.this, new OnPhoneContactsLoadedListener() {
-            @Override
-            public void onPhoneContactsLoaded(List<Bundle> phoneContacts) {
-                Log.d(Config.LOGTAG, "start merging phone contacts with roster");
-                for (Account account : accounts) {
-                    List<Contact> withSystemAccounts = account.getRoster().getWithSystemAccounts();
-                    for (Bundle phoneContact : phoneContacts) {
-                        Jid jid;
-                        try {
-                            jid = Jid.of(phoneContact.getString("jid"));
-                        } catch (final IllegalArgumentException e) {
-                            continue;
-                        }
-                        final Contact contact = account.getRoster().getContact(jid);
-                        String systemAccount = phoneContact.getInt("phoneid")
-                                + "#"
-                                + phoneContact.getString("lookup");
-                        contact.setSystemAccount(systemAccount);
-                        boolean needsCacheClean = contact.setPhotoUri(phoneContact.getString("photouri"));
-                        needsCacheClean |= contact.setSystemName(phoneContact.getString("displayname"));
-                        if (needsCacheClean) {
-                            getAvatarService().clear(contact);
-                        }
-                        withSystemAccounts.remove(contact);
+        mContactMergerExecutor.execute(() -> {
+            Map<Jid, JabberIdContact> contacts = JabberIdContact.load(this);
+            Log.d(Config.LOGTAG, "start merging phone contacts with roster");
+            for (Account account : accounts) {
+                List<Contact> withSystemAccounts = account.getRoster().getWithSystemAccounts();
+                for (JabberIdContact jidContact : contacts.values()) {
+                    final Contact contact = account.getRoster().getContact(jidContact.getJid());
+                    contact.setSystemAccount(jidContact.getLookupUri());
+                    boolean needsCacheClean = contact.setPhotoUri(jidContact.getPhotoUri());
+                    needsCacheClean |= contact.setSystemName(jidContact.getDisplayName());
+                    if (needsCacheClean) {
+                        getAvatarService().clear(contact);
                     }
-                    for (Contact contact : withSystemAccounts) {
-                        contact.setSystemAccount(null);
-                        boolean needsCacheClean = contact.setPhotoUri(null);
-                        needsCacheClean |= contact.setSystemName(null);
-                        if (needsCacheClean) {
-                            getAvatarService().clear(contact);
-                        }
+                    withSystemAccounts.remove(contact);
+                }
+                for (Contact contact : withSystemAccounts) {
+                    contact.setSystemAccount(null);
+                    boolean needsCacheClean = contact.setPhotoUri(null);
+                    needsCacheClean |= contact.setSystemName(null);
+                    if (needsCacheClean) {
+                        getAvatarService().clear(contact);
                     }
                 }
-                Log.d(Config.LOGTAG, "finished merging phone contacts");
-                mShortcutService.refresh(mInitialAddressbookSyncCompleted.compareAndSet(false, true));
-                updateRosterUi();
             }
-        }));
+            Log.d(Config.LOGTAG, "finished merging phone contacts");
+            mShortcutService.refresh(mInitialAddressbookSyncCompleted.compareAndSet(false, true));
+            updateRosterUi();
+            mQuickConversationsService.considerSync();
+        });
     }
 
     public void syncRoster(final Account account) {
@@ -3683,11 +3675,11 @@ public class XmppConnectionService extends Service {
     }
 
     public boolean useTorToConnect() {
-        return Config.FORCE_ORBOT || getBooleanPreference("use_tor", R.bool.use_tor);
+        return QuickConversationsService.isConversations() && getBooleanPreference("use_tor", R.bool.use_tor);
     }
 
     public boolean showExtendedConnectionOptions() {
-        return getBooleanPreference("show_connection_options", R.bool.show_connection_options);
+        return QuickConversationsService.isConversations() && getBooleanPreference("show_connection_options", R.bool.show_connection_options);
     }
 
     public boolean warnUnecryptedChat() {

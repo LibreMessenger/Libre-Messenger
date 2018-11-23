@@ -56,6 +56,7 @@ import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.entities.PresenceTemplate;
 import de.pixart.messenger.entities.ServiceDiscoveryResult;
 import de.pixart.messenger.services.BarcodeProvider;
+import de.pixart.messenger.services.QuickConversationsService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.services.XmppConnectionService.OnAccountUpdate;
 import de.pixart.messenger.services.XmppConnectionService.OnCaptchaRequested;
@@ -689,8 +690,8 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             }
         }
         SharedPreferences preferences = getPreferences();
-        mUseTor = Config.FORCE_ORBOT || preferences.getBoolean("use_tor", false);
-        this.mShowOptions = mUseTor || preferences.getBoolean("show_connection_options", false);
+        mUseTor = QuickConversationsService.isConversations() && preferences.getBoolean("use_tor", getResources().getBoolean(R.bool.use_tor));
+        this.mShowOptions = mUseTor || (QuickConversationsService.isConversations() && preferences.getBoolean("show_connection_options", getResources().getBoolean(R.bool.show_connection_options)));
         this.binding.namePort.setVisibility(mShowOptions ? View.VISIBLE : View.GONE);
     }
 
@@ -976,7 +977,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 
         }
 
-        final boolean editable = !mAccount.isOptionSet(Account.OPTION_LOGGED_IN_SUCCESSFULLY);
+        final boolean editable = !mAccount.isOptionSet(Account.OPTION_LOGGED_IN_SUCCESSFULLY) && QuickConversationsService.isConversations();
         this.binding.accountJid.setEnabled(editable);
         this.binding.accountJid.setFocusable(editable);
         this.binding.accountJid.setFocusableInTouchMode(editable);

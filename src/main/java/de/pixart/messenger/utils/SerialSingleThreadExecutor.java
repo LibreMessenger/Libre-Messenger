@@ -16,14 +16,8 @@ public class SerialSingleThreadExecutor implements Executor {
     private final String name;
     protected Runnable active;
 
-    public SerialSingleThreadExecutor(String name) {
-        this(name, false);
-    }
 
-    SerialSingleThreadExecutor(String name, boolean prepareLooper) {
-        if (prepareLooper) {
-            execute(Looper::prepare);
-        }
+    public SerialSingleThreadExecutor(String name) {
         this.name = name;
     }
 
