@@ -67,6 +67,7 @@ import de.pixart.messenger.utils.StylingHelper;
 import de.pixart.messenger.utils.TimeframeUtils;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.utils.XmppUri;
+import me.drakeet.support.toast.ToastCompat;
 import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.entities.Bookmark.printableValue;
@@ -790,7 +791,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             if (isFinishing()) {
                 return;
             }
-            Toast.makeText(ConferenceDetailsActivity.this, msg, Toast.LENGTH_SHORT).show();
+            ToastCompat.makeText(this, msg, Toast.LENGTH_SHORT).show();
         });
     }
 
