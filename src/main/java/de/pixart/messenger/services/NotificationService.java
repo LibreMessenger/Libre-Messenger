@@ -238,7 +238,7 @@ public class NotificationService {
         }
     }
 
-    public void pushFromDirectReply(final Message message) {
+    void pushFromDirectReply(final Message message) {
         synchronized (notifications) {
             pushToStack(message);
             updateNotification(false);
@@ -264,8 +264,7 @@ public class NotificationService {
 
     private List<String> getBacklogConversations(Account account) {
         final List<String> conversations = new ArrayList<>();
-        for (Iterator<Map.Entry<Conversation, AtomicInteger>> it = mBacklogMessageCounter.entrySet().iterator(); it.hasNext(); ) {
-            Map.Entry<Conversation, AtomicInteger> entry = it.next();
+        for (Map.Entry<Conversation, AtomicInteger> entry : mBacklogMessageCounter.entrySet()) {
             if (entry.getKey().getAccount() == account) {
                 conversations.add(entry.getKey().getUuid());
             }
@@ -286,7 +285,7 @@ public class NotificationService {
         return count;
     }
 
-    public void finishBacklog(boolean notify) {
+    void finishBacklog(boolean notify) {
         finishBacklog(notify, null);
     }
 
@@ -385,7 +384,7 @@ public class NotificationService {
         updateNotification(notify, null, false);
     }
 
-    public void updateNotification(final boolean notify, final List<String> conversations) {
+    private void updateNotification(final boolean notify, final List<String> conversations) {
         updateNotification(notify, conversations, false);
     }
 
@@ -924,7 +923,7 @@ public class NotificationService {
         return PendingIntent.getActivity(mXmppConnectionService, 0, new Intent(mXmppConnectionService, ConversationsActivity.class), 0);
     }
 
-    public void updateErrorNotification() {
+    void updateErrorNotification() {
         if (Config.SUPPRESS_ERROR_NOTIFICATION) {
             cancel(ERROR_NOTIFICATION_ID);
             return;
@@ -936,7 +935,7 @@ public class NotificationService {
                 errors.add(account);
             }
         }
-        if (Compatibility.keepForegroundService(mXmppConnectionService)) {
+        if (mXmppConnectionService.foregroundNotificationNeedsUpdatingWhenErrorStateChanges()) {
             notify(FOREGROUND_NOTIFICATION_ID, createForegroundNotification());
         }
         final Notification.Builder mBuilder = new Notification.Builder(mXmppConnectionService);
@@ -979,7 +978,7 @@ public class NotificationService {
         notify(ERROR_NOTIFICATION_ID, mBuilder.build());
     }
 
-    public void updateFileAddingNotification(int current, Message message) {
+    void updateFileAddingNotification(int current, Message message) {
         Notification.Builder mBuilder = new Notification.Builder(mXmppConnectionService);
         mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.transcoding_video));
         mBuilder.setProgress(100, current, false);
@@ -993,11 +992,11 @@ public class NotificationService {
         notify(FOREGROUND_NOTIFICATION_ID, notification);
     }
 
-    public void dismissForcedForegroundNotification() {
+    void dismissForcedForegroundNotification() {
         cancel(FOREGROUND_NOTIFICATION_ID);
     }
 
-    public Notification exportLogsNotification() {
+    Notification exportLogsNotification() {
         Notification.Builder mBuilder = new Notification.Builder(mXmppConnectionService);
         mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.app_name));
         mBuilder.setContentText(mXmppConnectionService.getString(R.string.notification_export_logs_title));
@@ -1010,11 +1009,11 @@ public class NotificationService {
         return mBuilder.build();
     }
 
-    public void exportLogsServiceNotification(Notification notification) {
+    void exportLogsServiceNotification(Notification notification) {
         notify(FOREGROUND_NOTIFICATION_ID, notification);
     }
 
-    public Notification AppUpdateNotification(PendingIntent intent, String version, String filesize) {
+    Notification AppUpdateNotification(PendingIntent intent, String version, String filesize) {
         Notification.Builder mBuilder = new Notification.Builder(mXmppConnectionService);
         mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.app_name));
         mBuilder.setContentText(mXmppConnectionService.getString(R.string.notification_export_logs_title));
