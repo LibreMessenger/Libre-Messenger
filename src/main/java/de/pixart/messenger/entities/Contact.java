@@ -20,6 +20,7 @@ import java.util.Locale;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.android.AbstractPhoneContact;
 import de.pixart.messenger.utils.JidHelper;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xml.Element;
@@ -579,6 +580,27 @@ public class Contact implements ListItem, Blockable {
         return serverName;
     }
 
+    public synchronized boolean setPhoneContact(AbstractPhoneContact phoneContact) {
+        setOption(getOption(phoneContact.getClass()));
+        setSystemAccount(phoneContact.getLookupUri());
+        boolean changed = setSystemName(phoneContact.getDisplayName());
+        changed |= setPhotoUri(phoneContact.getPhotoUri());
+        return changed;
+    }
+    public synchronized boolean unsetPhoneContact(Class<?extends AbstractPhoneContact> clazz) {
+        resetOption(getOption(clazz));
+        boolean changed = false;
+        if (!getOption(Options.SYNCED_VIA_ADDRESSBOOK) && !getOption(Options.SYNCED_VIA_OTHER)) {
+            setSystemAccount(null);
+            changed |= setPhotoUri(null);
+            changed |= setSystemName(null);
+        }
+        return changed;
+    }
+    public static int getOption(Class<? extends AbstractPhoneContact> clazz) {
+        return Options.SYNCED_VIA_OTHER;
+    }
+
     public final class Options {
         public static final int TO = 0;
         public static final int FROM = 1;
@@ -588,5 +610,7 @@ public class Contact implements ListItem, Blockable {
         public static final int PENDING_SUBSCRIPTION_REQUEST = 5;
         public static final int DIRTY_PUSH = 6;
         public static final int DIRTY_DELETE = 7;
+        private static final int SYNCED_VIA_ADDRESSBOOK = 8;
+        private static final int SYNCED_VIA_OTHER = 9;
     }
 }

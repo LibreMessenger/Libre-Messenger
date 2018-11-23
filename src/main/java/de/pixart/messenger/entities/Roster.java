@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import de.pixart.messenger.android.AbstractPhoneContact;
 import rocks.xmpp.addr.Jid;
 
 public class Roster {
@@ -54,11 +55,12 @@ public class Roster {
         }
     }
 
-    public List<Contact> getWithSystemAccounts() {
+    public List<Contact> getWithSystemAccounts(Class<?extends AbstractPhoneContact> clazz) {
+        int option = Contact.getOption(clazz);
         List<Contact> with = getContacts();
         for (Iterator<Contact> iterator = with.iterator(); iterator.hasNext(); ) {
             Contact contact = iterator.next();
-            if (contact.getSystemAccount() == null) {
+            if (!contact.getOption(option)) {
                 iterator.remove();
             }
         }
