@@ -1,4 +1,4 @@
-Pix-Art Messenger ist ein Fork der offiziellen Android-App <a href="">Conversations</a> mit
+Pix-Art Messenger ist ein Fork der offiziellen Android-App <a href="https://f-droid.org/packages/eu.siacs.conversations/">Conversations</a> mit
 einigen Änderungen, insbesondere zur Verbesserung der Benutzerfreundlichkeit,
 um den Umstieg von oftmals vorinstallierten Messengern zu erleichtern.
 
