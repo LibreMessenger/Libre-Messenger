@@ -1,4 +1,4 @@
-Pix-Art Messenger is a fork of [[eu.siacs.conversations]] with some changes,
+Pix-Art Messenger is a fork of <a href="https://f-droid.org/packages/eu.siacs.conversations/">Conversations</a> with some changes,
 to improve usability.
 
 Connection security and the protection of personal data are very important for
@@ -11,7 +11,7 @@ Since version 1.20.0, a hint is displayed directly in the chat, as long as you
 write unencrypted and encryption is possible.
 
 Features:
-* End-to-end encryption with either [http://conversations.im/omemo/ OMEMO], [https://otr.cypherpunks.ca/ OTR] or [http://openpgp.org/about/ OpenPGP]
+* End-to-end encryption with either <a href="http://conversations.im/omemo/">OMEMO</a>, <a href="https://otr.cypherpunks.ca/">OTR</a> or <a href="http://openpgp.org/about/">OpenPGP</a>
 * Send and receive images as well as other files
 * Send and receive locations
 * Send and receive voice messages
@@ -23,4 +23,4 @@ Features:
 * Status messages
 * Daily backup of database to local storage
 
-You need help? Please join our support group chat [xmpp:support@room.pix-art.de?join support@room.pix-art.de].
+You need help? Please join our support group chat <a href="xmpp:support@room.pix-art.de?join">support@room.pix-art.de</a>.
