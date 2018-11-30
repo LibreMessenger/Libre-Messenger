@@ -725,11 +725,11 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                 binding.contactPhoto.setAlpha(INACTIVE_ALPHA);
             }
             this.binding.mucMembers.addView(binding.getRoot());
-            if (mConversation.getMucOptions().canInvite()) {
-                this.binding.invite.setVisibility(View.VISIBLE);
-            } else {
-                this.binding.invite.setVisibility(View.GONE);
-            }
+        }
+        if (mConversation.getMucOptions().canInvite()) {
+            this.binding.invite.setVisibility(View.VISIBLE);
+        } else {
+            this.binding.invite.setVisibility(View.GONE);
         }
     }
 
