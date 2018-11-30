@@ -565,7 +565,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
         } else if ((QuickConversationsService.isConversations() || !Config.QUICKSY_DOMAIN.equals(contactJid.getDomain())) && isWithStranger()) {
             return contactJid;
         } else {
-            return this.getContact().getDisplayName();public PresencePacket requestPresenceUpdatesFrom(Contact contact) {
+            return this.getContact().getDisplayName();
         }
     }
 
