@@ -1933,6 +1933,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 final XmppConnection xmppConnection = conversation.getAccount().getXmppConnection();
                 if (!message.hasFileOnRemoteHost()
                         && xmppConnection != null
+                        && conversation.getMode() == Conversational.MODE_SINGLE
                         && !xmppConnection.getFeatures().httpUpload(message.getFileParams().size)) {
                     activity.selectPresence(conversation, () -> {
                         message.setCounterpart(conversation.getNextCounterpart());
