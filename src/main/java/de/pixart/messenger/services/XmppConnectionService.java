@@ -1027,10 +1027,10 @@ public class XmppConnectionService extends Service {
 
     public void expireOldMessages(final boolean resetHasMessagesLeftOnServer) {
         mLastExpiryRun.set(SystemClock.elapsedRealtime());
-        mDatabaseWriterExecutor.execute(() -> {
+        Runnable runnable = () -> {
             long timestamp = getAutomaticMessageDeletionDate();
             if (timestamp > 0) {
-                databaseBackend.expireOldMessages(timestamp);
+                expireOldMessages(timestamp);
                 synchronized (XmppConnectionService.this.conversations) {
                     for (Conversation conversation : XmppConnectionService.this.conversations) {
                         conversation.expireOldMessages(timestamp);
@@ -1042,7 +1042,8 @@ public class XmppConnectionService extends Service {
                 }
                 updateConversationUi();
             }
-        });
+        };
+        mDatabaseWriterExecutor.execute((runnable));
     }
 
     public boolean hasInternetConnection() {
@@ -1716,7 +1717,7 @@ public class XmppConnectionService extends Service {
                 mLastExpiryRun.set(SystemClock.elapsedRealtime());
                 if (deletionDate > 0) {
                     Log.d(Config.LOGTAG, "deleting messages that are older than " + AbstractGenerator.getTimestamp(deletionDate));
-                    databaseBackend.expireOldMessages(deletionDate);
+                    expireOldMessages(deletionDate);
                 }
                 Log.d(Config.LOGTAG, "restoring roster...");
                 for (Account account : accounts) {
@@ -4557,5 +4558,9 @@ public class XmppConnectionService extends Service {
         public void onReceive(Context context, Intent intent) {
             onStartCommand(intent, 0, 0);
         }
+    }
+
+    private void expireOldMessages(long timestamp) {
+        databaseBackend.expireOldMessages(timestamp);
     }
 }
