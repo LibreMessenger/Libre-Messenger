@@ -1023,20 +1023,25 @@ public class FileBackend {
 
     private String getAPK (File file, Context context) {
         String APKName;
-        //final Drawable icon;
         final PackageManager pm = context.getPackageManager();
         final PackageInfo pi = pm.getPackageArchiveInfo(file.toString(), 0);
-        pi.applicationInfo.sourceDir = file.toString();
-        pi.applicationInfo.publicSourceDir = file.toString();
-        //icon = pi.applicationInfo.loadIcon(pm);
-        final String AppName = (String) pi.applicationInfo.loadLabel(pm);
-        final String AppVersion = pi.versionName;
+        String AppName;
+        String AppVersion;
+        try {
+            pi.applicationInfo.sourceDir = file.toString();
+            pi.applicationInfo.publicSourceDir = file.toString();
+            AppName = (String) pi.applicationInfo.loadLabel(pm);
+            AppVersion = pi.versionName;
+        } catch (Exception e) {
+            e.printStackTrace();
+            AppName = String.valueOf(R.string.apk);
+            AppVersion = "0";
+        }
         Log.d(Config.LOGTAG, "APK name: " + AppName);
         APKName = " (" + AppName + " " + AppVersion + ")";
         try {
             byte[] data = APKName.getBytes("UTF-8");
             APKName = Base64.encodeToString(data, Base64.DEFAULT);
-
         } catch (UnsupportedEncodingException e) {
             APKName = "";
             e.printStackTrace();
