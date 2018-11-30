@@ -256,6 +256,11 @@
                 android:value="security" />
         </intent>
         <CheckBoxPreference
+            android:defaultValue="@bool/screen_security"
+            android:key="screen_security"
+            android:summary="@string/pref_screen_security_summary"
+            android:title="@string/pref_screen_security" />
+        <CheckBoxPreference
             android:defaultValue="@bool/confirm_messages"
             android:key="confirm_messages"
             android:summary="@string/pref_confirm_messages_summary"
