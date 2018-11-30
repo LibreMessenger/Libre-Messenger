@@ -25,6 +25,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -385,6 +386,7 @@ public abstract class XmppActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         this.mTheme = findTheme();
         setTheme(this.mTheme);
+        setVolumeControlStream(AudioManager.STREAM_NOTIFICATION);
         metrics = getResources().getDisplayMetrics();
         ExceptionHelper.init(getApplicationContext());
         this.isCameraFeatureAvailable = getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
