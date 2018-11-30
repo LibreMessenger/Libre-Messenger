@@ -1366,6 +1366,9 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 
     @Override
     public void OnUpdateBlocklist(Status status) {
+        if (isFinishing()) {
+            return;
+        }
         refreshUi();
     }
 }
