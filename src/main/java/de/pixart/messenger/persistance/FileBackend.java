@@ -1032,13 +1032,14 @@ public class FileBackend {
             pi.applicationInfo.publicSourceDir = file.toString();
             AppName = (String) pi.applicationInfo.loadLabel(pm);
             AppVersion = pi.versionName;
+            Log.d(Config.LOGTAG, "APK name: " + AppName);
+            APKName = " (" + AppName + " " + AppVersion + ")";
         } catch (Exception e) {
             e.printStackTrace();
-            AppName = String.valueOf(R.string.apk);
-            AppVersion = "0";
+            Log.d(Config.LOGTAG, "no APK name detected");
+            APKName = "";
         }
-        Log.d(Config.LOGTAG, "APK name: " + AppName);
-        APKName = " (" + AppName + " " + AppVersion + ")";
+
         try {
             byte[] data = APKName.getBytes("UTF-8");
             APKName = Base64.encodeToString(data, Base64.DEFAULT);
