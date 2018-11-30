@@ -1,10 +1,13 @@
 package de.pixart.messenger.generator;
 
+import android.text.TextUtils;
+
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.services.XmppConnectionService;
+import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.stanzas.PresencePacket;
 
@@ -23,7 +26,12 @@ public class PresenceGenerator extends AbstractGenerator {
     }
 
     public PresencePacket requestPresenceUpdatesFrom(Contact contact) {
-        return subscription("subscribe", contact);
+        PresencePacket packet = subscription("subscribe", contact);
+        String displayName = contact.getAccount().getDisplayName();
+        if (!TextUtils.isEmpty(displayName)) {
+            packet.addChild("nick", Namespace.NICK).setContent(displayName);
+        }
+        return packet;
     }
 
     public PresencePacket stopPresenceUpdatesFrom(Contact contact) {

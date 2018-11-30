@@ -29,6 +29,7 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.crypto.OmemoSetting;
 import de.pixart.messenger.crypto.PgpDecryptionService;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
+import de.pixart.messenger.services.QuickConversationsService;
 import de.pixart.messenger.utils.JidHelper;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 import de.pixart.messenger.xmpp.mam.MamReference;
@@ -561,10 +562,10 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
                     return contactJid.getLocal() != null ? contactJid.getLocal() : contactJid;
                 }
             }
-        } else if (isWithStranger()) {
+        } else if ((QuickConversationsService.isConversations() || !Config.QUICKSY_DOMAIN.equals(contactJid.getDomain())) && isWithStranger()) {
             return contactJid;
         } else {
-            return this.getContact().getDisplayName();
+            return this.getContact().getDisplayName();public PresencePacket requestPresenceUpdatesFrom(Contact contact) {
         }
     }
 

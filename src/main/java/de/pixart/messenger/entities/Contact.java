@@ -21,6 +21,7 @@ import java.util.Locale;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.android.AbstractPhoneContact;
+import de.pixart.messenger.services.QuickConversationsService;
 import de.pixart.messenger.utils.JidHelper;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xml.Element;
@@ -133,7 +134,7 @@ public class Contact implements ListItem, Blockable {
             return this.systemName;
         } else if (!TextUtils.isEmpty(this.serverName)) {
             return this.serverName;
-        } else if (!TextUtils.isEmpty(this.presenceName) && mutualPresenceSubscription()) {
+        } else if (!TextUtils.isEmpty(this.presenceName) && ((QuickConversationsService.isQuicksy() && Config.QUICKSY_DOMAIN.equals(jid.getDomain())) ||mutualPresenceSubscription())) {
             return this.presenceName;
         } else if (jid.getLocal() != null) {
             return JidHelper.localPartOrFallback(jid);
