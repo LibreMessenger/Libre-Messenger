@@ -2,6 +2,10 @@ package de.pixart.messenger.xmpp.pep;
 
 import android.os.Bundle;
 
+import de.pixart.messenger.utils.Namespace;
+import de.pixart.messenger.xml.Element;
+import de.pixart.messenger.xmpp.stanzas.IqPacket;
+
 public class PublishOptions {
 
     private PublishOptions() {
@@ -19,6 +23,11 @@ public class PublishOptions {
         options.putString("pubsub#persist_items", "true");
         options.putString("pubsub#access_model", "whitelist");
         return options;
+    }
+
+    public static boolean preconditionNotMet(IqPacket response) {
+        final Element error = response.getType() == IqPacket.TYPE.ERROR ? response.findChild("error") : null;
+        return error != null && error.hasChild("precondition-not-met", Namespace.PUBSUB_ERROR);
     }
 
 }
