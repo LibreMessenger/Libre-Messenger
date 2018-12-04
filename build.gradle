@@ -55,7 +55,7 @@ dependencies {
     implementation 'org.gnu.inet:libidn:1.15'
     implementation 'com.google.zxing:core:3.3.0'
     implementation 'de.measite.minidns:minidns-hla:0.2.4'
-    implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
+    implementation 'me.leolin:ShortcutBadger:1.1.22@aar'
     implementation 'org.whispersystems:signal-protocol-java:2.6.2'
     implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation 'jetty:javax.servlet:5.1.12'
@@ -95,10 +95,10 @@ android {
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 26
+        targetSdkVersion 28
 
-        versionCode 247
-        versionName "2.1.4"
+        versionCode 249
+        versionName "2.1.5 beta (2018-12-04)"
 
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"

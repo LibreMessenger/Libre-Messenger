@@ -1,5 +1,13 @@
 ### Changelog
 
+#### Version 2.1.5
+* improved handling of bookmark nicks
+* long press on 'allow' or 'add back' snackbar to bring up 'reject'
+* let the user forbid android from taking screenshots
+* make PEP avatars public to play nice with Prosody 0.11
+* fixed re-sending failed files in group chats
+* bug fixes
+
 #### Version 2.1.4
 * fix crash with xmpp uris
  
