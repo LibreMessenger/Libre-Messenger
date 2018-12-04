@@ -125,7 +125,7 @@ import static de.pixart.messenger.ui.XmppActivity.REQUEST_INVITE_TO_CONVERSATION
 import static de.pixart.messenger.ui.util.SoftKeyboardUtils.hideSoftKeyboard;
 import static de.pixart.messenger.xmpp.Patches.ENCRYPTION_EXCEPTIONS;
 
-public class ConversationFragment extends XmppFragment implements EditMessage.KeyboardListener {
+public class ConversationFragment extends XmppFragment implements EditMessage.KeyboardListener, MessageAdapter.OnContactPictureLongClicked, MessageAdapter.OnContactPictureClicked {
 
     public static final int REQUEST_SEND_MESSAGE = 0x0201;
     public static final int REQUEST_DECRYPT_PGP = 0x0202;
@@ -1190,59 +1190,8 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         binding.mediaPreview.setAdapter(mediaPreviewAdapter);
         binding.mediaPreview.setBackgroundResource(messageInputBubble());
         messageListAdapter = new MessageAdapter((XmppActivity) getActivity(), this.messageList);
-        messageListAdapter.setOnContactPictureClicked(message -> {
-            String fingerprint;
-            if (message.getEncryption() == Message.ENCRYPTION_PGP || message.getEncryption() == Message.ENCRYPTION_DECRYPTED) {
-                fingerprint = "pgp";
-            } else {
-                fingerprint = message.getFingerprint();
-            }
-            final boolean received = message.getStatus() <= Message.STATUS_RECEIVED;
-            if (received) {
-                if (message.getConversation() instanceof Conversation && message.getConversation().getMode() == Conversation.MODE_MULTI) {
-                    Jid tcp = message.getTrueCounterpart();
-                    Jid user = message.getCounterpart();
-                    if (user != null && !user.isBareJid()) {
-                        final MucOptions mucOptions = ((Conversation) message.getConversation()).getMucOptions();
-                        if (mucOptions.participating() || ((Conversation) message.getConversation()).getNextCounterpart() != null) {
-                            if (!mucOptions.isUserInRoom(user) && mucOptions.findUserByRealJid(tcp == null ? null : tcp.asBareJid()) == null) {
-                                Toast.makeText(getActivity(), activity.getString(R.string.user_has_left_conference, user.getResource()), Toast.LENGTH_SHORT).show();
-                            }
-                            highlightInConference(user.getResource());
-                        } else {
-                            Toast.makeText(getActivity(), R.string.you_are_not_participating, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    return;
-                } else {
-                    if (!message.getContact().isSelf()) {
-                        activity.switchToContactDetails(message.getContact(), fingerprint);
-                        return;
-                    }
-                }
-            }
-            activity.switchToAccount(message.getConversation().getAccount(), fingerprint);
-        });
-        messageListAdapter.setOnContactPictureLongClicked((v, message) -> {
-            if (message.getStatus() <= Message.STATUS_RECEIVED) {
-                if (message.getConversation().getMode() == Conversation.MODE_MULTI) {
-                    Jid tcp = message.getTrueCounterpart();
-                    Jid cp = message.getCounterpart();
-                    if (cp != null && !cp.isBareJid()) {
-                        User userByRealJid = tcp != null ? conversation.getMucOptions().findOrCreateUserByRealJid(tcp, cp) : null;
-                        final User user = userByRealJid != null ? userByRealJid : conversation.getMucOptions().findUserByFullJid(cp);
-                        final PopupMenu popupMenu = new PopupMenu(getActivity(), v);
-                        popupMenu.inflate(R.menu.muc_details_context);
-                        final Menu menu = popupMenu.getMenu();
-                        MucDetailsContextMenuHelper.configureMucDetailsContextMenu(activity, menu, conversation, user);
-                        popupMenu.setOnMenuItemClickListener(menuItem -> MucDetailsContextMenuHelper.onContextItemSelected(menuItem, user, conversation, activity));
-                        popupMenu.show();
-                    }
-                }
-            } else {
-                activity.showQrCode(conversation.getAccount().getShareableUri());
-            }
-        });
+        messageListAdapter.setOnContactPictureClicked(this);
+        messageListAdapter.setOnContactPictureLongClicked(this);
         messageListAdapter.setOnQuoteListener(this::quoteText);
         binding.messagesView.setAdapter(messageListAdapter);
 
@@ -3098,7 +3047,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             Log.e(Config.LOGTAG, "cleared pending intent with unhandled result left");
         }
         if (pendingScrollState.clear()) {
-            Log.e(Config.LOGTAG,"cleared scroll state");
+            Log.e(Config.LOGTAG, "cleared scroll state");
         }
         if (pendingTakePhotoUri.clear()) {
             Log.e(Config.LOGTAG, "cleared pending photo uri");
@@ -3111,5 +3060,87 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 
     public Conversation getConversation() {
         return conversation;
+    }
+
+    @Override
+    public void onContactPictureLongClicked(View v, final Message message) {
+        if (message.getStatus() <= Message.STATUS_RECEIVED) {
+            final PopupMenu popupMenu = new PopupMenu(getActivity(), v);
+            if (message.getConversation().getMode() == Conversation.MODE_MULTI) {
+                final Jid cp = message.getCounterpart();
+                if (cp == null || cp.isBareJid()) {
+                    return;
+                }
+                Jid tcp = message.getTrueCounterpart();
+                User userByRealJid = tcp != null ? conversation.getMucOptions().findOrCreateUserByRealJid(tcp, cp) : null;
+                final User user = userByRealJid != null ? userByRealJid : conversation.getMucOptions().findUserByFullJid(cp);
+                popupMenu.inflate(R.menu.muc_details_context);
+                final Menu menu = popupMenu.getMenu();
+                MucDetailsContextMenuHelper.configureMucDetailsContextMenu(activity, menu, conversation, user);
+                popupMenu.setOnMenuItemClickListener(menuItem -> MucDetailsContextMenuHelper.onContextItemSelected(menuItem, user, conversation, activity));
+            } else {
+                final Contact contact = message.getContact();
+                if (contact.isSelf()) {
+                    activity.showQrCode(conversation.getAccount().getShareableUri());
+                    return;
+                }
+                popupMenu.inflate(R.menu.one_on_one_context);
+                popupMenu.setOnMenuItemClickListener(item -> {
+                    switch (item.getItemId()) {
+                        case R.id.action_contact_details:
+                            String fingerprint;
+                            if (message.getEncryption() == Message.ENCRYPTION_PGP || message.getEncryption() == Message.ENCRYPTION_DECRYPTED) {
+                                fingerprint = "pgp";
+                            } else {
+                                fingerprint = message.getFingerprint();
+                            }
+                            activity.switchToContactDetails(message.getContact(), fingerprint);
+                            break;
+                        case R.id.action_show_qr_code:
+                            activity.showQrCode("xmpp:" + message.getContact().getJid().asBareJid().toEscapedString());
+                            break;
+                    }
+                    return true;
+                });
+            }
+            popupMenu.show();
+        } else {
+            activity.showQrCode(conversation.getAccount().getShareableUri());
+        }
+    }
+
+    @Override
+    public void onContactPictureClicked(Message message) {
+        String fingerprint;
+        if (message.getEncryption() == Message.ENCRYPTION_PGP || message.getEncryption() == Message.ENCRYPTION_DECRYPTED) {
+            fingerprint = "pgp";
+        } else {
+            fingerprint = message.getFingerprint();
+        }
+        final boolean received = message.getStatus() <= Message.STATUS_RECEIVED;
+        if (received) {
+            if (message.getConversation() instanceof Conversation && message.getConversation().getMode() == Conversation.MODE_MULTI) {
+                Jid tcp = message.getTrueCounterpart();
+                Jid user = message.getCounterpart();
+                if (user != null && !user.isBareJid()) {
+                    final MucOptions mucOptions = ((Conversation) message.getConversation()).getMucOptions();
+                    if (mucOptions.participating() || ((Conversation) message.getConversation()).getNextCounterpart() != null) {
+                        if (!mucOptions.isUserInRoom(user) && mucOptions.findUserByRealJid(tcp == null ? null : tcp.asBareJid()) == null) {
+                            Toast.makeText(getActivity(), activity.getString(R.string.user_has_left_conference, user.getResource()), Toast.LENGTH_SHORT).show();
+                        }
+                        highlightInConference(user.getResource());
+                    } else {
+                        Toast.makeText(getActivity(), R.string.you_are_not_participating, Toast.LENGTH_SHORT).show();
+                    }
+                }
+                return;
+            } else {
+                if (!message.getContact().isSelf()) {
+                    activity.switchToContactDetails(message.getContact(), fingerprint);
+                    return;
+                }
+            }
+        }
+        activity.switchToAccount(message.getConversation().getAccount(), fingerprint);
     }
 }
