@@ -79,7 +79,7 @@ public class XmppAxolotlSession implements Comparable<XmppAxolotlSession> {
     }
 
     @Nullable
-    public byte[] processReceiving(AxolotlKey encryptedKey) throws CryptoFailedException {
+    byte[] processReceiving(AxolotlKey encryptedKey) throws CryptoFailedException {
         byte[] plaintext;
         FingerprintStatus status = getTrust();
         if (!status.isCompromised()) {
@@ -99,21 +99,22 @@ public class XmppAxolotlSession implements Comparable<XmppAxolotlSession> {
                     plaintext = cipher.decrypt(preKeySignalMessage);
                 } else {
                     SignalMessage signalMessage = new SignalMessage(encryptedKey.key);
-                    plaintext = cipher.decrypt(signalMessage);
+                    try {
+                        plaintext = cipher.decrypt(signalMessage);
+                    } catch (InvalidMessageException | NoSessionException e) {
+                        throw new BrokenSessionException(this.remoteAddress, e);
+                    }
                     preKeyId = null; //better safe than sorry because we use that to do special after prekey handling
                 }
-            } catch (InvalidVersionException | InvalidKeyException | LegacyMessageException | InvalidMessageException | DuplicateMessageException | NoSessionException | InvalidKeyIdException | UntrustedIdentityException e) {
-                if (!(e instanceof DuplicateMessageException)) {
-                    e.printStackTrace();
-                }
-                throw new CryptoFailedException("Error decrypting WhisperMessage " + e.getClass().getSimpleName() + ": " + e.getMessage());
+            } catch (InvalidVersionException | InvalidKeyException | LegacyMessageException | InvalidMessageException | DuplicateMessageException | InvalidKeyIdException | UntrustedIdentityException e) {
+                throw new CryptoFailedException("Error decrypting SignalMessage", e);
             }
             if (!status.isActive()) {
                 setTrust(status.toActive());
                 //TODO: also (re)add to device list?
             }
         } else {
-            throw new CryptoFailedException("not encrypting omemo message from fingerprint "+getFingerprint()+" because it was marked as compromised");
+            throw new CryptoFailedException("not encrypting omemo message from fingerprint " + getFingerprint() + " because it was marked as compromised");
         }
         return plaintext;
     }

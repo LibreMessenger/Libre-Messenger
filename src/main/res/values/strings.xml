@@ -844,5 +844,6 @@
     <string name="error_message_copied_to_clipboard">Copied error message to clipboard</string>
     <string name="pref_screen_security_summary">Treat the content as secure and preventing it from appearing in screenshots.</string>
     <string name="pref_screen_security">Forbid screenshots</string>
+    <string name="omemo_decryption_failed">Failed to decrypt OMEMO message.</string>
 
 </resources>
