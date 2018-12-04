@@ -43,6 +43,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.pixart.messenger.Config;
@@ -69,6 +70,7 @@ import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.utils.Resolver;
 import de.pixart.messenger.utils.SignupUtils;
+import de.pixart.messenger.utils.TorServiceUtils;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xml.Element;
@@ -87,9 +89,10 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 
     private static final int REQUEST_DATA_SAVER = 0xf244;
     private static final int REQUEST_CHANGE_STATUS = 0xee11;
+    private static final int REQUEST_ORBOT = 0xff22;
 
     private AlertDialog mCaptchaDialog = null;
-
+    private final AtomicBoolean mPendingReconnect = new AtomicBoolean(false);
     private Jid jidToEdit;
     private boolean mInitMode = false;
     private boolean mUsernameMode = Config.DOMAIN_LOCK != null;
@@ -127,8 +130,17 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             }
 
             XmppConnection connection = mAccount == null ? null : mAccount.getXmppConnection();
-            boolean openRegistrationUrl = registerNewAccount && !accountInfoEdited && mAccount != null && mAccount.getStatus() == Account.State.REGISTRATION_WEB;
-            boolean openPaymentUrl = mAccount != null && mAccount.getStatus() == Account.State.PAYMENT_REQUIRED;
+            final boolean startOrbot = mAccount != null && mAccount.getStatus() == Account.State.TOR_NOT_AVAILABLE;
+            if (startOrbot) {
+                if (TorServiceUtils.isOrbotInstalled(EditAccountActivity.this)) {
+                    TorServiceUtils.startOrbot(EditAccountActivity.this, REQUEST_ORBOT);
+                } else {
+                    TorServiceUtils.downloadOrbot(EditAccountActivity.this, REQUEST_ORBOT);
+                }
+                return;
+            }
+            final boolean openRegistrationUrl = registerNewAccount && !accountInfoEdited && mAccount != null && mAccount.getStatus() == Account.State.REGISTRATION_WEB;
+            final boolean openPaymentUrl = mAccount != null && mAccount.getStatus() == Account.State.PAYMENT_REQUIRED;
             final boolean redirectionWorthyStatus = openPaymentUrl || openRegistrationUrl;
             URL url = connection != null && redirectionWorthyStatus ? connection.getRedirectionUrl() : null;
             if (url != null && !wasDisabled) {
@@ -419,6 +431,13 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 Log.d(Config.LOGTAG, "pgp result not ok");
             }
         }
+        if (requestCode == REQUEST_ORBOT) {
+            if (xmppConnectionService != null && mAccount != null) {
+                xmppConnectionService.reconnectAccountInBackground(mAccount);
+            } else {
+                mPendingReconnect.set(true);
+            }
+        }
     }
 
     @Override
@@ -429,12 +448,12 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 
     protected void processFingerprintVerification(XmppUri uri, boolean showWarningToast) {
         if (mAccount != null && mAccount.getJid().asBareJid().equals(uri.getJid()) && uri.hasFingerprints()) {
-            if (xmppConnectionService.verifyFingerprints(mAccount,uri.getFingerprints())) {
+            if (xmppConnectionService.verifyFingerprints(mAccount, uri.getFingerprints())) {
                 Toast.makeText(this, R.string.verified_fingerprints, Toast.LENGTH_SHORT).show();
                 updateAccountInformation(false);
             }
         } else if (showWarningToast) {
-            Toast.makeText(this,R.string.invalid_barcode,Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.invalid_barcode, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -472,6 +491,12 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         } else if (mAccount != null && mAccount.getStatus() == Account.State.DISABLED && !mInitMode) {
             this.binding.saveButton.setEnabled(true);
             this.binding.saveButton.setText(R.string.enable);
+        } else if (torNeedsInstall(mAccount)) {
+            this.binding.saveButton.setEnabled(true);
+            this.binding.saveButton.setText(R.string.install_orbot);
+        } else if (torNeedsStart(mAccount)) {
+            this.binding.saveButton.setEnabled(true);
+            this.binding.saveButton.setText(R.string.start_orbot);
         } else {
             this.binding.saveButton.setEnabled(true);
             if (!mInitMode) {
@@ -499,6 +524,14 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 }
             }
         }
+    }
+
+    private boolean torNeedsInstall(final Account account) {
+        return account != null && account.getStatus() == Account.State.TOR_NOT_AVAILABLE && !TorServiceUtils.isOrbotInstalled(this);
+    }
+
+    private boolean torNeedsStart(final Account account) {
+        return account != null && account.getStatus() == Account.State.TOR_NOT_AVAILABLE;
     }
 
     protected boolean accountInfoEdited() {
@@ -714,6 +747,9 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         }
 
         if (mAccount != null) {
+            if (mPendingReconnect.compareAndSet(true, false)) {
+                xmppConnectionService.reconnectAccountInBackground(mAccount);
+            }
             this.mInitMode |= this.mAccount.isOptionSet(Account.OPTION_REGISTER);
             this.mUsernameMode |= mAccount.isOptionSet(Account.OPTION_MAGIC_CREATE) && mAccount.isOptionSet(Account.OPTION_REGISTER);
             if (this.mAccount.getPrivateKeyAlias() != null) {
@@ -1086,13 +1122,13 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 this.binding.otrFingerprint.setText(CryptoHelper.prettifyFingerprint(otrFingerprint));
                 this.binding.actionCopyToClipboard.setVisibility(View.VISIBLE);
                 this.binding.actionCopyToClipboard.setOnClickListener(v -> {
-                            if (copyTextToClipboard(CryptoHelper.prettifyFingerprint(otrFingerprint), R.string.otr_fingerprint)) {
-                                Toast.makeText(
-                                        EditAccountActivity.this,
-                                        R.string.toast_message_otr_fingerprint,
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                    if (copyTextToClipboard(CryptoHelper.prettifyFingerprint(otrFingerprint), R.string.otr_fingerprint)) {
+                        Toast.makeText(
+                                EditAccountActivity.this,
+                                R.string.toast_message_otr_fingerprint,
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
             } else {
                 this.binding.otrFingerprintBox.setVisibility(View.GONE);
             }
@@ -1168,7 +1204,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                         return Math.round(maxsize * 1f / (1024 * 1024)) + " MiB";
                     } else if (maxsize >= (1 * 1024)) {
                         return Math.round(maxsize * 1f / 1024) + " KiB";
-                    } else if (maxsize > 0){
+                    } else if (maxsize > 0) {
                         return maxsize + " B";
                     }
                 } catch (Exception e) {
@@ -1192,7 +1228,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             this.binding.hostnameLayout.setErrorEnabled(false);
             this.binding.hostnameLayout.setError(null);
         }
-        if (this.binding.portLayout!= exception) {
+        if (this.binding.portLayout != exception) {
             this.binding.portLayout.setErrorEnabled(false);
             this.binding.portLayout.setError(null);
         }
