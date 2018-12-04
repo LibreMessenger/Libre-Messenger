@@ -996,23 +996,6 @@ public class NotificationService {
         cancel(FOREGROUND_NOTIFICATION_ID);
     }
 
-    Notification exportLogsNotification() {
-        Notification.Builder mBuilder = new Notification.Builder(mXmppConnectionService);
-        mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.app_name));
-        mBuilder.setContentText(mXmppConnectionService.getString(R.string.notification_export_logs_title));
-        mBuilder.setProgress(0, 0, true);
-        mBuilder.setSmallIcon(R.drawable.ic_import_export_white_24dp);
-        mBuilder.setOngoing(true);
-        if (Compatibility.runsTwentySix()) {
-            mBuilder.setChannelId(BACKUP_CHANNEL_ID);
-        }
-        return mBuilder.build();
-    }
-
-    void exportLogsServiceNotification(Notification notification) {
-        notify(FOREGROUND_NOTIFICATION_ID, notification);
-    }
-
     Notification AppUpdateNotification(PendingIntent intent, String version, String filesize) {
         Notification.Builder mBuilder = new Notification.Builder(mXmppConnectionService);
         mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.app_name));

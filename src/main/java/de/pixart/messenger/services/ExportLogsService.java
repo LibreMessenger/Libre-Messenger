@@ -1,5 +1,6 @@
 package de.pixart.messenger.services;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,6 +9,7 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.preference.PreferenceManager;
 import android.support.annotation.BoolRes;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import java.io.BufferedWriter;
@@ -36,6 +38,8 @@ import de.pixart.messenger.utils.EncryptDecryptFile;
 import de.pixart.messenger.utils.WakeLockHelper;
 import rocks.xmpp.addr.Jid;
 
+import static de.pixart.messenger.services.NotificationService.BACKUP_CHANNEL_ID;
+import static de.pixart.messenger.services.NotificationService.NOTIFICATION_ID;
 import static de.pixart.messenger.ui.SettingsActivity.USE_MULTI_ACCOUNTS;
 
 public class ExportLogsService extends XmppConnectionService {
@@ -58,17 +62,15 @@ public class ExportLogsService extends XmppConnectionService {
         ReadableLogsEnabled = ReadableLogs.getBoolean("export_plain_text_logs", getResources().getBoolean(R.bool.plain_text_logs));
         pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, Config.LOGTAG + ": ExportLogsService");
-        this.startForeground(NotificationService.FOREGROUND_NOTIFICATION_ID, getNotificationService().exportLogsNotification());
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (running.compareAndSet(false, true)) {
             new Thread(() -> {
-                startForcingForegroundNotification();
                 export();
-                stopForcingForegroundNotification();
                 WakeLockHelper.release(wakeLock);
+                stopForeground(true);
                 running.set(false);
                 stopSelf();
             }).start();
@@ -76,9 +78,20 @@ public class ExportLogsService extends XmppConnectionService {
         return START_NOT_STICKY;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stopForeground(true);
+    }
+
     private void export() {
         wakeLock.acquire();
-        getNotificationService().exportLogsServiceNotification(getNotificationService().exportLogsNotification());
+        NotificationManager mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getBaseContext(), BACKUP_CHANNEL_ID);
+        mBuilder.setContentTitle(getString(R.string.notification_export_logs_title));
+        mBuilder.setSmallIcon(R.drawable.ic_import_export_white_24dp);
+        mBuilder.setProgress(0, 0, true);
+        startForeground(NOTIFICATION_ID, mBuilder.build());
         List<Conversation> conversations = mDatabaseBackend.getConversations(Conversation.STATUS_AVAILABLE);
         conversations.addAll(mDatabaseBackend.getConversations(Conversation.STATUS_ARCHIVED));
         if (mAccounts.size() >= 1) {
