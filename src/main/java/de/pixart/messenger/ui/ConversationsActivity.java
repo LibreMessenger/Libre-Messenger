@@ -177,7 +177,6 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
                 if (binding.secondaryFragment != null) {
                     notifyFragmentOfBackendConnected(R.id.main_fragment);
                 }
-                invalidateActionBarTitle();
                 return;
             }
         }
@@ -216,13 +215,13 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
             handleActivityResult(activityResult);
         }
 
-        invalidateActionBarTitle();
         if (binding.secondaryFragment != null && ConversationFragment.getConversation(this) == null) {
             Conversation conversation = ConversationsOverviewFragment.getSuggestion(this);
             if (conversation != null) {
                 openConversation(conversation, null);
             }
         }
+        invalidateActionBarTitle();
         showDialogsIfMainIsOverview();
     }
 
@@ -640,6 +639,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
     @Override
     public void onResume() {
         super.onResume();
+        invalidateActionBarTitle();
         this.mActivityPaused = false;
     }
 

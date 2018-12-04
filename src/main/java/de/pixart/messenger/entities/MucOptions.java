@@ -473,15 +473,6 @@ public class MucOptions {
         return users;
     }
 
-    public int NumberOfUsers() {
-        List<User> users = getUsersRelevantForNameAndAvatar();
-        if (users.size() >= 1) {
-            return users.size() + 1; // add 1 for yourself
-        } else {
-            return 1;
-        }
-    }
-
     public String createNameFromParticipants() {
         List<User> users = getUsersRelevantForNameAndAvatar();
         if (users.size() >= 2) {
