@@ -21,10 +21,10 @@
                 android:id="@+id/LogoLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
                 card_view:cardBackgroundColor="?attr/color_background_secondary">
 
                 <ImageView
@@ -42,10 +42,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/LogoLayout"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:orientation="vertical"
                 card_view:cardBackgroundColor="?attr/color_background_secondary">
 
@@ -59,8 +59,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin"
                         android:layout_marginTop="@dimen/activity_vertical_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
                         android:autoLink="web"
                         android:fontFamily="monospace"
                         android:linksClickable="true"
@@ -74,20 +74,18 @@
                         android:id="@+id/show_privacy_policy"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="4dp"
                         android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
                         android:text="@string/show_privacy" />
 
                     <Button
                         android:id="@+id/show_terms_of_use"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="4dp"
                         android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
                         android:text="@string/show_termsofuse" />
                 </LinearLayout>
 
@@ -98,10 +96,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/aboutLayout"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
                 card_view:cardBackgroundColor="?attr/color_background_secondary">
 
                 <TextView
@@ -109,8 +107,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:autoLink="web"
                     android:fontFamily="monospace"
                     android:linksClickable="true"

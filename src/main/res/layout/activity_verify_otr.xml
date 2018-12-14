@@ -12,11 +12,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:layout_marginBottom="@dimen/activity_vertical_margin">
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/verification_explanation"
@@ -34,10 +34,10 @@
                     android:id="@+id/your_fingerprint"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="monospace"
                     android:textColor="?attr/text_Color_Main"
                     android:textSize="?attr/TextSizeBody"
-                    android:typeface="monospace"
-                    android:fontFamily="monospace" />
+                    android:typeface="monospace" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -51,10 +51,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
+                    android:fontFamily="monospace"
                     android:textColor="?attr/text_Color_Main"
                     android:textSize="?attr/TextSizeBody"
-                    android:typeface="monospace"
-                    android:fontFamily="monospace" />
+                    android:typeface="monospace" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -123,9 +123,11 @@
         android:id="@+id/button_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true">
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true">
 
         <Button
             android:id="@+id/left_button"
@@ -137,8 +139,8 @@
         <View
             android:layout_width="1dp"
             android:layout_height="fill_parent"
-            android:layout_marginBottom="7dp"
             android:layout_marginTop="7dp"
+            android:layout_marginBottom="7dp"
             android:background="?attr/color_background_primary" />
 
         <Button

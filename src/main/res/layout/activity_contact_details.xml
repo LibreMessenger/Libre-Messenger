@@ -25,10 +25,10 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     card_view:cardBackgroundColor="?attr/color_background_secondary">
 
                     <LinearLayout
@@ -65,12 +65,10 @@
                                     android:id="@+id/details_contact_badge"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_below="@+id/contact_display_name"
-                                    android:layout_centerHorizontal="true"
                                     android:adjustViewBounds="true"
                                     android:background="?attr/color_border"
-                                    android:maxHeight="384dp"
                                     android:maxWidth="384dp"
+                                    android:maxHeight="384dp"
                                     android:padding="1dp"
                                     android:scaleType="centerCrop" />
 
@@ -78,11 +76,6 @@
                                     android:id="@+id/details_jidbox"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_alignParentLeft="true"
-                                    android:layout_alignParentRight="true"
-                                    android:layout_alignParentStart="true"
-                                    android:layout_below="@+id/details_contact_badge"
                                     android:layout_marginTop="16dp"
                                     android:orientation="vertical">
 
@@ -100,18 +93,19 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center_horizontal"
-                                        android:layout_marginBottom="4dp"
+                                        android:layout_marginStart="-2dp"
                                         android:layout_marginLeft="-2dp"
                                         android:layout_marginTop="4dp"
-                                        android:orientation="horizontal"></com.wefika.flowlayout.FlowLayout>
+                                        android:layout_marginBottom="4dp"
+                                        android:orientation="horizontal" />
 
                                     <TextView
                                         android:id="@+id/details_lastseen"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center_horizontal"
-                                        android:layout_marginBottom="4dp"
                                         android:layout_marginTop="4dp"
+                                        android:layout_marginBottom="4dp"
                                         android:textAppearance="@style/TextAppearance.Conversations.Subhead" />
 
                                     <TextView
@@ -119,8 +113,8 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center_horizontal"
-                                        android:layout_marginBottom="4dp"
                                         android:layout_marginTop="4dp"
+                                        android:layout_marginBottom="4dp"
                                         android:gravity="center_horizontal"
                                         android:textAppearance="@style/TextAppearance.Conversations.Body1" />
 
@@ -129,8 +123,8 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center_horizontal"
-                                        android:layout_marginBottom="4dp"
                                         android:layout_marginTop="4dp"
+                                        android:layout_marginBottom="4dp"
                                         android:gravity="center_horizontal"
                                         android:textSize="?attr/TextSizeBody"
                                         android:textStyle="italic" />
@@ -139,11 +133,9 @@
                                         android:id="@+id/add_contact_button"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_alignParentTop="true"
-                                        android:layout_centerHorizontal="true"
                                         android:layout_gravity="center_horizontal"
-                                        android:layout_marginBottom="4dp"
                                         android:layout_marginTop="4dp"
+                                        android:layout_marginBottom="4dp"
                                         android:text="@string/add_contact" />
 
                                     <CheckBox
@@ -151,9 +143,6 @@
                                         style="@style/Widget.Conversations.CheckBox"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_alignParentLeft="true"
-                                        android:layout_alignParentStart="true"
-                                        android:layout_below="@+id/add_contact_button"
                                         android:layout_marginTop="4dp"
                                         android:text="@string/send_presence_updates"
                                         android:textAppearance="@style/TextAppearance.Conversations.Body1" />
@@ -163,9 +152,6 @@
                                         style="@style/Widget.Conversations.CheckBox"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_alignParentLeft="true"
-                                        android:layout_alignParentStart="true"
-                                        android:layout_below="@+id/details_send_presence"
                                         android:text="@string/receive_presence_updates"
                                         android:textAppearance="@style/TextAppearance.Conversations.Body1" />
 
@@ -195,17 +181,17 @@
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     card_view:cardBackgroundColor="?attr/color_background_secondary">
 
                     <RelativeLayout
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
                         android:padding="@dimen/card_padding_regular"
                         android:touchscreenBlocksFocus="true">
 
@@ -213,8 +199,10 @@
                             android:id="@+id/notification_status_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
                             android:layout_alignParentLeft="true"
                             android:layout_centerVertical="true"
+                            android:layout_toStartOf="@+id/notification_status_button"
                             android:layout_toLeftOf="@+id/notification_status_button"
                             android:text="@string/notify_on_all_messages"
                             android:textSize="?attr/TextSizeBody" />
@@ -224,6 +212,7 @@
                             style="?android:attr/buttonStyleSmall"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_gravity="center_horizontal"
@@ -239,10 +228,10 @@
                     android:id="@+id/media_wrapper"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     card_view:cardBackgroundColor="?attr/color_background_secondary">
 
                     <LinearLayout
@@ -254,13 +243,13 @@
                             android:id="@+id/media"
                             android:layout_width="match_parent"
                             android:layout_height="100dp"
-                            android:layout_marginEnd="-2dp"
                             android:layout_marginStart="-2dp"
+                            android:layout_marginEnd="-2dp"
                             android:orientation="horizontal"
-                            android:paddingBottom="@dimen/card_padding_list"
-                            android:paddingEnd="@dimen/card_padding_regular"
                             android:paddingStart="@dimen/card_padding_regular"
-                            android:paddingTop="@dimen/card_padding_regular" />
+                            android:paddingTop="@dimen/card_padding_regular"
+                            android:paddingEnd="@dimen/card_padding_regular"
+                            android:paddingBottom="@dimen/card_padding_list" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -286,10 +275,10 @@
                     android:id="@+id/keys_wrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
                     card_view:cardBackgroundColor="?attr/color_background_secondary">
 
                     <LinearLayout
