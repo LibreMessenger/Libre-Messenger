@@ -179,6 +179,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             activity.verifyOtrSessionDialog(conversation, v);
         }
     };
+
     private boolean reInitRequiredOnStart = true;
     private MediaPreviewAdapter mediaPreviewAdapter;
     private OnClickListener clickToMuc = new OnClickListener() {
@@ -192,6 +193,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
         }
     };
+
     private OnClickListener leaveMuc = new OnClickListener() {
 
         @Override
@@ -199,6 +201,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             activity.xmppConnectionService.archiveConversation(conversation);
         }
     };
+
     private OnClickListener joinMuc = new OnClickListener() {
 
         @Override
@@ -206,6 +209,16 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             activity.xmppConnectionService.joinMuc(conversation);
         }
     };
+
+    private OnClickListener acceptJoin = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            conversation.setAttribute("accept_non_anonymous", true);
+            activity.xmppConnectionService.updateConversation(conversation);
+            activity.xmppConnectionService.joinMuc(conversation);
+        }
+    };
+
     private OnClickListener enterPassword = new OnClickListener() {
 
         @Override
@@ -2378,6 +2391,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     break;
                 case DESTROYED:
                     showSnackbar(R.string.conference_destroyed, R.string.leave, leaveMuc);
+                    break;
+                case NON_ANONYMOUS:
+                    showSnackbar(R.string.group_chat_will_make_your_jabber_id_public, R.string.join, acceptJoin);
                     break;
                 default:
                     hideSnackbar();

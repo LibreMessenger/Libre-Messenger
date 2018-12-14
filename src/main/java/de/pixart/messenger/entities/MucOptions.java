@@ -675,7 +675,8 @@ public class MucOptions {
         SHUTDOWN,
         DESTROYED,
         INVALID_NICK,
-        UNKNOWN
+        UNKNOWN,
+        NON_ANONYMOUS
     }
 
     private interface OnEventListener {
