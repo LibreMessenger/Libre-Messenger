@@ -18,3 +18,4 @@
 -dontwarn org.bouncycastle.jce.provider.X509LDAPCertStoreSpi
 -dontwarn org.bouncycastle.cert.dane.**
 -dontwarn rocks.xmpp.addr.**
+-dontwarn com.google.firebase.analytics.connector.AnalyticsConnector
