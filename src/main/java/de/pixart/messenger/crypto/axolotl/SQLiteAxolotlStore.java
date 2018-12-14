@@ -16,6 +16,7 @@ import org.whispersystems.libsignal.state.SignedPreKeyRecord;
 import org.whispersystems.libsignal.util.KeyHelper;
 
 import java.security.cert.X509Certificate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -54,6 +55,8 @@ public class SQLiteAxolotlStore implements SignalProtocolStore {
     private IdentityKeyPair identityKeyPair;
     private int localRegistrationId;
     private int currentPreKeyId = 0;
+
+    private final HashSet<Integer> preKeysMarkedForRemoval = new HashSet<>();
 
     private final LruCache<String, FingerprintStatus> trustCache =
             new LruCache<String, FingerprintStatus>(NUM_TRUSTS_TO_CACHE) {
@@ -180,7 +183,7 @@ public class SQLiteAxolotlStore implements SignalProtocolStore {
      * <p/>
      * Store a remote client's identity key as trusted.
      *
-     * @param address        The address of the remote client.
+     * @param address     The address of the remote client.
      * @param identityKey The remote client's identity key.
      * @return true on success
      */
@@ -215,7 +218,6 @@ public class SQLiteAxolotlStore implements SignalProtocolStore {
      * store.  Only if it mismatches an entry in the local store is it considered
      * 'untrusted.'
      *
-     * @param name        The name of the remote client.
      * @param identityKey The identity key to verify.
      * @return true if trusted, false if untrusted.
      */
@@ -283,6 +285,7 @@ public class SQLiteAxolotlStore implements SignalProtocolStore {
         return mXmppConnectionService.databaseBackend.getSubDeviceSessions(account,
                 new SignalProtocolAddress(name, 0));
     }
+
 
     public List<String> getKnownAddresses() {
         return mXmppConnectionService.databaseBackend.getKnownSignalAddresses(account);
@@ -386,7 +389,23 @@ public class SQLiteAxolotlStore implements SignalProtocolStore {
      */
     @Override
     public void removePreKey(int preKeyId) {
-        mXmppConnectionService.databaseBackend.deletePreKey(account, preKeyId);
+        Log.d(Config.LOGTAG, "mark prekey for removal " + preKeyId);
+        synchronized (preKeysMarkedForRemoval) {
+            preKeysMarkedForRemoval.add(preKeyId);
+        }
+    }
+
+
+    public boolean flushPreKeys() {
+        Log.d(Config.LOGTAG, "flushing pre keys");
+        int count = 0;
+        synchronized (preKeysMarkedForRemoval) {
+            for (Integer preKeyId : preKeysMarkedForRemoval) {
+                count += mXmppConnectionService.databaseBackend.deletePreKey(account, preKeyId);
+            }
+            preKeysMarkedForRemoval.clear();
+        }
+        return count > 0;
     }
 
     // --------------------------------------
