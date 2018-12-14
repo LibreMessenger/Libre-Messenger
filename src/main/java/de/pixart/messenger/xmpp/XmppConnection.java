@@ -162,6 +162,7 @@ public class XmppConnection implements Runnable {
     private long lastConnect = 0;
     private long lastSessionStarted = 0;
     private long lastDiscoStarted = 0;
+    private boolean isMamPreferenceAlways = false;
     private AtomicInteger mPendingServiceDiscoveries = new AtomicInteger(0);
     private AtomicBoolean mWaitForDisco = new AtomicBoolean(true);
     private AtomicBoolean mWaitingForSmCatchup = new AtomicBoolean(false);
@@ -1195,6 +1196,7 @@ public class XmppConnection implements Runnable {
             Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": server caps came from cache");
             disco.put(Jid.of(account.getServer()), discoveryResult);
         }
+        discoverMamPreferences();
         sendServiceDiscoveryInfo(account.getJid().asBareJid());
         if (!requestDiscoItemsFirst) {
             sendServiceDiscoveryItems(Jid.of(account.getServer()));
@@ -1236,6 +1238,21 @@ public class XmppConnection implements Runnable {
                 }
             }
         });
+    }
+
+    private void discoverMamPreferences() {
+        IqPacket request = new IqPacket(IqPacket.TYPE.GET);
+        request.addChild("prefs", MessageArchiveService.Version.MAM_2.namespace);
+        sendIqPacket(request, (account, response) -> {
+            if (response.getType() == IqPacket.TYPE.RESULT) {
+                Element prefs = response.findChild("prefs", MessageArchiveService.Version.MAM_2.namespace);
+                isMamPreferenceAlways = "always".equals(prefs == null ? null : prefs.getAttribute("default"));
+            }
+        });
+    }
+
+    public boolean isMamPreferenceAlways() {
+        return isMamPreferenceAlways;
     }
 
     private void finalizeBind() {
