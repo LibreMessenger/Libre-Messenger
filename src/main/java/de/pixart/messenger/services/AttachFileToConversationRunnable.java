@@ -3,6 +3,7 @@ package de.pixart.messenger.services;
 import android.net.Uri;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import net.ypresto.androidtranscoder.MediaTranscoder;
@@ -54,7 +55,7 @@ public class AttachFileToConversationRunnable implements Runnable, MediaTranscod
     }
 
     public boolean isVideoMessage() {
-        return this.isVideoMessage;
+        return this.isVideoMessage && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
     }
 
     private void processAsFile() {
@@ -89,6 +90,7 @@ public class AttachFileToConversationRunnable implements Runnable, MediaTranscod
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void processAsVideo() throws FileNotFoundException {
         Log.d(Config.LOGTAG, "processing file as video");
         mXmppConnectionService.startForcingForegroundNotification();
@@ -161,7 +163,7 @@ public class AttachFileToConversationRunnable implements Runnable, MediaTranscod
 
     @Override
     public void run() {
-        if (isVideoMessage) {
+        if (this.isVideoMessage()) {
             try {
                 processAsVideo();
             } catch (FileNotFoundException e) {

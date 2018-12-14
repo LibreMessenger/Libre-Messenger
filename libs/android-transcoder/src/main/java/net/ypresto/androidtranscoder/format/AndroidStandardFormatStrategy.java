@@ -17,6 +17,8 @@ package net.ypresto.androidtranscoder.format;
 
 import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 class AndroidStandardFormatStrategy implements MediaFormatStrategy {
@@ -47,6 +49,7 @@ class AndroidStandardFormatStrategy implements MediaFormatStrategy {
         mAudioChannels = audioChannels;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     public MediaFormat createVideoOutputFormat(MediaFormat inputFormat) {
         int width = inputFormat.getInteger(MediaFormat.KEY_WIDTH);

@@ -276,6 +276,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
     private void openBatteryOptimizationDialogIfNeeded() {
         if (hasAccountWithoutPush()
                 && isOptimizingBattery()
+                && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M
                 && getPreferences().getBoolean(getBatteryOptimizationPreferenceKey(), true)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.battery_optimizations_enabled);
