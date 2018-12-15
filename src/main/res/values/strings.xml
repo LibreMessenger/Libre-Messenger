@@ -277,8 +277,8 @@
     <string name="pref_use_send_button_to_indicate_status_summary">Colorize send button to indicate contact status</string>
     <string name="pref_use_colored_names_to_indicate_status_summary">Colorize contact names to indicate contact status</string>
     <string name="pref_expert_options_other">Other</string>
-    <string name="pref_autojoin">Automatically join group chats</string>
-    <string name="pref_autojoin_summary">Respect the autojoin flag in group chat bookmarks</string>
+    <string name="pref_autojoin">Synchronize with bookmarks</string>
+    <string name="pref_autojoin_summary">Join and leave group chats according to auto-join flag in your bookmarks.</string>
     <string name="toast_message_otr_fingerprint">OTR fingerprint copied to clipboard!</string>
     <string name="toast_message_omemo_fingerprint">OMEMO fingerprint copied to clipboard!</string>
     <string name="conference_banned">You are banned from this group chat</string>
