@@ -271,8 +271,6 @@
     <string name="pref_use_send_button_to_indicate_status_summary">Kişi durumunu belirtmek için gönder butonunu renklendirin</string>
     <string name="pref_use_colored_names_to_indicate_status_summary">Kişi durumunu belirtmek için kişilerin adlarını renklendirin</string>
     <string name="pref_expert_options_other">Diğer</string>
-    <string name="pref_autojoin">Otomatik olarak grup sohbetine katılın</string>
-    <string name="pref_autojoin_summary">Grup sohbeti yer imlerindeki otomatik katılım bayrağına saygı duyun</string>
     <string name="toast_message_otr_fingerprint">OTR parmak izi panoya kopyalandı!</string>
     <string name="toast_message_omemo_fingerprint">OMEMO parmak izi Panoya kopyalandı!</string>
     <string name="conference_banned">Bu sohbet grubundan banlandınız</string>
