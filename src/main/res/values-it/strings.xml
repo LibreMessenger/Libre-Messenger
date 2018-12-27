@@ -278,8 +278,6 @@
     <string name="pref_use_send_button_to_indicate_status_summary">Colora il pulsante di invio per indicare lo stato del contatto</string>
     <string name="pref_use_colored_names_to_indicate_status_summary">Colora i nomi dei contatti per indicare lo stato dei contatti</string>
     <string name="pref_expert_options_other">Altro</string>
-    <string name="pref_autojoin">Unisciti automaticamente alle chat di gruppo</string>
-    <string name="pref_autojoin_summary">Rispetta l\'opzione di entrata automatica nei segnalibri di chat di gruppo</string>
     <string name="toast_message_otr_fingerprint">Impronta OTR copiata!</string>
     <string name="toast_message_omemo_fingerprint">impronta OMEMO copiata negli appunti|</string>
     <string name="conference_banned">Sei stato bandito da questa chat di gruppo</string>
