@@ -701,11 +701,25 @@
     <string name="error_no_keys_to_trust_presence">Non ci sono chiavi utilizzabili per questo contatto.\nAssicurati di avere reciprocamente la sottoscrizione sulla presenza.</string>
     <string name="mark_as_read">Segna come letto</string>
     <string name="server_info_partial">parziale</string>
+    <string name="pref_show_foreground_service_summary">Alcuni dispositivi Android terminano alcune applicazioni dopo un certo periodo di tempo e non sarai in grado di ricevere nuovi messaggi. Se hai questi problemi, prova ad attivare il servizio in primo piano. Tieni conto che avrai una notifica permanente con questa opzione attiva.</string>
     <string name="pref_show_foreground_service">Usa servizio in primo piano</string>
+    <string name="update_service">Servizio di aggiornamento Pix-Art Messenger</string>
+    <string name="install_update">Installare l\'aggiornamento?</string>
+    <string name="highlight_in_muc">evidenzia utente</string>
     <string name="no_application_found_to_open_link">Nessuna applicazione trovata per aprire il link</string>
     <string name="contacts_have_read_up_to_this_point">%s ha letto fino a questo punto</string>
     <string name="contact_has_read_up_to_this_point">%s ha letto fino a questo punto</string>
     <string name="contacts_and_n_more_have_read_up_to_this_point">%1$s +%2$d altri hanno letto fino a questo punto</string>
+    <string name="conversation_unencrypted_hint">Questa conversazione non è criptata, per ragioni di sicurezza dovresti attivare la crittografia dei messaggi utilizzando l\'icona a forma di lucchetto. La crittografia preferibile è OMEMO.</string>
+    <string name="pref_warn_unencrypted_chat">Avvisa se la conversazione non è criptata</string>
+    <string name="pref_warn_unencrypted_chat_summary">Se la crittografia del messaggio fosse disponibile, dovresti utilizzarla. Se non utilizzi la crittografia, mostra un messaggio di avviso nella conversazione.</string>
+    <string name="pref_use_bundled_emoji">Utilizza emoji integrate</string>
     <string name="invalid_muc_nick">Nickname non valido</string>
     <string name="title_activity_share_via_account">Condividi via account</string>
+    <string name="pref_font_size_summary">La dimensione dei caratteri relativa utilizzata all\'interno dell\'app.</string>
+    <string name="small">Piccola</string>
+    <string name="medium">Media</string>
+    <string name="large">Grande</string>
+    <string name="create_shortcut">Crea Scorciatoia</string>
+    <string name="not_encrypted_for_this_device">Il messaggio non è stato criptato per questo dispositivo.</string>
 </resources>
