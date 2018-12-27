@@ -828,6 +828,8 @@
     <string name="account_status_stream_opening_error">Errore di apertura dello stream</string>
     <string name="action_open">Apri</string>
     <string name="action_delete">Elimina</string>
+    <string name="security_violation_not_attaching_file">File omesso a causa di una violazione di sicurezza.</string>
+    <string name="delete_file_dialog">Elimina file</string>
     <string name="cancelled">annullato</string>
     <string name="already_drafting_message">Stai già scrivendo una bozza di messaggio.</string>
     <string name="bad_key_for_encryption">Chiave errata per la criptazione.</string>
