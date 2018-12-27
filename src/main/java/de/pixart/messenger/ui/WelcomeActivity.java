@@ -94,12 +94,12 @@ public class WelcomeActivity extends XmppActivity {
         final Button ImportDatabase = findViewById(R.id.import_database);
         final TextView ImportText = findViewById(R.id.import_text);
 
-        if (BackupAvailable()) {
+        if (BackupAvailable() != 0) {
             ImportDatabase.setVisibility(View.VISIBLE);
             ImportText.setVisibility(View.VISIBLE);
         }
 
-        ImportDatabase.setOnClickListener(v -> enterPasswordDialog());
+        ImportDatabase.setOnClickListener(v -> enterPasswordDialog(BackupAvailable()));
 
         final Button createAccount = findViewById(R.id.create_account);
         createAccount.setOnClickListener(v -> {
@@ -127,157 +127,233 @@ public class WelcomeActivity extends XmppActivity {
 
     }
 
-    public void enterPasswordDialog() {
-        LayoutInflater li = LayoutInflater.from(WelcomeActivity.this);
-        View promptsView = li.inflate(R.layout.password, null);
-        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(WelcomeActivity.this);
-        alertDialogBuilder.setView(promptsView);
-        final EditText userInput = promptsView
-                .findViewById(R.id.password);
-        alertDialogBuilder.setTitle(R.string.enter_password);
-        alertDialogBuilder.setMessage(R.string.enter_account_password);
-        alertDialogBuilder
-                .setCancelable(false)
-                .setPositiveButton(R.string.ok,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                final String password = userInput.getText().toString();
-                                final ProgressDialog pd = ProgressDialog.show(WelcomeActivity.this, getString(R.string.please_wait), getString(R.string.databaseimport_started), true);
-                                if (!password.isEmpty()) {
-                                    new Thread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            try {
-                                                checkDatabase(password);
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
+    public void enterPasswordDialog(final int backup_type) {
+        if (backup_type == 1) {
+            LayoutInflater li = LayoutInflater.from(WelcomeActivity.this);
+            View promptsView = li.inflate(R.layout.password, null);
+            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(WelcomeActivity.this);
+            alertDialogBuilder.setView(promptsView);
+            final EditText userInput = promptsView
+                    .findViewById(R.id.password);
+            alertDialogBuilder.setTitle(R.string.enter_password);
+            alertDialogBuilder.setMessage(R.string.enter_account_password);
+            alertDialogBuilder
+                    .setCancelable(false)
+                    .setPositiveButton(R.string.ok,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    final String password = userInput.getText().toString();
+                                    final ProgressDialog pd = ProgressDialog.show(WelcomeActivity.this, getString(R.string.please_wait), getString(R.string.databaseimport_started), true);
+                                    if (!password.isEmpty()) {
+                                        new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                try {
+                                                    checkDatabase(password);
+                                                } catch (IOException e) {
+                                                    e.printStackTrace();
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                                pd.dismiss();
                                             }
-                                            pd.dismiss();
-                                        }
-                                    }).start();
-                                } else {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(WelcomeActivity.this);
-                                    builder.setTitle(R.string.error);
-                                    builder.setMessage(R.string.password_should_not_be_empty);
-                                    builder.setNegativeButton(R.string.cancel, null);
-                                    builder.setPositiveButton(R.string.try_again, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            enterPasswordDialog();
-                                        }
-                                    });
-                                    builder.create().show();
+                                        }).start();
+                                    } else {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(WelcomeActivity.this);
+                                        builder.setTitle(R.string.error);
+                                        builder.setMessage(R.string.password_should_not_be_empty);
+                                        builder.setNegativeButton(R.string.cancel, null);
+                                        builder.setPositiveButton(R.string.try_again, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                enterPasswordDialog(backup_type);
+                                            }
+                                        });
+                                        builder.create().show();
+                                    }
+                                }
+                            })
+                    .setNegativeButton(R.string.cancel,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Toast.makeText(WelcomeActivity.this, R.string.import_canceled, Toast.LENGTH_LONG).show();
+                                    dialog.dismiss();
                                 }
                             }
-                        })
-                .setNegativeButton(R.string.cancel,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                Toast.makeText(WelcomeActivity.this, R.string.import_canceled, Toast.LENGTH_LONG).show();
-                                dialog.dismiss();
-                            }
-                        }
-                );
-        WelcomeActivity.this.runOnUiThread(new Runnable() {
-            public void run() {
-                // create alert dialog
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                // show it
-                alertDialog.show();
+                    );
+            WelcomeActivity.this.runOnUiThread(new Runnable() {
+                public void run() {
+                    // create alert dialog
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    // show it
+                    alertDialog.show();
+                }
+            });
+        } else {
+            try {
+                checkDatabase(null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        });
+        }
     }
 
-    private boolean BackupAvailable() {
+    private int BackupAvailable() {
         // Set the folder on the SDcard
-        File filePath = new File(FileBackend.getBackupDirectory() + "/database.db.crypt");
-        Log.d(Config.LOGTAG, "DB Path: " + filePath.toString());
-        if (filePath.exists()) {
-            Log.d(Config.LOGTAG, "DB Path existing");
-            return true;
+        File filePath_enc = new File(FileBackend.getBackupDirectory() + "/database.db.crypt");
+        File filePath_dec = new File(FileBackend.getBackupDirectory() + "/database.db");
+        if (filePath_enc.exists()) {
+            Log.d(Config.LOGTAG, "DB Path existing (encrypted)");
+            return 1;
+        } else if (filePath_dec.exists()) {
+            Log.d(Config.LOGTAG, "DB Path existing (decrypted)");
+            return 2;
         } else {
             Log.d(Config.LOGTAG, "DB Path not existing");
-            return false;
+            return 0;
         }
     }
 
     private void checkDatabase(String DecryptionKey) throws IOException {
-        // Set the folder on the SDcard
-        File directory = new File(FileBackend.getBackupDirectory());
-        // Set the input file stream up:
-        FileInputStream InputFile = new FileInputStream(directory.getPath() + "/database.db.crypt");
-        // Temp output for DB checks
-        File TempFile = new File(directory.getPath() + "database.bak");
-        FileOutputStream OutputTemp = new FileOutputStream(TempFile);
+        if (DecryptionKey != null) {
+            // Set the folder on the SDcard
+            File directory = new File(FileBackend.getBackupDirectory());
+            // Set the input file stream up:
+            FileInputStream InputFile = new FileInputStream(directory.getPath() + "/database.db.crypt");
+            // Temp output for DB checks
+            File TempFile = new File(directory.getPath() + "database.bak");
+            FileOutputStream OutputTemp = new FileOutputStream(TempFile);
 
-        try {
-            EncryptDecryptFile.decrypt(InputFile, OutputTemp, DecryptionKey);
-        } catch (NoSuchAlgorithmException e) {
-            Log.d(Config.LOGTAG, "Database importer: decryption failed with " + e);
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            Log.d(Config.LOGTAG, "Database importer: decryption failed with " + e);
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            Log.d(Config.LOGTAG, "Database importer: decryption failed (invalid key) with " + e);
-            e.printStackTrace();
-        } catch (IOException e) {
-            Log.d(Config.LOGTAG, "Database importer: decryption failed (IO) with " + e);
-            e.printStackTrace();
-        } catch (Exception e) {
-            Log.d(Config.LOGTAG, "Database importer: Error " + e);
-            e.printStackTrace();
-        }
-
-        SQLiteDatabase checkDB = null;
-        int DB_Version = DatabaseBackend.DATABASE_VERSION;
-        int Backup_DB_Version = 0;
-
-        try {
-            String dbPath = TempFile.toString();
-            checkDB = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READONLY);
-            Backup_DB_Version = checkDB.getVersion();
-            Log.d(Config.LOGTAG, "Backup found: " + checkDB + " Version: " + checkDB.getVersion());
-        } catch (SQLiteException e) {
-            //database does't exist yet.
-            Log.d(Config.LOGTAG, "No backup found: " + checkDB);
-        } catch (Exception e) {
-            Log.d(Config.LOGTAG, "Error importing backup: " + e);
-        }
-
-        if (checkDB != null) {
-            checkDB.close();
-        }
-        if (checkDB != null) {
-            Log.d(Config.LOGTAG, "checkDB = " + checkDB.toString() + ", Backup DB = " + Backup_DB_Version + ", DB = " + DB_Version);
-        }
-        if (checkDB != null && Backup_DB_Version != 0 && Backup_DB_Version <= DB_Version) {
             try {
-                ImportDatabase();
-                importSuccessful = true;
-            } catch (Exception e) {
-                importSuccessful = false;
+                EncryptDecryptFile.decrypt(InputFile, OutputTemp, DecryptionKey);
+            } catch (NoSuchAlgorithmException e) {
+                Log.d(Config.LOGTAG, "Database importer: decryption failed with " + e);
                 e.printStackTrace();
-            } finally {
-                if (importSuccessful) {
-                    restart();
-                }
+            } catch (NoSuchPaddingException e) {
+                Log.d(Config.LOGTAG, "Database importer: decryption failed with " + e);
+                e.printStackTrace();
+            } catch (InvalidKeyException e) {
+                Log.d(Config.LOGTAG, "Database importer: decryption failed (invalid key) with " + e);
+                e.printStackTrace();
+            } catch (IOException e) {
+                Log.d(Config.LOGTAG, "Database importer: decryption failed (IO) with " + e);
+                e.printStackTrace();
+            } catch (Exception e) {
+                Log.d(Config.LOGTAG, "Database importer: Error " + e);
+                e.printStackTrace();
             }
-        } else if (checkDB != null && Backup_DB_Version == 0) {
-            WelcomeActivity.this.runOnUiThread(new Runnable() {
-                public void run() {
-                    Toast.makeText(WelcomeActivity.this, R.string.Password_wrong, Toast.LENGTH_LONG).show();
-                    enterPasswordDialog();
+
+            SQLiteDatabase checkDB = null;
+            int DB_Version = DatabaseBackend.DATABASE_VERSION;
+            int Backup_DB_Version = 0;
+
+            try {
+                String dbPath = TempFile.toString();
+                checkDB = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READONLY);
+                Backup_DB_Version = checkDB.getVersion();
+                Log.d(Config.LOGTAG, "Backup found: " + checkDB + " Version: " + checkDB.getVersion());
+            } catch (SQLiteException e) {
+                //database does't exist yet.
+                Log.d(Config.LOGTAG, "No backup found: " + checkDB);
+            } catch (Exception e) {
+                Log.d(Config.LOGTAG, "Error importing backup: " + e);
+            }
+
+            if (checkDB != null) {
+                checkDB.close();
+            }
+            if (checkDB != null) {
+                Log.d(Config.LOGTAG, "checkDB = " + checkDB.toString() + ", Backup DB = " + Backup_DB_Version + ", DB = " + DB_Version);
+            }
+            if (checkDB != null && Backup_DB_Version != 0 && Backup_DB_Version <= DB_Version) {
+                try {
+                    ImportDatabase();
+                    importSuccessful = true;
+                } catch (Exception e) {
+                    importSuccessful = false;
+                    e.printStackTrace();
+                } finally {
+                    if (importSuccessful) {
+                        restart();
+                    }
                 }
-            });
+            } else if (checkDB != null && Backup_DB_Version == 0) {
+                WelcomeActivity.this.runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(WelcomeActivity.this, R.string.Password_wrong, Toast.LENGTH_LONG).show();
+                        enterPasswordDialog(1);
+                    }
+                });
+            } else {
+                WelcomeActivity.this.runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(WelcomeActivity.this, R.string.Import_failed, Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
         } else {
-            WelcomeActivity.this.runOnUiThread(new Runnable() {
-                public void run() {
-                    Toast.makeText(WelcomeActivity.this, R.string.Import_failed, Toast.LENGTH_LONG).show();
+            // Set the folder on the SDcard
+            File directory = new File(FileBackend.getBackupDirectory());
+            // Set the input file stream up:
+            FileInputStream InputFile = new FileInputStream(directory.getPath() + "/database.db");
+            // Temp output for DB checks
+            File TempFile = new File(directory.getPath() + "database.bak");
+            FileOutputStream OutputTemp = new FileOutputStream(TempFile);
+
+            try {
+                // Transfer bytes from in to out
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = InputFile.read(buf)) > 0) {
+                    OutputTemp.write(buf, 0, len);
                 }
-            });
+            } finally {
+                OutputTemp.close();
+            }
+
+            SQLiteDatabase checkDB = null;
+            int DB_Version = DatabaseBackend.DATABASE_VERSION;
+            int Backup_DB_Version = 0;
+
+            try {
+                String dbPath = TempFile.toString();
+                checkDB = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READONLY);
+                Backup_DB_Version = checkDB.getVersion();
+                Log.d(Config.LOGTAG, "Backup found: " + checkDB + " Version: " + checkDB.getVersion());
+            } catch (SQLiteException e) {
+                //database does't exist yet.
+                Log.d(Config.LOGTAG, "No backup found: " + checkDB);
+            } catch (Exception e) {
+                Log.d(Config.LOGTAG, "Error importing backup: " + e);
+            }
+
+            if (checkDB != null) {
+                checkDB.close();
+            }
+            if (checkDB != null) {
+                Log.d(Config.LOGTAG, "checkDB = " + checkDB.toString() + ", Backup DB = " + Backup_DB_Version + ", DB = " + DB_Version);
+            }
+            if (checkDB != null && Backup_DB_Version != 0 && Backup_DB_Version <= DB_Version) {
+                try {
+                    ImportDatabase();
+                    importSuccessful = true;
+                } catch (Exception e) {
+                    importSuccessful = false;
+                    e.printStackTrace();
+                } finally {
+                    if (importSuccessful) {
+                        restart();
+                    }
+                }
+            } else {
+                WelcomeActivity.this.runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(WelcomeActivity.this, R.string.Import_failed, Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
         }
     }
 
