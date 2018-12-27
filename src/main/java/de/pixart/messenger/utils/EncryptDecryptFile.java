@@ -19,7 +19,7 @@ import javax.crypto.spec.SecretKeySpec;
 import de.pixart.messenger.Config;
 
 public class EncryptDecryptFile {
-    private static String cipher_mode = "AES/ECB/PKCS5Padding";
+    private static String cipher_mode = "AES/CBC/PKCS5Padding";
 
     public static void encrypt(FileInputStream iFile, FileOutputStream oFile, String iKey) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
         byte[] key = iKey.getBytes("UTF-8");
