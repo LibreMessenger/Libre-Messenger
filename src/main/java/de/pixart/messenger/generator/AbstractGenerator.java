@@ -111,7 +111,6 @@ public abstract class AbstractGenerator {
 
     public List<String> getFeatures(Account account) {
         ArrayList<String> features = new ArrayList<>(Arrays.asList(FEATURES));
-        features.addAll(Arrays.asList(FEATURES));
         if (mXmppConnectionService.confirmMessages()) {
             features.addAll(Arrays.asList(MESSAGE_CONFIRMATION_FEATURES));
         }

@@ -699,9 +699,9 @@ public class MucOptions {
         private MucOptions options;
         private ChatState chatState = Config.DEFAULT_CHATSTATE;
 
-        public User(MucOptions options, Jid from) {
+        public User(MucOptions options, Jid fullJid) {
             this.options = options;
-            this.fullJid = from;
+            this.fullJid = fullJid;
         }
 
         public String getName() {

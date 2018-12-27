@@ -321,7 +321,7 @@ public class IqParser extends AbstractParser implements OnIqPacketReceived {
                 account.getBlocklist().addAll(jids);
                 if (packet.getType() == IqPacket.TYPE.SET) {
                     boolean removed = false;
-                    for(Jid jid : jids) {
+                    for (Jid jid : jids) {
                         removed |= mXmppConnectionService.removeBlockedConversations(account, jid);
                     }
                     if (removed) {
@@ -359,7 +359,7 @@ public class IqParser extends AbstractParser implements OnIqPacketReceived {
             mXmppConnectionService.sendIqPacket(account, response, null);
         } else if (packet.hasChild("open", "http://jabber.org/protocol/ibb")
                 || packet.hasChild("data", "http://jabber.org/protocol/ibb")
-                || packet.hasChild("close","http://jabber.org/protocol/ibb")) {
+                || packet.hasChild("close", "http://jabber.org/protocol/ibb")) {
             mXmppConnectionService.getJingleConnectionManager()
                     .deliverIbbPacket(account, packet);
         } else if (packet.hasChild("query", "http://jabber.org/protocol/disco#info")) {
