@@ -278,6 +278,7 @@
     <string name="pref_use_send_button_to_indicate_status_summary">El color del botón enviar indica el estado del contacto</string>
     <string name="pref_use_colored_names_to_indicate_status_summary">Colorear el nombre del contacto para mostrar su estado en línea</string>
     <string name="pref_expert_options_other">Otros</string>
+    <string name="pref_autojoin">Sincronizar con marcadores</string>
     <string name="toast_message_otr_fingerprint">¡Huella digital OTR copiada al portapapeles!</string>
     <string name="toast_message_omemo_fingerprint">¡Huella digital OMEMO copiada al portapapeles!</string>
     <string name="conference_banned">Tu entrada a este grupo ha sido prohibido</string>
