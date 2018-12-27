@@ -750,6 +750,7 @@
     <string name="error_trustkey_general">Pix-Art Messenger non è in grado di inviare messaggi criptati a %1$s. Questo può essere causato dal tuo contatto che utilizza un server non aggiornato o da un client che non gestisce OMEMO.</string>
     <string name="error_trustkey_device_list">Impossibile ottenere l\'elenco dei dispositivi</string>
     <string name="error_trustkey_hint_mutual">Suggerimento: In alcuni casi questo può essere risolto aggiungendosi a vicenda nelle liste dei contatti.</string>
+    <string name="disable_encryption_message">Sei sicuro di voler disabilitare la crittografia OMEMO per questa conversazione?\nQuesto può permettere all\'amministratore del server di leggere i tuoi messaggi, ma potrebbe essere l\'unico modo di comunicare con persone che utilizzano client non aggiornati.</string>
     <string name="disable_now">Disabilita ora</string>
     <string name="draft">Bozza:</string>
     <string name="pref_omemo_setting">Crittografia OMEMO</string>
@@ -782,9 +783,12 @@
     <string name="choose_your_server">Scegli il tuo fornitore jabber</string>
     <string name="show_privacy">Informativa sulla Privacy</string>
     <string name="show_termsofuse">Termini di Utilizzo</string>
+    <string name="p1_s3_filetransfer">Condivisione File HTTP per S3 (Amazon)</string>
     <string name="pref_start_search">Ricerca Diretta</string>
+    <string name="pref_start_search_summary">Alla schermata \'Inizia Conversazione\' apri la tastiera e posiziona il cursore nel campo di ricerca</string>
     <string name="paste_as_quote">Incolla come citazione</string>
     <string name="group_chat_avatar">Immagine della conversazione di gruppo</string>
+    <string name="host_does_not_support_group_chat_avatars">L\'Host non supporta immagini per le conversazioni di gruppo</string>
     <string name="only_the_owner_can_change_group_chat_avatar">Solo il proprietario può cambiare l\'immagine della conversazione di gruppo</string>
     <string name="contact_name">Nome del contatto</string>
     <string name="nickname">Soprannome per questa conversazione di gruppo</string>
@@ -796,6 +800,10 @@
     <string name="delete_message">Elimina messaggio</string>
     <string name="conference_destroyed">Questa conversazione di gruppo è stata eliminata</string>
     <string name="no_application_found_to_view_contact">Nessuna applicazione trovata per la visualizzazione di questo contatto</string>
+    <string name="welcome_server_info">Consigliamo di utilizzare blabber.im come tuo fornitore.</string>
+    <string name="no_location_permission">Pix-Art Messenger ha bisogno di accedere ai servizi di localizzazione</string>
+    <string name="pref_show_record_voice_btn_summary">Mostra pulsante di registrazione vocale nelle conversazioni come scelta rapida</string>
+    <string name="pref_show_record_voice_btn">Mostra pulsante di registrazione vocale</string>
     <string name="cancelled">annullato</string>
     <string name="already_drafting_message">Stai già scrivendo una bozza di messaggio.</string>
     <string name="bad_key_for_encryption">Chiave errata per la criptazione.</string>
