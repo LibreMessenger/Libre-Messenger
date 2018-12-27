@@ -278,8 +278,6 @@
     <string name="pref_use_send_button_to_indicate_status_summary">Senden-Schaltfläche einfärben, um den Online-Status des Kontakts anzuzeigen</string>
     <string name="pref_use_colored_names_to_indicate_status_summary">Kontaktnamen einfärben, um den Online-Status des Kontakts anzuzeigen</string>
     <string name="pref_expert_options_other">Sonstiges</string>
-    <string name="pref_autojoin">Gruppenchats automatisch beitreten</string>
-    <string name="pref_autojoin_summary">Gruppenchats automatisch beitreten, wenn in der Kontaktliste aktiviert</string>
     <string name="toast_message_otr_fingerprint">OTR-Fingerabdruck in die Zwischenablage kopiert!</string>
     <string name="toast_message_omemo_fingerprint">OMEMO-Fingerabdruck in die Zwischenablage kopiert!</string>
     <string name="conference_banned">Du wurdest von dem Gruppenchat ausgeschlossen</string>
@@ -839,4 +837,14 @@
     <string name="delete_message_dialog">Nachricht löschen</string>
     <string name="delete_message_dialog_msg">Bist du sicher, dass du diese Nachricht löschen möchtest?\n\n<b>Achtung:</b> Dies wird keine Kopien dieser Nachricht löschen, die auf anderen Geräten oder Servern gespeichert sind.</string>
     <string name="feature_not_implemented">Funktion ist nicht implementiert</string>
+    <string name="device_does_not_support_unknown_source_op">Dein Gerät bietet keine Einstellung an, um die Installation aus unbekannten Quellen zu erlauben.</string>
+    <string name="reject_request">Anfrage ablehnen</string>
+    <string name="error_message_copied_to_clipboard">Fehlermeldung in die Zwischenablage kopiert</string>
+    <string name="pref_screen_security_summary">Behandele den Inhalt als sicher und verhindere, dass er in Screenshots erscheint.</string>
+    <string name="pref_screen_security">Screenshots verbieten</string>
+    <string name="omemo_decryption_failed">Entschlüsselung der OMEMO-Nachricht fehlgeschlagen.</string>
+    <string name="install_orbot">Orbot installieren</string>
+    <string name="start_orbot">Orbot starten</string>
+    <string name="no_market_app_installed">Kein App-Store installiert.</string>
+    <string name="group_chat_will_make_your_jabber_id_public">Dieser Gruppen-Chat wird Deine Jabber-ID öffentlich zugänglich machen</string>
 </resources>
