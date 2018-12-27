@@ -570,6 +570,13 @@
     <string name="send_image">Inviare immagine?</string>
     <string name="this_device_is_no_longer_in_use">Questo dispositivo non è più in uso</string>
     <string name="import_canceled">Importazione annullata</string>
+    <string name="Import_failed">Importazione del database fallita, un\'importazione non è possibile</string>
+    <string name="Password_wrong">Password non corretta, prova di nuovo</string>
+    <string name="enter_account_password">Per favore inserisci la password del tuo account per importare il tuo backup.</string>
+    <string name="please_wait">Attendere prego…</string>
+    <string name="databaseimport_started">Il backup sarà importato, potrebbe volerci un po\'.</string>
+    <string name="pref_export_plain_text_logs_summary">Abilita l\'esportazione della cronologia delle conversazioni come file di testo leggibili</string>
+    <string name="pref_export_plain_text_logs">Esporta cronologia delle conversazioni in formato leggibile</string>
     <string name="payment_required">Necessario pagamento</string>
     <string name="missing_internet_permission">Autorizzazione internet mancante</string>
     <string name="me">Io</string>
@@ -577,8 +584,10 @@
     <string name="allow">Consenti</string>
     <string name="no_permission_to_access_x">Nessuna autorizzazione per accedere a %s</string>
     <string name="remote_server_not_found">Server remoto non trovato</string>
+    <string name="error_file_corrupt">Questo file sembra essere corrotto.</string>
     <string name="unable_to_update_account">Impossibile aggiornare l\'account</string>
     <string name="report_jid_as_spammer">Questo JID invia messaggi non richiesti.</string>
+    <string name="create_issue">Segnala un problema</string>
     <string name="pref_delete_omemo_identities">Elimina identità OMEMO</string>
     <string name="pref_delete_omemo_identities_summary">Rigenera le tue chiavi OMEMO. I tuoi contatti dovranno verificare un\'altra volta la tua identità. Solo come ultima possibilità.</string>
     <string name="delete_selected_keys">Cancella le chiavi selezionate</string>
