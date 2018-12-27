@@ -81,7 +81,11 @@ public class MediaPreviewAdapter extends RecyclerView.Adapter<MediaPreviewAdapte
         }
         holder.binding.deleteButton.setOnClickListener(v -> {
             int pos = mediaPreviews.indexOf(attachment);
-            mediaPreviews.remove(pos);
+            try {
+                mediaPreviews.remove(pos);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             notifyItemRemoved(pos);
             conversationFragment.toggleInputMethod();
         });
