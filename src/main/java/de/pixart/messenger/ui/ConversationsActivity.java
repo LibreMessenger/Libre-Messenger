@@ -571,7 +571,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
                 return true;
             case R.id.action_check_updates:
                 if (xmppConnectionService.hasInternetConnection()) {
-                    openInstallFromUnknownSourcesDialogIfNeeded();
+                    openInstallFromUnknownSourcesDialogIfNeeded(true);
                 } else {
                     Toast.makeText(this, R.string.account_status_no_internet, Toast.LENGTH_LONG).show();
                 }
@@ -957,9 +957,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
             Log.d(Config.LOGTAG, "AppUpdater: CurrentTime: " + lastUpdateTime);
             if (Store == null) {
                 Log.d(Config.LOGTAG, "AppUpdater started");
-                openInstallFromUnknownSourcesDialogIfNeeded();
-                UpdateService task = new UpdateService(this, Store, xmppConnectionService);
-                task.executeOnExecutor(UpdateService.THREAD_POOL_EXECUTOR, "false");
+                openInstallFromUnknownSourcesDialogIfNeeded(false);
             }
         } else {
             Log.d(Config.LOGTAG, "AppUpdater stopped");
