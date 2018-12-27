@@ -566,6 +566,8 @@
     <string name="pref_broadcast_last_activity">Trasmetti ultima interazione utente</string>
     <string name="pref_broadcast_last_activity_summary">Fai sapere ai tuoi contatti quando usi Pix-Art Messenger</string>
     <string name="invite_user">Invita su Pix-Art Messenger</string>
+    <string name="request_permissions_message">Pix-Art Messenger ti chiederà di concedere solo poche autorizzazioni. È importante che tu permetta tutte queste richieste per utilizzare tutte le funzionalità di questa app. Se neghi alcune di queste l\'app si chiuderà da sola.</string>
+    <string name="request_permissions_message_again">Hai negato alcune o tutte le autorizzazioni richieste da Pix-Art Messenger. Vuoi andare nelle impostazioni e concedere questi permessi? Se neghi qualsiasi di queste autorizzazioni, l\'app si chiuderà da sola.</string>
     <string name="unable_to_connect_to_keychain">Impossibile connettersi a OpenKeychain</string>
     <string name="send_image">Inviare immagine?</string>
     <string name="this_device_is_no_longer_in_use">Questo dispositivo non è più in uso</string>
@@ -714,8 +716,15 @@
     <string name="pref_warn_unencrypted_chat">Avvisa se la conversazione non è criptata</string>
     <string name="pref_warn_unencrypted_chat_summary">Se la crittografia del messaggio fosse disponibile, dovresti utilizzarla. Se non utilizzi la crittografia, mostra un messaggio di avviso nella conversazione.</string>
     <string name="pref_use_bundled_emoji">Utilizza emoji integrate</string>
+    <string name="pref_use_bundled_emoji_summary">Usa la libreria di emoji integrata invece di quella del dispositivo. Il cambiamento sarà disponibile alla riapertura dell\'app.</string>
     <string name="invalid_muc_nick">Nickname non valido</string>
     <string name="title_activity_share_via_account">Condividi via account</string>
+    <string name="private_messages_are_disabled">I messaggi privati sono disabilitati</string>
+    <string name="destroy_muc">Elimina conversazione di gruppo</string>
+    <string name="conference_unknown_error">Non fai più parte di questa conversazione di gruppo</string>
+    <string name="destroy_muc_text">Vuoi veramente eliminare la conversazione di gruppo %s? Questo rimuoverà questa conversazione di gruppo permanentemente.</string>
+    <string name="destroy_muc_succeed">Conversazione di gruppo eliminata con successo</string>
+    <string name="destroy_muc_failed">La conversazione di gruppo non può essere eliminata</string>
     <string name="pref_font_size_summary">La dimensione dei caratteri relativa utilizzata all\'interno dell\'app.</string>
     <string name="small">Piccola</string>
     <string name="medium">Media</string>
