@@ -12,6 +12,7 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.widget.DisabledActionModeCallback;
+import de.pixart.messenger.ui.widget.TextInputEditText;
 
 public class ChangePasswordActivity extends XmppActivity implements XmppConnectionService.OnAccountPasswordChanged {
 
@@ -40,11 +41,11 @@ public class ChangePasswordActivity extends XmppActivity implements XmppConnecti
             }
         }
     };
-    private EditText mCurrentPassword;
-    private EditText mNewPassword;
-    private Account mAccount;
+    private TextInputEditText mCurrentPassword;
+    private TextInputEditText mNewPassword;
     private TextInputLayout mNewPasswordLayout;
-	private TextInputLayout mCurrentPasswordLayout;
+    private TextInputLayout mCurrentPasswordLayout;
+    private Account mAccount;
 
     @Override
     void onBackendConnected() {
