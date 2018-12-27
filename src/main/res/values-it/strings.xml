@@ -725,6 +725,16 @@
     <string name="destroy_muc_text">Vuoi veramente eliminare la conversazione di gruppo %s? Questo rimuoverà questa conversazione di gruppo permanentemente.</string>
     <string name="destroy_muc_succeed">Conversazione di gruppo eliminata con successo</string>
     <string name="destroy_muc_failed">La conversazione di gruppo non può essere eliminata</string>
+    <string name="no_write_access_in_public_muc">Non stai partecipando a questa conversazione di gruppo e non hai accesso in scrittura al momento.\nPer favore vai ai dettagli della conversazione di gruppo premendo <b>OK</b> ed invia un messaggio privato al moderatore, amministratore o proprietario tenendo premuto sul nome di uno dei primi nomi dei membri in cima alla lista e chiedi l\'accesso in scrittura.</string>
+    <string name="snooze">Posponi</string>
+    <string name="huawei_protected_apps">App Protette</string>
+    <string name="huawei_protected_apps_summary">Per continuare a ricevere notifiche, anche quando lo schermo è spento, è necessario inserire Pix-Art Messenger alla lista delle app protette.</string>
+    <string name="pref_enable_multi_accounts_title">Abilita account multipli</string>
+    <string name="pref_enable_multi_accounts_summary">Se vuoi utilizzare account multipli devi impostare una password per backup giornalieri.</string>
+    <string name="mtm_accept_cert">Accettare Certificato Sconosciuto?</string>
+    <string name="mtm_trust_anchor">Il certificato del server non è firmato da un\'Autorità di Certificazione conosciuta.</string>
+    <string name="mtm_accept_servername">Accettare nome server non corrispondente?</string>
+    <string name="mtm_hostname_mismatch">Il server non può autenticarsi come \"%s\". Il certificato è valido solo per:</string>
     <string name="pref_font_size_summary">La dimensione dei caratteri relativa utilizzata all\'interno dell\'app.</string>
     <string name="small">Piccola</string>
     <string name="medium">Media</string>
