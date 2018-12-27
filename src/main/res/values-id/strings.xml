@@ -271,8 +271,6 @@
     <string name="pref_use_send_button_to_indicate_status_summary">Warna tombol kirim untuk menunjukkan status kontak</string>
     <string name="pref_use_colored_names_to_indicate_status_summary">Warna nama kontak untuk menunjukkan status kontak</string>
     <string name="pref_expert_options_other">Lainnya</string>
-    <string name="pref_autojoin">Otomatis bergabung dengan obrolan kelompok</string>
-    <string name="pref_autojoin_summary">Hormati bendera autojoin di grup chat bookmark</string>
     <string name="toast_message_otr_fingerprint">Sidik jari OTR disalin ke clipboard!</string>
     <string name="toast_message_omemo_fingerprint">Sidik jari OMEMO disalin ke clipboard!</string>
     <string name="conference_banned">Anda dilarang melakukan obrolan kelompok ini</string>
