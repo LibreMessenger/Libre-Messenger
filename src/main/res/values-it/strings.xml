@@ -530,9 +530,12 @@
     <string name="share_uri_with">Condividi l\'URI con...</string>
     <string name="mgmt_account_reconnect">Riconnetti</string>
     <string name="welcome_text">…è un client XMPP/Jabber libero e sicuro.</string>
+    <string name="magic_create_text">Ti guideremo nel processo di creazione di un account con una password casuale, che potrai utilizzare o cambiare con una tua nella prossima pagina. \nSuccessivamente potrai comunicare con altri utenti di questo e altri server dando loro il tuo ID-Jabber completo.</string>
     <string name="your_full_jid_will_be">Il tuo ID Jabber completo sarà: %s</string>
     <string name="create_account">Crea account</string>
+    <string name="welcome_advanced_mode">Modalità avanzata</string>
     <string name="pick_your_username">Scegli il tuo nome utente</string>
+    <string name="pref_manually_change_presence">Gestisci disponibilità manualmente</string>
     <string name="status_message">Messaggio di stato</string>
     <string name="presence_chat">Disponibile a chattare</string>
     <string name="presence_online">Online</string>
