@@ -139,6 +139,13 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 }
                 return;
             }
+            if (inNeedOfSaslAccept()) {
+                mAccount.setKey(Account.PINNED_MECHANISM_KEY, String.valueOf(-1));
+                if (!xmppConnectionService.updateAccount(mAccount)) {
+                    Toast.makeText(EditAccountActivity.this, R.string.unable_to_update_account, Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
             final boolean openRegistrationUrl = registerNewAccount && !accountInfoEdited && mAccount != null && mAccount.getStatus() == Account.State.REGISTRATION_WEB;
             final boolean openPaymentUrl = mAccount != null && mAccount.getStatus() == Account.State.PAYMENT_REQUIRED;
             final boolean redirectionWorthyStatus = openPaymentUrl || openRegistrationUrl;
@@ -510,6 +517,8 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                     URL url = connection != null && mAccount.getStatus() == Account.State.PAYMENT_REQUIRED ? connection.getRedirectionUrl() : null;
                     if (url != null) {
                         this.binding.saveButton.setText(R.string.open_website);
+                    } else if (inNeedOfSaslAccept()) {
+                        this.binding.saveButton.setText(R.string.accept);
                     } else {
                         this.binding.saveButton.setText(R.string.connect);
                     }
@@ -847,6 +856,10 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         return super.onOptionsItemSelected(item);
     }
 
+    private boolean inNeedOfSaslAccept() {
+        return mAccount != null && mAccount.getLastErrorStatus() == Account.State.DOWNGRADE_ATTACK && mAccount.getKeyAsInt(Account.PINNED_MECHANISM_KEY, -1) >= 0 && !accountInfoEdited();
+    }
+
     private void publishOpenPGPPublicKey(Account account) {
         if (EditAccountActivity.this.hasPgp()) {
             announcePgp(account, null, null, onOpenPGPKeyPublished);
@@ -1171,7 +1184,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         } else {
             final TextInputLayout errorLayout;
             if (this.mAccount.errorStatus()) {
-                if (this.mAccount.getStatus() == Account.State.UNAUTHORIZED) {
+                if (this.mAccount.getStatus() == Account.State.UNAUTHORIZED || this.mAccount.getStatus() == Account.State.DOWNGRADE_ATTACK) {
                     errorLayout = this.binding.accountPasswordLayout;
                 } else if (mShowOptions
                         && this.mAccount.getStatus() == Account.State.SERVER_NOT_FOUND
