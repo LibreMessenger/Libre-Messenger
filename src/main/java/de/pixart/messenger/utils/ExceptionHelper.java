@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -60,8 +61,11 @@ public class ExceptionHelper {
             final StringBuilder report = new StringBuilder();
             PackageManager pm = activity.getPackageManager();
             PackageInfo packageInfo;
+            String release = Build.VERSION.RELEASE;
+            int sdkVersion = Build.VERSION.SDK_INT;
             try {
                 packageInfo = pm.getPackageInfo(activity.getPackageName(), PackageManager.GET_SIGNATURES);
+                report.append("Android SDK: ").append(sdkVersion).append(" (").append(release).append(")").append('\n');
                 report.append("Version: ").append(packageInfo.versionName).append('\n');
                 report.append("Last Update: ").append(DATE_FORMAT.format(new Date(packageInfo.lastUpdateTime))).append('\n');
                 Signature[] signatures = packageInfo.signatures;
