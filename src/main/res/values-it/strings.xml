@@ -278,6 +278,8 @@
     <string name="pref_use_send_button_to_indicate_status_summary">Colora il pulsante di invio per indicare lo stato del contatto</string>
     <string name="pref_use_colored_names_to_indicate_status_summary">Colora i nomi dei contatti per indicare lo stato dei contatti</string>
     <string name="pref_expert_options_other">Altro</string>
+    <string name="pref_autojoin">Sincronizza con segnalibri</string>
+    <string name="pref_autojoin_summary">Unisciti e lascia conversazioni di gruppo in accordo con la tua scelta di auto-unisci nei tuoi segnalibri.</string>
     <string name="toast_message_otr_fingerprint">Impronta OTR copiata!</string>
     <string name="toast_message_omemo_fingerprint">impronta OMEMO copiata negli appunti|</string>
     <string name="conference_banned">Sei stato bandito da questa chat di gruppo</string>
@@ -747,6 +749,7 @@
     <string name="disable_encryption">Disabilita crittografia</string>
     <string name="error_trustkey_general">Pix-Art Messenger non è in grado di inviare messaggi criptati a %1$s. Questo può essere causato dal tuo contatto che utilizza un server non aggiornato o da un client che non gestisce OMEMO.</string>
     <string name="error_trustkey_device_list">Impossibile ottenere l\'elenco dei dispositivi</string>
+    <string name="error_trustkey_bundle">Impossibile recuperare i pacchetti di dispositivi</string>
     <string name="error_trustkey_hint_mutual">Suggerimento: In alcuni casi questo può essere risolto aggiungendosi a vicenda nelle liste dei contatti.</string>
     <string name="disable_encryption_message">Sei sicuro di voler disabilitare la crittografia OMEMO per questa conversazione?\nQuesto può permettere all\'amministratore del server di leggere i tuoi messaggi, ma potrebbe essere l\'unico modo di comunicare con persone che utilizzano client non aggiornati.</string>
     <string name="disable_now">Disabilita ora</string>
@@ -844,4 +847,5 @@
     <string name="start_orbot">Avvia Orbot</string>
     <string name="no_market_app_installed">Non ci sono app store installati.</string>
     <string name="group_chat_will_make_your_jabber_id_public">Questa conversazione di gruppo renderà il tuo jabber ID pubblico</string>
+    <string name="ebook">e-book</string>
 </resources>
