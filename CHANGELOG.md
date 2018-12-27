@@ -6,6 +6,10 @@
 * let the user forbid android from taking screenshots
 * make PEP avatars public to play nice with Prosody 0.11
 * fixed re-sending failed files in group chats
+* OMEMO stability improvements
+* context menu wen long pressing avatar in 1:1 chat
+* synchronize group chat join/leaves across multiple clients
+* fixed sending PGP encrypted messages from quick reply
 * bug fixes
 
 #### Version 2.1.4
