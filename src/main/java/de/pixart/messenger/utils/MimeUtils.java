@@ -69,6 +69,8 @@ public final class MimeUtils {
         add("application/rdf+xml", "rdf");
         add("application/rss+xml", "rss");
         add("application/zip", "zip");
+        add("application/gzip", "gz");
+        add("application/gzip", "tgz");
         add("application/vnd.amazon.mobi8-ebook","azw3");
         add("application/vnd.amazon.mobi8-ebook","azw");
         add("application/vnd.amazon.mobi8-ebook","kfx");
