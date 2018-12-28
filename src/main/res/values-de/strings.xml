@@ -565,7 +565,7 @@
     <string name="InviteText">Hallo,\n\n%s hat dich zu einem Gespräch mit Pix-Art Messenger eingeladen. Falls du Android Nutzer bist, probiere es aus und klicke folgenden Link…</string>
     <string name="pref_broadcast_last_activity">Zuletzt gesehen senden</string>
     <string name="pref_broadcast_last_activity_summary">Lasse deine Kontakte wissen, wann du Pix-Art Messenger nutzt</string>
-    <string name="invite_user">In Pix-Art Messenger einladen</string>
+    <string name="invite_user">Zu Pix-Art Messenger einladen</string>
     <string name="request_permissions_message">Pix-Art Messenger wird dich nach ein paar Berechtigungen fragen. Es ist wichtig, dass du alle Berechtigungen erlaubst, um alle Funktionen nutzen zu können. Falls du eine dieser Berechtigungen ablehnst wird sich die App schließen.</string>
     <string name="request_permissions_message_again">Du hast eine oder alle Berechtigungen, welche für Pix-Art Messenger benötigt werden abgelehnt. Willst du zu den Einstellungen springen, um diese Berechtigungen zu erlauben? Falls du eine dieser Berechtigungen ablehnst wird sich die App schließen.</string>
     <string name="unable_to_connect_to_keychain">Keine Verbindung zu OpenKeychain</string>
