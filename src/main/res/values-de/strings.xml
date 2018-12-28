@@ -278,6 +278,7 @@
     <string name="pref_use_send_button_to_indicate_status_summary">Senden-Schaltfläche einfärben, um den Online-Status des Kontakts anzuzeigen</string>
     <string name="pref_use_colored_names_to_indicate_status_summary">Kontaktnamen einfärben, um den Online-Status des Kontakts anzuzeigen</string>
     <string name="pref_expert_options_other">Sonstiges</string>
+    <string name="pref_autojoin">Mit Bookmarks synchronisieren</string>
     <string name="toast_message_otr_fingerprint">OTR-Fingerabdruck in die Zwischenablage kopiert!</string>
     <string name="toast_message_omemo_fingerprint">OMEMO-Fingerabdruck in die Zwischenablage kopiert!</string>
     <string name="conference_banned">Du wurdest von dem Gruppenchat ausgeschlossen</string>
