@@ -278,8 +278,8 @@
     <string name="pref_use_send_button_to_indicate_status_summary">Senden-Schaltfläche einfärben, um den Online-Status des Kontakts anzuzeigen</string>
     <string name="pref_use_colored_names_to_indicate_status_summary">Kontaktnamen einfärben, um den Online-Status des Kontakts anzuzeigen</string>
     <string name="pref_expert_options_other">Sonstiges</string>
-    <string name="pref_autojoin">Mit Bookmarks synchronisieren</string>
-    <string name="pref_autojoin_summary">Gruppen-Chats beitreten oder verlassen gemäß der Kennzeichnung \"Automatisches Beitreten\" in Deinen Bookmarks.</string>
+    <string name="pref_autojoin">Mit Kontaktliste synchronisieren</string>
+    <string name="pref_autojoin_summary">Gruppenchats beitreten oder verlassen gemäß der Kennzeichnung \"Automatisches Beitreten\" in deiner Kontaktliste.</string>
     <string name="toast_message_otr_fingerprint">OTR-Fingerabdruck in die Zwischenablage kopiert!</string>
     <string name="toast_message_omemo_fingerprint">OMEMO-Fingerabdruck in die Zwischenablage kopiert!</string>
     <string name="conference_banned">Du wurdest von dem Gruppenchat ausgeschlossen</string>
@@ -848,6 +848,6 @@
     <string name="install_orbot">Orbot installieren</string>
     <string name="start_orbot">Orbot starten</string>
     <string name="no_market_app_installed">Kein App-Store installiert.</string>
-    <string name="group_chat_will_make_your_jabber_id_public">Dieser Gruppen-Chat wird Deine Jabber-ID öffentlich zugänglich machen</string>
+    <string name="group_chat_will_make_your_jabber_id_public">Dieser Gruppenchat wird deine Jabber-ID öffentlich zugänglich machen</string>
     <string name="ebook">E-Book</string>
 </resources>
