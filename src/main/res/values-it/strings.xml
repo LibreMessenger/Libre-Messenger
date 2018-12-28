@@ -842,7 +842,6 @@
     <string name="device_does_not_support_unknown_source_op">Il tuo dispositivo non supporta l\'installazione di app da origini sconosciute.</string>
     <string name="reject_request">Rifiuta richiesta</string>
     <string name="error_message_copied_to_clipboard">Messaggio di errore copiato negli appunti</string>
-    <string name="pref_screen_security_summary">Considera il contenuto come sicuro ed evita che appaia nei salvataggi di schermate.</string>
     <string name="pref_screen_security">Vieta salvataggi di schermate</string>
     <string name="omemo_decryption_failed">Decriptazione del messaggio OMEMO fallita.</string>
     <string name="install_orbot">Installa Orbot</string>
