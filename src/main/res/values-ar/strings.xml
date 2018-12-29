@@ -86,4 +86,9 @@
     <string name="send_again">إرسل مجددا</string>
     <string name="file_url">رابط الملف</string>
     <string name="url_copied_to_clipboard">تم نسخ العنوان إلى الحافظة</string>
+    <string name="scan_qr_code">امسح رمز الاستجابة السريعة QR</string>
+    <string name="show_qr_code">إظهار رمز الكيو آر</string>
+    <string name="confirm">تأكيد</string>
+    <string name="choose_file">إختر ملفا</string>
+    <string name="file">ملف</string>
 </resources>
