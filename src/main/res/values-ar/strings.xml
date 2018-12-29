@@ -41,4 +41,26 @@
     <string name="unblock_contact_text">هل تريد إزالة الحظر عن %s والسماح لهم بمراسلتك؟</string>
     <string name="block_domain_text">حظر كل جهات الإتصال من %s ؟</string>
     <string name="unblock_domain_text">إزالة الحظر عن كل جهات الإتصال من %s ؟</string>
+    <string name="cancel">إلغاء</string>
+    <string name="add">إضافة</string>
+    <string name="edit">تعديل</string>
+    <string name="delete">حذف</string>
+    <string name="block">حجب</string>
+    <string name="unblock">إلغاء الحظر</string>
+    <string name="save">حفظ</string>
+    <string name="ok">موافق</string>
+    <string name="send_now">ارسل الآن</string>
+    <string name="send_never">لا تسأل مجددًا</string>
+    <string name="attach_file">إرفاق ملف</string>
+    <string name="delete_messages">حذف الرسائل</string>
+    <string name="choose_presence">اختر الجهاز</string>
+    <string name="pref_attachments">المرفقات</string>
+    <string name="pref_sound">النغمة</string>
+    <string name="accept">قبول</string>
+    <string name="your_account">حسابك</string>
+    <string name="attach_choose_picture">اختر صورة</string>
+    <string name="attach_take_from_camera">صورة من الكاميرا</string>
+    <string name="account_status_unknown">مجهول</string>
+    <string name="account_status_online">متصل</string>
+    <string name="account_status_offline">غير متصل</string>
 </resources>
