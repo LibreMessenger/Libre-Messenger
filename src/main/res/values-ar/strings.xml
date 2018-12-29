@@ -74,4 +74,16 @@
     <string name="last_seen_mins">منذ %d دقائق</string>
     <string name="last_seen_hour">منذ ساعة</string>
     <string name="done">تم</string>
+    <string name="topic">الموضوع</string>
+    <string name="leave">المغادرة</string>
+    <string name="skip">تخطي</string>
+    <string name="disable_notifications">تعطيل الإشعارات</string>
+    <string name="enable">تمكين</string>
+    <string name="ignore">تجاهل</string>
+    <string name="pref_expert_options">إعدادات الخبراء</string>
+    <string name="title_activity_about">عن التطبيق</string>
+    <string name="message_options">خيارات الرسائل</string>
+    <string name="send_again">إرسل مجددا</string>
+    <string name="file_url">رابط الملف</string>
+    <string name="url_copied_to_clipboard">تم نسخ العنوان إلى الحافظة</string>
 </resources>
