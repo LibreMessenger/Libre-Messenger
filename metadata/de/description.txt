@@ -1,4 +1,4 @@
-Pix-Art Messenger ist ein Fork der offiziellen Android-App <a href="https://f-droid.org/packages/eu.siacs.conversations/">Conversations</a> mit
+﻿Pix-Art Messenger ist ein Fork der offiziellen Android-App <a href="https://f-droid.org/packages/eu.siacs.conversations/">Conversations</a> mit
 einigen Änderungen, insbesondere zur Verbesserung der Benutzerfreundlichkeit,
 um den Umstieg von oftmals vorinstallierten Messengern zu erleichtern.
 
@@ -26,4 +26,4 @@ Features:
 * Status Nachrichten
 * tägliches Backup der Datenbank auf den lokalen Speicher
 
-Benötigst du Hilfe? Bitte tritt doch einfach dem Support Gruppenchat <a href="xmpp:support@room.pix-art.de?join">support@room.pix-art.de</a> bei.
+Benötigst du Hilfe? Bitte tritt doch einfach dem Support Gruppenchat <a href="https://jabber.pix-art.de/j/support/room.pix-art.de">support@room.pix-art.de</a> bei.

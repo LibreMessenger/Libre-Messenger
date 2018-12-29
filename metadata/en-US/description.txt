@@ -23,4 +23,4 @@ Features:
 * Status messages
 * Daily backup of database to local storage
 
-You need help? Please join our support group chat <a href="xmpp:support@room.pix-art.de?join">support@room.pix-art.de</a>.
+You need help? Please join our support group chat <a href="https://jabber.pix-art.de/j/support/room.pix-art.de">support@room.pix-art.de</a>.
