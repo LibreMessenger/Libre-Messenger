@@ -605,4 +605,23 @@
     <string name="gif">GIF</string>
     <string name="view_conversation">Afficher la conversation</string>
     <string name="web_address">adresse Web</string>
+    <string name="server_hint">Sélectionnez un service</string>
+    <string name="choose_your_server">Choisissez votre fournisseur jabber</string>
+    <string name="show_privacy">Politique de confidentialité</string>
+    <string name="show_termsofuse">Conditions d’utilisation</string>
+    <string name="pref_start_search">Recherche directe</string>
+    <string name="paste_as_quote">Coller comme une citation</string>
+    <string name="group_chat_avatar">Avatar du groupe de discussion</string>
+    <string name="contact_name">Nom du contact</string>
+    <string name="group_chat_name">Nom</string>
+    <string name="create_dialog_group_chat_name">Nom du groupe de discussion</string>
+    <string name="delete_message">Supprimer le message</string>
+    <string name="no_application_found_to_view_contact">Aucune application permettant d’afficher ce contact n’a été trouvée</string>
+    <string name="welcome_server_info">Nous vous recommandons d’utiliser blabber.im en tant que votre fournisseur.</string>
+    <string name="no_location_permission">Pix-Art Messenger a besoin d’accéder aux services de géolocalisation</string>
+    <string name="phone_book">Carnet d’adresses</string>
+    <string name="feature_not_implemented">Fonctionnalité non implémentée</string>
+    <string name="reject_request">Refuser la demande</string>
+    <string name="install_orbot">Installer Orbot</string>
+    <string name="start_orbot">Démarrer Orbot</string>
 </resources>
