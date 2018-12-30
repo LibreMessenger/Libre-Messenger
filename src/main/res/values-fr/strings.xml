@@ -290,8 +290,8 @@
     <string name="smp_requested">Le contact requiert la vérification du SMP</string>
     <string name="no_otr_session_found">Aucune session OTR valide n\'a été trouvée !</string>
     <string name="pref_export_logs">Exporter l\'historique</string>
-    <string name="pref_export_logs_summary">Sauvegarder l\'historique des conversations sur la carte SD</string>
-    <string name="notification_export_logs_title">Sauvegarde des historiques sur la carte SD...</string>
+    <string name="pref_export_logs_summary">Sauvegarder l’historique des conversations sur la carte SD</string>
+    <string name="notification_export_logs_title">Sauvegarde des historiques des conversations sur la carte SD</string>
     <string name="choose_file">Choix du fichier</string>
     <string name="receiving_x_file">Réception %1$s (%2$d%% complété)</string>
     <string name="download_x_file">Télécharger %s</string>
@@ -364,7 +364,7 @@
     <string name="pdf_document">document PDF</string>
     <string name="apk">Application Android</string>
     <string name="vcard">Contact</string>
-    <string name="touch_to_open_conversations">Cliquez pour ouvrir Pix-Art Messenger</string>
+    <string name="touch_to_open_conversations">Appuyez pour ouvrir Pix-Art Messenger</string>
     <string name="avatar_has_been_published">L\'avatar a été publié !</string>
     <string name="sending_x_file">%s en cours d\'envoi</string>
     <string name="offering_x_file">En train de proposer un(e) %s</string>
@@ -482,7 +482,7 @@
     <string name="no_application_to_share_uri">Aucune application trouvée pour partager l\'URI</string>
     <string name="share_uri_with">Partager l\'URI avec...</string>
     <string name="mgmt_account_reconnect">Reconnecter</string>
-    <string name="welcome_text">XMPP est un protocole indépendant. Vous pouvez utiliser ce client avec le serveur XMPP de votre choix.\nCependant, pour votre confort, vous pouvez créer un compte sur conversations.im¹, un fournisseur spécialement approprié pour Pix-Art Messenger.</string>
+    <string name="welcome_text">… est un client XMPP/Jabber libre et sécure.</string>
     <string name="magic_create_text">Nous vous guiderons pendant toute la procédure de création d’un compte utilisateur avec un mot de passe aléatoire que vous pourrez utiliser ou modifier, au choix durant, la prochaine étape. \nEnsuite vous pourrez communiquer avec les utilisateur·trice·s des autres fournisseurs en leur transmettant votre identifiant complet de Jabber.</string>
     <string name="your_full_jid_will_be">Votre Jabber ID complet sera : %s</string>
     <string name="create_account">Créer un compte</string>
