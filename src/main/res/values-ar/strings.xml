@@ -22,6 +22,7 @@
     <string name="title_activity_sharewith">مشاركة مع المحادثة</string>
     <string name="title_activity_start_conversation">بدء محادثة</string>
     <string name="title_activity_choose_contact">إختر جهة اتصال</string>
+    <string name="title_activity_choose_contacts">مُراسِلوك</string>
     <string name="title_activity_block_list">قائمة الحظر</string>
     <string name="just_now">الآن</string>
     <string name="minute_ago">منذ دقيقة</string>
@@ -43,6 +44,7 @@
     <string name="unblock_domain_text">إزالة الحظر عن كل جهات الإتصال من %s ؟</string>
     <string name="register_account">تسجيل حساب جديد على الخادم</string>
     <string name="invite_contact">دعوة مُراسِل</string>
+    <string name="contacts">المُراسِلون</string>
     <string name="cancel">إلغاء</string>
     <string name="add">إضافة</string>
     <string name="edit">تعديل</string>
@@ -86,6 +88,11 @@
     <string name="last_seen_day">منذ يوم</string>
     <string name="last_seen_days">منذ %d أيام</string>
     <string name="done">تم</string>
+    <string name="conferences">المحادثاث الجماعية</string>
+    <string name="join_conference">الالتحاق بفريق المحادثة</string>
+    <string name="conference_address">عنوان فريق المحادثة</string>
+    <string name="conference_address_example">groupchat@room.pix-art.de</string>
+    <string name="action_edit_subject">تعديل موضوع فريق المحادثة</string>
     <string name="topic">الموضوع</string>
     <string name="leave">المغادرة</string>
     <string name="skip">تخطي</string>
@@ -106,17 +113,28 @@
     <string name="choose_file">إختر ملفا</string>
     <string name="file">ملف</string>
     <string name="account_image_description">الصورة الرمزية للحساب</string>
+    <string name="conference_options">خيارات المحادثة الجماعية</string>
+    <string name="search_contacts">البحث عن مراسِلين</string>
     <string name="account_status_tor_unavailable">شبكة تور غير متوفرة</string>
     <string name="pref_presence_settings">التوفر</string>
     <string name="action_add_account_with_certificate">إضافة حساب يحوي شهادة</string>
     <string name="account_settings_hostname">اسم المضيف</string>
     <string name="account_settings_port">المنفذ</string>
+    <string name="sync_with_contacts">زامِن مع المراسِلين</string>
     <string name="yes">نعم</string>
     <string name="mgmt_account_reconnect">إعادة الاتصال</string>
     <string name="create_account">إنشاء حساب جديد</string>
+    <string name="action_end_conversation_muc">مغادرة المحادثة الجماعية</string>
+    <string name="create_conference">انشاء محادثة جماعية</string>
     <string name="invite_again">إعادة دعوته مجددا</string>
     <string name="inviteUser_Subject">قام بدعوتك عبر</string>
+    <string name="invite_user">الدعوة إلى بيكس آرت ماسنجر</string>
     <string name="today">اليوم</string>
+    <string name="contacts_are_typing">%s يكتبون حاليا…</string>
     <string name="yesterday">البارحة</string>
+    <string name="destroy_muc">حذف المحادثة الجماعية</string>
+    <string name="conference_unknown_error">أنت لم تعد مِن ضمن فريق المحادثة هذا</string>
     <string name="chooce_account">اختر حسابا</string>
+    <string name="group_chat_avatar">الصورة الرمزية للمحادثة الجماعية</string>
+    <string name="group_chat_name">التسمية</string>
 </resources>
