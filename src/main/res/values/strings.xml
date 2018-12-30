@@ -850,4 +850,8 @@
     <string name="no_market_app_installed">No market app installed.</string>
     <string name="group_chat_will_make_your_jabber_id_public">This group chat will make your Jabber ID public</string>
     <string name="ebook">e-book</string>
+    <string name="your_name">Your name</string>
+    <string name="enter_your_name">Enter your name</string>
+    <string name="enter_your_name_instructions">Please enter your nickname which will be visible to your contacts.</string>
+    <string name="no_name_set_instructions">No nickname set.</string>
 </resources>

@@ -236,7 +236,7 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
             if (bookmark.getConversation() != null) {
                 return get(bookmark.getConversation(), size, cachedOnly);
             } else {
-                final Jid jid = bookmark.getFullJid();
+                Jid jid = bookmark.getJid();
                 Account account = bookmark.getAccount();
                 Contact contact = jid == null ? null : account.getRoster().getContact(jid);
                 if (contact != null && contact.getAvatarFilename() != null) {
@@ -407,8 +407,13 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
         }
         avatar = mXmppConnectionService.getFileBackend().getAvatar(account.getAvatar(), size);
         if (avatar == null) {
+            final String displayName = account.getDisplayName();
             final String jid = account.getJid().asBareJid().toEscapedString();
-            avatar = get(jid, null, size, false);
+            if (QuickConversationsService.isQuicksy() && !TextUtils.isEmpty(displayName)) {
+                avatar = get(displayName, jid, size, false);
+            } else {
+                avatar = get(jid, null, size, false);
+            }
         }
         mXmppConnectionService.getBitmapCache().put(KEY, avatar);
         return avatar;

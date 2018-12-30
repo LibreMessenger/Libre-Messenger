@@ -42,11 +42,57 @@
                         android:layout_height="wrap_content"
                         android:padding="@dimen/card_padding_regular">
 
+                        <RelativeLayout
+                            android:id="@+id/your_name_box"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentLeft="true"
+                                android:layout_centerVertical="true"
+                                android:layout_toStartOf="@+id/action_edit_your_name"
+                                android:layout_toLeftOf="@+id/action_edit_your_name"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/your_name"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/no_name_set_instructions"
+                                    android:textAppearance="@style/TextAppearance.Conversations.Body1.Tertiary" />
+
+                                <TextView
+                                    android:id="@+id/your_name_desc"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/your_name"
+                                    android:textAppearance="@style/TextAppearance.Conversations.Caption" />
+                            </LinearLayout>
+
+                            <ImageButton
+                                android:id="@+id/action_edit_your_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:alpha="?attr/icon_alpha"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:padding="@dimen/image_button_padding"
+                                android:src="?attr/icon_edit_body"
+                                android:visibility="visible" />
+                        </RelativeLayout>
+
                         <com.makeramen.roundedimageview.RoundedImageView
                             android:id="@+id/avater"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentTop="true"
+                            android:layout_below="@id/your_name_box"
                             android:layout_centerHorizontal="true"
                             android:layout_marginBottom="@dimen/avatar_item_distance"
                             android:adjustViewBounds="true"
@@ -512,6 +558,10 @@
 
                             </TableRow>
                         </TableLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="8dp" />
 
                         <RelativeLayout
                             android:id="@+id/pgp_fingerprint_box"

@@ -241,7 +241,7 @@
         <activity
             android:name=".ui.MediaViewerActivity"
             android:configChanges="orientation|screenSize"
-            android:theme="@style/ConversationsTheme.FullScreen"></activity>
+            android:theme="@style/ConversationsTheme.FullScreen" />
         <activity
             android:name=".ui.TrustKeysActivity"
             android:label="@string/trust_omemo_fingerprints"
@@ -263,7 +263,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_updater"
             android:launchMode="singleTask"
-            android:theme="@style/ConversationsTheme"></activity>
+            android:theme="@style/ConversationsTheme" />
         <activity
             android:name=".ui.ShortcutActivity"
             android:label="@string/contact">
@@ -275,10 +275,13 @@
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity android:name=".ui.MemorizingActivity" />
-
         <activity
             android:name=".ui.MediaBrowserActivity"
             android:label="@string/media_browser" />
+        <activity
+            android:name=".ui.EnterNameActivity"
+            android:label="@string/enter_your_name"
+            android:launchMode="singleTask" />
 
         <service android:name=".services.ExportLogsService" />
         <service

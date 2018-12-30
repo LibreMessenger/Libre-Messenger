@@ -593,6 +593,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         this.binding.port.addTextChangedListener(mTextWatcher);
         this.binding.saveButton.setOnClickListener(this.mSaveButtonClickListener);
         this.binding.cancelButton.setOnClickListener(this.mCancelButtonClickListener);
+        this.binding.actionEditYourName.setOnClickListener(this::onEditYourNameClicked);
         if (savedInstanceState != null && savedInstanceState.getBoolean("showMoreTable")) {
             changeMoreTableVisibility(true);
         }
@@ -615,6 +616,21 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(browserIntent);
         });
+    }
+
+    private void onEditYourNameClicked(View view) {
+        quickEdit(mAccount.getDisplayName(), R.string.your_name, value -> {
+            final String displayName = value.trim();
+            updateDisplayName(displayName);
+            mAccount.setDisplayName(displayName);
+            xmppConnectionService.publishDisplayName(mAccount);
+            refreshAvatar();
+            return null;
+        }, true);
+    }
+
+    private void refreshAvatar() {
+        binding.avater.setImageBitmap(avatarService().get(mAccount, (int) getResources().getDimension(R.dimen.avatar_on_details_screen_size)));
     }
 
     @Override
@@ -1011,6 +1027,10 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         this.binding.accountJid.setEnabled(editable);
         this.binding.accountJid.setFocusable(editable);
         this.binding.accountJid.setFocusableInTouchMode(editable);
+        this.binding.accountJid.setCursorVisible(editable);
+
+        final String displayName = mAccount.getDisplayName();
+        updateDisplayName(displayName);
 
         final boolean tooglePassword = mAccount.isOptionSet(Account.OPTION_MAGIC_CREATE) || !mAccount.isOptionSet(Account.OPTION_LOGGED_IN_SUCCESSFULLY);
         final boolean editPassword = !mAccount.isOptionSet(Account.OPTION_MAGIC_CREATE) || (!mAccount.isOptionSet(Account.OPTION_LOGGED_IN_SUCCESSFULLY) && QuickConversationsService.isConversations()) || mAccount.getLastErrorStatus() == Account.State.UNAUTHORIZED;
@@ -1226,6 +1246,16 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             }
         }
         return "0";
+    }
+
+    private void updateDisplayName(String displayName) {
+        if (TextUtils.isEmpty(displayName)) {
+            this.binding.yourName.setText(R.string.no_name_set_instructions);
+            this.binding.yourName.setTextAppearance(this, R.style.TextAppearance_Conversations_Body1_Tertiary);
+        } else {
+            this.binding.yourName.setText(displayName);
+            this.binding.yourName.setTextAppearance(this, R.style.TextAppearance_Conversations_Body1);
+        }
     }
 
     private void removeErrorsOnAllBut(TextInputLayout exception) {
