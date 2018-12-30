@@ -483,7 +483,7 @@
     <string name="share_uri_with">Partager l\'URI avec...</string>
     <string name="mgmt_account_reconnect">Reconnecter</string>
     <string name="welcome_text">XMPP est un protocole indépendant. Vous pouvez utiliser ce client avec le serveur XMPP de votre choix.\nCependant, pour votre confort, vous pouvez créer un compte sur conversations.im¹, un fournisseur spécialement approprié pour Pix-Art Messenger.</string>
-    <string name="magic_create_text">Nous vous guiderons pendant toute la procédure de création d\'un compte utilisateur sur conversations.im.¹\nEn choisissant conversations.im comme fournisseur, vous pourrez communiquer avec les utilisateurs d\'autres fournisseurs en leur transmettant votre Jabber ID complet. </string>
+    <string name="magic_create_text">Nous vous guiderons pendant toute la procédure de création d’un compte utilisateur avec un mot de passe aléatoire que vous pourrez utiliser ou modifier, au choix durant, la prochaine étape. \nEnsuite vous pourrez communiquer avec les utilisateur·trice·s des autres fournisseurs en leur transmettant votre identifiant complet de Jabber.</string>
     <string name="your_full_jid_will_be">Votre Jabber ID complet sera : %s</string>
     <string name="create_account">Créer un compte</string>
     <string name="welcome_advanced_mode">Mode avancé</string>
@@ -648,6 +648,7 @@
     <string name="gif">GIF</string>
     <string name="view_conversation">Afficher la conversation</string>
     <string name="web_address">adresse Web</string>
+    <string name="copy_link">Copier l’adresse Web</string>
     <string name="server_hint">Sélectionnez un service</string>
     <string name="choose_your_server">Choisissez votre fournisseur jabber</string>
     <string name="show_privacy">Politique de confidentialité</string>
@@ -663,6 +664,16 @@
     <string name="welcome_server_info">Nous vous recommandons d’utiliser blabber.im en tant que votre fournisseur.</string>
     <string name="no_location_permission">Pix-Art Messenger a besoin d’accéder aux services de géolocalisation</string>
     <string name="phone_book">Carnet d’adresses</string>
+    <string name="notification_group_messages">Messages</string>
+    <string name="messages_channel_name">Messages</string>
+    <string name="video_compression_channel_name">Compression vidéo</string>
+    <string name="backup_channel_name">Sauvegarde de base de données</string>
+    <string name="app_update_channel_name">Mise à jour de l’application</string>
+    <string name="action_group_details">Détails du groupe</string>
+    <string name="view_media">Afficher le média</string>
+    <string name="action_open">Ouvrir</string>
+    <string name="action_delete">Supprimer</string>
+    <string name="cancelled">annulé</string>
     <string name="feature_not_implemented">Fonctionnalité non implémentée</string>
     <string name="reject_request">Refuser la demande</string>
     <string name="install_orbot">Installer Orbot</string>
