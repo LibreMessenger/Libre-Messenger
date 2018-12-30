@@ -100,6 +100,7 @@
     <string name="no_pgp_keys">Aucune clef OpenPGP n\'a été trouvée.</string>
     <string name="pref_general">Général</string>
     <string name="pref_accept_files_wifi">Accepter les fichier en mode Wi-Fi</string>
+    <string name="pref_accept_files_mobile">Accepter les fichier en mode connexion de données mobiles</string>
     <string name="pref_attachments">Pièces jointes</string>
     <string name="pref_notification_settings">Notification</string>
     <string name="pref_vibrate">Vibration</string>
@@ -244,6 +245,7 @@
     <string name="skip">Passer</string>
     <string name="disable_notifications">Désactiver les notifications</string>
     <string name="enable">Activer</string>
+    <string name="conference_requires_password">Ce groupe de discussion requiert un mot dd passe</string>
     <string name="enter_password">Entrer le mot de passe</string>
     <string name="request_presence_updates">Veuillez demander à votre contact de partager ses mises à jour de disponibilité.\n\n<small>Elles seront utilisées pour déterminer son client.</small></string>
     <string name="request_now">Demander maintenant</string>
@@ -327,6 +329,7 @@
     <string name="distrust_omemo_key">Ne plus faire confiance à cet appareil</string>
     <string name="distrust_omemo_key_text">Êtes-vous sûr de vouloir supprimer la vérification pour cet appareil ?\nCet appareil et les messages qui en proviennent seront marqués comme n\'étant pas dignes de confiance.</string>
     <string name="error_no_keys_to_trust_server_error">Il n\'y a aucune clef utilisable disponible pour ce contact.\nLa récupération de nouvelles clefs sur le serveur a échoué. Peut-être y a-t-il un problème avec votre serveur de contacts ?</string>
+    <string name="error_trustkeys_title">Une erreur s’est produite</string>
     <string name="fetching_history_from_server">Récupération de l\'historique sur le serveur</string>
     <string name="no_more_history_on_server">Plus d\'historique sur le serveur</string>
     <string name="updating">Mise à jour…</string>
@@ -353,7 +356,9 @@
     <string name="remove_membership">Révoquer le statut de membre</string>
     <string name="grant_admin_privileges">Accorder des privilèges d\'administrateur</string>
     <string name="remove_admin_privileges">Révoquer des privilèges d\'administrateur</string>
+    <string name="remove_from_room">Retirer du groupe de discussion</string>
     <string name="could_not_change_affiliation">Impossible de changer l\'affiliation de %s</string>
+    <string name="ban_from_conference">Bannir du groupe de discussion</string>
     <string name="ban_now">Bannir maintenant</string>
     <string name="could_not_change_role">Impossible de changer le rôle de %s</string>
     <string name="conference_options">Options du groupe de discussion</string>
@@ -413,6 +418,7 @@
     <string name="download_failed_could_not_connect">Échec du téléchargement : impossible de se connecter à l\'hôte</string>
     <string name="download_failed_could_not_write_file">Échec du téléchargement : Écriture impossible</string>
     <string name="action_check_update">Vérifier les mises à jour</string>
+    <string name="update_available">Version %1$s est disponible.\n\nTaille du fichier : %2$s\n\nMettre à jour maintenant vers %1$s ?</string>
     <string name="remind_later">ultérieurement</string>
     <string name="update">mettre à jour</string>
     <string name="no_update_available">Aucune mise à jour disponible</string>
@@ -508,6 +514,7 @@
     <string name="device_does_not_support_battery_op">Les optimisations de batterie ne peuvent pas être désactivées sur votre appareil</string>
     <string name="share">Partager</string>
     <string name="share_location">Partager ma position</string>
+    <string name="locating">En cours de localisation …</string>
     <string name="action_end_conversation_muc">Quitter le groupe de discussion</string>
     <string name="show_password">Afficher le mot de passe</string>
     <string name="registration_please_wait">L\'enregistrement a échoué : Réessayer plus tard</string>
@@ -523,6 +530,7 @@
     <string name="pref_broadcast_last_activity_summary">Informer tous vos contacts lorsque vous utitlisez Pix-Art Messenger</string>
     <string name="invite_user">Inviter à Pix-Art Messenger</string>
     <string name="unable_to_connect_to_keychain">Connection à OpenKeychain impossible</string>
+    <string name="send_image">Envoyer l’image ?</string>
     <string name="this_device_is_no_longer_in_use">Cet appareil n\'est plus utilisé</string>
     <string name="import_canceled">Importation annulée</string>
     <string name="Password_wrong">Mot de passe erroné, essayez à nouveau</string>
@@ -534,6 +542,7 @@
     <string name="allow">Autoriser</string>
     <string name="no_permission_to_access_x">Permission d\'accéder à %s refusée</string>
     <string name="remote_server_not_found">Serveur distant non trouvé</string>
+    <string name="error_file_corrupt">Le fichier semble être corrompu.</string>
     <string name="unable_to_update_account">Mise à jour du compte impossible</string>
     <string name="report_jid_as_spammer">Signaler ce JID comme envoyant des messages non sollicités.</string>
     <string name="create_issue">Signaler un problème</string>
@@ -550,13 +559,17 @@
     <string name="data_saver_enabled">Économiseur de données activé</string>
     <string name="data_saver_enabled_explained">Votre système d\'exploitation empêche Pix-Art Messenger d’accéder à Internet lorsque l\'application est en arrière plan. Pour recevoir les notifications de nouveaux messages, vous devez autoriser Pix-Art Messenger à accéder au réseau sans restriction quand l\'Économiseur de données est activé.\n Pix-Art Messenger tentera de consommer le moins de données possible.</string>
     <string name="device_does_not_support_data_saver">Votre appareil ne prend pas en charge la désactivation de l\'Économiseur de données pour Pix-Art Messenger.</string>
+    <string name="navigate">Naviguez jusqu’à l’emplacement</string>
     <string name="add_to_contact_list">Ajouter aux contacts</string>
     <string name="contact">Contact</string>
+    <string name="unable_to_start_recording">Impossible de démarrer l’enregistrement</string>
     <string name="error_unable_to_create_temporary_file">Impossible de créer un fichier temporaire</string>
     <string name="this_device_has_been_verified">Cet appareil a été vérifié</string>
     <string name="copy_fingerprint">Copier l\'empreinte</string>
     <string name="all_omemo_keys_have_been_verified">Toutes les clefs OMEMO ont étés vérifiées</string>
+    <string name="barcode_does_not_contain_fingerprints_for_this_conversation">Le code QR ne contient pas d’empreintes pour cette conversation.</string>
     <string name="verified_fingerprints">Empreintes vérifiées</string>
+    <string name="use_camera_icon_to_scan_barcode">Utilisez l’appareil photo pour scanner le code QR des contacts</string>
     <string name="please_wait_for_keys_to_be_fetched">Veuillez attendre que les clefs soient récupérées</string>
     <string name="share_as_barcode">Partager comme code QR</string>
     <string name="share_as_uri">Partager par URI XMPP</string>
@@ -566,6 +579,7 @@
     <string name="pref_blind_trust_before_verification_summary">Faire automatiquement confiance aux nouveaux appareils des contacts qui n\'ont pas été vérifiés auparavant, et requérir une confirmation manuelle à chaque fois qu\'un contact vérifié auparavant utilise un nouvel appareil.</string>
     <string name="not_trusted">Non approuvée</string>
     <string name="invalid_barcode">Code QR non valide</string>
+    <string name="verify_with_qr_code">vérifier avec un code QR</string>
     <string name="i_followed_this_link_from_a_trusted_source">J\'ai obtenu ce lien d\'une source de confiance</string>
     <string name="verifying_omemo_keys_trusted_source">Vous êtes sur le point de vérifier les clefs OMEMO de %1$s en cliquant sur un lien. Cette procédure n\'est sécurisée que si le lien en question n\'a pu être publié que par %2$s et que vous l\'avez obtenu d\'une source digne de confiance.</string>
     <string name="verify_omemo_keys">Vérifier les clefs OMEMO</string>
