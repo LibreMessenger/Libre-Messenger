@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -332,6 +333,14 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         this.binding.mucEditTitle.addTextChangedListener(this);
         this.binding.mucEditSubject.addTextChangedListener(this);
         this.binding.mucEditSubject.addTextChangedListener(new StylingHelper.MessageEditorStyler(this.binding.mucEditSubject));
+        this.binding.autojoinCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            final Bookmark bookmark = mConversation.getBookmark();
+            if (bookmark != null) {
+                bookmark.setAutojoin(this.binding.autojoinCheckbox.isChecked());
+                xmppConnectionService.pushBookmarks(bookmark.getAccount());
+                updateView();
+            }
+        });
         mMediaAdapter = new MediaAdapter(this, R.dimen.media_size);
         this.binding.media.setAdapter(mMediaAdapter);
         GridManager.setupLayoutManager(this, this.binding.media, R.dimen.media_size);
@@ -551,6 +560,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             return;
         }
         final MucOptions mucOptions = mConversation.getMucOptions();
+        final Bookmark bookmark = mConversation.getBookmark();
         final User self = mucOptions.getSelf();
         String account;
         if (Config.DOMAIN_LOCK != null) {
@@ -558,7 +568,6 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         } else {
             account = mConversation.getAccount().getJid().asBareJid().toString();
         }
-
 
         this.binding.editMucNameButton.setVisibility((self.getAffiliation().ranks(MucOptions.Affiliation.OWNER) || mucOptions.canChangeSubject()) ? View.VISIBLE : View.GONE);
         this.binding.detailsAccount.setText(getString(R.string.using_account, account));
@@ -613,6 +622,16 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                 this.binding.mucInfoMam.setText(R.string.server_info_available);
             } else {
                 this.binding.mucInfoMam.setText(R.string.server_info_unavailable);
+            }
+            if (bookmark != null) {
+                this.binding.autojoinCheckbox.setVisibility(View.VISIBLE);
+                if (bookmark.autojoin()) {
+                    this.binding.autojoinCheckbox.setChecked(true);
+                } else {
+                    this.binding.autojoinCheckbox.setChecked(false);
+                }
+            } else {
+                this.binding.autojoinCheckbox.setVisibility(View.GONE);
             }
             if (self.getAffiliation().ranks(MucOptions.Affiliation.OWNER)) {
                 if (mAdvancedMode) {
