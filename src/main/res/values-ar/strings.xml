@@ -41,6 +41,7 @@
     <string name="unblock_contact_text">هل تريد إزالة الحظر عن %s والسماح لهم بمراسلتك؟</string>
     <string name="block_domain_text">حظر كل جهات الإتصال من %s ؟</string>
     <string name="unblock_domain_text">إزالة الحظر عن كل جهات الإتصال من %s ؟</string>
+    <string name="register_account">تسجيل حساب جديد على الخادم</string>
     <string name="cancel">إلغاء</string>
     <string name="add">إضافة</string>
     <string name="edit">تعديل</string>
