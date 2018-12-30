@@ -9,7 +9,7 @@
     <string name="action_secure">Conversation sécurisée</string>
     <string name="action_add_account">Ajouter un compte</string>
     <string name="action_edit_contact">Modifier le nom</string>
-    <string name="action_add_phone_book">Ajouter au carnet d\'adresses</string>
+    <string name="action_add_phone_book">Ajouter au carnet d’adresses</string>
     <string name="action_delete_contact">Retirer des contacts</string>
     <string name="action_block_contact">Bloquer le contact</string>
     <string name="action_unblock_contact">Débloquer le contact</string>
@@ -68,7 +68,7 @@
     <string name="problem_connecting_to_accounts">Impossible de se connecter aux comptes.</string>
     <string name="touch_to_fix">Appuyez pour gérer vos comptes.</string>
     <string name="attach_file">Joindre un fichier</string>
-    <string name="not_in_roster">Le contact n\'est pas dans votre carnet d\'adresses. Voulez-vous l\'y ajouter ?</string>
+    <string name="not_in_roster">Le contact n’est pas dans votre carnet d’adresses. Voulez-vous l’y ajouter ?</string>
     <string name="add_contact">Ajouter un contact</string>
     <string name="send_failed">Échec de l\'envoi.</string>
     <string name="preparing_image">Préparation de l\'image pour envoi...</string>
@@ -104,11 +104,11 @@
     <string name="pref_attachments">Pièces jointes</string>
     <string name="pref_notification_settings">Notification</string>
     <string name="pref_vibrate">Vibration</string>
-    <string name="pref_vibrate_summary">Vibrer lors de la réception d\'un message</string>
+    <string name="pref_vibrate_summary">Vibrer lors de la réception d’un nouveau message</string>
     <string name="pref_led">Notification LED</string>
-    <string name="pref_led_summary">Faire clignoter la LED lors de la réception d\'un message</string>
+    <string name="pref_led_summary">Faire clignoter la led lors de la réception d’un nouveau message</string>
     <string name="pref_sound">Sonnerie</string>
-    <string name="pref_sound_summary">Jouer un son lors de la réception d\'un message</string>
+    <string name="pref_sound_summary">Jouer un son lors de la réception d’un nouveau message</string>
     <string name="pref_send_crash">Envoyer les rapports de plantage</string>
     <string name="pref_confirm_messages">Confirmation de lecture</string>
     <string name="pref_confirm_messages_summary">Informer vos contacts quand vous avez reçu et lu leurs messages</string>
@@ -126,7 +126,7 @@
     <string name="error_not_an_image_file">Le fichier choisi n\'est pas une image</string>
     <string name="error_compressing_image">Une erreur s\'est produite en convertissant l\'image</string>
     <string name="error_file_not_found">Impossible de trouver le fichier</string>
-    <string name="error_io_exception">Erreur générale d\'E/S. Avez-vous encore de l\'espace libre?</string>
+    <string name="error_io_exception">Erreur générale d\'E/S. Avez-vous encore de l’espace libre ?</string>
     <string name="error_security_exception_during_image_copy">L\'application utilisée ne nous donne pas la permission de lire l\'image.\n\n<small>Utilisez une autre application pour choisir une image.</small></string>
     <string name="account_status_unknown">Inconnu</string>
     <string name="account_status_disabled">Désactivé temporairement</string>
@@ -166,7 +166,7 @@
     <string name="passwords_do_not_match">Les deux mots de passe ne correspondent pas.</string>
     <string name="invalid_jid">Cet identifiant n\'est pas valide</string>
     <string name="error_out_of_memory">Plus de mémoire disponible. L\'image est trop volumineuse.</string>
-    <string name="add_phone_book_text">Voulez-vous ajouter %s à votre carnet d\'adresses ?</string>
+    <string name="add_phone_book_text">Voulez-vous ajouter %s à votre carnet d’adresses ?</string>
     <string name="server_info_show_more">Infos sur le serveur</string>
     <string name="server_info_mam">XEP-0313 : MAM</string>
     <string name="server_info_carbon_messages">XEP-0280 : Copies carbone</string>
@@ -234,7 +234,7 @@
     <string name="error_publish_avatar_converting">Une erreur s\'est produite pendant la conversion de votre image.</string>
     <string name="error_saving_avatar">Impossible de stocker l\'avatar sur le disque</string>
     <string name="or_long_press_for_default">(Un appui long réinitialise le paramètre)</string>
-    <string name="error_publish_avatar_no_server_support">Votre serveur n\'autorise pas la publication d\'avatars</string>
+    <string name="error_publish_avatar_no_server_support">Votre serveur ne supporte pas la publication d’avatars</string>
     <string name="private_message">chuchoté</string>
     <string name="private_message_to">pour %s</string>
     <string name="send_private_message_to">Envoyer un message privé à %s</string>
@@ -255,7 +255,7 @@
     <string name="without_mutual_presence_updates"><b>Attention :</b> peut poser problème si l\'un des deux correspondants n\'a pas activé les mises à jour de disponibilité.\n\n<small>Vérifiez dans les détails du contact que vous y avez bien souscrit.</small></string>
     <string name="pref_security_settings">Sécurité</string>
     <string name="pref_allow_message_correction">Autoriser la correction</string>
-    <string name="pref_allow_message_correction_summary">Permet à vos contacts d\'éditer leurs messages rétroactivement</string>
+    <string name="pref_allow_message_correction_summary">Permet à vos contacts d’éditer leurs messages rétroactivement</string>
     <string name="pref_expert_options">Paramètres avancés</string>
     <string name="title_activity_about">À propos</string>
     <string name="pref_about_conversations_summary">Informations sur la version et les licences</string>
@@ -500,8 +500,8 @@
     <string name="welcome_text">… est un client XMPP/Jabber libre et sécure.</string>
     <string name="magic_create_text">Nous vous guiderons pendant toute la procédure de création d’un compte utilisateur avec un mot de passe aléatoire que vous pourrez utiliser ou modifier, au choix durant, la prochaine étape. \nEnsuite vous pourrez communiquer avec les utilisateur·trice·s des autres fournisseurs en leur transmettant votre identifiant complet de Jabber.</string>
     <string name="your_full_jid_will_be">Votre Jabber ID complet sera : %s</string>
-    <string name="create_account">Créer un compte</string>
-    <string name="welcome_advanced_mode">Mode avancé</string>
+    <string name="create_account">Création d’un nouveau compte</string>
+    <string name="welcome_advanced_mode">Mode expert</string>
     <string name="pick_your_username">Choisissez votre nom d\'utilisateur</string>
     <string name="pref_manually_change_presence">Gérer la disponibilité manuellement</string>
     <string name="status_message">Message de statut</string>
