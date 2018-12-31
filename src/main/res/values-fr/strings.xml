@@ -320,6 +320,7 @@
     <string name="are_you_sure_verify_fingerprint">Êtes-vous sûr de vouloir vérifier l’empreinte OTR de votre contact ?</string>
     <string name="pref_show_dynamic_tags">Afficher les tags dynamiques</string>
     <string name="pref_show_dynamic_tags_summary">Afficher des tags en lecture seule en dessous des contacts.</string>
+    <string name="conference_creation_failed">Échec de la création du groupe de discussion !</string>
     <string name="account_image_description">Avatar du compte</string>
     <string name="copy_otr_clipboard_description">Copier l’empreinte OTR dans le presse-papier</string>
     <string name="copy_omemo_clipboard_description">Copier l’empreinte OMEMO dans le presse-papier</string>
@@ -359,13 +360,16 @@
     <string name="remove_from_room">Retirer du groupe de discussion</string>
     <string name="could_not_change_affiliation">Impossible de changer l’affiliation de %s</string>
     <string name="ban_from_conference">Bannir du groupe de discussion</string>
+    <string name="removing_from_public_conference">Vous essayez d’éjecter %s d’une conférence publique. La seule façon de le faire consiste à bannir cet utilisateur définitivement.</string>
     <string name="ban_now">Bannir maintenant</string>
     <string name="could_not_change_role">Impossible de changer le rôle de %s</string>
+    <string name="public_conference">Conférence accessible publiquement</string>
     <string name="conference_options">Options du groupe de discussion</string>
     <string name="members_only">Privé, membres uniquement</string>
     <string name="non_anonymous">Non anonyme</string>
     <string name="moderated">Modéré</string>
     <string name="you_are_not_participating">Vous ne participez pas</string>
+    <string name="could_not_modify_conference_options">Impossible de modifier les options du groupe de discussion</string>
     <string name="never">Jamais</string>
     <string name="until_further_notice">Jusqu’à nouvel ordre</string>
     <string name="pref_input_options">Saisie</string>
@@ -418,6 +422,7 @@
     <string name="download_failed_could_not_connect">Échec du téléchargement : impossible de se connecter à l’hôte</string>
     <string name="download_failed_could_not_write_file">Échec du téléchargement : Écriture impossible</string>
     <string name="action_check_update">Vérifier les mises à jour</string>
+    <string name="title_activity_updater">Mise à jour du service</string>
     <string name="update_available">Version %1$s est disponible.\n\nTaille du fichier : %2$s\n\nMettre à jour maintenant vers %1$s ?</string>
     <string name="remind_later">ultérieurement</string>
     <string name="update">mettre à jour</string>
@@ -517,6 +522,7 @@
     <string name="device_does_not_support_battery_op">Les optimisations de batterie ne peuvent pas être désactivées sur votre appareil</string>
     <string name="share">Partager</string>
     <string name="share_location">Partager ma position</string>
+    <string name="location_sharing_disabled">Le partage de position a été désactivé dans les paramètres</string>
     <string name="locating">En cours de localisation …</string>
     <string name="action_end_conversation_muc">Quitter le groupe de discussion</string>
     <string name="show_password">Afficher le mot de passe</string>
@@ -529,6 +535,7 @@
     <string name="import_database">Importer une sauvegarde</string>
     <string name="invite_again">Inviter à nouveau</string>
     <string name="inviteUser_Subject">vous a invité via</string>
+    <string name="InviteText">Salut,\n\nl’utilisateur·rice %s vous a invité sur Pix-Art Messenger. Si vous utilisez Android, veuillez cliquer sur le lien suivant pour continuer …</string>
     <string name="pref_broadcast_last_activity">Diffuser la dernière action utilisateur</string>
     <string name="pref_broadcast_last_activity_summary">Informer tous vos contacts lorsque vous utitlisez Pix-Art Messenger</string>
     <string name="invite_user">Inviter à Pix-Art Messenger</string>
@@ -537,7 +544,10 @@
     <string name="this_device_is_no_longer_in_use">Cet appareil n\'est plus utilisé</string>
     <string name="import_canceled">Importation annulée</string>
     <string name="Password_wrong">Mot de passe erroné, essayez à nouveau</string>
+    <string name="enter_account_password">Veuillez saisir le mot de passe de votre compte pour pouvoir importer votre sauvegarde.</string>
     <string name="please_wait">Veuillez patienter …</string>
+    <string name="databaseimport_started">La sauvegarde sera importée. Ceci peut prendre un peu de temps.</string>
+    <string name="pref_export_plain_text_logs">Exporter les journaux des conversations dans un format lisible</string>
     <string name="payment_required">Paiement requis</string>
     <string name="missing_internet_permission">Permission Internet manquante</string>
     <string name="me">Moi</string>
