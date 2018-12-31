@@ -850,4 +850,9 @@
     <string name="no_market_app_installed">Kein App-Store installiert.</string>
     <string name="group_chat_will_make_your_jabber_id_public">Dieser Gruppenchat wird deine Jabber-ID öffentlich zugänglich machen</string>
     <string name="ebook">E-Book</string>
+    <string name="your_name">Dein Name</string>
+    <string name="enter_your_name">Gib deinen Namen ein</string>
+    <string name="enter_your_name_instructions">Bitte gib deinen Nickname ein, der für deine Kontakte sichtbar sein wird.</string>
+    <string name="no_name_set_instructions">Keinen Nickname festgelegt.</string>
+    <string name="autojoin_groupchat">Diesem Gruppenchat automatisch beitreten</string>
 </resources>
