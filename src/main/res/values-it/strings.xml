@@ -850,4 +850,9 @@
     <string name="no_market_app_installed">Non ci sono app store installati.</string>
     <string name="group_chat_will_make_your_jabber_id_public">Questa conversazione di gruppo renderà il tuo jabber ID pubblico</string>
     <string name="ebook">e-book</string>
+    <string name="your_name">Il tuo nome</string>
+    <string name="enter_your_name">Inserisci il tuo nome</string>
+    <string name="enter_your_name_instructions">Per favore inserisci il tuo nome che sarà visibile ai tuoi contatti.</string>
+    <string name="no_name_set_instructions">Nessun nome impostato.</string>
+    <string name="autojoin_groupchat">Unisciti automaticamente a questa conversazione di gruppo</string>
 </resources>
