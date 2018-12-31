@@ -477,6 +477,9 @@
     <string name="pref_picture_compression_summary">Redimensionner et compresser les images</string>
     <string name="pref_video_compression">Compression des vidéos</string>
     <string name="pref_video_compression_summary">Redimensionner et compresser les vidéos</string>
+    <string name="video_low">basse (144p)</string>
+    <string name="video_mid">moyenne (360p)</string>
+    <string name="video_high">haute (720p)</string>
     <string name="always">Toujours</string>
     <string name="battery_optimizations_enabled">Optimisations de batterie activées</string>
     <string name="battery_optimizations_enabled_explained">Votre appareil applique sur Pix-Art Messenger des optimisations de batterie très strictes qui pourraient provoquer des retards dans les notifications, voire des pertes de messages.\nNous vous recommandons de les désactiver.</string>
@@ -614,6 +617,7 @@
         <item quantity="other">%d mois</item>
     </plurals>
     <string name="today">Aujourd’hui</string>
+    <string name="pref_use_max_brightness">Luminosité maximale</string>
     <string name="block_jabber_id">Bloquer l’ID Jabber</string>
     <string name="corresponding_conversations_closed">Conversations correspondantes fermées.</string>
     <string name="contact_blocked_past_tense">Contact bloqué.</string>
@@ -630,6 +634,9 @@
     <string name="pref_use_tor">Connexion via Tor</string>
     <string name="pref_use_tor_summary">Rediriger toutes les connexions via le réseau Tor. Nécessite Orbot.</string>
     <string name="pref_connection_options">Connexion</string>
+    <string name="image_low">basse (720p)</string>
+    <string name="image_mid">moyenne (1920p)</string>
+    <string name="image_high">haute (3840p)</string>
     <string name="last_seen_just_away">récemment</string>
     <string name="send_message">Envoyer le message</string>
     <string name="pref_show_connection_options_summary">Affiche le nom d’hôte et le port lors du paramétrage d’un compte</string>
@@ -665,6 +672,8 @@
     <string name="mtm_connect_anyway">Voulez-vous vous connecter malgré tout ?</string>
     <string name="mtm_cert_details">Détails du certificat :</string>
     <string name="once">Une fois</string>
+    <string name="pref_scroll_to_bottom">Défiler vers le bas</string>
+    <string name="no_camera_permission">Pix-Art Messenger a besoin d’accéder à l’appareil photo</string>
     <string name="edit_status_message_title">Modifier le message du Statut</string>
     <string name="edit_status_message">Modifier Message de Statut</string>
     <string name="disable_encryption">Désactiver le chiffrement</string>
@@ -734,4 +743,6 @@
     <string name="install_orbot">Installer Orbot</string>
     <string name="start_orbot">Démarrer Orbot</string>
     <string name="ebook">e-book</string>
+    <string name="your_name">Votre nom</string>
+    <string name="enter_your_name">Saisissez votre nom</string>
 </resources>
