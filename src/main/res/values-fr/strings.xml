@@ -101,6 +101,7 @@
     <string name="pref_general">Général</string>
     <string name="pref_accept_files_wifi">Accepter les fichier en mode Wi-Fi</string>
     <string name="pref_accept_files_mobile">Accepter les fichier en mode connexion de données mobiles</string>
+    <string name="pref_accept_files_mobileroaming">Accepter les fichiers en mode roaming mobile</string>
     <string name="pref_attachments">Pièces jointes</string>
     <string name="pref_notification_settings">Notification</string>
     <string name="pref_vibrate">Vibration</string>
@@ -269,8 +270,12 @@
     <string name="pref_use_indicate_received_summary">Les messages reçus seront marqués d’une coche verte, si supporté</string>
     <string name="pref_use_send_button_to_indicate_status_summary">Le bouton Envoyer change de couleur pour indiquer le statut du contact.</string>
     <string name="pref_expert_options_other">Autres</string>
+    <string name="pref_autojoin">Synchroniser les favoris</string>
     <string name="toast_message_otr_fingerprint">Empreinte OTR copiée dans le presse-papier !</string>
     <string name="toast_message_omemo_fingerprint">Empreinte OMEMO copiée dans le presse-papier !</string>
+    <string name="conference_banned">Vous êtes banni de cette conférence</string>
+    <string name="conference_members_only">Cette conférence est autorisée aux membres uniquement</string>
+    <string name="conference_kicked">Vous avez été expulsé de cette conférence</string>
     <string name="using_account">avec le compte %s</string>
     <string name="checking_x">Vérification de %s sur l’hôte HTTP</string>
     <string name="not_connected_try_again">Vous n\'êtes pas connecté. Essayez plus tard.</string>
@@ -369,6 +374,7 @@
     <string name="non_anonymous">Non anonyme</string>
     <string name="moderated">Modéré</string>
     <string name="you_are_not_participating">Vous ne participez pas</string>
+    <string name="modified_conference_options">Les options du groupe de discussions ont été modifiées !</string>
     <string name="could_not_modify_conference_options">Impossible de modifier les options du groupe de discussion</string>
     <string name="never">Jamais</string>
     <string name="until_further_notice">Jusqu’à nouvel ordre</string>
@@ -414,6 +420,7 @@
     <string name="search_groups">Rechercher des groupes de discussion</string>
     <string name="choose_quick_action">Sélectionner l’action rapide</string>
     <string name="send_private_message">Envoyer un message privé</string>
+    <string name="user_has_left_conference">%1$s a quitté la discussion !</string>
     <string name="username">Identifiant</string>
     <string name="username_hint">Identifiant</string>
     <string name="invalid_username">Cet identifiant n\'est pas valide</string>
@@ -670,6 +677,8 @@
     <string name="server_info_partial">partiel</string>
     <string name="install_update">Installer la mise à jour ?</string>
     <string name="no_application_found_to_open_link">Aucune application disponible pour ouvrir le lien</string>
+    <string name="contacts_have_read_up_to_this_point">%s ont tout lu jusqu’ici</string>
+    <string name="contact_has_read_up_to_this_point">%s a tout lu jusqu’ici</string>
     <string name="pref_warn_unencrypted_chat">Avertir lorsque la discussion n’est pas chiffrée</string>
     <string name="pref_use_bundled_emoji">Utiliser les émojis intégrés</string>
     <string name="invalid_muc_nick">Psœudonyme invalide</string>
