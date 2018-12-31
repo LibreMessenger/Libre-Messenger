@@ -848,4 +848,6 @@
     <string name="no_market_app_installed">Aplicación no instalada.</string>
     <string name="group_chat_will_make_your_jabber_id_public">Esta conversación en grupo publicará tu identificador Jabber</string>
     <string name="ebook">e-book (libro electrónico)</string>
+    <string name="your_name">Tu nombre</string>
+    <string name="autojoin_groupchat">Unirse automáticamente a este grupo de chat</string>
 </resources>
