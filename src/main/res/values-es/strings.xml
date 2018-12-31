@@ -841,6 +841,7 @@
     <string name="device_does_not_support_unknown_source_op">Tu dispositivo no soporta instalar aplicaciones desde orígenes desconocidos.</string>
     <string name="reject_request">Rechazar petición</string>
     <string name="error_message_copied_to_clipboard">Mensaje de error copiado al portapapeles</string>
+    <string name="pref_screen_security_summary">Tratar el contenido como seguro y evitar que aparezca en capturas de pantalla.</string>
     <string name="pref_screen_security">Capturas de pantalla no permitidas</string>
     <string name="omemo_decryption_failed">El descifrado del mensaje OMEMO ha fallado.</string>
     <string name="install_orbot">Instalar Orbot</string>
@@ -849,5 +850,8 @@
     <string name="group_chat_will_make_your_jabber_id_public">Esta conversación en grupo publicará tu identificador Jabber</string>
     <string name="ebook">e-book (libro electrónico)</string>
     <string name="your_name">Tu nombre</string>
+    <string name="enter_your_name">Escribe tu nombre</string>
+    <string name="enter_your_name_instructions">Por favor, escribe tu alias que será visible para tus contactos.</string>
+    <string name="no_name_set_instructions">Alias no configurado.</string>
     <string name="autojoin_groupchat">Unirse automáticamente a este grupo de chat</string>
 </resources>
