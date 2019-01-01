@@ -276,6 +276,7 @@
     <string name="conference_banned">Vous êtes banni de cette conférence</string>
     <string name="conference_members_only">Cette conférence est autorisée aux membres uniquement</string>
     <string name="conference_kicked">Vous avez été expulsé de cette conférence</string>
+    <string name="conference_shutdown">Le groupe de discussion n’existe plus</string>
     <string name="using_account">avec le compte %s</string>
     <string name="checking_x">Vérification de %s sur l’hôte HTTP</string>
     <string name="not_connected_try_again">Vous n\'êtes pas connecté. Essayez plus tard.</string>
@@ -496,6 +497,7 @@
     <string name="battery_optimizations_enabled">Optimisations de batterie activées</string>
     <string name="battery_optimizations_enabled_explained">Votre appareil applique sur Pix-Art Messenger des optimisations de batterie très strictes qui pourraient provoquer des retards dans les notifications, voire des pertes de messages.\nNous vous recommandons de les désactiver.</string>
     <string name="battery_optimizations_enabled_dialog">Votre appareil applique sur Pix-Art Messenger des optimisations de batterie très strictes qui pourraient provoquer des retards dans les notifications, voire des pertes de messages.\nVous allez maintenant avoir la possibilité de les désactiver.</string>
+    <string name="install_from_unknown_sources_disabled">L’nstallation à partir de sources inconnues a été désactivée</string>
     <string name="disable">Désactiver</string>
     <string name="selection_too_large">La zone sélectionnée est trop grande</string>
     <string name="cancel_update">Annuler la mise à jour ?</string>
@@ -703,6 +705,7 @@
     <string name="default_off">Désactivé par défaut</string>
     <string name="pref_theme_light">Thème clair</string>
     <string name="pref_theme_dark">Thème sombre</string>
+    <string name="pref_theme_options_summary">Sélectionner la palette de couleurs</string>
     <string name="pref_theme_options">Thème</string>
     <string name="chooce_account">Choisir un compte</string>
     <string name="pref_font_size">Taille de la police</string>
@@ -764,4 +767,6 @@
     <string name="ebook">e-book</string>
     <string name="your_name">Votre nom</string>
     <string name="enter_your_name">Saisissez votre nom</string>
+    <string name="no_name_set_instructions">Aucun psœudonyme n’a été spécifié.</string>
+    <string name="autojoin_groupchat">Rejoindre automatiquement ce groupe de discussion</string>
 </resources>
