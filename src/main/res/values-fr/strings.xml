@@ -371,6 +371,7 @@
     <string name="ban_now">Bannir maintenant</string>
     <string name="could_not_change_role">Impossible de changer le rôle de %s</string>
     <string name="public_conference">Conférence accessible publiquement</string>
+    <string name="private_conference">Privé, réservé aux membres du groupe de discussion uniquement</string>
     <string name="conference_options">Options du groupe de discussion</string>
     <string name="members_only">Privé, membres uniquement</string>
     <string name="non_anonymous">Non anonyme</string>
@@ -385,6 +386,7 @@
     <string name="pref_enter_is_send_summary">Utiliser la touche Entrée pour envoyer un message.</string>
     <string name="pref_display_enter_key">Afficher la touche Entrée</string>
     <string name="pref_display_enter_key_summary">Remplacer la touche Émoticônes par une touche Entrée.</string>
+    <string name="audio">audio</string>
     <string name="video">vidéo</string>
     <string name="image">image</string>
     <string name="pdf_document">document PDF</string>
@@ -536,6 +538,7 @@
     <string name="location_sharing_disabled">Le partage de position a été désactivé dans les paramètres</string>
     <string name="locating">En cours de localisation …</string>
     <string name="action_end_conversation_muc">Quitter le groupe de discussion</string>
+    <string name="leave_conference_warning">Désirez-vous quitter ce groupe de discussion ? Vous ne serez plus notifié de l’arrivée des nouveaux messages jusqu’à ce que vous rejoignez la conférence.</string>
     <string name="show_password">Afficher le mot de passe</string>
     <string name="registration_please_wait">L’enregistrement a échoué : Réessayer plus tard</string>
     <string name="registration_password_too_weak">Échec de l’enregistrement : le mot de passe n’est pas assez fort</string>
@@ -652,6 +655,7 @@
     <string name="presence_offline">Hors ligne</string>
     <string name="block_stranger">Bloquer l’inconnu</string>
     <string name="block_entire_domain">Bloquer le domaine entier</string>
+    <string name="pref_use_auto_rotate">Rotation des médias en mode plein écran</string>
     <string name="pref_use_tor">Connexion via Tor</string>
     <string name="pref_use_tor_summary">Rediriger toutes les connexions via le réseau Tor. Nécessite Orbot.</string>
     <string name="pref_connection_options">Connexion</string>
@@ -660,6 +664,7 @@
     <string name="image_high">haute (3840p)</string>
     <string name="last_seen_just_away">récemment</string>
     <string name="send_message">Envoyer le message</string>
+    <string name="send_failed_resend">échec de livraison, renvoi en cours …</string>
     <string name="pref_show_connection_options_summary">Affiche le nom d’hôte et le port lors du paramétrage d’un compte</string>
     <string name="pref_show_connection_options">Paramètres de connexion avancés</string>
     <string name="retry_decryption">Nouvelle tentative de déchiffrement</string>
@@ -692,17 +697,23 @@
     <string name="title_activity_share_via_account">Partager via le compte</string>
     <string name="private_messages_are_disabled">Les messages privés ont étés désactivés</string>
     <string name="conference_unknown_error">Vous ne faîtes plus partie de ce groupe</string>
+    <string name="snooze">Silencer</string>
     <string name="huawei_protected_apps">Applications protégées</string>
     <string name="pref_enable_multi_accounts_title">Activer les comptes multiples</string>
     <string name="mtm_accept_cert">Accepter ce certificat inconnu ?</string>
+    <string name="mtm_trust_anchor">Le certificat serveur n’est signé par une Autorité de Certification connue.</string>
     <string name="mtm_connect_anyway">Voulez-vous vous connecter malgré tout ?</string>
     <string name="mtm_cert_details">Détails du certificat :</string>
     <string name="once">Une fois</string>
+    <string name="qr_code_scanner_needs_access_to_camera">Le scanner de code QR a besoin d’accéder à votre appareil photo</string>
+    <string name="pref_scroll_to_bottom_summary">Défiler en bas une fois le message est envoyé</string>
     <string name="pref_scroll_to_bottom">Défiler vers le bas</string>
     <string name="no_camera_permission">Pix-Art Messenger a besoin d’accéder à l’appareil photo</string>
     <string name="edit_status_message_title">Modifier le message du Statut</string>
     <string name="edit_status_message">Modifier Message de Statut</string>
+    <string name="pref_automatically_delete_messages">Suppression automatique des messages</string>
     <string name="disable_encryption">Désactiver le chiffrement</string>
+    <string name="error_trustkey_device_list">Impossible d’obtenir la liste des appareils</string>
     <string name="disable_now">Désactiver maintenant</string>
     <string name="draft">Brouillon :</string>
     <string name="pref_omemo_setting">Chiffrement OMEMO</string>
