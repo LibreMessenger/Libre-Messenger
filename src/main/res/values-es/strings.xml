@@ -705,7 +705,7 @@
     <string name="server_info_partial">Parcial</string>
     <string name="pref_show_foreground_service_summary">Algunos dispositivos Android cerrarán algunas aplicaciones al cabo de un tiempo y no podrás recibir nuevos mensajes. Si tiene estos problemas, intente activar el servicio de primer plano. Pero tenga en cuenta que tendrá una notificación permanente con esta opción marcada.</string>
     <string name="pref_show_foreground_service">Usar servicio en primer plano</string>
-    <string name="update_service">Pix-Art Mensajero servicio de actualización</string>
+    <string name="update_service">Servicio de actualización de Pix-Art Messenger</string>
     <string name="install_update">¿Instalar actualización?</string>
     <string name="highlight_in_muc">menciona usuario</string>
     <string name="no_application_found_to_open_link">No se ha encontrado aplicación para abrir la página web</string>
