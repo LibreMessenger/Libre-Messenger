@@ -757,11 +757,13 @@
     <string name="no_location_permission">Pix-Art Messenger a besoin d’accéder aux services de géolocalisation</string>
     <string name="pref_show_record_voice_btn">Afficher le bouton d’enregisrement de la voix</string>
     <string name="phone_book">Carnet d’adresses</string>
+    <string name="unable_to_save_recording">Impossible de sauvegarder l’enregistrement</string>
     <string name="foreground_service_channel_name">Service au premier plan</string>
     <string name="error_channel_name">Problèmes de connexion</string>
     <string name="notification_group_messages">Messages</string>
     <string name="messages_channel_name">Messages</string>
     <string name="pref_more_notification_settings">Paramètres des notifications</string>
+    <string name="pref_more_notification_settings_summary">Importance, Sonnerie, Vibreur</string>
     <string name="video_compression_channel_name">Compression vidéo</string>
     <string name="backup_channel_name">Sauvegarde de base de données</string>
     <string name="app_update_channel_name">Mise à jour de l’application</string>
@@ -772,17 +774,22 @@
     <string name="action_delete">Supprimer</string>
     <string name="delete_file_dialog">Supprimer le fichier</string>
     <string name="cancelled">annulé</string>
+    <string name="remote_server_timeout">Délai d’attente dépassé lors de la connexion au serveur distant</string>
+    <string name="already_drafting_message">Vous êtes déjà entrain de rédiger un brouillon.</string>
     <string name="bad_key_for_encryption">Mauvaise clé pour le chiffrement.</string>
     <string name="delete_message_dialog">Supprimer le message</string>
     <string name="feature_not_implemented">Fonctionnalité non implémentée</string>
     <string name="reject_request">Refuser la demande</string>
+    <string name="error_message_copied_to_clipboard">Message d’erreur copié vers le presse-papier</string>
     <string name="pref_screen_security">Interdire les captures d’écran</string>
     <string name="omemo_decryption_failed">Échec de déchiffrement du message OMEMO.</string>
     <string name="install_orbot">Installer Orbot</string>
     <string name="start_orbot">Démarrer Orbot</string>
+    <string name="group_chat_will_make_your_jabber_id_public">Ce groupe de discussion rendra visible publiquement votre ID Jabber</string>
     <string name="ebook">e-book</string>
     <string name="your_name">Votre nom</string>
     <string name="enter_your_name">Saisissez votre nom</string>
+    <string name="enter_your_name_instructions">Veuillez saisir le psœudonyme que vous désirez rendre visible à vos contacts.</string>
     <string name="no_name_set_instructions">Aucun psœudonyme n’a été spécifié.</string>
     <string name="autojoin_groupchat">Rejoindre automatiquement ce groupe de discussion</string>
 </resources>
