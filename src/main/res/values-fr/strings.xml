@@ -270,7 +270,7 @@
     <string name="title_pref_enable_quiet_hours">Activer les heures tranquilles</string>
     <string name="pref_quiet_hours_summary">Les notifications seront muettes pendant les heures tranquilles.</string>
     <string name="pref_use_send_button_to_indicate_status">Statut sur le bouton Envoyer</string>
-    <string name="pref_use_colored_names_to_indicate_status">Es noms colorés pour indiquer les statuts</string>
+    <string name="pref_use_colored_names_to_indicate_status">Noms colorés pour indiquer les statuts</string>
     <string name="pref_use_indicate_received">Accusés de réception</string>
     <string name="pref_use_indicate_received_summary">Les messages reçus seront marqués d’une coche verte, si supporté</string>
     <string name="pref_use_send_button_to_indicate_status_summary">Le bouton Envoyer change de couleur pour indiquer le statut du contact.</string>
@@ -740,6 +740,7 @@
     <string name="pref_theme_options">Thème</string>
     <string name="chooce_account">Choisir un compte</string>
     <string name="pref_font_size">Taille de la police</string>
+    <string name="pref_font_size_summary">La taille relative de la police de caractères utilisée dans l’app.</string>
     <string name="small">Petite</string>
     <string name="medium">Normale</string>
     <string name="large">Grande</string>
