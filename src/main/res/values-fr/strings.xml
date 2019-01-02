@@ -101,8 +101,11 @@
     <string name="no_pgp_keys">Aucune clef OpenPGP n\'a été trouvée.</string>
     <string name="pref_general">Général</string>
     <string name="pref_accept_files_wifi">Accepter les fichier en mode Wi-Fi</string>
+    <string name="pref_accept_files_summary_wifi">En mode Wi-Fi, accepter automatiquement les fichiers d’une taille inférieure à …</string>
     <string name="pref_accept_files_mobile">Accepter les fichier en mode connexion de données mobiles</string>
+    <string name="pref_accept_files_summary_mobile">En mode données mobiles, accepter automatiquement les fichiers d’une taille inférieure à …</string>
     <string name="pref_accept_files_mobileroaming">Accepter les fichiers en mode roaming mobile</string>
+    <string name="pref_accept_files_summary_mobileroaming">En mode roaming mobile, accepter automatiquement les fichiers d’une taille inférieure à …</string>
     <string name="pref_attachments">Pièces jointes</string>
     <string name="pref_notification_settings">Notification</string>
     <string name="pref_vibrate">Vibration</string>
@@ -267,9 +270,11 @@
     <string name="title_pref_enable_quiet_hours">Activer les heures tranquilles</string>
     <string name="pref_quiet_hours_summary">Les notifications seront muettes pendant les heures tranquilles.</string>
     <string name="pref_use_send_button_to_indicate_status">Statut sur le bouton Envoyer</string>
+    <string name="pref_use_colored_names_to_indicate_status">Es noms colorés pour indiquer les statuts</string>
     <string name="pref_use_indicate_received">Accusés de réception</string>
     <string name="pref_use_indicate_received_summary">Les messages reçus seront marqués d’une coche verte, si supporté</string>
     <string name="pref_use_send_button_to_indicate_status_summary">Le bouton Envoyer change de couleur pour indiquer le statut du contact.</string>
+    <string name="pref_use_colored_names_to_indicate_status_summary">Colorer les noms des contacts pour indiquer leurs statut</string>
     <string name="pref_expert_options_other">Autres</string>
     <string name="pref_autojoin">Synchroniser les favoris</string>
     <string name="toast_message_otr_fingerprint">Empreinte OTR copiée dans le presse-papier !</string>
@@ -512,6 +517,7 @@
     <string name="no_participants">Aucun participant</string>
     <string name="correct_message">Corriger le message</string>
     <string name="send_corrected_message">Envoyer le message corrigé</string>
+    <string name="no_keys_just_confirm">Vous faites déjà confiance à ce contact. En sélectionnant « Terminé » vous confirmerez seulement que %s est membre de cette conférence.</string>
     <string name="contacts_have_no_pgp_keys">Pix-Art Messenger ne peut pas chiffrer votre message car vos contacts ne communiquent pas leur clef publique.\n\n<small>Demandez-leur de configurer OpenPGP.</small></string>
     <string name="this_account_is_disabled">Vous avez désactivé ce compte</string>
     <string name="security_error_invalid_file_access">Erreur de sécurité : accès fichier non-valide</string>
@@ -525,6 +531,7 @@
     <string name="welcome_advanced_mode">Mode expert</string>
     <string name="pick_your_username">Choisissez votre nom d’utilisateur</string>
     <string name="pref_manually_change_presence">Gérer la disponibilité manuellement</string>
+    <string name="pref_manually_change_presence_summary">Paramètre votre disponibilité lorsque vous éditez votre message de statut.</string>
     <string name="status_message">Message de statut</string>
     <string name="presence_chat">Disponible</string>
     <string name="presence_online">En ligne</string>
@@ -557,6 +564,7 @@
     <string name="send_image">Envoyer l’image ?</string>
     <string name="this_device_is_no_longer_in_use">Cet appareil n\'est plus utilisé</string>
     <string name="import_canceled">Importation annulée</string>
+    <string name="Import_failed">Échec d’import de la base de données, impossible d’effectuer l’importation</string>
     <string name="Password_wrong">Mot de passe erroné, essayez à nouveau</string>
     <string name="enter_account_password">Veuillez saisir le mot de passe de votre compte pour pouvoir importer votre sauvegarde.</string>
     <string name="please_wait">Veuillez patienter …</string>
