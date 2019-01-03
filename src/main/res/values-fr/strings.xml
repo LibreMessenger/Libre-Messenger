@@ -752,7 +752,7 @@
     <string name="pref_theme_options_summary">Sélectionner la palette de couleurs</string>
     <string name="pref_theme_options">Thème</string>
     <string name="chooce_account">Choisir un compte</string>
-    <string name="pref_font_size">Taille de la police</string>
+    <string name="pref_font_size">Taille de la police de caractères</string>
     <string name="pref_font_size_summary">La taille relative de la police de caractères utilisée dans l’app.</string>
     <string name="small">Petite</string>
     <string name="medium">Normale</string>
