@@ -45,6 +45,7 @@
     <string name="contact_blocked">المراسل محظور</string>
     <string name="blocked">تم حجبه</string>
     <string name="register_account">تسجيل حساب جديد على الخادم</string>
+    <string name="change_password_on_server">تعديل الكلمة السرية على الخادم</string>
     <string name="share_with">شارك بواسطة…</string>
     <string name="start_conversation">ابدأ محادثة</string>
     <string name="invite_contact">دعوة مُراسِل</string>
@@ -62,6 +63,8 @@
     <string name="send_now">ارسل الآن</string>
     <string name="send_never">لا تسأل مجددًا</string>
     <string name="problem_connecting_to_account">لا يمكن الاتصال بالحساب</string>
+    <string name="problem_connecting_to_accounts">السماح بتوصيل عدة حسابات</string>
+    <string name="touch_to_fix">إضغط هنا لإدارة حساباتك</string>
     <string name="attach_file">إرفاق ملف</string>
     <string name="add_contact">إضافة مُراسِل</string>
     <string name="delete_messages">حذف الرسائل</string>
@@ -88,6 +91,7 @@
     <string name="account_status_regis_fail">فشلت عملية تسجيل الحساب</string>
     <string name="account_status_regis_conflict">اسم المستخدم بالفعل قيد الاستخدام</string>
     <string name="account_status_regis_success">اكتملت عملية التسجيل</string>
+    <string name="account_status_regis_not_sup">هذا الخادم لا يسمح بإنشاء حسابات جديدة</string>
     <string name="account_status_policy_violation">انتهاك للشروط</string>
     <string name="encryption_choice_otr">OTR</string>
     <string name="encryption_choice_pgp">OpenPGP</string>
@@ -136,6 +140,7 @@
     <string name="error_publish_avatar_server_reject">رفض الخادم منشورك</string>
     <string name="private_message_to">إلى %s</string>
     <string name="connect">اتصل</string>
+    <string name="account_already_exists">هذا الحساب موجود بالفعل</string>
     <string name="next">التالي</string>
     <string name="skip">تخطي</string>
     <string name="disable_notifications">تعطيل الإشعارات</string>
@@ -174,9 +179,12 @@
     <string name="account_image_description">الصورة الرمزية للحساب</string>
     <string name="clear_other_devices">احذف الأجهزة</string>
     <string name="distrust_omemo_key">سحب الثقة في الجهاز</string>
+    <string name="password_changed">تم تغيير الكلمة السرية!</string>
+    <string name="could_not_change_password">لا يمكن تغيير الكلمة السرية</string>
     <string name="change_password">تغيير الكلمة السرية</string>
     <string name="current_password">الكلمة السرية الحالية</string>
     <string name="new_password">كلمة السر الجديدة</string>
+    <string name="password_should_not_be_empty">لا يجب ترك حقل الكلمة السرية فارغا</string>
     <string name="member">عضو</string>
     <string name="advanced_mode">الوضع المتقدم</string>
     <string name="grant_membership">منحة صفة العضوية</string>
@@ -226,6 +234,7 @@
     <string name="no">لا</string>
     <string name="no_accounts">(ليس هناك أي حساب نشط)</string>
     <string name="this_field_is_required">هذة الخانة ضرورية</string>
+    <string name="this_account_is_disabled">لقد قمت بتعطيل هذا الحساب</string>
     <string name="mgmt_account_reconnect">إعادة الاتصال</string>
     <string name="welcome_text">… هو تطبيق محادثة حر و آمن لجابر و XMPP.</string>
     <string name="create_account">إنشاء حساب جديد</string>
@@ -236,10 +245,12 @@
     <string name="presence_away">غائب</string>
     <string name="presence_xa">غير متوفر</string>
     <string name="presence_dnd">مشغول</string>
+    <string name="secure_password_generated">تم توليد كلمة سرية آمنة</string>
     <string name="share">شارك</string>
     <string name="share_location">مشاركة الموقع</string>
     <string name="action_end_conversation_muc">مغادرة المحادثة الجماعية</string>
     <string name="show_password">إظهار الكلمة السرية</string>
+    <string name="registration_password_too_weak">فشلت عملية إنشاء الحساب: إنّ الكلمة السرية ضعيفة</string>
     <string name="create_conference">انشاء محادثة جماعية</string>
     <string name="conference_subject">الموضوع</string>
     <string name="import_text">إنّ جهازك يحتوي على نسخة احتياطية يمكنك استيرادها.\nسوف يتم إعادة تشغيل تطبيقك بعد عملية الإسترجاع. هل تريد استعادة تلك النسخة الإحتياطية؟ </string>
@@ -247,9 +258,12 @@
     <string name="invite_again">إعادة دعوته مجددا</string>
     <string name="inviteUser_Subject">قام بدعوتك عبر</string>
     <string name="invite_user">الدعوة إلى بيكس آرت ماسنجر</string>
+    <string name="Password_wrong">الكلمة السرية خاطئة، أعد المحاولة</string>
+    <string name="enter_account_password">يرجى ادخال الكلمة السرية الخاصة بحسابك قصد استيراد نسختك الإحتياطية.</string>
     <string name="please_wait">يُرجى الانتظار…</string>
     <string name="me">أنا</string>
     <string name="allow">سماح</string>
+    <string name="unable_to_update_account">تعذر تحديث حسابك</string>
     <string name="copy_to_clipboard">انسخ إلى الحافظة</string>
     <string name="message_copied_to_clipboard">تم نسخ الرسالة إلى الحافظة</string>
     <string name="share_as_barcode">شاركه كرمز كيو آر</string>
@@ -268,8 +282,10 @@
     <string name="action_take_video">تسجيل فيديو</string>
     <string name="yesterday">البارحة</string>
     <string name="server_info_partial">جزئيا</string>
+    <string name="title_activity_share_via_account">شاركه عبر حساب</string>
     <string name="destroy_muc">حذف المحادثة الجماعية</string>
     <string name="conference_unknown_error">أنت لم تعد مِن ضمن فريق المحادثة هذا</string>
+    <string name="pref_enable_multi_accounts_title">السماح باستخدام عدة حسابات</string>
     <string name="mtm_cert_details">تفاصيل الشهادة:</string>
     <string name="once">مرة واحدة</string>
     <string name="draft">المسودة:</string>
