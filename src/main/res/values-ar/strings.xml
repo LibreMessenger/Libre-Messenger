@@ -227,8 +227,10 @@
     <string name="no_accounts">(ليس هناك أي حساب نشط)</string>
     <string name="this_field_is_required">هذة الخانة ضرورية</string>
     <string name="mgmt_account_reconnect">إعادة الاتصال</string>
+    <string name="welcome_text">… هو تطبيق محادثة حر و آمن لجابر و XMPP.</string>
     <string name="create_account">إنشاء حساب جديد</string>
     <string name="welcome_advanced_mode">الوضع المتقدم</string>
+    <string name="pick_your_username">قم باختيار اسم مستخدم خاص بك</string>
     <string name="presence_chat">حر للمحادثة</string>
     <string name="presence_online">متصل</string>
     <string name="presence_away">غائب</string>
@@ -240,6 +242,8 @@
     <string name="show_password">إظهار الكلمة السرية</string>
     <string name="create_conference">انشاء محادثة جماعية</string>
     <string name="conference_subject">الموضوع</string>
+    <string name="import_text">إنّ جهازك يحتوي على نسخة احتياطية يمكنك استيرادها.\nسوف يتم إعادة تشغيل تطبيقك بعد عملية الإسترجاع. هل تريد استعادة تلك النسخة الإحتياطية؟ </string>
+    <string name="import_database">استيراد نسخة احتياطية</string>
     <string name="invite_again">إعادة دعوته مجددا</string>
     <string name="inviteUser_Subject">قام بدعوتك عبر</string>
     <string name="invite_user">الدعوة إلى بيكس آرت ماسنجر</string>
@@ -276,6 +280,7 @@
     <string name="pref_font_size">حجم الخط</string>
     <string name="gif">صورة متحركة</string>
     <string name="view_conversation">عرض المحادثة</string>
+    <string name="choose_your_server">اختر مزوّدك لخدمة جابر</string>
     <string name="show_privacy">سياسة الخصوصية</string>
     <string name="show_termsofuse">شروط الاستخدام</string>
     <string name="pref_start_search">البحث المباشر</string>
@@ -284,6 +289,7 @@
     <string name="create_dialog_group_chat_name">اسم فريق المحادثة</string>
     <string name="delete_message">حذف الرسالة</string>
     <string name="conference_destroyed">لقد تم تدمير هذه المحادثة الجماعية</string>
+    <string name="welcome_server_info">ننصح باستخدام blabber.im كمزوّد الخدمة الخاص بك.</string>
     <string name="notification_group_messages">رسائل</string>
     <string name="messages_channel_name">رسائل</string>
     <string name="silent_messages_channel_name">رسائل صامتة</string>
