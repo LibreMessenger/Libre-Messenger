@@ -200,7 +200,7 @@
     <string name="send_private_message">أرسل رسالة خاصة</string>
     <string name="username">اسم المستخدم</string>
     <string name="username_hint">اسم المستخدم</string>
-    <string name="action_check_update">فحص توفر التحديثات</string>
+    <string name="action_check_update">البحث عن تحديثات</string>
     <string name="title_activity_updater">خدمة التحديث</string>
     <string name="remind_later">لاحقا</string>
     <string name="update">تحديث</string>
