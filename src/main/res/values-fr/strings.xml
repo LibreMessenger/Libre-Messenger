@@ -707,6 +707,7 @@
     <string name="contacts_and_n_more_have_read_up_to_this_point">%1$s et %2$d autres ont tout lu jusqu’ici</string>
     <string name="conversation_unencrypted_hint">Cette discussion est non chiffrée et pour des raisons de sécurité, il est préférable d’activer le chiffrement des messages en utilisant l’icône du cadenas en haut. Le chiffrement recommandé est OMEMO.</string>
     <string name="pref_warn_unencrypted_chat">Avertir lorsque la discussion n’est pas chiffrée</string>
+    <string name="pref_warn_unencrypted_chat_summary">Si le chiffrement des messages est disponible, il est conseillé de l’utiliser. Si vous n’utilisez pas de chiffrement de messages, afficher un avertissement dans la fenêtre de discussion.</string>
     <string name="pref_use_bundled_emoji">Utiliser les émojis intégrés</string>
     <string name="pref_use_bundled_emoji_summary">Utilise la libraire d’émojis intégrée au lieu de ceux de votre appareil. Les modifications seront prises en considération à la réouverture de l’application.</string>
     <string name="invalid_muc_nick">Psœudonyme invalide</string>
@@ -723,6 +724,7 @@
     <string name="pref_enable_multi_accounts_summary">Si vous désirez utiliser plusieurs comptes, vous devez spécifier un mot de passe pour les sauvegardes quotidiennes.</string>
     <string name="mtm_accept_cert">Accepter ce certificat inconnu ?</string>
     <string name="mtm_trust_anchor">Le certificat serveur n’est signé par une Autorité de Certification connue.</string>
+    <string name="mtm_accept_servername">Accepter même non-concordant avec le nom du serveur ?</string>
     <string name="mtm_connect_anyway">Voulez-vous vous connecter malgré tout ?</string>
     <string name="mtm_cert_details">Détails du certificat :</string>
     <string name="once">Une fois</string>
@@ -739,6 +741,7 @@
     <string name="draft">Brouillon :</string>
     <string name="pref_omemo_setting">Chiffrement OMEMO</string>
     <string name="pref_omemo_setting_summary_always">OMEMO sera toujours utilisé dans les discussions privées à deux.</string>
+    <string name="pref_omemo_setting_summary_default_on">OMEMO sera utilisé par défaut dans les nouvelles discussions.</string>
     <string name="default_on">Activé par défaut</string>
     <string name="default_off">Désactivé par défaut</string>
     <string name="pref_theme_light">Thème clair</string>
@@ -800,6 +803,7 @@
     <string name="action_group_details">Détails du groupe</string>
     <string name="view_media">Afficher le média</string>
     <string name="media_browser">Gestionnaire de médias</string>
+    <string name="account_status_stream_opening_error">Erreur lors de l’ouverture du flux</string>
     <string name="action_open">Ouvrir</string>
     <string name="action_delete">Supprimer</string>
     <string name="security_violation_not_attaching_file">Fichier écarté pour des raisons de violations de la sécurité.</string>
@@ -812,6 +816,7 @@
     <string name="delete_message_dialog">Supprimer le message</string>
     <string name="delete_message_dialog_msg">Voulez-vous vraiment supprimer ce message ? \n\n<b>Attention :</b> Ceci ne procédera pas à la suppression des copies stockées sur d’autres serveurs ou appareils.</string>
     <string name="feature_not_implemented">Fonctionnalité non implémentée</string>
+    <string name="device_does_not_support_unknown_source_op">Votre appareil n’autorise pas l’installation d’applications venant de sources inconnues.</string>
     <string name="reject_request">Refuser la demande</string>
     <string name="error_message_copied_to_clipboard">Message d’erreur copié vers le presse-papier</string>
     <string name="pref_screen_security_summary">Traiter le contenu comme sécure et interdire son apparition dans les captures d’écran.</string>
