@@ -553,6 +553,7 @@
     <string name="conference_subject">Objet</string>
     <string name="choose_participants">Choisir les participants</string>
     <string name="creating_conference">Création du groupe de discussion …</string>
+    <string name="import_text">Votre appareil contient une sauvegarde que vous pouvez importer.\nVotre Messager sera redémarré une fois la sauvegarde restaurée. Désivrez-vous l’importer ? </string>
     <string name="import_database">Importer une sauvegarde</string>
     <string name="invite_again">Inviter à nouveau</string>
     <string name="inviteUser_Subject">vous a invité via</string>
