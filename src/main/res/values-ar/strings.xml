@@ -75,7 +75,7 @@
     <string name="openkeychain_not_installed">يُرجى تثبيت OpenKeychain</string>
     <string name="pref_general">عام</string>
     <string name="pref_attachments">المرفقات</string>
-    <string name="pref_notification_settings">اشعار</string>
+    <string name="pref_notification_settings">الإشعارات</string>
     <string name="pref_vibrate">إهتزاز</string>
     <string name="pref_sound">النغمة</string>
     <string name="pref_ui_options">واجهة المستخدم</string>
@@ -127,6 +127,7 @@
     <string name="create_contact">انشاء مُراسِل</string>
     <string name="join_conference">الالتحاق بفريق المحادثة</string>
     <string name="block_contact">حجب مُراسِل</string>
+    <string name="create">إنشاء</string>
     <string name="join">الانضمام</string>
     <string name="conference_address">عنوان فريق المحادثة</string>
     <string name="conference_address_example">groupchat@room.pix-art.de</string>
@@ -196,6 +197,7 @@
     <string name="image">صورة</string>
     <string name="pdf_document">وثيقة PDF</string>
     <string name="apk">تطبيق أندرويد</string>
+    <string name="hide_offline">إخفاء غير المتّصلين</string>
     <string name="location">الموقع</string>
     <string name="pref_dont_trust_system_cas_title">لا تثق في سلطات شهادات النظام</string>
     <string name="dialog_manage_certs_negativebutton">إلغاء</string>
@@ -253,6 +255,7 @@
     <string name="registration_password_too_weak">فشلت عملية إنشاء الحساب: إنّ الكلمة السرية ضعيفة</string>
     <string name="create_conference">انشاء محادثة جماعية</string>
     <string name="conference_subject">الموضوع</string>
+    <string name="choose_participants">اختر المشاركين</string>
     <string name="import_text">إنّ جهازك يحتوي على نسخة احتياطية يمكنك استيرادها.\nسوف يتم إعادة تشغيل تطبيقك بعد عملية الإسترجاع. هل تريد استعادة تلك النسخة الإحتياطية؟ </string>
     <string name="import_database">استيراد نسخة احتياطية</string>
     <string name="invite_again">إعادة دعوته مجددا</string>
@@ -264,11 +267,13 @@
     <string name="me">أنا</string>
     <string name="allow">سماح</string>
     <string name="unable_to_update_account">تعذر تحديث حسابك</string>
+    <string name="create_issue">الإبلاغ عن مشكلة</string>
     <string name="copy_to_clipboard">انسخ إلى الحافظة</string>
     <string name="message_copied_to_clipboard">تم نسخ الرسالة إلى الحافظة</string>
     <string name="share_as_barcode">شاركه كرمز كيو آر</string>
     <string name="share_as_uri">شاركه كعنوان XMPP</string>
     <string name="share_as_http">شاركه كرابط HTTP</string>
+    <string name="hide_inactive_devices">إخفاء الخاملين</string>
     <string name="reply">رد</string>
     <string name="encrypting_message">تشفير الرسالة</string>
     <string name="today">اليوم</string>
@@ -294,8 +299,10 @@
     <string name="pref_theme_options">السمة</string>
     <string name="chooce_account">اختر حسابا</string>
     <string name="pref_font_size">حجم الخط</string>
+    <string name="create_shortcut">إنشاء اختصار</string>
     <string name="gif">صورة متحركة</string>
     <string name="view_conversation">عرض المحادثة</string>
+    <string name="server_hint">اختر المزوِّد</string>
     <string name="choose_your_server">اختر مزوّدك لخدمة جابر</string>
     <string name="show_privacy">سياسة الخصوصية</string>
     <string name="show_termsofuse">شروط الاستخدام</string>
