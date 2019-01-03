@@ -734,9 +734,12 @@
     <string name="no_camera_permission">Pix-Art Messenger a besoin d’accéder à l’appareil photo</string>
     <string name="edit_status_message_title">Modifier le message du Statut</string>
     <string name="edit_status_message">Modifier Message de Statut</string>
+    <string name="pref_automatically_delete_messages_description">Supprimer automatiquement de cet appareil les anciens messages ayant dépassé la période spécifiée.</string>
     <string name="pref_automatically_delete_messages">Suppression automatique des messages</string>
     <string name="disable_encryption">Désactiver le chiffrement</string>
+    <string name="error_trustkey_general">Pix-Art Messenger ne peut envoyer de messages chiffrés à %1$s. Il se peut que votre contact utilise soit un serveur ou un client anciens ne prenant pas en charge le chiffrement via OMEMO.</string>
     <string name="error_trustkey_device_list">Impossible d’obtenir la liste des appareils</string>
+    <string name="error_trustkey_hint_mutual">Astuce : Dans certains cas ceci peut être résolu en se rajoutant mutuellement dans les listes de contacts.</string>
     <string name="disable_now">Désactiver maintenant</string>
     <string name="draft">Brouillon :</string>
     <string name="pref_omemo_setting">Chiffrement OMEMO</string>
