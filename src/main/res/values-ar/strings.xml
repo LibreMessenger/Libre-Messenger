@@ -67,8 +67,12 @@
     <string name="touch_to_fix">إضغط هنا لإدارة حساباتك</string>
     <string name="attach_file">إرفاق ملف</string>
     <string name="add_contact">إضافة مُراسِل</string>
+    <string name="action_clear_history">مسح السجلّ</string>
+    <string name="clear_conversation_history">محو سجلّ المحادثة</string>
     <string name="delete_messages">حذف الرسائل</string>
     <string name="choose_presence">اختر الجهاز</string>
+    <string name="send_unencrypted_message">ارسل رسالة غير مشفّرة</string>
+    <string name="send_unencrypted">أرسل من دون تشفير</string>
     <string name="openkeychain_required">OpenKeychain</string>
     <string name="restart">إعادة التشغيل</string>
     <string name="install">تثبيت</string>
@@ -93,6 +97,7 @@
     <string name="account_status_regis_success">اكتملت عملية التسجيل</string>
     <string name="account_status_regis_not_sup">هذا الخادم لا يسمح بإنشاء حسابات جديدة</string>
     <string name="account_status_policy_violation">انتهاك للشروط</string>
+    <string name="encryption_choice_unencrypted">بدون تشفير</string>
     <string name="encryption_choice_otr">OTR</string>
     <string name="encryption_choice_pgp">OpenPGP</string>
     <string name="encryption_choice_omemo">OMEMO</string>
@@ -287,6 +292,7 @@
     <string name="action_take_video">تسجيل فيديو</string>
     <string name="yesterday">البارحة</string>
     <string name="server_info_partial">جزئيا</string>
+    <string name="pref_warn_unencrypted_chat">التنبيه إن كانت المحادثة غير مشفّرة</string>
     <string name="title_activity_share_via_account">شاركه عبر حساب</string>
     <string name="destroy_muc">حذف المحادثة الجماعية</string>
     <string name="conference_unknown_error">أنت لم تعد مِن ضمن فريق المحادثة هذا</string>
