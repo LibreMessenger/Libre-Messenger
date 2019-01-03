@@ -127,7 +127,6 @@ import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.ExceptionHelper;
 import de.pixart.messenger.utils.MimeUtils;
 import de.pixart.messenger.utils.Namespace;
-import de.pixart.messenger.utils.OnPhoneContactsLoadedListener;
 import de.pixart.messenger.utils.PhoneHelper;
 import de.pixart.messenger.utils.QuickLoader;
 import de.pixart.messenger.utils.ReplacingSerialSingleThreadExecutor;
@@ -3084,29 +3083,29 @@ public class XmppConnectionService extends Service {
         });
     }
 
-    public void destroyMuc(final Conversation mSelectedConversation) {
-        destroyConference(mSelectedConversation, new XmppConnectionService.OnDestroyMuc() {
+    public void destroyRoom(final Conversation mSelectedConversation) {
+        destroyRoom(mSelectedConversation, new OnRoomDestroy() {
             @Override
-            public void OnDestroyMucSuccessful(int resId) {
+            public void onRoomDestroySucceeded(int resId) {
                 Log.d(Config.LOGTAG, "Destroy succeed");
                 showErrorToastInUi(resId);
             }
 
             @Override
-            public void OnDestroyMucFailed(int resId) {
+            public void onRoomDestroyFailed(int resId) {
                 Log.d(Config.LOGTAG, "Destroy failed");
                 showErrorToastInUi(resId);
             }
         });
     }
 
-    public void destroyConference(final Conversation conference, final OnDestroyMuc callback) {
-        IqPacket request = this.mIqGenerator.destroyConference(conference);
+    public void destroyRoom(final Conversation conference, final OnRoomDestroy callback) {
+        IqPacket request = this.mIqGenerator.destroyRoom(conference);
         sendIqPacket(conference.getAccount(), request, (account, packet) -> {
             if (packet.getType() == IqPacket.TYPE.RESULT) {
-                callback.OnDestroyMucSuccessful(R.string.destroy_muc_succeed);
+                callback.onRoomDestroySucceeded(R.string.destroy_muc_succeed);
             } else {
-                callback.OnDestroyMucFailed(R.string.destroy_muc_failed);
+                callback.onRoomDestroyFailed(R.string.destroy_muc_failed);
             }
         });
     }
@@ -4581,10 +4580,10 @@ public class XmppConnectionService extends Service {
         void onRoleChangeFailed(String nick, int resid);
     }
 
-    public interface OnDestroyMuc {
-        void OnDestroyMucSuccessful(int resId);
+    public interface OnRoomDestroy {
+        void onRoomDestroySucceeded(int resId);
 
-        void OnDestroyMucFailed(int resId);
+        void onRoomDestroyFailed(int resId);
     }
 
     public interface OnConversationUpdate {

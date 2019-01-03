@@ -76,7 +76,6 @@ import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.services.EmojiService;
-import de.pixart.messenger.services.UpdateService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.interfaces.OnBackendConnected;
 import de.pixart.messenger.ui.interfaces.OnConversationArchived;
@@ -619,7 +618,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
                 Log.d(Config.LOGTAG, "Get " + intent.getAction() + " intent for " + extras.getString("MUC_UUID"));
                 Conversation conversation = xmppConnectionService.findConversationByUuid(extras.getString("MUC_UUID"));
                 ConversationsActivity.this.xmppConnectionService.clearConversationHistory(conversation);
-                xmppConnectionService.destroyMuc(conversation);
+                xmppConnectionService.destroyRoom(conversation);
                 endConversation(conversation);
             }
         }

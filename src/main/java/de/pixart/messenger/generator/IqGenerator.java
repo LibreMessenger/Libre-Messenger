@@ -358,7 +358,7 @@ public class IqGenerator extends AbstractGenerator {
         return packet;
     }
 
-    public IqPacket destroyConference(Conversation conference) {
+    public IqPacket destroyRoom(Conversation conference) {
         IqPacket packet = new IqPacket(IqPacket.TYPE.SET);
         packet.setTo(conference.getJid().asBareJid());
         packet.setFrom(conference.getAccount().getJid());
