@@ -893,6 +893,8 @@ public class XmppConnectionService extends Service {
                 return 1920;
             case "high":
                 return 3840;
+            case "uncompressed":
+                return 0;
             default:
                 return 3840;
         }
@@ -906,6 +908,8 @@ public class XmppConnectionService extends Service {
                 return 524288; // 0.5 * 1024 * 1024 = 524288 (0.5 MiB)
             case "high":
                 return 1048576; // 1 * 1024 * 1024 = 1048576 (1 MiB)
+            case "uncompressed":
+                return 0;
             default:
                 return 524288;
         }
@@ -919,6 +923,8 @@ public class XmppConnectionService extends Service {
                 return 360;
             case "high":
                 return 720;
+            case "uncompressed":
+                return 0;
             default:
                 return 360;
         }
@@ -932,6 +938,8 @@ public class XmppConnectionService extends Service {
                 return 500000;
             case "high":
                 return 2000000;
+            case "uncompressed":
+                return 0;
             default:
                 return 500000;
         }

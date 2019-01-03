@@ -49,12 +49,11 @@ public class AttachFileToConversationRunnable implements Runnable, MediaTranscod
         this.originalFileSize = FileBackend.getFileSize(mXmppConnectionService, uri);
         this.isVideoMessage = !getFileBackend().useFileAsIs(uri)
                 && (mimeType != null && mimeType.startsWith("video/")
-                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+                && (mXmppConnectionService.getCompressVideoBitratePreference() != 0 && mXmppConnectionService.getCompressVideoResolutionPreference() != 0))
                 && originalFileSize > autoAcceptFileSize;
-
     }
 
-    public boolean isVideoMessage() {
+    boolean isVideoMessage() {
         return this.isVideoMessage && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2;
     }
 
@@ -110,8 +109,12 @@ public class AttachFileToConversationRunnable implements Runnable, MediaTranscod
             mXmppConnectionService.stopForcingForegroundNotification();
             throw new AssertionError(e);
         } catch (ExecutionException e) {
-            mXmppConnectionService.stopForcingForegroundNotification();
-            Log.d(Config.LOGTAG, "ignoring execution exception. Should get handled by onTranscodeFiled() instead", e);
+            if (e.getCause() instanceof Error) {
+                mXmppConnectionService.stopForcingForegroundNotification();
+                processAsFile();
+            } else {
+                Log.d(Config.LOGTAG, "ignoring execution exception. Should get handled by onTranscodeFiled() instead", e);
+            }
         }
     }
 

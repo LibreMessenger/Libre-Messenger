@@ -294,8 +294,11 @@ public class FileBackend {
         }
         File file = new File(path);
         long size = file.length();
-        if (size == 0 || size >= mXmppConnectionService.getCompressImageSizePreference()) {
+        if ((size == 0 || size >= mXmppConnectionService.getCompressImageSizePreference()) && mXmppConnectionService.getCompressImageSizePreference() != 0) {
             return false;
+        }
+        if (mXmppConnectionService.getCompressImageResolutionPreference() == 0 && mXmppConnectionService.getCompressImageSizePreference() == 0 ) {
+            return true;
         }
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -450,7 +453,7 @@ public class FileBackend {
                     throw new FileCopyException(R.string.error_compressing_image);
                 }
                 os.flush();
-                targetSizeReached = file.length() <= mXmppConnectionService.getCompressImageSizePreference() || quality <= 50;
+                targetSizeReached = (file.length() <= mXmppConnectionService.getCompressImageSizePreference() && mXmppConnectionService.getCompressImageSizePreference() != 0) || quality <= 50;
                 quality -= 5;
             }
             scaledBitmap.recycle();

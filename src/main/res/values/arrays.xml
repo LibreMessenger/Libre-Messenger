@@ -58,24 +58,28 @@
         <item>low</item>
         <item>mid</item>
         <item>high</item>
+        <item>uncompressed</item>
     </string-array>
 
     <string-array name="image_compression_entries">
         <item>@string/image_low</item>
         <item>@string/image_mid</item>
         <item>@string/image_high</item>
+        <item>@string/image_original</item>
     </string-array>
 
     <string-array name="video_compression_values">
         <item>low</item>
         <item>mid</item>
         <item>high</item>
+        <item>uncompressed</item>
     </string-array>
 
     <string-array name="video_compression_entries">
         <item>@string/video_low</item>
         <item>@string/video_mid</item>
         <item>@string/video_high</item>
+        <item>@string/video_original</item>
     </string-array>
 
     <string-array name="mam_prefs">
