@@ -3,7 +3,7 @@
 <resources>
     <string name="action_settings">Paramètres</string>
     <string name="action_add">Nouvelle conversation</string>
-    <string name="action_accounts">Gérer les comptes</string>
+    <string name="action_accounts">Gestion des comptes</string>
     <string name="action_end_conversation">Terminer cette conversation</string>
     <string name="action_contact_details">Détails du contact</string>
     <string name="action_secure">Conversation sécurisée</string>
@@ -559,7 +559,7 @@
     <string name="import_database">Importer une sauvegarde</string>
     <string name="invite_again">Inviter à nouveau</string>
     <string name="inviteUser_Subject">vous a invité via</string>
-    <string name="InviteText">Salut,\n\nl’utilisateur·rice %s vous a invité sur Pix-Art Messenger. Si vous utilisez Android, veuillez cliquer sur le lien suivant pour continuer …</string>
+    <string name="InviteText">Bonjour,\n\nl’utilisateur·rice %s vous a invité sur Pix-Art Messenger. Si vous utilisez Android, essayez-le en cliquant sur le lien suivant pour continuer …</string>
     <string name="pref_broadcast_last_activity">Diffuser la dernière action utilisateur</string>
     <string name="pref_broadcast_last_activity_summary">Informer tous vos contacts lorsque vous utitlisez Pix-Art Messenger</string>
     <string name="invite_user">Inviter à Pix-Art Messenger</string>
@@ -705,6 +705,7 @@
     <string name="contacts_have_read_up_to_this_point">%s ont tout lu jusqu’ici</string>
     <string name="contact_has_read_up_to_this_point">%s a tout lu jusqu’ici</string>
     <string name="contacts_and_n_more_have_read_up_to_this_point">%1$s et %2$d autres ont tout lu jusqu’ici</string>
+    <string name="conversation_unencrypted_hint">Cette discussion est non chiffrée et pour des raisons de sécurité, il est préférable d’activer le chiffrement des messages en utilisant l’icône du cadenas en haut. Le chiffrement recommandé est OMEMO.</string>
     <string name="pref_warn_unencrypted_chat">Avertir lorsque la discussion n’est pas chiffrée</string>
     <string name="pref_use_bundled_emoji">Utiliser les émojis intégrés</string>
     <string name="pref_use_bundled_emoji_summary">Utilise la libraire d’émojis intégrée au lieu de ceux de votre appareil. Les modifications seront prises en considération à la réouverture de l’application.</string>
