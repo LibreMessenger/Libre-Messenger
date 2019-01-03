@@ -274,8 +274,6 @@
     <string name="pref_use_send_button_to_indicate_status_summary">Раскрасить кнопку отсылки сообщений для индикации статуса контакта</string>
     <string name="pref_use_colored_names_to_indicate_status_summary">Раскрасить имена контактов для индикации статуса контакта</string>
     <string name="pref_expert_options_other">Другие</string>
-    <string name="pref_autojoin">Автоматически присоединяться к групповым чатам</string>
-    <string name="pref_autojoin_summary">Уважать флаг автовхода в закладках группового чата</string>
     <string name="toast_message_otr_fingerprint">OTR отпечаток был скопирован в буфер обмена!</string>
     <string name="toast_message_omemo_fingerprint">OMEMO отпечаток был скопирован в буфер обмена!</string>
     <string name="conference_banned">Вы заблокированы в этом групповом чате</string>

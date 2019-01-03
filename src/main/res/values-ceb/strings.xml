@@ -271,8 +271,6 @@
     <string name="pref_use_send_button_to_indicate_status_summary">Di-kolor pagpadala ug button para pagpasabot sa kontak nga status</string>
     <string name="pref_use_colored_names_to_indicate_status_summary">Di-kolor nga pangan sa kontak para pagpahibalo sa kontak status</string>
     <string name="pref_expert_options_other">Uban pa</string>
-    <string name="pref_autojoin">Awtomatik ang pag apil sa grupo nga chat</string>
-    <string name="pref_autojoin_summary">Respetohi ang awto-apil nga flag sa grupo nga chat nga mga bookmark</string>
     <string name="toast_message_otr_fingerprint">OTR fingerprint gekopya ngadto sa clipboard!</string>
     <string name="toast_message_omemo_fingerprint">OMEMO fingerprint gekopya ngadto sa clipboard!</string>
     <string name="conference_banned">Ikaw ge ban sa kini nga grupo sa chat</string>
