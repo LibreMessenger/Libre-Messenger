@@ -90,14 +90,14 @@
     <string name="send_unencrypted">Envoyer en clair</string>
     <string name="decryption_failed">Echec du déchiffrement. Avez-vous la bonne clef privée ?</string>
     <string name="openkeychain_required">OpenKeychain</string>
-    <string name="openkeychain_required_long">Pix-Art Messenger requiert une application tierce nommée <b>OpenKeychain</b> pour chiffrer et déchiffrer les messages.\n\nOpenKeychain est sous licence GPLv3 et est disponible sur F-Droid et Google Play.\n\n<small>(Veuillez redémarrer Pix-Art Messenger après l\'installation de l\'app)</small></string>
+    <string name="openkeychain_required_long">Pix-Art Messenger requiert une application tierce nommée <b>OpenKeychain</b> pour chiffrer et déchiffrer les messages.\n\nOpenKeychain est sous licence GPLv3 et est disponible sur F-Droid et Google Play.\n\n<small>(Veuillez redémarrer Pix-Art Messenger après l’installation de l’app)</small></string>
     <string name="restart">Redémarrer</string>
     <string name="install">Installer</string>
     <string name="openkeychain_not_installed">Veuillez installer OpenKeychain</string>
     <string name="offering">Proposition…</string>
     <string name="waiting">Patientez…</string>
     <string name="no_pgp_key">Aucune clef OpenPGP trouvée.</string>
-    <string name="contact_has_no_pgp_key">Pix-Art Messenger ne peut pas chiffrer vos messages car votre contact n\'a pas communiqué sa clef publique.\n\n<small>Demandez-lui de configurer OpenPGP.</small></string>
+    <string name="contact_has_no_pgp_key">Pix-Art Messenger ne peut pas chiffrer vos messages car votre contact n’a pas communiqué sa clef publique.\n\n<small>Demandez-lui de configurer OpenPGP.</small></string>
     <string name="no_pgp_keys">Aucune clef OpenPGP n\'a été trouvée.</string>
     <string name="pref_general">Général</string>
     <string name="pref_accept_files_wifi">Accepter les fichier en mode Wi-Fi</string>
@@ -520,7 +520,7 @@
     <string name="correct_message">Corriger le message</string>
     <string name="send_corrected_message">Envoyer le message corrigé</string>
     <string name="no_keys_just_confirm">Vous faites déjà confiance à ce contact. En sélectionnant « Terminé » vous confirmerez seulement que %s est membre de cette conférence.</string>
-    <string name="contacts_have_no_pgp_keys">Pix-Art Messenger ne peut pas chiffrer votre message car vos contacts ne communiquent pas leur clef publique.\n\n<small>Demandez-leur de configurer OpenPGP.</small></string>
+    <string name="contacts_have_no_pgp_keys">Pix-Art Messenger ne peut pas chiffrer vos messages car vos contacts ne communiquent pas leurs clefs publiques.\n\n</string>
     <string name="this_account_is_disabled">Vous avez désactivé ce compte</string>
     <string name="security_error_invalid_file_access">Erreur de sécurité : accès fichier non-valide</string>
     <string name="no_application_to_share_uri">Aucune application trouvée pour partager l’URI</string>
@@ -707,6 +707,7 @@
     <string name="contacts_and_n_more_have_read_up_to_this_point">%1$s et %2$d autres ont tout lu jusqu’ici</string>
     <string name="pref_warn_unencrypted_chat">Avertir lorsque la discussion n’est pas chiffrée</string>
     <string name="pref_use_bundled_emoji">Utiliser les émojis intégrés</string>
+    <string name="pref_use_bundled_emoji_summary">Utilise la libraire d’émojis intégrée au lieu de ceux de votre appareil. Les modifications seront prises en considération à la réouverture de l’application.</string>
     <string name="invalid_muc_nick">Psœudonyme invalide</string>
     <string name="title_activity_share_via_account">Partager via le compte</string>
     <string name="private_messages_are_disabled">Les messages privés ont étés désactivés</string>
