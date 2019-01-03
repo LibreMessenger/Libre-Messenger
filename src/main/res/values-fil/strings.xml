@@ -182,7 +182,7 @@
     <string name="missing_public_keys">Nawalang public key na mga anunsyo</string>
     <string name="last_seen_now">online</string>
     <string name="last_seen_min">1 minutong nakalipas</string>
-    <string name="last_seen_mins">minutong nakalipas</string>
+    <string name="last_seen_mins">%d minutong nakalipas</string>
     <string name="last_seen_hour">1 oras na ang nakalipas</string>
     <string name="last_seen_hours">%d oras na nakalipas</string>
     <string name="last_seen_day">1 araw na nakalipas</string>
@@ -271,8 +271,6 @@
     <string name="pref_use_send_button_to_indicate_status_summary">May color na panghatid na pindutan para magpahiwatig ng estado</string>
     <string name="pref_use_colored_names_to_indicate_status_summary">May color na pangalan sa kontak ay nagpapahiwatig ng estado sa kontak</string>
     <string name="pref_expert_options_other">Iba pa</string>
-    <string name="pref_autojoin">Automatikong pagsali sa grupo ng chat</string>
-    <string name="pref_autojoin_summary">Paggalang sa awtomatikong bandira sa pagsali sa grupo ng chat bookmarks</string>
     <string name="toast_message_otr_fingerprint">OTR tatak ng daliri ay nakopya sa klipboard!</string>
     <string name="toast_message_omemo_fingerprint">OMEMO tatak ng daliri ay nakopya sa klipboard!</string>
     <string name="conference_banned">Ikaw ay pinagbawalan dito sa grupo ng chat</string>
