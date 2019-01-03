@@ -277,6 +277,7 @@
     <string name="pref_use_colored_names_to_indicate_status_summary">Colorer les noms des contacts pour indiquer leurs statut</string>
     <string name="pref_expert_options_other">Autres</string>
     <string name="pref_autojoin">Synchroniser les favoris</string>
+    <string name="pref_autojoin_summary">Joindre et quitter des conférences dépendamment de vos paramètres.</string>
     <string name="toast_message_otr_fingerprint">Empreinte OTR copiée dans le presse-papier !</string>
     <string name="toast_message_omemo_fingerprint">Empreinte OMEMO copiée dans le presse-papier !</string>
     <string name="conference_banned">Vous êtes banni de cette conférence</string>
@@ -332,6 +333,7 @@
     <string name="are_you_sure_verify_fingerprint">Êtes-vous sûr de vouloir vérifier l’empreinte OTR de votre contact ?</string>
     <string name="pref_show_dynamic_tags">Afficher les tags dynamiques</string>
     <string name="pref_show_dynamic_tags_summary">Afficher des tags en lecture seule en dessous des contacts.</string>
+    <string name="no_conference_server_found">Aucun serveur de conférences n’a été trouvé</string>
     <string name="conference_creation_failed">Échec de la création de la conférence !</string>
     <string name="account_image_description">Avatar du compte</string>
     <string name="copy_otr_clipboard_description">Copier l’empreinte OTR dans le presse-papier</string>
@@ -544,15 +546,15 @@
     <string name="share_location">Partager ma position</string>
     <string name="location_sharing_disabled">Le partage de position a été désactivé dans les paramètres</string>
     <string name="locating">En cours de localisation …</string>
-    <string name="action_end_conversation_muc">Quitter le groupe de discussion</string>
+    <string name="action_end_conversation_muc">Quitter la conférence</string>
     <string name="leave_conference_warning">Désirez-vous quitter ce groupe de discussion ? Vous ne serez plus notifié de l’arrivée des nouveaux messages jusqu’à ce que vous rejoignez la conférence.</string>
     <string name="show_password">Afficher le mot de passe</string>
     <string name="registration_please_wait">L’enregistrement a échoué : Réessayer plus tard</string>
     <string name="registration_password_too_weak">Échec de l’enregistrement : le mot de passe n’est pas assez fort</string>
-    <string name="create_conference">Créer un groupe de discussion</string>
+    <string name="create_conference">Créer une conférence</string>
     <string name="conference_subject">Objet</string>
     <string name="choose_participants">Choisir les participants</string>
-    <string name="creating_conference">Création du groupe de discussion …</string>
+    <string name="creating_conference">Création de la conférence …</string>
     <string name="import_text">Votre appareil contient une sauvegarde que vous pouvez importer.\nVotre Messager sera redémarré une fois la sauvegarde restaurée. Désivrez-vous l’importer ? </string>
     <string name="import_database">Importer une sauvegarde</string>
     <string name="invite_again">Inviter à nouveau</string>
@@ -709,7 +711,8 @@
     <string name="title_activity_share_via_account">Partager via le compte</string>
     <string name="private_messages_are_disabled">Les messages privés ont étés désactivés</string>
     <string name="destroy_muc">Supprimer complètement la conférence</string>
-    <string name="conference_unknown_error">Vous ne faîtes plus partie de ce groupe</string>
+    <string name="conference_unknown_error">Vous ne faîtes plus partie de cette conférence</string>
+    <string name="destroy_muc_text">Désirez-vous supprimer complètement la conférence %s ? Ceci supprimera la conférence pour de bon.</string>
     <string name="destroy_muc_succeed">La conférence a été supprimée avec succès</string>
     <string name="destroy_muc_failed">Impossible de supprimer la conférence</string>
     <string name="snooze">Silencer</string>
@@ -733,6 +736,7 @@
     <string name="disable_now">Désactiver maintenant</string>
     <string name="draft">Brouillon :</string>
     <string name="pref_omemo_setting">Chiffrement OMEMO</string>
+    <string name="pref_omemo_setting_summary_always">OMEMO sera toujours utilisé dans les discussions privées à deux.</string>
     <string name="default_on">Activé par défaut</string>
     <string name="default_off">Désactivé par défaut</string>
     <string name="pref_theme_light">Thème clair</string>
@@ -767,7 +771,7 @@
     <string name="host_does_not_support_group_chat_avatars">L’hôte ne prend pas en charge les avatars de conférences</string>
     <string name="only_the_owner_can_change_group_chat_avatar">Seul le propriétaire peut changer l’avatar de la conférence</string>
     <string name="contact_name">Nom du contact</string>
-    <string name="nickname">Psœudonyme pour ce groupe de discussion</string>
+    <string name="nickname">Psœudonyme pour cette conférence</string>
     <string name="group_chat_name">Nom</string>
     <string name="providing_a_name_is_optional">Le nom est optionnel</string>
     <string name="create_dialog_group_chat_name">Nom de la conférence</string>
