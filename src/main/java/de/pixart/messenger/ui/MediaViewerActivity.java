@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.PopupMenu;
@@ -162,8 +163,16 @@ public class MediaViewerActivity extends XmppActivity {
     }
 
     private void deleteFile() {
-        this.xmppConnectionService.getFileBackend().deleteFile(mFile);
-        finish();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.setTitle(R.string.delete_file_dialog);
+        builder.setMessage(R.string.delete_file_dialog_msg);
+        builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
+            if (this.xmppConnectionService.getFileBackend().deleteFile(mFile)) {
+                finish();
+            }
+        });
+        builder.create().show();
     }
 
     private void open() {
