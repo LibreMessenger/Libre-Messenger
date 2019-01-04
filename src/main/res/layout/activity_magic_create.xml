@@ -22,12 +22,14 @@
                 android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
                 android:minHeight="256dp"
                 android:orientation="vertical"
-                android:paddingBottom="8dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="8dp">
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp">
 
@@ -96,7 +98,7 @@
                     style="@style/Widget.Conversations.Button.Borderless"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
+                    android:layout_gravity="end"
                     android:text="@string/next"
                     android:textColor="?attr/colorAccent" />
             </LinearLayout>
@@ -105,8 +107,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/linearLayout"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true">
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true">
 
                 <ImageView
                     android:layout_width="wrap_content"
