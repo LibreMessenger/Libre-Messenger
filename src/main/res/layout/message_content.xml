@@ -15,6 +15,19 @@
         android:scaleType="centerCrop"
         app:riv_corner_radius="@dimen/rounded_image_border" />
 
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/message_image_gif"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="4dp"
+        android:adjustViewBounds="true"
+        android:longClickable="true"
+        android:maxWidth="500dp"
+        android:maxHeight="500dp"
+        android:scaleType="centerCrop"
+        app:riv_corner_radius="@dimen/rounded_image_border" />
+
     <de.pixart.messenger.ui.widget.CopyTextView
         android:id="@+id/message_body"
         android:layout_width="wrap_content"

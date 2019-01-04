@@ -103,7 +103,7 @@ public class ShowLocationActivity extends XmppActivity {
         }
     }
 
-    protected SharedPreferences getPreferences() {
+    public SharedPreferences getPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     }
 

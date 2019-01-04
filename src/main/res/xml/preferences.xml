@@ -71,6 +71,11 @@
             android:key="scroll_to_bottom"
             android:summary="@string/pref_scroll_to_bottom_summary"
             android:title="@string/pref_scroll_to_bottom" />
+        <CheckBoxPreference
+            android:defaultValue="@bool/play_gif_inside"
+            android:key="play_gif_inside"
+            android:summary="@string/pref_play_gif_inside_summary"
+            android:title="@string/pref_play_gif_inside" />
     </PreferenceScreen>
     <!--Notifications-->
     <PreferenceScreen

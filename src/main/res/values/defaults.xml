@@ -110,6 +110,7 @@
     <bool name="show_record_voice_btn">true</bool>
     <bool name="quick_share_attachment_choice">true</bool>
     <bool name="screen_security">false</bool>
+    <bool name="play_gif_inside">false</bool>
 
     <string-array name="domains">
         <item>pix-art.de</item>

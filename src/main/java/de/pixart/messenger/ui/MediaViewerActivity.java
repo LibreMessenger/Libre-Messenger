@@ -391,7 +391,7 @@ public class MediaViewerActivity extends XmppActivity {
         return getPreferences().getBoolean("use_auto_rotate", getResources().getBoolean(R.bool.auto_rotate));
     }
 
-    protected SharedPreferences getPreferences() {
+    public SharedPreferences getPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     }
 }

@@ -857,4 +857,6 @@
     <string name="enter_your_name_instructions">Please enter your nickname which will be visible to your contacts.</string>
     <string name="no_name_set_instructions">No nickname set.</string>
     <string name="autojoin_groupchat">Automatically join this group chat</string>
+    <string name="pref_play_gif_inside">Play GIF files in chat</string>
+    <string name="pref_play_gif_inside_summary">Setting this to true plays GIF files directly inside the chat view.</string>
 </resources>

@@ -55,6 +55,7 @@ import android.widget.Toast;
 
 import net.java.otr4j.session.SessionID;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -87,6 +88,7 @@ import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import de.pixart.messenger.utils.ThemeHelper;
 import de.pixart.messenger.xmpp.OnKeyStatusUpdated;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
+import pl.droidsonroids.gif.GifDrawable;
 import rocks.xmpp.addr.Jid;
 
 public abstract class XmppActivity extends ActionBarActivity {
@@ -441,7 +443,7 @@ public abstract class XmppActivity extends ActionBarActivity {
         return getBooleanPreference("display_enter_key", R.bool.display_enter_key);
     }
 
-    protected SharedPreferences getPreferences() {
+    public SharedPreferences getPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     }
 
@@ -1081,6 +1083,16 @@ public abstract class XmppActivity extends ActionBarActivity {
 
     public AvatarService avatarService() {
         return xmppConnectionService.getAvatarService();
+    }
+
+    public void loadGif(File file, ImageView imageView) {
+        GifDrawable gifDrawable = null;
+        try {
+            gifDrawable = new GifDrawable(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        imageView.setImageDrawable(gifDrawable);
     }
 
     public void loadBitmap(Message message, ImageView imageView) {
