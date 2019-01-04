@@ -791,10 +791,11 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
                                     }
                                 }
                             } else {
-                                if (users.size() == 1) {
+                                if (users.size() == 0) {
                                     absubtitle.setText(getString(R.string.one_participant));
                                 } else {
-                                    absubtitle.setText(getString(R.string.more_participants, users.size()));
+                                    int size = users.size() + 1;
+                                    absubtitle.setText(getString(R.string.more_participants, size));
                                 }
                             }
                             absubtitle.setSelected(true);
