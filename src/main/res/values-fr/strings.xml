@@ -727,6 +727,7 @@
     <string name="mtm_accept_cert">Accepter ce certificat inconnu ?</string>
     <string name="mtm_trust_anchor">Le certificat serveur n’est signé par une Autorité de Certification connue.</string>
     <string name="mtm_accept_servername">Accepter même non-concordant avec le nom du serveur ?</string>
+    <string name="mtm_hostname_mismatch">Le serveur ne peut pas s’authentifier en tant que « %s ». Le certificat n’est valide que pour :</string>
     <string name="mtm_connect_anyway">Voulez-vous vous connecter malgré tout ?</string>
     <string name="mtm_cert_details">Détails du certificat :</string>
     <string name="once">Une fois</string>
@@ -741,6 +742,7 @@
     <string name="disable_encryption">Désactiver le chiffrement</string>
     <string name="error_trustkey_general">Pix-Art Messenger ne peut envoyer de messages chiffrés à %1$s. Il se peut que votre contact utilise soit un serveur ou un client anciens ne prenant pas en charge le chiffrement via OMEMO.</string>
     <string name="error_trustkey_device_list">Impossible d’obtenir la liste des appareils</string>
+    <string name="error_trustkey_bundle">Impossible d’obtenir la liste des appareils</string>
     <string name="error_trustkey_hint_mutual">Astuce : Dans certains cas ceci peut être résolu en se rajoutant mutuellement dans les listes de contacts.</string>
     <string name="disable_now">Désactiver maintenant</string>
     <string name="draft">Brouillon :</string>
@@ -837,4 +839,5 @@
     <string name="enter_your_name_instructions">Veuillez saisir le psœudonyme que vous désirez rendre visible à vos contacts.</string>
     <string name="no_name_set_instructions">Aucun psœudonyme n’a été spécifié.</string>
     <string name="autojoin_groupchat">Rejoindre automatiquement cette conférence</string>
+    <string name="pref_play_gif_inside">Animer les fichiers GIF dans la conversation</string>
 </resources>
