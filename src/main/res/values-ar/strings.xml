@@ -365,6 +365,7 @@
     <string name="phone_book">دفتر العناوين</string>
     <string name="unable_to_save_recording">لا يمكن الاحتفاظ بالتسجيل</string>
     <string name="foreground_service_channel_name">الخدمة الأمامية</string>
+    <string name="error_channel_name">مشاكل الاتصال</string>
     <string name="notification_group_messages">رسائل</string>
     <string name="messages_channel_name">رسائل</string>
     <string name="silent_messages_channel_name">رسائل صامتة</string>
@@ -375,7 +376,13 @@
     <string name="view_media">عرض الوسائط</string>
     <string name="media_browser">مستعرض الوسائط</string>
     <string name="action_open">افتح</string>
+    <string name="action_delete">حذف</string>
+    <string name="delete_file_dialog">احذف الملف</string>
+    <string name="cancelled">ملغى</string>
+    <string name="remote_server_timeout">انتهت مدة الاتصال مع الخادم عند بُعد</string>
     <string name="install_orbot">تثبيت أوربوت</string>
     <string name="start_orbot">تشغيل أوربوت</string>
     <string name="ebook">كتاب إلكتروني</string>
+    <string name="pref_play_gif_inside">تشغيل صور جيف المتحركة في المحادثة</string>
+    <string name="pref_play_gif_inside_summary">إن تم تنشيط هذه الميزة فسوف يتم تشغيل صور جيف المتحركة تلقائيا داخل نافذة المحادثة.</string>
 </resources>
