@@ -68,6 +68,8 @@
     <string name="attach_file">إرفاق ملف</string>
     <string name="add_contact">إضافة مُراسِل</string>
     <string name="send_failed">فشل التسليم</string>
+    <string name="preparing_image">جارٍ تهيئة الصورة للإرسال</string>
+    <string name="preparing_images">جارٍ تهيئة الصور للإرسال</string>
     <string name="action_clear_history">مسح السجلّ</string>
     <string name="clear_conversation_history">محو سجلّ المحادثة</string>
     <string name="delete_messages">حذف الرسائل</string>
