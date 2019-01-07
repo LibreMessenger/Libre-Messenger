@@ -506,6 +506,7 @@
     <string name="video_low">niedrig (144p)</string>
     <string name="video_mid">mittelmäßig (360p)</string>
     <string name="video_high">hoch (720p)</string>
+    <string name="video_original">Original (unkomprimiert)</string>
     <string name="always">Immer</string>
     <string name="battery_optimizations_enabled">Batterieoptimierung aktiv</string>
     <string name="battery_optimizations_enabled_explained">Dein Telefon wendet Batterioptimierungen bei Pix-Art Messenger an, welche verspätete Benachrichtigungen oder Nachrichtenverlust verursachen können.\nEs ist empfehlenswert diese zu deaktivieren.</string>
@@ -681,6 +682,7 @@
     <string name="image_low">niedrig (720p)</string>
     <string name="image_mid">mittelmäßig  (1920p)</string>
     <string name="image_high">hoch (3840p)</string>
+    <string name="image_original">original (unkomprimiert)</string>
     <string name="last_seen_just_away">kürzlich</string>
     <string name="send_message">Nachricht senden</string>
     <string name="send_failed_resend">Zustellung fehlgeschlagen, sende erneut…</string>
@@ -855,4 +857,5 @@
     <string name="enter_your_name_instructions">Bitte gib deinen Nickname ein, der für deine Kontakte sichtbar sein wird.</string>
     <string name="no_name_set_instructions">Keinen Nickname festgelegt.</string>
     <string name="autojoin_groupchat">Diesem Gruppenchat automatisch beitreten</string>
+    <string name="pref_play_gif_inside">GIF-Dateien im Chat abspielen</string>
 </resources>

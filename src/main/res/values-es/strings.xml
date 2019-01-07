@@ -506,6 +506,7 @@
     <string name="video_low">bajo (144p)</string>
     <string name="video_mid">medio (360p)</string>
     <string name="video_high">alto (720p)</string>
+    <string name="video_original">Original (sin comprimir)</string>
     <string name="always">Siempre</string>
     <string name="battery_optimizations_enabled">Optimizaciones de uso de batería habilitadas</string>
     <string name="battery_optimizations_enabled_explained">Tu dispositivo está realizando optimizaciones de uso de batería en Pix-Art Messenger que pueden hacer que los mensajes se retrasen o incluso hacer que se pierdan.\nEs recomendable deshabilitarlas.</string>
@@ -681,6 +682,7 @@
     <string name="image_low">bajo (720p)</string>
     <string name="image_mid">medio (1920p)</string>
     <string name="image_high">alto (3840p)</string>
+    <string name="image_original">original (sin comprimir)</string>
     <string name="last_seen_just_away">recientemente</string>
     <string name="send_message">Enviar mensaje</string>
     <string name="send_failed_resend">entrega fallida, reenvío…</string>
