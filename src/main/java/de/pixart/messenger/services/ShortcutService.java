@@ -127,9 +127,9 @@ public class ShortcutService {
     }
 
     @NonNull
-    public Intent createShortcut(Contact contact) {
+    public Intent createShortcut(Contact contact, boolean legacy) {
         Intent intent;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !legacy) {
             ShortcutInfo shortcut = getShortcutInfo(contact);
             ShortcutManager shortcutManager = xmppConnectionService.getSystemService(ShortcutManager.class);
             intent = shortcutManager.createShortcutResultIntent(shortcut);
@@ -141,10 +141,9 @@ public class ShortcutService {
 
     @NonNull
     private Intent createShortcutResultIntent(Contact contact) {
-        Intent intent;
         AvatarService avatarService = xmppConnectionService.getAvatarService();
         Bitmap icon = avatarService.getRoundedShortcutWithIcon(contact);
-        intent = new Intent();
+        Intent intent = new Intent();
         intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, contact.getDisplayName());
         intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, icon);
         intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, getShortcutIntent(contact));

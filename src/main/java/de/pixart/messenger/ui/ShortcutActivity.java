@@ -1,5 +1,6 @@
 package de.pixart.messenger.ui;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +8,9 @@ import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
@@ -15,6 +18,8 @@ import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.ListItem;
 
 public class ShortcutActivity extends AbstractSearchableListItemActivity {
+
+    private static final List<String> BLACKLISTED_ACTIVITIES = Arrays.asList("com.teslacoilsw.launcher.ChooseActionIntentActivity");
 
     @Override
     protected void refreshUiReal() {
@@ -25,15 +30,16 @@ public class ShortcutActivity extends AbstractSearchableListItemActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getListView().setOnItemClickListener((parent, view, position, id) -> {
+            final ComponentName callingActivity = getCallingActivity();
             final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getSearchEditText().getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
 
             ListItem listItem = getListItems().get(position);
-            Intent shortcut = xmppConnectionService.getShortcutService().createShortcut(((Contact) listItem));
+            final boolean legacy = BLACKLISTED_ACTIVITIES.contains(callingActivity == null ? null : callingActivity.getClassName());
+            Intent shortcut = xmppConnectionService.getShortcutService().createShortcut(((Contact) listItem), legacy);
             setResult(RESULT_OK, shortcut);
             finish();
         });
-        binding.fab.setVisibility(View.GONE);
     }
 
     @Override
