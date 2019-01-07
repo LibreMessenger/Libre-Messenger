@@ -77,6 +77,7 @@
     <string name="choose_presence">اختر الجهاز</string>
     <string name="send_unencrypted_message">ارسل رسالة غير مشفّرة</string>
     <string name="send_message_to_x">إرسال رسالة إلى %s</string>
+    <string name="send_pgp_message">ارسل رسالة مشفّرة بواسطة OpenPGP</string>
     <string name="your_nick_has_been_changed">لقد تم تغيير اسمك المستعار</string>
     <string name="send_unencrypted">أرسل من دون تشفير</string>
     <string name="openkeychain_required">OpenKeychain</string>
@@ -96,7 +97,9 @@
     <string name="pref_sound_summary">تشغيل نغمة عند استلام رسالة جديدة</string>
     <string name="pref_send_crash">ارسال تقارير تحطّم التطبيق</string>
     <string name="pref_confirm_messages">تأكيد الرسائل</string>
+    <string name="pref_confirm_messages_summary">دع كافة مُراسِليك يعلمون أنك قد تلقيت رسائلهم و قمتَ بقراءتها</string>
     <string name="pref_ui_options">واجهة المستخدم</string>
+    <string name="openpgp_error">لقد أَبلَغَ OpenKeychain عند حدوث خطأ</string>
     <string name="accept">قبول</string>
     <string name="error">لقد حدث خطأ ما</string>
     <string name="your_account">حسابك</string>
@@ -185,12 +188,14 @@
     <string name="touch_to_choose_picture">انقر على الصورة المصغرة لاختيار صورة مِن المعرض</string>
     <string name="publishing">جارٍ النشر…</string>
     <string name="error_publish_avatar_server_reject">رفض الخادم منشورك</string>
+    <string name="error_saving_avatar">لا يمكن حفظ الصورة الرمزية على مساحة التخزين</string>
     <string name="private_message">هَمَسَ</string>
     <string name="private_message_to">إلى %s</string>
     <string name="send_private_message_to">أرسل رسالة خاصة إلى %s</string>
     <string name="connect">اتصل</string>
     <string name="account_already_exists">هذا الحساب موجود بالفعل</string>
     <string name="next">التالي</string>
+    <string name="server_info_session_established">تم ربط الجلسة الحالية</string>
     <string name="skip">تخطي</string>
     <string name="disable_notifications">تعطيل الإشعارات</string>
     <string name="enable">تمكين</string>
@@ -484,6 +489,7 @@
     <string name="cancelled">ملغى</string>
     <string name="remote_server_timeout">انتهت مدة الاتصال مع الخادم عند بُعد</string>
     <string name="delete_message_dialog">حذف الرسالة</string>
+    <string name="feature_not_implemented">الميزة غير مُدمَجة بعد</string>
     <string name="reject_request">رفض الطلب</string>
     <string name="pref_screen_security">منع لقطات الشاشة</string>
     <string name="install_orbot">تثبيت أوربوت</string>
@@ -491,6 +497,7 @@
     <string name="ebook">كتاب إلكتروني</string>
     <string name="your_name">اسمك</string>
     <string name="enter_your_name">أدخل اسمك</string>
+    <string name="autojoin_groupchat">إلتحق بفريق المحادثة هذا افتراضيا</string>
     <string name="pref_play_gif_inside">تشغيل صور جيف المتحركة في المحادثة</string>
     <string name="pref_play_gif_inside_summary">إن تم تنشيط هذه الميزة فسوف يتم تشغيل صور جيف المتحركة تلقائيا داخل نافذة المحادثة.</string>
 </resources>
