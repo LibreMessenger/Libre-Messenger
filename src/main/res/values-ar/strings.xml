@@ -209,10 +209,12 @@
     <string name="pref_allow_message_correction">السماح بتصحيح الرسائل</string>
     <string name="pref_expert_options">إعدادات الخبراء</string>
     <string name="title_activity_about">عن التطبيق</string>
+    <string name="pref_about_conversations_summary">الإصدار وتفاصيل التراخيص</string>
     <string name="title_pref_quiet_hours">ساعات الهدوء</string>
     <string name="title_pref_quiet_hours_start_time">توقيت البداية</string>
     <string name="title_pref_quiet_hours_end_time">إلى غاية</string>
     <string name="title_pref_enable_quiet_hours">تمكين ساعات الهدوء</string>
+    <string name="pref_quiet_hours_summary">سوف يتم كتم الاشعارات أثناء ساعات السكون</string>
     <string name="pref_expert_options_other">أخرى</string>
     <string name="pref_autojoin">زامن مع الفواصل المرجعية</string>
     <string name="using_account">تستخدم حاليا حساب %s</string>
