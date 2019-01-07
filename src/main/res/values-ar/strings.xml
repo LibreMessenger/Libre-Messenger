@@ -93,7 +93,9 @@
     <string name="pref_notification_settings">الإشعارات</string>
     <string name="pref_vibrate">إهتزاز</string>
     <string name="pref_sound">النغمة</string>
+    <string name="pref_sound_summary">تشغيل نغمة عند استلام رسالة جديدة</string>
     <string name="pref_send_crash">ارسال تقارير تحطّم التطبيق</string>
+    <string name="pref_confirm_messages">تأكيد الرسائل</string>
     <string name="pref_ui_options">واجهة المستخدم</string>
     <string name="accept">قبول</string>
     <string name="error">لقد حدث خطأ ما</string>
@@ -103,6 +105,8 @@
     <string name="ask_for_presence_updates">أطلب تحديثات حالة الحضور</string>
     <string name="attach_choose_picture">اختر صورة</string>
     <string name="attach_take_from_camera">صورة من الكاميرا</string>
+    <string name="error_not_an_image_file">إنّ الملف الذي قمت باختياره ليس صورة</string>
+    <string name="error_compressing_image">خطأ أثناء تحويل ملف الصورة</string>
     <string name="error_file_not_found">لم يتم العثور على الملف</string>
     <string name="account_status_unknown">مجهول</string>
     <string name="account_status_disabled">معطّل مؤقتا</string>
@@ -116,6 +120,7 @@
     <string name="account_status_regis_not_sup">هذا الخادم لا يسمح بإنشاء حسابات جديدة</string>
     <string name="account_status_tls_error">فشلت المفاوضة الآمنة عبر TLS</string>
     <string name="account_status_policy_violation">انتهاك للشروط</string>
+    <string name="account_status_incompatible_server">خادم غير متوافق</string>
     <string name="account_status_stream_error">خطأ في البث</string>
     <string name="encryption_choice_unencrypted">بدون تشفير</string>
     <string name="encryption_choice_otr">OTR</string>
@@ -180,14 +185,18 @@
     <string name="touch_to_choose_picture">انقر على الصورة المصغرة لاختيار صورة مِن المعرض</string>
     <string name="publishing">جارٍ النشر…</string>
     <string name="error_publish_avatar_server_reject">رفض الخادم منشورك</string>
+    <string name="private_message">هَمَسَ</string>
     <string name="private_message_to">إلى %s</string>
+    <string name="send_private_message_to">أرسل رسالة خاصة إلى %s</string>
     <string name="connect">اتصل</string>
     <string name="account_already_exists">هذا الحساب موجود بالفعل</string>
     <string name="next">التالي</string>
     <string name="skip">تخطي</string>
     <string name="disable_notifications">تعطيل الإشعارات</string>
     <string name="enable">تمكين</string>
+    <string name="conference_requires_password">تلزمك كلمة سرية الانضمام إلى فريق المحادثة</string>
     <string name="enter_password">ادخل الكلمة السرية</string>
+    <string name="request_now">اطلب الآن</string>
     <string name="delete_fingerprint">حذف البصمة</string>
     <string name="sure_delete_fingerprint">هل أنت متأكد مِن أنك تريد حذف هذه البصمة؟</string>
     <string name="ignore">تجاهل</string>
@@ -209,10 +218,15 @@
     <string name="scan_qr_code">امسح رمز الاستجابة السريعة QR</string>
     <string name="show_qr_code">إظهار رمز الكيو آر</string>
     <string name="account_details">تفاصيل الحساب</string>
+    <string name="shared_secret_hint">نصيحة أو سؤال</string>
+    <string name="shared_secret_secret">الرمز السري المشترَك</string>
     <string name="confirm">تأكيد</string>
+    <string name="in_progress">المعالجة جارية</string>
+    <string name="respond">رد</string>
     <string name="failed">أخفق</string>
     <string name="try_again">أعد المحاولة</string>
     <string name="finish">إنهاء</string>
+    <string name="verified">تم التحقق منه!</string>
     <string name="pref_export_logs">تصدير السجل</string>
     <string name="choose_file">إختر ملفا</string>
     <string name="download_x_file">تنزيل %s</string>
@@ -234,6 +248,7 @@
     <string name="updating">التحديث جارٍ…</string>
     <string name="password_changed">تم تغيير الكلمة السرية!</string>
     <string name="could_not_change_password">لا يمكن تغيير الكلمة السرية</string>
+    <string name="ask_question">اطرح سؤالاً</string>
     <string name="change_password">تغيير الكلمة السرية</string>
     <string name="current_password">الكلمة السرية الحالية</string>
     <string name="new_password">كلمة السر الجديدة</string>
@@ -255,6 +270,7 @@
     <string name="image">صورة</string>
     <string name="pdf_document">وثيقة PDF</string>
     <string name="apk">تطبيق أندرويد</string>
+    <string name="sending_x_file">إرسال %s</string>
     <string name="hide_offline">إخفاء غير المتّصلين</string>
     <string name="is_typing">يكتب حاليا…</string>
     <string name="pref_chat_states">إشعارات الكتابة</string>
@@ -274,6 +290,8 @@
     <string name="send_private_message">أرسل رسالة خاصة</string>
     <string name="username">اسم المستخدم</string>
     <string name="username_hint">اسم المستخدم</string>
+    <string name="invalid_username">اسم المستخدم هذا غير صالح</string>
+    <string name="download_failed_server_not_found">فشلت التنزيل: الخادم غير موجود</string>
     <string name="action_check_update">البحث عن تحديثات</string>
     <string name="title_activity_updater">خدمة التحديث</string>
     <string name="remind_later">لاحقا</string>
