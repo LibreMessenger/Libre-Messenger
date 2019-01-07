@@ -1790,13 +1790,11 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 }
             }
         };
-        if (account.httpUploadAvailable() || attachmentChoice == ATTACHMENT_CHOICE_LOCATION) {
-            if ((account.httpUploadAvailable() || attachmentChoice == ATTACHMENT_CHOICE_LOCATION) && encryption != Message.ENCRYPTION_OTR) {
-                conversation.setNextCounterpart(null);
-                callback.onPresenceSelected();
-            } else {
-                activity.selectPresence(conversation, callback);
-            }
+        if ((account.httpUploadAvailable() || attachmentChoice == ATTACHMENT_CHOICE_LOCATION) && encryption != Message.ENCRYPTION_OTR) {
+            conversation.setNextCounterpart(null);
+            callback.onPresenceSelected();
+        } else {
+            activity.selectPresence(conversation, callback);
         }
     }
 
