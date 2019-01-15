@@ -32,6 +32,14 @@ public class IqPacket extends AbstractAcknowledgeableStanza {
         return query;
     }
 
+    public Element command() {
+        Element command = findChild("command");
+        if (command == null) {
+            command = addChild("command");
+        }
+        return command;
+    }
+
     public Element query(final String xmlns) {
         final Element query = query();
         query.setAttribute("xmlns", xmlns);
