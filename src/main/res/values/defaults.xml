@@ -67,7 +67,7 @@
     <bool name="vibrate_on_notification">true</bool>
     <bool name="led">true</bool>
     <string name="notification_ringtone">content://settings/system/notification_sound</string>
-    <bool name="notifications_from_strangers">false</bool>
+    <bool name="notifications_from_strangers">true</bool>
     <bool name="headsup_notifications">true</bool>
     <bool name="enable_quiet_hours">false</bool>
     <bool name="manually_change_presence">true</bool>
