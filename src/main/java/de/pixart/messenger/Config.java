@@ -85,6 +85,7 @@ public final class Config {
     public static final int FILE_SIZE = 1048576; // 1 MiB
 
     public static final int AVATAR_SIZE = 480;
+    public static final int SYSTEM_UI_AVATAR_SIZE = 48;
     public static final Bitmap.CompressFormat AVATAR_FORMAT = Bitmap.CompressFormat.JPEG;
     public static final int AVATAR_CHAR_LIMIT = 9400;
 

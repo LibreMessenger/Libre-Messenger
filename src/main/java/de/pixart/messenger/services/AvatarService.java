@@ -1,5 +1,6 @@
 package de.pixart.messenger.services;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -42,6 +43,8 @@ import de.pixart.messenger.xmpp.OnAdvancedStreamFeaturesLoaded;
 import de.pixart.messenger.xmpp.XmppConnection;
 import rocks.xmpp.addr.Jid;
 
+import static de.pixart.messenger.Config.SYSTEM_UI_AVATAR_SIZE;
+
 public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
 
     private static final int FG_COLOR = 0xFFFAFAFA;
@@ -73,6 +76,10 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
 
     private static String emptyOnNull(@Nullable Jid value) {
         return value == null ? "" : value.toString();
+    }
+
+    public static int getSystemUiAvatarSize(final Context context) {
+        return (int) (SYSTEM_UI_AVATAR_SIZE * context.getResources().getDisplayMetrics().density);
     }
 
     private Bitmap get(final Contact contact, final int size, boolean cachedOnly) {
