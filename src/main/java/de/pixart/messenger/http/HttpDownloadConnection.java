@@ -146,7 +146,6 @@ public class HttpDownloadConnection implements Transferable {
     }
 
     private void finish() {
-        mXmppConnectionService.getFileBackend().updateMediaScanner(file);
         message.setTransferable(null);
         mHttpConnectionManager.finishConnection(this);
         boolean notify = acceptedAutomatically && !message.isRead();
@@ -154,9 +153,12 @@ public class HttpDownloadConnection implements Transferable {
             notify = message.getConversation().getAccount().getPgpDecryptionService().decrypt(message, notify);
         }
         mHttpConnectionManager.updateConversationUi(true);
-        if (notify) {
-            mXmppConnectionService.getNotificationService().push(message);
-        }
+        final boolean notifyAfterScan = notify;
+        mXmppConnectionService.getFileBackend().updateMediaScanner(file, () -> {
+            if (notifyAfterScan) {
+                mXmppConnectionService.getNotificationService().push(message);
+            }
+        });
     }
 
     private void changeStatus(int status) {
