@@ -766,65 +766,49 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
                             }
                         }
                     } else {
-                        if (conversation.getParticipants() != null) {
-                            ChatState state = ChatState.COMPOSING;
-                            List<MucOptions.User> userWithChatStates = conversation.getMucOptions().getUsersWithChatState(state, 5);
-                            if (userWithChatStates.size() == 0) {
-                                state = ChatState.PAUSED;
-                                userWithChatStates = conversation.getMucOptions().getUsersWithChatState(state, 5);
-                            }
-                            List<MucOptions.User> users = conversation.getMucOptions().getUsers(true);
-                            if (state == ChatState.COMPOSING) {
-                                if (userWithChatStates.size() > 0) {
-                                    if (userWithChatStates.size() == 1) {
-                                        MucOptions.User user = userWithChatStates.get(0);
-                                        absubtitle.setText(EmojiWrapper.transform(getString(R.string.contact_is_typing, UIHelper.getDisplayName(user))));
-                                    } else {
-                                        StringBuilder builder = new StringBuilder();
-                                        for (MucOptions.User user : userWithChatStates) {
-                                            if (builder.length() != 0) {
-                                                builder.append(", ");
-                                            }
-                                            builder.append(UIHelper.getDisplayName(user));
-                                        }
-                                        absubtitle.setText(EmojiWrapper.transform(getString(R.string.contacts_are_typing, builder.toString())));
-                                    }
-                                }
-                            } else {
-                                if (users.size() == 0) {
-                                    absubtitle.setText(getString(R.string.one_participant));
-                                } else {
-                                    int size = users.size() + 1;
-                                    absubtitle.setText(getString(R.string.more_participants, size));
-                                }
-                            }
-                            absubtitle.setSelected(true);
-                            absubtitle.setOnClickListener(view15 -> {
-                                if (conversation.getMode() == Conversation.MODE_SINGLE) {
-                                    switchToContactDetails(conversation.getContact());
-                                } else if (conversation.getMode() == Conversation.MODE_MULTI) {
-                                    Intent intent = new Intent(ConversationsActivity.this, ConferenceDetailsActivity.class);
-                                    intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
-                                    intent.putExtra("uuid", conversation.getUuid());
-                                    startActivity(intent);
-                                    overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
-                                }
-                            });
-                        } else {
-                            absubtitle.setText(R.string.no_participants);
-                            abtitle.setSelected(true);
-                            absubtitle.setOnClickListener(view16 -> {
-                                if (conversation.getMode() == Conversation.MODE_SINGLE) {
-                                    switchToContactDetails(conversation.getContact());
-                                } else if (conversation.getMode() == Conversation.MODE_MULTI) {
-                                    Intent intent = new Intent(ConversationsActivity.this, ConferenceDetailsActivity.class);
-                                    intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
-                                    intent.putExtra("uuid", conversation.getUuid());
-                                    startActivity(intent);
-                                    overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
-                                }
-                            });
+                        ChatState state = ChatState.COMPOSING;
+                        List<MucOptions.User> userWithChatStates = conversation.getMucOptions().getUsersWithChatState(state, 5);
+                        if (userWithChatStates.size() == 0) {
+                            state = ChatState.PAUSED;
+                            userWithChatStates = conversation.getMucOptions().getUsersWithChatState(state, 5);
                         }
+                        List<MucOptions.User> users = conversation.getMucOptions().getUsers(true);
+                        if (state == ChatState.COMPOSING) {
+                            if (userWithChatStates.size() > 0) {
+                                if (userWithChatStates.size() == 1) {
+                                    MucOptions.User user = userWithChatStates.get(0);
+                                    absubtitle.setText(EmojiWrapper.transform(getString(R.string.contact_is_typing, UIHelper.getDisplayName(user))));
+                                } else {
+                                    StringBuilder builder = new StringBuilder();
+                                    for (MucOptions.User user : userWithChatStates) {
+                                        if (builder.length() != 0) {
+                                            builder.append(", ");
+                                        }
+                                        builder.append(UIHelper.getDisplayName(user));
+                                    }
+                                    absubtitle.setText(EmojiWrapper.transform(getString(R.string.contacts_are_typing, builder.toString())));
+                                }
+                            }
+                        } else {
+                            if (users.size() == 0) {
+                                absubtitle.setText(getString(R.string.one_participant));
+                            } else {
+                                int size = users.size() + 1;
+                                absubtitle.setText(getString(R.string.more_participants, size));
+                            }
+                        }
+                        absubtitle.setSelected(true);
+                        absubtitle.setOnClickListener(view15 -> {
+                            if (conversation.getMode() == Conversation.MODE_SINGLE) {
+                                switchToContactDetails(conversation.getContact());
+                            } else if (conversation.getMode() == Conversation.MODE_MULTI) {
+                                Intent intent = new Intent(ConversationsActivity.this, ConferenceDetailsActivity.class);
+                                intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
+                                intent.putExtra("uuid", conversation.getUuid());
+                                startActivity(intent);
+                                overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+                            }
+                        });
                     }
                     return;
                 }

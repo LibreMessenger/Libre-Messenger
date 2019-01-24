@@ -276,32 +276,30 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
                 viewHolder.sender.setVisibility(View.GONE);
             }
         } else {
-            if (conversation.getParticipants() != null) {
-                ChatState state = ChatState.COMPOSING;
-                List<MucOptions.User> userWithChatStates = conversation.getMucOptions().getUsersWithChatState(state, 5);
-                if (userWithChatStates.size() == 0) {
-                    state = ChatState.PAUSED;
-                    userWithChatStates = conversation.getMucOptions().getUsersWithChatState(state, 5);
-                }
-                if (state == ChatState.COMPOSING) {
-                    if (userWithChatStates.size() > 0) {
-                        if (userWithChatStates.size() == 1) {
-                            MucOptions.User user = userWithChatStates.get(0);
-                            viewHolder.lastMessage.setText(activity.getString(R.string.contact_is_typing, UIHelper.getDisplayName(user)));
-                            viewHolder.lastMessage.setTypeface(null, Typeface.BOLD_ITALIC);
-                            viewHolder.sender.setVisibility(View.GONE);
-                        } else {
-                            StringBuilder builder = new StringBuilder();
-                            for (MucOptions.User user : userWithChatStates) {
-                                if (builder.length() != 0) {
-                                    builder.append(", ");
-                                }
-                                builder.append(UIHelper.getDisplayName(user));
+            ChatState state = ChatState.COMPOSING;
+            List<MucOptions.User> userWithChatStates = conversation.getMucOptions().getUsersWithChatState(state, 5);
+            if (userWithChatStates.size() == 0) {
+                state = ChatState.PAUSED;
+                userWithChatStates = conversation.getMucOptions().getUsersWithChatState(state, 5);
+            }
+            if (state == ChatState.COMPOSING) {
+                if (userWithChatStates.size() > 0) {
+                    if (userWithChatStates.size() == 1) {
+                        MucOptions.User user = userWithChatStates.get(0);
+                        viewHolder.lastMessage.setText(activity.getString(R.string.contact_is_typing, UIHelper.getDisplayName(user)));
+                        viewHolder.lastMessage.setTypeface(null, Typeface.BOLD_ITALIC);
+                        viewHolder.sender.setVisibility(View.GONE);
+                    } else {
+                        StringBuilder builder = new StringBuilder();
+                        for (MucOptions.User user : userWithChatStates) {
+                            if (builder.length() != 0) {
+                                builder.append(", ");
                             }
-                            viewHolder.lastMessage.setText(activity.getString(R.string.contacts_are_typing, builder.toString()));
-                            viewHolder.lastMessage.setTypeface(null, Typeface.BOLD_ITALIC);
-                            viewHolder.sender.setVisibility(View.GONE);
+                            builder.append(UIHelper.getDisplayName(user));
                         }
+                        viewHolder.lastMessage.setText(activity.getString(R.string.contacts_are_typing, builder.toString()));
+                        viewHolder.lastMessage.setTypeface(null, Typeface.BOLD_ITALIC);
+                        viewHolder.sender.setVisibility(View.GONE);
                     }
                 }
             }
