@@ -1132,7 +1132,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     }
 
     public void showLocation(Message message) {
-        for (Intent intent : GeoHelper.createGeoIntentsFromMessage(message, this.getContext())) {
+        for (Intent intent : GeoHelper.createGeoIntentsFromMessage(this.getContext(), message)) {
             if (intent.resolveActivity(getContext().getPackageManager()) != null) {
                 getContext().startActivity(intent);
                 activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);

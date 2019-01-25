@@ -80,6 +80,7 @@ dependencies {
     implementation 'org.conscrypt:conscrypt-android:1.4.2'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.15' // last working version for minSDK 16
     implementation 'me.drakeet.support:toastcompat:1.1.0'
+    implementation 'org.osmdroid:osmdroid-android:6.0.3'
 }
 
 ext {

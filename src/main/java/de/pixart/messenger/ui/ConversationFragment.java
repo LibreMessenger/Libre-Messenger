@@ -108,6 +108,7 @@ import de.pixart.messenger.ui.util.SendButtonAction;
 import de.pixart.messenger.ui.util.SendButtonTool;
 import de.pixart.messenger.ui.util.ShareUtil;
 import de.pixart.messenger.ui.widget.EditMessage;
+import de.pixart.messenger.utils.GeoHelper;
 import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import de.pixart.messenger.utils.MessageUtils;
 import de.pixart.messenger.utils.NickValidityChecker;
@@ -1283,6 +1284,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             final boolean receiving = m.getStatus() == Message.STATUS_RECEIVED && (t instanceof JingleConnection || t instanceof HttpDownloadConnection);
             activity.getMenuInflater().inflate(R.menu.message_context, menu);
             menu.setHeaderTitle(R.string.message_options);
+            MenuItem openWith = menu.findItem(R.id.open_with);
             MenuItem copyMessage = menu.findItem(R.id.copy_message);
             MenuItem copyLink = menu.findItem(R.id.copy_link);
             MenuItem quoteMessage = menu.findItem(R.id.quote_message);
@@ -1314,6 +1316,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             }
             if (!showError
                     && relevantForCorrection.getType() == Message.TYPE_TEXT
+                    && !m.isGeoUri()
                     && relevantForCorrection.isLastCorrectableMessage()
                     && m.getConversation() instanceof Conversation
                     && (((Conversation) m.getConversation()).getMucOptions().nonanonymous() || m.getConversation().getMode() == Conversation.MODE_SINGLE)) {
@@ -1354,6 +1357,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             }
             if (showError) {
                 showErrorMessage.setVisible(true);
+            }
+            if (m.isGeoUri() && GeoHelper.openInOsmAnd(getActivity(),m)) {
+                openWith.setVisible(true);
             }
         }
     }
@@ -1399,6 +1405,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 return true;
             case R.id.show_error_message:
                 showErrorMessage(selectedMessage);
+                return true;
+            case R.id.open_with:
+                openWith(selectedMessage);
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -1841,6 +1850,12 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             }
         }
         return null;
+    }
+
+    private void openWith(final Message message) {
+        if (message.isGeoUri()) {
+            GeoHelper.view(getActivity(), message);
+        }
     }
 
     private void showErrorMessage(final Message message) {

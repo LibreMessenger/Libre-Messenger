@@ -859,4 +859,5 @@
     <string name="autojoin_groupchat">Automatically join this group chat</string>
     <string name="pref_play_gif_inside">Play GIF files in chat</string>
     <string name="pref_play_gif_inside_summary">Setting this to true plays GIF files directly inside the chat view.</string>
+    <string name="open_with">Open with…</string>
 </resources>
