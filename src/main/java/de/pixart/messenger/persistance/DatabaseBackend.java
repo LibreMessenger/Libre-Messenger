@@ -161,8 +161,8 @@ public class DatabaseBackend extends SQLiteOpenHelper {
             + ");";
     private static String CREATE_MESSAGE_TIME_INDEX = "create INDEX message_time_index ON " + Message.TABLENAME + "(" + Message.TIME_SENT + ")";
     private static String CREATE_MESSAGE_CONVERSATION_INDEX = "create INDEX message_conversation_index ON " + Message.TABLENAME + "(" + Message.CONVERSATION + ")";
-    private static String CREATE_MESSAGE_DELETED_INDEX = "create index message_deleted_index ON "+ Message.TABLENAME + "(" + Message.DELETED + ")";
-    private static String CREATE_MESSAGE_FILE_DELETED_INDEX = "create index message_file_deleted_index ON "+ Message.TABLENAME + "(" + Message.FILE_DELETED + ")";
+    private static String CREATE_MESSAGE_DELETED_INDEX = "create index message_deleted_index ON " + Message.TABLENAME + "(" + Message.DELETED + ")";
+    private static String CREATE_MESSAGE_FILE_DELETED_INDEX = "create index message_file_deleted_index ON " + Message.TABLENAME + "(" + Message.FILE_DELETED + ")";
     private static String CREATE_MESSAGE_RELATIVE_FILE_PATH_INDEX = "create INDEX message_file_path_index ON " + Message.TABLENAME + "(" + Message.RELATIVE_FILE_PATH + ")";
     private static String CREATE_MESSAGE_TYPE_INDEX = "create INDEX message_type_index ON " + Message.TABLENAME + "(" + Message.TYPE + ")";
 
@@ -346,7 +346,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         }
         /* Any migrations that alter the Account table need to happen BEFORE this migration, as it
          * depends on account de-serialization.
-		 */
+         */
         if (oldVersion < 17 && newVersion >= 17 && newVersion < 31) {
             List<Account> accounts = getAccounts(db);
             for (Account account : accounts) {
@@ -819,8 +819,14 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         String selection;
         String[] selectionArgs;
         if (internal) {
-            selection = Message.RELATIVE_FILE_PATH + " IN(?,?) and type in (1,2)";
-            selectionArgs = new String[]{file.getAbsolutePath(), file.getName()};
+            final String name = file.getName();
+            if (name.endsWith(".pgp")) {
+                selection = "(" + Message.RELATIVE_FILE_PATH + " IN(?,?) OR (" + Message.RELATIVE_FILE_PATH + "=? and encryption in(1,4))) and type in (1,2)";
+                selectionArgs = new String[]{file.getAbsolutePath(), name, name.substring(0, name.length() - 4)};
+            } else {
+                selection = Message.RELATIVE_FILE_PATH + " IN(?,?) and type in (1,2)";
+                selectionArgs = new String[]{file.getAbsolutePath(), name};
+            }
         } else {
             selection = Message.RELATIVE_FILE_PATH + "=? and type in (1,2)";
             selectionArgs = new String[]{file.getAbsolutePath()};
@@ -866,7 +872,6 @@ public class DatabaseBackend extends SQLiteOpenHelper {
     public List<FilePath> getRelativeFilePaths(String account, Jid jid, int limit) {
         SQLiteDatabase db = this.getReadableDatabase();
         final String SQL = "select uuid,relativeFilePath from messages where type in (1,2) and file_deleted=0 and conversationUuid=(select uuid from conversations where accountUuid=? and (contactJid=? or contactJid like ?)) order by timeSent desc";
-
         final String[] args = {account, jid.toEscapedString(), jid.toEscapedString() + "/%"};
         Cursor cursor = db.rawQuery(SQL + (limit > 0 ? " limit " + String.valueOf(limit) : ""), args);
         List<FilePath> filesPaths = new ArrayList<>();
@@ -941,6 +946,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         }
     }
 
+
     private List<Account> getAccounts(SQLiteDatabase db) {
         List<Account> list = new ArrayList<>();
         Cursor cursor = db.query(Account.TABLENAME, null, null, null, null,
@@ -977,11 +983,10 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         return db.update(Message.TABLENAME, message.getContentValues(), Message.UUID + "=?", args) == 1;
     }
 
-    public void updateMessage(Message message, String uuid) {
+    public boolean updateMessage(Message message, String uuid) {
         SQLiteDatabase db = this.getWritableDatabase();
         String[] args = {uuid};
-        db.update(Message.TABLENAME, message.getContentValues(), Message.UUID
-                + "=?", args);
+        return db.update(Message.TABLENAME, message.getContentValues(), Message.UUID + "=?", args) == 1;
     }
 
     public void readRoster(Roster roster) {
@@ -1020,10 +1025,13 @@ public class DatabaseBackend extends SQLiteOpenHelper {
     public void deleteMessageInConversation(Message message) {
         long start = SystemClock.elapsedRealtime();
         final SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
         ContentValues values = new ContentValues();
         values.put(Message.DELETED, "1");
         String[] args = {message.getUuid()};
         int rows = db.update("messages", values, "uuid =?", args);
+        db.setTransactionSuccessful();
+        db.endTransaction();
         Log.d(Config.LOGTAG, "deleted " + rows + " message in " + (SystemClock.elapsedRealtime() - start) + "ms");
     }
 
@@ -1594,7 +1602,8 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         storeIdentityKey(account, account.getJid().asBareJid().toString(), true, CryptoHelper.bytesToHex(identityKeyPair.getPublicKey().serialize()), Base64.encodeToString(identityKeyPair.serialize(), Base64.DEFAULT), FingerprintStatus.createActiveVerified(false));
     }
 
-    public void recreateAxolotlDb(SQLiteDatabase db) {
+
+    private void recreateAxolotlDb(SQLiteDatabase db) {
         Log.d(Config.LOGTAG, AxolotlService.LOGPREFIX + " : " + ">>> (RE)CREATING AXOLOTL DATABASE <<<");
         db.execSQL("DROP TABLE IF EXISTS " + SQLiteAxolotlStore.SESSION_TABLENAME);
         db.execSQL(CREATE_SESSIONS_STATEMENT);

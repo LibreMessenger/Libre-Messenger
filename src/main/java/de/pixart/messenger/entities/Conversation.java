@@ -193,20 +193,6 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
         }
     }
 
-    public void findMessagesWithFiles(final OnMessageFound onMessageFound) {
-        final ArrayList<Message> results = new ArrayList<>();
-        synchronized (this.messages) {
-            for (final Message m : this.messages) {
-                if (m.isFileOrImage() && m.getEncryption() != Message.ENCRYPTION_PGP) {
-                    results.add(m);
-                }
-            }
-        }
-        for (Message result : results) {
-            onMessageFound.onMessageFound(result);
-        }
-    }
-
     public void findFailedMessagesWithFiles(final OnMessageFound onMessageFound) {
         final ArrayList<Message> results = new ArrayList<>();
         synchronized (this.messages) {
@@ -252,11 +238,15 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
 
     public boolean markAsDeleted(final List<String> uuids) {
         boolean deleted = false;
+        final PgpDecryptionService pgpDecryptionService = account.getPgpDecryptionService();
         synchronized (this.messages) {
-            for(Message message : this.messages) {
+            for (Message message : this.messages) {
                 if (uuids.contains(message.getUuid())) {
                     message.setFileDeleted(true);
                     deleted = true;
+                    if (message.getEncryption() == Message.ENCRYPTION_PGP && pgpDecryptionService != null) {
+                        pgpDecryptionService.discard(message);
+                    }
                 }
             }
         }
