@@ -383,7 +383,13 @@ public class NotificationService {
         mBuilder.setColor(ContextCompat.getColor(mXmppConnectionService, R.color.primary));
     }
 
-    public void updateNotification(final boolean notify) {
+    public void updateNotification() {
+        synchronized (notifications) {
+            updateNotification(false);
+        }
+    }
+
+    private void updateNotification(final boolean notify) {
         updateNotification(notify, null, false);
     }
 
