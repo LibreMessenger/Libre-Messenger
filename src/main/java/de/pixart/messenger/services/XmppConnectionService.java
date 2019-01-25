@@ -195,7 +195,8 @@ public class XmppConnectionService extends Service {
     private final IBinder mBinder = new XmppConnectionBinder();
     private final List<Conversation> conversations = new CopyOnWriteArrayList<>();
     private final IqGenerator mIqGenerator = new IqGenerator(this);
-    private final List<String> mInProgressAvatarFetches = new ArrayList<>();
+    private final Set<String> mInProgressAvatarFetches = new HashSet<>();
+    private final Set<String> mOmittedPepAvatarFetches = new HashSet<>();
     private final HashSet<Jid> mLowPingTimeoutMode = new HashSet<>();
     private final OnIqPacketReceived mDefaultIqHandler = (account, packet) -> {
         if (packet.getType() != IqPacket.TYPE.RESULT) {
@@ -3434,6 +3435,7 @@ public class XmppConnectionService extends Service {
                     if (account.setAvatar(avatar.getFilename())) {
                         getAvatarService().clear(account);
                         databaseBackend.updateAccount(account);
+                        notifyAccountAvatarHasChanged(account);
                     }
                     Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": published avatar " + (avatar.size / 1024) + "KiB");
                     if (callback != null) {
@@ -3513,7 +3515,7 @@ public class XmppConnectionService extends Service {
     public void fetchAvatar(Account account, final Avatar avatar, final UiCallback<Avatar> callback) {
         final String KEY = generateFetchKey(account, avatar);
         synchronized (this.mInProgressAvatarFetches) {
-            if (!this.mInProgressAvatarFetches.contains(KEY)) {
+            if (mInProgressAvatarFetches.add(KEY)) {
                 switch (avatar.origin) {
                     case PEP:
                         this.mInProgressAvatarFetches.add(KEY);
@@ -3524,6 +3526,10 @@ public class XmppConnectionService extends Service {
                         fetchAvatarVcard(account, avatar, callback);
                         break;
                 }
+            } else if (avatar.origin == Avatar.Origin.PEP) {
+                mOmittedPepAvatarFetches.add(KEY);
+            } else {
+                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": already fetching " + avatar.origin + " avatar for " + avatar.owner);
             }
         }
     }
@@ -3581,54 +3587,54 @@ public class XmppConnectionService extends Service {
 
     private void fetchAvatarVcard(final Account account, final Avatar avatar, final UiCallback<Avatar> callback) {
         IqPacket packet = this.mIqGenerator.retrieveVcardAvatar(avatar);
-        this.sendIqPacket(account, packet, new OnIqPacketReceived() {
-            @Override
-            public void onIqPacketReceived(Account account, IqPacket packet) {
-                synchronized (mInProgressAvatarFetches) {
-                    mInProgressAvatarFetches.remove(generateFetchKey(account, avatar));
-                }
-                if (packet.getType() == IqPacket.TYPE.RESULT) {
-                    Element vCard = packet.findChild("vCard", "vcard-temp");
-                    Element photo = vCard != null ? vCard.findChild("PHOTO") : null;
-                    String image = photo != null ? photo.findChildContent("BINVAL") : null;
-                    if (image != null) {
-                        avatar.image = image;
-                        if (getFileBackend().save(avatar)) {
-                            Log.d(Config.LOGTAG, account.getJid().asBareJid()
-                                    + ": successfully fetched vCard avatar for " + avatar.owner);
-                            if (avatar.owner.isBareJid()) {
-                                if (account.getJid().asBareJid().equals(avatar.owner) && account.getAvatar() == null) {
-                                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": had no avatar. replacing with vcard");
-                                    account.setAvatar(avatar.getFilename());
-                                    databaseBackend.updateAccount(account);
-                                    getAvatarService().clear(account);
-                                    updateAccountUi();
-                                } else {
-                                    Contact contact = account.getRoster().getContact(avatar.owner);
-                                    if (contact.setAvatar(avatar)) {
-                                        syncRoster(account);
-                                        getAvatarService().clear(contact);
-                                        updateRosterUi();
-                                    }
-                                }
-                                updateConversationUi();
+        this.sendIqPacket(account, packet, (account1, packet1) -> {
+            final boolean previouslyOmittedPepFetch;
+            synchronized (mInProgressAvatarFetches) {
+                final String KEY = generateFetchKey(account1, avatar);
+                mInProgressAvatarFetches.remove(KEY);
+                previouslyOmittedPepFetch = mOmittedPepAvatarFetches.remove(KEY);
+            }
+            if (packet1.getType() == IqPacket.TYPE.RESULT) {
+                Element vCard = packet1.findChild("vCard", "vcard-temp");
+                Element photo = vCard != null ? vCard.findChild("PHOTO") : null;
+                String image = photo != null ? photo.findChildContent("BINVAL") : null;
+                if (image != null) {
+                    avatar.image = image;
+                    if (getFileBackend().save(avatar)) {
+                        Log.d(Config.LOGTAG, account1.getJid().asBareJid()
+                                + ": successfully fetched vCard avatar for " + avatar.owner + " omittedPep=" + previouslyOmittedPepFetch);
+                        if (avatar.owner.isBareJid()) {
+                            if (account1.getJid().asBareJid().equals(avatar.owner) && account1.getAvatar() == null) {
+                                Log.d(Config.LOGTAG, account1.getJid().asBareJid() + ": had no avatar. replacing with vcard");
+                                account1.setAvatar(avatar.getFilename());
+                                databaseBackend.updateAccount(account1);
+                                getAvatarService().clear(account1);
+                                updateAccountUi();
                             } else {
-                                Conversation conversation = find(account, avatar.owner.asBareJid());
-                                if (conversation != null && conversation.getMode() == Conversation.MODE_MULTI) {
-                                    MucOptions.User user = conversation.getMucOptions().findUserByFullJid(avatar.owner);
-                                    if (user != null) {
-                                        if (user.setAvatar(avatar)) {
-                                            getAvatarService().clear(user);
-                                            updateConversationUi();
-                                            updateMucRosterUi();
-                                        }
-                                        if (user.getRealJid() != null) {
-                                            Contact contact = account.getRoster().getContact(user.getRealJid());
-                                            if (contact.setAvatar(avatar)) {
-                                                syncRoster(account);
-                                                getAvatarService().clear(contact);
-                                                updateRosterUi();
-                                            }
+                                Contact contact = account1.getRoster().getContact(avatar.owner);
+                                if (contact.setAvatar(avatar, previouslyOmittedPepFetch)) {
+                                    syncRoster(account1);
+                                    getAvatarService().clear(contact);
+                                    updateRosterUi();
+                                }
+                            }
+                            updateConversationUi();
+                        } else {
+                            Conversation conversation = find(account1, avatar.owner.asBareJid());
+                            if (conversation != null && conversation.getMode() == Conversation.MODE_MULTI) {
+                                MucOptions.User user = conversation.getMucOptions().findUserByFullJid(avatar.owner);
+                                if (user != null) {
+                                    if (user.setAvatar(avatar)) {
+                                        getAvatarService().clear(user);
+                                        updateConversationUi();
+                                        updateMucRosterUi();
+                                    }
+                                    if (user.getRealJid() != null) {
+                                        Contact contact = account1.getRoster().getContact(user.getRealJid());
+                                        if (contact.setAvatar(avatar)) {
+                                            syncRoster(account1);
+                                            getAvatarService().clear(contact);
+                                            updateRosterUi();
                                         }
                                     }
                                 }
@@ -3671,6 +3677,23 @@ public class XmppConnectionService extends Service {
                 callback.error(0, null);
             }
         });
+    }
+
+    public void notifyAccountAvatarHasChanged(final Account account) {
+        final XmppConnection connection = account.getXmppConnection();
+        if (connection != null && connection.getFeatures().bookmarksConversion()) {
+            Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": avatar changed. resending presence to online group chats");
+            for (Conversation conversation : conversations) {
+                if (conversation.getAccount() == account && conversation.getMode() == Conversational.MODE_MULTI) {
+                    final MucOptions mucOptions = conversation.getMucOptions();
+                    if (mucOptions.online()) {
+                        PresencePacket packet = mPresenceGenerator.selfPresence(account, Presence.Status.ONLINE, mucOptions.nonanonymous());
+                        packet.setTo(mucOptions.getSelf().getFullJid());
+                        connection.sendPresencePacket(packet);
+                    }
+                }
+            }
+        }
     }
 
     public void deleteContactOnServer(Contact contact) {
