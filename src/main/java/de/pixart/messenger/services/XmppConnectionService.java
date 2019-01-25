@@ -1852,10 +1852,23 @@ public class XmppConnectionService extends Service {
     }
 
     public void populateWithOrderedConversations(final List<Conversation> list) {
-        populateWithOrderedConversations(list, true);
+        populateWithOrderedConversations(list, true, true);
     }
 
-    public void populateWithOrderedConversations(final List<Conversation> list, boolean includeNoFileUpload) {
+    public void populateWithOrderedConversations(final List<Conversation> list, final boolean includeNoFileUpload) {
+        populateWithOrderedConversations(list, includeNoFileUpload, true);
+    }
+
+    public void populateWithOrderedConversations(final List<Conversation> list, final boolean includeNoFileUpload, final boolean sort) {
+        final List<String> orderedUuids;
+        if (sort) {
+            orderedUuids = null;
+        } else {
+            orderedUuids = new ArrayList<>();
+            for (Conversation conversation : list) {
+                orderedUuids.add(conversation.getUuid());
+            }
+        }
         list.clear();
         if (includeNoFileUpload) {
             list.addAll(getConversations());
@@ -1868,7 +1881,18 @@ public class XmppConnectionService extends Service {
             }
         }
         try {
-            Collections.sort(list);
+            if (orderedUuids != null) {
+                Collections.sort(list, (a, b) -> {
+                    final int indexA = orderedUuids.indexOf(a.getUuid());
+                    final int indexB = orderedUuids.indexOf(b.getUuid());
+                    if (indexA == -1 || indexB == -1 || indexA == indexB) {
+                        return a.compareTo(b);
+                    }
+                    return indexA - indexB;
+                });
+            } else {
+                Collections.sort(list);
+            }
         } catch (IllegalArgumentException e) {
             //ignore
         }
