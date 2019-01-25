@@ -107,6 +107,7 @@ import de.pixart.messenger.ui.util.ScrollState;
 import de.pixart.messenger.ui.util.SendButtonAction;
 import de.pixart.messenger.ui.util.SendButtonTool;
 import de.pixart.messenger.ui.util.ShareUtil;
+import de.pixart.messenger.ui.util.ViewUtil;
 import de.pixart.messenger.ui.widget.EditMessage;
 import de.pixart.messenger.utils.Compatibility;
 import de.pixart.messenger.utils.GeoHelper;
@@ -1359,7 +1360,8 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             if (showError) {
                 showErrorMessage.setVisible(true);
             }
-            if (m.isGeoUri() && GeoHelper.openInOsmAnd(getActivity(),m)) {
+            final String mime = m.isFileOrImage() ? m.getMimeType() : null;
+            if ((m.isGeoUri() && GeoHelper.openInOsmAnd(getActivity(), m)) || (mime != null && mime.startsWith("audio/"))) {
                 openWith.setVisible(true);
             }
         }
@@ -1856,6 +1858,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     private void openWith(final Message message) {
         if (message.isGeoUri()) {
             GeoHelper.view(getActivity(), message);
+        } else {
+            final DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
+            ViewUtil.view(activity, file);
         }
     }
 

@@ -14,6 +14,7 @@ import java.util.List;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.entities.DownloadableFile;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.ui.MediaViewerActivity;
 
@@ -22,6 +23,18 @@ public class ViewUtil {
     public static void view(Context context, Attachment attachment) {
         File file = new File(attachment.getUri().getPath());
         final String mime = attachment.getMime() == null ? "*/*" : attachment.getMime();
+        view(context, file, mime);
+    }
+
+    public static void view(Context context, DownloadableFile file) {
+        if (!file.exists()) {
+            Toast.makeText(context, R.string.file_deleted, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String mime = file.getMimeType();
+        if (mime == null) {
+            mime = "*/*";
+        }
         view(context, file, mime);
     }
 
