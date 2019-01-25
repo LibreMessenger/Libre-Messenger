@@ -114,40 +114,49 @@ public class EnterJidDialog extends DialogFragment implements OnBackendConnected
         AlertDialog dialog = builder.create();
 
         View.OnClickListener dialogOnClick = v -> {
-            final Jid accountJid;
-            if (!binding.account.isEnabled() && account == null) {
-                return;
-            }
-            try {
-                if (Config.DOMAIN_LOCK != null) {
-                    accountJid = Jid.of((String) binding.account.getSelectedItem(), Config.DOMAIN_LOCK, null);
-                } else {
-                    accountJid = Jid.of((String) binding.account.getSelectedItem());
-                }
-            } catch (final IllegalArgumentException e) {
-                return;
-            }
-            final Jid contactJid;
-            try {
-                contactJid = Jid.of(binding.jid.getText().toString());
-            } catch (final IllegalArgumentException e) {
-                binding.jid.setError(getActivity().getString(R.string.invalid_jid));
-                return;
-            }
-
-            if (mListener != null) {
-                try {
-                    if (mListener.onEnterJidDialogPositive(accountJid, contactJid)) {
-                        dialog.dismiss();
-                    }
-                } catch (JidError error) {
-                    binding.jid.setError(error.toString());
-                }
-            }
+            handleEnter(binding, account, dialog);
         };
+        binding.jid.setOnEditorActionListener((v, actionId, event) -> {
+            handleEnter(binding, account, dialog);
+            return true;
+        });
+
         dialog.show();
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(dialogOnClick);
         return dialog;
+    }
+
+    private void handleEnter(EnterJidDialogBinding binding, String account, Dialog dialog) {
+        final Jid accountJid;
+        if (!binding.account.isEnabled() && account == null) {
+            return;
+        }
+        try {
+            if (Config.DOMAIN_LOCK != null) {
+                accountJid = Jid.of((String) binding.account.getSelectedItem(), Config.DOMAIN_LOCK, null);
+            } else {
+                accountJid = Jid.of((String) binding.account.getSelectedItem());
+            }
+        } catch (final IllegalArgumentException e) {
+            return;
+        }
+        final Jid contactJid;
+        try {
+            contactJid = Jid.of(binding.jid.getText().toString());
+        } catch (final IllegalArgumentException e) {
+            binding.jid.setError(getActivity().getString(R.string.invalid_jid));
+            return;
+        }
+
+        if (mListener != null) {
+            try {
+                if (mListener.onEnterJidDialogPositive(accountJid, contactJid)) {
+                    dialog.dismiss();
+                }
+            } catch (JidError error) {
+                binding.jid.setError(error.toString());
+            }
+        }
     }
 
     public void setOnEnterJidDialogPositiveListener(OnEnterJidDialogPositiveListener listener) {
