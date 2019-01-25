@@ -549,15 +549,7 @@ public class SettingsActivity extends XmppActivity implements
     }
 
     private void startExport() {
-        try {
-            if (Compatibility.runsAndTargetsTwentySix(this)) {
-                ContextCompat.startForegroundService(this, new Intent(this, ExportLogsService.class));
-            } else {
-                this.startService(new Intent(this, ExportLogsService.class));
-            }
-        } catch (RuntimeException e) {
-            Log.d(Config.LOGTAG, "SettingsActivity was unable to start ExportLogsService");
-        }
+        Compatibility.startService(this, new Intent(this, ExportLogsService.class));
     }
 
     private void displayToast(final String msg) {

@@ -1,6 +1,7 @@
 package de.pixart.messenger.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -11,14 +12,18 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.support.annotation.BoolRes;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.ui.SettingsActivity;
 import de.pixart.messenger.ui.SettingsFragment;
+
+import static de.pixart.messenger.services.EventReceiver.EXTRA_NEEDS_FOREGROUND_SERVICE;
 
 public class Compatibility {
     private static final List<String> UNUSED_SETTINGS_POST_TWENTYSIX = Arrays.asList(
@@ -100,6 +105,19 @@ public class Compatibility {
                     }
                 }
             }
+        }
+    }
+
+    public static void startService(Context context, Intent intent) {
+        try {
+            if (Compatibility.runsAndTargetsTwentySix(context)) {
+                intent.putExtra(EXTRA_NEEDS_FOREGROUND_SERVICE, true);
+                ContextCompat.startForegroundService(context, intent);
+            } else {
+                context.startService(intent);
+            }
+        } catch (RuntimeException e) {
+            Log.d(Config.LOGTAG, context.getClass().getSimpleName() + " was unable to start service");
         }
     }
 }

@@ -1256,6 +1256,7 @@ public class XmppConnectionService extends Service {
         } catch (IllegalArgumentException e) {
             //ignored
         }
+        destroyed = false;
         fileObserver.stopWatching();
         super.onDestroy();
         // cancel scheduled exporter

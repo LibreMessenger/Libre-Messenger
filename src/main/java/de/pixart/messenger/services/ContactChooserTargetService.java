@@ -18,6 +18,7 @@ import java.util.List;
 
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.ui.ConversationsActivity;
+import de.pixart.messenger.utils.Compatibility;
 
 @TargetApi(Build.VERSION_CODES.M)
 public class ContactChooserTargetService extends ChooserTargetService implements ServiceConnection {
@@ -37,10 +38,14 @@ public class ContactChooserTargetService extends ChooserTargetService implements
 
     @Override
     public List<ChooserTarget> onGetChooserTargets(ComponentName targetActivityName, IntentFilter matchedFilter) {
-        Intent intent = new Intent(this, XmppConnectionService.class);
+        final ArrayList<ChooserTarget> chooserTargets = new ArrayList<>();
+        if (!EventReceiver.hasEnabledAccounts(this)) {
+            return chooserTargets;
+        }
+        final Intent intent = new Intent(this, XmppConnectionService.class);
         intent.setAction("contact_chooser");
+        Compatibility.startService(this, intent);
         bindService(intent, this, Context.BIND_AUTO_CREATE);
-        ArrayList<ChooserTarget> chooserTargets = new ArrayList<>();
         try {
             waitForService();
             final ArrayList<Conversation> conversations = new ArrayList<>();
