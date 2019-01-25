@@ -95,7 +95,7 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/SplashTheme"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -108,7 +108,7 @@
             android:launchMode="singleTask"
             android:minWidth="300dp"
             android:minHeight="300dp"
-            android:windowSoftInputMode="stateHidden"></activity>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".ui.ScanActivity"
             android:screenOrientation="portrait"
