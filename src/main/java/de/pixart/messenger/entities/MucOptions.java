@@ -101,8 +101,9 @@ public class MucOptions {
         return tookProposedNickFromBookmark;
     }
 
-    void notifyOfBookmarkNick(String nick) {
-        if (nick != null && nick.trim().equals(getSelf().getFullJid().getResource())) {
+    void notifyOfBookmarkNick(final String nick) {
+        final String normalized = normalize(account.getJid(),nick);
+        if (normalized != null && normalized.equals(getSelf().getFullJid().getResource())) {
             this.tookProposedNickFromBookmark = true;
         }
     }
@@ -388,20 +389,32 @@ public class MucOptions {
 
     private String getProposedNick() {
         final Bookmark bookmark = this.conversation.getBookmark();
-        final String bookmarkedNick = bookmark == null ? null : bookmark.getNick();
-        if (bookmarkedNick != null && !bookmarkedNick.trim().isEmpty()) {
+        final String bookmarkedNick = normalize(account.getJid(), bookmark == null ? null : bookmark.getNick());
+        if (bookmarkedNick != null) {
             this.tookProposedNickFromBookmark = true;
-            return bookmarkedNick.trim();
+            return bookmarkedNick;
         } else if (!conversation.getJid().isBareJid()) {
             return conversation.getJid().getResource();
         } else {
-            final String displayName = account.getDisplayName();
-            if (TextUtils.isEmpty(displayName)) {
+            final String displayName = normalize(account.getJid(), account.getDisplayName());
+            if (displayName == null) {
                 return JidHelper.localPartOrFallback(account.getJid());
             } else {
                 return displayName;
             }
         }
+    }
+
+    private static String normalize(Jid account, String nick) {
+        if (account == null || TextUtils.isEmpty(nick)) {
+            return null;
+        }
+        try {
+            return account.withResource(nick).getResource();
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+
     }
 
     public String getActualNick() {
@@ -531,7 +544,7 @@ public class MucOptions {
 
     public Jid createJoinJid(String nick) {
         try {
-            return Jid.of(this.conversation.getJid().asBareJid().toString() + "/" + nick);
+            return conversation.getJid().withResource(nick);
         } catch (final IllegalArgumentException e) {
             return null;
         }
