@@ -76,6 +76,7 @@ import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.Presences;
 import de.pixart.messenger.services.AvatarService;
 import de.pixart.messenger.services.BarcodeProvider;
+import de.pixart.messenger.services.EmojiService;
 import de.pixart.messenger.services.UpdateService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.services.XmppConnectionService.XmppConnectionBinder;
@@ -90,6 +91,8 @@ import de.pixart.messenger.xmpp.OnKeyStatusUpdated;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import pl.droidsonroids.gif.GifDrawable;
 import rocks.xmpp.addr.Jid;
+
+import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
 
 public abstract class XmppActivity extends ActionBarActivity {
 
@@ -395,6 +398,7 @@ public abstract class XmppActivity extends ActionBarActivity {
         setVolumeControlStream(AudioManager.STREAM_NOTIFICATION);
         metrics = getResources().getDisplayMetrics();
         ExceptionHelper.init(getApplicationContext());
+        new EmojiService(this).init(getPreferences().getBoolean(USE_BUNDLED_EMOJIS, getResources().getBoolean(R.bool.use_bundled_emoji)));
         this.isCameraFeatureAvailable = getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
         mColorRed = ContextCompat.getColor(this, R.color.red800);
         if (isDarkTheme()) {

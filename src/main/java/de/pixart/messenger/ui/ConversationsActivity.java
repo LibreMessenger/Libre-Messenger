@@ -418,7 +418,6 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
         super.onCreate(savedInstanceState);
         ConversationMenuConfigurator.reloadFeatures(this);
         OmemoSetting.load(this);
-        new EmojiService(this).init(useBundledEmoji());
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_conversations);
         setSupportActionBar((Toolbar) binding.toolbar);
         configureActionBar(getSupportActionBar());
@@ -819,10 +818,6 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
             actionBar.setSubtitle(null);
             actionBar.setDisplayHomeAsUpEnabled(false);
         }
-    }
-
-    public boolean useBundledEmoji() {
-        return getPreferences().getBoolean(USE_BUNDLED_EMOJIS, getResources().getBoolean(R.bool.use_bundled_emoji));
     }
 
     public void verifyOtrSessionDialog(final Conversation conversation, View view) {

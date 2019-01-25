@@ -73,8 +73,6 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        boolean useBundledEmoji = getPreferences().getBoolean(USE_BUNDLED_EMOJIS, getResources().getBoolean(R.bool.use_bundled_emoji));
-        new EmojiService(this).init(useBundledEmoji);
         setContentView(R.layout.activity_share_with);
         setSupportActionBar(findViewById(R.id.toolbar));
         if (getSupportActionBar() != null) {

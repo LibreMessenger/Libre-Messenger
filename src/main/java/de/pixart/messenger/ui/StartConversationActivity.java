@@ -261,7 +261,6 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new EmojiService(this).init(useBundledEmoji());
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_start_conversation);
         Toolbar toolbar = (Toolbar) binding.toolbar;
         setSupportActionBar(toolbar);
@@ -937,10 +936,6 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
             startActivity(intent);
         }
         finish();
-    }
-
-    public boolean useBundledEmoji() {
-        return getPreferences().getBoolean(USE_BUNDLED_EMOJIS, getResources().getBoolean(R.bool.use_bundled_emoji));
     }
 
     @Override

@@ -289,8 +289,6 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        boolean useBundledEmoji = getPreferences().getBoolean(USE_BUNDLED_EMOJIS, getResources().getBoolean(R.bool.use_bundled_emoji));
-        new EmojiService(this).init(useBundledEmoji);
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_muc_details);
         this.binding.changeConferenceButton.setOnClickListener(this.mChangeConferenceSettings);
         this.binding.invite.setOnClickListener(inviteListener);

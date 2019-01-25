@@ -65,8 +65,6 @@ public class ShowLocationActivity extends XmppActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        boolean useBundledEmoji = getPreferences().getBoolean(USE_BUNDLED_EMOJIS, getResources().getBoolean(R.bool.use_bundled_emoji));
-        new EmojiService(this).init(useBundledEmoji);
         setContentView(R.layout.activity_show_locaction);
         setTitle(getString(R.string.show_location));
         setSupportActionBar(findViewById(R.id.toolbar));
