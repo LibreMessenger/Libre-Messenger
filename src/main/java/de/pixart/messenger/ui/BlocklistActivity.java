@@ -25,6 +25,7 @@ public class BlocklistActivity extends AbstractSearchableListItemActivity implem
             BlockContactDialog.show(BlocklistActivity.this, (Contact) getListItems().get(position));
             return true;
         });
+        this.binding.fab.show();
         this.binding.fab.setOnClickListener((v) -> showEnterJidDialog());
     }
 
@@ -38,7 +39,7 @@ public class BlocklistActivity extends AbstractSearchableListItemActivity implem
         }
         filterContacts();
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_DIALOG);
-        if (fragment != null && fragment instanceof OnBackendConnected) {
+        if (fragment instanceof OnBackendConnected) {
             ((OnBackendConnected) fragment).onBackendConnected();
         }
     }
