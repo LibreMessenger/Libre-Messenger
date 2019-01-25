@@ -1050,7 +1050,7 @@ public class FileBackend {
             body.append("|0|0|0|").append(getAPK(file, mXmppConnectionService.getApplicationContext()));
         }
         message.setBody(body.toString());
-        message.setDeleted(false);
+        message.setFileDeleted(false);
     }
 
     public int getMediaRuntime(Uri uri) {

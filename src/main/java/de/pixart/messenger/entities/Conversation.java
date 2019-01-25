@@ -212,7 +212,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
         synchronized (this.messages) {
             for (final Message m : this.messages) {
                 if (m.isFileOrImage() && m.getEncryption() != Message.ENCRYPTION_PGP) {
-                    if (m.getStatus() == Message.STATUS_SEND_FAILED && !m.isDeleted() && m.needsUploading()) {
+                    if (m.getStatus() == Message.STATUS_SEND_FAILED && !m.isFileDeleted() && m.needsUploading()) {
                         results.add(m);
                     }
                 }
@@ -227,7 +227,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
         final ArrayList<Message> results = new ArrayList<>();
         synchronized (this.messages) {
             for (final Message m : this.messages) {
-                if (m.isDeleted()) {
+                if (m.isFileDeleted()) {
                     results.add(m);
                 }
             }
@@ -255,7 +255,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
         synchronized (this.messages) {
             for(Message message : this.messages) {
                 if (uuids.contains(message.getUuid())) {
-                    message.setDeleted(true);
+                    message.setFileDeleted(true);
                     deleted = true;
                 }
             }
@@ -1117,7 +1117,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
             for (int i = this.messages.size() - 1; i >= 0; --i) {
                 Message message = this.messages.get(i);
                 if ((message.getType() == Message.TYPE_IMAGE || message.getType() == Message.TYPE_FILE) && message.getEncryption() != Message.ENCRYPTION_PGP) {
-                    if (message.getStatus() == Message.STATUS_SEND_FAILED && !message.isDeleted() && message.needsUploading()){
+                    if (message.getStatus() == Message.STATUS_SEND_FAILED && !message.isFileDeleted() && message.needsUploading()){
                         ++count;
                     }
                 }

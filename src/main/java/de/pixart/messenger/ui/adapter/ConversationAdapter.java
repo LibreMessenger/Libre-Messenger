@@ -139,7 +139,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             viewHolder.lastMessage.setTypeface(null, Typeface.NORMAL);
             viewHolder.sender.setTypeface(null, Typeface.ITALIC);
         } else {
-            final boolean fileAvailable = !message.isDeleted();
+            final boolean fileAvailable = !message.isFileDeleted();
             final boolean showPreviewText;
             if (fileAvailable && (message.isFileOrImage() || message.treatAsDownloadable() || message.isGeoUri())) {
                 final int imageResource;

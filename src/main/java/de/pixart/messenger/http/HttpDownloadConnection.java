@@ -139,7 +139,7 @@ public class HttpDownloadConnection implements Transferable {
         mHttpConnectionManager.finishConnection(this);
         message.setTransferable(null);
         if (message.isFileOrImage()) {
-            message.setDeleted(true);
+            message.setFileDeleted(true);
         }
         mHttpConnectionManager.updateConversationUi(true);
     }

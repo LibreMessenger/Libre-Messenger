@@ -396,12 +396,12 @@ public class Message extends AbstractEntity {
         return this.deleted;
     }
 
-    public boolean isDeleted() {
-        return this.deleted;
+    public boolean isFileDeleted() {
+        return this.file_deleted;
     }
 
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
+    public void setFileDeleted(boolean file_deleted) {
+        this.file_deleted = file_deleted;
     }
 
     public void markRead() {
