@@ -85,11 +85,15 @@ public class AccountAdapter extends ArrayAdapter<Account> {
             tglAccountState.setVisibility(View.GONE);
         }
         tglAccountState.setOnCheckedChangeListener((compoundButton, b) -> {
-            if (b == isDisabled && activity instanceof ManageAccountActivity) {
-                ((ManageAccountActivity) activity).onClickTglAccountState(account, b);
+            if (b == isDisabled && activity instanceof OnTglAccountState) {
+                ((OnTglAccountState) activity).onClickTglAccountState(account, b);
             }
         });
         return view;
+    }
+
+    public interface OnTglAccountState {
+        void onClickTglAccountState(Account account, boolean state);
     }
 
     public static boolean cancelPotentialWork(Account account, ImageView imageView) {
