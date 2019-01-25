@@ -73,6 +73,7 @@ public class Message extends AbstractEntity {
     public static final String ERROR_MESSAGE = "errorMsg";
     public static final String READ_BY_MARKERS = "readByMarkers";
     public static final String MARKABLE = "markable";
+    public static final String FILE_DELETED = "file_deleted";
     public static final String ME_COMMAND = "/me";
     public static final String ERROR_MESSAGE_CANCELLED = "eu.siacs.conversations.cancelled";
 
@@ -86,6 +87,7 @@ public class Message extends AbstractEntity {
     protected int encryption;
     protected int status;
     protected int type;
+    protected boolean file_deleted = false;
     protected boolean carbon = false;
     protected boolean oob = false;
     protected String edited = null;
@@ -139,6 +141,7 @@ public class Message extends AbstractEntity {
                 false,
                 null,
                 null,
+                false,
                 false);
     }
 
@@ -148,7 +151,7 @@ public class Message extends AbstractEntity {
                     final String remoteMsgId, final String relativeFilePath,
                     final String serverMsgId, final String fingerprint, final boolean read, final boolean deleted,
                     final String edited, final boolean oob, final String errorMessage, final Set<ReadByMarker> readByMarkers,
-                    final boolean markable) {
+                    final boolean markable, final boolean file_deleted) {
         this.conversation = conversation;
         this.uuid = uuid;
         this.conversationUuid = conversationUUid;
@@ -171,6 +174,7 @@ public class Message extends AbstractEntity {
         this.errorMessage = errorMessage;
         this.readByMarkers = readByMarkers == null ? new HashSet<ReadByMarker>() : readByMarkers;
         this.markable = markable;
+        this.file_deleted = file_deleted;
     }
 
     public static Message fromCursor(Cursor cursor, Conversation conversation) {
@@ -219,7 +223,8 @@ public class Message extends AbstractEntity {
                 cursor.getInt(cursor.getColumnIndex(OOB)) > 0,
                 cursor.getString(cursor.getColumnIndex(ERROR_MESSAGE)),
                 ReadByMarker.fromJsonString(cursor.getString(cursor.getColumnIndex(READ_BY_MARKERS))),
-                cursor.getInt(cursor.getColumnIndex(MARKABLE)) > 0);
+                cursor.getInt(cursor.getColumnIndex(MARKABLE)) > 0,
+                cursor.getInt(cursor.getColumnIndex(FILE_DELETED)) > 0);
     }
 
     public static Message createStatusMessage(Conversation conversation, String body) {
@@ -269,6 +274,7 @@ public class Message extends AbstractEntity {
         values.put(ERROR_MESSAGE, errorMessage);
         values.put(READ_BY_MARKERS, ReadByMarker.toJson(readByMarkers).toString());
         values.put(MARKABLE, markable ? 1 : 0);
+        values.put(FILE_DELETED, file_deleted ? 1 : 0);
         return values;
     }
 
@@ -388,6 +394,14 @@ public class Message extends AbstractEntity {
 
     public boolean isMessageDeleted() {
         return this.deleted;
+    }
+
+    public boolean isDeleted() {
+        return this.deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     public void markRead() {
@@ -838,10 +852,6 @@ public class Message extends AbstractEntity {
 
     public boolean isFileOrImage() {
         return type == TYPE_FILE || type == TYPE_IMAGE;
-    }
-
-    public boolean isDeleted() {
-        return (type == TYPE_FILE || type == TYPE_IMAGE) && getTransferable() != null && getTransferable().getFileSize() == 0;
     }
 
     public boolean hasFileOnRemoteHost() {
