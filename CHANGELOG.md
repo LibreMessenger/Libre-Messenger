@@ -3,7 +3,7 @@
 #### Version 2.1.5
 * improved handling of bookmark nicks
 * long press on 'allow' or 'add back' snackbar to bring up 'reject'
-* let the user forbid android from taking screenshots
+* let the user forbid android from taking screenshots (PAM)
 * make PEP avatars public to play nice with Prosody 0.11
 * fixed re-sending failed files in group chats
 * OMEMO stability improvements
@@ -20,22 +20,22 @@
 * fixed group chat mentions when nick ends in . (dot)
 * fixed not asking for permissions after direct share
 * fixed CVE-2018-18467
-* implement message deletion
+* implement message deletion (PAM)
 * bug fixes
 
 #### Version 2.1.2
 * fix crash with updater
 
 #### Version 2.1.1
-* make quick actions/attachment choice configurable
-* add a hideable separate quick button for voice messages
+* make quick actions/attachment choice configurable (PAM)
+* add a hideable separate quick button for voice messages (PAM)
 * switch between speaker/earpiece while playing audios/voice messages
 * store bookmarks in PEP if server has ability to convert to old bookmarks
 * show Jabber IDs from address book in address book
 * preview and ask for confirmation before sending media files
 * view per conversation media files in contact and conference details screens
 * enable foreground service by default for Android 8 (notification can be disabled by long pressing it)
-* reworked MediaViewer
+* reworked MediaViewer (PAM)
 * support TLSv1.3 (ejabberd ≤ 18.06 is incompatible with openssl 1.1.1 - Update ejabberd or downgrade openssl if you get ›Stream opening error‹)
 * add push messages for playstore versions
 * bug fixes
@@ -58,7 +58,7 @@
 
 #### Version 2.0.1
 * improved recording quality
-* let the user select a public server for account creation
+* let the user select a public server for account creation (PAM)
 * add possibility to de-/activate accounts in multi account mode
 * bug fixes 
 
@@ -69,7 +69,7 @@
 * reworked message search
 * added splash screen at startup
 * integrate dark theme
-* keep OTR, but without further development and support, just for compatibility
+* keep OTR, but without further development and support, just for compatibility (PAM)
 * added configurable font size
 * added global OMEMO preference
 * added scroll to bottom button
@@ -82,7 +82,7 @@
 * bug fixes
 
 #### Version 1.22.0
-* integrated expert option to enable multiple account
+* integrated expert option to enable multiple account (PAM)
 * some UI improvements
 * improved MAM support
 * bug fixes 
@@ -96,20 +96,20 @@
 * bug fixes
 
 #### Version 1.21.1
-* don't use integrated updater if Messenger is installed from F-Droid
-* check if app installs from unknown sources are allowed, if not open settings to allow this
-* show hint in chatview if private message is activated
+* don't use integrated updater if Messenger is installed from F-Droid (PAM)
+* check if app installs from unknown sources are allowed, if not open settings to allow this (PAM)
+* show hint in chatview if private message is activated (PAM)
 * send delivery receipts after MAM catchup
 * reduce number of wake locks
-* add possibility to destroy group chats
-* show progress dialog while downloading update with internal updater
-* implemented message search
+* add possibility to destroy group chats (PAM)
+* show progress dialog while downloading update with internal updater (PAM)
+* implemented message search (PAM)
 * improved self chat
 * bug fixes
 
 #### Version 1.21.0
-* replaced google maps location service with open street map services via leaflet
-* let screen on while playing audio files
+* replaced google maps location service with open street map services via leaflet (PAM)
+* let screen on while playing audio files (PAM)
 * add Turkish translations
 * bug fixes
 
@@ -127,7 +127,7 @@
 * bug fixes
 
 #### Version 1.20.0
-* reworked AppUpdater and show a notification if there is an update available
+* reworked AppUpdater and show a notification if there is an update available (PAM)
 * some UI and performance improvements
 * add french and spanish translations
 * text markup *bold*, _italic_,`monospace` and ~strikethrough~
@@ -135,7 +135,7 @@
 * always open URLs in new tab
 * bring back quick share (default off) and return to previous app after sharing
 * send and show read markers in private, non-anonymous groups
-* warn if chat is unencrypted and switch to OMEMO if available after pressing OK (warning can be disabled in settings)
+* warn if chat is unencrypted and switch to OMEMO if available after pressing OK (warning can be disabled in settings) (PAM)
 * support sending and receiving opus file
 * bug fixes
 
@@ -179,7 +179,7 @@
 
 #### Version 1.18.0
 * enable OTR and OpenPGP again
-* fix bug with updater on devices < SDK 21
+* fix bug with updater on devices < SDK 21 (PAM)
 * Show colored contact names for their presence status (via settings)
 * treat URL as file if URL is in oob or contains key
 * added support for Android Auto
@@ -188,30 +188,30 @@
 * bug fixes
 
 #### Version 1.17.1
-* grey out offline contacts in StartConversation
+* grey out offline contacts in StartConversation (PAM)
 * change emoji library which supports newer emojis
 * change avatar images to circles
 * Switch Aztec to QR for faster scans
-* make automatic fullscreen media rotation configurable
+* make automatic fullscreen media rotation configurable (PAM)
 * open version can use tor networks
-* make image compression configurable
-* show read/received markers in chatlist
+* make image compression configurable (PAM)
+* show read/received markers in chatlist (PAM)
 * OMEMO: put auth tag into key (verify auth tag as well)
 * offer to block entire domain in message from stanger snackbar
 * bug fixes
 
 #### Version 1.17.0
-* add date bubbles in chat view
+* add date bubbles in chat view (PAM)
 * show last used resource in contact details
-* make brightness overwrite in image/video viewer configurable
-* make video resolution configurable
+* make brightness overwrite in image/video viewer configurable (PAM)
+* make video resolution configurable (PAM)
 * do not notify for messages from strangers by default
 * blocking a JID closes the corresponding conversation
 * show message sender in conversation overview
 * Support for the latest MAM namespace
 * Icons for attach menu
 * send typing notifications in private, non-anonymous MUCs
-* change media directory names
+* change media directory names (PAM)
 * bug fixes
 
 #### Version 1.16.5
@@ -219,8 +219,8 @@
 * bug fixes 
 
 #### Version 1.16.4
-* show failed file uploads in chatlist
-* resend failed file uploads automatically
+* show failed file uploads in chatlist (PAM)
+* resend failed file uploads automatically (PAM)
 * preview files in chatlist
 * move (un)mute settings to contact-/conference details
 * UI performance fixes
@@ -238,15 +238,15 @@
 * bug fixes
 
 #### Version 1.16.0
-* show unread messages in chatlist
-* increase image size to 4k UHD
+* show unread messages in chatlist (PAM)
+* increase image size to 4k UHD (PAM)
 * add support for GIF files
-* reworked video compression
+* reworked video compression (PAM)
 * reworked app updater
 * bug fixes
 
 #### Version 1.15.4
-* improve video compression quality
+* improve video compression quality (PAM)
 * support for POSH (RFC7711)
 * support for quoting messages (via select text)
 * verified messages show shield icon; unverified messages show lock
@@ -268,9 +268,9 @@
 #### Version 1.15.0
 * make OMEMO working with other clients
 * make OMEMO encryption standard for 1:1 chats as default
-* start navigation app directly from show location activity
-* show map preview on shared locations
-* show contacts name on shared VCARDs
+* start navigation app directly from show location activity (PAM)
+* show map preview on shared locations (PAM)
+* show contacts name on shared VCARDs (PAM)
 * send text directly via ShareWithActivity
 * bug fixes 
 
@@ -284,8 +284,8 @@
 * bug fixes
 
 #### Version 1.14.3
-* set different auto-download-sizes for mobile, roaming and WiFi connections
-* add ability to report errors and bugs directly from menu
+* set different auto-download-sizes for mobile, roaming and WiFi connections (PAM)
+* add ability to report errors and bugs directly from menu (PAM)
 * XEP-0377: Spam Reporting
 * fix rare start up crashes
 * bug fixes
