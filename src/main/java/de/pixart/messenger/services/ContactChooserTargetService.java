@@ -23,10 +23,17 @@ import de.pixart.messenger.ui.ConversationsActivity;
 public class ContactChooserTargetService extends ChooserTargetService implements ServiceConnection {
 
     private final Object lock = new Object();
-
+    private final int MAX_TARGETS = 5;
     private XmppConnectionService mXmppConnectionService;
 
-    private final int MAX_TARGETS = 5;
+    private static boolean textOnly(IntentFilter filter) {
+        for (int i = 0; i < filter.countDataTypes(); ++i) {
+            if (!"text/plain".equals(filter.getDataType(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     @Override
     public List<ChooserTarget> onGetChooserTargets(ComponentName targetActivityName, IntentFilter matchedFilter) {
@@ -40,7 +47,8 @@ public class ContactChooserTargetService extends ChooserTargetService implements
             if (!mXmppConnectionService.areMessagesInitialized()) {
                 return chooserTargets;
             }
-            mXmppConnectionService.populateWithOrderedConversations(conversations, false);
+
+            mXmppConnectionService.populateWithOrderedConversations(conversations, textOnly(matchedFilter));
             final ComponentName componentName = new ComponentName(this, ConversationsActivity.class);
             final int pixel = AvatarService.getSystemUiAvatarSize(this);
             for (Conversation conversation : conversations) {
