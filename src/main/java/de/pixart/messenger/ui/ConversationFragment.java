@@ -126,6 +126,9 @@ import rocks.xmpp.addr.Jid;
 import static de.pixart.messenger.ui.XmppActivity.EXTRA_ACCOUNT;
 import static de.pixart.messenger.ui.XmppActivity.REQUEST_INVITE_TO_CONVERSATION;
 import static de.pixart.messenger.ui.util.SoftKeyboardUtils.hideSoftKeyboard;
+import static de.pixart.messenger.utils.PermissionUtils.allGranted;
+import static de.pixart.messenger.utils.PermissionUtils.getFirstDenied;
+import static de.pixart.messenger.utils.PermissionUtils.writeGranted;
 import static de.pixart.messenger.xmpp.Patches.ENCRYPTION_EXCEPTIONS;
 
 public class ConversationFragment extends XmppFragment implements EditMessage.KeyboardListener, MessageAdapter.OnContactPictureLongClicked, MessageAdapter.OnContactPictureClicked {
@@ -594,33 +597,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             return conversation;
         }
         return getConversation(activity, R.id.main_fragment);
-    }
-
-    private static boolean allGranted(int[] grantResults) {
-        for (int grantResult : grantResults) {
-            if (grantResult != PackageManager.PERMISSION_GRANTED) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private static boolean writeGranted(int[] grantResults, String[] permission) {
-        for (int i = 0; i < grantResults.length; ++i) {
-            if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equals(permission[i])) {
-                return grantResults[i] == PackageManager.PERMISSION_GRANTED;
-            }
-        }
-        return false;
-    }
-
-    private static String getFirstDenied(int[] grantResults, String[] permissions) {
-        for (int i = 0; i < grantResults.length; ++i) {
-            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                return permissions[i];
-            }
-        }
-        return null;
     }
 
     private static boolean scrolledToBottom(AbsListView listView) {

@@ -36,7 +36,8 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.OmemoSetting;
 import de.pixart.messenger.entities.Account;
-import de.pixart.messenger.services.ExportLogsService;
+import de.pixart.messenger.persistance.FileBackend;
+import de.pixart.messenger.services.ExportBackupService;
 import de.pixart.messenger.services.MemorizingTrustManager;
 import de.pixart.messenger.ui.util.StyledAttributes;
 import de.pixart.messenger.utils.Compatibility;
@@ -64,7 +65,7 @@ public class SettingsActivity extends XmppActivity implements
     public static final String NUMBER_OF_ACCOUNTS = "number_of_accounts";
     public static final String PLAY_GIF_INSIDE = "play_gif_inside";
 
-    public static final int REQUEST_WRITE_LOGS = 0xbf8701;
+    public static final int REQUEST_CREATE_BACKUP = 0xbf8701;
     Preference multiAccountPreference;
     Preference BundledEmojiPreference;
     Preference QuickShareAttachmentChoicePreference;
@@ -249,11 +250,12 @@ public class SettingsActivity extends XmppActivity implements
             });
         }
 
-        final Preference exportLogsPreference = mSettingsFragment.findPreference("export_logs");
-        if (exportLogsPreference != null) {
-            exportLogsPreference.setOnPreferenceClickListener(preference -> {
-                if (hasStoragePermission(REQUEST_WRITE_LOGS)) {
-                    startExport();
+        final Preference createBackupPreference = mSettingsFragment.findPreference("create_backup");
+        if (createBackupPreference != null) {
+            createBackupPreference.setSummary(getString(R.string.pref_create_backup_summary, FileBackend.getBackupDirectory()));
+            createBackupPreference.setOnPreferenceClickListener(preference -> {
+                if (hasStoragePermission(REQUEST_CREATE_BACKUP)) {
+                    createBackup();
                 }
                 return true;
             });
@@ -538,18 +540,19 @@ public class SettingsActivity extends XmppActivity implements
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (grantResults.length > 0)
+        if (grantResults.length > 0) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (requestCode == REQUEST_WRITE_LOGS) {
-                    startExport();
+                if (requestCode == REQUEST_CREATE_BACKUP) {
+                    createBackup();
                 }
             } else {
                 Toast.makeText(this, R.string.no_storage_permission, Toast.LENGTH_SHORT).show();
             }
+        }
     }
 
-    private void startExport() {
-        Compatibility.startService(this, new Intent(this, ExportLogsService.class));
+    private void createBackup() {
+        ContextCompat.startForegroundService(this, new Intent(this, ExportBackupService.class));
     }
 
     private void displayToast(final String msg) {

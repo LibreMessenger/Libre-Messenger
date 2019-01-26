@@ -163,6 +163,10 @@
             android:label="@string/create_account"
             android:launchMode="singleTask" />
         <activity
+            android:name=".ui.ImportBackupActivity"
+            android:label="@string/restore_backup"
+            android:launchMode="singleTask" />
+        <activity
             android:name=".ui.SettingsActivity"
             android:label="@string/title_activity_settings">
             <intent-filter>
@@ -302,7 +306,8 @@
             android:label="@string/enter_your_name"
             android:launchMode="singleTask" />
 
-        <service android:name=".services.ExportLogsService" />
+        <service android:name=".services.ExportBackupService" />
+        <service android:name=".services.ImportBackupService"/>
         <service
             android:name=".services.ContactChooserTargetService"
             android:permission="android.permission.BIND_CHOOSER_TARGET_SERVICE">

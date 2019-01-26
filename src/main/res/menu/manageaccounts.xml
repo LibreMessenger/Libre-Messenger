@@ -5,18 +5,22 @@
     <item
         android:id="@+id/action_add_account"
         android:icon="?attr/icon_add_person"
-        app:showAsAction="always"
-        android:title="@string/action_add_account" />
+        android:title="@string/action_add_account"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_import_backup"
+        android:title="@string/restore_backup"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_add_account_with_cert"
-        app:showAsAction="never"
         android:icon="?attr/icon_add_person"
         android:title="@string/action_add_account_with_certificate"
-        android:visible="true" />
+        android:visible="true"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
-        app:showAsAction="never"
-        android:title="@string/action_settings" />
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
 
 </menu>

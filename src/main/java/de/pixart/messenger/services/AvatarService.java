@@ -51,6 +51,8 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
     private static final int TRANSPARENT = 0x00000000;
     private static final int PLACEHOLDER_COLOR = 0xFF202020;
 
+    public static final int SYSTEM_UI_AVATAR_SIZE = 48;
+
     private static final String PREFIX_CONTACT = "contact";
     private static final String PREFIX_CONVERSATION = "conversation";
     private static final String PREFIX_ACCOUNT = "account";
@@ -63,19 +65,6 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
 
     AvatarService(XmppConnectionService service) {
         this.mXmppConnectionService = service;
-    }
-
-    private static String getFirstLetter(String name) {
-        for (Character c : name.toCharArray()) {
-            if (Character.isLetterOrDigit(c)) {
-                return c.toString();
-            }
-        }
-        return "X";
-    }
-
-    private static String emptyOnNull(@Nullable Jid value) {
-        return value == null ? "" : value.toString();
     }
 
     public static int getSystemUiAvatarSize(final Context context) {
@@ -91,15 +80,14 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
         if (avatar != null || cachedOnly) {
             return avatar;
         }
-        if (contact.getAvatarFilename() != null) {
+        if (contact.getAvatarFilename() != null && QuickConversationsService.isQuicksy()) {
             avatar = mXmppConnectionService.getFileBackend().getAvatar(contact.getAvatarFilename(), size);
         }
         if (avatar == null && contact.getProfilePhoto() != null) {
-            try {
-                avatar = mXmppConnectionService.getFileBackend().cropCenterSquare(Uri.parse(contact.getProfilePhoto()), size);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            avatar = mXmppConnectionService.getFileBackend().cropCenterSquare(Uri.parse(contact.getProfilePhoto()), size);
+        }
+        if (avatar == null && contact.getAvatarFilename() != null) {
+            avatar = mXmppConnectionService.getFileBackend().getAvatar(contact.getAvatarFilename(), size);
         }
         if (avatar == null) {
             avatar = get(contact.getDisplayName(), contact.getJid().asBareJid().toString(), size, false);
@@ -123,6 +111,7 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
         final Paint paint = new Paint();
+
         drawAvatar(bitmap, canvas, paint);
         if (withIcon) {
             drawIcon(canvas, paint);
@@ -318,7 +307,9 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
         if (bitmap != null || cachedOnly) {
             return bitmap;
         }
+
         bitmap = mXmppConnectionService.getFileBackend().getAvatar(mucOptions.getAvatar(), size);
+
         if (bitmap == null) {
             final List<MucOptions.User> users = mucOptions.getUsersRelevantForNameAndAvatar();
             if (users.size() == 0) {
@@ -328,7 +319,9 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
                 bitmap = getImpl(users, size);
             }
         }
+
         this.mXmppConnectionService.getBitmapCache().put(KEY, bitmap);
+
         return bitmap;
     }
 
@@ -488,10 +481,6 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
         }
     }
 
-    /*public Bitmap get(String name, int size) {
-         return get(name,null, size,false);
- 	}*/
-
     public void clear(MucOptions.User user) {
         synchronized (this.sizes) {
             for (Integer size : sizes) {
@@ -510,6 +499,10 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
                 + String.valueOf(size);
     }
 
+	/*public Bitmap get(String name, int size) {
+		return get(name,null, size,false);
+	}*/
+
     public Bitmap get(final String name, String seed, final int size, boolean cachedOnly) {
         final String KEY = key(seed == null ? name : name + "\0" + seed, size);
         Bitmap bitmap = mXmppConnectionService.getBitmapCache().get(KEY);
@@ -521,7 +514,11 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
         return bitmap;
     }
 
-    private Bitmap getImpl(final String name, final String seed, final int size) {
+    public static Bitmap get(final Jid jid, final int size) {
+        return getImpl(jid.asBareJid().toEscapedString(), null, size);
+    }
+
+    private static Bitmap getImpl(final String name, final String seed, final int size) {
         Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         final String trimmedName = name == null ? "" : name.trim();
@@ -538,7 +535,7 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
         return PREFIX_GENERIC + "_" + name + "_" + String.valueOf(size);
     }
 
-    private boolean drawTile(Canvas canvas, String letter, int tileColor, int left, int top, int right, int bottom) {
+    private static boolean drawTile(Canvas canvas, String letter, int tileColor, int left, int top, int right, int bottom) {
         letter = letter.toUpperCase(Locale.getDefault());
         Paint tilePaint = new Paint(), textPaint = new Paint();
         tilePaint.setColor(tileColor);
@@ -561,25 +558,13 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
         Contact contact = user.getContact();
         if (contact != null) {
             Uri uri = null;
-            if (contact.getAvatarFilename() != null) {
-                try {
-                    uri = mXmppConnectionService.getFileBackend().getAvatarUri(contact.getAvatarFilename());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            if (contact.getAvatarFilename() != null && QuickConversationsService.isQuicksy()) {
+                uri = mXmppConnectionService.getFileBackend().getAvatarUri(contact.getAvatarFilename());
             } else if (contact.getProfilePhoto() != null) {
                 uri = Uri.parse(contact.getProfilePhoto());
+            } else if (contact.getAvatarFilename() != null) {
+                uri = mXmppConnectionService.getFileBackend().getAvatarUri(contact.getAvatarFilename());
             }
-            if (drawTile(canvas, uri, left, top, right, bottom)) {
-                return true;
-            }
-        } else if (user.getAvatar() != null) {
-            Uri uri = mXmppConnectionService.getFileBackend().getAvatarUri(user.getAvatar());
-            if (drawTile(canvas, uri, left, top, right, bottom)) {
-                return true;
-            }
-        } else if (user.getAvatar() != null) {
-            Uri uri = mXmppConnectionService.getFileBackend().getAvatarUri(user.getAvatar());
             if (drawTile(canvas, uri, left, top, right, bottom)) {
                 return true;
             }
@@ -613,7 +598,7 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
         return drawTile(canvas, name, name, left, top, right, bottom);
     }
 
-    private boolean drawTile(Canvas canvas, String name, String seed, int left, int top, int right, int bottom) {
+    private static boolean drawTile(Canvas canvas, String name, String seed, int left, int top, int right, int bottom) {
         if (name != null) {
             final String letter = getFirstLetter(name);
             final int color = UIHelper.getColorForName(seed == null ? name : seed);
@@ -621,6 +606,15 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
             return true;
         }
         return false;
+    }
+
+    private static String getFirstLetter(String name) {
+        for (Character c : name.toCharArray()) {
+            if (Character.isLetterOrDigit(c)) {
+                return c.toString();
+            }
+        }
+        return "X";
     }
 
     private boolean drawTile(Canvas canvas, Uri uri, int left, int top, int right, int bottom) {
@@ -650,5 +644,9 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
                 mXmppConnectionService.republishAvatarIfNeeded(account);
             }
         }
+    }
+
+    private static String emptyOnNull(@Nullable Jid value) {
+        return value == null ? "" : value.toString();
     }
 }

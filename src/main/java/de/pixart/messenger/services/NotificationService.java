@@ -1047,7 +1047,6 @@ public class NotificationService {
     Notification AppUpdateNotification(PendingIntent intent, String version, String filesize) {
         Notification.Builder mBuilder = new Notification.Builder(mXmppConnectionService);
         mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.app_name));
-        mBuilder.setContentText(mXmppConnectionService.getString(R.string.notification_export_logs_title));
         mBuilder.setContentText(String.format(mXmppConnectionService.getString(R.string.update_available), version, filesize));
         mBuilder.setSmallIcon(R.drawable.ic_update_notification);
         mBuilder.setContentIntent(intent);

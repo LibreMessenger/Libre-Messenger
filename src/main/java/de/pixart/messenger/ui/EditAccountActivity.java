@@ -16,6 +16,7 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.security.KeyChain;
 import android.security.KeyChainAliasCallback;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -82,6 +83,9 @@ import de.pixart.messenger.xmpp.forms.Data;
 import de.pixart.messenger.xmpp.pep.Avatar;
 import rocks.xmpp.addr.Jid;
 
+import static de.pixart.messenger.utils.PermissionUtils.allGranted;
+import static de.pixart.messenger.utils.PermissionUtils.writeGranted;
+
 public class EditAccountActivity extends OmemoActivity implements OnAccountUpdate, OnUpdateBlocklist,
         OnKeyStatusUpdated, OnCaptchaRequested, KeyChainAliasCallback, XmppConnectionService.OnShowErrorToast, XmppConnectionService.OnMamPreferencesFetched {
 
@@ -90,6 +94,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     private static final int REQUEST_DATA_SAVER = 0xf244;
     private static final int REQUEST_CHANGE_STATUS = 0xee11;
     private static final int REQUEST_ORBOT = 0xff22;
+    private static final int REQUEST_IMPORT_BACKUP = 0x63fb;
 
     private AlertDialog mCaptchaDialog = null;
     private final AtomicBoolean mPendingReconnect = new AtomicBoolean(false);
@@ -825,6 +830,12 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             return false;
         }
         switch (item.getItemId()) {
+            case R.id.action_import_backup:
+                if (hasStoragePermission(REQUEST_IMPORT_BACKUP)) {
+                    startActivity(new Intent(this, ImportBackupActivity.class));
+                }
+                overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+                break;
             case R.id.mgmt_account_reconnect:
                 XmppConnection connection = mAccount.getXmppConnection();
                 if (connection != null) {
@@ -1441,6 +1452,26 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             }
             Toast.makeText(EditAccountActivity.this, R.string.unable_to_fetch_mam_prefs, Toast.LENGTH_LONG).show();
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        if (grantResults.length > 0) {
+            if (allGranted(grantResults)) {
+                switch (requestCode) {
+                    case REQUEST_IMPORT_BACKUP:
+                        startActivity(new Intent(this, ImportBackupActivity.class));
+                        break;
+                }
+            } else {
+                Toast.makeText(this, R.string.no_storage_permission, Toast.LENGTH_SHORT).show();
+            }
+        }
+        if (writeGranted(grantResults, permissions)) {
+            if (xmppConnectionService != null) {
+                xmppConnectionService.restartFileObserver();
+            }
+        }
     }
 
     @Override

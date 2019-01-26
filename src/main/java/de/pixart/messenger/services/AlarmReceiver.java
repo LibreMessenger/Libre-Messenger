@@ -15,7 +15,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().contains("exportlogs")) {
             Log.d(Config.LOGTAG, "Received alarm broadcast to export logs");
-            Compatibility.startService(context, new Intent(context, ExportLogsService.class));
+            Compatibility.startService(context, new Intent(context, ExportBackupService.class));
         }
     }
 }

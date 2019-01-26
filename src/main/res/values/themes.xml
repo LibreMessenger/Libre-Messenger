@@ -99,8 +99,6 @@
         <item name="icon_search" type="reference">@drawable/ic_search_white_24dp</item>
         <item name="icon_secure" type="reference">@drawable/ic_lock_open_white_24dp</item>
         <item name="icon_settings" type="reference">@drawable/ic_settings_black_24dp</item>
-        <item name="icon_import_export" type="reference">@drawable/ic_import_export_white_24dp
-        </item>
         <item name="icon_delete" type="reference">@drawable/ic_delete_black_24dp</item>
         <item name="icon_share" type="reference">@drawable/ic_share_black_24dp</item>
         <item name="icon_scan_qr_code" type="reference">@drawable/ic_qrcode_scan_white_24dp</item>
@@ -274,8 +272,6 @@
         <item name="icon_search" type="reference">@drawable/ic_search_white_24dp</item>
         <item name="icon_secure" type="reference">@drawable/ic_lock_open_white_24dp</item>
         <item name="icon_settings" type="reference">@drawable/ic_settings_white_24dp</item>
-        <item name="icon_import_export" type="reference">@drawable/ic_import_export_white_24dp
-        </item>
         <item name="icon_delete" type="reference">@drawable/ic_delete_white_24dp</item>
         <item name="icon_share" type="reference">@drawable/ic_share_white_24dp</item>
         <item name="icon_scan_qr_code" type="reference">@drawable/ic_qrcode_scan_white_24dp</item>
