@@ -102,6 +102,10 @@ public class ImportBackupService extends Service {
         return START_NOT_STICKY;
     }
 
+    public boolean getLoadingState() {
+        return running.get();
+    }
+
     public void loadBackupFiles(OnBackupFilesLoaded onBackupFilesLoaded) {
         executor.execute(() -> {
             List<Jid> accounts = mDatabaseBackend.getAccountJids(false);
@@ -128,13 +132,14 @@ public class ImportBackupService extends Service {
                     }
                 }
             }
+            Collections.sort(backupFiles, (a, b) -> a.header.getJid().toString().compareTo(b.header.getJid().toString()));
             onBackupFilesLoaded.onBackupFilesLoaded(backupFiles);
         });
     }
 
     private void startForegroundService() {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getBaseContext(), "backup");
-        mBuilder.setContentTitle(getString(R.string.notification_restore_backup_title))
+        mBuilder.setContentTitle(getString(R.string.restoring_backup))
                 .setSmallIcon(R.drawable.ic_unarchive_white_24dp)
                 .setProgress(1, 0, true);
         startForeground(NOTIFICATION_ID, mBuilder.build());

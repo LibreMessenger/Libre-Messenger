@@ -14,6 +14,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Toast;
 
 import java.util.List;
@@ -63,6 +64,7 @@ public class ImportBackupActivity extends ActionBarActivity implements ServiceCo
         ImportBackupService.ImportBackupServiceBinder binder = (ImportBackupService.ImportBackupServiceBinder) service;
         this.service = binder.getService();
         this.service.addOnBackupProcessedListener(this);
+        setLoadingState(this.service.getLoadingState());
         this.service.loadBackupFiles(this);
     }
 
@@ -73,9 +75,7 @@ public class ImportBackupActivity extends ActionBarActivity implements ServiceCo
 
     @Override
     public void onBackupFilesLoaded(final List<ImportBackupService.BackupFile> files) {
-        runOnUiThread(() -> {
-            backupFileAdapter.setFiles(files);
-        });
+        runOnUiThread(() -> backupFileAdapter.setFiles(files));
     }
 
     @Override
@@ -92,10 +92,18 @@ public class ImportBackupActivity extends ActionBarActivity implements ServiceCo
             Intent intent = new Intent(this, ImportBackupService.class);
             intent.putExtra("password", password);
             intent.putExtra("file", backupFile.getFile().getAbsolutePath());
+            setLoadingState(true);
             ContextCompat.startForegroundService(this, intent);
         });
         builder.setCancelable(false);
         builder.create().show();
+    }
+
+    private void setLoadingState(final boolean loadingState) {
+        binding.coordinator.setVisibility(loadingState ? View.GONE : View.VISIBLE);
+        binding.inProgress.setVisibility(loadingState ? View.VISIBLE : View.GONE);
+        setTitle(loadingState ? R.string.restoring_backup : R.string.restore_backup);
+        configureActionBar(getSupportActionBar(), !loadingState);
     }
 
     @Override
@@ -111,6 +119,7 @@ public class ImportBackupActivity extends ActionBarActivity implements ServiceCo
     @Override
     public void onBackupDecryptionFailed() {
         runOnUiThread(() -> {
+            setLoadingState(false);
             Snackbar.make(binding.coordinator, R.string.unable_to_decrypt_backup, Snackbar.LENGTH_LONG).show();
         });
     }
@@ -118,6 +127,7 @@ public class ImportBackupActivity extends ActionBarActivity implements ServiceCo
     @Override
     public void onBackupRestoreFailed() {
         runOnUiThread(() -> {
+            setLoadingState(false);
             Snackbar.make(binding.coordinator, R.string.unable_to_restore_backup, Snackbar.LENGTH_LONG).show();
         });
     }
