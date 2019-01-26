@@ -295,7 +295,7 @@
 * add custom Emojis
 * scroll long actionbar titles
 * some performance improvements
-* some video compression improvements
+* some video compression improvements (PAM)
 * bug fixes
 
 #### Version 1.14.1
@@ -310,8 +310,8 @@
 
 #### Version 1.13.9
 * add icons for files in chat view
-* reworked backup service to automatically backup database encrypted to local storage at 4 am each day
-* make human readable log export optional
+* reworked backup service to automatically backup database encrypted to local storage at 4 am each day (PAM)
+* make human readable log export optional (PAM)
 * bug fixes
 
 #### Version 1.13.8
@@ -322,16 +322,16 @@
 * bug fixes
 
 #### Version 1.13.6
-* share image/video directly from fullscreen view
+* share image/video directly from fullscreen view (PAM)
 * show online status in foreground service
 * support jingle ft:4
 * show contact as DND if one resource is
 * bug fixes
 
 #### Version 1.13.5
-* add image preview before sending single images directly
-* add vibrate notification when app is open
-* hide actionbar in fullscreen image/video view
+* add image preview before sending single images directly (PAM)
+* add vibrate notification when app is open (PAM)
+* hide actionbar in fullscreen image/video view (PAM)
 * bug fixes
 
 #### Version 1.13.4
@@ -339,7 +339,7 @@
 * bug fixes
 
 #### Version 1.13.3
-* new permission check and request at startup
+* new permission check and request at startup (PAM)
 * bug fixes
 
 #### Version 1.13.2
@@ -350,15 +350,15 @@
 * bug fixes
 
 #### Version 1.13.0
-* changed applicationId
-* play videos directly without touching play button
-* add database importer from local storage as backup
-* changed files directories and names
+* changed applicationId (PAM)
+* play videos directly without touching play button (PAM)
+* add database importer from local storage as backup (PAM)
+* changed files directories and names (PAM)
 * bug fixes
 
 #### Version 1.12.6
 * bug fixes
-* add database exporter to local storage as backup
+* add database exporter to local storage as backup (PAM)
 
 #### Version 1.12.5
 * bug fixes
@@ -368,7 +368,7 @@
 * show first unread message on top
 * show geo uri as links
 * circumvent long message DOS
-* integrate simple videoplayer and image viewer
+* integrate simple videoplayer and image viewer (PAM)
 
 #### Version 1.12.3
 * show offline members in conferences
@@ -378,17 +378,17 @@
 * make omemo default when all resources support it
 * show presence of other resources as template
 * start typing in StartConversationsActivity to search
-* show addresses in locations
+* show addresses in locations (PAM)
 * show video previews in chats
 * various bug fixes and improvements
 * fixed pgp presence signing
 
 #### Version 1.12.1
 * expert setting to modify presence
-* added simple audio player
-* added audio recorder
-* added location services
-* changed theme color from green to blue
+* added simple audio player (PAM)
+* added audio recorder (PAM)
+* added location services (PAM)
+* changed theme color from green to blue (PAM)
 * small bug fixes
 
 #### Version 1.12.0
@@ -401,7 +401,7 @@
 * Share xmpp uri from conference details
 * add setting to allow quick sharing
 * use material design icons for android < lollipop
-* make foreground service always activated
+* make foreground service always activated (PAM)
 * disable account deactivation
 * UI improvements
 * various bug fixes
@@ -458,8 +458,8 @@
 #### Version 1.9.2
 * prevent startup crash on Sailfish OS
 * minor bug fixes
-* removed contact-/conferece-details button
-* touch contact name or conferce name in action bar opens contact-/conference-details
+* removed contact-/conferece-details button (PAM)
+* touch contact name or conference name in action bar opens contact-/conference-details (PAM)
 
 #### Version 1.9.1
 * minor bug fixes incl. a workaround for nimbuzz.com
@@ -501,9 +501,9 @@
 * bug fixes
 
 #### Versrion 1.7.3
-* changed app name from Conversations to Pix-Art Messenger
+* changed app name from Conversations to Pix-Art Messenger (PAM)
 * changed chat background to light yellow
-* added own name for sent locations
+* added own name for sent locations (PAM)
 
 #### Version 1.7.2
 * let users crop their avatars
