@@ -1322,13 +1322,15 @@ public class XmppConnectionService extends Service {
 
     private void logoutAndSave(boolean stop) {
         int activeAccounts = 0;
-        for (final Account account : accounts) {
-            if (account.getStatus() != Account.State.DISABLED) {
-                databaseBackend.writeRoster(account.getRoster());
-                activeAccounts++;
-            }
-            if (account.getXmppConnection() != null) {
-                new Thread(() -> disconnect(account, false)).start();
+        if (accounts != null) {
+            for (final Account account : accounts) {
+                if (account.getStatus() != Account.State.DISABLED) {
+                    databaseBackend.writeRoster(account.getRoster());
+                    activeAccounts++;
+                }
+                if (account.getXmppConnection() != null) {
+                    new Thread(() -> disconnect(account, false)).start();
+                }
             }
         }
         if (stop || activeAccounts == 0) {
