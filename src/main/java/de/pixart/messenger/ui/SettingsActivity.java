@@ -64,6 +64,7 @@ public class SettingsActivity extends XmppActivity implements
     public static final String QUICK_SHARE_ATTACHMENT_CHOICE = "quick_share_attachment_choice";
     public static final String NUMBER_OF_ACCOUNTS = "number_of_accounts";
     public static final String PLAY_GIF_INSIDE = "play_gif_inside";
+    public static final String PREFER_XMPP_AVATAR = "prefer_xmpp_avatar";
 
     public static final int REQUEST_CREATE_BACKUP = 0xbf8701;
     Preference multiAccountPreference;

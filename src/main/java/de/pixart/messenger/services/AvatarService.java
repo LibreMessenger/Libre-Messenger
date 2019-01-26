@@ -44,6 +44,7 @@ import de.pixart.messenger.xmpp.XmppConnection;
 import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.Config.SYSTEM_UI_AVATAR_SIZE;
+import static de.pixart.messenger.ui.SettingsActivity.PREFER_XMPP_AVATAR;
 
 public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
 
@@ -80,14 +81,14 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
         if (avatar != null || cachedOnly) {
             return avatar;
         }
-        if (contact.getAvatarFilename() != null && QuickConversationsService.isQuicksy()) {
+        if (contact.getAvatarFilename() != null && QuickConversationsService.isQuicksy() && mXmppConnectionService.getPreferences().getBoolean(PREFER_XMPP_AVATAR, mXmppConnectionService.getResources().getBoolean(R.bool.prefer_xmpp_avatar))) {
+            avatar = mXmppConnectionService.getFileBackend().getAvatar(contact.getAvatarFilename(), size);
+        }
+        if (avatar == null && contact.getAvatarFilename() != null && mXmppConnectionService.getPreferences().getBoolean(PREFER_XMPP_AVATAR, mXmppConnectionService.getResources().getBoolean(R.bool.prefer_xmpp_avatar))) {
             avatar = mXmppConnectionService.getFileBackend().getAvatar(contact.getAvatarFilename(), size);
         }
         if (avatar == null && contact.getProfilePhoto() != null) {
             avatar = mXmppConnectionService.getFileBackend().cropCenterSquare(Uri.parse(contact.getProfilePhoto()), size);
-        }
-        if (avatar == null && contact.getAvatarFilename() != null) {
-            avatar = mXmppConnectionService.getFileBackend().getAvatar(contact.getAvatarFilename(), size);
         }
         if (avatar == null) {
             avatar = get(contact.getDisplayName(), contact.getJid().asBareJid().toString(), size, false);
@@ -558,12 +559,12 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
         Contact contact = user.getContact();
         if (contact != null) {
             Uri uri = null;
-            if (contact.getAvatarFilename() != null && QuickConversationsService.isQuicksy()) {
+            if (contact.getAvatarFilename() != null && QuickConversationsService.isQuicksy() && mXmppConnectionService.getPreferences().getBoolean(PREFER_XMPP_AVATAR, mXmppConnectionService.getResources().getBoolean(R.bool.prefer_xmpp_avatar))) {
+                uri = mXmppConnectionService.getFileBackend().getAvatarUri(contact.getAvatarFilename());
+            } else if (contact.getAvatarFilename() != null && mXmppConnectionService.getPreferences().getBoolean(PREFER_XMPP_AVATAR, mXmppConnectionService.getResources().getBoolean(R.bool.prefer_xmpp_avatar))) {
                 uri = mXmppConnectionService.getFileBackend().getAvatarUri(contact.getAvatarFilename());
             } else if (contact.getProfilePhoto() != null) {
                 uri = Uri.parse(contact.getProfilePhoto());
-            } else if (contact.getAvatarFilename() != null) {
-                uri = mXmppConnectionService.getFileBackend().getAvatarUri(contact.getAvatarFilename());
             }
             if (drawTile(canvas, uri, left, top, right, bottom)) {
                 return true;
