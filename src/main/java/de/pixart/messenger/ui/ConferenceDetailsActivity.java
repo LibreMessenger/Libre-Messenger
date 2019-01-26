@@ -332,11 +332,13 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         this.binding.mucEditSubject.addTextChangedListener(this);
         this.binding.mucEditSubject.addTextChangedListener(new StylingHelper.MessageEditorStyler(this.binding.mucEditSubject));
         this.binding.autojoinCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            final Bookmark bookmark = mConversation.getBookmark();
-            if (bookmark != null) {
-                bookmark.setAutojoin(this.binding.autojoinCheckbox.isChecked());
-                xmppConnectionService.pushBookmarks(bookmark.getAccount());
-                updateView();
+            if (mConversation != null) {
+                final Bookmark bookmark = mConversation.getBookmark();
+                if (bookmark != null) {
+                    bookmark.setAutojoin(this.binding.autojoinCheckbox.isChecked());
+                    xmppConnectionService.pushBookmarks(bookmark.getAccount());
+                    updateView();
+                }
             }
         });
         mMediaAdapter = new MediaAdapter(this, R.dimen.media_size);
