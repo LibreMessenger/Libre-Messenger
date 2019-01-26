@@ -555,8 +555,24 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         }
 
         if (oldVersion < 46 && newVersion >= 46) {
-            db.execSQL("ALTER TABLE " + SQLiteAxolotlStore.IDENTITIES_TABLENAME + " ADD COLUMN " + SQLiteAxolotlStore.TRUSTED); // TODO - just to make old databases importable, column isn't needed at all
+            if (!isColumnExisting(db, SQLiteAxolotlStore.IDENTITIES_TABLENAME, SQLiteAxolotlStore.TRUSTED)) {
+                db.execSQL("ALTER TABLE " + SQLiteAxolotlStore.IDENTITIES_TABLENAME + " ADD COLUMN " + SQLiteAxolotlStore.TRUSTED); // TODO - just to make old databases importable, column isn't needed at all
+            }
         }
+    }
+
+    private boolean isColumnExisting(SQLiteDatabase db, String TableName, String ColumnName) {
+        boolean isExist = false;
+        Cursor cursor = db.rawQuery("PRAGMA table_info(" + TableName + ")", null);
+        cursor.moveToFirst();
+        do {
+            String currentColumn = cursor.getString(1);
+            if (currentColumn.equals(ColumnName)) {
+                isExist = true;
+            }
+        } while (cursor.moveToNext());
+        cursor.close();
+        return isExist;
     }
 
     private void canonicalizeJids(SQLiteDatabase db) {
