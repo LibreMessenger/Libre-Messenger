@@ -426,73 +426,7 @@ public class SettingsActivity extends XmppActivity implements
     private void enableMultiAccounts() {
         if (!isMultiAccountChecked) {
             multiAccountPreference.setEnabled(true);
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setCancelable(false);
-            builder.setTitle(R.string.pref_enable_multi_accounts_title);
-            builder.setMessage(R.string.pref_enable_multi_accounts_summary);
-            builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
-                ((CheckBoxPreference) multiAccountPreference).setChecked(false);
-            });
-            builder.setPositiveButton(R.string.enter_password, (dialog, which) -> {
-                ((CheckBoxPreference) multiAccountPreference).setChecked(false);
-                enterPasswordDialog();
-            });
-            AlertDialog dialog = builder.create();
-            dialog.show();
         }
-    }
-
-    public void enterPasswordDialog() {
-        LayoutInflater li = LayoutInflater.from(this);
-        View promptsView = li.inflate(R.layout.password, null);
-
-        final Preference preference = mSettingsFragment.findPreference("enable_multi_accounts");
-
-        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setView(promptsView);
-        final EditText password = promptsView.findViewById(R.id.password);
-        final EditText confirm_password = promptsView.findViewById(R.id.confirm_password);
-        confirm_password.setVisibility(View.VISIBLE);
-        alertDialogBuilder.setTitle(R.string.enter_password);
-        alertDialogBuilder.setMessage(R.string.enter_password);
-        alertDialogBuilder
-                .setCancelable(false)
-                .setPositiveButton(R.string.ok,
-                        (dialog, id) -> {
-                            final String pw1 = password.getText().toString();
-                            final String pw2 = confirm_password.getText().toString();
-                            if (!pw1.equals(pw2)) {
-                                ((CheckBoxPreference) preference).setChecked(false);
-                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                                builder.setTitle(R.string.error);
-                                builder.setMessage(R.string.passwords_do_not_match);
-                                builder.setNegativeButton(R.string.cancel, null);
-                                builder.setPositiveButton(R.string.try_again, (dialog12, id12) -> enterPasswordDialog());
-                                builder.create().show();
-                            } else if (pw1.trim().isEmpty()) {
-                                ((CheckBoxPreference) preference).setChecked(false);
-                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                                builder.setTitle(R.string.error);
-                                builder.setMessage(R.string.password_should_not_be_empty);
-                                builder.setNegativeButton(R.string.cancel, null);
-                                builder.setPositiveButton(R.string.try_again, (dialog1, id1) -> enterPasswordDialog());
-                                builder.create().show();
-                            } else {
-                                ((CheckBoxPreference) preference).setChecked(true);
-                                SharedPreferences multiaccount_prefs = getApplicationContext().getSharedPreferences(USE_MULTI_ACCOUNTS, Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = multiaccount_prefs.edit();
-                                editor.putString("BackupPW", pw1);
-                                boolean passwordstored = editor.commit();
-                                Log.d(Config.LOGTAG, "saving multiaccount password " + passwordstored);
-                                if (passwordstored) {
-                                    recreate();
-                                } else {
-                                    //handleMultiAccountChanges();
-                                }
-                            }
-                        })
-                .setNegativeButton(R.string.cancel, null);
-        alertDialogBuilder.create().show();
     }
 
 

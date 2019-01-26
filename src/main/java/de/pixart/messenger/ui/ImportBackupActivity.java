@@ -26,7 +26,7 @@ import de.pixart.messenger.databinding.DialogEnterPasswordBinding;
 import de.pixart.messenger.services.ImportBackupService;
 import de.pixart.messenger.ui.adapter.BackupFileAdapter;
 
-public class ImportBackupActivity extends ActionBarActivity implements ServiceConnection, ImportBackupService.OnBackupFilesLoaded, BackupFileAdapter.OnItemClickedListener, ImportBackupService.OnBackupProcessed {
+public class ImportBackupActivity extends XmppActivity implements ServiceConnection, ImportBackupService.OnBackupFilesLoaded, BackupFileAdapter.OnItemClickedListener, ImportBackupService.OnBackupProcessed {
 
     private ActivityImportBackupBinding binding;
 
@@ -45,6 +45,10 @@ public class ImportBackupActivity extends ActionBarActivity implements ServiceCo
     }
 
     @Override
+    protected void refreshUiReal() {
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         bindService(new Intent(this, ImportBackupService.class), this, Context.BIND_AUTO_CREATE);
@@ -57,6 +61,10 @@ public class ImportBackupActivity extends ActionBarActivity implements ServiceCo
             this.service.removeOnBackupProcessedListener(this);
         }
         unbindService(this);
+    }
+
+    @Override
+    void onBackendConnected() {
     }
 
     @Override
