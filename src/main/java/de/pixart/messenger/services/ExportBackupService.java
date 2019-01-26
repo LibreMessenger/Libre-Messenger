@@ -5,21 +5,29 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
+import android.os.PowerManager;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.GZIPOutputStream;
@@ -41,12 +49,22 @@ import de.pixart.messenger.persistance.DatabaseBackend;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.utils.BackupFileHeader;
 import de.pixart.messenger.utils.Compatibility;
+import de.pixart.messenger.utils.WakeLockHelper;
+import rocks.xmpp.addr.Jid;
 
 public class ExportBackupService extends Service {
+
+    private PowerManager.WakeLock wakeLock;
+    private PowerManager pm;
 
     public static final String KEYTYPE = "AES";
     public static final String CIPHERMODE = "AES/GCM/NoPadding";
     public static final String PROVIDER = "BC";
+
+    boolean ReadableLogsEnabled = false;
+    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    private static final String DIRECTORY_STRING_FORMAT = FileBackend.getAppLogsDirectory() + "%s";
+    private static final String MESSAGE_STRING_FORMAT = "(%s) %s: %s\n";
 
     private static final int NOTIFICATION_ID = 19;
     private static final int PAGE_SIZE = 20;
@@ -169,6 +187,10 @@ public class ExportBackupService extends Service {
         mDatabaseBackend = DatabaseBackend.getInstance(getBaseContext());
         mAccounts = mDatabaseBackend.getAccounts();
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        final SharedPreferences ReadableLogs = PreferenceManager.getDefaultSharedPreferences(this);
+        ReadableLogsEnabled = ReadableLogs.getBoolean("export_plain_text_logs", getResources().getBoolean(R.bool.plain_text_logs));
+        pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, Config.LOGTAG + ": ExportLogsService");
     }
 
     @Override
@@ -178,6 +200,7 @@ public class ExportBackupService extends Service {
                 export();
                 stopForeground(true);
                 running.set(false);
+                WakeLockHelper.release(wakeLock);
                 stopSelf();
             }).start();
             return START_STICKY;
@@ -210,6 +233,7 @@ public class ExportBackupService extends Service {
     }
 
     private void export() {
+        wakeLock.acquire(15 * 60 * 1000L /*15 minutes*/);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getBaseContext(), "backup");
         mBuilder.setContentTitle(getString(R.string.notification_create_backup_title))
                 .setSmallIcon(R.drawable.ic_archive_white_24dp)
@@ -219,6 +243,15 @@ public class ExportBackupService extends Service {
             int count = 0;
             final int max = this.mAccounts.size();
             final SecureRandom secureRandom = new SecureRandom();
+            if (mAccounts.size() >= 1) {
+                if (ReadableLogsEnabled) {
+                    List<Conversation> conversations = mDatabaseBackend.getConversations(Conversation.STATUS_AVAILABLE);
+                    conversations.addAll(mDatabaseBackend.getConversations(Conversation.STATUS_ARCHIVED));
+                    for (Conversation conversation : conversations) {
+                        writeToFile(conversation);
+                    }
+                }
+            }
             for (Account account : this.mAccounts) {
                 final byte[] IV = new byte[12];
                 final byte[] salt = new byte[16];
@@ -261,6 +294,73 @@ public class ExportBackupService extends Service {
         } catch (Exception e) {
             Log.d(Config.LOGTAG, "unable to create backup ", e);
         }
+    }
+
+    private void writeToFile(Conversation conversation) {
+        Jid accountJid = resolveAccountUuid(conversation.getAccountUuid());
+        Jid contactJid = conversation.getJid();
+
+        File dir = new File(String.format(DIRECTORY_STRING_FORMAT, accountJid.asBareJid().toString()));
+        dir.mkdirs();
+
+        BufferedWriter bw = null;
+        try {
+            for (Message message : mDatabaseBackend.getMessagesIterable(conversation)) {
+                if (message == null)
+                    continue;
+                if (message.getType() == Message.TYPE_TEXT || message.hasFileOnRemoteHost()) {
+                    String date = simpleDateFormat.format(new Date(message.getTimeSent()));
+                    if (bw == null) {
+                        bw = new BufferedWriter(new FileWriter(
+                                new File(dir, contactJid.asBareJid().toString() + ".txt")));
+                    }
+                    String jid = null;
+                    switch (message.getStatus()) {
+                        case Message.STATUS_RECEIVED:
+                            jid = getMessageCounterpart(message);
+                            break;
+                        case Message.STATUS_SEND:
+                        case Message.STATUS_SEND_RECEIVED:
+                        case Message.STATUS_SEND_DISPLAYED:
+                            jid = accountJid.asBareJid().toString();
+                            break;
+                    }
+                    if (jid != null) {
+                        String body = message.hasFileOnRemoteHost() ? message.getFileParams().url.toString() : message.getBody();
+                        bw.write(String.format(MESSAGE_STRING_FORMAT, date, jid,
+                                body.replace("\\\n", "\\ \n").replace("\n", "\\ \n")));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (bw != null) {
+                    bw.close();
+                }
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+    }
+
+    private String getMessageCounterpart(Message message) {
+        String trueCounterpart = (String) message.getContentValues().get(Message.TRUE_COUNTERPART);
+        if (trueCounterpart != null) {
+            return trueCounterpart;
+        } else {
+            return message.getCounterpart().toString();
+        }
+    }
+
+    private Jid resolveAccountUuid(String accountUuid) {
+        for (Account account : mAccounts) {
+            if (account.getUuid().equals(accountUuid)) {
+                return account.getJid();
+            }
+        }
+        return null;
     }
 
     @Override
