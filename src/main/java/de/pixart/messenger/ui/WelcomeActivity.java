@@ -16,6 +16,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,6 +42,7 @@ import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.persistance.DatabaseBackend;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.utils.EncryptDecryptFile;
+import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import de.pixart.messenger.utils.XmppUri;
 
 import static de.pixart.messenger.utils.PermissionUtils.allGranted;
@@ -122,6 +125,27 @@ public class WelcomeActivity extends XmppActivity {
             overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
         });
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.welcome, menu);
+        MenuItem qrCodeScanMenuItem = menu.findItem(R.id.action_scan_qr_code);
+        qrCodeScanMenuItem.setVisible(isCameraFeatureAvailable());
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (MenuDoubleTabUtil.shouldIgnoreTap()) {
+            return false;
+        }
+        if (item.getItemId() == R.id.action_scan_qr_code) {
+            UriHandlerActivity.scan(this);
+            return true;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void addInviteUri(Intent intent) {
