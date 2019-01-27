@@ -874,4 +874,5 @@
     <string name="group_chat_members">Group chat members</string>
     <string name="join_group_chat">Join group chat</string>
     <string name="create_group_chat">Create group chat</string>
+    <string name="message_deleted">Message was deleted</string>
 </resources>
