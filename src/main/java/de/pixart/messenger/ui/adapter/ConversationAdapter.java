@@ -390,33 +390,38 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     static class AsyncDrawable extends BitmapDrawable {
         private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
 
-        public AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
+        AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
             super(res, bitmap);
             bitmapWorkerTaskReference = new WeakReference<>(bitmapWorkerTask);
         }
 
-        public BitmapWorkerTask getBitmapWorkerTask() {
+        BitmapWorkerTask getBitmapWorkerTask() {
             return bitmapWorkerTaskReference.get();
         }
     }
 
-    class BitmapWorkerTask extends AsyncTask<Conversation, Void, Bitmap> {
+    static class BitmapWorkerTask extends AsyncTask<Conversation, Void, Bitmap> {
         private final WeakReference<ImageView> imageViewReference;
         private Conversation conversation = null;
 
-        public BitmapWorkerTask(ImageView imageView) {
+        BitmapWorkerTask(ImageView imageView) {
             imageViewReference = new WeakReference<>(imageView);
         }
+
 
         @Override
         protected Bitmap doInBackground(Conversation... params) {
             this.conversation = params[0];
+            final XmppActivity activity = XmppActivity.find(imageViewReference);
+            if (activity == null) {
+                return null;
+            }
             return activity.avatarService().get(this.conversation, activity.getPixel(56), isCancelled());
         }
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap != null) {
+            if (bitmap != null && !isCancelled()) {
                 final ImageView imageView = imageViewReference.get();
                 if (imageView != null) {
                     imageView.setImageBitmap(bitmap);
