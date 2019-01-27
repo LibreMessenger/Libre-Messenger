@@ -64,6 +64,7 @@ import de.pixart.messenger.services.XmppConnectionService.OnAccountUpdate;
 import de.pixart.messenger.services.XmppConnectionService.OnCaptchaRequested;
 import de.pixart.messenger.ui.adapter.KnownHostsAdapter;
 import de.pixart.messenger.ui.adapter.PresenceTemplateAdapter;
+import de.pixart.messenger.ui.util.AvatarWorkerTask;
 import de.pixart.messenger.ui.util.PendingItem;
 import de.pixart.messenger.ui.util.SoftKeyboardUtils;
 import de.pixart.messenger.utils.CryptoHelper;
@@ -639,7 +640,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     }
 
     private void refreshAvatar() {
-        binding.avater.setImageBitmap(avatarService().get(mAccount, (int) getResources().getDimension(R.dimen.avatar_on_details_screen_size)));
+        AvatarWorkerTask.loadAvatar(mAccount, binding.avater, R.dimen.avatar_on_details_screen_size);
     }
 
     @Override
@@ -1057,7 +1058,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 
         if (!mInitMode) {
             binding.avater.setVisibility(View.VISIBLE);
-            binding.avater.setImageBitmap(avatarService().get(this.mAccount, getPixel(Config.AVATAR_SIZE)));
+            AvatarWorkerTask.loadAvatar(mAccount, binding.avater, getPixel(Config.AVATAR_SIZE));
             this.binding.accountJid.setEnabled(false);
         } else {
             binding.avater.setVisibility(View.GONE);

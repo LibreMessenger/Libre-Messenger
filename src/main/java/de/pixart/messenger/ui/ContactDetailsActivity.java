@@ -50,6 +50,7 @@ import de.pixart.messenger.services.XmppConnectionService.OnRosterUpdate;
 import de.pixart.messenger.ui.adapter.MediaAdapter;
 import de.pixart.messenger.ui.interfaces.OnMediaLoaded;
 import de.pixart.messenger.ui.util.Attachment;
+import de.pixart.messenger.ui.util.AvatarWorkerTask;
 import de.pixart.messenger.ui.util.GridManager;
 import de.pixart.messenger.ui.util.JidDialog;
 import de.pixart.messenger.utils.Compatibility;
@@ -527,7 +528,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             account = contact.getAccount().getJid().asBareJid().toString();
         }
         binding.detailsAccount.setText(getString(R.string.using_account, account));
-        binding.detailsContactBadge.setImageBitmap(avatarService().get(contact, getPixel(Config.AVATAR_SIZE)));
+        AvatarWorkerTask.loadAvatar(contact, binding.detailsContactBadge, Config.AVATAR_SIZE);
         binding.detailsContactBadge.setOnClickListener(this.onBadgeClick);
 
         if (xmppConnectionService.multipleAccounts()) {

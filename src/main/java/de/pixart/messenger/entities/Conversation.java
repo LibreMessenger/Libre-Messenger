@@ -30,8 +30,10 @@ import de.pixart.messenger.crypto.OmemoSetting;
 import de.pixart.messenger.crypto.PgpDecryptionService;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.persistance.DatabaseBackend;
+import de.pixart.messenger.services.AvatarService;
 import de.pixart.messenger.services.QuickConversationsService;
 import de.pixart.messenger.utils.JidHelper;
+import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 import de.pixart.messenger.xmpp.mam.MamReference;
 import rocks.xmpp.addr.Jid;
@@ -39,7 +41,7 @@ import rocks.xmpp.addr.Jid;
 import static de.pixart.messenger.entities.Bookmark.printableValue;
 
 
-public class Conversation extends AbstractEntity implements Blockable, Comparable<Conversation>, Conversational {
+public class Conversation extends AbstractEntity implements Blockable, Comparable<Conversation>, Conversational, AvatarService.Avatarable {
     public static final String TABLENAME = "conversations";
 
     public static final int STATUS_AVAILABLE = 0;
@@ -1187,6 +1189,11 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
             }
         }
         return 0;
+    }
+
+    @Override
+    public int getAvatarBackgroundColor() {
+        return UIHelper.getColorForName(getName().toString());
     }
 
     public interface OnMessageFound {

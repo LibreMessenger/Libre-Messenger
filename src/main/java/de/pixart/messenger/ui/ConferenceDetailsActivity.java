@@ -56,6 +56,7 @@ import de.pixart.messenger.services.XmppConnectionService.OnMucRosterUpdate;
 import de.pixart.messenger.ui.adapter.MediaAdapter;
 import de.pixart.messenger.ui.interfaces.OnMediaLoaded;
 import de.pixart.messenger.ui.util.Attachment;
+import de.pixart.messenger.ui.util.AvatarWorkerTask;
 import de.pixart.messenger.ui.util.GridManager;
 import de.pixart.messenger.ui.util.MucDetailsContextMenuHelper;
 import de.pixart.messenger.ui.util.MyLinkify;
@@ -577,8 +578,9 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         } else {
             this.binding.detailsAccount.setVisibility(View.GONE);
         }
-        this.binding.detailsMucAvatar.setImageBitmap(avatarService().get(mConversation, getPixel(Config.AVATAR_SIZE)));
-        this.binding.yourPhoto.setImageBitmap(avatarService().get(mConversation.getAccount(), getPixel(48)));
+        AvatarWorkerTask.loadAvatar(mConversation, binding.detailsMucAvatar, getPixel(Config.AVATAR_SIZE));
+        AvatarWorkerTask.loadAvatar(mConversation, binding.yourPhoto, R.dimen.avatar_on_details_screen_size);
+
         String roomName = mucOptions.getName();
         String subject = mucOptions.getSubject();
         final boolean hasTitle;

@@ -26,6 +26,7 @@ import de.pixart.messenger.databinding.ContactBinding;
 import de.pixart.messenger.entities.ListItem;
 import de.pixart.messenger.ui.SettingsActivity;
 import de.pixart.messenger.ui.XmppActivity;
+import de.pixart.messenger.ui.util.AvatarWorkerTask;
 import de.pixart.messenger.ui.util.StyledAttributes;
 import de.pixart.messenger.utils.EmojiWrapper;
 import de.pixart.messenger.utils.IrregularUnicodeDetector;
@@ -121,7 +122,7 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
             viewHolder.avatar.setAlpha(ACTIVE_ALPHA);
             viewHolder.tags.setAlpha(ACTIVE_ALPHA);
         }
-        loadAvatar(item, viewHolder.avatar);
+        AvatarWorkerTask.loadAvatar(item, viewHolder.avatar, R.dimen.avatar);
         return view;
     }
 
@@ -131,96 +132,6 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
 
     public interface OnTagClickedListener {
         void onTagClicked(String tag);
-    }
-
-    private static class BitmapWorkerTask extends AsyncTask<ListItem, Void, Bitmap> {
-        private final WeakReference<ImageView> imageViewReference;
-        private ListItem item = null;
-
-        BitmapWorkerTask(ImageView imageView) {
-            imageViewReference = new WeakReference<>(imageView);
-        }
-
-        @Override
-        protected Bitmap doInBackground(ListItem... params) {
-            this.item = params[0];
-            final XmppActivity activity = XmppActivity.find(imageViewReference);
-            if (activity == null) {
-                return null;
-            }
-            return activity.avatarService().get(this.item, activity.getPixel(56), isCancelled());
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap != null && !isCancelled()) {
-                final ImageView imageView = imageViewReference.get();
-                if (imageView != null) {
-                    imageView.setImageBitmap(bitmap);
-                    imageView.setBackgroundColor(0x00000000);
-                }
-            }
-        }
-    }
-
-    private void loadAvatar(ListItem item, ImageView imageView) {
-        if (cancelPotentialWork(item, imageView)) {
-            final Bitmap bm = activity.avatarService().get(item, activity.getPixel(48), true);
-            if (bm != null) {
-                cancelPotentialWork(item, imageView);
-                imageView.setImageBitmap(bm);
-                imageView.setBackgroundColor(0x00000000);
-            } else {
-                String seed = item.getJid() != null ? item.getJid().asBareJid().toString() : item.getDisplayName();
-                imageView.setBackgroundColor(UIHelper.getColorForName(seed));
-                imageView.setImageDrawable(null);
-                final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
-                final AsyncDrawable asyncDrawable = new AsyncDrawable(activity.getResources(), null, task);
-                imageView.setImageDrawable(asyncDrawable);
-                try {
-                    task.executeOnExecutor(BitmapWorkerTask.THREAD_POOL_EXECUTOR, item);
-                } catch (final RejectedExecutionException ignored) {
-                }
-            }
-        }
-    }
-
-    private static boolean cancelPotentialWork(ListItem item, ImageView imageView) {
-        final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
-
-        if (bitmapWorkerTask != null) {
-            final ListItem oldItem = bitmapWorkerTask.item;
-            if (oldItem == null || item != oldItem) {
-                bitmapWorkerTask.cancel(true);
-            } else {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
-        if (imageView != null) {
-            final Drawable drawable = imageView.getDrawable();
-            if (drawable instanceof AsyncDrawable) {
-                final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
-                return asyncDrawable.getBitmapWorkerTask();
-            }
-        }
-        return null;
-    }
-
-    static class AsyncDrawable extends BitmapDrawable {
-        private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
-
-        AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
-            super(res, bitmap);
-            bitmapWorkerTaskReference = new WeakReference<>(bitmapWorkerTask);
-        }
-
-        BitmapWorkerTask getBitmapWorkerTask() {
-            return bitmapWorkerTaskReference.get();
-        }
     }
 
     private static class ViewHolder {
@@ -243,8 +154,7 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
         }
     }
 
-
-    public boolean ShowPresenceColoredNames() {
+    private boolean ShowPresenceColoredNames() {
         return getPreferences().getBoolean("presence_colored_names", activity.getResources().getBoolean(R.bool.presence_colored_names));
     }
 

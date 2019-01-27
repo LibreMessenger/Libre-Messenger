@@ -2,6 +2,7 @@ package de.pixart.messenger.entities;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
 
@@ -16,6 +17,7 @@ import java.util.Set;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.crypto.axolotl.FingerprintStatus;
+import de.pixart.messenger.services.AvatarService;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.Emoticons;
 import de.pixart.messenger.utils.GeoHelper;
@@ -25,7 +27,7 @@ import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.utils.XmppUri;
 import rocks.xmpp.addr.Jid;
 
-public class Message extends AbstractEntity {
+public class Message extends AbstractEntity implements AvatarService.Avatarable {
 
     public static final String TABLENAME = "messages";
 
@@ -631,6 +633,15 @@ public class Message extends AbstractEntity {
 
     public List<MucOptions.User> getCounterparts() {
         return this.counterparts;
+    }
+
+    @Override
+    public int getAvatarBackgroundColor() {
+        if (type == Message.TYPE_STATUS && getCounterparts() != null && getCounterparts().size() > 1) {
+            return Color.TRANSPARENT;
+        } else {
+            return UIHelper.getColorForName(UIHelper.getMessageDisplayName(this));
+        }
     }
 
     public static class MergeSeparator {

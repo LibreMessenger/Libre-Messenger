@@ -38,6 +38,7 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.BoolRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -1228,11 +1229,12 @@ public abstract class XmppActivity extends ActionBarActivity {
         }
     }
 
-    public static XmppActivity find(WeakReference<ImageView> viewWeakReference) {
+    public static XmppActivity find(@NonNull WeakReference<ImageView> viewWeakReference) {
         final View view = viewWeakReference.get();
-        if (view == null) {
-            return null;
-        }
+        return view == null ? null : find(view);
+    }
+
+    public static XmppActivity find(@NonNull final View view) {
         final Context context = view.getContext();
         if (context instanceof XmppActivity) {
             return (XmppActivity) context;

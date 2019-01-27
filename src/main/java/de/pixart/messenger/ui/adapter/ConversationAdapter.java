@@ -29,6 +29,7 @@ import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.ui.ConversationFragment;
 import de.pixart.messenger.ui.XmppActivity;
+import de.pixart.messenger.ui.util.AvatarWorkerTask;
 import de.pixart.messenger.ui.util.StyledAttributes;
 import de.pixart.messenger.utils.EmojiWrapper;
 import de.pixart.messenger.utils.IrregularUnicodeDetector;
@@ -45,31 +46,6 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     public ConversationAdapter(XmppActivity activity, List<Conversation> conversations) {
         this.activity = activity;
         this.conversations = conversations;
-    }
-
-    private static boolean cancelPotentialWork(Conversation conversation, ImageView imageView) {
-        final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
-
-        if (bitmapWorkerTask != null) {
-            final Conversation oldConversation = bitmapWorkerTask.conversation;
-            if (oldConversation == null || conversation != oldConversation) {
-                bitmapWorkerTask.cancel(true);
-            } else {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
-        if (imageView != null) {
-            final Drawable drawable = imageView.getDrawable();
-            if (drawable instanceof AsyncDrawable) {
-                final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
-                return asyncDrawable.getBitmapWorkerTask();
-            }
-        }
-        return null;
     }
 
     @NonNull
@@ -232,7 +208,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             timestamp = conversation.getLatestMessage().getTimeSent();
         }
         viewHolder.binding.conversationLastupdate.setText(UIHelper.readableTimeDifference(activity, timestamp));
-        loadAvatar(conversation, viewHolder.binding.conversationImage);
+        AvatarWorkerTask.loadAvatar(conversation, viewHolder.binding.conversationImage, R.dimen.avatar_on_conversation_overview);
         viewHolder.itemView.setOnClickListener(v -> listener.onConversationClick(v, conversation));
 
         if (conversation.getMode() == Conversation.MODE_SINGLE && ShowPresenceColoredNames()) {
@@ -317,27 +293,6 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         this.listener = listener;
     }
 
-    private void loadAvatar(Conversation conversation, ImageView imageView) {
-        if (cancelPotentialWork(conversation, imageView)) {
-            final Bitmap bm = activity.avatarService().get(conversation, activity.getPixel(56), true);
-            if (bm != null) {
-                cancelPotentialWork(conversation, imageView);
-                imageView.setImageBitmap(bm);
-                imageView.setBackgroundColor(0x00000000);
-            } else {
-                imageView.setBackgroundColor(UIHelper.getColorForName(conversation.getName().toString()));
-                imageView.setImageDrawable(null);
-                final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
-                final AsyncDrawable asyncDrawable = new AsyncDrawable(activity.getResources(), null, task);
-                imageView.setImageDrawable(asyncDrawable);
-                try {
-                    task.execute(conversation);
-                } catch (final RejectedExecutionException ignored) {
-                }
-            }
-        }
-    }
-
     public void insert(Conversation c, int position) {
         conversations.add(position, c);
         notifyDataSetChanged();
@@ -358,50 +313,6 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         private ConversationViewHolder(ConversationListRowBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
-        }
-    }
-
-    static class AsyncDrawable extends BitmapDrawable {
-        private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
-
-        AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
-            super(res, bitmap);
-            bitmapWorkerTaskReference = new WeakReference<>(bitmapWorkerTask);
-        }
-
-        BitmapWorkerTask getBitmapWorkerTask() {
-            return bitmapWorkerTaskReference.get();
-        }
-    }
-
-    static class BitmapWorkerTask extends AsyncTask<Conversation, Void, Bitmap> {
-        private final WeakReference<ImageView> imageViewReference;
-        private Conversation conversation = null;
-
-        BitmapWorkerTask(ImageView imageView) {
-            imageViewReference = new WeakReference<>(imageView);
-        }
-
-
-        @Override
-        protected Bitmap doInBackground(Conversation... params) {
-            this.conversation = params[0];
-            final XmppActivity activity = XmppActivity.find(imageViewReference);
-            if (activity == null) {
-                return null;
-            }
-            return activity.avatarService().get(this.conversation, activity.getPixel(56), isCancelled());
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap != null && !isCancelled()) {
-                final ImageView imageView = imageViewReference.get();
-                if (imageView != null) {
-                    imageView.setImageBitmap(bitmap);
-                    imageView.setBackgroundColor(0x00000000);
-                }
-            }
         }
     }
 

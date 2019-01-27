@@ -29,12 +29,14 @@ import de.pixart.messenger.crypto.OtrService;
 import de.pixart.messenger.crypto.PgpDecryptionService;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.crypto.axolotl.XmppAxolotlSession;
+import de.pixart.messenger.services.AvatarService;
 import de.pixart.messenger.services.XmppConnectionService;
+import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xmpp.XmppConnection;
 import rocks.xmpp.addr.Jid;
 
-public class Account extends AbstractEntity {
+public class Account extends AbstractEntity implements AvatarService.Avatarable {
 
     public static final String TABLENAME = "accounts";
 
@@ -614,6 +616,11 @@ public class Account extends AbstractEntity {
 
     public boolean isOnlineAndConnected() {
         return this.getStatus() == State.ONLINE && this.getXmppConnection() != null;
+    }
+
+    @Override
+    public int getAvatarBackgroundColor() {
+        return UIHelper.getColorForName(jid.asBareJid().toString());
     }
 
     public enum State {

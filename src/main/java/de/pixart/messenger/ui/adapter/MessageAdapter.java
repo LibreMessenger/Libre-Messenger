@@ -74,6 +74,7 @@ import de.pixart.messenger.ui.ConversationsActivity;
 import de.pixart.messenger.ui.XmppActivity;
 import de.pixart.messenger.ui.text.DividerSpan;
 import de.pixart.messenger.ui.text.QuoteSpan;
+import de.pixart.messenger.ui.util.AvatarWorkerTask;
 import de.pixart.messenger.ui.util.MyLinkify;
 import de.pixart.messenger.ui.util.ViewUtil;
 import de.pixart.messenger.ui.widget.ClickableMovementMethod;
@@ -119,31 +120,6 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         this.audioPlayer = new AudioPlayer(this);
         metrics = getContext().getResources().getDisplayMetrics();
         updatePreferences();
-    }
-
-    public static boolean cancelPotentialWork(Message message, ImageView imageView) {
-        final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
-
-        if (bitmapWorkerTask != null) {
-            final Message oldMessage = bitmapWorkerTask.message;
-            if (oldMessage == null || message != oldMessage) {
-                bitmapWorkerTask.cancel(true);
-            } else {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
-        if (imageView != null) {
-            final Drawable drawable = imageView.getDrawable();
-            if (drawable instanceof AsyncDrawable) {
-                final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
-                return asyncDrawable.getBitmapWorkerTask();
-            }
-        }
-        return null;
     }
 
     private static void resetClickListener(View... views) {
@@ -252,7 +228,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 filesize = Math.round(params.size * 1f / (1024 * 1024)) + " MiB";
             } else if (params.size >= (1 * 1024)) {
                 filesize = Math.round(params.size * 1f / 1024) + " KiB";
-            } else if (params.size > 0){
+            } else if (params.size > 0) {
                 filesize = params.size + " B";
             }
             if (transferable != null && transferable.getStatus() == Transferable.STATUS_FAILED) {
@@ -605,7 +581,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             if (highlightedTerm != null) {
                 StylingHelper.highlight(activity, body, highlightedTerm, StylingHelper.isDarkText(viewHolder.messageBody));
             }
-            MyLinkify.addLinks(body,true);
+            MyLinkify.addLinks(body, true);
             viewHolder.messageBody.setAutoLinkMask(0);
             viewHolder.messageBody.setText(EmojiWrapper.transform(body));
             viewHolder.messageBody.setTextIsSelectable(true);
@@ -922,10 +898,10 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 boolean showAvatar;
                 if (conversation.getMode() == Conversation.MODE_SINGLE) {
                     showAvatar = true;
-                    loadAvatar(message,viewHolder.contact_picture,activity.getPixel(32));
+                    AvatarWorkerTask.loadAvatar(message, viewHolder.contact_picture, R.dimen.avatar_on_status_message);
                 } else if (message.getCounterpart() != null || message.getTrueCounterpart() != null || (message.getCounterparts() != null && message.getCounterparts().size() > 0)) {
                     showAvatar = true;
-                    loadAvatar(message,viewHolder.contact_picture,activity.getPixel(32));
+                    AvatarWorkerTask.loadAvatar(message, viewHolder.contact_picture, R.dimen.avatar_on_status_message);
                 } else {
                     showAvatar = false;
                 }
@@ -938,7 +914,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             }
             return view;
         } else {
-            loadAvatar(message, viewHolder.contact_picture, activity.getPixel(48));
+            AvatarWorkerTask.loadAvatar(message, viewHolder.contact_picture, R.dimen.avatar);
         }
 
         resetClickListener(viewHolder.message_box, viewHolder.messageBody);
@@ -1035,7 +1011,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 viewHolder.encryption.setVisibility(View.GONE);
                 viewHolder.encryption.setTextColor(this.getMessageTextColor(darkBackground, false));
             } else {
-                viewHolder.message_box.setBackgroundResource(darkBackground ? R.drawable.message_bubble_received_warning_dark: R.drawable.message_bubble_received_warning);
+                viewHolder.message_box.setBackgroundResource(darkBackground ? R.drawable.message_bubble_received_warning_dark : R.drawable.message_bubble_received_warning);
                 viewHolder.encryption.setVisibility(View.VISIBLE);
                 viewHolder.encryption.setTextColor(this.getWarningTextColor(darkBackground));
                 if (omemoEncryption && !message.isTrusted()) {
@@ -1139,33 +1115,6 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         this.mIndicateReceived = p.getBoolean("indicate_received", activity.getResources().getBoolean(R.bool.indicate_received));
     }
 
-    private void loadAvatar(Message message, ImageView imageView, int size) {
-        if (cancelPotentialWork(message, imageView)) {
-            final Bitmap bm = activity.avatarService().get(message, size, true);
-            if (bm != null) {
-                cancelPotentialWork(message, imageView);
-                imageView.setImageBitmap(bm);
-                imageView.setBackgroundColor(Color.TRANSPARENT);
-            } else {
-                @ColorInt int bg;
-                if (message.getType() == Message.TYPE_STATUS && message.getCounterparts() != null && message.getCounterparts().size() > 1) {
-                    bg = Color.TRANSPARENT;
-                } else {
-                    bg = UIHelper.getColorForName(UIHelper.getMessageDisplayName(message));
-                }
-                imageView.setBackgroundColor(bg);
-                imageView.setImageDrawable(null);
-                final BitmapWorkerTask task = new BitmapWorkerTask(imageView, size);
-                final AsyncDrawable asyncDrawable = new AsyncDrawable(activity.getResources(), null, task);
-                imageView.setImageDrawable(asyncDrawable);
-                try {
-                    task.executeOnExecutor(BitmapWorkerTask.THREAD_POOL_EXECUTOR, message);
-                } catch (final RejectedExecutionException ignored) {
-                }
-            }
-        }
-    }
-
     public void setHighlightedTerm(List<String> terms) {
         this.highlightedTerm = terms == null ? null : StylingHelper.filterHighlightedWords(terms);
     }
@@ -1200,19 +1149,6 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         protected ImageView contact_picture;
         protected TextView status_message;
         protected TextView encryption;
-    }
-
-    static class AsyncDrawable extends BitmapDrawable {
-        private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
-
-        public AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
-            super(res, bitmap);
-            bitmapWorkerTaskReference = new WeakReference<>(bitmapWorkerTask);
-        }
-
-        public BitmapWorkerTask getBitmapWorkerTask() {
-            return bitmapWorkerTaskReference.get();
-        }
     }
 
     private class MessageBodyActionModeCallback implements ActionMode.Callback {
@@ -1257,38 +1193,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
 
         @Override
-        public void onDestroyActionMode(ActionMode mode) {}
-    }
-
-    private static class BitmapWorkerTask extends AsyncTask<Message, Void, Bitmap> {
-        private final WeakReference<ImageView> imageViewReference;
-        private final int size;
-        private Message message = null;
-
-        BitmapWorkerTask(ImageView imageView, int size) {
-            imageViewReference = new WeakReference<>(imageView);
-            this.size = size;
-        }
-
-        @Override
-        protected Bitmap doInBackground(Message... params) {
-            this.message = params[0];
-            final XmppActivity activity = XmppActivity.find(imageViewReference);
-            if (activity == null) {
-                return null;
-            }
-            return activity.avatarService().get(this.message, size, isCancelled());
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap != null && !isCancelled()) {
-                final ImageView imageView = imageViewReference.get();
-                if (imageView != null) {
-                    imageView.setImageBitmap(bitmap);
-                    imageView.setBackgroundColor(0x00000000);
-                }
-            }
+        public void onDestroyActionMode(ActionMode mode) {
         }
     }
 }

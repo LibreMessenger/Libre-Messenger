@@ -603,6 +603,11 @@ public class Contact implements ListItem, Blockable {
         return Options.SYNCED_VIA_OTHER;
     }
 
+    @Override
+    public int getAvatarBackgroundColor() {
+        return UIHelper.getColorForName(jid != null ? jid.asBareJid().toString() : getDisplayName());
+    }
+
     public final class Options {
         public static final int TO = 0;
         public static final int FROM = 1;
