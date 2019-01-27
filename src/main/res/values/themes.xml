@@ -13,6 +13,7 @@
         <item name="color_background_primary">@color/grey50</item>
         <item name="color_background_secondary">@color/grey200</item>
         <item name="color_background_tertiary">@color/grey300</item>
+        <item name="color_background_overlay">@color/grey300_40</item>
         <item name="color_warning">@color/red700</item>
         <item name="TextColorOnline">@color/green500</item>
         <item name="TextColorError">@color/red800</item>
@@ -66,7 +67,8 @@
         </item>
         <item name="ic_send_voice_offline" type="reference">@drawable/ic_send_voice_offline</item>
 
-        <item name="media_preview_document" type="reference">@drawable/ic_description_black_48dp</item>
+        <item name="media_preview_document" type="reference">@drawable/ic_description_black_48dp
+        </item>
         <item name="media_preview_recording" type="reference">@drawable/ic_mic_black_48dp</item>
         <item name="media_preview_audio" type="reference">@drawable/ic_headset_black_48dp</item>
         <item name="media_preview_location" type="reference">@drawable/ic_room_black_48dp</item>
@@ -121,7 +123,7 @@
         <item name="delete_icon_alpha" type="float">0.70</item>
 
         <item name="ic_attach_camera" type="reference">@drawable/ic_attach_camera</item>
-        <item type="reference" name="ic_attach_videocam">@drawable/ic_attach_videocam</item>
+        <item name="ic_attach_videocam" type="reference">@drawable/ic_attach_videocam</item>
         <item name="ic_attach_document" type="reference">@drawable/ic_attach_document</item>
         <item name="ic_attach_location" type="reference">@drawable/ic_attach_location</item>
         <item name="ic_attach_photo" type="reference">@drawable/ic_attach_photo</item>
@@ -167,6 +169,7 @@
         <item name="color_background_primary">@color/grey700</item>
         <item name="color_background_secondary">@color/grey800</item>
         <item name="color_background_tertiary">@color/grey900</item>
+        <item name="color_background_overlay">@color/grey900_40</item>
         <item name="color_warning">@color/red700</item>
         <item name="TextColorOnline">@color/green500</item>
         <item name="TextColorError">@color/red500</item>
@@ -240,7 +243,8 @@
         <item name="dialog_horizontal_padding">24dp</item>
         <item name="dialog_vertical_padding">16dp</item>
 
-        <item name="media_preview_document" type="reference">@drawable/ic_description_white_48dp</item>
+        <item name="media_preview_document" type="reference">@drawable/ic_description_white_48dp
+        </item>
         <item name="media_preview_recording" type="reference">@drawable/ic_mic_white_48dp</item>
         <item name="media_preview_audio" type="reference">@drawable/ic_headset_white_48dp</item>
         <item name="media_preview_location" type="reference">@drawable/ic_room_white_48dp</item>

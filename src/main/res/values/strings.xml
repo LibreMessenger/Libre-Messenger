@@ -872,4 +872,6 @@
     <string name="pref_prefer_xmpp_avatar">Prefer XMPP avatar</string>
     <string name="view_users">View members</string>
     <string name="group_chat_members">Group chat members</string>
+    <string name="join_group_chat">Join group chat</string>
+    <string name="create_group_chat">Create group chat</string>
 </resources>
