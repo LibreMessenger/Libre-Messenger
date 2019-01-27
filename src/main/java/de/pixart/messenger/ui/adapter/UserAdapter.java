@@ -28,15 +28,24 @@ import de.pixart.messenger.ui.ConferenceDetailsActivity;
 import de.pixart.messenger.ui.XmppActivity;
 import de.pixart.messenger.ui.util.AvatarWorkerTask;
 import de.pixart.messenger.ui.util.MucDetailsContextMenuHelper;
+import rocks.xmpp.addr.Jid;
 
 public class UserAdapter extends ListAdapter<MucOptions.User, UserAdapter.ViewHolder> implements View.OnCreateContextMenuListener {
-
-    private MucOptions.User selectedUser = null;
 
     static final DiffUtil.ItemCallback<MucOptions.User> DIFF = new DiffUtil.ItemCallback<MucOptions.User>() {
         @Override
         public boolean areItemsTheSame(@NonNull MucOptions.User a, @NonNull MucOptions.User b) {
-            return a == b;
+            final Jid fullA = a.getFullJid();
+            final Jid fullB = b.getFullJid();
+            final Jid realA = a.getRealJid();
+            final Jid realB = b.getRealJid();
+            if (fullA != null && fullB != null) {
+                return fullA.equals(fullB);
+            } else if (realA != null && realB != null) {
+                return realA.equals(realB);
+            } else {
+                return false;
+            }
         }
 
         @Override
@@ -45,6 +54,7 @@ public class UserAdapter extends ListAdapter<MucOptions.User, UserAdapter.ViewHo
         }
     };
     private final boolean advancedMode;
+    private MucOptions.User selectedUser = null;
 
     public UserAdapter(final boolean advancedMode) {
         super(DIFF);
@@ -115,23 +125,7 @@ public class UserAdapter extends ListAdapter<MucOptions.User, UserAdapter.ViewHo
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        final XmppActivity activity = XmppActivity.find(v);
-        final Object tag = v.getTag();
-        if (tag instanceof MucOptions.User && activity != null) {
-            activity.getMenuInflater().inflate(R.menu.muc_details_context, menu);
-            final MucOptions.User user = (MucOptions.User) tag;
-            String name;
-            final Contact contact = user.getContact();
-            if (contact != null && contact.showInContactList()) {
-                name = contact.getDisplayName();
-            } else if (user.getRealJid() != null) {
-                name = user.getRealJid().asBareJid().toString();
-            } else {
-                name = user.getName();
-            }
-            menu.setHeaderTitle(name);
-            MucDetailsContextMenuHelper.configureMucDetailsContextMenu(activity, menu, user.getConversation(), user);
-        }
+        MucDetailsContextMenuHelper.onCreateContextMenu(menu, v);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

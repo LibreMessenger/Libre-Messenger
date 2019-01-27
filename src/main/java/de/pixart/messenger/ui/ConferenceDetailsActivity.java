@@ -358,6 +358,14 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         return super.onOptionsItemSelected(menuItem);
     }
 
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if (!MucDetailsContextMenuHelper.onContextItemSelected(item, mUserPreviewAdapter.getSelectedUser(), this)) {
+            return super.onContextItemSelected(item);
+        }
+        return true;
+    }
+
     public void onMucEditButtonClicked(View v) {
         if (this.binding.mucEditor.getVisibility() == View.GONE) {
             final MucOptions mucOptions = mConversation.getMucOptions();
@@ -669,7 +677,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                 }
             }
         });
-        this.mUserPreviewAdapter.setUserList(MucOptions.sub(users, GridManager.getCurrentColumnCount(binding.users)));
+        this.mUserPreviewAdapter.submitList(MucOptions.sub(users, GridManager.getCurrentColumnCount(binding.users)));
         this.binding.invite.setVisibility(mucOptions.canInvite() ? View.VISIBLE : View.GONE);
     }
 

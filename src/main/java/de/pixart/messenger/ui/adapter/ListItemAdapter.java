@@ -75,9 +75,8 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
         } else {
             viewHolder = (ViewHolder) view.getTag();
         }
-
+        view.setBackground(StyledAttributes.getDrawable(view.getContext(), R.attr.list_item_background));
         List<ListItem.Tag> tags = item.getTags(activity);
-
         if (tags.size() == 0 || !this.showDynamicTags) {
             viewHolder.tags.setVisibility(View.GONE);
         } else {
