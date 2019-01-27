@@ -305,9 +305,12 @@
             android:name=".ui.EnterNameActivity"
             android:label="@string/enter_your_name"
             android:launchMode="singleTask" />
+        <activity
+            android:name=".ui.MucUsersActivity"
+            android:label="@string/group_chat_members" />
 
         <service android:name=".services.ExportBackupService" />
-        <service android:name=".services.ImportBackupService"/>
+        <service android:name=".services.ImportBackupService" />
         <service
             android:name=".services.ContactChooserTargetService"
             android:permission="android.permission.BIND_CHOOSER_TARGET_SERVICE">

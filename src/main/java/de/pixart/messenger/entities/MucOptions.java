@@ -14,6 +14,7 @@ import java.util.Set;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.services.AvatarService;
 import de.pixart.messenger.services.MessageArchiveService;
 import de.pixart.messenger.utils.JidHelper;
 import de.pixart.messenger.utils.UIHelper;
@@ -45,6 +46,7 @@ public class MucOptions {
     private User self;
     private String password = null;
     private boolean tookProposedNickFromBookmark = false;
+
     public MucOptions(Conversation conversation) {
         this.account = conversation.getAccount();
         this.conversation = conversation;
@@ -102,7 +104,7 @@ public class MucOptions {
     }
 
     void notifyOfBookmarkNick(final String nick) {
-        final String normalized = normalize(account.getJid(),nick);
+        final String normalized = normalize(account.getJid(), nick);
         if (normalized != null && normalized.equals(getSelf().getFullJid().getResource())) {
             this.tookProposedNickFromBookmark = true;
         }
@@ -381,6 +383,21 @@ public class MucOptions {
         return subset;
     }
 
+    public static List<User> sub(List<User> users, int max) {
+        ArrayList<User> subset = new ArrayList<>();
+        HashSet<Jid> jids = new HashSet<>();
+        for (User user : users) {
+            jids.add(user.getAccount().getJid().asBareJid());
+            if (user.getRealJid() == null || (user.getRealJid().getLocal() != null && jids.add(user.getRealJid()))) {
+                subset.add(user);
+            }
+            if (subset.size() >= max) {
+                break;
+            }
+        }
+        return subset;
+    }
+
     public int getUserCount() {
         synchronized (users) {
             return users.size();
@@ -602,6 +619,7 @@ public class MucOptions {
 
         private int resId;
         private int rank;
+
         Affiliation(int rank, int resId) {
             this.resId = resId;
             this.rank = rank;
@@ -644,6 +662,7 @@ public class MucOptions {
 
         private int resId;
         private int rank;
+
         Role(int resId, int rank) {
             this.resId = resId;
             this.rank = rank;
@@ -702,7 +721,7 @@ public class MucOptions {
 
     }
 
-    public static class User implements Comparable<User> {
+    public static class User implements Comparable<User>, AvatarService.Avatarable {
         private Role role = Role.NONE;
         private Affiliation affiliation = Affiliation.NONE;
         private Jid realJid;
@@ -838,7 +857,7 @@ public class MucOptions {
             }
         }
 
-        private String getComparableName() {
+        public String getComparableName() {
             Contact contact = getContact();
             if (contact != null) {
                 return contact.getDisplayName();
@@ -862,6 +881,12 @@ public class MucOptions {
             }
             this.chatState = chatState;
             return true;
+        }
+
+        @Override
+        public int getAvatarBackgroundColor() {
+            final String seed = realJid != null ? realJid.asBareJid().toString() : null;
+            return UIHelper.getColorForName(seed == null ? getName() : seed);
         }
     }
 }

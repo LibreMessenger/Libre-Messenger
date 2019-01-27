@@ -1058,7 +1058,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 
         if (!mInitMode) {
             binding.avater.setVisibility(View.VISIBLE);
-            AvatarWorkerTask.loadAvatar(mAccount, binding.avater, getPixel(Config.AVATAR_SIZE));
+            AvatarWorkerTask.loadAvatar(mAccount, binding.avater, R.dimen.avatar_big);
             this.binding.accountJid.setEnabled(false);
         } else {
             binding.avater.setVisibility(View.GONE);

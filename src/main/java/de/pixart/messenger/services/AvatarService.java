@@ -39,6 +39,7 @@ import de.pixart.messenger.entities.Conversational;
 import de.pixart.messenger.entities.ListItem;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.MucOptions;
+import de.pixart.messenger.ui.ConferenceDetailsActivity;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.OnAdvancedStreamFeaturesLoaded;
 import de.pixart.messenger.xmpp.XmppConnection;
@@ -75,13 +76,15 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
 
     public Bitmap get(final Avatarable avatarable, final int size, final boolean cachedOnly) {
         if (avatarable instanceof Account) {
-            return get((Account) avatarable,size,cachedOnly);
+            return get((Account) avatarable, size, cachedOnly);
         } else if (avatarable instanceof Conversation) {
             return get((Conversation) avatarable, size, cachedOnly);
         } else if (avatarable instanceof Message) {
             return get((Message) avatarable, size, cachedOnly);
         } else if (avatarable instanceof ListItem) {
             return get((ListItem) avatarable, size, cachedOnly);
+        } else if (avatarable instanceof MucOptions.User) {
+            return get((MucOptions.User) avatarable, size, cachedOnly);
         }
         throw new AssertionError("AvatarService does not know how to generate avatar from "+avatarable.getClass().getName());
     }
