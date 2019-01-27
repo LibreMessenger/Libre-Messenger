@@ -29,6 +29,7 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.crypto.OmemoSetting;
 import de.pixart.messenger.crypto.PgpDecryptionService;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
+import de.pixart.messenger.persistance.DatabaseBackend;
 import de.pixart.messenger.services.QuickConversationsService;
 import de.pixart.messenger.utils.JidHelper;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
@@ -251,6 +252,25 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
             }
         }
         return deleted;
+    }
+
+
+    public boolean markAsChanged(final List<DatabaseBackend.FilePathInfo> files) {
+        boolean changed = false;
+        final PgpDecryptionService pgpDecryptionService = account.getPgpDecryptionService();
+        synchronized (this.messages) {
+            for (Message message : this.messages) {
+                for (final DatabaseBackend.FilePathInfo file : files)
+                    if (file.uuid.toString().equals(message.getUuid())) {
+                        message.setFileDeleted(file.FileDeleted);
+                        changed = true;
+                        if (file.FileDeleted && message.getEncryption() == Message.ENCRYPTION_PGP && pgpDecryptionService != null) {
+                            pgpDecryptionService.discard(message);
+                        }
+                    }
+            }
+        }
+        return changed;
     }
 
     public void clearMessages() {
