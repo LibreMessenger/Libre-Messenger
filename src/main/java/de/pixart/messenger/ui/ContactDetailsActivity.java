@@ -528,7 +528,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             account = contact.getAccount().getJid().asBareJid().toString();
         }
         binding.detailsAccount.setText(getString(R.string.using_account, account));
-        AvatarWorkerTask.loadAvatar(contact, binding.detailsContactBadge, Config.AVATAR_SIZE);
+        AvatarWorkerTask.loadAvatar(contact, binding.detailsContactBadge, R.dimen.avatar_big);
         binding.detailsContactBadge.setOnClickListener(this.onBadgeClick);
 
         if (xmppConnectionService.multipleAccounts()) {
