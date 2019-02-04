@@ -263,8 +263,6 @@
     <string name="verified">Verificado!</string>
     <string name="smp_requested">O contato pediu uma verificação SMP</string>
     <string name="no_otr_session_found">Não foi encontrada nenhuma sessão OTR válida!</string>
-    <string name="pref_export_logs">Exportar histórico</string>
-    <string name="notification_export_logs_title">A escrever os logs para o cartão SD</string>
     <string name="choose_file">Escolher arquivo</string>
     <string name="receiving_x_file">Recebendo %1$s (%2$d%% concluído)</string>
     <string name="download_x_file">Transferir %s</string>
@@ -333,7 +331,6 @@
     <string name="pdf_document">Documento PDF</string>
     <string name="apk">Aplicação Android</string>
     <string name="vcard">Contato</string>
-    <string name="touch_to_open_conversations">Toque para abrir Pix-Art Messenger</string>
     <string name="avatar_has_been_published">O avatar foi publicado!</string>
     <string name="sending_x_file">Enviando %s</string>
     <string name="offering_x_file">Oferecendo %s</string>

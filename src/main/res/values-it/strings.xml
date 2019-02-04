@@ -314,9 +314,12 @@
     <string name="verified">Verificato!</string>
     <string name="smp_requested">Il contatto ha richiesto la verifica SMP</string>
     <string name="no_otr_session_found">Non è stata trovata nessuna sessione OTR valida!</string>
-    <string name="pref_export_logs">Esporta la cronologia</string>
-    <string name="pref_export_logs_summary">Scrivi la cronologia delle conversazioni nella scheda SD</string>
-    <string name="notification_export_logs_title">Scrittura log su scheda SD</string>
+    <string name="pref_create_backup">Crea backup</string>
+    <string name="pref_create_backup_summary">Scrivi file di backup su %s</string>
+    <string name="notification_create_backup_title">Creazione dei file di backup in corso</string>
+    <string name="restoring_backup">Ripristino del backup in corso</string>
+    <string name="notification_restored_backup_title">Il tuo backup è stato ripristinato</string>
+    <string name="notification_restored_backup_subtitle">Non dimenticarti di abilitare l\'account.</string>
     <string name="choose_file">Scegli un file</string>
     <string name="receiving_x_file">Ricezione di %1$s file (%2$d%% completato)</string>
     <string name="download_x_file">Scarica %s</string>
@@ -401,7 +404,6 @@
     <string name="pdf_document">Documento PDF</string>
     <string name="apk">Applicazione Android</string>
     <string name="vcard">Contatto</string>
-    <string name="touch_to_open_conversations">Tocca per avviare Pix-Art Messenger</string>
     <string name="avatar_has_been_published">Il tuo avatar è stato pubblicato!</string>
     <string name="sending_x_file">Invio %s</string>
     <string name="offering_x_file">Offrendo %s</string>
@@ -575,9 +577,7 @@
     <string name="import_canceled">Importazione annullata</string>
     <string name="Import_failed">Importazione del database fallita, un\'importazione non è possibile</string>
     <string name="Password_wrong">Password non corretta, prova di nuovo</string>
-    <string name="enter_account_password">Per favore inserisci la password del tuo account per importare il tuo backup.</string>
     <string name="please_wait">Attendere prego…</string>
-    <string name="databaseimport_started">Il backup sarà importato, potrebbe volerci un po\'.</string>
     <string name="pref_export_plain_text_logs_summary">Abilita l\'esportazione della cronologia delle conversazioni come file di testo leggibili</string>
     <string name="pref_export_plain_text_logs">Esporta cronologia delle conversazioni in formato leggibile</string>
     <string name="payment_required">Necessario pagamento</string>
@@ -732,7 +732,7 @@
     <string name="huawei_protected_apps">App Protette</string>
     <string name="huawei_protected_apps_summary">Per continuare a ricevere notifiche, anche quando lo schermo è spento, è necessario inserire Pix-Art Messenger alla lista delle app protette.</string>
     <string name="pref_enable_multi_accounts_title">Abilita account multipli</string>
-    <string name="pref_enable_multi_accounts_summary">Se vuoi utilizzare account multipli devi impostare una password per backup giornalieri.</string>
+    <string name="pref_enable_multi_accounts_summary">Vuoi utilizzare account multipli?</string>
     <string name="mtm_accept_cert">Accettare Certificato Sconosciuto?</string>
     <string name="mtm_trust_anchor">Il certificato del server non è firmato da un\'Autorità di Certificazione conosciuta.</string>
     <string name="mtm_accept_servername">Accettare nome server non corrispondente?</string>
@@ -823,7 +823,7 @@
     <string name="pref_more_notification_settings">Impostazioni delle notifiche</string>
     <string name="pref_more_notification_settings_summary">Importanza, Suono, Vibrazione</string>
     <string name="video_compression_channel_name">Compressione video</string>
-    <string name="backup_channel_name">Backup del database</string>
+    <string name="backup_channel_name">Backup &amp; Ripristino</string>
     <string name="app_update_channel_name">Aggiornamento app</string>
     <string name="action_group_details">Dettagli del gruppo</string>
     <string name="view_media">Vedi media</string>
@@ -859,4 +859,20 @@
     <string name="autojoin_groupchat">Unisciti automaticamente a questa conversazione di gruppo</string>
     <string name="pref_play_gif_inside">Riproduci file GIF nelle conversazioni</string>
     <string name="pref_play_gif_inside_summary">Attivando questa opzione, i file GIF verranno riprodotti direttamente nella conversazione.</string>
+    <string name="open_with">Apri con…</string>
+    <string name="choose_account">Scegli account</string>
+    <string name="set_profile_picture">Immagine di profilo Pix-Art Messenger</string>
+    <string name="restore_backup">Ripristino backup</string>
+    <string name="restore">Ripristino</string>
+    <string name="enter_password_to_restore">Inserisci la password per l\'account %s per ripristinare il backup.</string>
+    <string name="restore_warning">Non usare il ripristino del backup nel tentativo di clonare (avviare simultaneamente) un\'installazione. Il ripristino del backup è inteso solo per migrazioni o nel caso tu abbia perso il dispositivo originale.</string>
+    <string name="unable_to_restore_backup">Impossibile ripristinare il backup.</string>
+    <string name="unable_to_decrypt_backup">Impossibile decriptare il backup. La password è corretta?</string>
+    <string name="pref_prefer_xmpp_avatar_summary">Preferisci l\'immagine del profilo dell\'utente XMPP invece di quella dalla tua rubrica</string>
+    <string name="pref_prefer_xmpp_avatar">Preferisci l\'avatar XMPP</string>
+    <string name="view_users">Vedi membri</string>
+    <string name="group_chat_members">Membri della conversazione di gruppo</string>
+    <string name="join_group_chat">Unisciti alla conversazione di gruppo</string>
+    <string name="create_group_chat">Crea conversazione di gruppo</string>
+    <string name="message_deleted">Il messaggio è stato eliminato</string>
 </resources>

@@ -312,9 +312,11 @@
     <string name="verified">Vérifié !</string>
     <string name="smp_requested">Le contact requiert la vérification du SMP</string>
     <string name="no_otr_session_found">Aucune session OTR valide n\'a été trouvée !</string>
-    <string name="pref_export_logs">Exporter l’historique</string>
-    <string name="pref_export_logs_summary">Sauvegarder l’historique des conversations sur la carte SD</string>
-    <string name="notification_export_logs_title">Sauvegarde des historiques des conversations sur la carte SD</string>
+    <string name="pref_create_backup">Créer une sauvegarde</string>
+    <string name="notification_create_backup_title">Création des fichiers de sauvegarde</string>
+    <string name="restoring_backup">Restauration de la sauvegarde</string>
+    <string name="notification_restored_backup_title">Votre sauvegarde a été restaurée</string>
+    <string name="notification_restored_backup_subtitle">N\'oubliez pas d\'activer le compte.</string>
     <string name="choose_file">Choix du fichier</string>
     <string name="receiving_x_file">Réception %1$s (%2$d%% complété)</string>
     <string name="download_x_file">Télécharger %s</string>
@@ -399,7 +401,6 @@
     <string name="pdf_document">document PDF</string>
     <string name="apk">Application Android</string>
     <string name="vcard">Contact</string>
-    <string name="touch_to_open_conversations">Appuyez pour ouvrir Pix-Art Messenger</string>
     <string name="avatar_has_been_published">L’avatar a été publié !</string>
     <string name="sending_x_file">%s en cours d’envoi</string>
     <string name="offering_x_file">En train de proposer un(e) %s</string>
@@ -570,9 +571,7 @@
     <string name="import_canceled">Importation annulée</string>
     <string name="Import_failed">Échec d’import de la base de données, impossible d’effectuer l’importation</string>
     <string name="Password_wrong">Mot de passe erroné, essayez à nouveau</string>
-    <string name="enter_account_password">Veuillez saisir le mot de passe de votre compte pour pouvoir importer votre sauvegarde.</string>
     <string name="please_wait">Veuillez patienter …</string>
-    <string name="databaseimport_started">La sauvegarde sera importée. Ceci peut prendre un peu de temps.</string>
     <string name="pref_export_plain_text_logs">Exporter les journaux des conversations dans un format lisible</string>
     <string name="payment_required">Paiement requis</string>
     <string name="missing_internet_permission">Permission Internet manquante</string>
@@ -723,7 +722,7 @@
     <string name="snooze">Silencer</string>
     <string name="huawei_protected_apps">Applications protégées</string>
     <string name="pref_enable_multi_accounts_title">Activer les comptes multiples</string>
-    <string name="pref_enable_multi_accounts_summary">Si vous désirez utiliser plusieurs comptes, vous devez spécifier un mot de passe pour les sauvegardes quotidiennes.</string>
+    <string name="pref_enable_multi_accounts_summary">Désirez-vous activer l\'utilisation du multi-comptes ?</string>
     <string name="mtm_accept_cert">Accepter ce certificat inconnu ?</string>
     <string name="mtm_trust_anchor">Le certificat serveur n’est signé par une Autorité de Certification connue.</string>
     <string name="mtm_accept_servername">Accepter même non-concordant avec le nom du serveur ?</string>
@@ -805,7 +804,7 @@
     <string name="pref_more_notification_settings">Paramètres des notifications</string>
     <string name="pref_more_notification_settings_summary">Importance, Sonnerie, Vibreur</string>
     <string name="video_compression_channel_name">Compression vidéo</string>
-    <string name="backup_channel_name">Sauvegarde de base de données</string>
+    <string name="backup_channel_name">Sauvegarde et restauration</string>
     <string name="app_update_channel_name">Mise à jour de l’application</string>
     <string name="action_group_details">Détails du groupe</string>
     <string name="view_media">Afficher le média</string>
@@ -841,4 +840,19 @@
     <string name="autojoin_groupchat">Rejoindre automatiquement cette conférence</string>
     <string name="pref_play_gif_inside">Animer les fichiers GIF dans la discussion</string>
     <string name="pref_play_gif_inside_summary">L’activation de cette option permet d’animer les images GIF publiées dans la fenêtre de discussion.</string>
+    <string name="open_with">Ouvrir avec …</string>
+    <string name="choose_account">Sélectionnez un compte</string>
+    <string name="set_profile_picture">Image du profil Pix-Art Messenger</string>
+    <string name="restore_backup">Restaurer une sauvegarde</string>
+    <string name="restore">Restaurer</string>
+    <string name="enter_password_to_restore">Entrez votre mot de passe pour le compte %s afin de procéder à la restauration de la sauvegarde.</string>
+    <string name="unable_to_restore_backup">Impossible de restaurer la sauvegarde.</string>
+    <string name="unable_to_decrypt_backup">Impossible de déchiffrer la sauvegarde. Vérifiez que le mot de passe est correct.</string>
+    <string name="pref_prefer_xmpp_avatar_summary">Préférer l\'avatar XMPP des utilisateur·rice·s au lieu de celui figurant sur votre carnet d\'adresses</string>
+    <string name="pref_prefer_xmpp_avatar">Préférer l\'avatar XMPP</string>
+    <string name="view_users">Afficher les membres</string>
+    <string name="group_chat_members">Grouper les membres de la discussion</string>
+    <string name="join_group_chat">Rejoindre une discussion</string>
+    <string name="create_group_chat">Créer un groupe de discussion</string>
+    <string name="message_deleted">Le message a été supprimé</string>
 </resources>
