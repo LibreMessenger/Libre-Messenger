@@ -7,6 +7,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
+import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
@@ -31,6 +32,8 @@ import android.widget.Toast;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.github.rtoshiro.view.video.FullscreenVideoLayout;
+import com.leinardi.android.speeddial.SpeedDialActionItem;
+import com.leinardi.android.speeddial.SpeedDialView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -40,28 +43,27 @@ import java.util.List;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.databinding.ActivityMediaViewerBinding;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.utils.ExifHelper;
 import de.pixart.messenger.utils.MimeUtils;
 import pl.droidsonroids.gif.GifImageView;
+import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.persistance.FileBackend.close;
 
 public class MediaViewerActivity extends XmppActivity {
 
     Integer oldOrientation;
-    SubsamplingScaleImageView mImage;
-    GifImageView mGIF;
-    FullscreenVideoLayout mVideo;
     ImageView mFullscreenbutton;
     Uri mFileUri;
     File mFile;
-    FloatingActionButton fab;
     int height = 0;
     int width = 0;
     int rotation = 0;
     boolean isImage = false;
     boolean isVideo = false;
+    private ActivityMediaViewerBinding binding;
 
     public static String getMimeType(String path) {
         try {
@@ -80,6 +82,7 @@ public class MediaViewerActivity extends XmppActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.binding = DataBindingUtil.setContentView(this, R.layout.activity_media_viewer);
         this.mTheme = findTheme();
         setTheme(this.mTheme);
 
@@ -97,56 +100,27 @@ public class MediaViewerActivity extends XmppActivity {
         getWindow().setAttributes(layout);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_media_viewer);
-        mImage = findViewById(R.id.message_image_view);
-        mGIF = findViewById(R.id.message_gif_view);
-        mVideo = findViewById(R.id.message_video_view);
         mFullscreenbutton = findViewById(R.id.vcv_img_fullscreen);
-        fab = findViewById(R.id.fab);
-        fab.setOnClickListener(v -> {
-            PopupMenu popup = new PopupMenu(MediaViewerActivity.this, v);
-            popup.inflate(R.menu.media_viewer);
-            final Menu menu = popup.getMenu();
-            MenuItem delete = menu.findItem(R.id.action_delete);
-            MenuItem open = menu.findItem(R.id.action_open);
-            Log.d(Config.LOGTAG, "Path = " + mFile.toString());
-            if (mFile == null || !mFile.toString().startsWith("/") || mFile.toString().contains(FileBackend.getConversationsDirectory("null"))) {
-                delete.setVisible(true);
-            } else {
-                delete.setVisible(false);
-            }
-            if (isVideo) {
-                if (isDarkTheme()) {
-                    open.setIcon(R.drawable.ic_video_white_24dp);
-                } else {
-                    open.setIcon(R.drawable.ic_video_black_24dp);
-                }
-            } else if (isImage) {
-                if (isDarkTheme()) {
-                    open.setIcon(R.drawable.ic_image_white_24dp);
-                } else {
-                    open.setIcon(R.drawable.ic_image_black_24dp);
-                }
-            }
-            popup.setOnMenuItemClickListener(item -> {
-                switch (item.getItemId()) {
-                    case R.id.action_share:
-                        share();
-                        break;
-                    case R.id.action_open:
-                        open();
-                        break;
-                    case R.id.action_delete:
+        binding.speedDial.inflate(R.menu.media_viewer);
+        binding.speedDial.setOnActionSelectedListener(actionItem -> {
+            switch (actionItem.getId()) {
+                case R.id.action_share:
+                    share();
+                    break;
+                case R.id.action_open:
+                    open();
+                    break;
+                /*
+                case R.id.action_delete:
+                    if (mFile == null || !mFile.toString().startsWith("/") || mFile.toString().contains(FileBackend.getConversationsDirectory("null"))) {
                         deleteFile();
-                        break;
-                    default:
-                        return false;
-                }
-                return true;
-            });
-            MenuPopupHelper menuHelper = new MenuPopupHelper(MediaViewerActivity.this, (MenuBuilder) menu, v);
-            menuHelper.setForceShowIcon(true);
-            menuHelper.show();
+                    }
+                    break;
+                    */
+                default:
+                    return false;
+            }
+            return false;
         });
     }
 
@@ -262,11 +236,11 @@ public class MediaViewerActivity extends XmppActivity {
         }
         try {
             if (gif) {
-                mGIF.setVisibility(View.VISIBLE);
-                mGIF.setImageURI(FileUri);
+                binding.messageGifView.setVisibility(View.VISIBLE);
+                binding.messageGifView.setImageURI(FileUri);
             } else {
-                mImage.setVisibility(View.VISIBLE);
-                mImage.setImage(ImageSource.uri(FileUri));
+                binding.messageImageView.setVisibility(View.VISIBLE);
+                binding.messageImageView.setImage(ImageSource.uri(FileUri));
             }
         } catch (Exception e) {
             Toast.makeText(this, getString(R.string.error_file_corrupt), Toast.LENGTH_LONG).show();
@@ -296,10 +270,10 @@ public class MediaViewerActivity extends XmppActivity {
             rotateScreen(width, height, rotation);
         }
         try {
-            mVideo.setVisibility(View.VISIBLE);
-            mVideo.setVideoURI(uri);
+            binding.messageVideoView.setVisibility(View.VISIBLE);
+            binding.messageVideoView.setVideoURI(uri);
             mFullscreenbutton.setVisibility(View.INVISIBLE);
-            mVideo.setShouldAutoplay(true);
+            binding.messageVideoView.setShouldAutoplay(true);
 
         } catch (IOException e) {
             Toast.makeText(this, getString(R.string.error_file_corrupt), Toast.LENGTH_LONG).show();
@@ -348,13 +322,13 @@ public class MediaViewerActivity extends XmppActivity {
         }
         getWindow().setAttributes(layout);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        mVideo.setShouldAutoplay(true);
+        binding.messageVideoView.setShouldAutoplay(true);
         super.onResume();
     }
 
     @Override
     public void onPause() {
-        mVideo.reset();
+        binding.messageVideoView.reset();
         WindowManager.LayoutParams layout = getWindow().getAttributes();
         if (useMaxBrightness()) {
             layout.screenBrightness = -1;
@@ -367,7 +341,7 @@ public class MediaViewerActivity extends XmppActivity {
 
     @Override
     public void onStop() {
-        mVideo.reset();
+        binding.messageVideoView.reset();
         WindowManager.LayoutParams layout = getWindow().getAttributes();
         if (useMaxBrightness()) {
             layout.screenBrightness = -1;
