@@ -1,5 +1,6 @@
 package de.pixart.messenger.ui;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -85,8 +86,9 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher, Ad
                 } else {
                     mUsername.setError(null);
                     Account account = xmppConnectionService.findAccountByJid(jid);
+                    String password = CryptoHelper.createPassword(new SecureRandom());
                     if (account == null) {
-                        account = new Account(jid, CryptoHelper.createPassword(new SecureRandom()));
+                        account = new Account(jid, password);
                         account.setOption(Account.OPTION_REGISTER, true);
                         account.setOption(Account.OPTION_DISABLED, true);
                         account.setOption(Account.OPTION_MAGIC_CREATE, true);
@@ -96,12 +98,27 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher, Ad
                     intent.putExtra("jid", account.getJid().asBareJid().toString());
                     intent.putExtra("init", true);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    Toast.makeText(MagicCreateActivity.this, R.string.secure_password_generated, Toast.LENGTH_LONG).show();
-                    StartConversationActivity.addInviteUri(intent, getIntent());
-                    startActivity(intent);
-                    overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
-                    finish();
-                    overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle(getString(R.string.create_account));
+                    builder.setCancelable(false);
+                    StringBuilder messasge = new StringBuilder();
+                    messasge.append(getString(R.string.secure_password_generated));
+                    messasge.append("\n\n");
+                    messasge.append(getString(R.string.password));
+                    messasge.append(": ");
+                    messasge.append(password);
+                    builder.setMessage(messasge);
+                    builder.setPositiveButton(getString(R.string.copy_to_clipboard), (dialogInterface, i) -> {
+                        if (copyTextToClipboard(password, R.string.create_account)) {
+                            StartConversationActivity.addInviteUri(intent, getIntent());
+                            startActivity(intent);
+                            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+                            finish();
+                            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+                        }
+                    });
+                    builder.create().show();
                 }
             } catch (IllegalArgumentException e) {
                 mUsername.setError(getString(R.string.invalid_username));
@@ -136,7 +153,7 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher, Ad
         generateJID(mUsername.getText().toString());
     }
 
-    private void generateJID (String s) {
+    private void generateJID(String s) {
         domain = mServer.getSelectedItem().toString();
         if (s.trim().length() > 0) {
             try {
