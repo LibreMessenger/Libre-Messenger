@@ -18,6 +18,7 @@ public final class Config {
     private static final int OMEMO = 8;
 
     private static final int ENCRYPTION_MASK = UNENCRYPTED | OPENPGP | OTR | OMEMO;
+
     public static boolean supportUnencrypted() {
         return (ENCRYPTION_MASK & UNENCRYPTED) != 0;
     }
@@ -75,6 +76,7 @@ public final class Config {
     public static final int PING_TIMEOUT = 15;
     public static final int SOCKET_TIMEOUT = 15;
     public static final int CONNECT_TIMEOUT = 60;
+    public static final int POST_CONNECTIVITY_CHANGE_PING_INTERVAL = 30;
     public static final int CONNECT_DISCO_TIMEOUT = 30;
     public static final int MINI_GRACE_PERIOD = 750;
 
