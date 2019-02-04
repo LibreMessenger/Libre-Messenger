@@ -77,7 +77,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
     public static final String MARKABLE = "markable";
     public static final String FILE_DELETED = "file_deleted";
     public static final String ME_COMMAND = "/me";
-    public static final String ERROR_MESSAGE_CANCELLED = "eu.siacs.conversations.cancelled";
+    public static final String ERROR_MESSAGE_CANCELLED = "de.pixart.messenger.cancelled";
 
     public boolean markable = false;
     protected String conversationUuid;
