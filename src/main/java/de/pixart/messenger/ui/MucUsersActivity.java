@@ -19,7 +19,7 @@ import de.pixart.messenger.ui.adapter.UserAdapter;
 import de.pixart.messenger.ui.util.MucDetailsContextMenuHelper;
 import rocks.xmpp.addr.Jid;
 
-public class MucUsersActivity extends XmppActivity implements XmppConnectionService.OnMucRosterUpdate, XmppConnectionService.OnAffiliationChanged, XmppConnectionService.OnRoleChanged {
+public class MucUsersActivity extends XmppActivity implements XmppConnectionService.OnMucRosterUpdate, XmppConnectionService.OnAffiliationChanged {
 
     private UserAdapter userAdapter;
 
@@ -83,15 +83,5 @@ public class MucUsersActivity extends XmppActivity implements XmppConnectionServ
     @Override
     public void onAffiliationChangeFailed(Jid jid, int resId) {
         displayToast(getString(resId, jid.asBareJid().toString()));
-    }
-
-    @Override
-    public void onRoleChangedSuccessful(String nick) {
-
-    }
-
-    @Override
-    public void onRoleChangeFailed(String nick, int resId) {
-        displayToast(getString(resId, nick));
     }
 }

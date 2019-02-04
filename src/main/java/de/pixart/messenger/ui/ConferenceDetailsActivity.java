@@ -77,7 +77,7 @@ import static de.pixart.messenger.entities.Bookmark.printableValue;
 import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
 import static de.pixart.messenger.utils.StringUtils.changed;
 
-public class ConferenceDetailsActivity extends XmppActivity implements OnConversationUpdate, OnMucRosterUpdate, XmppConnectionService.OnAffiliationChanged, XmppConnectionService.OnRoleChanged, XmppConnectionService.OnConfigurationPushed, TextWatcher, OnMediaLoaded {
+public class ConferenceDetailsActivity extends XmppActivity implements OnConversationUpdate, OnMucRosterUpdate, XmppConnectionService.OnAffiliationChanged, XmppConnectionService.OnConfigurationPushed, TextWatcher, OnMediaLoaded {
     public static final String ACTION_VIEW_MUC = "view_muc";
     private Conversation mConversation;
     private OnClickListener destroyListener = new OnClickListener() {
@@ -701,16 +701,6 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
     @Override
     public void onAffiliationChangeFailed(Jid jid, int resId) {
         displayToast(getString(resId, jid.asBareJid().toString()));
-    }
-
-    @Override
-    public void onRoleChangedSuccessful(String nick) {
-
-    }
-
-    @Override
-    public void onRoleChangeFailed(String nick, int resId) {
-        displayToast(getString(resId, nick));
     }
 
     @Override
