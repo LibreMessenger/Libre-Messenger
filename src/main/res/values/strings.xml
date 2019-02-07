@@ -899,4 +899,6 @@
     <string name="jabber_ids_are_visible_to_anyone">Jabber IDs are visible to anyone.</string>
     <string name="no_users_hint_channel">This public channel has no participants.</string>
     <string name="no_users_hint_group_chat">This private group chat has no participants.</string>
+    <string name="grant_owner_privileges">Grant owner privileges</string>
+    <string name="remove_owner_privileges">Revoke owner privileges</string>
 </resources>
