@@ -1298,8 +1298,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     && relevantForCorrection.getType() == Message.TYPE_TEXT
                     && !m.isGeoUri()
                     && relevantForCorrection.isLastCorrectableMessage()
-                    && m.getConversation() instanceof Conversation
-                    && (((Conversation) m.getConversation()).getMucOptions().nonanonymous() || m.getConversation().getMode() == Conversation.MODE_SINGLE)) {
+                    && m.getConversation() instanceof Conversation) {
                 correctMessage.setVisible(true);
             }
             if ((m.isFileOrImage() && !deleted && !receiving) || (m.getType() == Message.TYPE_TEXT && !m.treatAsDownloadable())) {
