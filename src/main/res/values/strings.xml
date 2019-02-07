@@ -508,7 +508,7 @@
     <string name="video_low">low (144p)</string>
     <string name="video_mid">middle (360p)</string>
     <string name="video_high">high (720p)</string>
-    <string name="video_original">Original (uncompressed)</string>
+    <string name="video_original">original (uncompressed)</string>
     <string name="always">Always</string>
     <string name="battery_optimizations_enabled">Battery optimizations enabled</string>
     <string name="battery_optimizations_enabled_explained">Your device is doing some heavy battery optimizations on Pix-Art Messenger that might lead to delayed notifications or even message loss.\nIt is recommended to disable those.</string>
