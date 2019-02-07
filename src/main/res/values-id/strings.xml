@@ -17,7 +17,7 @@
     <string name="action_unblock_domain">Buka blokir halaman</string>
     <string name="title_activity_manage_accounts">Kelola akun</string>
     <string name="title_activity_settings">Pengaturan</string>
-    <string name="title_activity_conference_details">Rincian chat kelompok</string>
+    <string name="conference_details">Rincian chat kelompok</string>
     <string name="title_activity_contact_details">Rincian kontak</string>
     <string name="title_activity_sharewith">Berbagi dengan percakapan</string>
     <string name="title_activity_start_conversation">Mulai percakapan</string>
@@ -208,7 +208,7 @@
     <string name="search">Pencarian</string>
     <string name="create_contact">Buat kontak</string>
     <string name="enter_contact">Masukkan kontak</string>
-    <string name="join_conference">Gabung kelompok obrolan</string>
+    <string name="join_public_channel">Gabung kelompok obrolan</string>
     <string name="delete_contact">Menghapus kontak</string>
     <string name="view_contact_details">Lihat rincian kontak</string>
     <string name="block_contact">Blokir kontak</string>
@@ -218,7 +218,7 @@
     <string name="contact_already_exists">Kontak sudah uda</string>
     <string name="join">Gabung</string>
     <string name="conference_address">Alamat obrolan kelompok</string>
-    <string name="conference_address_example">obrolankelompok@room.pix-art.de</string>
+    <string name="channel_full_jid_example">obrolankelompok@room.pix-art.de</string>
     <string name="save_as_bookmark">Simpan sebagai penanda</string>
     <string name="delete_bookmark">Hapus penanda</string>
     <string name="bookmark_already_exists">Penanda ini sudah ada</string>
@@ -528,7 +528,7 @@
     <string name="show_password">Tampilkan kata sandi</string>
     <string name="registration_please_wait">Pendaftaran gagal: Coba lagi nanti</string>
     <string name="registration_password_too_weak">Pendaftaran gagal: Kata sandi terlalu lemah</string>
-    <string name="create_conference">Buat obrolan kelompok</string>
+    <string name="create_private_group_chat">Buat obrolan kelompok</string>
     <string name="conference_subject">Perihal</string>
     <string name="choose_participants">Pilih peserta</string>
     <string name="creating_conference">Membuat obrolan kelompok…</string>

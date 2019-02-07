@@ -195,7 +195,7 @@
     <string name="search">Bilatu</string>
     <string name="create_contact">Kontaktua sortu</string>
     <string name="enter_contact">Kontaktua sartu</string>
-    <string name="join_conference">Taldera batu</string>
+    <string name="join_public_channel">Taldera batu</string>
     <string name="delete_contact">Kontaktua ezabatu</string>
     <string name="view_contact_details">Kontaktuaren xehetasunak ikusi</string>
     <string name="block_contact">Kontaktua blokeatu</string>
@@ -205,7 +205,7 @@
     <string name="contact_already_exists">Kontaktua existitzen da dagoeneko</string>
     <string name="join">Batu</string>
     <string name="conference_address">Taldearen helbidea</string>
-    <string name="conference_address_example">gela@konferentzia.adibidea.eus/ezizena</string>
+    <string name="channel_full_jid_example">gela@konferentzia.adibidea.eus/ezizena</string>
     <string name="save_as_bookmark">Gorde laster-marka bezala</string>
     <string name="delete_bookmark">Laster-marka ezabatu</string>
     <string name="bookmark_already_exists">Laster-marka hau existitzen da dagoeneko</string>
@@ -487,7 +487,7 @@
     <string name="show_password">Pasahitza erakutsi</string>
     <string name="registration_please_wait">Erregistroak huts egin du: saiatu berriz beranduago</string>
     <string name="registration_password_too_weak">Erregistroa huts egin du: pasahitza ahulegia da</string>
-    <string name="create_conference">Taldea sortu</string>
+    <string name="create_private_group_chat">Taldea sortu</string>
     <string name="conference_subject">Gaia</string>
     <string name="choose_participants">Parte hartzaileak hautatu</string>
     <string name="creating_conference">Taldea sortzen…</string>

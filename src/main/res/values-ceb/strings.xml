@@ -17,7 +17,7 @@
     <string name="action_unblock_domain">Ayaw i-block ang domain</string>
     <string name="title_activity_manage_accounts">Pagdumala sa mga account</string>
     <string name="title_activity_settings">Mga pagtakda</string>
-    <string name="title_activity_conference_details">Mga detalyi sa Group chat</string>
+    <string name="conference_details">Mga detalyi sa Group chat</string>
     <string name="title_activity_contact_details">Mga detalyi sa kontak</string>
     <string name="title_activity_sharewith">Ipakigbahin ang gepanag-estoryahan</string>
     <string name="title_activity_start_conversation">Pagsugod sa Panag-estorya</string>
@@ -208,7 +208,7 @@
     <string name="search">Pangita</string>
     <string name="create_contact">Buhat ug kontak</string>
     <string name="enter_contact">Isulod ang kontak</string>
-    <string name="join_conference">Apil sa group chat</string>
+    <string name="join_public_channel">Apil sa group chat</string>
     <string name="delete_contact">Tangtanga ang kontak</string>
     <string name="view_contact_details">Tan-awa ang mga detayi sa kontak</string>
     <string name="block_contact">I-block ang kontak</string>
@@ -218,7 +218,7 @@
     <string name="contact_already_exists">Ang kontak kay naa na daan</string>
     <string name="join">Apil</string>
     <string name="conference_address">Address sa group chat</string>
-    <string name="conference_address_example">groupchat@room.pix-art.de</string>
+    <string name="channel_full_jid_example">groupchat@room.pix-art.de</string>
     <string name="save_as_bookmark">Sagupa ingun sa bookmark</string>
     <string name="delete_bookmark">Tangtanga ang bookmark</string>
     <string name="bookmark_already_exists">Ang kini nga bookmark kay naa na daan</string>
@@ -492,7 +492,7 @@
     <string name="show_password">Ipakita ang password</string>
     <string name="registration_please_wait">Napakyas ang pagrehistro: Sulayi pag-usab taud-taud</string>
     <string name="registration_password_too_weak">Ang pag-rehistro napakyas: Ang password sobra ra ka-huyang</string>
-    <string name="create_conference">Buhat ug grupo sa chat</string>
+    <string name="create_private_group_chat">Buhat ug grupo sa chat</string>
     <string name="conference_subject">Subject</string>
     <string name="choose_participants">Pili ug mga partisipante</string>
     <string name="creating_conference">Nagbuhat ug grupo sa chat…</string>

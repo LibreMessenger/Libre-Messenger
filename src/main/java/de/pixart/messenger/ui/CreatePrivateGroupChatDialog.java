@@ -19,15 +19,15 @@ import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.util.DelayedHintHelper;
 
 
-public class CreateConferenceDialog extends DialogFragment {
+public class CreatePrivateGroupChatDialog extends DialogFragment {
 
     private static final String ACCOUNTS_LIST_KEY = "activated_accounts_list";
     private static final String MULTIPLE_ACCOUNTS = "multiple_accounts_enabled";
     public XmppConnectionService xmppConnectionService;
     private CreateConferenceDialogListener mListener;
 
-    public static CreateConferenceDialog newInstance(List<String> accounts, boolean multipleAccounts) {
-        CreateConferenceDialog dialog = new CreateConferenceDialog();
+    public static CreatePrivateGroupChatDialog newInstance(List<String> accounts, boolean multipleAccounts) {
+        CreatePrivateGroupChatDialog dialog = new CreatePrivateGroupChatDialog();
         Bundle bundle = new Bundle();
         bundle.putStringArrayList(ACCOUNTS_LIST_KEY, (ArrayList<String>) accounts);
         bundle.putBoolean(MULTIPLE_ACCOUNTS, multipleAccounts);
@@ -45,7 +45,7 @@ public class CreateConferenceDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.create_conference);
+        builder.setTitle(R.string.create_private_group_chat);
         CreateConferenceDialogBinding binding = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.create_conference_dialog, null, false);
         if (getArguments().getBoolean(MULTIPLE_ACCOUNTS)) {
             binding.yourAccount.setVisibility(View.VISIBLE);

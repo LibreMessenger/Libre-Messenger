@@ -17,7 +17,7 @@
     <string name="action_unblock_domain">Deblochează domeniu</string>
     <string name="title_activity_manage_accounts">Configurează conturile</string>
     <string name="title_activity_settings">Setări</string>
-    <string name="title_activity_conference_details">Detalii discuție de grup</string>
+    <string name="conference_details">Detalii discuție de grup</string>
     <string name="title_activity_contact_details">Detalii contact</string>
     <string name="title_activity_sharewith">Partajează într-o conversație</string>
     <string name="title_activity_start_conversation">Pornește o conversație</string>
@@ -198,7 +198,7 @@
     <string name="search">Caută</string>
     <string name="create_contact">Creează contact</string>
     <string name="enter_contact">Introdu contact</string>
-    <string name="join_conference">Alătură-te unei discuții de grup</string>
+    <string name="join_public_channel">Alătură-te unei discuții de grup</string>
     <string name="delete_contact">Șterge contact</string>
     <string name="view_contact_details">Arată detalii contact</string>
     <string name="block_contact">Blochează contact</string>
@@ -208,7 +208,7 @@
     <string name="contact_already_exists">Contactul exista deja</string>
     <string name="join">Alatura-te</string>
     <string name="conference_address">Adresă discuție de grup</string>
-    <string name="conference_address_example">grupchat@room.pix-art.de</string>
+    <string name="channel_full_jid_example">grupchat@room.pix-art.de</string>
     <string name="save_as_bookmark">Salvează semn de carte</string>
     <string name="delete_bookmark">Șterge semn de carte</string>
     <string name="bookmark_already_exists">Acest semn de carte exista</string>
@@ -505,7 +505,7 @@ sau chiar pierderea mesajelor.\nÎn continuare veți fi rugați să dezactivați
     <string name="show_password">Arată parola</string>
     <string name="registration_please_wait">Înregistrare eșuată: Încercați din nou mai târziu</string>
     <string name="registration_password_too_weak">Înregistrare eșuată: Parolă nesigură</string>
-    <string name="create_conference">Creează discuție de grup</string>
+    <string name="create_private_group_chat">Creează discuție de grup</string>
     <string name="conference_subject">Subiect</string>
     <string name="choose_participants">Alege participanți</string>
     <string name="creating_conference">Se creează discuția de grup...</string>

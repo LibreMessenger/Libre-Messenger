@@ -17,7 +17,7 @@
     <string name="action_unblock_domain">Desbloquear dominio</string>
     <string name="title_activity_manage_accounts">Gestionar Cuentas</string>
     <string name="title_activity_settings">Ajustes</string>
-    <string name="title_activity_conference_details">Detalles del chat de grupo</string>
+    <string name="conference_details">Detalles del chat de grupo</string>
     <string name="title_activity_contact_details">Detalles del contacto</string>
     <string name="title_activity_sharewith">Compartir con Conversación</string>
     <string name="title_activity_start_conversation">Comenzar conversación</string>
@@ -214,7 +214,7 @@
     <string name="search">Buscar</string>
     <string name="create_contact">Crear Contacto</string>
     <string name="enter_contact">Introducir contacto</string>
-    <string name="join_conference">Únete al grupo</string>
+    <string name="join_public_channel">Únete al grupo</string>
     <string name="delete_contact">Eliminar Contacto</string>
     <string name="view_contact_details">Ver detalles del contacto</string>
     <string name="block_contact">Bloquear contacto</string>
@@ -224,7 +224,7 @@
     <string name="contact_already_exists">El contacto ya existe</string>
     <string name="join">Unirse</string>
     <string name="conference_address">Dirección del chat de grupo</string>
-    <string name="conference_address_example">grupo@room.pix-art.de</string>
+    <string name="channel_full_jid_example">grupo@room.pix-art.de</string>
     <string name="save_as_bookmark">Guardar en marcadores</string>
     <string name="delete_bookmark">Eliminar marcador</string>
     <string name="bookmark_already_exists">Este marcador ya existe</string>
@@ -557,7 +557,7 @@
     <string name="show_password">Mostrar contraseña</string>
     <string name="registration_please_wait">El registro falló. Prueba de nuevo más tarde</string>
     <string name="registration_password_too_weak">Error en el registro: La contraseña es demasiado débil</string>
-    <string name="create_conference">Crear grupo</string>
+    <string name="create_private_group_chat">Crear grupo</string>
     <string name="conference_subject">Asunto</string>
     <string name="choose_participants">Elige a los participantes</string>
     <string name="creating_conference">Crear chat de grupo…</string>

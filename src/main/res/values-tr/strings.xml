@@ -17,7 +17,7 @@
     <string name="action_unblock_domain">Domainin engelini kaldır</string>
     <string name="title_activity_manage_accounts">Hesapları Yönet</string>
     <string name="title_activity_settings">Ayarlar</string>
-    <string name="title_activity_conference_details">Grup sohbeti Detayları</string>
+    <string name="conference_details">Grup sohbeti Detayları</string>
     <string name="title_activity_contact_details">Kişi Detayları</string>
     <string name="title_activity_sharewith">Sohbetle Paylaş</string>
     <string name="title_activity_start_conversation">Konuşmayı Başlat</string>
@@ -208,7 +208,7 @@
     <string name="search">Ara</string>
     <string name="create_contact">Kişi oluştur</string>
     <string name="enter_contact">İletişim Kur</string>
-    <string name="join_conference">Grup sohbetine katıl</string>
+    <string name="join_public_channel">Grup sohbetine katıl</string>
     <string name="delete_contact">Kişiyi sil</string>
     <string name="view_contact_details">Kişi ayrıntılarını görün</string>
     <string name="block_contact">Kişiyi engelleyin</string>
@@ -218,7 +218,7 @@
     <string name="contact_already_exists">Kişi zaten mevcut</string>
     <string name="join">Katıl</string>
     <string name="conference_address">Grup sohbeti adresi</string>
-    <string name="conference_address_example">groupchat@room.pix-art.de</string>
+    <string name="channel_full_jid_example">groupchat@room.pix-art.de</string>
     <string name="save_as_bookmark">Yer imi olarak kaydet</string>
     <string name="delete_bookmark">Yer imini sil</string>
     <string name="bookmark_already_exists">Bu yer işareti zaten var</string>
@@ -531,7 +531,7 @@
     <string name="show_password">Parolayı göster</string>
     <string name="registration_please_wait">Kayıt başarısız: Daha sonra tekrar deneyin</string>
     <string name="registration_password_too_weak">Kayıt başarısız oldu: Şifre çok zayıf</string>
-    <string name="create_conference">Grup sohbeti oluştur</string>
+    <string name="create_private_group_chat">Grup sohbeti oluştur</string>
     <string name="conference_subject">Konu</string>
     <string name="choose_participants">Katılımcıları seç</string>
     <string name="creating_conference">Grup sohbeti oluşturuluyor…</string>

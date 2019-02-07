@@ -47,9 +47,9 @@
             android:layout_alignParentBottom="true"
             app:backgroundTint="?attr/colorAccent"
             app:sdMainFabClosedBackgroundColor="?attr/colorAccent"
-            app:sdMainFabClosedSrc="@drawable/ic_person_add_white_24dp"
+            app:sdMainFabClosedSrc="@drawable/ic_add_white_24dp"
             app:sdMainFabOpenedBackgroundColor="?attr/colorAccent"
-            app:sdMainFabOpenedSrc="@drawable/ic_close_white_24dp"
-            app:sdOverlayLayout="@id/overlay" />
+            app:sdOverlayLayout="@id/overlay"
+            app:sdUseReverseAnimationOnClose="true" />
     </RelativeLayout>
 </layout>

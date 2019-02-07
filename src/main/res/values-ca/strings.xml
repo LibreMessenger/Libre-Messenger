@@ -195,7 +195,7 @@
     <string name="search">Cercar</string>
     <string name="create_contact">Crea un contacte</string>
     <string name="enter_contact">Introduïu un contacte</string>
-    <string name="join_conference">Uniu-vos al xat en grup</string>
+    <string name="join_public_channel">Uniu-vos al xat en grup</string>
     <string name="delete_contact">Suprimeix el contacte</string>
     <string name="view_contact_details">Veure els detalls dels contactes</string>
     <string name="block_contact">Bloqueja contacte</string>
@@ -205,7 +205,7 @@
     <string name="contact_already_exists">El contacte ja existeix</string>
     <string name="join">Unir-se</string>
     <string name="conference_address">Direcció del xat de grup</string>
-    <string name="conference_address_example">room@conference.example.com/nick</string>
+    <string name="channel_full_jid_example">room@conference.example.com/nick</string>
     <string name="save_as_bookmark">Guardar com a favorits</string>
     <string name="delete_bookmark">Eliminar de favorits</string>
     <string name="bookmark_already_exists">Aquesta llista de favorits ja existeix</string>
@@ -500,7 +500,7 @@ d\'altres proveïdors donant-los la vostra ID Jabber completa.</string>
     <string name="show_password">Ensenya la contrasenya</string>
     <string name="registration_please_wait">Error de registre: torna-ho a provar més tard</string>
     <string name="registration_password_too_weak">Ha fallat la inscripció: la contrasenya és massa feble</string>
-    <string name="create_conference">Crea un xat en grup</string>
+    <string name="create_private_group_chat">Crea un xat en grup</string>
     <string name="conference_subject">Subjecte</string>
     <string name="choose_participants">Tria els participants</string>
     <string name="creating_conference">S\'està creant el xat en grup...</string>

@@ -195,7 +195,7 @@
     <string name="search">Zoeken</string>
     <string name="create_contact">Contact aanmaken</string>
     <string name="enter_contact">Contact invoeren</string>
-    <string name="join_conference">Deelnemen aan groepsgesprek</string>
+    <string name="join_public_channel">Deelnemen aan groepsgesprek</string>
     <string name="delete_contact">Contact verwijderen</string>
     <string name="view_contact_details">Contactgegevens bekijken</string>
     <string name="block_contact">Contact blokkeren</string>
@@ -205,7 +205,7 @@
     <string name="contact_already_exists">Het contact bestaat al</string>
     <string name="join">Deelnemen</string>
     <string name="conference_address">Gespreksadres</string>
-    <string name="conference_address_example">ruimte@groepsgesprek.voorbeeld.be/naam</string>
+    <string name="channel_full_jid_example">ruimte@groepsgesprek.voorbeeld.be/naam</string>
     <string name="save_as_bookmark">Opslaan als bladwijzer</string>
     <string name="delete_bookmark">Bladwijzer verwijderen</string>
     <string name="bookmark_already_exists">Deze bladwijzer bestaat al</string>
@@ -484,7 +484,7 @@
     <string name="show_password">Wachtwoord weergeven</string>
     <string name="registration_please_wait">Registratie mislukt: probeer later opnieuw</string>
     <string name="registration_password_too_weak">Registratie mislukt: wachtwoord te zwak</string>
-    <string name="create_conference">Groepsgesprek aanmaken</string>
+    <string name="create_private_group_chat">Groepsgesprek aanmaken</string>
     <string name="conference_subject">Onderwerp</string>
     <string name="choose_participants">Kies deelnemers</string>
     <string name="creating_conference">Groepsgesprek aanmaken…</string>

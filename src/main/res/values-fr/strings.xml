@@ -17,7 +17,7 @@
     <string name="action_unblock_domain">Débloquer le domaine</string>
     <string name="title_activity_manage_accounts">Gestion des comptes</string>
     <string name="title_activity_settings">Paramètres</string>
-    <string name="title_activity_conference_details">Détails de la conférence</string>
+    <string name="conference_details">Détails de la conférence</string>
     <string name="title_activity_contact_details">Détails du contact</string>
     <string name="title_activity_sharewith">Partager avec Conversation</string>
     <string name="title_activity_start_conversation">Démarrer une conversation</string>
@@ -213,7 +213,7 @@
     <string name="search">Rechercher</string>
     <string name="create_contact">Ajouter un contact</string>
     <string name="enter_contact">Ajouter contact</string>
-    <string name="join_conference">Rejoindre une conférence</string>
+    <string name="join_public_channel">Rejoindre une conférence</string>
     <string name="delete_contact">Supprimer le contact</string>
     <string name="view_contact_details">Afficher les détails du contact</string>
     <string name="block_contact">Bloquer le contact</string>
@@ -223,7 +223,7 @@
     <string name="contact_already_exists">Le contact existe déjà.</string>
     <string name="join">Rejoindre</string>
     <string name="conference_address">Adresse de la conférence</string>
-    <string name="conference_address_example">groupchat@room.pix-art.de</string>
+    <string name="channel_full_jid_example">groupchat@room.pix-art.de</string>
     <string name="save_as_bookmark">Enregistrer comme favori</string>
     <string name="delete_bookmark">Supprimer le favori</string>
     <string name="bookmark_already_exists">Le favori existe déjà</string>
@@ -553,7 +553,7 @@
     <string name="show_password">Afficher le mot de passe</string>
     <string name="registration_please_wait">L’enregistrement a échoué : Réessayer plus tard</string>
     <string name="registration_password_too_weak">Échec de l’enregistrement : le mot de passe n’est pas assez fort</string>
-    <string name="create_conference">Créer une conférence</string>
+    <string name="create_private_group_chat">Créer une conférence</string>
     <string name="conference_subject">Objet</string>
     <string name="choose_participants">Choisir les participants</string>
     <string name="creating_conference">Création de la conférence …</string>

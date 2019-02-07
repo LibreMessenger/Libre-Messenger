@@ -95,7 +95,7 @@ public class PresenceParser extends AbstractParser implements
                                     + mucOptions.getConversation().getJid().asBareJid()
                                     + "' created. pushing default configuration");
                             mXmppConnectionService.pushConferenceConfiguration(mucOptions.getConversation(),
-                                    IqGenerator.defaultRoomConfiguration(),
+                                    IqGenerator.defaultGroupChatConfiguration(),
                                     null);
                         }
                         if (mXmppConnectionService.getPgpEngine() != null) {

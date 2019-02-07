@@ -17,7 +17,7 @@
     <string name="action_unblock_domain">إلغاء حجب اسم النطاق</string>
     <string name="title_activity_manage_accounts">إدارة الحسابات</string>
     <string name="title_activity_settings">الإعدادات</string>
-    <string name="title_activity_conference_details">تفاصيل فريق المحادثة</string>
+    <string name="conference_details">تفاصيل فريق المحادثة</string>
     <string name="title_activity_contact_details">تفاصيل المُراسِل</string>
     <string name="title_activity_sharewith">شارك بواسطة بيكسل آرت ماسنجر</string>
     <string name="title_activity_start_conversation">الشروع في محادثة</string>
@@ -166,7 +166,7 @@
     <string name="search">بحث</string>
     <string name="create_contact">انشاء مُراسِل</string>
     <string name="enter_contact">أدخل مراسلا</string>
-    <string name="join_conference">الالتحاق بفريق المحادثة</string>
+    <string name="join_public_channel">الالتحاق بفريق المحادثة</string>
     <string name="delete_contact">حذف المراسِل</string>
     <string name="view_contact_details">عرض تفاصيل المُراسِل</string>
     <string name="block_contact">حجب مُراسِل</string>
@@ -175,7 +175,7 @@
     <string name="select">اختيار</string>
     <string name="join">الانضمام</string>
     <string name="conference_address">عنوان فريق المحادثة</string>
-    <string name="conference_address_example">groupchat@room.pix-art.de</string>
+    <string name="channel_full_jid_example">groupchat@room.pix-art.de</string>
     <string name="save_as_bookmark">أضفه كفاصلة مرجعية</string>
     <string name="delete_bookmark">حذف الفاصلة المرجعية</string>
     <string name="action_edit_subject">تعديل موضوع فريق المحادثة</string>
@@ -356,7 +356,7 @@
     <string name="action_end_conversation_muc">مغادرة المحادثة الجماعية</string>
     <string name="show_password">إظهار الكلمة السرية</string>
     <string name="registration_password_too_weak">فشلت عملية إنشاء الحساب: إنّ الكلمة السرية ضعيفة</string>
-    <string name="create_conference">انشاء محادثة جماعية</string>
+    <string name="create_private_group_chat">انشاء محادثة جماعية</string>
     <string name="conference_subject">الموضوع</string>
     <string name="choose_participants">اختر المشاركين</string>
     <string name="creating_conference">عملية انشاء فريق المحادثة جارية…</string>

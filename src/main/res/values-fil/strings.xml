@@ -17,7 +17,7 @@
     <string name="action_unblock_domain">Wag harangan ang domain</string>
     <string name="title_activity_manage_accounts">Mamahala ng mga account</string>
     <string name="title_activity_settings">Mga setting</string>
-    <string name="title_activity_conference_details">Grupo ng detalye sa chat</string>
+    <string name="conference_details">Grupo ng detalye sa chat</string>
     <string name="title_activity_contact_details">Mga detalyi sa kontak</string>
     <string name="title_activity_sharewith">Ibahagi ang pag-uusap</string>
     <string name="title_activity_start_conversation">Simulan ang pag-uusap</string>
@@ -208,7 +208,7 @@
     <string name="search">Magsaliksik</string>
     <string name="create_contact">Gumawa ng kontak</string>
     <string name="enter_contact">Ipasok na kontak</string>
-    <string name="join_conference">Sumali sa pang-grupong chat</string>
+    <string name="join_public_channel">Sumali sa pang-grupong chat</string>
     <string name="delete_contact">Burahin ang kontak</string>
     <string name="view_contact_details">Tingnan ang mga detalye sa kontak</string>
     <string name="block_contact">Harangan ang kontak</string>
@@ -218,7 +218,7 @@
     <string name="contact_already_exists">Mayroon ng kontak na umiiral</string>
     <string name="join">Sumali</string>
     <string name="conference_address">Address ng grupong chat</string>
-    <string name="conference_address_example">groupchat@room.pix-art.de</string>
+    <string name="channel_full_jid_example">groupchat@room.pix-art.de</string>
     <string name="save_as_bookmark">I-save bilang bookmark</string>
     <string name="delete_bookmark">Burahin na bookmark</string>
     <string name="bookmark_already_exists">Umiiral na ang bookmark</string>
@@ -531,7 +531,7 @@
     <string name="show_password">Ipakita ang password</string>
     <string name="registration_please_wait">Nabigo ang pagpaparehistro: Subukang muli sa ibang pagkakataon</string>
     <string name="registration_password_too_weak">Nabigo ang pagpaparehistro: Mahina ang password</string>
-    <string name="create_conference">Lumikha ng grupo ng chat</string>
+    <string name="create_private_group_chat">Lumikha ng grupo ng chat</string>
     <string name="conference_subject">Paksa</string>
     <string name="choose_participants">Pumili ng mga kalahok</string>
     <string name="creating_conference">Paglikha ng grupo ng chat…</string>

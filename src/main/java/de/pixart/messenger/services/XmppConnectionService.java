@@ -96,7 +96,6 @@ import de.pixart.messenger.entities.Bookmark;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Conversational;
-import de.pixart.messenger.entities.DownloadableFile;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.MucOptions.OnRenameListener;
@@ -104,8 +103,6 @@ import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.entities.PresenceTemplate;
 import de.pixart.messenger.entities.Roster;
 import de.pixart.messenger.entities.ServiceDiscoveryResult;
-import de.pixart.messenger.entities.Transferable;
-import de.pixart.messenger.entities.TransferablePlaceholder;
 import de.pixart.messenger.generator.AbstractGenerator;
 import de.pixart.messenger.generator.IqGenerator;
 import de.pixart.messenger.generator.MessageGenerator;
@@ -2673,6 +2670,9 @@ public class XmppConnectionService extends Service {
                     if (mucOptions.nonanonymous() && !mucOptions.membersOnly() && !conversation.getBooleanAttribute("accept_non_anonymous", false)) {
                         mucOptions.setError(MucOptions.Error.NON_ANONYMOUS);
                         updateConversationUi();
+                        if (onConferenceJoined != null) {
+                            onConferenceJoined.onConferenceJoined(conversation);
+                        }
                         return;
                     }
                     final Jid joinJid = mucOptions.getSelf().getFullJid();
@@ -2956,6 +2956,31 @@ public class XmppConnectionService extends Service {
         return null;
     }
 
+    public void createPublicChannel(final Account account, final String name, final Jid address, final UiCallback<Conversation> callback) {
+        joinMuc(findOrCreateConversation(account, address, true, false, true), conversation -> {
+            final Bundle configuration = IqGenerator.defaultChannelConfiguration();
+            if (!TextUtils.isEmpty(name)) {
+                configuration.putString("muc#roomconfig_roomname", name);
+            }
+            pushConferenceConfiguration(conversation, configuration, new OnConfigurationPushed() {
+                @Override
+                public void onPushSucceeded() {
+                    saveConversationAsBookmark(conversation, name);
+                    callback.success(conversation);
+                }
+
+                @Override
+                public void onPushFailed() {
+                    if (conversation.getMucOptions().getSelf().getAffiliation().ranks(MucOptions.Affiliation.OWNER)) {
+                        callback.error(R.string.unable_to_set_channel_configuration, conversation);
+                    } else {
+                        callback.error(R.string.joined_an_existing_channel, conversation);
+                    }
+                }
+            });
+        });
+    }
+
     public boolean createAdhocConference(final Account account,
                                          final String name,
                                          final Iterable<Jid> jids,
@@ -2975,7 +3000,7 @@ public class XmppConnectionService extends Service {
                 joinMuc(conversation, new OnConferenceJoined() {
                     @Override
                     public void onConferenceJoined(final Conversation conversation) {
-                        final Bundle configuration = IqGenerator.defaultRoomConfiguration();
+                        final Bundle configuration = IqGenerator.defaultGroupChatConfiguration();
                         if (!TextUtils.isEmpty(name)) {
                             configuration.putString("muc#roomconfig_roomname", name);
                         }

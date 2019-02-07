@@ -17,7 +17,7 @@
     <string name="action_unblock_domain">Sblocca dominio</string>
     <string name="title_activity_manage_accounts">Gestisci account</string>
     <string name="title_activity_settings">Impostazioni</string>
-    <string name="title_activity_conference_details">Dettagli della conversazione di gruppo</string>
+    <string name="conference_details">Dettagli della conversazione di gruppo</string>
     <string name="title_activity_contact_details">Dettagli del Contatto</string>
     <string name="title_activity_sharewith">Condividi con Conversation</string>
     <string name="title_activity_start_conversation">Inizia una conversazione</string>
@@ -214,7 +214,7 @@
     <string name="search">Cerca</string>
     <string name="create_contact">Crea contatto</string>
     <string name="enter_contact">Inserisci contatto</string>
-    <string name="join_conference">Unisciti alla conversazione di gruppo</string>
+    <string name="join_public_channel">Unisciti alla conversazione di gruppo</string>
     <string name="delete_contact">Elimina contatto</string>
     <string name="view_contact_details">Mostra dettagli contatto</string>
     <string name="block_contact">Blocca contatto</string>
@@ -224,7 +224,7 @@
     <string name="contact_already_exists">Il contatto esiste già</string>
     <string name="join">Entra</string>
     <string name="conference_address">Indirizzo della conversazione di gruppo</string>
-    <string name="conference_address_example">stanza@conferenza.esempio.com/nick</string>
+    <string name="channel_full_jid_example">stanza@conferenza.esempio.com/nick</string>
     <string name="save_as_bookmark">Salva come segnalibro</string>
     <string name="delete_bookmark">Elimina segnalibro</string>
     <string name="bookmark_already_exists">Questo segnalibro esiste già</string>
@@ -557,7 +557,7 @@
     <string name="show_password">Mostra la password</string>
     <string name="registration_please_wait">Registrazione fallita: riprova più tardi</string>
     <string name="registration_password_too_weak">Registrazione fallita: password troppo debole</string>
-    <string name="create_conference">Crea conversazione di gruppo</string>
+    <string name="create_private_group_chat">Crea conversazione di gruppo</string>
     <string name="conference_subject">Soggetto</string>
     <string name="choose_participants">Scegli i partecipanti</string>
     <string name="creating_conference">Creazione conversazione di gruppo…</string>

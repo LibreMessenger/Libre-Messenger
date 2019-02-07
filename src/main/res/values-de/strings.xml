@@ -17,7 +17,7 @@
     <string name="action_unblock_domain">Domain entsperren</string>
     <string name="title_activity_manage_accounts">Profile verwalten</string>
     <string name="title_activity_settings">Einstellungen</string>
-    <string name="title_activity_conference_details">Gruppenchat-Details</string>
+    <string name="conference_details">Gruppenchat-Details</string>
     <string name="title_activity_contact_details">Kontakt-Details</string>
     <string name="title_activity_sharewith">Mit Unterhaltung teilen</string>
     <string name="title_activity_start_conversation">Unterhaltung beginnen</string>
@@ -214,7 +214,7 @@
     <string name="search">Suchen</string>
     <string name="create_contact">Kontakt hinzufügen</string>
     <string name="enter_contact">Kontakt eingeben</string>
-    <string name="join_conference">Gruppenchat beitreten</string>
+    <string name="join_public_channel">Gruppenchat beitreten</string>
     <string name="delete_contact">Kontakt löschen</string>
     <string name="view_contact_details">Kontakt-Details anzeigen</string>
     <string name="block_contact">Kontakt sperren</string>
@@ -224,7 +224,7 @@
     <string name="contact_already_exists">Der Kontakt existiert bereits</string>
     <string name="join">Beitreten</string>
     <string name="conference_address">Gruppenchat-Adresse</string>
-    <string name="conference_address_example">gruppenchat@room.pix-art.de</string>
+    <string name="channel_full_jid_example">gruppenchat@room.pix-art.de</string>
     <string name="save_as_bookmark">Zur Kontaktliste hinzufügen</string>
     <string name="delete_bookmark">Von Kontaktliste entfernen</string>
     <string name="bookmark_already_exists">Die Konferenz befindet sich bereits auf deiner Kontaktliste</string>
@@ -557,7 +557,7 @@
     <string name="show_password">Passwort anzeigen</string>
     <string name="registration_please_wait">Registrierung fehlgeschlagen: Bitte später versuchen</string>
     <string name="registration_password_too_weak">Registrierung fehlgeschlagen: Passwort zu schwach</string>
-    <string name="create_conference">Gruppenchat erstellen</string>
+    <string name="create_private_group_chat">Gruppenchat erstellen</string>
     <string name="conference_subject">Titel</string>
     <string name="choose_participants">Mitglieder auswählen</string>
     <string name="creating_conference">Gruppenchat wird erstellt…</string>

@@ -3,14 +3,8 @@ package de.pixart.messenger.ui;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender.SendIntentException;
-import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
-import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -18,38 +12,24 @@ import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import org.openintents.openpgp.util.OpenPgpUtils;
-
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
-import de.pixart.messenger.crypto.PgpEngine;
 import de.pixart.messenger.databinding.ActivityMucDetailsBinding;
-import de.pixart.messenger.databinding.ContactBinding;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Bookmark;
-import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.MucOptions.User;
-import de.pixart.messenger.services.EmojiService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.services.XmppConnectionService.OnConversationUpdate;
 import de.pixart.messenger.services.XmppConnectionService.OnMucRosterUpdate;
@@ -68,13 +48,11 @@ import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import de.pixart.messenger.utils.StringUtils;
 import de.pixart.messenger.utils.StylingHelper;
 import de.pixart.messenger.utils.TimeframeUtils;
-import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.utils.XmppUri;
 import me.drakeet.support.toast.ToastCompat;
 import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.entities.Bookmark.printableValue;
-import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
 import static de.pixart.messenger.utils.StringUtils.changed;
 
 public class ConferenceDetailsActivity extends XmppActivity implements OnConversationUpdate, OnMucRosterUpdate, XmppConnectionService.OnAffiliationChanged, XmppConnectionService.OnConfigurationPushed, TextWatcher, OnMediaLoaded {
@@ -520,7 +498,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         } else {
             account = mConversation.getAccount().getJid().asBareJid().toString();
         }
-
+        setTitle(mucOptions.isPrivateAndNonAnonymous() ? R.string.conference_details : R.string.channel_details);
         this.binding.editMucNameButton.setVisibility((self.getAffiliation().ranks(MucOptions.Affiliation.OWNER) || mucOptions.canChangeSubject()) ? View.VISIBLE : View.GONE);
         this.binding.detailsAccount.setText(getString(R.string.using_account, account));
         this.binding.jid.setText(mConversation.getJid().asBareJid().toEscapedString());

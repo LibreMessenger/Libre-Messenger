@@ -196,7 +196,7 @@
     <string name="select">Välj</string>
     <string name="contact_already_exists">Kontakten finns redan</string>
     <string name="join">Gå med</string>
-    <string name="conference_address_example">room@conference.example.com/nick</string>
+    <string name="channel_full_jid_example">room@conference.example.com/nick</string>
     <string name="save_as_bookmark">Spara som bokmärke</string>
     <string name="delete_bookmark">Ta bort bokmärke</string>
     <string name="bookmark_already_exists">Detta bokmärke finns redan</string>

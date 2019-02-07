@@ -40,7 +40,7 @@
                 style="@style/Widget.Conversations.EditText"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionDone"
+                android:imeOptions="actionDone|flagNoExtractUi"
                 android:inputType="textEmailAddress"
                 android:textColor="?attr/text_Color_Main" />
         </android.support.design.widget.TextInputLayout>

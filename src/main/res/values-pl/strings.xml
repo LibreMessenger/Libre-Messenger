@@ -17,7 +17,7 @@
     <string name="action_unblock_domain">Odblokuj domenę</string>
     <string name="title_activity_manage_accounts">Zarządzaj kontami</string>
     <string name="title_activity_settings">Ustawienia</string>
-    <string name="title_activity_conference_details">Szczegóły czatu grupowego</string>
+    <string name="conference_details">Szczegóły czatu grupowego</string>
     <string name="title_activity_contact_details">Szczegóły kontaktu</string>
     <string name="title_activity_sharewith">Udostępnij w konwersacji</string>
     <string name="title_activity_start_conversation">Rozpocznij konwersację</string>
@@ -215,7 +215,7 @@ Nie spowoduje to usunięcia kopii wiadomości przechowywanych na innych urządze
     <string name="search">Szukaj</string>
     <string name="create_contact">Utwórz kontakt</string>
     <string name="enter_contact">Wpisz kontakt</string>
-    <string name="join_conference">Dołącz do czatu grupowego</string>
+    <string name="join_public_channel">Dołącz do czatu grupowego</string>
     <string name="delete_contact">Usuń kontakt</string>
     <string name="view_contact_details">Szczegóły kontaktu</string>
     <string name="block_contact">Zablokuj kontakt</string>
@@ -225,7 +225,7 @@ Nie spowoduje to usunięcia kopii wiadomości przechowywanych na innych urządze
     <string name="contact_already_exists">Kontakt już istnieje</string>
     <string name="join">Dołącz</string>
     <string name="conference_address">Adres czatu grupowego</string>
-    <string name="conference_address_example">konferencja@konferencje.example.com/nick</string>
+    <string name="channel_full_jid_example">konferencja@konferencje.example.com/nick</string>
     <string name="save_as_bookmark">Dodaj jako zakładkę</string>
     <string name="delete_bookmark">Usuń zakładkę</string>
     <string name="bookmark_already_exists">Zakładka już istnieje</string>
@@ -538,7 +538,7 @@ Nie spowoduje to usunięcia kopii wiadomości przechowywanych na innych urządze
     <string name="show_password">Pokaż hasło</string>
     <string name="registration_please_wait">Rejestracja nie powiodła się. Spróbuj później</string>
     <string name="registration_password_too_weak">Rejestracja nie powiodła się: hasło zbyt słabe</string>
-    <string name="create_conference">Utwórz czat grupowy</string>
+    <string name="create_private_group_chat">Utwórz czat grupowy</string>
     <string name="conference_subject">Temat</string>
     <string name="choose_participants">Wybierz uczestnika</string>
     <string name="import_database">Importować backup</string>

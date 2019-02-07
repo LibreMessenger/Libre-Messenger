@@ -195,7 +195,7 @@
     <string name="search">Buscar</string>
     <string name="create_contact">Crear unha conta</string>
     <string name="enter_contact">Introducir contacto</string>
-    <string name="join_conference">Entrar nunha conversa en grupo</string>
+    <string name="join_public_channel">Entrar nunha conversa en grupo</string>
     <string name="delete_contact">Eliminar contacto</string>
     <string name="view_contact_details">Ver os detalles do contacto</string>
     <string name="block_contact">Bloquear contacto</string>
@@ -205,7 +205,7 @@
     <string name="contact_already_exists">Xa existe o contacto</string>
     <string name="join">Unirse</string>
     <string name="conference_address">Enderezo da conversa en grupo</string>
-    <string name="conference_address_example">sala@xuntanza.exemplo.com/nick</string>
+    <string name="channel_full_jid_example">sala@xuntanza.exemplo.com/nick</string>
     <string name="save_as_bookmark">Gardar como marcador</string>
     <string name="delete_bookmark">Eliminar marcador</string>
     <string name="bookmark_already_exists">Este marcador xa existe</string>
@@ -487,7 +487,7 @@
     <string name="show_password">Mostar contrasinal</string>
     <string name="registration_please_wait">Fallo no rexistro: inténteo de novo</string>
     <string name="registration_password_too_weak">Fallo no rexistro: contrasinal moi feble</string>
-    <string name="create_conference">Crear conversa en grupo</string>
+    <string name="create_private_group_chat">Crear conversa en grupo</string>
     <string name="conference_subject">Asunto</string>
     <string name="choose_participants">Escoller participantes</string>
     <string name="creating_conference">Creando unha conversa en grupo...</string>

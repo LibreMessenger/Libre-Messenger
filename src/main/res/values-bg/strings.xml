@@ -13,7 +13,7 @@
     <string name="action_unblock_domain">Разблокираи доминио</string>
     <string name="title_activity_manage_accounts">Управление на профили</string>
     <string name="title_activity_settings">Настройки</string>
-    <string name="title_activity_conference_details">Детаили на чат групата</string>
+    <string name="conference_details">Детаили на чат групата</string>
     <string name="title_activity_contact_details">Детайли на контакта</string>
     <string name="title_activity_sharewith">Сподели със конверсация</string>
     <string name="title_activity_start_conversation">Започнете Разговор</string>

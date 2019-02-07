@@ -192,7 +192,7 @@
     <string name="select">Vybrat</string>
     <string name="contact_already_exists">Kontakt již existuje</string>
     <string name="join">Vstoupit</string>
-    <string name="conference_address_example">room@conference.example.com/nick</string>
+    <string name="channel_full_jid_example">room@conference.example.com/nick</string>
     <string name="save_as_bookmark">Uložit jako záložku</string>
     <string name="delete_bookmark">Smazat záložku</string>
     <string name="bookmark_already_exists">Tato záložka již existuje</string>
