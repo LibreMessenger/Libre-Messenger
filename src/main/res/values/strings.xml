@@ -868,7 +868,7 @@
     <string name="restore_warning">Do not use the restore backup feature in an attempt to clone (run simultaneously) an installation. Restoring a backup is only meant for migrations or in case you have lost the original device.</string>
     <string name="unable_to_restore_backup">Unable to restore backup.</string>
     <string name="unable_to_decrypt_backup">Unable to decrypt backup. Is the password correct?</string>
-    <string name="pref_prefer_xmpp_avatar_summary">Prefer the users XMPP avatar instead of the one from your address book</string>
+    <string name="pref_prefer_xmpp_avatar_summary">Prefer the user\'s XMPP avatar instead of the one from your address book</string>
     <string name="pref_prefer_xmpp_avatar">Prefer XMPP avatar</string>
     <string name="view_users">View members</string>
     <string name="group_chat_members">Group chat members</string>
