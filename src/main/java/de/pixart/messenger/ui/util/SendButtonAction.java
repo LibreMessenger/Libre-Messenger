@@ -32,8 +32,8 @@ package de.pixart.messenger.ui.util;
 import static de.pixart.messenger.ui.ConversationFragment.ATTACHMENT_CHOICE;
 import static de.pixart.messenger.ui.ConversationFragment.ATTACHMENT_CHOICE_CHOOSE_IMAGE;
 import static de.pixart.messenger.ui.ConversationFragment.ATTACHMENT_CHOICE_LOCATION;
-import static de.pixart.messenger.ui.ConversationFragment.ATTACHMENT_CHOICE_RECORD_VOICE;
 import static de.pixart.messenger.ui.ConversationFragment.ATTACHMENT_CHOICE_RECORD_VIDEO;
+import static de.pixart.messenger.ui.ConversationFragment.ATTACHMENT_CHOICE_RECORD_VOICE;
 import static de.pixart.messenger.ui.ConversationFragment.ATTACHMENT_CHOICE_TAKE_PHOTO;
 
 public enum SendButtonAction {

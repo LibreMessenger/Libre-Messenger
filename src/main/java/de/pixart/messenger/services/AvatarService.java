@@ -3,7 +3,6 @@ package de.pixart.messenger.services;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -39,13 +38,11 @@ import de.pixart.messenger.entities.Conversational;
 import de.pixart.messenger.entities.ListItem;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.MucOptions;
-import de.pixart.messenger.ui.ConferenceDetailsActivity;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.OnAdvancedStreamFeaturesLoaded;
 import de.pixart.messenger.xmpp.XmppConnection;
 import rocks.xmpp.addr.Jid;
 
-import static de.pixart.messenger.Config.SYSTEM_UI_AVATAR_SIZE;
 import static de.pixart.messenger.ui.SettingsActivity.PREFER_XMPP_AVATAR;
 
 public class AvatarService implements OnAdvancedStreamFeaturesLoaded {

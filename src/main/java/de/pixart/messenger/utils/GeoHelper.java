@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Contact;
-import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Conversational;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.ui.ShowLocationActivity;

@@ -1,6 +1,5 @@
 package de.pixart.messenger.utils;
 
-import android.os.Looper;
 import android.util.Log;
 
 import java.util.ArrayDeque;

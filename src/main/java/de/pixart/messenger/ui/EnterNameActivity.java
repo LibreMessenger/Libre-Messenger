@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+
 import de.pixart.messenger.R;
 import de.pixart.messenger.databinding.ActivityEnterNameBinding;
 import de.pixart.messenger.entities.Account;

@@ -2,7 +2,6 @@ package de.pixart.messenger.crypto.axolotl;
 
 import android.util.Base64;
 import android.util.Log;
-import android.util.SparseArray;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;

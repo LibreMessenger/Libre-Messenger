@@ -46,7 +46,6 @@ import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.parser.IqParser;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.utils.CryptoHelper;
-import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.utils.SerialSingleThreadExecutor;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.OnAdvancedStreamFeaturesLoaded;

@@ -28,10 +28,7 @@ import java.util.Locale;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
-import de.pixart.messenger.services.EmojiService;
 import de.pixart.messenger.utils.MenuDoubleTabUtil;
-
-import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
 
 public class ShowLocationActivity extends XmppActivity {
     FloatingActionButton fab;

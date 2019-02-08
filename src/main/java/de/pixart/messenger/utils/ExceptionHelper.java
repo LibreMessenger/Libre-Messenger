@@ -17,7 +17,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import de.pixart.messenger.Config;
@@ -27,7 +26,6 @@ import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.XmppActivity;
-import rocks.xmpp.addr.Jid;
 
 public class ExceptionHelper {
     private static final String FILENAME = "stacktrace.txt";

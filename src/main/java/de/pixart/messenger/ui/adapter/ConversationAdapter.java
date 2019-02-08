@@ -1,13 +1,8 @@
 package de.pixart.messenger.ui.adapter;
 
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -16,11 +11,8 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
-import java.lang.ref.WeakReference;
 import java.util.List;
-import java.util.concurrent.RejectedExecutionException;
 
 import de.pixart.messenger.R;
 import de.pixart.messenger.databinding.ConversationListRowBinding;

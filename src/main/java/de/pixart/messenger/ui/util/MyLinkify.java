@@ -40,8 +40,6 @@ import de.pixart.messenger.utils.GeoHelper;
 import de.pixart.messenger.utils.Patterns;
 import de.pixart.messenger.utils.XmppUri;
 
-import static java.lang.Character.isAlphabetic;
-
 public class MyLinkify {
 
     private static final Linkify.TransformFilter WEBURL_TRANSFORM_FILTER = (matcher, url) -> {

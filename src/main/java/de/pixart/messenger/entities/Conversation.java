@@ -28,7 +28,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.crypto.OmemoSetting;
 import de.pixart.messenger.crypto.PgpDecryptionService;
-import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.persistance.DatabaseBackend;
 import de.pixart.messenger.services.AvatarService;
 import de.pixart.messenger.services.QuickConversationsService;

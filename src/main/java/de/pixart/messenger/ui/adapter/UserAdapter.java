@@ -9,14 +9,10 @@ import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.PopupMenu;
 
 import org.openintents.openpgp.util.OpenPgpUtils;
-
-import java.util.List;
 
 import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.PgpEngine;

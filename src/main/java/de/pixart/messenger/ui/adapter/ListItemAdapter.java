@@ -1,12 +1,7 @@
 package de.pixart.messenger.ui.adapter;
 
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +12,7 @@ import android.widget.TextView;
 
 import com.wefika.flowlayout.FlowLayout;
 
-import java.lang.ref.WeakReference;
 import java.util.List;
-import java.util.concurrent.RejectedExecutionException;
 
 import de.pixart.messenger.R;
 import de.pixart.messenger.databinding.ContactBinding;
@@ -30,7 +23,6 @@ import de.pixart.messenger.ui.util.AvatarWorkerTask;
 import de.pixart.messenger.ui.util.StyledAttributes;
 import de.pixart.messenger.utils.EmojiWrapper;
 import de.pixart.messenger.utils.IrregularUnicodeDetector;
-import de.pixart.messenger.utils.UIHelper;
 import rocks.xmpp.addr.Jid;
 
 public class ListItemAdapter extends ArrayAdapter<ListItem> {

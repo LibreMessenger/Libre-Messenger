@@ -1,6 +1,5 @@
 package de.pixart.messenger.ui.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.databinding.DataBindingUtil;

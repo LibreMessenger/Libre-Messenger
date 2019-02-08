@@ -14,15 +14,9 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.view.menu.MenuBuilder;
-import android.support.v7.view.menu.MenuPopupHelper;
-import android.support.v7.widget.PopupMenu;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
@@ -30,10 +24,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
-import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
-import com.github.rtoshiro.view.video.FullscreenVideoLayout;
-import com.leinardi.android.speeddial.SpeedDialActionItem;
-import com.leinardi.android.speeddial.SpeedDialView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -47,8 +37,6 @@ import de.pixart.messenger.databinding.ActivityMediaViewerBinding;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.utils.ExifHelper;
 import de.pixart.messenger.utils.MimeUtils;
-import pl.droidsonroids.gif.GifImageView;
-import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.persistance.FileBackend.close;
 

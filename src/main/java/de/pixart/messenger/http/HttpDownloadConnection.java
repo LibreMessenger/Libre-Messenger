@@ -25,7 +25,6 @@ import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.DownloadableFile;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.Transferable;
-import de.pixart.messenger.entities.TransferablePlaceholder;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.services.AbstractConnectionManager;
 import de.pixart.messenger.services.XmppConnectionService;

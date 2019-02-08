@@ -20,9 +20,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.File;
@@ -40,7 +37,6 @@ import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.services.ExportBackupService;
 import de.pixart.messenger.services.MemorizingTrustManager;
 import de.pixart.messenger.ui.util.StyledAttributes;
-import de.pixart.messenger.utils.Compatibility;
 import de.pixart.messenger.utils.TimeframeUtils;
 import rocks.xmpp.addr.Jid;
 

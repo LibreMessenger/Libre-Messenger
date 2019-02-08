@@ -38,7 +38,6 @@ import android.view.MenuItem;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.OmemoSetting;
-import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Conversational;
 import de.pixart.messenger.entities.Message;

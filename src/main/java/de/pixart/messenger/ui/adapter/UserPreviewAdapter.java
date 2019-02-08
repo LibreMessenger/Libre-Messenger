@@ -6,12 +6,8 @@ import android.support.v7.recyclerview.extensions.ListAdapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.PopupMenu;
-
-import java.util.List;
 
 import de.pixart.messenger.R;
 import de.pixart.messenger.databinding.UserPreviewBinding;

@@ -57,14 +57,12 @@ import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.ui.ConversationsActivity;
 import de.pixart.messenger.ui.EditAccountActivity;
-import de.pixart.messenger.ui.ManageAccountActivity;
 import de.pixart.messenger.ui.TimePreference;
 import de.pixart.messenger.utils.AccountUtils;
 import de.pixart.messenger.utils.Compatibility;
 import de.pixart.messenger.utils.GeoHelper;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.XmppConnection;
-import rocks.xmpp.addr.Jid;
 
 public class NotificationService {
 

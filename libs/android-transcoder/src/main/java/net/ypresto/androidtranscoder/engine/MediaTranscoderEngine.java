@@ -22,7 +22,6 @@ import android.media.MediaMuxer;
 import android.os.Build;
 import android.util.Log;
 
-import net.ypresto.androidtranscoder.BuildConfig;
 import net.ypresto.androidtranscoder.format.MediaFormatStrategy;
 import net.ypresto.androidtranscoder.utils.ISO6709LocationParser;
 import net.ypresto.androidtranscoder.utils.MediaExtractorUtils;
