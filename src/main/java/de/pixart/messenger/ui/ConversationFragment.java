@@ -385,7 +385,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     private OnClickListener mHideUnencryptionHint = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (Config.supportOmemo() && conversation.getAccount().getAxolotlService().isConversationAxolotlCapable(conversation)) {
+            if (Config.supportOmemo() && Conversation.suitableForOmemoByDefault(conversation) && conversation.isSingleOrPrivateAndNonAnonymous()) {
                 conversation.setNextEncryption(Message.ENCRYPTION_AXOLOTL);
                 activity.xmppConnectionService.updateConversation(conversation);
                 activity.refreshUi();
@@ -1488,38 +1488,43 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         if (conversation == null) {
             return;
         }
+        final boolean updated;
         switch (item.getItemId()) {
             case R.id.encryption_choice_none:
-                conversation.setNextEncryption(Message.ENCRYPTION_NONE);
+                updated = conversation.setNextEncryption(Message.ENCRYPTION_NONE);
                 item.setChecked(true);
                 break;
             case R.id.encryption_choice_otr:
-                conversation.setNextEncryption(Message.ENCRYPTION_OTR);
+                updated = conversation.setNextEncryption(Message.ENCRYPTION_OTR);
                 item.setChecked(true);
                 break;
             case R.id.encryption_choice_pgp:
                 if (activity.hasPgp()) {
                     if (conversation.getAccount().getPgpSignature() != null) {
-                        conversation.setNextEncryption(Message.ENCRYPTION_PGP);
+                        updated = conversation.setNextEncryption(Message.ENCRYPTION_PGP);
                         item.setChecked(true);
                     } else {
+                        updated = false;
                         activity.announcePgp(conversation.getAccount(), conversation, null, activity.onOpenPGPKeyPublished);
                     }
                 } else {
                     activity.showInstallPgpDialog();
+                    updated = false;
                 }
                 break;
             case R.id.encryption_choice_axolotl:
                 Log.d(Config.LOGTAG, AxolotlService.getLogprefix(conversation.getAccount())
                         + "Enabled axolotl for Contact " + conversation.getContact().getJid());
-                conversation.setNextEncryption(Message.ENCRYPTION_AXOLOTL);
+                updated = conversation.setNextEncryption(Message.ENCRYPTION_AXOLOTL);
                 item.setChecked(true);
                 break;
             default:
-                conversation.setNextEncryption(Message.ENCRYPTION_NONE);
+                updated = conversation.setNextEncryption(Message.ENCRYPTION_NONE);
                 break;
         }
-        activity.xmppConnectionService.updateConversation(conversation);
+        if (updated) {
+            activity.xmppConnectionService.updateConversation(conversation);
+        }
         updateChatMsgHint();
         getActivity().invalidateOptionsMenu();
         activity.refreshUi();
@@ -2445,22 +2450,10 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 && conversation.isWithStranger()) {
             showSnackbar(R.string.received_message_from_stranger, R.string.block, mBlockClickListener);
         } else if (activity.xmppConnectionService.warnUnecryptedChat()) {
-            AxolotlService axolotlService = account.getAxolotlService();
-            if ((mode == Conversation.MODE_SINGLE) && (conversation.getNextEncryption() == Message.ENCRYPTION_NONE &&
-                    ((Config.supportOmemo() && axolotlService != null && conversation.getAccount().getAxolotlService().isConversationAxolotlCapable(conversation)) ||
-                            (Config.supportOpenPgp() && account.isPgpDecryptionServiceConnected()) ||
-                            Config.supportOtr()))) {
+            if (conversation.getNextEncryption() == Message.ENCRYPTION_NONE && conversation.isSingleOrPrivateAndNonAnonymous() && ((Config.supportOmemo() && Conversation.suitableForOmemoByDefault(conversation)) ||
+                    (Config.supportOpenPgp() && account.isPgpDecryptionServiceConnected()) || (
+                    mode == Conversation.MODE_SINGLE && Config.supportOtr()))) {
                 if (ENCRYPTION_EXCEPTIONS.contains(conversation.getJid().toString()) || conversation.getJid().toString().equals(account.getJid().getDomain())) {
-                    hideSnackbar();
-                } else {
-                    showSnackbar(R.string.conversation_unencrypted_hint, R.string.ok, mHideUnencryptionHint, null);
-                }
-            } else if ((mode == Conversation.MODE_MULTI && conversation.getMucOptions().membersOnly() && conversation.getMucOptions().nonanonymous()) &&
-                    (conversation.getNextEncryption() == Message.ENCRYPTION_NONE &&
-                            ((Config.supportOmemo() && axolotlService != null && conversation.getAccount().getAxolotlService().isConversationAxolotlCapable(conversation)) ||
-                                    (Config.supportOpenPgp() && account.isPgpDecryptionServiceConnected())))) {
-                if (ENCRYPTION_EXCEPTIONS.contains(conversation.getJid().toString()) || conversation.getJid().toString().equals(account.getJid().getDomain())) {
-                    Log.d(Config.LOGTAG, "Don't show unencrypted warning because " + conversation.getJid().toString() + " is on exception list");
                     hideSnackbar();
                 } else {
                     showSnackbar(R.string.conversation_unencrypted_hint, R.string.ok, mHideUnencryptionHint, null);

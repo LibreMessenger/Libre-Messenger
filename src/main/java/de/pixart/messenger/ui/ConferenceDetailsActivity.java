@@ -389,6 +389,8 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.muc_details, menu);
+        final MenuItem share = menu.findItem(R.id.action_share);
+        share.setVisible(mConversation != null && !mConversation.isPrivateAndNonAnonymous());
         return super.onCreateOptionsMenu(menu);
     }
 

@@ -1461,15 +1461,16 @@ public class XmppConnectionService extends Service {
         boolean saveInDb = addToConversation;
         message.setStatus(Message.STATUS_WAITING);
 
+        if (message.getEncryption() != Message.ENCRYPTION_NONE && conversation.getMode() == Conversation.MODE_MULTI && conversation.isPrivateAndNonAnonymous()) {
+            if (conversation.setAttribute(Conversation.ATTRIBUTE_FORMERLY_PRIVATE_NON_ANONYMOUS, true)) {
+                databaseBackend.updateConversation(conversation);
+            }
+        }
+
         if (!resend && message.getEncryption() != Message.ENCRYPTION_OTR) {
             conversation.endOtrIfNeeded();
             conversation.findUnsentMessagesWithEncryption(Message.ENCRYPTION_OTR,
-                    new Conversation.OnMessageFound() {
-                        @Override
-                        public void onMessageFound(Message message) {
-                            markMessage(message, Message.STATUS_SEND_FAILED);
-                        }
-                    });
+                    message1 -> markMessage(message1, Message.STATUS_SEND_FAILED));
         }
 
         if (account.isOnlineAndConnected()) {

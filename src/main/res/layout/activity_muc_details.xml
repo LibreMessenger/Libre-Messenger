@@ -173,7 +173,6 @@
                                     android:layout_centerVertical="true"
                                     android:layout_toStartOf="@+id/change_conference_button"
                                     android:layout_toLeftOf="@+id/change_conference_button"
-                                    android:text="@string/private_conference"
                                     android:textAppearance="@style/TextAppearance.Conversations.Body1" />
 
                                 <ImageButton
