@@ -825,6 +825,7 @@
     <string name="pref_play_gif_inside">Play GIF files in chat</string>
     <string name="pref_play_gif_inside_summary">Setting this to true plays GIF files directly inside the chat view.</string>
     <string name="open_with">Open with…</string>
+    <string name="server_info_adhoc_invite">XEP-0050: Ad-Hoc Commands: user invite</string>
     <string name="choose_account">Choose account</string>
     <string name="set_profile_picture">Pix-Art Messenger profile picture</string>
     <string name="restore_backup">Restore backup</string>

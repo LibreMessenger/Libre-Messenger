@@ -90,6 +90,7 @@ import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import de.pixart.messenger.utils.ThemeHelper;
 import de.pixart.messenger.xmpp.OnKeyStatusUpdated;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
+import de.pixart.messenger.xmpp.XmppConnection;
 import pl.droidsonroids.gif.GifDrawable;
 import rocks.xmpp.addr.Jid;
 
@@ -964,6 +965,11 @@ public abstract class XmppActivity extends ActionBarActivity {
             String user = Jid.of(mAccount.getJid()).getLocal();
             String domain = Jid.of(mAccount.getJid()).getDomain();
             String inviteURL = Config.inviteUserURL + user + "/" + domain;
+            XmppConnection.Features features = mAccount.getXmppConnection().getFeatures();
+            final boolean adhoclink = features.adhocinvite;
+            if (adhoclink) {
+                inviteURL = features.adhocinviteURI;
+            }
             String inviteText = getString(R.string.InviteText, user);
             Intent intent = new Intent(android.content.Intent.ACTION_SEND);
             intent.setType("text/plain");
@@ -991,9 +997,15 @@ public abstract class XmppActivity extends ActionBarActivity {
             builder.setPositiveButton(R.string.ok,
                     (dialog, id) -> {
                         String selection = spinner.getSelectedItem().toString();
+                        Account mAccount = xmppConnectionService.findAccountByJid(Jid.of(selection).asBareJid());
                         String user = Jid.of(selection).getLocal();
                         String domain = Jid.of(selection).getDomain();
                         String inviteURL = Config.inviteUserURL + user + "/" + domain;
+                        XmppConnection.Features features = mAccount.getXmppConnection().getFeatures();
+                        final boolean adhoclink = features.adhocinvite;
+                        if (adhoclink) {
+                            inviteURL = features.adhocinviteURI;
+                        }
                         String inviteText = getString(R.string.InviteText, user);
                         Intent intent = new Intent(Intent.ACTION_SEND);
                         intent.setType("text/plain");
