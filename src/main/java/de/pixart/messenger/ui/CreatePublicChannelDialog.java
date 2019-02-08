@@ -38,6 +38,7 @@ public class CreatePublicChannelDialog extends DialogFragment implements OnBacke
     private static final char[] FORBIDDEN = new char[]{'\u0022', '&', '\'', '/', ':', '<', '>', '@'};
 
     private static final String ACCOUNTS_LIST_KEY = "activated_accounts_list";
+    private static final String MULTIPLE_ACCOUNTS = "multiple_accounts_enabled";
     private CreatePublicChannelDialogListener mListener;
     private KnownHostsAdapter knownHostsAdapter;
     private boolean jidWasModified = false;
@@ -67,6 +68,13 @@ public class CreatePublicChannelDialog extends DialogFragment implements OnBacke
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.create_public_channel);
         final CreatePublicChannelDialogBinding binding = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.create_public_channel_dialog, null, false);
+        if (getArguments().getBoolean(MULTIPLE_ACCOUNTS)) {
+            binding.yourAccount.setVisibility(View.VISIBLE);
+            binding.account.setVisibility(View.VISIBLE);
+        } else {
+            binding.yourAccount.setVisibility(View.GONE);
+            binding.account.setVisibility(View.GONE);
+        }
         binding.account.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
