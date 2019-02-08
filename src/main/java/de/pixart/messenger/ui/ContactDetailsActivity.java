@@ -155,8 +155,12 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             } else {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(systemAccount);
-                startActivity(intent);
-                overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+                try {
+                    startActivity(intent);
+                    overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+                } catch (ActivityNotFoundException e) {
+                    Toast.makeText(ContactDetailsActivity.this, R.string.no_application_found_to_view_contact, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     };
@@ -192,16 +196,16 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
                         }
                     }
                     builder1.setItems(labels, (dialog1, which1) -> {
-                                final long till;
-                                if (durations[which1] == -1) {
-                                    till = Long.MAX_VALUE;
-                                } else {
-                                    till = System.currentTimeMillis() + (durations[which1] * 1000);
-                                }
-                                mConversation.setMutedTill(till);
-                                xmppConnectionService.updateConversation(mConversation);
-                                populateView();
-                            });
+                        final long till;
+                        if (durations[which1] == -1) {
+                            till = Long.MAX_VALUE;
+                        } else {
+                            till = System.currentTimeMillis() + (durations[which1] * 1000);
+                        }
+                        mConversation.setMutedTill(till);
+                        xmppConnectionService.updateConversation(mConversation);
+                        populateView();
+                    });
                     builder1.create().show();
                 } else {
                     mConversation.setMutedTill(0);
@@ -423,9 +427,9 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             binding.addContactButton.setOnClickListener(view -> {
                 final AlertDialog.Builder deleteFromRosterDialog = new AlertDialog.Builder(ContactDetailsActivity.this);
                 deleteFromRosterDialog.setNegativeButton(getString(R.string.cancel), null)
-                .setTitle(getString(R.string.action_delete_contact))
-                .setMessage(JidDialog.style(this, R.string.remove_contact_text, contact.getJid().toEscapedString()))
-                .setPositiveButton(getString(R.string.delete), removeFromRoster).create().show();
+                        .setTitle(getString(R.string.action_delete_contact))
+                        .setMessage(JidDialog.style(this, R.string.remove_contact_text, contact.getJid().toEscapedString()))
+                        .setPositiveButton(getString(R.string.delete), removeFromRoster).create().show();
             });
             binding.detailsSendPresence.setOnCheckedChangeListener(null);
             binding.detailsReceivePresence.setOnCheckedChangeListener(null);
@@ -570,7 +574,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
         if (Config.supportOmemo() && axolotlService != null) {
             final Collection<XmppAxolotlSession> sessions = axolotlService.findSessionsForContact(contact);
             boolean anyActive = false;
-            for(XmppAxolotlSession session : sessions) {
+            for (XmppAxolotlSession session : sessions) {
                 anyActive = session.getTrust().isActive();
                 if (anyActive) {
                     break;
