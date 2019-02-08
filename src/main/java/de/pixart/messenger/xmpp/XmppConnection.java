@@ -1327,8 +1327,7 @@ public class XmppConnection implements Runnable {
                             final String node = element.getAttribute("node");
                             if (node.equals("invite")) {
                                 features.adhocinvite = true;
-                                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": query disco commands of " + server + " was successful");
-                                getAdHocInviteUrl(server);
+                                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": query disco commands of " + server + " was successful for node " + node);
                             }
                         }
                     }
@@ -1345,7 +1344,7 @@ public class XmppConnection implements Runnable {
         });
     }
 
-    private void getAdHocInviteUrl(final Jid server) {
+    public void getAdHocInviteUrl(final Jid server) {
         IqPacket iqPacket = new IqPacket(IqPacket.TYPE.SET);
         iqPacket.setTo(Jid.ofDomain(server.getDomain()));
         iqPacket.setFrom(Jid.of(account.getJid().asBareJid()));

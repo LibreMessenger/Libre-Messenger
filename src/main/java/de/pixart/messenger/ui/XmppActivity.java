@@ -63,6 +63,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -964,12 +965,11 @@ public abstract class XmppActivity extends ActionBarActivity {
             Account mAccount = xmppConnectionService.getAccounts().get(0);
             String user = Jid.of(mAccount.getJid()).getLocal();
             String domain = Jid.of(mAccount.getJid()).getDomain();
-            String inviteURL = Config.inviteUserURL + user + "/" + domain;
-            XmppConnection.Features features = mAccount.getXmppConnection().getFeatures();
-            final boolean adhoclink = features.adhocinvite;
-            if (adhoclink) {
-                inviteURL = features.adhocinviteURI;
+            String inviteURL = AdHocInviteUri(mAccount);
+            if (inviteURL == null) {
+                inviteURL = Config.inviteUserURL + user + "/" + domain;
             }
+            Log.d(Config.LOGTAG, "Invite uri = " + inviteURL);
             String inviteText = getString(R.string.InviteText, user);
             Intent intent = new Intent(android.content.Intent.ACTION_SEND);
             intent.setType("text/plain");
@@ -1000,12 +1000,11 @@ public abstract class XmppActivity extends ActionBarActivity {
                         Account mAccount = xmppConnectionService.findAccountByJid(Jid.of(selection).asBareJid());
                         String user = Jid.of(selection).getLocal();
                         String domain = Jid.of(selection).getDomain();
-                        String inviteURL = Config.inviteUserURL + user + "/" + domain;
-                        XmppConnection.Features features = mAccount.getXmppConnection().getFeatures();
-                        final boolean adhoclink = features.adhocinvite;
-                        if (adhoclink) {
-                            inviteURL = features.adhocinviteURI;
+                        String inviteURL = AdHocInviteUri(mAccount);
+                        if (inviteURL == null) {
+                            inviteURL = Config.inviteUserURL + user + "/" + domain;
                         }
+                        Log.d(Config.LOGTAG, "Invite uri = " + inviteURL);
                         String inviteText = getString(R.string.InviteText, user);
                         Intent intent = new Intent(Intent.ACTION_SEND);
                         intent.setType("text/plain");
@@ -1017,6 +1016,32 @@ public abstract class XmppActivity extends ActionBarActivity {
             builder.setNegativeButton(R.string.cancel, null);
             builder.create().show();
         }
+    }
+
+    private boolean AdHocInvite(Account account) {
+        XmppConnection.Features features = account.getXmppConnection().getFeatures();
+        Log.d(Config.LOGTAG, "Invite available: " + features.adhocinvite);
+        return features.adhocinvite;
+    }
+
+    private String AdHocInviteUri(Account account) {
+        if (AdHocInvite(account)) {
+            int counter = 0;
+            XmppConnection.Features features = account.getXmppConnection().getFeatures();
+            account.getXmppConnection().getAdHocInviteUrl(Jid.ofDomain(account.getJid().getDomain()));
+            while (features.adhocinviteURI == null && counter <= 10) {
+                try {
+                    Thread.sleep(500);
+                } catch(InterruptedException e) {
+                    // Process exception
+                }
+                counter++;
+            }
+            String uri = features.adhocinviteURI;
+            features.adhocinviteURI = null;
+            return uri;
+        }
+        return null;
     }
 
     private void createIssue() {
