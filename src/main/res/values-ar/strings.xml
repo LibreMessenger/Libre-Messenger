@@ -69,11 +69,8 @@
     <string name="add_contact">إضافة مُراسِل</string>
     <string name="send_failed">فشل التسليم</string>
     <string name="preparing_image">جارٍ تهيئة الصورة للإرسال</string>
-    <string name="preparing_images">جارٍ تهيئة الصور للإرسال</string>
-    <string name="sharing_files_please_wait">مشاركة الملفات جارية. يُرجى الانتظار…</string>
     <string name="action_clear_history">مسح السجلّ</string>
     <string name="clear_conversation_history">محو سجلّ المحادثة</string>
-    <string name="delete_messages">حذف الرسائل</string>
     <string name="choose_presence">اختر الجهاز</string>
     <string name="send_unencrypted_message">ارسل رسالة غير مشفّرة</string>
     <string name="send_message_to_x">إرسال رسالة إلى %s</string>
@@ -83,7 +80,6 @@
     <string name="openkeychain_required">OpenKeychain</string>
     <string name="restart">إعادة التشغيل</string>
     <string name="install">تثبيت</string>
-    <string name="openkeychain_not_installed">يُرجى تثبيت OpenKeychain</string>
     <string name="waiting">في الانتظار…</string>
     <string name="no_pgp_key">تم يتم العثور على أي مفتاح OpenPGP</string>
     <string name="no_pgp_keys">تم يتم العثور على أية مفاتيح OpenPGP</string>
@@ -107,7 +103,6 @@
     <string name="receive_presence_updates">استلم تحديثات حالة الحضور</string>
     <string name="ask_for_presence_updates">أطلب تحديثات حالة الحضور</string>
     <string name="attach_choose_picture">اختر صورة</string>
-    <string name="attach_take_from_camera">صورة من الكاميرا</string>
     <string name="error_not_an_image_file">إنّ الملف الذي قمت باختياره ليس صورة</string>
     <string name="error_compressing_image">خطأ أثناء تحويل ملف الصورة</string>
     <string name="error_file_not_found">لم يتم العثور على الملف</string>
@@ -137,11 +132,8 @@
     <string name="mgmt_account_are_you_sure">هل أنت متأكد؟</string>
     <string name="attach_record_voice">تسجيل مقطع صوتي</string>
     <string name="account_settings_jabber_id">حساب جابر</string>
-    <string name="account_settings_password">الكلمة السرية</string>
     <string name="account_settings_example_jabber_id">username@pix-art.de</string>
     <string name="password">الكلمة السرية</string>
-    <string name="confirm_password">تأكيد كلمة السر</string>
-    <string name="passwords_do_not_match">كلمتا المرور غير متطابقتين</string>
     <string name="server_info_show_more">معلومات الخادم</string>
     <string name="server_info_available">نعم</string>
     <string name="server_info_unavailable">لا</string>
@@ -162,9 +154,7 @@
     <string name="done">تم</string>
     <string name="verify">تحقق</string>
     <string name="decrypt">فك التشفير</string>
-    <string name="conferences">المحادثاث الجماعية</string>
     <string name="search">بحث</string>
-    <string name="create_contact">انشاء مُراسِل</string>
     <string name="enter_contact">أدخل مراسلا</string>
     <string name="join_public_channel">الالتحاق بفريق المحادثة</string>
     <string name="delete_contact">حذف المراسِل</string>
@@ -174,11 +164,9 @@
     <string name="create">إنشاء</string>
     <string name="select">اختيار</string>
     <string name="join">الانضمام</string>
-    <string name="conference_address">عنوان فريق المحادثة</string>
     <string name="channel_full_jid_example">groupchat@room.pix-art.de</string>
     <string name="save_as_bookmark">أضفه كفاصلة مرجعية</string>
     <string name="delete_bookmark">حذف الفاصلة المرجعية</string>
-    <string name="action_edit_subject">تعديل موضوع فريق المحادثة</string>
     <string name="topic">الموضوع</string>
     <string name="joining_conference">جارٍ الانضمام إلى فريق المحادثة…</string>
     <string name="leave">المغادرة</string>
@@ -268,9 +256,7 @@
     <string name="grant_admin_privileges">منح صلاحيات المُشرِف</string>
     <string name="remove_admin_privileges">الغاء صلاحيات المُشرِف</string>
     <string name="conference_options">خيارات المحادثة الجماعية</string>
-    <string name="members_only">خاص بالأعضاء المنتمين إليه فقط</string>
     <string name="non_anonymous">غير مجهول</string>
-    <string name="moderated">تحت الإشراف</string>
     <string name="never">أبدًا</string>
     <string name="pref_display_enter_key">أظهر زر الإدخال</string>
     <string name="video">فيديو</string>
@@ -334,7 +320,6 @@
     <string name="no">لا</string>
     <string name="no_accounts">(ليس هناك أي حساب نشط)</string>
     <string name="this_field_is_required">هذة الخانة ضرورية</string>
-    <string name="no_participants">لا يوجد أي مشارك</string>
     <string name="correct_message">تصحيح الرسالة</string>
     <string name="send_corrected_message">أرسل الرسالة المصححة</string>
     <string name="this_account_is_disabled">لقد قمت بتعطيل هذا الحساب</string>
@@ -357,7 +342,6 @@
     <string name="show_password">إظهار الكلمة السرية</string>
     <string name="registration_password_too_weak">فشلت عملية إنشاء الحساب: إنّ الكلمة السرية ضعيفة</string>
     <string name="create_private_group_chat">انشاء محادثة جماعية</string>
-    <string name="conference_subject">الموضوع</string>
     <string name="choose_participants">اختر المشاركين</string>
     <string name="creating_conference">عملية انشاء فريق المحادثة جارية…</string>
     <string name="import_text">إنّ جهازك يحتوي على نسخة احتياطية يمكنك استيرادها.\nسوف يتم إعادة تشغيل تطبيقك بعد عملية الإسترجاع. هل تريد استعادة تلك النسخة الإحتياطية؟ </string>
@@ -365,8 +349,6 @@
     <string name="invite_again">إعادة دعوته مجددا</string>
     <string name="inviteUser_Subject">قام بدعوتك عبر</string>
     <string name="invite_user">الدعوة إلى بيكس آرت ماسنجر</string>
-    <string name="import_canceled">تم إلغاء الاستيراد</string>
-    <string name="Password_wrong">الكلمة السرية خاطئة، أعد المحاولة</string>
     <string name="please_wait">يُرجى الانتظار…</string>
     <string name="me">أنا</string>
     <string name="allow">سماح</string>
@@ -391,7 +373,6 @@
     <string name="show_inactive_devices">إظهار الخاملين</string>
     <string name="hide_inactive_devices">إخفاء الخاملين</string>
     <string name="reply">رد</string>
-    <string name="encrypting_message">تشفير الرسالة</string>
     <string name="transcoding_video">جارٍ ضغط الفيديو</string>
     <string name="today">اليوم</string>
     <string name="pref_use_max_brightness">أقصى سطوع للشاشة</string>
@@ -423,7 +404,6 @@
     <string name="pref_warn_unencrypted_chat">التنبيه إن كانت المحادثة غير مشفّرة</string>
     <string name="invalid_muc_nick">الاسم المستعار غير صالح</string>
     <string name="title_activity_share_via_account">شاركه عبر حساب</string>
-    <string name="private_messages_are_disabled">تم تعطيل الرسائل الخاصة</string>
     <string name="destroy_muc">حذف المحادثة الجماعية</string>
     <string name="conference_unknown_error">أنت لم تعد مِن ضمن فريق المحادثة هذا</string>
     <string name="snooze">غفوة</string>
@@ -471,7 +451,6 @@
     <string name="delete_message">حذف الرسالة</string>
     <string name="conference_destroyed">لقد تم تدمير هذه المحادثة الجماعية</string>
     <string name="welcome_server_info">ننصح باستخدام blabber.im كمزوّد الخدمة الخاص بك.</string>
-    <string name="phone_book">دفتر العناوين</string>
     <string name="unable_to_save_recording">لا يمكن الاحتفاظ بالتسجيل</string>
     <string name="foreground_service_channel_name">الخدمة الأمامية</string>
     <string name="error_channel_name">مشاكل الاتصال</string>
@@ -486,7 +465,6 @@
     <string name="view_media">عرض الوسائط</string>
     <string name="media_browser">مستعرض الوسائط</string>
     <string name="action_open">افتح</string>
-    <string name="action_delete">حذف</string>
     <string name="delete_file_dialog">احذف الملف</string>
     <string name="cancelled">ملغى</string>
     <string name="remote_server_timeout">انتهت مدة الاتصال مع الخادم عند بُعد</string>
@@ -506,7 +484,5 @@
     <string name="restore">إستعادة</string>
     <string name="unable_to_restore_backup">تعذرت عملية استعادة النسخة الاحتياطية.</string>
     <string name="view_users">عرض الأعضاء</string>
-    <string name="join_group_chat">الالتحاق بفريق المحادثة</string>
-    <string name="create_group_chat">انشاء محادثة جماعية</string>
     <string name="message_deleted">تم حذف الرسالة</string>
 </resources>

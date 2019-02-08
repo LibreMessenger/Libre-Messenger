@@ -68,11 +68,8 @@
     <string name="add_contact">Contact toevoegen</string>
     <string name="send_failed">afleveren mislukt</string>
     <string name="preparing_image">Bezig met voorbereiden van versturen van afbeelding</string>
-    <string name="preparing_images">Bezig met voorbereiden van versturen van afbeeldingen</string>
-    <string name="sharing_files_please_wait">Bestanden delen. Even geduld…</string>
     <string name="action_clear_history">Geschiedenis wissen</string>
     <string name="clear_conversation_history">Gespreksgeschiedenis wissen</string>
-    <string name="delete_messages">Berichten verwijderen</string>
     <string name="also_end_conversation">Dit gesprek na afloop beëindigen</string>
     <string name="choose_presence">Apparaat kiezen</string>
     <string name="send_unencrypted_message">Verstuur onversleuteld bericht</string>
@@ -88,7 +85,6 @@
     <string name="openkeychain_required_long">Pix-Art Messenger gebruikt een derde partij app genaamd <b>OpenKeychain</b> om berichten te versleutelen en ontsleutelen, en om publieke sleutels te beheren.\n\nOpenKeychain is beschikbaar onder de GPLv3 en beschikbaar op F-Droid en Google Play.\n\n<small>(Herstart Pix-Art Messenger na installatie.)</small></string>
     <string name="restart">Herstarten</string>
     <string name="install">Installeren</string>
-    <string name="openkeychain_not_installed">Gelieve OpenKeychain te installeren</string>
     <string name="offering">bezig met aanbieden…</string>
     <string name="waiting">wachten…</string>
     <string name="no_pgp_key">Geen OpenPGP-sleutel gevonden</string>
@@ -150,7 +146,6 @@
     <string name="mgmt_account_delete_confirm_text">Als je je account verwijdert, wordt je volledige gespreksgeschiedenis gewist</string>
     <string name="attach_record_voice">Stem opnemen</string>
     <string name="account_settings_jabber_id">Jabber-ID:</string>
-    <string name="account_settings_password">Wachtwoord:</string>
     <string name="account_settings_example_jabber_id">gebruikersnaam@voorbeeld.nl</string>
     <string name="password">Wachtwoord</string>
     <string name="invalid_jid">Dit is geen geldige Jabber-ID</string>
@@ -191,9 +186,7 @@
     <string name="done">Klaar</string>
     <string name="verify">Verifiëren</string>
     <string name="decrypt">Ontsleutelen</string>
-    <string name="conferences">Groepsgesprekken</string>
     <string name="search">Zoeken</string>
-    <string name="create_contact">Contact aanmaken</string>
     <string name="enter_contact">Contact invoeren</string>
     <string name="join_public_channel">Deelnemen aan groepsgesprek</string>
     <string name="delete_contact">Contact verwijderen</string>
@@ -204,12 +197,10 @@
     <string name="select">Selecteren</string>
     <string name="contact_already_exists">Het contact bestaat al</string>
     <string name="join">Deelnemen</string>
-    <string name="conference_address">Gespreksadres</string>
     <string name="channel_full_jid_example">ruimte@groepsgesprek.voorbeeld.be/naam</string>
     <string name="save_as_bookmark">Opslaan als bladwijzer</string>
     <string name="delete_bookmark">Bladwijzer verwijderen</string>
     <string name="bookmark_already_exists">Deze bladwijzer bestaat al</string>
-    <string name="action_edit_subject">Gespreksonderwerp bewerken</string>
     <string name="joining_conference">Deelnemen aan groepsgesprek…</string>
     <string name="leave">Verlaten</string>
     <string name="contact_added_you">Contact heeft je toegevoegd aan zijn/haar contacten</string>
@@ -347,13 +338,8 @@
     <string name="ban_from_conference">Verbannen uit groepsgesprek</string>
     <string name="removing_from_public_conference">Je probeert %s te verwijderen uit een publiek groepsgesprek. De enige manier om dat te doen is door hem/haar voorgoed te verbannen.</string>
     <string name="ban_now">Nu verbannen</string>
-    <string name="could_not_change_role">Kon rol van %s niet wijzigen</string>
-    <string name="public_conference">Openbaar groepsgesprek</string>
-    <string name="private_conference">Privé groepsgesprek, enkel toegankelijk voor leden</string>
     <string name="conference_options">Gespreksopties</string>
-    <string name="members_only">Privé, enkel leden</string>
     <string name="non_anonymous">Niet anoniem</string>
-    <string name="moderated">Gemodereerd</string>
     <string name="you_are_not_participating">Je neemt geen deel</string>
     <string name="modified_conference_options">Gespreksopties aangepast!</string>
     <string name="could_not_modify_conference_options">Kon gespreksopties niet aanpassen</string>
@@ -442,11 +428,7 @@
         <item quantity="other">%d berichten</item>
     </plurals>
     <string name="load_more_messages">Laad meer berichten</string>
-    <string name="shared_file_with_x">Bestand gedeeld met %s</string>
-    <string name="shared_image_with_x">Afbeelding gedeeld met %s</string>
     <string name="no_storage_permission">Pix-Art Messenger heeft toegang nodig tot de externe opslag</string>
-    <string name="shared_images_with_x">Afbeeldingen gedeeld met %s</string>
-    <string name="shared_text_with_x">Tekst gedeeld met %s</string>
     <string name="sync_with_contacts">Synchroniseer met contacten</string>
     <string name="sync_with_contacts_long">Pix-Art Messenger wil je XMPP-contacten met je systeemcontacten vergelijken om hun volledige namen en avatars te tonen.\n\nPix-Art Messenger zal je contacten enkel lokaal lezen en vergelijken zonder ze te uploaden naar je server.\n\nJe zal nu gevraagd worden Pix-Art Messenger toegang te verlenen tot je contacten.</string>
     <string name="notify_on_all_messages">Melding bij alle berichten</string>
@@ -460,14 +442,12 @@
     <string name="battery_optimizations_enabled_explained">Je apparaat voert sterke batterij-optimalisaties uit op Pix-Art Messenger, die kunnen leiden tot vertraagde meldingen of zelfs verlies van berichten.\nHet is aangeraden deze optimalisaties uit te schakelen.</string>
     <string name="battery_optimizations_enabled_dialog">Je apparaat voert sterke batterij-optimalisaties uit op Pix-Art Messenger, die kunnen leiden tot vertraagde meldingen of zelfs verlies van berichten.\n\nJe zal nu gevraagd worden deze optimalisaties uit te schakelen.</string>
     <string name="disable">Uitschakelen</string>
-    <string name="selection_too_large">Het gekozen vlak is te groot</string>
     <string name="no_accounts">(Geen actieve accounts)</string>
     <string name="this_field_is_required">Dit veld is vereist</string>
     <string name="correct_message">Bericht corrigeren</string>
     <string name="send_corrected_message">Gecorrigeerd bericht versturen</string>
     <string name="no_keys_just_confirm">Je vertrouwt dit contact al. Door \'klaar\' te kiezen bevestig je enkel dat %s deel uitmaakt van dit groepsgesprek.</string>
     <string name="this_account_is_disabled">Je hebt deze account uitgeschakeld</string>
-    <string name="security_error_invalid_file_access">Beveiligingsfout: Ongeldige bestandstoegang</string>
     <string name="no_application_to_share_uri">Geen applicatie om URI te delen</string>
     <string name="share_uri_with">URI delen met…</string>
     <string name="your_full_jid_will_be">Je volledige Jabber-ID zal %s zijn</string>
@@ -485,7 +465,6 @@
     <string name="registration_please_wait">Registratie mislukt: probeer later opnieuw</string>
     <string name="registration_password_too_weak">Registratie mislukt: wachtwoord te zwak</string>
     <string name="create_private_group_chat">Groepsgesprek aanmaken</string>
-    <string name="conference_subject">Onderwerp</string>
     <string name="choose_participants">Kies deelnemers</string>
     <string name="creating_conference">Groepsgesprek aanmaken…</string>
     <string name="invite_again">Opnieuw uitnodigen</string>
@@ -530,7 +509,6 @@
     <string name="i_followed_this_link_from_a_trusted_source">Ik heb deze link gevolgd vanuit een betrouwbare bron</string>
     <string name="verifying_omemo_keys_trusted_source">Je staat op het punt de OMEMO-sleutels van %1$s te verifiëren door op een link te klikken. Dit is enkel veilig als je de link van een betrouwbare bron hebt gevolgd, waarbij enkel %2$s de link gepubliceerd kan hebben.</string>
     <string name="verify_omemo_keys">OMEMO-sleutels verifiëren</string>
-    <string name="encrypting_message">Bericht wordt versleuteld</string>
     <string name="transcoding_video">Video wordt gecomprimeerd</string>
     <string name="not_fetching_history_retention_period">Berichten worden niet opgehaald wegens lokale bewaarperiode.</string>
     <string name="today">Vandaag</string>

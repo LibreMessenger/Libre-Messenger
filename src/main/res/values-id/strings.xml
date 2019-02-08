@@ -70,11 +70,8 @@
     <string name="add_contact">Tambah kontak</string>
     <string name="send_failed">pengiriman gagal</string>
     <string name="preparing_image">Menyiapkan gambar untuk pengiriman</string>
-    <string name="preparing_images">Menyiapkan banyak gambar untuk pengiriman</string>
-    <string name="sharing_files_please_wait">Berbagi berkas. Mohon tunggu…</string>
     <string name="action_clear_history">Hapus riwayat</string>
     <string name="clear_conversation_history">Hapus Riwayat Percakapan</string>
-    <string name="delete_messages">Hapus pesan</string>
     <string name="also_end_conversation">Akhiri pembicaraan setelahnya</string>
     <string name="choose_presence">Pilih perangkat</string>
     <string name="send_unencrypted_message">Kirim pesan tidak terenkripsi</string>
@@ -90,7 +87,6 @@
     <string name="openkeychain_required_long">Pix-Art Messenger menggunakan aplikasi pihak ketiga yang disebut <b>OpenKeychain</b> untuk mengenkripsi dan mendekripsi pesan dan mengelola kunci publik anda.\n\nOpenKeychain memiliki lisensi di bawah GPLv3 dan tersedia di F-Droid dan Google Play.\n\n<small>(Silahkan muat ulang Pix-Art Messenger setelahnya.)</small></string>
     <string name="restart">Muat ulang</string>
     <string name="install">Pasang</string>
-    <string name="openkeychain_not_installed">Silahkan pasang OpenKeychain</string>
     <string name="offering">penawaran…</string>
     <string name="waiting">menunggu…</string>
     <string name="no_pgp_key">Tidak ada kunci OpenPGP yang ditemukan</string>
@@ -124,7 +120,6 @@
     <string name="receive_presence_updates">Terkirim pembaruan terbaru</string>
     <string name="ask_for_presence_updates">Mintalah pembaruan terbaru</string>
     <string name="attach_choose_picture">Pilih gambar</string>
-    <string name="attach_take_from_camera">Mengambil dari kamera</string>
     <string name="preemptively_grant">Secara beraturan memberikan permintaan berlangganan</string>
     <string name="error_not_an_image_file">Berkas yang anda pilih bukan gambar</string>
     <string name="error_compressing_image">Kesalahan saat mengubah berkas gambar</string>
@@ -161,11 +156,8 @@
     <string name="mgmt_account_delete_confirm_text">Jika anda menghapus akun anda, semua riwayat percakapan anda akan hilang</string>
     <string name="attach_record_voice">Rekam suara</string>
     <string name="account_settings_jabber_id">Obrolan-Data diri</string>
-    <string name="account_settings_password">Kata sandi</string>
     <string name="account_settings_example_jabber_id">nama pengguna@pix-art.de</string>
     <string name="password">Kata sandi</string>
-    <string name="confirm_password">Konfirmasi sandi</string>
-    <string name="passwords_do_not_match">Kata sandi tidak cocok</string>
     <string name="invalid_jid">Ini bukan ID Jabber yang sah</string>
     <string name="error_out_of_memory">Kehabisan ruang penyimpanan. Gambar terlalu besar</string>
     <string name="add_phone_book_text">Apakah anda ingin menambahkannya%s ke buku alamat anda?</string>
@@ -204,9 +196,7 @@
     <string name="done">Selesai</string>
     <string name="verify">Memeriksa</string>
     <string name="decrypt">Terdeskripsi</string>
-    <string name="conferences">Obrolan kelompok</string>
     <string name="search">Pencarian</string>
-    <string name="create_contact">Buat kontak</string>
     <string name="enter_contact">Masukkan kontak</string>
     <string name="join_public_channel">Gabung kelompok obrolan</string>
     <string name="delete_contact">Menghapus kontak</string>
@@ -217,12 +207,10 @@
     <string name="select">Pilih</string>
     <string name="contact_already_exists">Kontak sudah uda</string>
     <string name="join">Gabung</string>
-    <string name="conference_address">Alamat obrolan kelompok</string>
     <string name="channel_full_jid_example">obrolankelompok@room.pix-art.de</string>
     <string name="save_as_bookmark">Simpan sebagai penanda</string>
     <string name="delete_bookmark">Hapus penanda</string>
     <string name="bookmark_already_exists">Penanda ini sudah ada</string>
-    <string name="action_edit_subject">Ubah subjek obrolan kelompok</string>
     <string name="joining_conference">Bergabung dengan kelompok obrolan…</string>
     <string name="leave">Meninggalkan</string>
     <string name="contact_added_you">Menambahkan kontak anda kedaftar kontak</string>
@@ -363,13 +351,8 @@
     <string name="ban_from_conference">Larangan dari obrolan berkelompok</string>
     <string name="removing_from_public_conference">Anda mencoba menghapusnya s %s dari obrolan kelompok terbuka. Satu-satunya cara untuk melakukannya adalah dengan melarang pengguna itu selamanya.</string>
     <string name="ban_now">Larang sekarang</string>
-    <string name="could_not_change_role">Tidak dapat mengganti peran %s</string>
-    <string name="public_conference">Obrolan kelompok yang dapat diakses publik</string>
-    <string name="private_conference">Tertutup, obrolan kelompok hanya untuk anggota</string>
     <string name="conference_options">Pilihan obrolan kelompok</string>
-    <string name="members_only">Tertutup, anggota saja</string>
     <string name="non_anonymous">Tidak anonim</string>
-    <string name="moderated">Penengah</string>
     <string name="you_are_not_participating">Kamu tidak mengambil bagian</string>
     <string name="modified_conference_options">Mengubah pilihan obrolan kelompok!</string>
     <string name="could_not_modify_conference_options">Tidak dapat mengubah pilihan obrolan kelompok</string>
@@ -466,11 +449,7 @@
         <item quantity="other">%d pesan</item>
     </plurals>
     <string name="load_more_messages">Muat lebih banyak pesan</string>
-    <string name="shared_file_with_x">Berbagi berkas dengan %s</string>
-    <string name="shared_image_with_x">Berbagi gambar dengan %s</string>
     <string name="no_storage_permission">Pix-Art Messenger membutuhkan akses ke penyimpanan eksternal</string>
-    <string name="shared_images_with_x">Berbagi gambar dengan %s</string>
-    <string name="shared_text_with_x">Berbagi teks dengan %s</string>
     <string name="sync_with_contacts">Sesuaikan dengan kontak</string>
     <string name="sync_with_contacts_long">Pix-Art Messenger ingin mencocokkan daftar XMPP anda dengan kontak anda untuk menunjukkan nama lengkap dan avatar mereka.\n\nPix-Art Messenger hanya akan membaca kontak anda dan mencocokkannya secara lokal tanpa mengunggahnya ke server anda.\n\nAnda sekarang diminta izin untuk mengakses kontak anda.</string>
     <string name="notify_on_all_messages">Hidupkan pemberitahuan untuk semua pesan</string>
@@ -491,19 +470,16 @@
     <string name="install_from_unknown_sources_disabled">Memasang dari sumber yang tidak dikenal dimatikan</string>
     <string name="install_from_unknown_sources_disabled_dialog">Perangkat anda diatur untuk tidak mengizinkan pemasangan aplikasi dari sumber yang tidak dipercaya kecuali dari Google PlayStore. Hal ini akan menyebabkan masalah pada pembaruan aplikasi.\n\nAnda sekarang akan diminta untuk mengizinkan pemasangan aplikasi dari sumber yang tidak dipercaya.</string>
     <string name="disable">Menonaktifkan</string>
-    <string name="selection_too_large">Area yang dipilih terlalu besar</string>
     <string name="cancel_update">Batalkan pembaruan?</string>
     <string name="yes">Ya</string>
     <string name="no">Tidak</string>
     <string name="no_accounts">(Tidak ada akun yang diaktifkan)</string>
     <string name="this_field_is_required">Bagian ini diperlukan</string>
-    <string name="no_participants">Tidak ada peserta</string>
     <string name="correct_message">Memeriksa pesan</string>
     <string name="send_corrected_message">Kirim pesan yang dikoreksi</string>
     <string name="no_keys_just_confirm">Anda sudah mempercayai kontak ini. Dengan memilih \'selesai\' anda telah memastikan bahwa %s anda adalah bagian dari obrolan kelompok ini.</string>
     <string name="contacts_have_no_pgp_keys">Pix-Art Messenger tidak dapat mengenkripsi pesan anda karena kontak tidak menampilkan kunci publik mereka.\n\n</string>
     <string name="this_account_is_disabled">Anda telah menonaktifkan akun ini</string>
-    <string name="security_error_invalid_file_access">Kesalahan keamanan: Akses berkas tidak sah</string>
     <string name="no_application_to_share_uri">Tidak ada aplikasi yang ditemukan untuk berbagi URI</string>
     <string name="share_uri_with">Bagikan URI dengan…</string>
     <string name="mgmt_account_reconnect">Sambung kembali</string>
@@ -529,7 +505,6 @@
     <string name="registration_please_wait">Pendaftaran gagal: Coba lagi nanti</string>
     <string name="registration_password_too_weak">Pendaftaran gagal: Kata sandi terlalu lemah</string>
     <string name="create_private_group_chat">Buat obrolan kelompok</string>
-    <string name="conference_subject">Perihal</string>
     <string name="choose_participants">Pilih peserta</string>
     <string name="creating_conference">Membuat obrolan kelompok…</string>
     <string name="import_database">Impor cadangan</string>
@@ -542,11 +517,7 @@
     <string name="request_permissions_message">Pix-Art Messenger akan meminta Anda mengizinkan beberapa izin. Penting bahwa Anda mengizinkan semua hak akses ini untuk menggunakan semua fitur messenger ini. Jika Anda menolak izin ini, aplikasi akan menutup dengan sendiri.</string>
     <string name="request_permissions_message_again">Anda telah menolak beberapa atau semua izin yang dibutuhkan untuk Pix-Art Messenger. Apakah Anda ingin beralih ke pengaturan dan mengizinkan izin ini? Jika Anda menolak semua izin ini, aplikasi akan menutup dengan sendiri.</string>
     <string name="unable_to_connect_to_keychain">Tidak dapat terhubung ke OpenKeychain</string>
-    <string name="send_image">Kirim gambar?</string>
     <string name="this_device_is_no_longer_in_use">Perangkat ini tidak lagi digunakan</string>
-    <string name="import_canceled">Impor dibatalkan</string>
-    <string name="Import_failed">Gagal memasukkan penyimpanan data, masukan tidak mungkin dilakukan</string>
-    <string name="Password_wrong">Kata sandi salah, coba lagi</string>
     <string name="please_wait">Harap tunggu…</string>
     <string name="pref_export_plain_text_logs_summary">Aktifkan ekspor catatan obrolan sebagai berkas teks yang mudah dibaca</string>
     <string name="pref_export_plain_text_logs">Ekspor catatan obrolan yang dapat dibaca</string>
@@ -574,7 +545,6 @@
     <string name="data_saver_enabled">Penghemat data diaktifkan</string>
     <string name="data_saver_enabled_explained">Sistem operasi Anda membatasi Pix-Art Messenger untuk mengakses Internet saat berada di latar belakang. Untuk menerima notifikasi pesan baru, Anda harus mengizinkan akses Pix-Art Messenger tidak terbatas saat hemat data aktif. \\n Pix-Art Messenger masih akan berusaha untuk menyimpan data bila memungkinkan.</string>
     <string name="device_does_not_support_data_saver">Perangkat Anda tidak mendukung penonaktifan hemat data untuk Pix-Art Messenger.</string>
-    <string name="navigate">Arahkan ke lokasi</string>
     <string name="add_to_contact_list">Tambahkan ke daftar kontak</string>
     <string name="contact">Kontak</string>
     <string name="unable_to_start_recording">Tidak dapat mulai merekam</string>
@@ -593,7 +563,6 @@
     <string name="verifying_omemo_keys_trusted_source">Anda akan memverifikasi kunci OMEMO dari %1$s setelah mengeklik tautan. Ini hanya aman jika Anda mengikuti tautan ini dari sumber terpercaya yang hanya memiliki %2$s yang bisa menerbitkan tautan ini.</string>
     <string name="verify_omemo_keys">Memeriksa OMEMO dengan sidik jari</string>
     <string name="reply">Balas</string>
-    <string name="encrypting_message">Enkripsi pesan</string>
     <string name="transcoding_video">Pemampatan video</string>
     <string name="not_fetching_history_retention_period">Tidak mengambil pesan karena periode penyimpanan lokal.</string>
     <string name="today">Hari ini</string>
@@ -658,7 +627,6 @@
     <string name="pref_use_bundled_emoji_summary">Gunakan perpustakaan emoji yang terintegrasi daripada menggunakan perangkat Anda. Perubahan akan tersedia setelah membuka kembali aplikasi.</string>
     <string name="invalid_muc_nick">Nama panggilan tidak sah</string>
     <string name="title_activity_share_via_account">Bagikan melalui akun</string>
-    <string name="private_messages_are_disabled">Pesan pribadi dimatikan</string>
     <string name="destroy_muc">Menghilangkan obrolan kelompok</string>
     <string name="conference_unknown_error">Anda tidak lagi di obrolan grup ini</string>
     <string name="destroy_muc_text">Apakah anda ingin menghilangkan obrolan kelompok %s? Tindakan ini akan menghapus obrolan kelompok secara permanen.</string>

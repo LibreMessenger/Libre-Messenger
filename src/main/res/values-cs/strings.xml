@@ -65,11 +65,8 @@
     <string name="add_contact">Přidat kontakt</string>
     <string name="send_failed">doručení selhalo</string>
     <string name="preparing_image">Připravuji obrázek na přenos</string>
-    <string name="preparing_images">Příprava obrázků pro přenos</string>
-    <string name="sharing_files_please_wait">Sdílení souborů. Chvíli strpení...</string>
     <string name="action_clear_history">Smazat historii</string>
     <string name="clear_conversation_history">Smaže historii konverzací</string>
-    <string name="delete_messages">Smazat zprávy</string>
     <string name="also_end_conversation">Poté ukončit tuto konverzaci</string>
     <string name="choose_presence">Vybrat přístroj</string>
     <string name="send_unencrypted_message">Odeslat nešifrovanou zprávu</string>
@@ -85,7 +82,6 @@
     <string name="openkeychain_required_long">Konverzace využívá aplikaci třetí strany, <b>OpenKeychain</b>, k šifrování a dešifrování zpráv a ke správě veřejných klíčů.\n\nOpenKeychain je licencován pod GPLv3 a dostupný na F-Droid a Google Play.\n\n<small>(Po instalaci prosím restartujte aplikaci Konverzace.)</small></string>
     <string name="restart">Restartovat</string>
     <string name="install">Instalovat</string>
-    <string name="openkeychain_not_installed">Nainstalujte prosím OpenKeychain</string>
     <string name="offering">nabízí…</string>
     <string name="waiting">čekám…</string>
     <string name="no_pgp_key">Nebyl nalezen žádný OpenPGP klíč</string>
@@ -142,7 +138,6 @@
     <string name="mgmt_account_are_you_sure">Jste si jisti?</string>
     <string name="attach_record_voice">Nahrát hlas</string>
     <string name="account_settings_jabber_id">Jabber ID</string>
-    <string name="account_settings_password">Heslo</string>
     <string name="account_settings_example_jabber_id">jmeno@server.cz</string>
     <string name="password">Heslo</string>
     <string name="invalid_jid">Toto není platné Jabber ID</string>
@@ -318,10 +313,7 @@
     <string name="remove_admin_privileges">Odebrat administrátorská oprávnění</string>
     <string name="could_not_change_affiliation">Nelze změnit připojení uživatele %s</string>
     <string name="ban_now">Vypovědět</string>
-    <string name="could_not_change_role">Nelze změnit roli uživatele %s</string>
-    <string name="members_only">Soukromé, pouze pro členy</string>
     <string name="non_anonymous">Neanonymní</string>
-    <string name="moderated">Moderováno</string>
     <string name="you_are_not_participating">Neúčastníte se</string>
     <string name="never">Nikdy</string>
     <string name="until_further_notice">Než opět změním</string>
@@ -396,11 +388,7 @@
     <string name="not_valid_hostname">Toto není platné hostname</string>
     <string name="connected_accounts">%1$d z %2$d účtů připojeno</string>
     <string name="load_more_messages">Načíst více zpráv</string>
-    <string name="shared_file_with_x">Soubor sdílen s %s</string>
-    <string name="shared_image_with_x">Obrázek sdílen s %s</string>
     <string name="no_storage_permission">Pix-Art Messenger vyžaduje přístup k externímu úložišti</string>
-    <string name="shared_images_with_x">Obrázky sdíleny s %s</string>
-    <string name="shared_text_with_x">Text sdílen s %s</string>
     <string name="sync_with_contacts">Synchronizovat s kontakty</string>
     <string name="sync_with_contacts_long">Aplikace Pix-Art Messenger by ráda porovnala svůj XMPP seznam s vašimi kontakty, aby mohla zobrazit plná jména a avatary.\n\nPix-Art Messenger načte a porovná kontakty pouze lokálně, bez jejich nahrávání na server.\n\nNyní budete dotázáni na udělení práv pro přístup k seznamu kontaktů.</string>
     <string name="notify_on_all_messages">Upozorňovat na všechny zprávy</string>
@@ -413,14 +401,12 @@
     <string name="battery_optimizations_enabled_explained">Tento přístroj provádí agresivní optimalizace využití baterie pro aplikaci Pix-Art Messenger. Ty mohou způsobit zpoždění upozornění nebo ztrátu zpráv.\nJe doporučeno tyto vypnout.</string>
     <string name="battery_optimizations_enabled_dialog">Tento přístroj provádí agresivní optimalizace využití baterie pro aplikaci Pix-Art Messenger. Ty mohou způsobit zpoždění upozornění nebo ztrátu zpráv.\nnyní budete vyzváni k jejich vypnutí.</string>
     <string name="disable">Vypnout</string>
-    <string name="selection_too_large">Vybraný obsah je příliš dlouhý</string>
     <string name="no_accounts">(Žádné aktivované účty)</string>
     <string name="this_field_is_required">Toto pole je vyžadováno</string>
     <string name="correct_message">Opravit zprávu</string>
     <string name="send_corrected_message">Odeslat opravenou zprávu</string>
     <string name="contacts_have_no_pgp_keys">Není možné zašifrovat zprávy v aplikaci Konverzace, protože kontakty neoznamují svůj veřejný klíč.\n\n<small>Požádejte své kontakty ať si nastaví OpenPGP.</small></string>
     <string name="this_account_is_disabled">Tento účet byl vypnut</string>
-    <string name="security_error_invalid_file_access">Chyba zabezpečení: Neplatný přístup k souboru</string>
     <string name="no_application_to_share_uri">Nebyla nalezena aplikace pro sdílení URI</string>
     <string name="share_uri_with">Sdílet URI s...</string>
     <string name="your_full_jid_will_be">Vaše celé Jabber ID bude: %s</string>
@@ -437,7 +423,6 @@
     <string name="show_password">Zobrazit heslo</string>
     <string name="registration_please_wait">Registrace selhala: Zkuste znovu později</string>
     <string name="registration_password_too_weak">Registrace selhala: Příliš slabé heslo</string>
-    <string name="conference_subject">Předmět</string>
     <string name="choose_participants">Vybrat účastníky</string>
     <string name="invite_again">Pozvat znovu</string>
     <string name="pref_broadcast_last_activity">Odeslat poslední uživatelskou interakci</string>

@@ -70,11 +70,8 @@
     <string name="add_contact">Kişi ekle</string>
     <string name="send_failed">gönderme başarısız</string>
     <string name="preparing_image">Aktarım için resim hazırlanıyor</string>
-    <string name="preparing_images">Aktarım için resimler hazırlanıyor</string>
-    <string name="sharing_files_please_wait">Dosyalar paylaşılıyor. Lütfen bekleyin…</string>
     <string name="action_clear_history">Geçmişi sil</string>
     <string name="clear_conversation_history">Konuşma Geçmişini Sil</string>
-    <string name="delete_messages">Mesajları silin</string>
     <string name="also_end_conversation">Bu sohbeti daha sonra sonlandır</string>
     <string name="choose_presence">Cihazı seçin</string>
     <string name="send_unencrypted_message">Şifresiz mesaj gönder</string>
@@ -90,7 +87,6 @@
     <string name="openkeychain_required_long">Pix-Art messenger ileti şifreleme ile şifre çözme ve genel anahtarlarınzı yönetmek için üçüncü parti <b>OpenKeychain</b> denen bir uygulama kullanır.\n\nOpenKeychain GPLv3 lisansı altındadır ve F-Droid ile Google Play\'de mevcuttur.\n\n<small>(Lürfen Pix-Art messenger\'ı daha sonra yeniden başlatın.)</small></string>
     <string name="restart">Yeniden başlat</string>
     <string name="install">Yükle</string>
-    <string name="openkeychain_not_installed">Lütfen OpenKeychain\'i yükleyin</string>
     <string name="offering">teklif yapılıyor…</string>
     <string name="waiting">Bekleniyor…</string>
     <string name="no_pgp_key">Hiç OpenPGP anahtarı bulunamadı</string>
@@ -124,7 +120,6 @@
     <string name="receive_presence_updates">Durum güncellemelerini alın</string>
     <string name="ask_for_presence_updates">Durum güncellemelerini isteyin</string>
     <string name="attach_choose_picture">Resim seç</string>
-    <string name="attach_take_from_camera">Kameradan al</string>
     <string name="preemptively_grant">Önceden abone talep isteğinde bulunun</string>
     <string name="error_not_an_image_file">Seçtiğiniz dosya bir görüntü dosyası değil</string>
     <string name="error_compressing_image">Görüntü dosyası dönüştürürken hata oluştu</string>
@@ -161,11 +156,8 @@
     <string name="mgmt_account_delete_confirm_text">Hesabınızı silerseniz, tüm görüşme geçmişiniz kaybolur</string>
     <string name="attach_record_voice">Kayıt sesi</string>
     <string name="account_settings_jabber_id">Jabber-ID</string>
-    <string name="account_settings_password">Şifre</string>
     <string name="account_settings_example_jabber_id">kullanıcıadı@pix-art.de</string>
     <string name="password">Parola</string>
-    <string name="confirm_password">Parolayı onayla</string>
-    <string name="passwords_do_not_match">Parolalar uyuşmuyor</string>
     <string name="invalid_jid">Bu geçerli bir Jabber-ID değil</string>
     <string name="error_out_of_memory">Bellek yetersiz. Görüntü çok büyük</string>
     <string name="add_phone_book_text">Adres defterinize %s\'i eklemek istiyor musunuz?</string>
@@ -204,9 +196,7 @@
     <string name="done">Bitti</string>
     <string name="verify">Doğrula</string>
     <string name="decrypt">Şifreyi çöz</string>
-    <string name="conferences">Grup sohbeti</string>
     <string name="search">Ara</string>
-    <string name="create_contact">Kişi oluştur</string>
     <string name="enter_contact">İletişim Kur</string>
     <string name="join_public_channel">Grup sohbetine katıl</string>
     <string name="delete_contact">Kişiyi sil</string>
@@ -217,12 +207,10 @@
     <string name="select">Seç</string>
     <string name="contact_already_exists">Kişi zaten mevcut</string>
     <string name="join">Katıl</string>
-    <string name="conference_address">Grup sohbeti adresi</string>
     <string name="channel_full_jid_example">groupchat@room.pix-art.de</string>
     <string name="save_as_bookmark">Yer imi olarak kaydet</string>
     <string name="delete_bookmark">Yer imini sil</string>
     <string name="bookmark_already_exists">Bu yer işareti zaten var</string>
-    <string name="action_edit_subject">Grup sohbetinin konusunu düzenle</string>
     <string name="joining_conference">Sohbet Grubuna bağlanılıyor…</string>
     <string name="leave">Ayrıl</string>
     <string name="contact_added_you">Kişi sizi listesine ekledi</string>
@@ -363,13 +351,8 @@
     <string name="ban_from_conference">Grup sohbetini engelle</string>
     <string name="removing_from_public_conference">%s adlı kullanıcıyı bir genel grup sohbetinden kaldırılmaya çalışılıyorsunuz. Bunu yapmanın tek yolu kullanıcıyı sonsuza dek yasaklamaktır.</string>
     <string name="ban_now">Şimdi engelle</string>
-    <string name="could_not_change_role">%s görevini değiştiremedim</string>
-    <string name="public_conference">Herkese açık sohbet grubu</string>
-    <string name="private_conference">Özel, sadece grup üyeleri</string>
     <string name="conference_options">Grup sohbeti seçenekleri</string>
-    <string name="members_only">Özel, yalnızca üyeler</string>
     <string name="non_anonymous">İsimsiz</string>
-    <string name="moderated">Denetlenen</string>
     <string name="you_are_not_participating">Katılım sağlamıyorsun</string>
     <string name="modified_conference_options">Grup sohbeti seçeneklerini düzenle!</string>
     <string name="could_not_modify_conference_options">Grup sohbeti seçenekleri değiştirilemedi</string>
@@ -468,11 +451,7 @@
         <item quantity="other">%d mesajlar</item>
     </plurals>
     <string name="load_more_messages">Daha fazla ileti yükle</string>
-    <string name="shared_file_with_x">%s ile paylaşılan dosya</string>
-    <string name="shared_image_with_x">%s ile paylaşılan resim</string>
     <string name="no_storage_permission">Pix-Art Messenger\'ın harici depolama alanına erişim izni gerekiyor</string>
-    <string name="shared_images_with_x">%s ile paylaşılan resimler</string>
-    <string name="shared_text_with_x">%s ile paylaşılan metin</string>
     <string name="sync_with_contacts">Bağlantıyı senkronize et</string>
     <string name="sync_with_contacts_long">Pix-Art Messenger, tam adlarını ve avatarlarını göstermek için XMPP listenizi kişilerinizle eşleştirmek istiyor\n\nPix-Art Messenger yalnızca kişilerinizi okuyacak ve bunları sunucunuza yüklemeden yerel olarak eşleştirecektir.\n\nKişilerinize erişmek için izin vermeniz istenecektir.</string>
     <string name="notify_on_all_messages">Tüm mesajları bildir</string>
@@ -493,19 +472,16 @@
     <string name="install_from_unknown_sources_disabled">Bilinmeyen açık kaynaklardan yüklemeleri devre dışı bırak</string>
     <string name="install_from_unknown_sources_disabled_dialog">Cihazınız, Google PlayStore dışında bilinmeyen kaynaklardan uygulama yüklemelerine izin vermeyecek şekilde yapılandırıldı. Bu, uygulama güncelleyicisinde sorunlara neden olur. \n\n Bundan sonra bilinmeyen kaynaklardan uygulama yüklemelerine izin vermeniz istenecektir.</string>
     <string name="disable">Devre dışı</string>
-    <string name="selection_too_large">Seçilen alan çok büyük</string>
     <string name="cancel_update">Güncellemeyi iptal et?</string>
     <string name="yes">Evet</string>
     <string name="no">Hayır</string>
     <string name="no_accounts">(Aktif hesap yok)</string>
     <string name="this_field_is_required">Bu alan gerekli</string>
-    <string name="no_participants">Katılımcı yok</string>
     <string name="correct_message">Doğru mesaj</string>
     <string name="send_corrected_message">Düzeltilmiş mesaj gönder</string>
     <string name="no_keys_just_confirm">Bu kişiye zaten güvenin. \'tamam\' seçeneğini seçerseniz, yalnızca%s, bu grup sohbetinin bir parçası olduğunu onaylıyorsunuz demektir.</string>
     <string name="contacts_have_no_pgp_keys">Kişileriniz genel anahtarlarını duyurmadığı için Pix-Art Messenger mesajlarınızı şifreleyemiyor.\n\n</string>
     <string name="this_account_is_disabled">Bu hesabı devre dışı bıraktınız</string>
-    <string name="security_error_invalid_file_access">Güvenlik hatası: Geçersiz dosya erişimi</string>
     <string name="no_application_to_share_uri">URI\'yi paylaşacak hiçbir uygulama bulunamadı</string>
     <string name="share_uri_with">Ile URI paylaş…</string>
     <string name="mgmt_account_reconnect">Yeniden bağlan</string>
@@ -532,7 +508,6 @@
     <string name="registration_please_wait">Kayıt başarısız: Daha sonra tekrar deneyin</string>
     <string name="registration_password_too_weak">Kayıt başarısız oldu: Şifre çok zayıf</string>
     <string name="create_private_group_chat">Grup sohbeti oluştur</string>
-    <string name="conference_subject">Konu</string>
     <string name="choose_participants">Katılımcıları seç</string>
     <string name="creating_conference">Grup sohbeti oluşturuluyor…</string>
     <string name="import_database">Yedeği içeri aktar</string>
@@ -545,11 +520,7 @@
     <string name="request_permissions_message">Pix-Art Messenger birkaç izin vermenizi isteyecektir. Tüm bu izinlerin bu mesajlaşma aracının tüm özelliklerine sahip olmasına izin vermeniz önemlidir. Bu izinlerden herhangi birini reddederseniz, uygulama kendiliğinden kapanacaktır.</string>
     <string name="request_permissions_message_again">Pix-Art Messenger için gerekli bazı veya tüm izinleri reddettiniz. Ayarlara atlamak ve bu izinlere izin vermek ister misiniz? Bu izinlerden herhangi birine siz karar verirseniz, uygulama kendiliğinden kapanacaktır.</string>
     <string name="unable_to_connect_to_keychain">OpenKeyChain\'e bağlanılamıyor</string>
-    <string name="send_image">Resim gönder?</string>
     <string name="this_device_is_no_longer_in_use">Bu cihaz artık kullanılmıyor</string>
-    <string name="import_canceled">İçe aktarım iptal edildi</string>
-    <string name="Import_failed">Veritabanı içe aktarma başarısız, içe aktarma mümkün değil</string>
-    <string name="Password_wrong">Yanlış parola, yeniden dene</string>
     <string name="please_wait">Lütfen bekleyin…</string>
     <string name="pref_export_plain_text_logs_summary">Sohbet günlüklerini insan tarafından okunabilir metin dosyaları olarak dışa aktarmayı etkinleştir</string>
     <string name="pref_export_plain_text_logs">Insanlar tarafından okunabilir metin dosyalarını dışa aktarın</string>
@@ -577,7 +548,6 @@
     <string name="data_saver_enabled">Veri kaydedici etkin</string>
     <string name="data_saver_enabled_explained">İşletim sisteminiz Pix-Art Messenger\'ın arka planda olduğunda Internet\'e erişmesini kısıtlıyor. Yeni mesaj bildirimlerini almak için, Veri koruyucu açıkken Pix-Art Messenger\'a sınırsız erişime izin vermelisiniz.\n Pix-Art Messenger mümkün olduğunca veri kaydetmek için çaba gösterecektir.</string>
     <string name="device_does_not_support_data_saver">Cihazınız Pix-Art messenger\'ın veri koruyucusunu devre dışı bırakmayı desteklemiyor.</string>
-    <string name="navigate">Konuma gidin</string>
     <string name="add_to_contact_list">Bağlantı listesine ekle</string>
     <string name="contact">Bağlantı</string>
     <string name="unable_to_start_recording">Kayıt başlatılamıyor</string>
@@ -597,7 +567,6 @@
     <string name="verifying_omemo_keys_trusted_source">Bir bağlantıyı tıkladıktan sonra %1$s ürününün OMEMO tuşlarını doğrulamak üzeresin. Yalnızca %2$s tarafından bu bağlantıyı yayınlayabildiğiniz güvenilir bir kaynaktan bu bağlantıyı izlerseniz güvenli olur.</string>
     <string name="verify_omemo_keys">OMEMO parmak izlerini doğrulayın</string>
     <string name="reply">Yanıtla</string>
-    <string name="encrypting_message">Mesajı şifrele</string>
     <string name="transcoding_video">Video sıkıştırılıyor</string>
     <string name="not_fetching_history_retention_period">Yerel koruma süresi nedeniyle ileti getirilemiyor.</string>
     <string name="today">Bugün</string>
@@ -662,7 +631,6 @@
     <string name="pref_use_bundled_emoji_summary">Cihazlarınızın yerine emoji kitaplığını kullanın. Değişiklikler, uygulamayı yeniden açtıktan sonra kullanılabilir olacaktır.</string>
     <string name="invalid_muc_nick">Geçersiz kullanıcı adı</string>
     <string name="title_activity_share_via_account">Hesap yoluyla paylaş</string>
-    <string name="private_messages_are_disabled">Özel mesajlar devre dışı</string>
     <string name="destroy_muc">Grup sohbetini sil</string>
     <string name="conference_unknown_error">Artık bu grupta değilsiniz</string>
     <string name="destroy_muc_text">%s grubunu gerçekten silmek istiyor musunuz? Grup sohbeti kalıcı olarak silinecektir.</string>

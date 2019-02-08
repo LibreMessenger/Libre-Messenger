@@ -68,11 +68,8 @@
     <string name="add_contact">Kontaktua gehitu</string>
     <string name="send_failed">huts bidaltzerakoan</string>
     <string name="preparing_image">Irudia transmisiorako prestatzen. Mesedez itxaron…</string>
-    <string name="preparing_images">Irudiak transmisiorako prestatzen</string>
-    <string name="sharing_files_please_wait">Fitxategiak partekatzen. Mesedez itxaron...</string>
     <string name="action_clear_history">Historia garbitu</string>
     <string name="clear_conversation_history">Elkarrizketa historia garbitu</string>
-    <string name="delete_messages">Mezuak ezabatu</string>
     <string name="also_end_conversation">Elkarrizketa hau jarraian amaitu</string>
     <string name="choose_presence">Gailua aukeratu</string>
     <string name="send_unencrypted_message">Enkriptatu gabeko mezua bidali</string>
@@ -88,7 +85,6 @@
     <string name="openkeychain_required_long">Pix-Art Messenger ek <b>OpenKeychain</b> izeneko hirugarren app bat erabiltzen du mezuak enkriptatu eta desenkriptatzeko eta zure gako publikoak kudeatzeko.\n\nOpenKeychain GPLv3 lizentziapean dago eta F-Droid eta Google Playn eskura daiteke.\n\n<small>(Mesedez ondoren Pix-Art Messenger berrabiarazi)</small></string>
     <string name="restart">Berrabiarazi</string>
     <string name="install">Instalatu</string>
-    <string name="openkeychain_not_installed">Mesedez instalatu ezazu OpenKeychain</string>
     <string name="offering">eskeintzen…</string>
     <string name="waiting">itxaroten…</string>
     <string name="no_pgp_key">Ez da OpenPGP gakorik aurkitu</string>
@@ -150,7 +146,6 @@
     <string name="mgmt_account_delete_confirm_text">Zure kontua ezabatzen baduzu, zure elkarrizketen historia guztia galduko da</string>
     <string name="attach_record_voice">Ahotsa grabatu</string>
     <string name="account_settings_jabber_id">Jabber IDa</string>
-    <string name="account_settings_password">Pasahitza</string>
     <string name="account_settings_example_jabber_id">erabiltzailea@adibidea.com</string>
     <string name="password">Pasahitza</string>
     <string name="invalid_jid">Hau ez da Jabber ID baliodun bat</string>
@@ -191,9 +186,7 @@
     <string name="done">Eginda</string>
     <string name="verify">Egiaztatu</string>
     <string name="decrypt">Desenkriptatu</string>
-    <string name="conferences">Taldeak</string>
     <string name="search">Bilatu</string>
-    <string name="create_contact">Kontaktua sortu</string>
     <string name="enter_contact">Kontaktua sartu</string>
     <string name="join_public_channel">Taldera batu</string>
     <string name="delete_contact">Kontaktua ezabatu</string>
@@ -204,12 +197,10 @@
     <string name="select">Hautatu</string>
     <string name="contact_already_exists">Kontaktua existitzen da dagoeneko</string>
     <string name="join">Batu</string>
-    <string name="conference_address">Taldearen helbidea</string>
     <string name="channel_full_jid_example">gela@konferentzia.adibidea.eus/ezizena</string>
     <string name="save_as_bookmark">Gorde laster-marka bezala</string>
     <string name="delete_bookmark">Laster-marka ezabatu</string>
     <string name="bookmark_already_exists">Laster-marka hau existitzen da dagoeneko</string>
-    <string name="action_edit_subject">Taldearen gaia editatu</string>
     <string name="joining_conference">Taldera batzen...</string>
     <string name="leave">Alde egin</string>
     <string name="contact_added_you">Kontaktuak bere zerrendara gehitu zaitu</string>
@@ -347,13 +338,8 @@
     <string name="ban_from_conference">Taldean egotea debekatu</string>
     <string name="removing_from_public_conference">%s talde publiko batetik ateratzen saiatzen ari zara. Hori lortzeko modu bakarra erabiltzaile hori betiko debekatzea da.</string>
     <string name="ban_now">Debekatu orain</string>
-    <string name="could_not_change_role">%s(r)en rola ezin izan da aldatu</string>
-    <string name="public_conference">Publikoki edonor sar daiteken taldea</string>
-    <string name="private_conference">Talde pribatua, kideentzat soilik</string>
     <string name="conference_options">Taldearen aukerak</string>
-    <string name="members_only">Pribatua, kideentzat soilik</string>
     <string name="non_anonymous">Ez anonimoa</string>
-    <string name="moderated">Moderatua</string>
     <string name="you_are_not_participating">Ez zara parte hartzen ari</string>
     <string name="modified_conference_options">Taldearen aukerak aldatu dira</string>
     <string name="could_not_modify_conference_options">Ezin izan dira taldearen aukerak aldatu</string>
@@ -442,11 +428,7 @@
         <item quantity="other">%d mezu</item>
     </plurals>
     <string name="load_more_messages">Mezu gehiago kargatu</string>
-    <string name="shared_file_with_x">Fitxategia %s(r)ekin partekatu da</string>
-    <string name="shared_image_with_x">Irudia %s(r)ekin partekatu da</string>
     <string name="no_storage_permission">Pix-Art Messenger ek kanpoko biltegirako sarbidea behar du</string>
-    <string name="shared_images_with_x">Irudiak %s(r)ekin partekatu dira</string>
-    <string name="shared_text_with_x">Testua %s(r)ekin partekatu da</string>
     <string name="sync_with_contacts">Kontaktuekin sinkronizatu</string>
     <string name="sync_with_contacts_long">Pix-Art Messenger ek zure XMPP zerrenda eta zure kontaktuak uztartu nahi ditu haien izenak eta argazkiak erakusteko.\n\nPix-Art Messenger ek zure kontaktuak modu lokalean soilik irakurri eta uztartuko ditu, zure zerbitzarira kargatu gabe.\n\nJarraian baimenak eskatuko zaizkizu zure kontaktuetara sartu ahal izateko.</string>
     <string name="notify_on_all_messages">Mezu guztiak jakinarazi</string>
@@ -460,7 +442,6 @@
     <string name="battery_optimizations_enabled_explained">Zure gailua jakinarazpen atzeratuak edota mezuen galera ekar lezaketen bateriaren optimizazio handiak egiten ari da Pix-Art Messenger en.\nHoriek ezgaitzea gomendatzen da.</string>
     <string name="battery_optimizations_enabled_dialog">Zure gailua jakinarazpen atzeratuak edota mezuen galera ekar lezaketen bateriaren optimizazio handiak egiten ari da Conversationsen.\nJarraian hauek ezgaitzea eskatuko zaizu.</string>
     <string name="disable">Ezgaitu</string>
-    <string name="selection_too_large">Hautatutako zatia handiegia da</string>
     <string name="no_accounts">(Ez dago kontu aktiborik)</string>
     <string name="this_field_is_required">Datu hau beharrezkoa da</string>
     <string name="correct_message">Mezua zuzendu</string>
@@ -468,7 +449,6 @@
     <string name="no_keys_just_confirm">Kontaktu honetaz fidatzen zara dagoeneko. \'Eginda\' hautatuz %s talde honen kidea dela egiaztatzen duzu besterik gabe.</string>
     <string name="contacts_have_no_pgp_keys">Conversations ez da zure mezuak enkriptatzeko gai zure kontaktuak haien gako publikoa jakinarazten ez daudelako.\n\n<small>Mesedez eskatu ezaiezu zure kontakuei OpenPGP konfigura dezaten.</small></string>
     <string name="this_account_is_disabled">Kontu hau ezgaitu duzu</string>
-    <string name="security_error_invalid_file_access">Segurtasun akatsa: fitxategi sarrera baliogabea</string>
     <string name="no_application_to_share_uri">Ez da aplikaziorik aurkitu URIa partekatzeko</string>
     <string name="share_uri_with">URIa honekin partekatu...</string>
     <string name="welcome_text">XMPP hornitzaleez independiente den protokolo bat da. Bezero hau aukeratzen duzun edozein XMPP zerbitzariarekin erabili dezakezu.\nHala ere zure erosotasunerako conversations.im¹-en, Conversationsekin bereziki erabiltzeko egokia den hornitzaile batean, kontu bat sortzea erraz egin dugu.</string>
@@ -488,7 +468,6 @@
     <string name="registration_please_wait">Erregistroak huts egin du: saiatu berriz beranduago</string>
     <string name="registration_password_too_weak">Erregistroa huts egin du: pasahitza ahulegia da</string>
     <string name="create_private_group_chat">Taldea sortu</string>
-    <string name="conference_subject">Gaia</string>
     <string name="choose_participants">Parte hartzaileak hautatu</string>
     <string name="creating_conference">Taldea sortzen…</string>
     <string name="invite_again">Berriz gonbidatu</string>
@@ -533,7 +512,6 @@
     <string name="i_followed_this_link_from_a_trusted_source">Lotura hau jatorri fidagarri batetik jarraitu dut</string>
     <string name="verifying_omemo_keys_trusted_source">%1$s(r)en OMEMO gakoak egiaztatuko dira lotura batean sakatu ondoren. Hau segurua da soilik lotura hau jatorri fidagarri batetik jarraitu baduzu eta soilik %2$s(e)k argitaratu izan ahal badu.</string>
     <string name="verify_omemo_keys">OMEMO gakoak egiaztatu</string>
-    <string name="encrypting_message">Mezua enkriptatzen</string>
     <string name="transcoding_video">Bideoa konprimatzen</string>
     <string name="not_fetching_history_retention_period">Mezurik ez eskuratzen gelditze tarte lokalarengatik.</string>
     <string name="today">Gaur</string>

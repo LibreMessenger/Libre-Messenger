@@ -72,12 +72,9 @@
     <string name="add_contact">Aggiungi contatto</string>
     <string name="send_failed">Invio fallito</string>
     <string name="preparing_image">Preparazione immagine per la trasmissione</string>
-    <string name="preparing_images">Preparazione immagini per la trasmissione</string>
-    <string name="sharing_files_please_wait">Condivisione file. Attendere prego...</string>
     <string name="action_clear_history">Pulisci la cronologia</string>
     <string name="clear_conversation_history">Pulisci la cronologia della conversazione</string>
     <string name="clear_histor_msg">Sei sicuro di voler cancellare tutti i messaggi di questa conversazione?\n\n<b>Attenzione:</b>Questo non eliminerà le copie di questi messaggi salvati su altri dispositivi o server.</string>
-    <string name="delete_messages">Elimina messaggi</string>
     <string name="also_end_conversation">Termina questa conversazione successivamente</string>
     <string name="choose_presence">Scegli un dispositivo</string>
     <string name="send_unencrypted_message">Invia messaggio non cifrato</string>
@@ -93,7 +90,6 @@
     <string name="openkeychain_required_long">Pix-Art Messenger usa una app di terze parti chiamata <b>OpenKeychain</b> per cifrare e decifrare i messaggi per gestire le tue chiavi pubbliche.\n\nOpenKeychain è rilasciato secondo i termini della GPLv3 ed è disponibile sia su F-Droid, che su Google Play.\n\n<small>(Riavvia Pix-Art Messenger in seguito.)</small></string>
     <string name="restart">Riavvia</string>
     <string name="install">Installa</string>
-    <string name="openkeychain_not_installed">Per favore installa OpenKeychain</string>
     <string name="offering">offrendo…</string>
     <string name="waiting">in attesa…</string>
     <string name="no_pgp_key">Nessuna chiave OpenPGP trovata</string>
@@ -127,7 +123,6 @@
     <string name="receive_presence_updates">Ricevi aggiornamenti della presenza</string>
     <string name="ask_for_presence_updates">Chiedi aggiornamenti della presenza</string>
     <string name="attach_choose_picture">Scegli un’immagine</string>
-    <string name="attach_take_from_camera">Scatta dalla fotocamera</string>
     <string name="preemptively_grant">Concedi aggiornamenti della presenza preventivamente</string>
     <string name="error_not_an_image_file">Il file selezionato non è un’immagine</string>
     <string name="error_compressing_image">Errore durante la conversione dell’immagine</string>
@@ -165,11 +160,8 @@
     <string name="mgmt_account_delete_confirm_text">Se elimini il tuo account perderai tutta la cronologia delle conversazioni</string>
     <string name="attach_record_voice">Registra la voce</string>
     <string name="account_settings_jabber_id">ID Jabber</string>
-    <string name="account_settings_password">Password</string>
     <string name="account_settings_example_jabber_id">utente@esempio.com</string>
     <string name="password">Password</string>
-    <string name="confirm_password">Conferma password</string>
-    <string name="passwords_do_not_match">Le password non corrispondono</string>
     <string name="invalid_jid">Questo non è un ID Jabber valido</string>
     <string name="error_out_of_memory">Memoria esaurita. L’immagine è tropppo grande</string>
     <string name="add_phone_book_text">Vuoi aggiungere %s alla tua rubrica?</string>
@@ -210,9 +202,7 @@
     <string name="done">Fatto</string>
     <string name="verify">Verifica</string>
     <string name="decrypt">Decripta</string>
-    <string name="conferences">Conversazioni di gruppo</string>
     <string name="search">Cerca</string>
-    <string name="create_contact">Crea contatto</string>
     <string name="enter_contact">Inserisci contatto</string>
     <string name="join_public_channel">Unisciti alla conversazione di gruppo</string>
     <string name="delete_contact">Elimina contatto</string>
@@ -223,12 +213,10 @@
     <string name="select">Seleziona</string>
     <string name="contact_already_exists">Il contatto esiste già</string>
     <string name="join">Entra</string>
-    <string name="conference_address">Indirizzo della conversazione di gruppo</string>
     <string name="channel_full_jid_example">stanza@conferenza.esempio.com/nick</string>
     <string name="save_as_bookmark">Salva come segnalibro</string>
     <string name="delete_bookmark">Elimina segnalibro</string>
     <string name="bookmark_already_exists">Questo segnalibro esiste già</string>
-    <string name="action_edit_subject">Modifica titolo conversazione di gruppo</string>
     <string name="topic">Argomento</string>
     <string name="joining_conference">Ingresso nella conversazione di gruppo…</string>
     <string name="leave">Abbandona</string>
@@ -381,13 +369,8 @@
     <string name="ban_from_conference">Bandisci dalla conversazione di gruppo</string>
     <string name="removing_from_public_conference">Stai cercando di rimuovere %s da una conversazione di gruppo pubblica. L\'unico modo per farlo è bandire per sempre quell\'utente.</string>
     <string name="ban_now">Bandisci</string>
-    <string name="could_not_change_role">Impossibile cambiare ruolo di %s</string>
-    <string name="public_conference">Conversazione di gruppo pubblicamente accessibile</string>
-    <string name="private_conference">Conversazione di gruppo privata, solo per membri</string>
     <string name="conference_options">Opzioni conversazione di gruppo</string>
-    <string name="members_only">Privato, solo membri</string>
     <string name="non_anonymous">Non anonimo</string>
-    <string name="moderated">Moderata</string>
     <string name="you_are_not_participating">Non stai partecipando</string>
     <string name="modified_conference_options">Opzioni della conversazione di gruppo modificate!</string>
     <string name="could_not_modify_conference_options">Impossibile modificare le opzioni della conversazione di gruppo</string>
@@ -490,11 +473,7 @@
         <item quantity="other">%d messaggi</item>
     </plurals>
     <string name="load_more_messages">Carica altri messaggi</string>
-    <string name="shared_file_with_x">Condividi file con %s</string>
-    <string name="shared_image_with_x">Immagine condivisa con %s</string>
     <string name="no_storage_permission">Pix-Art Messenger necessita di accesso alla memoria esterna</string>
-    <string name="shared_images_with_x">Immagini condivise con %s</string>
-    <string name="shared_text_with_x">Testo condiviso con %s</string>
     <string name="sync_with_contacts">Sincronizza con i contatti</string>
     <string name="sync_with_contacts_long">Pix-Art Messenger vuole confrontare il tuo roster XMPP con i tuoi contatti per mostrare i loro nomi ed avatar.\n\nPix-Art Messenger leggerà solamente i contatti e li confronterà localmente senza caricarli sul server.\n\nTi verrà ora chiesto il permesso di accedere ai tuoi contatti.</string>
     <string name="notify_on_all_messages">Notifica per tutti i messaggi</string>
@@ -516,19 +495,16 @@
     <string name="install_from_unknown_sources_disabled">L\'installazione da sorgenti sconosciute è disabilitata</string>
     <string name="install_from_unknown_sources_disabled_dialog">Il tuo dispositivo è configurato per non consentire installazioni da origini sconosciute ad eccezione di Google PlayStorr. Questo può causare problemi con il nostro servizio di aggiornamento.\n\nOra ti sarà chiesto di consentire l\'installazione da origini sconosciute.</string>
     <string name="disable">Disabilita</string>
-    <string name="selection_too_large">L\'area selezionata è troppo grande</string>
     <string name="cancel_update">Annullare aggiornamento?</string>
     <string name="yes">Si</string>
     <string name="no">No</string>
     <string name="no_accounts">(Nessun account attivo)</string>
     <string name="this_field_is_required">Questo campo è obbligatorio</string>
-    <string name="no_participants">Nessun partecipante</string>
     <string name="correct_message">Correggi messaggio</string>
     <string name="send_corrected_message">Invia messaggio corretto</string>
     <string name="no_keys_just_confirm">Ti fidi già di questo contatto. Selezionando \'fatto\' stai solo confermando che %s fa parte di questa conversazione di gruppo.</string>
     <string name="contacts_have_no_pgp_keys">Pix-Art Messenger non è in grado di criptare i tuoi messaggi perchè i tuoi contatti non stanno annunciando le loro chiavi pubbliche.\n\n</string>
     <string name="this_account_is_disabled">Hai disabilitato questo account</string>
-    <string name="security_error_invalid_file_access">Errore di sicurezza: accesso file non valido</string>
     <string name="no_application_to_share_uri">Nessuna applicazione trovata per condividere l\'URI</string>
     <string name="share_uri_with">Condividi l\'URI con...</string>
     <string name="mgmt_account_reconnect">Riconnetti</string>
@@ -558,7 +534,6 @@
     <string name="registration_please_wait">Registrazione fallita: riprova più tardi</string>
     <string name="registration_password_too_weak">Registrazione fallita: password troppo debole</string>
     <string name="create_private_group_chat">Crea conversazione di gruppo</string>
-    <string name="conference_subject">Soggetto</string>
     <string name="choose_participants">Scegli i partecipanti</string>
     <string name="creating_conference">Creazione conversazione di gruppo…</string>
     <string name="import_text">C\'è un backup sul tuo dispositivo che può essere importato.\nIl tuo Messenger sarà riavviato durante il processo di backup. Vorresti importare il backup? </string>
@@ -572,11 +547,7 @@
     <string name="request_permissions_message">Pix-Art Messenger ti chiederà di concedere solo poche autorizzazioni. È importante che tu permetta tutte queste richieste per utilizzare tutte le funzionalità di questa app. Se neghi alcune di queste l\'app si chiuderà da sola.</string>
     <string name="request_permissions_message_again">Hai negato alcune o tutte le autorizzazioni richieste da Pix-Art Messenger. Vuoi andare nelle impostazioni e concedere questi permessi? Se neghi qualsiasi di queste autorizzazioni, l\'app si chiuderà da sola.</string>
     <string name="unable_to_connect_to_keychain">Impossibile connettersi a OpenKeychain</string>
-    <string name="send_image">Inviare immagine?</string>
     <string name="this_device_is_no_longer_in_use">Questo dispositivo non è più in uso</string>
-    <string name="import_canceled">Importazione annullata</string>
-    <string name="Import_failed">Importazione del database fallita, un\'importazione non è possibile</string>
-    <string name="Password_wrong">Password non corretta, prova di nuovo</string>
     <string name="please_wait">Attendere prego…</string>
     <string name="pref_export_plain_text_logs_summary">Abilita l\'esportazione della cronologia delle conversazioni come file di testo leggibili</string>
     <string name="pref_export_plain_text_logs">Esporta cronologia delle conversazioni in formato leggibile</string>
@@ -604,7 +575,6 @@
     <string name="data_saver_enabled">Risparmio dati attivato</string>
     <string name="data_saver_enabled_explained">Il tuo sistema operativo sta limitando l\'accesso internet a Pix-Art Messenger quando è in background. Per ricevere le notifiche di nuovi messaggi dovresti consentire l\'accesso senza limiti a Pix-Art Messenger quando il Risparmio dati è attivo.\nPix-Art Messenger cercherà comunque di risparmiare dati quando possibile.</string>
     <string name="device_does_not_support_data_saver">Il tuo dispositivo non supporta la disattivazione del Risparmio dati per Pix-Art Messenger.</string>
-    <string name="navigate">Naviga fino alla posizione</string>
     <string name="add_to_contact_list">Aggiungi alla lista contatti</string>
     <string name="contact">Contatto</string>
     <string name="unable_to_start_recording">Impossibile avviare la registrazione</string>
@@ -631,7 +601,6 @@
     <string name="show_inactive_devices">Mostra inattivi</string>
     <string name="hide_inactive_devices">Nascondi inattivi</string>
     <string name="reply">Rispondi</string>
-    <string name="encrypting_message">Cifratura del messaggio</string>
     <string name="transcoding_video">Compressione video in corso</string>
     <string name="not_fetching_history_retention_period">Nessun recupero di messaggi a causa del periodo di conservazione locale.</string>
     <plurals name="seconds">
@@ -721,7 +690,6 @@
     <string name="pref_use_bundled_emoji_summary">Usa la libreria di emoji integrata invece di quella del dispositivo. Il cambiamento sarà disponibile alla riapertura dell\'app.</string>
     <string name="invalid_muc_nick">Nickname non valido</string>
     <string name="title_activity_share_via_account">Condividi via account</string>
-    <string name="private_messages_are_disabled">I messaggi privati sono disabilitati</string>
     <string name="destroy_muc">Elimina conversazione di gruppo</string>
     <string name="conference_unknown_error">Non fai più parte di questa conversazione di gruppo</string>
     <string name="destroy_muc_text">Vuoi veramente eliminare la conversazione di gruppo %s? Questo rimuoverà questa conversazione di gruppo permanentemente.</string>
@@ -809,7 +777,6 @@
     <string name="pref_show_record_voice_btn">Mostra pulsante di registrazione vocale</string>
     <string name="pref_use_quick_share_attachment_choice_summary">Sostituisci il pulsante di invio con quello della scelta dell\'allegato se non è stato scritto nulla. Altrimenti mostra scelte rapide, che possono essere configurate nelle prossime impostazioni.</string>
     <string name="pref_quick_share_attachment_choice">Scelta dell\'allegato</string>
-    <string name="phone_book">Rubrica</string>
     <string name="unable_to_save_recording">Impossibile salvare la registrazione</string>
     <string name="foreground_service_channel_name">Servizio in primo piano</string>
     <string name="foreground_service_channel_description">Questa categoria di notifiche è utilizzata per mostrare una notifica permanente indicando che Pix-Art Messenger è in esecuzione.</string>
@@ -830,7 +797,6 @@
     <string name="media_browser">Visualizzatore media</string>
     <string name="account_status_stream_opening_error">Errore di apertura dello stream</string>
     <string name="action_open">Apri</string>
-    <string name="action_delete">Elimina</string>
     <string name="security_violation_not_attaching_file">File omesso a causa di una violazione di sicurezza.</string>
     <string name="delete_file_dialog">Elimina file</string>
     <string name="delete_file_dialog_msg">Sei sicuro di voler eliminare questo file?\n\n<b>Attenzione:</b> Questo non eliminerà le copie di questo file che sono salvate su altri dispositivi o server.</string>
@@ -872,7 +838,5 @@
     <string name="pref_prefer_xmpp_avatar">Preferisci l\'avatar XMPP</string>
     <string name="view_users">Vedi membri</string>
     <string name="group_chat_members">Membri della conversazione di gruppo</string>
-    <string name="join_group_chat">Unisciti alla conversazione di gruppo</string>
-    <string name="create_group_chat">Crea conversazione di gruppo</string>
     <string name="message_deleted">Il messaggio è stato eliminato</string>
 </resources>

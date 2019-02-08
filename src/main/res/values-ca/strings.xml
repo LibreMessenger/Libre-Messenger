@@ -68,11 +68,8 @@
     <string name="add_contact">Afefgir contacte</string>
     <string name="send_failed">Error a l\'enviar</string>
     <string name="preparing_image">Preparant imatge per enviar</string>
-    <string name="preparing_images">Preparació d\'imatges per a la transmissió</string>
-    <string name="sharing_files_please_wait">Compartint fitxers. Espereu ...</string>
     <string name="action_clear_history">Netejar historial</string>
     <string name="clear_conversation_history">Netejar historial de conversa</string>
-    <string name="delete_messages">Esborrar missatges</string>
     <string name="also_end_conversation">Finalitza aquesta conversa després</string>
     <string name="choose_presence">Tria el dispositiu</string>
     <string name="send_unencrypted_message">Envia un missatge no xifrat</string>
@@ -88,7 +85,6 @@
     <string name="openkeychain_required_long">Conversations utilitza una aplicació de tercers anomenada <b>OpenKeychain</b> per xifrar i desxifrar missatges i gestionar les teves claus públiques..\n\nOpenKeychain està publicat sota llicència GPLv3 i disponible a la F-Droid i Google Play.\n\n<small>(Si us plau, reinicieu Conversations després.)</small></string>
     <string name="restart">Reiniciar</string>
     <string name="install">Instal·lar</string>
-    <string name="openkeychain_not_installed">Si us plau, instal·leu OpenKeychain</string>
     <string name="offering">oferint…</string>
     <string name="waiting">Esperant...</string>
     <string name="no_pgp_key">Clau OpenPGP no trobada</string>
@@ -150,7 +146,6 @@
     <string name="mgmt_account_delete_confirm_text">Si suprimiu el vostre compte, es perdrà tot l\'historial de la conversa</string>
     <string name="attach_record_voice">Registre de veu</string>
     <string name="account_settings_jabber_id">Identificació de Jabber</string>
-    <string name="account_settings_password">Contrasenya</string>
     <string name="account_settings_example_jabber_id">username@example.com</string>
     <string name="password">Contrasenya</string>
     <string name="invalid_jid">Aquesta identificació de Jabber no és vàlida</string>
@@ -191,9 +186,7 @@
     <string name="done">Fet</string>
     <string name="verify">Verificar</string>
     <string name="decrypt">Desxifrar</string>
-    <string name="conferences">Xats de grup</string>
     <string name="search">Cercar</string>
-    <string name="create_contact">Crea un contacte</string>
     <string name="enter_contact">Introduïu un contacte</string>
     <string name="join_public_channel">Uniu-vos al xat en grup</string>
     <string name="delete_contact">Suprimeix el contacte</string>
@@ -204,12 +197,10 @@
     <string name="select">Seleccioneu</string>
     <string name="contact_already_exists">El contacte ja existeix</string>
     <string name="join">Unir-se</string>
-    <string name="conference_address">Direcció del xat de grup</string>
     <string name="channel_full_jid_example">room@conference.example.com/nick</string>
     <string name="save_as_bookmark">Guardar com a favorits</string>
     <string name="delete_bookmark">Eliminar de favorits</string>
     <string name="bookmark_already_exists">Aquesta llista de favorits ja existeix</string>
-    <string name="action_edit_subject">Edita el tema del xat de grup</string>
     <string name="joining_conference">S\'està unint al xat de grup...</string>
     <string name="leave">Sortir</string>
     <string name="contact_added_you">Afegir un contacte a la llista de contactes</string>
@@ -350,13 +341,8 @@ mentrestant.</string>
     <string name="ban_from_conference">Prohibició del xat en grup</string>
     <string name="removing_from_public_conference">Esteu intentant eliminar %s d\'un xat de grup públic. L\'única manera de fer-ho és prohibir l\'usuari per sempre.</string>
     <string name="ban_now">Banejat ara</string>
-    <string name="could_not_change_role">No s\'ha pogut canviar les regles de %s</string>
-    <string name="public_conference">Xat de grup amb accés públic</string>
-    <string name="private_conference">Xat en grup privat, només membres</string>
     <string name="conference_options">Opcions de xat en grup</string>
-    <string name="members_only">Privat, només membres</string>
     <string name="non_anonymous">Sense anonimat</string>
-    <string name="moderated">Moderat</string>
     <string name="you_are_not_participating">No esteu participant</string>
     <string name="modified_conference_options">S\'han modificat les opcions de xat en grup.</string>
     <string name="could_not_modify_conference_options">No s\'han pogut modificar les opcions de xat de grup</string>
@@ -445,11 +431,7 @@ mentrestant.</string>
         <item quantity="other">%d messages</item>
     </plurals>
     <string name="load_more_messages">Carregueu més missatges</string>
-    <string name="shared_file_with_x">Fitxer compartit amb %s</string>
-    <string name="shared_image_with_x">Imatge compartida amb %s</string>
     <string name="no_storage_permission">Les converses necessiten accés a emmagatzematge extern</string>
-    <string name="shared_images_with_x">Imatges compartides amb %s</string>
-    <string name="shared_text_with_x">Text compartit amb %s</string>
     <string name="sync_with_contacts">Sincronitza amb contactes</string>
     <string name="sync_with_contacts_long">Conversations vol coincidir amb la vostra llista XMPP amb els vostres contactes per 
 mostrar els noms i avatars complets.\n\nConversations només 
@@ -471,7 +453,6 @@ missatges.\nEs recomana desactivar-les.</string>
 pot provocar notificacions retardades o fins i tot pèrdua de 
 missatges.\n\nAra se us demanarà que desactiveu-las.</string>
     <string name="disable">Desactivar</string>
-    <string name="selection_too_large">L\'àrea seleccionada és massa gran</string>
     <string name="no_accounts">(Sense comptes activats)</string>
     <string name="this_field_is_required">Aquest camp és obligatori</string>
     <string name="correct_message">Corregeix el missatge</string>
@@ -479,7 +460,6 @@ missatges.\n\nAra se us demanarà que desactiveu-las.</string>
     <string name="no_keys_just_confirm">Ja confieu en aquest contacte. Si seleccioneu \"fet\", només confirma que forma %s part d\'aquest xat en grup.</string>
     <string name="contacts_have_no_pgp_keys">Coversations no és possible xifrar les teves converses perquè els teus contactes no han mostrat la seva clau pública.\n\n<small> Si us plau, pregunti als seus contactes per configurar OpenPGP .</small></string>
     <string name="this_account_is_disabled">Heu desactivat aquest compte</string>
-    <string name="security_error_invalid_file_access">Error de seguretat: accés d\'arxiu no vàlid</string>
     <string name="no_application_to_share_uri">No s\'ha trobat cap aplicació que comparteixi URI</string>
     <string name="share_uri_with">Comparteix l\'URI amb...</string>
     <string name="welcome_text">XMPP és un protocol independent del proveïdor. Podeu utilitzar aquest client amb el servidor XMPP que trieu.\nPerò per a la vostra comoditat, hem facilitat crear un compte a conversations.im¹; un proveïdor especialment indicat per a l\'ús amb Conversations.</string>
@@ -501,7 +481,6 @@ d\'altres proveïdors donant-los la vostra ID Jabber completa.</string>
     <string name="registration_please_wait">Error de registre: torna-ho a provar més tard</string>
     <string name="registration_password_too_weak">Ha fallat la inscripció: la contrasenya és massa feble</string>
     <string name="create_private_group_chat">Crea un xat en grup</string>
-    <string name="conference_subject">Subjecte</string>
     <string name="choose_participants">Tria els participants</string>
     <string name="creating_conference">S\'està creant el xat en grup...</string>
     <string name="invite_again">Torna a convidar</string>
@@ -547,7 +526,6 @@ d\'altres proveïdors donant-los la vostra ID Jabber completa.</string>
     <string name="i_followed_this_link_from_a_trusted_source">He seguit aquest enllaç des d\'una font de confiança</string>
     <string name="verifying_omemo_keys_trusted_source">Esteu a punt de verificar les claus OMEMO de %1$sdesprés de fer clic a un enllaç. Això només és segur si seguiu aquest enllaç des d\'una font de confiança on només %2$s podria haver publicat aquest enllaç.</string>
     <string name="verify_omemo_keys">Comproveu les claus OMEMO</string>
-    <string name="encrypting_message">Xifrant el missatge</string>
     <string name="transcoding_video">S\'està comprimint el vídeo</string>
     <string name="not_fetching_history_retention_period">No es recullen missatges deguts al període de retenció local.</string>
     <string name="today">Avui</string>
