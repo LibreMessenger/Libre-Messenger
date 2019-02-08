@@ -22,7 +22,8 @@
         android:visible="false" />
     <item
         android:id="@+id/manage_permissions"
-        android:title="@string/manage_permission">
+        android:title="@string/manage_permission"
+        android:visible="false">
         <menu>
             <item
                 android:id="@+id/give_membership"
@@ -52,10 +53,10 @@
                 android:id="@+id/ban_from_conference"
                 android:title="@string/ban_from_conference"
                 android:visible="false" />
-            <item
-                android:id="@+id/remove_from_room"
-                android:title="@string/remove_from_room"
-                android:visible="false" />
         </menu>
     </item>
+    <item
+        android:id="@+id/remove_from_room"
+        android:title="@string/remove_from_room"
+        android:visible="false" />
 </menu>
