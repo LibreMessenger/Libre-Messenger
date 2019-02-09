@@ -1,5 +1,23 @@
 ### Changelog
 
+#### Version 2.2.0
+* add ability to set/edit nickname in own profile (PAM)
+* add ability to configure autojoin flag in groupchat details (PAM)
+* support for Android 9 'message style' notifications
+* OMEMO stability improvements
+* do not show deleted files in media browser
+* added 'Keep Original' as image and video quality choice (PAM)
+* fixed avatar not being refreshed in group chats
+* make users avatars configurable (prefer either from xmpp or addressbook) (PAM)
+* integrate last message deletion on remote devices (server and client need support for message correction) (PAM)
+* clearly distinguish between (private) group chats and (public) channels
+* redesigned participants view for group chats and channels
+* redesigned create new contact/group chat/channel flow in Start Conversation screen
+* reworked backup & restore
+* use Ad-Hoc Commands to invite new users (PAM)
+* show link preview in chat (PAM)
+* bug fixes
+
 #### Version 2.1.5
 * improved handling of bookmark nicks
 * long press on 'allow' or 'add back' snackbar to bring up 'reject'

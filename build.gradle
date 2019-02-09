@@ -77,7 +77,7 @@ dependencies {
     implementation project(':libs:xmpp-addr')
     implementation 'org.hsluv:hsluv:0.2'
     implementation 'org.conscrypt:conscrypt-android:1.4.2'
-    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.15' // last working version for minSDK 16
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.15' // 1.2.15 is last working version for minSDK 16
     implementation 'me.drakeet.support:toastcompat:1.1.0'
     implementation 'org.osmdroid:osmdroid-android:6.0.3'
     implementation 'com.leinardi.android:speed-dial:2.0.1'
@@ -99,7 +99,7 @@ android {
         targetSdkVersion 28
 
         versionCode 251
-        versionName "2.1.6 beta (2019-01-07)"
+        versionName "2.2.0 beta (2019-02-09)"
 
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"
