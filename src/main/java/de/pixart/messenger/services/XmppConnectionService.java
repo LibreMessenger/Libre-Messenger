@@ -3205,32 +3205,26 @@ public class XmppConnectionService extends Service {
         });
     }
 
-    public void destroyRoom(final Conversation mSelectedConversation) {
-        destroyRoom(mSelectedConversation, new OnRoomDestroy() {
+    public void destroyRoom(final Conversation conversation, final OnRoomDestroy callback) {
+        IqPacket request = new IqPacket(IqPacket.TYPE.SET);
+        request.setTo(conversation.getJid().asBareJid());
+        request.query("http://jabber.org/protocol/muc#owner").addChild("destroy");
+        sendIqPacket(conversation.getAccount(), request, new OnIqPacketReceived() {
             @Override
-            public void onRoomDestroySucceeded(int resId) {
-                Log.d(Config.LOGTAG, "Destroy succeed");
-                showErrorToastInUi(resId);
-            }
-
-            @Override
-            public void onRoomDestroyFailed(int resId) {
-                Log.d(Config.LOGTAG, "Destroy failed");
-                showErrorToastInUi(resId);
+            public void onIqPacketReceived(Account account, IqPacket packet) {
+                if (packet.getType() == IqPacket.TYPE.RESULT) {
+                    if (callback != null) {
+                        callback.onRoomDestroySucceeded();
+                    }
+                } else if (packet.getType() == IqPacket.TYPE.ERROR) {
+                    if (callback != null) {
+                        callback.onRoomDestroyFailed();
+                    }
+                }
             }
         });
     }
 
-    public void destroyRoom(final Conversation conference, final OnRoomDestroy callback) {
-        IqPacket request = this.mIqGenerator.destroyRoom(conference);
-        sendIqPacket(conference.getAccount(), request, (account, packet) -> {
-            if (packet.getType() == IqPacket.TYPE.RESULT) {
-                callback.onRoomDestroySucceeded(R.string.destroy_muc_succeed);
-            } else {
-                callback.onRoomDestroyFailed(R.string.destroy_muc_failed);
-            }
-        });
-    }
 
     private void disconnect(Account account, boolean force) {
         if ((account.getStatus() == Account.State.ONLINE)
@@ -4719,9 +4713,9 @@ public class XmppConnectionService extends Service {
     }
 
     public interface OnRoomDestroy {
-        void onRoomDestroySucceeded(int resId);
+        void onRoomDestroySucceeded();
 
-        void onRoomDestroyFailed(int resId);
+        void onRoomDestroyFailed();
     }
 
     public interface OnConversationUpdate {

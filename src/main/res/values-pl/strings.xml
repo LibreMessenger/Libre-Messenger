@@ -725,6 +725,6 @@ Pix-Art Messenger będzie wciąż ograniczał transfer danych, kiedy tylko to je
     <string name="enter_your_name">Wprowadź swoje imię</string>
     <string name="enter_your_name_instructions">Wprowadź swój pseudonim, który będzie widoczny dla Twoich kontaktów.</string>
     <string name="no_name_set_instructions">Brak ustawionego pseudonimu.</string>
-    <string name="autojoin_groupchat">Automatycznie dołącz do tego czatu grupowego</string>
+    <string name="autojoin_group_chat">Automatycznie dołącz do tego czatu grupowego</string>
     <string name="pref_play_gif_inside">Odtwarzaj pliki GIF w czacie</string>
 </resources>

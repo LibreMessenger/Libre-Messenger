@@ -96,7 +96,7 @@ import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.ui.ConversationFragment.REQUEST_DECRYPT_PGP;
 
-public class ConversationsActivity extends XmppActivity implements OnConversationSelected, OnConversationArchived, OnConversationsListItemUpdated, OnConversationRead, XmppConnectionService.OnAccountUpdate, XmppConnectionService.OnConversationUpdate, XmppConnectionService.OnRosterUpdate, OnUpdateBlocklist, XmppConnectionService.OnShowErrorToast, XmppConnectionService.OnAffiliationChanged {
+public class ConversationsActivity extends XmppActivity implements OnConversationSelected, OnConversationArchived, OnConversationsListItemUpdated, OnConversationRead, XmppConnectionService.OnAccountUpdate, XmppConnectionService.OnConversationUpdate, XmppConnectionService.OnRosterUpdate, OnUpdateBlocklist, XmppConnectionService.OnShowErrorToast, XmppConnectionService.OnAffiliationChanged, XmppConnectionService.OnRoomDestroy {
 
     public static final String ACTION_VIEW_CONVERSATION = "de.pixart.messenger.VIEW";
     public static final String EXTRA_CONVERSATION = "conversationUuid";
@@ -607,7 +607,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
                 Log.d(Config.LOGTAG, "Get " + intent.getAction() + " intent for " + extras.getString("MUC_UUID"));
                 Conversation conversation = xmppConnectionService.findConversationByUuid(extras.getString("MUC_UUID"));
                 ConversationsActivity.this.xmppConnectionService.clearConversationHistory(conversation);
-                xmppConnectionService.destroyRoom(conversation);
+                xmppConnectionService.destroyRoom(conversation, ConversationsActivity.this);
                 endConversation(conversation);
             }
         }
@@ -931,5 +931,19 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
         } else {
             Log.d(Config.LOGTAG, "AppUpdater stopped");
         }
+    }
+
+    @Override
+    public void onRoomDestroySucceeded() {
+        Conversation conversation = ConversationFragment.getConversationReliable(this);
+        final boolean groupChat = conversation != null && conversation.isPrivateAndNonAnonymous();
+        displayToast(getString(groupChat ? R.string.destroy_room_succeed : R.string.destroy_channel_succeed));
+    }
+
+    @Override
+    public void onRoomDestroyFailed() {
+        Conversation conversation = ConversationFragment.getConversationReliable(this);
+        final boolean groupChat = conversation != null && conversation.isPrivateAndNonAnonymous();
+        displayToast(getString(groupChat ? R.string.destroy_room_failed : R.string.destroy_channel_failed));
     }
 }

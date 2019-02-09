@@ -64,8 +64,9 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         public void onClick(View v) {
             final AlertDialog.Builder DestroyMucDialog = new AlertDialog.Builder(ConferenceDetailsActivity.this);
             DestroyMucDialog.setNegativeButton(getString(R.string.cancel), null);
-            DestroyMucDialog.setTitle(getString(R.string.destroy_muc));
-            DestroyMucDialog.setMessage(getString(R.string.destroy_muc_text, mConversation.getName()));
+            final boolean groupChat = mConversation != null && mConversation.isPrivateAndNonAnonymous();
+            DestroyMucDialog.setTitle(groupChat ? R.string.destroy_room : R.string.destroy_channel);
+            DestroyMucDialog.setMessage(getString(groupChat ? R.string.destroy_room_dialog : R.string.destroy_channel_dialog, mConversation.getName()));
             DestroyMucDialog.setPositiveButton(getString(R.string.delete), (dialogInterface, i) -> {
                 Intent intent = new Intent(xmppConnectionService, ConversationsActivity.class);
                 intent.setAction(ConversationsActivity.ACTION_DESTROY_MUC);
@@ -388,9 +389,10 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        final boolean groupChat = mConversation != null && mConversation.isPrivateAndNonAnonymous();
         getMenuInflater().inflate(R.menu.muc_details, menu);
         final MenuItem share = menu.findItem(R.id.action_share);
-        share.setVisible(mConversation != null && !mConversation.isPrivateAndNonAnonymous());
+        share.setVisible(groupChat);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -435,6 +437,11 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                     final int limit = GridManager.getCurrentColumnCount(this.binding.media);
                     xmppConnectionService.getAttachments(this.mConversation, limit, this);
                     this.binding.showMedia.setOnClickListener((v) -> MediaBrowserActivity.launch(this, mConversation));
+
+                    final boolean groupChat = mConversation != null && mConversation.isPrivateAndNonAnonymous();
+                    this.binding.destroy.setText(groupChat ? R.string.destroy_room : R.string.destroy_channel);
+                    this.binding.leaveMuc.setText(groupChat ? R.string.action_end_conversation_muc : R.string.action_end_conversation_channel);
+                    this.binding.autojoinCheckbox.setText(groupChat ? R.string.autojoin_group_chat : R.string.autojoin_channel);
                 }
                 updateView();
             }

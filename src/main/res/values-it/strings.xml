@@ -690,11 +690,11 @@
     <string name="pref_use_bundled_emoji_summary">Usa la libreria di emoji integrata invece di quella del dispositivo. Il cambiamento sarà disponibile alla riapertura dell\'app.</string>
     <string name="invalid_muc_nick">Nickname non valido</string>
     <string name="title_activity_share_via_account">Condividi via account</string>
-    <string name="destroy_muc">Elimina conversazione di gruppo</string>
+    <string name="destroy_room">Elimina conversazione di gruppo</string>
     <string name="conference_unknown_error">Non fai più parte di questa conversazione di gruppo</string>
-    <string name="destroy_muc_text">Vuoi veramente eliminare la conversazione di gruppo %s? Questo rimuoverà questa conversazione di gruppo permanentemente.</string>
-    <string name="destroy_muc_succeed">Conversazione di gruppo eliminata con successo</string>
-    <string name="destroy_muc_failed">La conversazione di gruppo non può essere eliminata</string>
+    <string name="destroy_room_dialog">Vuoi veramente eliminare la conversazione di gruppo %s? Questo rimuoverà questa conversazione di gruppo permanentemente.</string>
+    <string name="destroy_room_succeed">Conversazione di gruppo eliminata con successo</string>
+    <string name="destroy_room_failed">La conversazione di gruppo non può essere eliminata</string>
     <string name="no_write_access_in_public_muc">Non stai partecipando a questa conversazione di gruppo e non hai accesso in scrittura al momento.\nPer favore vai ai dettagli della conversazione di gruppo premendo <b>OK</b> ed invia un messaggio privato al moderatore, amministratore o proprietario tenendo premuto sul nome di uno dei primi nomi dei membri in cima alla lista e chiedi l\'accesso in scrittura.</string>
     <string name="snooze">Posponi</string>
     <string name="huawei_protected_apps">App Protette</string>
@@ -822,7 +822,7 @@
     <string name="enter_your_name">Inserisci il tuo nome</string>
     <string name="enter_your_name_instructions">Per favore inserisci il tuo nome che sarà visibile ai tuoi contatti.</string>
     <string name="no_name_set_instructions">Nessun nome impostato.</string>
-    <string name="autojoin_groupchat">Unisciti automaticamente a questa conversazione di gruppo</string>
+    <string name="autojoin_group_chat">Unisciti automaticamente a questa conversazione di gruppo</string>
     <string name="pref_play_gif_inside">Riproduci file GIF nelle conversazioni</string>
     <string name="pref_play_gif_inside_summary">Attivando questa opzione, i file GIF verranno riprodotti direttamente nella conversazione.</string>
     <string name="open_with">Apri con…</string>

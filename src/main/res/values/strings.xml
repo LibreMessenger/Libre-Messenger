@@ -690,11 +690,11 @@
     <string name="pref_use_bundled_emoji_summary">Use the integrated emoji library instead of using your devices ones. Changes will be available after reopening the app.</string>
     <string name="invalid_muc_nick">Invalid nickname</string>
     <string name="title_activity_share_via_account">Share via account</string>
-    <string name="destroy_muc">Destroy group chat</string>
+    <string name="destroy_room">Destroy group chat</string>
     <string name="conference_unknown_error">You are no longer in this group chat</string>
-    <string name="destroy_muc_text">Would you like to destroy the group chat %s? This will remove this group chat permanently.</string>
-    <string name="destroy_muc_succeed">Group chat successfully destroyed</string>
-    <string name="destroy_muc_failed">Group chat could not be destroyed</string>
+    <string name="destroy_room_dialog">Would you like to destroy the group chat %s? This will remove this group chat permanently.</string>
+    <string name="destroy_room_succeed">Group chat successfully destroyed</string>
+    <string name="destroy_room_failed">Group chat could not be destroyed</string>
     <string name="no_write_access_in_public_muc">You are not participating this group chat and have no write access at the moment.\nPlease go to the group chat details by pressing <b>OK</b> and send a private message to a moderator, administrator or owner by long clicking one of the members name at the top of the list to ask for write access.</string>
     <string name="snooze">Snooze</string>
     <string name="huawei_protected_apps">Protected Apps</string>
@@ -759,8 +759,8 @@
     <string name="pref_start_search_summary">At ‘Start Conversation’ screen open keyboard and place cursor in search field</string>
     <string name="paste_as_quote">Paste as quote</string>
     <string name="group_chat_avatar">Group chat avatar</string>
-    <string name="host_does_not_support_group_chat_avatars">Host does not support group chat avatars</string>
-    <string name="only_the_owner_can_change_group_chat_avatar">Only the owner can change group chat avatar</string>
+    <string name="host_does_not_support_group_chat_avatars">Host does not support avatars</string>
+    <string name="only_the_owner_can_change_group_chat_avatar">Only the owner can change the avatar</string>
     <string name="contact_name">Contact name</string>
     <string name="nickname">Nickname for this group chat</string>
     <string name="group_chat_name">Name</string>
@@ -822,7 +822,7 @@
     <string name="enter_your_name">Enter your name</string>
     <string name="enter_your_name_instructions">Please enter your nickname which will be visible to your contacts.</string>
     <string name="no_name_set_instructions">No nickname set.</string>
-    <string name="autojoin_groupchat">Automatically join this group chat</string>
+    <string name="autojoin_group_chat">Automatically join this group chat</string>
     <string name="pref_show_links_inside">Show previews of web links in chat</string>
     <string name="pref_show_links_inside_summary">Show previews of web links directly inside the chat view.</string>
     <string name="pref_play_gif_inside">Play GIF files in chat</string>
@@ -874,4 +874,10 @@
     <string name="remove_from_channel">Remove from channel</string>
     <string name="ban_from_channel">Ban from channel</string>
     <string name="manage_permission">Manage privileges</string>
+    <string name="destroy_channel">Destroy channel</string>
+    <string name="destroy_channel_dialog">Would you like to destroy the channel %s? This will remove this channel permanently.</string>
+    <string name="destroy_channel_succeed">Channel successfully destroyed</string>
+    <string name="destroy_channel_failed">Channel could not be destroyed</string>
+    <string name="action_end_conversation_channel">Leave channel</string>
+    <string name="autojoin_channel">Automatically join this channel</string>
 </resources>
