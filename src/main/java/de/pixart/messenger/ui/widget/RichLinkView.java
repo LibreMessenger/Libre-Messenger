@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,6 +15,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import de.pixart.messenger.R;
+import de.pixart.messenger.services.XmppConnectionService;
 import io.github.ponnamkarthik.richlinkpreview.MetaData;
 import io.github.ponnamkarthik.richlinkpreview.ResponseListener;
 import io.github.ponnamkarthik.richlinkpreview.RichLinkListener;
@@ -44,6 +44,7 @@ public class RichLinkView extends RelativeLayout {
 
     private RichLinkListener richLinkListener;
 
+    private XmppConnectionService mXmppConnectionService;
 
     public RichLinkView(Context context) {
         super(context);
@@ -96,10 +97,14 @@ public class RichLinkView extends RelativeLayout {
         if (meta.getImageurl().equals("") || meta.getImageurl().isEmpty()) {
             imageView.setVisibility(GONE);
         } else {
-            imageView.setVisibility(VISIBLE);
-            Picasso.get()
-                    .load(meta.getImageurl())
-                    .into(imageView);
+            if (mXmppConnectionService != null && mXmppConnectionService.isDataSaverDisabled()) {
+                imageView.setVisibility(VISIBLE);
+                Picasso.get()
+                        .load(meta.getImageurl())
+                        .into(imageView);
+            } else {
+                imageView.setVisibility(GONE);
+            }
         }
         if (meta.getTitle().isEmpty() || meta.getTitle().equals("")) {
             textViewTitle.setVisibility(GONE);
