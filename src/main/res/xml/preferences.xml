@@ -77,6 +77,11 @@
             android:summary="@string/pref_play_gif_inside_summary"
             android:title="@string/pref_play_gif_inside" />
         <CheckBoxPreference
+            android:defaultValue="@bool/show_links_inside"
+            android:key="show_links_inside"
+            android:summary="@string/pref_show_links_inside_summary"
+            android:title="@string/pref_show_links_inside" />
+        <CheckBoxPreference
             android:defaultValue="@bool/prefer_xmpp_avatar"
             android:key="prefer_xmpp_avatar"
             android:summary="@string/pref_prefer_xmpp_avatar_summary"

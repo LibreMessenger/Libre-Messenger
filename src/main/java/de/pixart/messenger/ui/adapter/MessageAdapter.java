@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -35,8 +36,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -70,6 +70,7 @@ import de.pixart.messenger.ui.util.ViewUtil;
 import de.pixart.messenger.ui.widget.ClickableMovementMethod;
 import de.pixart.messenger.ui.widget.CopyTextView;
 import de.pixart.messenger.ui.widget.ListSelectionManager;
+import de.pixart.messenger.ui.widget.RichLinkView;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.EmojiWrapper;
 import de.pixart.messenger.utils.Emoticons;
@@ -77,9 +78,11 @@ import de.pixart.messenger.utils.GeoHelper;
 import de.pixart.messenger.utils.StylingHelper;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.mam.MamReference;
+import io.github.ponnamkarthik.richlinkpreview.ViewListener;
 import pl.droidsonroids.gif.GifImageView;
 
 import static de.pixart.messenger.ui.SettingsActivity.PLAY_GIF_INSIDE;
+import static de.pixart.messenger.ui.SettingsActivity.SHOW_LINKS_INSIDE;
 
 public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextView.CopyHandler {
 
@@ -356,6 +359,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.audioPlayer.setVisibility(View.GONE);
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.gifImage.setVisibility(View.GONE);
+        viewHolder.richlinkview.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.VISIBLE);
         viewHolder.messageBody.setText(text);
         if (darkBackground) {
@@ -371,6 +375,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.audioPlayer.setVisibility(View.GONE);
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.gifImage.setVisibility(View.GONE);
+        viewHolder.richlinkview.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.VISIBLE);
         if (darkBackground) {
             viewHolder.messageBody.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Body1_Emoji_OnDark);
@@ -415,6 +420,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         });
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.gifImage.setVisibility(View.GONE);
+        viewHolder.richlinkview.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.GONE);
 
     }
@@ -490,6 +496,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.download_button.setVisibility(View.GONE);
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.gifImage.setVisibility(View.GONE);
+        viewHolder.richlinkview.setVisibility(View.GONE);
         viewHolder.audioPlayer.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.VISIBLE);
         if (darkBackground) {
@@ -587,6 +594,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.audioPlayer.setVisibility(View.GONE);
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.gifImage.setVisibility(View.GONE);
+        viewHolder.richlinkview.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.GONE);
         viewHolder.download_button.setVisibility(View.VISIBLE);
         viewHolder.download_button.setText(text);
@@ -598,6 +606,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.audioPlayer.setVisibility(View.GONE);
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.gifImage.setVisibility(View.GONE);
+        viewHolder.richlinkview.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.GONE);
         viewHolder.download_button.setVisibility(View.VISIBLE);
         final String mimeType = message.getMimeType();
@@ -658,12 +667,45 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message) + VCardName));
     }
 
+    private void displayRichLinkMessage(ViewHolder viewHolder, final Message message, boolean darkBackground) {
+        viewHolder.audioPlayer.setVisibility(View.GONE);
+        viewHolder.image.setVisibility(View.GONE);
+        viewHolder.gifImage.setVisibility(View.GONE);
+        boolean showLinksInside = activity.getPreferences().getBoolean(SHOW_LINKS_INSIDE, activity.getResources().getBoolean(R.bool.show_links_inside));
+        viewHolder.messageBody.setVisibility(View.VISIBLE);
+        Editable body = new SpannableStringBuilder(message.getBody().toLowerCase());
+        if (darkBackground) {
+            viewHolder.messageBody.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Body1_OnDark);
+        } else {
+            viewHolder.messageBody.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Body1);
+        }
+        MyLinkify.addLinks(body, false);
+        viewHolder.messageBody.setAutoLinkMask(0);
+        viewHolder.messageBody.setText(EmojiWrapper.transform(body));
+        if (showLinksInside) {
+            viewHolder.richlinkview.setVisibility(View.VISIBLE);
+            viewHolder.richlinkview.setLink(body.toString(), new ViewListener() {
+
+                @Override
+                public void onSuccess(boolean status) {
+                }
+
+                @Override
+                public void onError(Exception e) {
+                }
+            });
+        } else {
+            viewHolder.richlinkview.setVisibility(View.GONE);
+        }
+    }
+
     private void displayLocationMessage(ViewHolder viewHolder, final Message message) {
         viewHolder.audioPlayer.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.GONE);
         String url = GeoHelper.MapPreviewUri(message);
         viewHolder.image.setVisibility(View.VISIBLE);
         viewHolder.gifImage.setVisibility(View.GONE);
+        viewHolder.richlinkview.setVisibility(View.GONE);
         double target = metrics.density * 200;
         int scaledW;
         int scaledH;
@@ -681,12 +723,9 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         layoutParams.setMargins(0, (int) (metrics.density * 4), 0, (int) (metrics.density * 4));
         viewHolder.image.setLayoutParams(layoutParams);
         viewHolder.image.setOnClickListener(v -> showLocation(message));
-        Glide
-                .with(activity)
+        Picasso
+                .get()
                 .load(Uri.parse(url))
-                .asBitmap()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .fitCenter()
                 .placeholder(R.drawable.ic_map_marker_grey600_48dp)
                 .error(R.drawable.ic_map_marker_grey600_48dp)
                 .into(viewHolder.image);
@@ -702,6 +741,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     private void displayAudioMessage(ViewHolder viewHolder, Message message, boolean darkBackground) {
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.gifImage.setVisibility(View.GONE);
+        viewHolder.richlinkview.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.GONE);
         viewHolder.download_button.setVisibility(View.GONE);
         final RelativeLayout audioPlayer = viewHolder.audioPlayer;
@@ -714,6 +754,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.download_button.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.GONE);
         viewHolder.audioPlayer.setVisibility(View.GONE);
+        viewHolder.richlinkview.setVisibility(View.GONE);
         DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
         if (!file.exists()) {
             Toast.makeText(activity, R.string.file_deleted, Toast.LENGTH_SHORT).show();
@@ -821,6 +862,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                     viewHolder.edit_indicator = view.findViewById(R.id.edit_indicator);
                     viewHolder.image = view.findViewById(R.id.message_image);
                     viewHolder.gifImage = view.findViewById(R.id.message_image_gif);
+                    viewHolder.richlinkview = view.findViewById(R.id.richLinkView);
                     viewHolder.messageBody = view.findViewById(R.id.message_body);
                     viewHolder.time = view.findViewById(R.id.message_time);
                     viewHolder.indicatorReceived = view.findViewById(R.id.indicator_received);
@@ -836,6 +878,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                     viewHolder.edit_indicator = view.findViewById(R.id.edit_indicator);
                     viewHolder.image = view.findViewById(R.id.message_image);
                     viewHolder.gifImage = view.findViewById(R.id.message_image_gif);
+                    viewHolder.richlinkview = view.findViewById(R.id.richLinkView);
                     viewHolder.messageBody = view.findViewById(R.id.message_body);
                     viewHolder.time = view.findViewById(R.id.message_time);
                     viewHolder.indicatorReceived = view.findViewById(R.id.indicator_received);
@@ -964,6 +1007,8 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         } else {
             if (message.isGeoUri()) {
                 displayLocationMessage(viewHolder, message);
+            } else if (message.isWebUri()) {
+                displayRichLinkMessage(viewHolder, message, darkBackground);
             } else if (message.bodyIsOnlyEmojis() && message.getType() != Message.TYPE_PRIVATE) {
                 displayEmojiMessage(viewHolder, message.getBody().trim(), darkBackground);
             } else if (message.isXmppUri()) {
@@ -1130,6 +1175,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         protected Button resend_button;
         protected ImageView image;
         protected GifImageView gifImage;
+        protected RichLinkView richlinkview;
         protected ImageView indicator;
         protected ImageView indicatorReceived;
         protected ImageView indicatorRead;

@@ -8,6 +8,7 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import de.pixart.messenger.Config;
 import rocks.xmpp.addr.Jid;
@@ -27,6 +28,8 @@ public class XmppUri {
     public static final String ACTION_JOIN = "join";
     public static final String ACTION_MESSAGE = "message";
 
+    public static Pattern XMPP_URI = Patterns.XMPP_PATTERN;
+
     public XmppUri(String uri) {
         try {
             parse(Uri.parse(uri));
@@ -41,11 +44,6 @@ public class XmppUri {
 
     public XmppUri(Uri uri) {
         parse(uri);
-    }
-
-    public static boolean isXmppUri(String uri) {
-        String scheme = Uri.parse(uri).getScheme();
-        return "xmpp".equalsIgnoreCase(scheme);
     }
 
     public XmppUri(Uri uri, boolean safeSource) {

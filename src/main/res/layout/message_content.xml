@@ -28,6 +28,11 @@
         android:scaleType="centerCrop"
         app:riv_corner_radius="@dimen/rounded_image_border" />
 
+    <de.pixart.messenger.ui.widget.RichLinkView
+        android:id="@+id/richLinkView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <de.pixart.messenger.ui.widget.CopyTextView
         android:id="@+id/message_body"
         android:layout_width="wrap_content"

@@ -34,6 +34,7 @@ import android.text.Editable;
 import android.text.util.Linkify;
 
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import de.pixart.messenger.ui.text.FixedURLSpan;
 import de.pixart.messenger.utils.GeoHelper;

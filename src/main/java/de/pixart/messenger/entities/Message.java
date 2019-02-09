@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
+import android.webkit.URLUtil;
 
 import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
@@ -14,15 +15,18 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.crypto.axolotl.FingerprintStatus;
 import de.pixart.messenger.services.AvatarService;
+import de.pixart.messenger.ui.util.MyLinkify;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.Emoticons;
 import de.pixart.messenger.utils.GeoHelper;
 import de.pixart.messenger.utils.MessageUtils;
 import de.pixart.messenger.utils.MimeUtils;
+import de.pixart.messenger.utils.Patterns;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.utils.XmppUri;
 import rocks.xmpp.addr.Jid;
@@ -108,6 +112,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
 
     private Boolean isGeoUri = null;
     private Boolean isXmppUri = null;
+    private Boolean isWebUri = null;
     private Boolean isEmojisOnly = null;
     private Boolean treatAsDownloadable = null;
     private FileParams fileParams = null;
@@ -602,6 +607,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
                         this.getBody().length() + message.getBody().length() <= Config.MAX_DISPLAY_MESSAGE_CHARS &&
                         !message.isGeoUri()&&
                         !this.isGeoUri() &&
+                        !this.isWebUri() &&
                         !message.treatAsDownloadable() &&
                         !this.treatAsDownloadable() &&
                         !message.getBody().startsWith(ME_COMMAND) &&
@@ -767,7 +773,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
 
     public synchronized boolean isXmppUri() {
         if (isXmppUri == null) {
-            isXmppUri = XmppUri.isXmppUri(body.trim());
+            isXmppUri = XmppUri.XMPP_URI.matcher(body).matches();
         }
         return isXmppUri;
     }
@@ -777,6 +783,14 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
             isGeoUri = GeoHelper.GEO_URI.matcher(body).matches();
         }
         return isGeoUri;
+    }
+
+    public synchronized boolean isWebUri() {
+        String url = body.toLowerCase().trim();
+        if (isWebUri == null) {
+            isWebUri = URLUtil.isValidUrl(url) && Patterns.WEB_URL.matcher(url).matches();
+        }
+        return isWebUri;
     }
 
     public synchronized void resetFileParams() {

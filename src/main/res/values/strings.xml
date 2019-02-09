@@ -823,8 +823,10 @@
     <string name="enter_your_name_instructions">Please enter your nickname which will be visible to your contacts.</string>
     <string name="no_name_set_instructions">No nickname set.</string>
     <string name="autojoin_groupchat">Automatically join this group chat</string>
+    <string name="pref_show_links_inside">Show previews of web links in chat</string>
+    <string name="pref_show_links_inside_summary">Show previews of web links directly inside the chat view.</string>
     <string name="pref_play_gif_inside">Play GIF files in chat</string>
-    <string name="pref_play_gif_inside_summary">Setting this to true plays GIF files directly inside the chat view.</string>
+    <string name="pref_play_gif_inside_summary">Play GIF files directly inside the chat view.</string>
     <string name="open_with">Open with…</string>
     <string name="server_info_adhoc_invite">XEP-0050: Ad-Hoc Commands: user invite</string>
     <string name="choose_account">Choose account</string>
