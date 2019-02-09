@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import java.util.List;
 
@@ -50,7 +51,6 @@ public class MediaBrowserActivity extends XmppActivity implements OnMediaLoaded 
         mMediaAdapter = new MediaAdapter(this, R.dimen.media_size);
         this.binding.media.setAdapter(mMediaAdapter);
         GridManager.setupLayoutManager(this, this.binding.media, R.dimen.browser_media_size);
-
     }
 
     @Override
@@ -71,7 +71,12 @@ public class MediaBrowserActivity extends XmppActivity implements OnMediaLoaded 
     @Override
     public void onMediaLoaded(List<Attachment> attachments) {
         runOnUiThread(() -> {
-            mMediaAdapter.setAttachments(attachments);
+            if (attachments.size() > 0) {
+                mMediaAdapter.setAttachments(attachments);
+                this.binding.noMedia.setVisibility(View.GONE);
+            } else {
+                this.binding.noMedia.setVisibility(View.VISIBLE);
+            }
         });
     }
 }

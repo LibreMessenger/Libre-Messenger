@@ -94,6 +94,7 @@ import de.pixart.messenger.services.MessageArchiveService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.adapter.MediaPreviewAdapter;
 import de.pixart.messenger.ui.adapter.MessageAdapter;
+import de.pixart.messenger.ui.interfaces.OnMediaLoaded;
 import de.pixart.messenger.ui.util.ActivityResult;
 import de.pixart.messenger.ui.util.Attachment;
 import de.pixart.messenger.ui.util.ConversationMenuConfigurator;
@@ -1126,6 +1127,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         final MenuItem menuArchiveChat = menu.findItem(R.id.action_archive_chat);
         final MenuItem menuGroupDetails = menu.findItem(R.id.action_group_details);
         final MenuItem menuContactDetails = menu.findItem(R.id.action_contact_details);
+        final MenuItem menuMediaBrowser = menu.findItem(R.id.action_mediabrowser);
 
         if (conversation != null) {
             if (conversation.getMode() == Conversation.MODE_MULTI) {
@@ -1147,6 +1149,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 menuGroupDetails.setVisible(false);
                 menuContactDetails.setVisible(false);
             }
+            menuMediaBrowser.setVisible(true);
             menuNeedHelp.setVisible(true);
             menuSearchUpdates.setVisible(false);
             ConversationMenuConfigurator.configureAttachmentMenu(conversation, menu, activity.xmppConnectionService.getAttachmentChoicePreference(), hasAttachments);
@@ -1157,6 +1160,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             menuInviteContact.setVisible(false);
             menuGroupDetails.setVisible(false);
             menuContactDetails.setVisible(false);
+            menuMediaBrowser.setVisible(false);
         }
         super.onCreateOptionsMenu(menu, menuInflater);
     }
@@ -1445,6 +1449,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 break;
             case R.id.action_contact_details:
                 activity.switchToContactDetails(conversation.getContact());
+                break;
+            case R.id.action_mediabrowser:
+                MediaBrowserActivity.launch(activity, conversation);
                 break;
             case R.id.action_block:
             case R.id.action_unblock:

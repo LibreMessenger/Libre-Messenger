@@ -437,7 +437,6 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                     final int limit = GridManager.getCurrentColumnCount(this.binding.media);
                     xmppConnectionService.getAttachments(this.mConversation, limit, this);
                     this.binding.showMedia.setOnClickListener((v) -> MediaBrowserActivity.launch(this, mConversation));
-
                     final boolean groupChat = mConversation != null && mConversation.isPrivateAndNonAnonymous();
                     this.binding.destroy.setText(groupChat ? R.string.destroy_room : R.string.destroy_channel);
                     this.binding.leaveMuc.setText(groupChat ? R.string.action_end_conversation_muc : R.string.action_end_conversation_channel);

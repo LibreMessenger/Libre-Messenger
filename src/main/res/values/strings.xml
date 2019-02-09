@@ -880,4 +880,5 @@
     <string name="destroy_channel_failed">Channel could not be destroyed</string>
     <string name="action_end_conversation_channel">Leave channel</string>
     <string name="autojoin_channel">Automatically join this channel</string>
+    <string name="no_attachments">There are no attachments</string>
 </resources>
