@@ -10,13 +10,17 @@ import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PointF;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
@@ -52,6 +56,7 @@ public class MediaViewerActivity extends XmppActivity {
     boolean isImage = false;
     boolean isVideo = false;
     private ActivityMediaViewerBinding binding;
+    private GestureDetector gestureDetector;
 
     public static String getMimeType(String path) {
         try {
@@ -73,6 +78,15 @@ public class MediaViewerActivity extends XmppActivity {
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_media_viewer);
         this.mTheme = findTheme();
         setTheme(this.mTheme);
+        gestureDetector = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onDown(MotionEvent e) {
+                showFab();
+                return super.onDown(e);
+            }
+
+            
+        });
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null && actionBar.isShowing()) {
@@ -110,6 +124,7 @@ public class MediaViewerActivity extends XmppActivity {
             }
             return false;
         });
+        showFab();
     }
 
     private void share() {
@@ -226,9 +241,11 @@ public class MediaViewerActivity extends XmppActivity {
             if (gif) {
                 binding.messageGifView.setVisibility(View.VISIBLE);
                 binding.messageGifView.setImageURI(FileUri);
+                binding.messageGifView.setOnTouchListener((view, motionEvent) -> gestureDetector.onTouchEvent(motionEvent));
             } else {
                 binding.messageImageView.setVisibility(View.VISIBLE);
                 binding.messageImageView.setImage(ImageSource.uri(FileUri));
+                binding.messageImageView.setOnTouchListener((view, motionEvent) -> gestureDetector.onTouchEvent(motionEvent));
             }
         } catch (Exception e) {
             Toast.makeText(this, getString(R.string.error_file_corrupt), Toast.LENGTH_LONG).show();
@@ -262,6 +279,7 @@ public class MediaViewerActivity extends XmppActivity {
             binding.messageVideoView.setVideoURI(uri);
             mFullscreenbutton.setVisibility(View.INVISIBLE);
             binding.messageVideoView.setShouldAutoplay(true);
+            binding.messageVideoView.setOnTouchListener((view, motionEvent) -> gestureDetector.onTouchEvent(motionEvent));
 
         } catch (IOException e) {
             Toast.makeText(this, getString(R.string.error_file_corrupt), Toast.LENGTH_LONG).show();
@@ -356,4 +374,17 @@ public class MediaViewerActivity extends XmppActivity {
     public SharedPreferences getPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     }
+
+    private void showFab() {
+        binding.speedDial.show();
+        hideFab();
+    }
+
+    private void hideFab() {
+        new Handler().postDelayed(() -> {
+            binding.speedDial.hide();
+        }, 3000);
+    }
+
+
 }
