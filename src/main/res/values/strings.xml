@@ -201,7 +201,7 @@
     <string name="done">Done</string>
     <string name="verify">Verify</string>
     <string name="decrypt">Decrypt</string>
-    <string name="bookmarks">Bookmarks</string>
+    <string name="bookmarks">Multi user chats</string>
     <string name="search">Search</string>
     <string name="enter_contact">Enter Contact</string>
     <string name="delete_contact">Delete Contact</string>
