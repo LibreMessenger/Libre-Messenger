@@ -80,6 +80,7 @@ import de.pixart.messenger.utils.Patterns;
 import de.pixart.messenger.utils.Resolver;
 import de.pixart.messenger.utils.SSLSocketHelper;
 import de.pixart.messenger.utils.SocksSocketFactory;
+import de.pixart.messenger.utils.XmlHelper;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xml.Tag;
 import de.pixart.messenger.xml.TagWriter;
@@ -874,6 +875,7 @@ public class XmppConnection implements Runnable {
             if (isSecure) {
                 sendRegistryRequest();
             } else {
+                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": unable to find STARTTLS for registration process " + XmlHelper.printElementNames(this.streamFeatures));
                 throw new StateChangingException(Account.State.INCOMPATIBLE_SERVER);
             }
         } else if (!this.streamFeatures.hasChild("register") && account.isOptionSet(Account.OPTION_REGISTER)) {
@@ -892,6 +894,7 @@ public class XmppConnection implements Runnable {
             if (this.streamFeatures.hasChild("bind") && isSecure) {
                 sendBindRequest();
             } else {
+                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": unable to find bind feature " + XmlHelper.printElementNames(this.streamFeatures));
                 throw new StateChangingException(Account.State.INCOMPATIBLE_SERVER);
             }
         }
@@ -930,6 +933,7 @@ public class XmppConnection implements Runnable {
             }
             tagWriter.writeElement(auth);
         } else {
+            Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": unable to find SASL mechanism " + saslMechanism.toString());
             throw new StateChangingException(Account.State.INCOMPATIBLE_SERVER);
         }
     }
