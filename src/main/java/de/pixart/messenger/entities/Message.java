@@ -786,9 +786,9 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
     }
 
     public synchronized boolean isWebUri() {
-        String url = body.toLowerCase().trim();
+        String url = body.trim();
         if (isWebUri == null) {
-            isWebUri = URLUtil.isValidUrl(url) && Patterns.WEB_URL.matcher(url).matches();
+            isWebUri = URLUtil.isValidUrl(url) && Patterns.WEB_URL.matcher(url).matches() && !url.contains(" ");
         }
         return isWebUri;
     }

@@ -673,7 +673,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.gifImage.setVisibility(View.GONE);
         boolean showLinksInside = activity.getPreferences().getBoolean(SHOW_LINKS_INSIDE, activity.getResources().getBoolean(R.bool.show_links_inside));
         viewHolder.messageBody.setVisibility(View.VISIBLE);
-        Editable body = new SpannableStringBuilder(message.getBody().toLowerCase());
+        Editable body = new SpannableStringBuilder(message.getBody());
         if (darkBackground) {
             viewHolder.messageBody.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Body1_OnDark);
         } else {
@@ -682,6 +682,9 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         MyLinkify.addLinks(body, false);
         viewHolder.messageBody.setAutoLinkMask(0);
         viewHolder.messageBody.setText(EmojiWrapper.transform(body));
+        viewHolder.messageBody.setTextIsSelectable(true);
+        viewHolder.messageBody.setMovementMethod(ClickableMovementMethod.getInstance());
+        listSelectionManager.onUpdate(viewHolder.messageBody, message);
         if (showLinksInside) {
             viewHolder.richlinkview.setVisibility(View.VISIBLE);
             viewHolder.richlinkview.setLink(body.toString(), new ViewListener() {
