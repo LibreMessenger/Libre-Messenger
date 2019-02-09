@@ -1010,8 +1010,6 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         } else {
             if (message.isGeoUri()) {
                 displayLocationMessage(viewHolder, message);
-            } else if (message.isWebUri()) {
-                displayRichLinkMessage(viewHolder, message, darkBackground);
             } else if (message.bodyIsOnlyEmojis() && message.getType() != Message.TYPE_PRIVATE) {
                 displayEmojiMessage(viewHolder, message.getBody().trim(), darkBackground);
             } else if (message.isXmppUri()) {
@@ -1037,6 +1035,8 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                             activity.getString(R.string.check_x_filesize,
                                     UIHelper.getFileDescriptionString(activity, message)));
                 }
+            } else if (message.isWebUri()) {
+                displayRichLinkMessage(viewHolder, message, darkBackground);
             } else {
                 displayTextMessage(viewHolder, message, darkBackground, type);
             }
