@@ -97,14 +97,10 @@ public class RichLinkView extends RelativeLayout {
         if (meta.getImageurl().equals("") || meta.getImageurl().isEmpty()) {
             imageView.setVisibility(GONE);
         } else {
-            if (mXmppConnectionService != null && mXmppConnectionService.isDataSaverDisabled()) {
-                imageView.setVisibility(VISIBLE);
-                Picasso.get()
-                        .load(meta.getImageurl())
-                        .into(imageView);
-            } else {
-                imageView.setVisibility(GONE);
-            }
+            imageView.setVisibility(VISIBLE);
+            Picasso.get()
+                    .load(meta.getImageurl())
+                    .into(imageView);
         }
         if (meta.getTitle().isEmpty() || meta.getTitle().equals("")) {
             textViewTitle.setVisibility(GONE);

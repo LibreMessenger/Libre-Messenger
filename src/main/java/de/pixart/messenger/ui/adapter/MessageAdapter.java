@@ -685,7 +685,8 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.messageBody.setTextIsSelectable(true);
         viewHolder.messageBody.setMovementMethod(ClickableMovementMethod.getInstance());
         listSelectionManager.onUpdate(viewHolder.messageBody, message);
-        if (showLinksInside) {
+        boolean dataSaverDisabled = activity.xmppConnectionService.isDataSaverDisabled();
+        if (showLinksInside && dataSaverDisabled) {
             viewHolder.richlinkview.setVisibility(View.VISIBLE);
             viewHolder.richlinkview.setLink(body.toString(), new ViewListener() {
 
