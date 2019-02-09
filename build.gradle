@@ -83,6 +83,7 @@ dependencies {
     implementation 'com.leinardi.android:speed-dial:2.0.1'
     implementation 'io.github.ponnamkarthik:richlinkpreview:1.0.9'
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.squareup.okhttp3:okhttp:3.13.1'
 }
 
 ext {
@@ -98,8 +99,8 @@ android {
         minSdkVersion 16
         targetSdkVersion 28
 
-        versionCode 251
-        versionName "2.2.0 beta (2019-02-09)"
+        versionCode 252
+        versionName "2.2.0 beta (2019-02-10)"
 
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"
