@@ -41,7 +41,7 @@
 		    \n\nhttps://github.com/google/gson\n(Apache License, Version 2.0)
 		    \n\nhttp://hc.apache.org/httpcomponents-client\n(Apache License, Version 2.0)
 		    \n\nhttp://hc.apache.org/httpcomponents-core\n(Apache License, Version 2.0)
-			\n\nhttps://github.com/bumptech/glide\n(BSD, The MIT License (MIT) and Apache License, Version 2.0)
+			\n\nhttps://github.com/square/picasso\n(Apache License, Version 2.0)
 			\n\nhttps://github.com/davemorrissey/subsampling-scale-image-view\n(Apache License, Version 2.0)
             \n\nhttps://github.com/koral--/android-gif-drawable\n(The MIT License (MIT))
 			\n\nhttps://github.com/rtoshiro/FullscreenVideoView\n(Apache License, Version 2.0)
@@ -55,6 +55,7 @@
             \n\nhttp://xmpp.rocks/\n(The MIT License (MIT))
             \n\nhttps://github.com/drakeet/ToastCompat/\n(Apache License, Version 2.0)
             \n\nhttps://github.com/leinardi/FloatingActionButtonSpeedDial/\n(Apache License, Version 2.0)
+            \n\nhttps://github.com/PonnamKarthik/RichLinkPreview\n(Apache License, Version 2.0)
     </string>
 
     <string name="default_resource" translatable="false">Phone</string>
