@@ -1,17 +1,27 @@
 package de.pixart.messenger.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Locale;
 
 import de.pixart.messenger.R;
 import de.pixart.messenger.databinding.ActivityMucUsersBinding;
+import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.services.XmppConnectionService;
@@ -19,11 +29,15 @@ import de.pixart.messenger.ui.adapter.UserAdapter;
 import de.pixart.messenger.ui.util.MucDetailsContextMenuHelper;
 import rocks.xmpp.addr.Jid;
 
-public class MucUsersActivity extends XmppActivity implements XmppConnectionService.OnMucRosterUpdate, XmppConnectionService.OnAffiliationChanged {
+public class MucUsersActivity extends XmppActivity implements XmppConnectionService.OnMucRosterUpdate, XmppConnectionService.OnAffiliationChanged, MenuItem.OnActionExpandListener, TextWatcher {
 
     private UserAdapter userAdapter;
 
     private Conversation mConversation = null;
+
+    private EditText mSearchEditText;
+
+    private ArrayList<MucOptions.User> allUsers = new ArrayList<>();
 
     @Override
     protected void refreshUiReal() {
@@ -41,9 +55,26 @@ public class MucUsersActivity extends XmppActivity implements XmppConnectionServ
 
     private void loadAndSubmitUsers() {
         if (mConversation != null) {
-            ArrayList<MucOptions.User> users = mConversation.getMucOptions().getUsers();
-            Collections.sort(users);
-            userAdapter.submitList(users);
+            allUsers = mConversation.getMucOptions().getUsers();
+            Collections.sort(allUsers);
+            submitFilteredList(mSearchEditText != null ? mSearchEditText.getText().toString() : null);
+        }
+    }
+
+    private void submitFilteredList(String search) {
+        if (TextUtils.isEmpty(search)) {
+            userAdapter.submitList(allUsers);
+        } else {
+            final String needle = search.toLowerCase(Locale.getDefault());
+            ArrayList<MucOptions.User> filtered = new ArrayList<>();
+            for (MucOptions.User user : allUsers) {
+                final String name = user.getName();
+                final Contact contact = user.getContact();
+                if (name != null && name.toLowerCase(Locale.getDefault()).contains(needle) || contact != null && contact.getDisplayName().toLowerCase(Locale.getDefault()).contains(needle)) {
+                    filtered.add(user);
+                }
+            }
+            userAdapter.submitList(filtered);
         }
     }
 
@@ -83,5 +114,51 @@ public class MucUsersActivity extends XmppActivity implements XmppConnectionServ
     @Override
     public void onAffiliationChangeFailed(Jid jid, int resId) {
         displayToast(getString(resId, jid.asBareJid().toString()));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        getMenuInflater().inflate(R.menu.muc_users_activity, menu);
+        final MenuItem menuSearchView = menu.findItem(R.id.action_search);
+        final View mSearchView = menuSearchView.getActionView();
+        mSearchEditText = mSearchView.findViewById(R.id.search_field);
+        mSearchEditText.addTextChangedListener(this);
+        mSearchEditText.setHint(R.string.search_participants);
+        menuSearchView.setOnActionExpandListener(this);
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemActionExpand(MenuItem item) {
+        mSearchEditText.post(() -> {
+            mSearchEditText.requestFocus();
+            final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(mSearchEditText, InputMethodManager.SHOW_IMPLICIT);
+        });
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemActionCollapse(MenuItem item) {
+        final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mSearchEditText.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
+        mSearchEditText.setText("");
+        submitFilteredList("");
+        return true;
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        submitFilteredList(s.toString());
     }
 }

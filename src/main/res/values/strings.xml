@@ -885,4 +885,5 @@
     <string name="notification_backup_created_subtitle">The backup files were stored in %s</string>
     <string name="notification_backup_failed_title">Backup failed</string>
     <string name="notification_backup_failed_subtitle">The backup files could not be stored in %s</string>
+    <string name="search_participants">Search participants</string>
 </resources>
