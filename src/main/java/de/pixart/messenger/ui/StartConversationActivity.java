@@ -20,6 +20,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -259,6 +260,12 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
         configureActionBar(getSupportActionBar());
         binding.speedDial.inflate(R.menu.start_conversation_fab_submenu);
         binding.tabLayout.setupWithViewPager(binding.startConversationViewPager);
+        binding.startConversationViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                updateSearchViewHint();
+            }
+        });
         mListPagerAdapter = new ListPagerAdapter(getSupportFragmentManager());
         binding.startConversationViewPager.setAdapter(mListPagerAdapter);
 
@@ -605,7 +612,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
         if (binding.startConversationViewPager.getCurrentItem() == 0) {
             mSearchEditText.setHint(R.string.search_contacts);
         } else {
-            mSearchEditText.setHint(R.string.search_groups);
+            mSearchEditText.setHint(R.string.search_bookmarks);
         }
     }
 

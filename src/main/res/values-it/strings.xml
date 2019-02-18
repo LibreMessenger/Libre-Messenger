@@ -415,7 +415,7 @@
     <string name="none">Nessuno</string>
     <string name="recently_used">Usati recentemente</string>
     <string name="search_contacts">Cerca contatti</string>
-    <string name="search_groups">Cerca conversazioni di gruppo</string>
+    <string name="search_bookmarks">Cerca conversazioni di gruppo</string>
     <string name="choose_quick_action">Scegli azione rapida</string>
     <string name="send_private_message">Invia messaggio privato</string>
     <string name="user_has_left_conference">%1$s ha lasciato la conversazione di gruppo!</string>
