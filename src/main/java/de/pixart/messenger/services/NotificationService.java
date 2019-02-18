@@ -1063,7 +1063,7 @@ public class NotificationService {
         }
     }
 
-    private void notify(int id, Notification notification) {
+    public void notify(int id, Notification notification) {
         final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mXmppConnectionService);
         try {
             notificationManager.notify(id, notification);
