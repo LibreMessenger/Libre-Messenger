@@ -487,7 +487,15 @@ public class FileBackend {
             if (originalBitmap == null) {
                 throw new FileCopyException(R.string.error_not_an_image_file);
             }
-            Bitmap scaledBitmap = resize(originalBitmap, mXmppConnectionService.getCompressImageResolutionPreference());
+            int size;
+            if (mXmppConnectionService.getCompressImageResolutionPreference() == 0) {
+                int height = originalBitmap.getHeight();
+                int width = originalBitmap.getWidth();
+                size = height > width ? height : width;
+            } else {
+                size = mXmppConnectionService.getCompressImageResolutionPreference();
+            }
+            Bitmap scaledBitmap = resize(originalBitmap, size);
             int rotation = getRotation(image);
             scaledBitmap = rotate(scaledBitmap, rotation);
             boolean targetSizeReached = false;

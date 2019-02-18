@@ -624,9 +624,11 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     }
 
     private void onEditYourNameClicked(View view) {
-        String nick = "";
+        String nick;
         if (mAccount.getDisplayName() != null) {
             nick = mAccount.getDisplayName();
+        } else {
+            nick = mAccount.getJid().getLocal();
         }
         quickEdit(nick, R.string.your_name, value -> {
             final String displayName = value.trim();

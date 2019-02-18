@@ -903,7 +903,7 @@ public class XmppConnectionService extends Service {
             case "uncompressed":
                 return 0;
             default:
-                return 3840;
+                return 1920;
         }
     }
 
