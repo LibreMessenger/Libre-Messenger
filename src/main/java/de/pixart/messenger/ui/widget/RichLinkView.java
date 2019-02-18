@@ -16,10 +16,10 @@ import com.squareup.picasso.Picasso;
 
 import de.pixart.messenger.R;
 import de.pixart.messenger.services.XmppConnectionService;
+import de.pixart.messenger.utils.RichPreview;
 import io.github.ponnamkarthik.richlinkpreview.MetaData;
 import io.github.ponnamkarthik.richlinkpreview.ResponseListener;
 import io.github.ponnamkarthik.richlinkpreview.RichLinkListener;
-import io.github.ponnamkarthik.richlinkpreview.RichPreview;
 import io.github.ponnamkarthik.richlinkpreview.ViewListener;
 
 /**
