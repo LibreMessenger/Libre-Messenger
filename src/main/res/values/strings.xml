@@ -881,4 +881,8 @@
     <string name="action_end_conversation_channel">Leave channel</string>
     <string name="autojoin_channel">Automatically join this channel</string>
     <string name="no_attachments">There are no attachments</string>
+    <string name="notification_backup_created_title">Backup was successful</string>
+    <string name="notification_backup_created_subtitle">The backup files were stored in %s</string>
+    <string name="notification_backup_failed_title">Backup failed</string>
+    <string name="notification_backup_failed_subtitle">The backup files could not be stored in %s</string>
 </resources>

@@ -253,7 +253,7 @@ public class SettingsActivity extends XmppActivity implements
             createBackupPreference.setSummary(getString(R.string.pref_create_backup_summary, FileBackend.getBackupDirectory()));
             createBackupPreference.setOnPreferenceClickListener(preference -> {
                 if (hasStoragePermission(REQUEST_CREATE_BACKUP)) {
-                    createBackup();
+                    createBackup(true);
                 }
                 return true;
             });
@@ -475,7 +475,7 @@ public class SettingsActivity extends XmppActivity implements
         if (grantResults.length > 0) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (requestCode == REQUEST_CREATE_BACKUP) {
-                    createBackup();
+                    createBackup(true);
                 }
             } else {
                 Toast.makeText(this, R.string.no_storage_permission, Toast.LENGTH_SHORT).show();
@@ -483,8 +483,10 @@ public class SettingsActivity extends XmppActivity implements
         }
     }
 
-    private void createBackup() {
-        ContextCompat.startForegroundService(this, new Intent(this, ExportBackupService.class));
+    private void createBackup(boolean notify) {
+        final Intent intent = new Intent(this, ExportBackupService.class);
+        intent.putExtra("NOTIFY_ON_BACKUP_COMPLETE", notify);
+        ContextCompat.startForegroundService(this, intent);
     }
 
     private void displayToast(final String msg) {
@@ -501,32 +503,6 @@ public class SettingsActivity extends XmppActivity implements
 
     public void refreshUiReal() {
         recreate();
-        //handleMultiAccountChanges();
-    }
-
-    private void handleMultiAccountChanges() {
-        multiAccountPreference = mSettingsFragment.findPreference("enable_multi_accounts");
-        if (multiAccountPreference != null) {
-            //check if password = null
-            final SharedPreferences multiaccount_prefs = getApplicationContext().getSharedPreferences(USE_MULTI_ACCOUNTS, Context.MODE_PRIVATE);
-            if (multiaccount_prefs != null && multiaccount_prefs.getString("BackupPW", null) == null) {
-                Log.d(Config.LOGTAG, "uncheck multiaccount because password = null");
-                if (multiAccountPreference != null) {
-                    ((CheckBoxPreference) multiAccountPreference).setChecked(false);
-                }
-            }
-            //if multiAccountDisabled reset password
-            final Preference enableMultiAccountsPreference = mSettingsFragment.findPreference("enable_multi_accounts");
-            if (enableMultiAccountsPreference != null && !isMultiAccountChecked) {
-                SharedPreferences.Editor editor = multiaccount_prefs.edit();
-                editor.putString("BackupPW", null);
-                if (editor.commit()) {
-                    Log.d(Config.LOGTAG, "resetting multiaccount password because multiaccount = unchecked");
-                } else {
-                    Log.d(Config.LOGTAG, "resetting multiaccount password failed");
-                }
-            }
-        }
     }
 
     private int getNumberOfAccounts() {

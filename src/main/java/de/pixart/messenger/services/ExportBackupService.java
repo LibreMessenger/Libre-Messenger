@@ -2,6 +2,7 @@ package de.pixart.messenger.services;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
@@ -72,6 +75,30 @@ public class ExportBackupService extends Service {
     private DatabaseBackend mDatabaseBackend;
     private List<Account> mAccounts;
     private NotificationManager notificationManager;
+
+    private static List<Intent> getPossibleFileOpenIntents(final Context context, final String path) {
+
+        //http://www.openintents.org/action/android-intent-action-view/file-directory
+        //do not use 'vnd.android.document/directory' since this will trigger system file manager
+        Intent openIntent = new Intent(Intent.ACTION_VIEW);
+        openIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        if (Compatibility.runsAndTargetsTwentyFour(context)) {
+            openIntent.setType("resource/folder");
+        } else {
+            openIntent.setDataAndType(Uri.parse("file://" + path), "resource/folder");
+        }
+        openIntent.putExtra("org.openintents.extra.ABSOLUTE_PATH", path);
+
+        Intent amazeIntent = new Intent(Intent.ACTION_VIEW);
+        amazeIntent.setDataAndType(Uri.parse("com.amaze.filemanager:" + path), "resource/folder");
+
+        //will open a file manager at root and user can navigate themselves
+        Intent systemFallBack = new Intent(Intent.ACTION_VIEW);
+        systemFallBack.addCategory(Intent.CATEGORY_DEFAULT);
+        systemFallBack.setData(Uri.parse("content://com.android.externalstorage.documents/root/primary"));
+
+        return Arrays.asList(openIntent, amazeIntent, systemFallBack);
+    }
 
     private static void accountExport(SQLiteDatabase db, String uuid, PrintWriter writer) {
         final StringBuilder builder = new StringBuilder();
@@ -197,9 +224,19 @@ public class ExportBackupService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (running.compareAndSet(false, true)) {
             new Thread(() -> {
-                export();
+                final Bundle extras = intent.getExtras();
+                boolean notify = false;
+                if (extras != null & extras.containsKey("NOTIFY_ON_BACKUP_COMPLETE")) {
+                    notify = extras.getBoolean("NOTIFY_ON_BACKUP_COMPLETE");
+                }
+                final boolean success = export();
                 stopForeground(true);
                 running.set(false);
+                if (success) {
+                    notifySuccess(notify);
+                } else {
+                    notifyError();
+                }
                 WakeLockHelper.release(wakeLock);
                 stopSelf();
             }).start();
@@ -232,7 +269,7 @@ public class ExportBackupService extends Service {
         }
     }
 
-    private void export() {
+    private boolean export() {
         wakeLock.acquire(15 * 60 * 1000L /*15 minutes*/);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getBaseContext(), "backup");
         mBuilder.setContentTitle(getString(R.string.notification_create_backup_title))
@@ -291,9 +328,46 @@ public class ExportBackupService extends Service {
                 Log.d(Config.LOGTAG, "written backup to " + file.getAbsoluteFile());
                 count++;
             }
+            return true;
         } catch (Exception e) {
             Log.d(Config.LOGTAG, "unable to create backup ", e);
+            return false;
         }
+    }
+
+    private void notifySuccess(final boolean notify) {
+        if (!notify) {
+            return;
+        }
+        final String path = FileBackend.getBackupDirectory();
+        PendingIntent pendingIntent = null;
+        for (Intent intent : getPossibleFileOpenIntents(this, path)) {
+            if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
+                pendingIntent = PendingIntent.getActivity(this, 189, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                break;
+            }
+        }
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getBaseContext(), "backup");
+        mBuilder.setContentTitle(getString(R.string.notification_backup_created_title))
+                .setContentText(getString(R.string.notification_backup_created_subtitle, path))
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.notification_backup_created_subtitle, FileBackend.getBackupDirectory())))
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .setSmallIcon(R.drawable.ic_archive_white_24dp);
+        notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+    }
+
+    private void notifyError() {
+        final String path = FileBackend.getBackupDirectory();
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getBaseContext(), "backup");
+        mBuilder.setContentTitle(getString(R.string.notification_backup_failed_title))
+                .setContentText(getString(R.string.notification_backup_failed_subtitle, path))
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.notification_backup_failed_subtitle, FileBackend.getBackupDirectory())))
+                .setAutoCancel(true)
+                .setSmallIcon(R.drawable.ic_warning_white_24dp);
+        notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
     private void writeToFile(Conversation conversation) {
