@@ -81,7 +81,6 @@ dependencies {
     implementation 'me.drakeet.support:toastcompat:1.1.0'
     implementation 'org.osmdroid:osmdroid-android:6.0.3'
     implementation 'com.leinardi.android:speed-dial:2.0.1'
-    implementation 'io.github.ponnamkarthik:richlinkpreview:1.0.9'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.squareup.okhttp3:okhttp:3.13.1'
 }

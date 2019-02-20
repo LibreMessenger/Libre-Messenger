@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,12 +16,9 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import de.pixart.messenger.R;
-import de.pixart.messenger.services.XmppConnectionService;
+import de.pixart.messenger.utils.MetaData;
 import de.pixart.messenger.utils.RichPreview;
-import io.github.ponnamkarthik.richlinkpreview.MetaData;
-import io.github.ponnamkarthik.richlinkpreview.ResponseListener;
-import io.github.ponnamkarthik.richlinkpreview.RichLinkListener;
-import io.github.ponnamkarthik.richlinkpreview.ViewListener;
+
 
 /**
  * Created by ponna on 16-01-2018.
@@ -36,15 +34,12 @@ public class RichLinkView extends RelativeLayout {
     ImageView imageView;
     TextView textViewTitle;
     TextView textViewDesp;
-    TextView textViewUrl;
 
     private String main_url;
 
     private boolean isDefaultClick = true;
 
-    private RichLinkListener richLinkListener;
-
-    private XmppConnectionService mXmppConnectionService;
+    private RichPreview.RichLinkListener richLinkListener;
 
     public RichLinkView(Context context) {
         super(context);
@@ -73,7 +68,7 @@ public class RichLinkView extends RelativeLayout {
     }
 
 
-    public void initView() {
+    public void initView(final boolean dataSaverDisabled) {
         if (findLinearLayoutChild() != null) {
             this.view = findLinearLayoutChild();
         } else {
@@ -84,35 +79,42 @@ public class RichLinkView extends RelativeLayout {
         imageView = findViewById(R.id.rich_link_image);
         textViewTitle = findViewById(R.id.rich_link_title);
         textViewDesp = findViewById(R.id.rich_link_desp);
-        textViewUrl = findViewById(R.id.rich_link_url);
-
+        imageView.setAdjustViewBounds(true);
         if (!meta.getImageurl().equals("") || !meta.getImageurl().isEmpty()
                 && !meta.getTitle().isEmpty() || !meta.getTitle().equals("")
                 && !meta.getUrl().isEmpty() || !meta.getUrl().equals("")
                 && !meta.getDescription().isEmpty() || !meta.getDescription().equals("")) {
             linearLayout.setVisibility(VISIBLE);
         } else {
-            linearLayout.setVisibility(GONE);
+            linearLayout.setVisibility(VISIBLE);
         }
-        if (meta.getImageurl().equals("") || meta.getImageurl().isEmpty()) {
-            imageView.setVisibility(GONE);
+        if (!meta.getImageurl().equals("") && !meta.getImageurl().isEmpty()) {
+            if (!dataSaverDisabled) {
+                Picasso.get()
+                        .load(R.drawable.ic_web_grey600_48)
+                        .into(imageView);
+            } else {
+                imageView.setVisibility(VISIBLE);
+                Picasso.get()
+                        .load(meta.getImageurl())
+                        .resize(80, 80)
+                        .onlyScaleDown()
+                        .centerInside()
+                        .placeholder(R.drawable.ic_web_grey600_48)
+                        .into(imageView);
+            }
         } else {
             imageView.setVisibility(VISIBLE);
             Picasso.get()
-                    .load(meta.getImageurl())
+                    .load(R.drawable.ic_web_grey600_48)
                     .into(imageView);
         }
         if (meta.getTitle().isEmpty() || meta.getTitle().equals("")) {
-            textViewTitle.setVisibility(GONE);
+            textViewTitle.setVisibility(VISIBLE);
+            textViewTitle.setText(meta.getUrl());
         } else {
             textViewTitle.setVisibility(VISIBLE);
             textViewTitle.setText(meta.getTitle());
-        }
-        if (meta.getUrl().isEmpty() || meta.getUrl().equals("")) {
-            textViewUrl.setVisibility(GONE);
-        } else {
-            textViewUrl.setVisibility(GONE);
-            textViewUrl.setText(meta.getUrl());
         }
         if (meta.getDescription().isEmpty() || meta.getDescription().equals("")) {
             textViewDesp.setVisibility(GONE);
@@ -143,7 +145,7 @@ public class RichLinkView extends RelativeLayout {
         isDefaultClick = isDefault;
     }
 
-    public void setClickListener(RichLinkListener richLinkListener1) {
+    public void setClickListener(RichPreview.RichLinkListener richLinkListener1) {
         richLinkListener = richLinkListener1;
     }
 
@@ -156,23 +158,23 @@ public class RichLinkView extends RelativeLayout {
 
     public void setLinkFromMeta(MetaData metaData) {
         meta = metaData;
-        initView();
+        initView(true);
     }
 
     public MetaData getMetaData() {
         return meta;
     }
 
-    public void setLink(String url, final ViewListener viewListener) {
+    public void setLink(final String url, final String filename, final boolean dataSaverDisabled, final RichPreview.ViewListener viewListener) {
         main_url = url;
-        RichPreview richPreview = new RichPreview(new ResponseListener() {
+        RichPreview richPreview = new RichPreview(new RichPreview.ResponseListener() {
             @Override
             public void onData(MetaData metaData) {
                 meta = metaData;
                 if (!meta.getTitle().isEmpty() || !meta.getTitle().equals("")) {
                     viewListener.onSuccess(true);
                 }
-                initView();
+                initView(dataSaverDisabled);
             }
 
             @Override
@@ -180,6 +182,6 @@ public class RichLinkView extends RelativeLayout {
                 viewListener.onError(e);
             }
         });
-        richPreview.getPreview(url);
+        richPreview.getPreview(url, filename, context);
     }
 }

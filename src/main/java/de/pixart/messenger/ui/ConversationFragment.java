@@ -173,8 +173,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     public Uri mPendingEditorContent = null;
     public FragmentConversationBinding binding;
     protected MessageAdapter messageListAdapter;
-    protected Message lastHistoryMessage = null;
-    SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd. MMM yyyy", Locale.getDefault());
     private String lastMessageUuid = null;
     private Conversation conversation;
     private Toast messageLoaderToast;
@@ -680,21 +678,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             }
         }
         return -1;
-    }
-
-    private ScrollState getScrollPosition(int pos, View view) {
-        final ListView listView = this.binding.messagesView;
-        if (listView.getCount() == 0 || listView.getLastVisiblePosition() == listView.getCount() - 1) {
-            return null;
-        } else {
-            //final int pos = listView.getFirstVisiblePosition();
-            //final View view = listView.getChildAt(0);
-            if (view == null) {
-                return null;
-            } else {
-                return new ScrollState(pos, view.getTop());
-            }
-        }
     }
 
     private ScrollState getScrollPosition() {
@@ -2956,75 +2939,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             lastCompletionLength = 0;
         }
         return true;
-    }
-
-    public Message searchHistory(String query) {
-        return searchHistory(query, null);
-    }
-
-    public Message searchHistory(String query, Boolean ascendingSearch) {
-        return searchHistory(query, lastHistoryMessage, ascendingSearch);
-    }
-
-    /**
-     * Search through history from message basis either ascending or descending
-     *
-     * @param query           search term
-     * @param basis           message to start from. If null, start from last recent message
-     * @param ascendingSearch do we want to ascend or descend in our search?
-     *                        If this is null, ascend to first match and return.
-     * @return match or null
-     */
-    public Message searchHistory(String query, Message basis, Boolean ascendingSearch) {
-        int entryIndex;
-        Message message;
-        lastHistoryMessage = basis;
-        if (messageList.size() == 0) {
-            return null;
-        }
-        if (basis == null) {
-            entryIndex = messageList.size() - 1;
-        } else {
-            int in = getIndexOf(basis.getUuid(), messageList);
-            entryIndex = (in != -1 ? in : messageList.size() - 1);
-        }
-
-        int firstMatchIndex = entryIndex;
-        boolean entryIndexWasMatch = true;
-        do {
-            message = messageList.get(firstMatchIndex);
-            if (message.getType() == Message.TYPE_TEXT && messageContainsQuery(message, query)) {
-                lastHistoryMessage = message;
-                break;
-            }
-            entryIndexWasMatch = false;
-            firstMatchIndex = (messageList.size() + firstMatchIndex - 1) % messageList.size();
-        } while (entryIndex != firstMatchIndex);
-
-        if (!entryIndexWasMatch && entryIndex == firstMatchIndex) {
-            //No matches
-            return null;
-        }
-
-        if (ascendingSearch != null) {
-            int direction = ascendingSearch ? -1 : 1;
-            int nextMatchIndex = firstMatchIndex;
-            do {
-                nextMatchIndex = (messageList.size() + nextMatchIndex + direction) % messageList.size();
-                message = messageList.get(nextMatchIndex);
-                if (message.getType() == Message.TYPE_TEXT && messageContainsQuery(message, query)) {
-                    lastHistoryMessage = message;
-                    break;
-                }
-            } while (nextMatchIndex != entryIndex);
-        }
-
-        if (lastHistoryMessage != null) {
-            int pos = getIndexOf(lastHistoryMessage.getUuid(), messageList);
-            setScrollPosition(getScrollPosition(pos, getView()), null);
-            this.binding.messagesView.setSelection(pos);
-        }
-        return lastHistoryMessage;
     }
 
     private boolean messageContainsQuery(Message m, String q) {

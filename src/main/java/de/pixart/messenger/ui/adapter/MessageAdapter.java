@@ -75,12 +75,13 @@ import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.EmojiWrapper;
 import de.pixart.messenger.utils.Emoticons;
 import de.pixart.messenger.utils.GeoHelper;
+import de.pixart.messenger.utils.RichPreview;
 import de.pixart.messenger.utils.StylingHelper;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.mam.MamReference;
-import io.github.ponnamkarthik.richlinkpreview.ViewListener;
 import pl.droidsonroids.gif.GifImageView;
 
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static de.pixart.messenger.ui.SettingsActivity.PLAY_GIF_INSIDE;
 import static de.pixart.messenger.ui.SettingsActivity.SHOW_LINKS_INSIDE;
 
@@ -104,6 +105,8 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     private OnContactPictureClicked mOnContactPictureClickedListener;
     private OnContactPictureLongClicked mOnContactPictureLongClickedListener;
     private boolean mIndicateReceived = false;
+    private boolean mPlayGifInside = false;
+    private boolean mShowLinksInside = false;
     private OnQuoteListener onQuoteListener;
 
     public MessageAdapter(XmppActivity activity, List<Message> messages) {
@@ -671,7 +674,6 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.audioPlayer.setVisibility(View.GONE);
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.gifImage.setVisibility(View.GONE);
-        boolean showLinksInside = activity.getPreferences().getBoolean(SHOW_LINKS_INSIDE, activity.getResources().getBoolean(R.bool.show_links_inside));
         viewHolder.messageBody.setVisibility(View.VISIBLE);
         Editable body = new SpannableStringBuilder(message.getBody());
         if (darkBackground) {
@@ -685,10 +687,22 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.messageBody.setTextIsSelectable(true);
         viewHolder.messageBody.setMovementMethod(ClickableMovementMethod.getInstance());
         listSelectionManager.onUpdate(viewHolder.messageBody, message);
-        boolean dataSaverDisabled = activity.xmppConnectionService.isDataSaverDisabled();
-        if (showLinksInside && dataSaverDisabled) {
-            viewHolder.richlinkview.setVisibility(View.VISIBLE);
-            viewHolder.richlinkview.setLink(body.toString(), new ViewListener() {
+        final boolean dataSaverDisabled = activity.xmppConnectionService.isDataSaverDisabled();
+        viewHolder.richlinkview.setVisibility(View.VISIBLE);
+        if (mShowLinksInside) {
+            double target = metrics.density * 200;
+            int scaledH;
+            if (Math.max(100, 100) * metrics.density <= target) {
+                scaledH = (int) (100 * metrics.density);
+            } else if (Math.max(100, 100) <= target) {
+                scaledH = 100;
+            } else {
+                scaledH = (int) (100 / ((double) 100 / target));
+            }
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(WRAP_CONTENT, scaledH);
+            layoutParams.setMargins(0, (int) (metrics.density * 4), 0, (int) (metrics.density * 4));
+            viewHolder.richlinkview.setLayoutParams(layoutParams);
+            viewHolder.richlinkview.setLink(body.toString(), message.getUuid(), dataSaverDisabled, new RichPreview.ViewListener() {
 
                 @Override
                 public void onSuccess(boolean status) {
@@ -696,6 +710,8 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
                 @Override
                 public void onError(Exception e) {
+                    e.printStackTrace();
+                    viewHolder.richlinkview.setVisibility(View.GONE);
                 }
             });
         } else {
@@ -765,8 +781,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             return;
         }
         String mime = file.getMimeType();
-        boolean playGifInside = activity.getPreferences().getBoolean(PLAY_GIF_INSIDE, activity.getResources().getBoolean(R.bool.play_gif_inside));
-        if (mime != null && mime.equals("image/gif") && playGifInside) {
+        if (mime != null && mime.equals("image/gif") && mPlayGifInside) {
             Log.d(Config.LOGTAG, "Gif Image file");
             viewHolder.image.setVisibility(View.GONE);
             viewHolder.gifImage.setVisibility(View.VISIBLE);
@@ -1151,6 +1166,8 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     public void updatePreferences() {
         SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(activity);
         this.mIndicateReceived = p.getBoolean("indicate_received", activity.getResources().getBoolean(R.bool.indicate_received));
+        this.mPlayGifInside = p.getBoolean(PLAY_GIF_INSIDE, activity.getResources().getBoolean(R.bool.play_gif_inside));
+        this.mShowLinksInside = p.getBoolean(SHOW_LINKS_INSIDE, activity.getResources().getBoolean(R.bool.show_links_inside));
     }
 
     public void setHighlightedTerm(List<String> terms) {

@@ -31,7 +31,8 @@
     <de.pixart.messenger.ui.widget.RichLinkView
         android:id="@+id/richLinkView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:maxHeight="80dp" />
 
     <de.pixart.messenger.ui.widget.CopyTextView
         android:id="@+id/message_body"
