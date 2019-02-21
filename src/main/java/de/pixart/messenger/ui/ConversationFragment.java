@@ -2864,7 +2864,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             service.sendChatState(conversation);
         }
         if (broadcastLastActivity) {
-            service.sendPresence(conversation.getAccount(), false); //send new presence but don't include idle because we are not
+            //service.sendPresence(conversation.getAccount(), false); //send new presence but don't include idle because we are not
         }
         updateSendButton();
     }

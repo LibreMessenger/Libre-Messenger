@@ -48,7 +48,7 @@ public class MessageGenerator extends AbstractGenerator {
         } else if (message.getType() == Message.TYPE_PRIVATE) { //TODO files and images might be private as well
             packet.setTo(message.getCounterpart());
             packet.setType(MessagePacket.TYPE_CHAT);
-            packet.addChild("x","http://jabber.org/protocol/muc#user");
+            packet.addChild("x", "http://jabber.org/protocol/muc#user");
             if (this.mXmppConnectionService.indicateReceived()) {
                 packet.addChild("request", "urn:xmpp:receipts");
             }
@@ -85,7 +85,9 @@ public class MessageGenerator extends AbstractGenerator {
         packet.setAxolotlMessage(axolotlMessage.toElement());
         packet.setBody(OMEMO_FALLBACK_MESSAGE);
         packet.addChild("store", "urn:xmpp:hints");
-        packet.addChild("encryption", "urn:xmpp:eme:0").setAttribute("name", "OMEMO").setAttribute("namespace", AxolotlService.PEP_PREFIX);
+        packet.addChild("encryption", "urn:xmpp:eme:0")
+                .setAttribute("name", "OMEMO")
+                .setAttribute("namespace", AxolotlService.PEP_PREFIX);
         return packet;
     }
 
@@ -98,10 +100,6 @@ public class MessageGenerator extends AbstractGenerator {
         return packet;
     }
 
-    private static boolean recipientSupportsOmemo(Message message) {
-        Contact c = message.getContact();
-        return c != null && c.getPresences().allOrNonSupport(AxolotlService.PEP_DEVICE_LIST_NOTIFY);
-    }
 
     public static void addMessageHints(MessagePacket packet) {
         packet.addChild("private", "urn:xmpp:carbons:2");

@@ -2661,10 +2661,7 @@ public class XmppConnectionService extends Service {
         account.pendingConferenceJoins.remove(conversation);
         account.pendingConferenceLeaves.remove(conversation);
         if (account.getStatus() == Account.State.ONLINE) {
-
-            //disabled for testing strange MUC leaves
             sendPresencePacket(account, mPresenceGenerator.leave(conversation.getMucOptions()));
-
             conversation.resetMucOptions();
             if (onConferenceJoined != null) {
                 conversation.getMucOptions().flagNoAutoPushConfiguration();

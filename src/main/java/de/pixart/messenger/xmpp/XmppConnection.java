@@ -1193,6 +1193,7 @@ public class XmppConnection implements Runnable {
         final boolean requestDiscoItemsFirst = !account.isOptionSet(Account.OPTION_LOGGED_IN_SUCCESSFULLY);
         if (requestDiscoItemsFirst) {
             sendServiceDiscoveryItems(Jid.of(account.getServer()));
+            getAdHocFeatures(Jid.of(account.getServer()));
         }
         if (discoveryResult == null) {
             sendServiceDiscoveryInfo(Jid.of(account.getServer()));
@@ -1204,6 +1205,7 @@ public class XmppConnection implements Runnable {
         sendServiceDiscoveryInfo(account.getJid().asBareJid());
         if (!requestDiscoItemsFirst) {
             sendServiceDiscoveryItems(Jid.of(account.getServer()));
+            getAdHocFeatures(Jid.of(account.getServer()));
         }
 
         if (!mWaitForDisco.get()) {
@@ -1300,7 +1302,6 @@ public class XmppConnection implements Runnable {
                 for (Jid jid : items) {
                     sendServiceDiscoveryInfo(jid);
                 }
-                getAdHocFeatures(server);
             } else {
                 Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": could not query disco items of " + server);
             }
