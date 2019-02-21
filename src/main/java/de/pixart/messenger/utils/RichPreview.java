@@ -21,6 +21,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.regex.Pattern;
 
 import de.pixart.messenger.Config;
 
@@ -56,6 +59,14 @@ public class RichPreview {
             FileInputStream fis = null;
             ObjectInputStream is = null;
             final File file = new File(context.getCacheDir(), RICH_LINK_METADATA + "/" + filename);
+            if(file.exists()) {
+                Calendar time = Calendar.getInstance();
+                time.add(Calendar.DAY_OF_YEAR, -7);
+                Date lastModified = new Date(file.lastModified());
+                if (lastModified.before(time.getTime())) {
+                    file.delete();
+                }
+            }
             try {
                 fis = new FileInputStream(file);
                 InputStreamReader isr = new InputStreamReader(fis);
@@ -296,4 +307,11 @@ public class RichPreview {
 
         void onError(Exception e);
     }
+
+    // Pattern for recognizing a URL, based off RFC 3986
+    public static final Pattern urlPattern = Pattern.compile(
+            "(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"
+                    + "(([\\w\\-]+\\.){1,}?([\\w\\-.~]+\\/?)*"
+                    + "[\\p{Alnum}.,%_=?&#\\-+()\\[\\]\\*$~@!:/{};']*)",
+            Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
 }
