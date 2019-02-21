@@ -56,13 +56,13 @@ public class OmemoSetting {
                 always = true;
                 encryption = Message.ENCRYPTION_AXOLOTL;
                 break;
-            case "default_off":
+            case "default_on":
                 always = false;
-                encryption = Message.ENCRYPTION_NONE;
+                encryption = Message.ENCRYPTION_AXOLOTL;
                 break;
             default:
                 always = false;
-                encryption = Message.ENCRYPTION_AXOLOTL;
+                encryption = Message.ENCRYPTION_NONE;
                 break;
 
         }
