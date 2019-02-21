@@ -72,6 +72,9 @@
         android:title="@string/change_password"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/mgmt_account_password_forgotten"
+        android:title="@string/mgmt_account_password_forgotten" />
+    <item
         android:id="@+id/mgmt_account_reconnect"
         android:title="@string/mgmt_account_reconnect"
         app:showAsAction="never" />

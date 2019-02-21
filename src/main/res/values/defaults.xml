@@ -236,5 +236,30 @@
         <item>blabber.im</item>
         <item>buzon.uy</item>
     </string-array>
+
+    <string-array name="support_domains">
+        <item>pix-art.de</item>
+        <item>blabber.im</item>
+        <item>jabber.de</item>
+        <item>dismail.de</item>
+        <item>draugr.de</item>
+        <item>conversations.im</item>
+        <item>jabber.at</item>
+        <item>jabber-germany.de</item>
+        <item>jabjab.de</item>
+        <item>jabber.fr</item>
+    </string-array>
+    <string-array name="support_site">
+        <item>https://jabber.pix-art.de/impressum/</item>
+        <item>https://blabber.im/en/kontakt/</item>
+        <item>https://www.jabber.de/support/</item>
+        <item>https://dismail.de/contact.html</item>
+        <item>https://www.draugr.de/kontakt/</item>
+        <item>https://conversations.im/#support</item>
+        <item>https://jabber.at/account/password/reset/</item>
+        <item>https://jabber-germany.de/impressum.html</item>
+        <item>https://jabjab.de/kontakt.php</item>
+        <item>https://jabberfr.org/contact/</item>
+    </string-array>
 </resources>
 

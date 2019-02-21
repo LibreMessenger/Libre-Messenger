@@ -887,4 +887,7 @@
     <string name="notification_backup_failed_subtitle">The backup files could not be stored in %s</string>
     <string name="search_participants">Search participants</string>
     <string name="file_too_large">File too large</string>
+    <string name="mgmt_account_password_forgotten">Password forgotten</string>
+    <string name="password_forgotten_title">Password forgotten</string>
+    <string name="password_forgotten_text">You have forgotten your account password? We will now try to open the support website of your provider.</string>
 </resources>
