@@ -264,15 +264,19 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                     if (Message.ERROR_MESSAGE_CANCELLED.equals(errorMessage)) {
                         info = getContext().getString(R.string.cancelled);
                     } else {
-                        final String[] errorParts = errorMessage.split("\\u001f", 2);
-                        if (errorParts.length == 2) {
-                            switch (errorParts[0]) {
-                                case "file-too-large":
-                                    info = getContext().getString(R.string.file_too_large);
-                                    break;
-                                default:
-                                    info = getContext().getString(R.string.send_failed);
-                                    break;
+                        if (errorMessage != null) {
+                            final String[] errorParts = errorMessage.split("\\u001f", 2);
+                            if (errorParts.length == 2) {
+                                switch (errorParts[0]) {
+                                    case "file-too-large":
+                                        info = getContext().getString(R.string.file_too_large);
+                                        break;
+                                    default:
+                                        info = getContext().getString(R.string.send_failed);
+                                        break;
+                                }
+                            } else {
+                                info = getContext().getString(R.string.send_failed);
                             }
                         } else {
                             info = getContext().getString(R.string.send_failed);
@@ -1091,9 +1095,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         if (type == SENT) {
             viewHolder.message_box.setBackgroundResource(activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark : R.drawable.message_bubble_sent);
         }
-
         displayStatus(viewHolder, message, type, darkBackground);
-
         return view;
     }
 
