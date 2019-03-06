@@ -4776,6 +4776,11 @@ public class XmppConnectionService extends Service {
     }
 
     private void expireOldMessages(long timestamp) {
-        databaseBackend.expireOldMessages(timestamp);
+        try {
+            databaseBackend.expireOldMessages(timestamp);
+        } catch (Exception e) {
+            e.printStackTrace();
+            expireOldMessages(timestamp);
+        }
     }
 }

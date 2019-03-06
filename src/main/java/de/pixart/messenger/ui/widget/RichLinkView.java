@@ -1,5 +1,6 @@
 package de.pixart.messenger.ui.widget;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -80,14 +82,6 @@ public class RichLinkView extends RelativeLayout {
         textViewTitle = findViewById(R.id.rich_link_title);
         textViewDesp = findViewById(R.id.rich_link_desp);
         imageView.setAdjustViewBounds(true);
-        if (!meta.getImageurl().equals("") || !meta.getImageurl().isEmpty()
-                && !meta.getTitle().isEmpty() || !meta.getTitle().equals("")
-                && !meta.getUrl().isEmpty() || !meta.getUrl().equals("")
-                && !meta.getDescription().isEmpty() || !meta.getDescription().equals("")) {
-            linearLayout.setVisibility(VISIBLE);
-        } else {
-            linearLayout.setVisibility(VISIBLE);
-        }
         if (!meta.getImageurl().equals("") && !meta.getImageurl().isEmpty()) {
             if (!dataSaverDisabled) {
                 Picasso.get()
@@ -98,7 +92,6 @@ public class RichLinkView extends RelativeLayout {
                 Picasso.get()
                         .load(meta.getImageurl())
                         .resize(80, 80)
-                        .onlyScaleDown()
                         .centerInside()
                         .placeholder(R.drawable.ic_web_grey600_48)
                         .into(imageView);
@@ -138,7 +131,11 @@ public class RichLinkView extends RelativeLayout {
 
     private void richLinkClicked() {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(main_url));
-        context.startActivity(intent);
+        try {
+            context.startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(context, R.string.no_application_found_to_open_link, Toast.LENGTH_LONG).show();
+        }
     }
 
     public void setDefaultClickListener(boolean isDefault) {

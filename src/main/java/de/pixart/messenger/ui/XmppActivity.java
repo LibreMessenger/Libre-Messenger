@@ -1001,8 +1001,8 @@ public abstract class XmppActivity extends ActionBarActivity {
                     (dialog, id) -> {
                         String selection = spinner.getSelectedItem().toString();
                         Account mAccount = xmppConnectionService.findAccountByJid(Jid.of(selection).asBareJid());
-                        String user = Jid.of(selection).getLocal();
-                        String domain = Jid.of(selection).getDomain();
+                        String user = mAccount.getDisplayName();
+                        String domain = mAccount.getJid().getDomain();
                         String inviteURL = AdHocInviteUri(mAccount);
                         if (inviteURL == null) {
                             inviteURL = Config.inviteUserURL + user + "/" + domain;

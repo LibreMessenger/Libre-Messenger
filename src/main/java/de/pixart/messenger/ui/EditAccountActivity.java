@@ -626,10 +626,10 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     private void onEditYourNameClicked(View view) {
         String nick;
         try {
-            if (mAccount.getDisplayName() != null) {
+            if (mAccount != null) {
                 nick = mAccount.getDisplayName();
             } else {
-                nick = mAccount.getJid().getLocal();
+                nick = "";
             }
         } catch (Exception e) {
             e.printStackTrace();

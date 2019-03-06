@@ -226,7 +226,7 @@ public class ExportBackupService extends Service {
             new Thread(() -> {
                 final Bundle extras = intent.getExtras();
                 boolean notify = false;
-                if (extras != null & extras.containsKey("NOTIFY_ON_BACKUP_COMPLETE")) {
+                if (extras != null && extras.containsKey("NOTIFY_ON_BACKUP_COMPLETE")) {
                     notify = extras.getBoolean("NOTIFY_ON_BACKUP_COMPLETE");
                 }
                 final boolean success = export();
