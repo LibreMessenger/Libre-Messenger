@@ -264,7 +264,9 @@ public class FileBackend {
         for (DatabaseBackend.FilePath relativeFilePath : relativeFilePaths) {
             final String mime = MimeUtils.guessMimeTypeFromExtension(MimeUtils.extractRelevantExtension(relativeFilePath.path));
             final File file = getFileForPath(relativeFilePath.path, mime);
-            attachments.add(Attachment.of(relativeFilePath.uuid, file, mime));
+            if (mime != null && (mime.startsWith("image/") || mime.startsWith("video/"))) {
+                attachments.add(Attachment.of(relativeFilePath.uuid, file, mime));
+            }
         }
         return attachments;
     }
