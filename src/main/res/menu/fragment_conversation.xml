@@ -98,7 +98,7 @@
     <item
         android:id="@+id/action_mediabrowser"
         android:icon="@drawable/ic_image_white_24dp"
-        android:orderInCategory="100"
+        android:orderInCategory="1"
         android:title="@string/media_browser"
         app:showAsAction="always" />
 </menu>

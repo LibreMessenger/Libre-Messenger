@@ -51,6 +51,8 @@ public class MediaBrowserActivity extends XmppActivity implements OnMediaLoaded 
         mMediaAdapter = new MediaAdapter(this, R.dimen.media_size);
         this.binding.media.setAdapter(mMediaAdapter);
         GridManager.setupLayoutManager(this, this.binding.media, R.dimen.browser_media_size);
+        this.binding.noMedia.setVisibility(View.GONE);
+        this.binding.progressbar.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -74,8 +76,10 @@ public class MediaBrowserActivity extends XmppActivity implements OnMediaLoaded 
             if (attachments.size() > 0) {
                 mMediaAdapter.setAttachments(attachments);
                 this.binding.noMedia.setVisibility(View.GONE);
+                this.binding.progressbar.setVisibility(View.GONE);
             } else {
                 this.binding.noMedia.setVisibility(View.VISIBLE);
+                this.binding.progressbar.setVisibility(View.GONE);
             }
         });
     }
