@@ -17,9 +17,13 @@ Alternativ kannst du den Messenger direkt aus hier von GitHub unter [Releases](h
 #### Ich habe Probleme, was soll ich tun?
 Am einfachsten ist es, wenn du unserer Support-Gruppe beitrittst, dort werden deine Probleme mit Sicherheit schnell gelöst. 
 
-[![Users in muc](https://inverse.chat/badge.svg?room=support@room.pix-art.de)](https://jabber.pix-art.de/j/support@room.pix-art.de?join): [support@room.pix-art.de](https://jabber.pix-art.de/j/support@room.pix-art.de?join) oder für Themen die sich um Development drehen, bitte hier schreiben: [development@room.pix-art.de](https://jabber.pix-art.de/j/development@room.pix-art.de?join) 
+Support-Chat: [support@room.pix-art.de](https://jabber.pix-art.de/j/support@room.pix-art.de?join)     
+[![Users in muc](https://inverse.chat/badge.svg?room=support@room.pix-art.de)](https://jabber.pix-art.de/j/support@room.pix-art.de?join)
 
-oder scanne den QR-Code (für den Support-Chat):
+Development-Chat:  [development@room.pix-art.de](https://jabber.pix-art.de/j/development@room.pix-art.de?join)     
+[![Users in muc](https://inverse.chat/badge.svg?room=development@room.pix-art.de)](https://jabber.pix-art.de/j/development@room.pix-art.de?join)
+
+Scanne den QR-Code um in den Support-Chat zu gelangen:
 
 <img src="art/qr-code_suport_small.png" width="220">
 
