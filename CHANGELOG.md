@@ -1,5 +1,9 @@
 ### Changelog
 
+#### Version 2.2.1
+* use extra activity for enter name during registration (PAM)
+* bug fixes
+
 #### Version 2.2.0
 * add ability to set/edit nickname in own profile (PAM)
 * add ability to configure autojoin flag in groupchat details (PAM)
