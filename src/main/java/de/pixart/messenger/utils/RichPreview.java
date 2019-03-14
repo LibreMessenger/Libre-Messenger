@@ -177,7 +177,7 @@ public class RichPreview {
             doc = Jsoup.connect(url)
                     .timeout(Config.CONNECT_TIMEOUT * 1000)
                     .get();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

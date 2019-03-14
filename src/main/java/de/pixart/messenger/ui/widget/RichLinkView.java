@@ -82,7 +82,7 @@ public class RichLinkView extends RelativeLayout {
         textViewTitle = findViewById(R.id.rich_link_title);
         textViewDesp = findViewById(R.id.rich_link_desp);
         imageView.setAdjustViewBounds(true);
-        if (!meta.getImageurl().equals("") && !meta.getImageurl().isEmpty()) {
+        if (meta.getImageurl() != null && !meta.getImageurl().equals("") && !meta.getImageurl().isEmpty()) {
             if (!dataSaverDisabled) {
                 Picasso.get()
                         .load(R.drawable.ic_web_grey600_48)
@@ -94,6 +94,7 @@ public class RichLinkView extends RelativeLayout {
                         .resize(80, 80)
                         .centerInside()
                         .placeholder(R.drawable.ic_web_grey600_48)
+                        .error(R.drawable.ic_web_grey600_48)
                         .into(imageView);
             }
         } else {
