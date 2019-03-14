@@ -98,6 +98,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 
     private AlertDialog mCaptchaDialog = null;
     private final AtomicBoolean mPendingReconnect = new AtomicBoolean(false);
+    private final AtomicBoolean redirectInProgress = new AtomicBoolean(false);
     private Jid jidToEdit;
     private boolean mInitMode = false;
     private boolean mUsernameMode = Config.DOMAIN_LOCK != null;
@@ -298,15 +299,21 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
             finish();
         } else if (mInitMode && mAccount != null && mAccount.getStatus() == Account.State.ONLINE) {
-            if (!mFetchingAvatar) {
-                mFetchingAvatar = true;
-                xmppConnectionService.checkForAvatar(mAccount, mAvatarFetchCallback);
-            }
+            runOnUiThread(this::performPostVerificationRedirect);
         }
         if (mAccount != null) {
             updateAccountInformation(false);
         }
         updateSaveButton();
+    }
+
+    private void performPostVerificationRedirect() {
+        if (redirectInProgress.compareAndSet(false, true)) {
+            Intent intent = new Intent(this, EnterNameActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+            finish();
+        }
     }
 
     @Override
@@ -624,18 +631,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     }
 
     private void onEditYourNameClicked(View view) {
-        String nick;
-        try {
-            if (mAccount != null) {
-                nick = mAccount.getDisplayName();
-            } else {
-                nick = "";
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            nick = "";
-        }
-        quickEdit(nick, R.string.your_name, value -> {
+        quickEdit(mAccount.getDisplayName(), R.string.your_name, value -> {
             final String displayName = value.trim();
             updateDisplayName(displayName);
             mAccount.setDisplayName(displayName);
@@ -742,6 +738,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 setTitle(getString(R.string.account_details));
                 configureActionBar(getSupportActionBar(), !openedFromNotification);
             } else {
+                this.binding.yourNameBox.setVisibility(View.GONE);
                 this.binding.avater.setVisibility(View.GONE);
                 configureActionBar(getSupportActionBar(), !(init && Config.MAGIC_CREATE_DOMAIN == null));
                 setTitle(R.string.action_add_account);
@@ -1112,6 +1109,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         } else {
             this.binding.accountRegisterNew.setVisibility(mInitMode ? View.VISIBLE : View.GONE);
         }
+        this.binding.yourNameBox.setVisibility(mInitMode ? View.GONE : View.VISIBLE);
         if (this.mAccount.isOnlineAndConnected() && !this.mFetchingAvatar) {
             Features features = this.mAccount.getXmppConnection().getFeatures();
             this.binding.stats.setVisibility(View.VISIBLE);

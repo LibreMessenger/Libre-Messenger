@@ -28,22 +28,19 @@ public class EnterNameActivity extends XmppActivity implements XmppConnectionSer
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_enter_name);
         setSupportActionBar((Toolbar) this.binding.toolbar);
         this.binding.next.setOnClickListener(this::next);
-        this.setNick.set(savedInstanceState != null && savedInstanceState.getBoolean("set_nick",false));
+        this.setNick.set(savedInstanceState != null && savedInstanceState.getBoolean("set_nick", false));
     }
 
     private void next(View view) {
         if (account != null) {
-
             String name = this.binding.name.getText().toString().trim();
-
             account.setDisplayName(name);
-
             xmppConnectionService.publishDisplayName(account);
-
             Intent intent = new Intent(this, PublishProfilePictureActivity.class);
             intent.putExtra(PublishProfilePictureActivity.EXTRA_ACCOUNT, account.getJid().asBareJid().toEscapedString());
             intent.putExtra("setup", true);
             startActivity(intent);
+            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
         }
         finish();
     }
