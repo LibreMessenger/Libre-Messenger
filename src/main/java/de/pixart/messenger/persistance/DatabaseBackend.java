@@ -60,7 +60,7 @@ import rocks.xmpp.addr.Jid;
 public class DatabaseBackend extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "history";
-    public static final int DATABASE_VERSION = 46; // = Conversations DATABASE_VERSION + 2
+    public static final int DATABASE_VERSION = 47; // = Conversations DATABASE_VERSION + 3
     private static DatabaseBackend instance = null;
 
     private static String CREATE_CONTATCS_STATEMENT = "create table "
@@ -136,7 +136,6 @@ public class DatabaseBackend extends SQLiteOpenHelper {
             + SQLiteAxolotlStore.OWN + " INTEGER, "
             + SQLiteAxolotlStore.FINGERPRINT + " TEXT, "
             + SQLiteAxolotlStore.CERTIFICATE + " BLOB, "
-            + SQLiteAxolotlStore.TRUSTED + " TEXT, "
             + SQLiteAxolotlStore.TRUST + " TEXT, "
             + SQLiteAxolotlStore.ACTIVE + " NUMBER, "
             + SQLiteAxolotlStore.LAST_ACTIVATION + " NUMBER,"
@@ -554,7 +553,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
             db.execSQL(CREATE_MESSAGE_TYPE_INDEX);
         }
 
-        if (oldVersion < 46 && newVersion >= 46) {
+        if (oldVersion < 46 && newVersion == 46) { // only available for old database version 46
             if (!isColumnExisting(db, SQLiteAxolotlStore.IDENTITIES_TABLENAME, SQLiteAxolotlStore.TRUSTED)) {
                 db.execSQL("ALTER TABLE " + SQLiteAxolotlStore.IDENTITIES_TABLENAME + " ADD COLUMN " + SQLiteAxolotlStore.TRUSTED); // TODO - just to make old databases importable, column isn't needed at all
             }
