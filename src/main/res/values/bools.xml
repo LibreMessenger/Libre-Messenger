@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <bool name="prefer_xmpp_avatar">true</bool>
-    <bool name="show_links_inside">true</bool>
-</resources>

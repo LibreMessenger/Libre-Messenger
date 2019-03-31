@@ -97,6 +97,7 @@ import pl.droidsonroids.gif.GifDrawable;
 import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.ui.SettingsActivity.USE_BUNDLED_EMOJIS;
+import static de.pixart.messenger.ui.SettingsActivity.USE_INTERNAL_UPDATER;
 
 public abstract class XmppActivity extends ActionBarActivity {
 
@@ -453,6 +454,10 @@ public abstract class XmppActivity extends ActionBarActivity {
 
     protected boolean usingEnterKey() {
         return getBooleanPreference("display_enter_key", R.bool.display_enter_key);
+    }
+
+    public boolean useInternalUpdater() {
+        return getBooleanPreference(USE_INTERNAL_UPDATER, R.bool.use_internal_updater);
     }
 
     public SharedPreferences getPreferences() {

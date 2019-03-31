@@ -95,6 +95,7 @@ import de.pixart.messenger.xmpp.chatstate.ChatState;
 import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.ui.ConversationFragment.REQUEST_DECRYPT_PGP;
+import static de.pixart.messenger.ui.SettingsActivity.USE_INTERNAL_UPDATER;
 
 public class ConversationsActivity extends XmppActivity implements OnConversationSelected, OnConversationArchived, OnConversationsListItemUpdated, OnConversationRead, XmppConnectionService.OnAccountUpdate, XmppConnectionService.OnConversationUpdate, XmppConnectionService.OnRosterUpdate, OnUpdateBlocklist, XmppConnectionService.OnShowErrorToast, XmppConnectionService.OnAffiliationChanged, XmppConnectionService.OnRoomDestroy {
 
@@ -195,10 +196,12 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
             System.exit(0);
         }
 
-        if (xmppConnectionService.getAccounts().size() != 0) {
-            if (xmppConnectionService.hasInternetConnection()) {
-                if (xmppConnectionService.isWIFI() || (xmppConnectionService.isMobile() && !xmppConnectionService.isMobileRoaming())) {
-                    AppUpdate(xmppConnectionService.installedFrom());
+        if (useInternalUpdater()) {
+            if (xmppConnectionService.getAccounts().size() != 0) {
+                if (xmppConnectionService.hasInternetConnection()) {
+                    if (xmppConnectionService.isWIFI() || (xmppConnectionService.isMobile() && !xmppConnectionService.isMobileRoaming())) {
+                        AppUpdate(xmppConnectionService.installedFrom());
+                    }
                 }
             }
         }

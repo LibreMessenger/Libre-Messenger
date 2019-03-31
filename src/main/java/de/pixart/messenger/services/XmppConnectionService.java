@@ -164,6 +164,12 @@ import de.pixart.messenger.xmpp.stanzas.PresencePacket;
 import me.leolin.shortcutbadger.ShortcutBadger;
 import rocks.xmpp.addr.Jid;
 
+import static de.pixart.messenger.ui.SettingsActivity.CHAT_STATES;
+import static de.pixart.messenger.ui.SettingsActivity.CONFIRM_MESSAGES;
+import static de.pixart.messenger.ui.SettingsActivity.ENABLE_MULTI_ACCOUNTS;
+import static de.pixart.messenger.ui.SettingsActivity.INDICATE_RECEIVED;
+import static de.pixart.messenger.ui.SettingsActivity.ENABLE_MULTI_ACCOUNTS;
+
 public class XmppConnectionService extends Service {
 
     public static final String ACTION_REPLY_TO_CONVERSATION = "reply_to_conversations";
@@ -3912,7 +3918,7 @@ public class XmppConnectionService extends Service {
     }
 
     public boolean confirmMessages() {
-        return getBooleanPreference("confirm_messages", R.bool.confirm_messages);
+        return getBooleanPreference(CONFIRM_MESSAGES, R.bool.confirm_messages);
     }
 
     public boolean allowMessageCorrection() {
@@ -3920,7 +3926,7 @@ public class XmppConnectionService extends Service {
     }
 
     public boolean sendChatStates() {
-        return getBooleanPreference("chat_states", R.bool.chat_states);
+        return getBooleanPreference(CHAT_STATES, R.bool.chat_states);
     }
 
     private boolean synchronizeWithBookmarks() {
@@ -3928,7 +3934,7 @@ public class XmppConnectionService extends Service {
     }
 
     public boolean indicateReceived() {
-        return getBooleanPreference("indicate_received", R.bool.indicate_received);
+        return getBooleanPreference(INDICATE_RECEIVED, R.bool.indicate_received);
     }
 
     public boolean useTorToConnect() {
@@ -3948,7 +3954,7 @@ public class XmppConnectionService extends Service {
     }
 
     public boolean multipleAccounts() {
-        return getBooleanPreference("enable_multi_accounts", R.bool.enable_multi_accounts);
+        return getBooleanPreference(ENABLE_MULTI_ACCOUNTS, R.bool.enable_multi_accounts);
     }
 
     public int unreadCount() {

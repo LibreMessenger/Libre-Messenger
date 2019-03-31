@@ -299,7 +299,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
             finish();
         } else if (mInitMode && mAccount != null && mAccount.getStatus() == Account.State.ONLINE) {
-            runOnUiThread(this::performPostVerificationRedirect);
+            runOnUiThread(this::next);
         }
         if (mAccount != null) {
             updateAccountInformation(false);
@@ -307,7 +307,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         updateSaveButton();
     }
 
-    private void performPostVerificationRedirect() {
+    private void next() {
         if (redirectInProgress.compareAndSet(false, true)) {
             Intent intent = new Intent(this, EnterNameActivity.class);
             startActivity(intent);

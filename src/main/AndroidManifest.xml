@@ -306,6 +306,10 @@
             android:label="@string/enter_your_name"
             android:launchMode="singleTask" />
         <activity
+            android:name=".ui.SetSettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:launchMode="singleTask" />
+        <activity
             android:name=".ui.MucUsersActivity"
             android:label="@string/group_chat_members" />
 

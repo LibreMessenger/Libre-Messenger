@@ -77,11 +77,6 @@
             android:summary="@string/pref_play_gif_inside_summary"
             android:title="@string/pref_play_gif_inside" />
         <CheckBoxPreference
-            android:defaultValue="@bool/show_links_inside"
-            android:key="show_links_inside"
-            android:summary="@string/pref_show_links_inside_summary"
-            android:title="@string/pref_show_links_inside" />
-        <CheckBoxPreference
             android:defaultValue="@bool/prefer_xmpp_avatar"
             android:key="prefer_xmpp_avatar"
             android:summary="@string/pref_prefer_xmpp_avatar_summary"
@@ -300,6 +295,21 @@
             android:key="last_activity"
             android:summary="@string/pref_broadcast_last_activity_summary"
             android:title="@string/pref_broadcast_last_activity" />
+        <CheckBoxPreference
+            android:defaultValue="@bool/use_internal_updater"
+            android:key="use_internal_updater"
+            android:summary="@string/pref_use_internal_updater_summary"
+            android:title="@string/pref_use_internal_updater" />
+        <CheckBoxPreference
+            android:defaultValue="@bool/show_links_inside"
+            android:key="show_links_inside"
+            android:summary="@string/pref_show_links_inside_summary"
+            android:title="@string/pref_show_links_inside" />
+        <CheckBoxPreference
+            android:defaultValue="@bool/show_maps_inside"
+            android:key="show_maps_inside"
+            android:summary="@string/pref_show_mappreview_inside_summary"
+            android:title="@string/pref_show_mappreview_inside" />
         <CheckBoxPreference
             android:defaultValue="@bool/warn_unencrypted_chat"
             android:key="warn_unencrypted_chat"

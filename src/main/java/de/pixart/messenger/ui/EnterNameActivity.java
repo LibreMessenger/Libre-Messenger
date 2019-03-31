@@ -13,13 +13,12 @@ import de.pixart.messenger.databinding.ActivityEnterNameBinding;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.utils.AccountUtils;
+import de.pixart.messenger.utils.FirstStartManager;
 
 public class EnterNameActivity extends XmppActivity implements XmppConnectionService.OnAccountUpdate {
 
     private ActivityEnterNameBinding binding;
-
     private Account account;
-
     private AtomicBoolean setNick = new AtomicBoolean(false);
 
     @Override
@@ -28,19 +27,38 @@ public class EnterNameActivity extends XmppActivity implements XmppConnectionSer
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_enter_name);
         setSupportActionBar((Toolbar) this.binding.toolbar);
         this.binding.next.setOnClickListener(this::next);
+        updateNextButton();
         this.setNick.set(savedInstanceState != null && savedInstanceState.getBoolean("set_nick", false));
     }
 
+    private void updateNextButton() {
+        if (account != null && (account.getStatus() == Account.State.CONNECTING || account.getStatus() == Account.State.REGISTRATION_SUCCESSFUL)) {
+            this.binding.next.setEnabled(false);
+            this.binding.next.setText(R.string.account_status_connecting);
+        } else if (account != null && (account.getStatus() == Account.State.ONLINE)) {
+            this.binding.next.setEnabled(true);
+            this.binding.next.setText(R.string.next);
+        }
+    }
+
     private void next(View view) {
+        FirstStartManager firstStartManager = new FirstStartManager(this);
         if (account != null) {
             String name = this.binding.name.getText().toString().trim();
             account.setDisplayName(name);
             xmppConnectionService.publishDisplayName(account);
-            Intent intent = new Intent(this, PublishProfilePictureActivity.class);
-            intent.putExtra(PublishProfilePictureActivity.EXTRA_ACCOUNT, account.getJid().asBareJid().toEscapedString());
-            intent.putExtra("setup", true);
-            startActivity(intent);
-            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+            if (firstStartManager.isFirstTimeLaunch()) {
+                Intent intent = new Intent(this, SetSettingsActivity.class);
+                intent.putExtra("setup", true);
+                startActivity(intent);
+                overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+            } else {
+                Intent intent = new Intent(this, PublishProfilePictureActivity.class);
+                intent.putExtra(PublishProfilePictureActivity.EXTRA_ACCOUNT, account.getJid().asBareJid().toEscapedString());
+                intent.putExtra("setup", true);
+                startActivity(intent);
+                overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+            }
         }
         finish();
     }
@@ -54,12 +72,14 @@ public class EnterNameActivity extends XmppActivity implements XmppConnectionSer
     @Override
     protected void refreshUiReal() {
         checkSuggestPreviousNick();
+        updateNextButton();
     }
 
     @Override
     void onBackendConnected() {
         this.account = AccountUtils.getFirst(xmppConnectionService);
         checkSuggestPreviousNick();
+        updateNextButton();
     }
 
     private void checkSuggestPreviousNick() {

@@ -56,12 +56,18 @@ public class SettingsActivity extends XmppActivity implements
     public static final String OMEMO_SETTING = "omemo";
     public static final String SHOW_FOREGROUND_SERVICE = "show_foreground_service";
     public static final String USE_BUNDLED_EMOJIS = "use_bundled_emoji";
-    public static final String USE_MULTI_ACCOUNTS = "use_multi_accounts";
+    public static final String ENABLE_MULTI_ACCOUNTS = "enable_multi_accounts";
     public static final String QUICK_SHARE_ATTACHMENT_CHOICE = "quick_share_attachment_choice";
     public static final String NUMBER_OF_ACCOUNTS = "number_of_accounts";
     public static final String PLAY_GIF_INSIDE = "play_gif_inside";
+    public static final String USE_INTERNAL_UPDATER = "use_internal_updater";
     public static final String SHOW_LINKS_INSIDE = "show_links_inside";
+    public static final String SHOW_MAPS_INSIDE = "show_maps_inside";
     public static final String PREFER_XMPP_AVATAR = "prefer_xmpp_avatar";
+    public static final String CHAT_STATES = "chat_states";
+    public static final String FORBID_SCREENSHOTS = "screen_security";
+    public static final String CONFIRM_MESSAGES = "confirm_messages";
+    public static final String INDICATE_RECEIVED = "indicate_received";
 
     public static final int REQUEST_CREATE_BACKUP = 0xbf8701;
     Preference multiAccountPreference;
@@ -438,7 +444,7 @@ public class SettingsActivity extends XmppActivity implements
     @Override
     public void onSharedPreferenceChanged(SharedPreferences preferences, String name) {
         final List<String> resendPresence = Arrays.asList(
-                "confirm_messages",
+                CONFIRM_MESSAGES,
                 DND_ON_SILENT_MODE,
                 AWAY_WHEN_SCREEN_IS_OFF,
                 "allow_message_correction",

@@ -84,6 +84,7 @@ import pl.droidsonroids.gif.GifImageView;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static de.pixart.messenger.ui.SettingsActivity.PLAY_GIF_INSIDE;
 import static de.pixart.messenger.ui.SettingsActivity.SHOW_LINKS_INSIDE;
+import static de.pixart.messenger.ui.SettingsActivity.SHOW_MAPS_INSIDE;
 
 public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextView.CopyHandler {
 
@@ -107,6 +108,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     private boolean mIndicateReceived = false;
     private boolean mPlayGifInside = false;
     private boolean mShowLinksInside = false;
+    private boolean mShowMapsInside = false;
     private OnQuoteListener onQuoteListener;
 
     public MessageAdapter(XmppActivity activity, List<Message> messages) {
@@ -740,39 +742,43 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.audioPlayer.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.GONE);
         String url = GeoHelper.MapPreviewUri(message);
-        viewHolder.image.setVisibility(View.VISIBLE);
         viewHolder.gifImage.setVisibility(View.GONE);
         viewHolder.richlinkview.setVisibility(View.GONE);
-        double target = metrics.density * 200;
-        int scaledW;
-        int scaledH;
-        if (Math.max(500, 500) * metrics.density <= target) {
-            scaledW = (int) (500 * metrics.density);
-            scaledH = (int) (500 * metrics.density);
-        } else if (Math.max(500, 500) <= target) {
-            scaledW = 500;
-            scaledH = 500;
+        if (mShowMapsInside) {
+            viewHolder.image.setVisibility(View.VISIBLE);
+            double target = metrics.density * 200;
+            int scaledW;
+            int scaledH;
+            if (Math.max(500, 500) * metrics.density <= target) {
+                scaledW = (int) (500 * metrics.density);
+                scaledH = (int) (500 * metrics.density);
+            } else if (Math.max(500, 500) <= target) {
+                scaledW = 500;
+                scaledH = 500;
+            } else {
+                scaledW = (int) target;
+                scaledH = (int) (500 / ((double) 500 / target));
+            }
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(scaledW, scaledH);
+            layoutParams.setMargins(0, (int) (metrics.density * 4), 0, (int) (metrics.density * 4));
+            viewHolder.image.setLayoutParams(layoutParams);
+            viewHolder.image.setOnClickListener(v -> showLocation(message));
+            Picasso
+                    .get()
+                    .load(Uri.parse(url))
+                    .placeholder(R.drawable.ic_map_marker_grey600_48dp)
+                    .error(R.drawable.ic_map_marker_grey600_48dp)
+                    .into(viewHolder.image);
+            viewHolder.image.setMaxWidth(500);
+            viewHolder.image.setAdjustViewBounds(true);
+            viewHolder.download_button.setVisibility(View.GONE);
         } else {
-            scaledW = (int) target;
-            scaledH = (int) (500 / ((double) 500 / target));
+            viewHolder.image.setVisibility(View.GONE);
+            viewHolder.download_button.setVisibility(View.VISIBLE);
+            viewHolder.download_button.setText(R.string.show_location);
+            viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_map_marker_grey600_48dp, 0, 0, 0);
+            viewHolder.download_button.setOnClickListener(v -> showLocation(message));
         }
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(scaledW, scaledH);
-        layoutParams.setMargins(0, (int) (metrics.density * 4), 0, (int) (metrics.density * 4));
-        viewHolder.image.setLayoutParams(layoutParams);
-        viewHolder.image.setOnClickListener(v -> showLocation(message));
-        Picasso
-                .get()
-                .load(Uri.parse(url))
-                .placeholder(R.drawable.ic_map_marker_grey600_48dp)
-                .error(R.drawable.ic_map_marker_grey600_48dp)
-                .into(viewHolder.image);
-        viewHolder.image.setMaxWidth(500);
-        viewHolder.image.setAdjustViewBounds(true);
-        viewHolder.download_button.setVisibility(View.GONE);
-        viewHolder.download_button.setText(R.string.show_location);
-        viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_map_marker_grey600_48dp, 0, 0, 0);
-        viewHolder.download_button.setOnClickListener(v -> showLocation(message));
-
     }
 
     private void displayAudioMessage(ViewHolder viewHolder, Message message, boolean darkBackground) {
@@ -1183,6 +1189,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         this.mIndicateReceived = p.getBoolean("indicate_received", activity.getResources().getBoolean(R.bool.indicate_received));
         this.mPlayGifInside = p.getBoolean(PLAY_GIF_INSIDE, activity.getResources().getBoolean(R.bool.play_gif_inside));
         this.mShowLinksInside = p.getBoolean(SHOW_LINKS_INSIDE, activity.getResources().getBoolean(R.bool.show_links_inside));
+        this.mShowMapsInside = p.getBoolean(SHOW_MAPS_INSIDE, activity.getResources().getBoolean(R.bool.show_maps_inside));
     }
 
     public void setHighlightedTerm(List<String> terms) {

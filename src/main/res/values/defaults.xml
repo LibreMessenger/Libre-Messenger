@@ -113,6 +113,10 @@
     <bool name="quick_share_attachment_choice">true</bool>
     <bool name="screen_security">false</bool>
     <bool name="play_gif_inside">false</bool>
+    <bool name="prefer_xmpp_avatar">true</bool>
+    <bool name="show_links_inside">true</bool>
+    <bool name="show_maps_inside">true</bool>
+    <bool name="use_internal_updater">true</bool>
 
     <string-array name="domains">
         <item>pix-art.de</item>

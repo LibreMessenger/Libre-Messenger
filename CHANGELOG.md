@@ -1,5 +1,8 @@
 ### Changelog
 
+#### Version 2.2.2
+* add activity to define some important privacy settings on first start
+
 #### Version 2.2.1
 * use extra activity for enter name during registration (PAM)
 * bug fixes
