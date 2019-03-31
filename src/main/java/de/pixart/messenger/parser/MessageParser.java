@@ -610,7 +610,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                 } else {
                     trueCounterpart = fallback;
                 }
-                if (trueCounterpart != null) {
+                if (trueCounterpart != null && isTypeGroupChat) {
                     if (trueCounterpart.asBareJid().equals(account.getJid().asBareJid())) {
                         status = isTypeGroupChat ? Message.STATUS_SEND_RECEIVED : Message.STATUS_SEND;
                     } else {
