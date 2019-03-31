@@ -1122,11 +1122,12 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             }
             if (getFragmentManager().findFragmentById(R.id.secondary_fragment) != null) {
                 if (conversation.getMode() == Conversation.MODE_MULTI) {
+                    menuGroupDetails.setTitle(conversation.getMucOptions().isPrivateAndNonAnonymous() ? R.string.action_group_details : R.string.channel_details);
                     menuGroupDetails.setVisible(true);
                     menuContactDetails.setVisible(false);
                 } else {
                     menuGroupDetails.setVisible(false);
-                    menuContactDetails.setVisible(true);
+                    menuContactDetails.setVisible(!this.conversation.withSelf());
                 }
             } else {
                 menuGroupDetails.setVisible(false);
