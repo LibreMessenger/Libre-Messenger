@@ -1166,11 +1166,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 this.binding.serverInfoPep.setText(R.string.server_info_unavailable);
             }
             if (features.httpUpload(0)) {
-                if (getHttpUploadMaxFileSize().equals("0")) {
-                    this.binding.serverInfoHttpUpload.setText(R.string.server_info_available);
-                } else {
-                    this.binding.serverInfoHttpUpload.setText(getHttpUploadMaxFileSize());
-                }
+                this.binding.serverInfoHttpUpload.setText(UIHelper.filesizeToString(features.getMaxHttpUploadSize()));
             } else if (features.p1S3FileTransfer()) {
                 this.binding.serverInfoHttpUploadDescription.setText(R.string.p1_s3_filetransfer);
                 this.binding.serverInfoHttpUpload.setText(R.string.server_info_available);
@@ -1278,28 +1274,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             this.binding.stats.setVisibility(View.GONE);
             this.binding.otherDeviceKeysCard.setVisibility(View.GONE);
         }
-    }
-
-    private String getHttpUploadMaxFileSize() {
-        XmppConnection connection = mAccount.getXmppConnection();
-        for (String namespace : new String[]{Namespace.HTTP_UPLOAD, Namespace.HTTP_UPLOAD_LEGACY}) {
-            List<Map.Entry<Jid, ServiceDiscoveryResult>> items = connection.findDiscoItemsByFeature(namespace);
-            if (items.size() > 0) {
-                try {
-                    long maxsize = Long.parseLong(items.get(0).getValue().getExtendedDiscoInformation(namespace, "max-file-size"));
-                    if (maxsize > (1 * 1024 * 1024)) {
-                        return Math.round(maxsize * 1f / (1024 * 1024)) + " MiB";
-                    } else if (maxsize >= (1 * 1024)) {
-                        return Math.round(maxsize * 1f / 1024) + " KiB";
-                    } else if (maxsize > 0) {
-                        return maxsize + " B";
-                    }
-                } catch (Exception e) {
-                    return "0";
-                }
-            }
-        }
-        return "0";
     }
 
     private void updateDisplayName(String displayName) {
