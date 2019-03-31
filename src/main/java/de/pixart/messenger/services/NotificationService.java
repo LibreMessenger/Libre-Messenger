@@ -15,6 +15,7 @@ import android.media.AudioAttributes;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.DeadSystemException;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
@@ -961,7 +962,12 @@ public class NotificationService {
     }
 
     private PendingIntent createOpenConversationsIntent() {
-        return PendingIntent.getActivity(mXmppConnectionService, 0, new Intent(mXmppConnectionService, ConversationsActivity.class), 0);
+        try {
+            return PendingIntent.getActivity(mXmppConnectionService, 0, new Intent(mXmppConnectionService, ConversationsActivity.class), 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     void updateErrorNotification() {
