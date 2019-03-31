@@ -481,10 +481,10 @@
     <string name="notify_only_when_highlighted">Notify only when mentioned</string>
     <string name="notify_never">Notifications disabled</string>
     <string name="notify_paused">Notifications paused</string>
-    <string name="pref_picture_compression">Compress pictures</string>
-    <string name="pref_picture_compression_summary">Resize and compress pictures</string>
-    <string name="pref_video_compression">Compress videos</string>
-    <string name="pref_video_compression_summary">Resize and compress videos</string>
+    <string name="pref_picture_quality">Picture quality</string>
+    <string name="pref_picture_quality_summary">Resize and compress pictures</string>
+    <string name="pref_video_quality">Video quality</string>
+    <string name="pref_video_quality_summary">Resize and compress videos</string>
     <string name="video_low">low (144p)</string>
     <string name="video_mid">middle (360p)</string>
     <string name="video_high">high (720p)</string>
@@ -824,7 +824,7 @@
     <string name="no_name_set_instructions">No nickname set.</string>
     <string name="autojoin_group_chat">Automatically join this group chat</string>
     <string name="pref_show_links_inside">Show previews of web links in chat</string>
-    <string name="pref_show_links_inside_summary">Show previews of web links directly inside the chat view.</string>
+    <string name="pref_show_links_inside_summary">Show previews of web links directly inside the chat view, a connection to the server specified in the link will be established.</string>
     <string name="pref_play_gif_inside">Play GIF files in chat</string>
     <string name="pref_play_gif_inside_summary">Play GIF files directly inside the chat view.</string>
     <string name="open_with">Open with…</string>
@@ -891,7 +891,7 @@
     <string name="password_forgotten_title">Password forgotten</string>
     <string name="password_forgotten_text">You have forgotten your account password? We will now try to open the support website of your provider.</string>
     <string name="set_settings_intro">Here you can set some important privacy settings to your needs. All the settings can also be modified later.</string>
-    <string name="pref_show_mappreview_inside_summary">Show map previews directly inside the chat view</string>
+    <string name="pref_show_mappreview_inside_summary">Show map previews directly inside the chat view, a connection to the Pix-Art-Server will be established.</string>
     <string name="pref_show_mappreview_inside">Show previews of locations in chat</string>
     <string name="pref_use_internal_updater_summary">Let the messenger look for new app updates once a day</string>
     <string name="pref_use_internal_updater">look for updates</string>

@@ -204,15 +204,15 @@
             android:entries="@array/image_compression_entries"
             android:entryValues="@array/image_compression_values"
             android:key="image_compression"
-            android:summary="@string/pref_picture_compression_summary"
-            android:title="@string/pref_picture_compression" />
+            android:summary="@string/pref_picture_quality_summary"
+            android:title="@string/pref_picture_quality" />
         <ListPreference
             android:defaultValue="@string/video_compression"
             android:entries="@array/video_compression_entries"
             android:entryValues="@array/video_compression_values"
             android:key="video_compression"
-            android:summary="@string/pref_video_compression_summary"
-            android:title="@string/pref_video_compression" />
+            android:summary="@string/pref_video_quality_summary"
+            android:title="@string/pref_video_quality" />
     </PreferenceScreen>
     <!--status-->
     <PreferenceScreen
