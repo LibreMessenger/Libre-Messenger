@@ -355,7 +355,7 @@ public class ManageAccountActivity extends XmppActivity implements OnAccountUpda
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.mgmt_account_are_you_sure));
         builder.setIconAttribute(android.R.attr.alertDialogIcon);
-        builder.setMessage(getString(R.string.mgmt_account_delete_confirm_text));
+        builder.setMessage(getString(R.string.mgmt_account_delete_confirm_message));
         builder.setPositiveButton(getString(R.string.delete),
                 (dialog, which) -> {
                     xmppConnectionService.deleteAccount(account);
@@ -364,7 +364,21 @@ public class ManageAccountActivity extends XmppActivity implements OnAccountUpda
                         WelcomeActivity.launch(this);
                     }
                 });
-        builder.setNegativeButton(getString(R.string.cancel), null);
+
+        builder.setNegativeButton(getString(R.string.delete_from_server),
+                (dialog, which) -> {
+                    if (account.isOnlineAndConnected()) {
+                        xmppConnectionService.deleteAccountFromServer(account);
+                        selectedAccount = null;
+                        if (xmppConnectionService.getAccounts().size() == 0 && Config.MAGIC_CREATE_DOMAIN != null) {
+                            WelcomeActivity.launch(this);
+                        }
+                    } else {
+                        informUser(R.string.go_online_to_delete);
+                    }
+                });
+
+        builder.setNeutralButton(getString(R.string.cancel), null);
         builder.create().show();
     }
 

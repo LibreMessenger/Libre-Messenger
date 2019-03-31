@@ -156,7 +156,7 @@
     <string name="unpublish_pgp_message">Are you sure you want to remove your OpenPGP public key from your presence announcement?\nYour contacts will no longer be able to send you OpenPGP encrypted messages.</string>
     <string name="openpgp_has_been_published">OpenPGP public key has been published.</string>
     <string name="mgmt_account_are_you_sure">Are you sure?</string>
-    <string name="mgmt_account_delete_confirm_text">If you delete your account, your entire conversation history will be lost</string>
+    <string name="mgmt_account_delete_confirm_message">If you delete your account, your entire local conversation history will be lost.\n\nIf you delete your account from server, your entire account will be deleted from server too, you will not be able to login anymore until you register a new account.</string>
     <string name="attach_record_voice">Record voice</string>
     <string name="account_settings_jabber_id">Jabber-ID</string>
     <string name="account_settings_example_jabber_id">username@pix-art.de</string>
@@ -896,4 +896,7 @@
     <string name="pref_use_internal_updater_summary">Let the messenger look for new app updates once a day</string>
     <string name="pref_use_internal_updater">look for updates</string>
     <string name="attach">Attach</string>
+    <string name="delete_locally">Delete locally</string>
+    <string name="delete_from_server">Delete from server</string>
+    <string name="go_online_to_delete">You have to activate and/or go online with the account you want to delete from server.</string>
 </resources>

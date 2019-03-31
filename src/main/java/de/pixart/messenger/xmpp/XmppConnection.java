@@ -1017,6 +1017,22 @@ public class XmppConnection implements Runnable {
         }, true);
     }
 
+    public void sendDeleteRequest() {
+        final IqPacket delete = new IqPacket(IqPacket.TYPE.SET);
+        delete.query("jabber:iq:register").addChild("remove");
+        delete.setTo(Jid.of(account.getServer()));
+        delete.setFrom(account.getJid().asBareJid());
+        Log.d(Config.LOGTAG, "Delete " + delete);
+        sendUnmodifiedIqPacket(delete, (account, packet) -> {
+            if (packet.getType() == IqPacket.TYPE.TIMEOUT) {
+                return;
+            }
+            if (packet.getType() == IqPacket.TYPE.ERROR) {
+                throw new StateChangingError(Account.State.DISABLED);
+            }
+        }, true);
+    }
+
 
     private void setAccountCreationFailed(String url) {
         if (url != null) {

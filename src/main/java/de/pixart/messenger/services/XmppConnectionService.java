@@ -2354,6 +2354,11 @@ public class XmppConnectionService extends Service {
         });
     }
 
+    public void deleteAccountFromServer(final Account account) {
+        account.getXmppConnection().sendDeleteRequest();
+        deleteAccount(account);
+    }
+
     public void deleteAccount(final Account account) {
         synchronized (this.conversations) {
             for (final Conversation conversation : conversations) {
