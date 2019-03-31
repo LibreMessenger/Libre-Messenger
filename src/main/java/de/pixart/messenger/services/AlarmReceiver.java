@@ -17,7 +17,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             Log.d(Config.LOGTAG, "Received alarm broadcast to export logs");
             final Intent backupIntent = new Intent(context, ExportBackupService.class);
             backupIntent.putExtra("NOTIFY_ON_BACKUP_COMPLETE", false);
-            Compatibility.startService(context, intent);
+            Compatibility.startService(context, backupIntent);
         }
     }
 }
