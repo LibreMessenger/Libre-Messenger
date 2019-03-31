@@ -441,8 +441,9 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_conversations, menu);
-        MenuItem qrCodeScanMenuItem = menu.findItem(R.id.action_scan_qr_code);
+        final MenuItem qrCodeScanMenuItem = menu.findItem(R.id.action_scan_qr_code);
         final MenuItem menuEditProfiles = menu.findItem(R.id.action_accounts);
+        final MenuItem inviteUser = menu.findItem(R.id.action_invite_user);
         if (qrCodeScanMenuItem != null) {
             if (isCameraFeatureAvailable()) {
                 Fragment fragment = getFragmentManager().findFragmentById(R.id.main_fragment);
@@ -458,6 +459,11 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
             menuEditProfiles.setTitle(R.string.action_account);
         } else {
             menuEditProfiles.setTitle(R.string.action_accounts);
+        }
+        if (xmppConnectionServiceBound && xmppConnectionService.getAccounts().size() > 0) {
+            inviteUser.setVisible(true);
+        } else {
+            inviteUser.setVisible(false);
         }
         return super.onCreateOptionsMenu(menu);
     }

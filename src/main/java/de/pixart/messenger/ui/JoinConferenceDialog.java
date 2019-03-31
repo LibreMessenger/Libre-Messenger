@@ -29,7 +29,6 @@ public class JoinConferenceDialog extends DialogFragment implements OnBackendCon
     private static final String PREFILLED_JID_KEY = "prefilled_jid";
     private static final String ACCOUNTS_LIST_KEY = "activated_accounts_list";
     private static final String MULTIPLE_ACCOUNTS = "multiple_accounts_enabled";
-    public XmppConnectionService xmppConnectionService;
     private JoinConferenceDialogListener mListener;
     private KnownHostsAdapter knownHostsAdapter;
 
