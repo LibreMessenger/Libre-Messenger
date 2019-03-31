@@ -79,12 +79,12 @@
                     android:textColor="?attr/colorAccent" />
 
                 <Button
-                    android:id="@+id/use_advanced_mode"
+                    android:id="@+id/use_existing_account"
                     style="@style/Widget.Conversations.Button.Borderless"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:text="@string/welcome_advanced_mode"
+                    android:text="@string/welcome_existing_account"
                     android:textColor="?attr/colorAccent" />
             </LinearLayout>
 
