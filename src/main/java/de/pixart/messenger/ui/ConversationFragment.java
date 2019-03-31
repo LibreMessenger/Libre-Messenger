@@ -1120,7 +1120,8 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 menuInviteContact.setVisible(false);
                 menuArchiveChat.setTitle(R.string.action_end_conversation);
             }
-            if (getFragmentManager().findFragmentById(R.id.secondary_fragment) != null) {
+            Fragment secondaryFragment = getFragmentManager().findFragmentById(R.id.secondary_fragment);
+            if (secondaryFragment != null && secondaryFragment instanceof ConversationFragment) {
                 if (conversation.getMode() == Conversation.MODE_MULTI) {
                     menuGroupDetails.setTitle(conversation.getMucOptions().isPrivateAndNonAnonymous() ? R.string.action_group_details : R.string.channel_details);
                     menuGroupDetails.setVisible(true);
