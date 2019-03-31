@@ -55,7 +55,7 @@ public class MyLinkify {
         }
     };
 
-    private static String removeTrailingBracket(final String url) {
+    public static String removeTrailingBracket(final String url) {
         int numOpenBrackets = 0;
         for (char c : url.toCharArray()) {
             if (c == '(') {

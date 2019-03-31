@@ -607,6 +607,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
                         this.getBody().length() + message.getBody().length() <= Config.MAX_DISPLAY_MESSAGE_CHARS &&
                         !message.isGeoUri()&&
                         !this.isGeoUri() &&
+                        !message.isWebUri() &&
                         !this.isWebUri() &&
                         !message.treatAsDownloadable() &&
                         !this.treatAsDownloadable() &&
@@ -788,7 +789,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
     public synchronized boolean isWebUri() {
         String url = body.trim();
         if (isWebUri == null) {
-            isWebUri = URLUtil.isValidUrl(url) && Patterns.WEB_URL.matcher(url).matches() && !url.contains(" ");
+            isWebUri = Patterns.AUTOLINK_WEB_URL.matcher(url).matches() && !url.contains(" ");
         }
         return isWebUri;
     }

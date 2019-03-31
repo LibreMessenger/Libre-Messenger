@@ -41,6 +41,7 @@ import com.squareup.picasso.Picasso;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -85,6 +86,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static de.pixart.messenger.ui.SettingsActivity.PLAY_GIF_INSIDE;
 import static de.pixart.messenger.ui.SettingsActivity.SHOW_LINKS_INSIDE;
 import static de.pixart.messenger.ui.SettingsActivity.SHOW_MAPS_INSIDE;
+import static de.pixart.messenger.ui.util.MyLinkify.removeTrailingBracket;
 
 public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextView.CopyHandler {
 
@@ -715,7 +717,15 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(WRAP_CONTENT, scaledH);
             layoutParams.setMargins(0, (int) (metrics.density * 4), 0, (int) (metrics.density * 4));
             viewHolder.richlinkview.setLayoutParams(layoutParams);
-            viewHolder.richlinkview.setLink(body.toString(), message.getUuid(), dataSaverDisabled, new RichPreview.ViewListener() {
+            final String url = body.toString();
+            String weburl;
+            final String lcUrl = url.toLowerCase(Locale.US);
+            if (lcUrl.startsWith("http://") || lcUrl.startsWith("https://")) {
+                weburl = removeTrailingBracket(url);
+            } else {
+                weburl = "http://" + removeTrailingBracket(url);
+            }
+            viewHolder.richlinkview.setLink(weburl, message.getUuid(), dataSaverDisabled, new RichPreview.ViewListener() {
 
                 @Override
                 public void onSuccess(boolean status) {
