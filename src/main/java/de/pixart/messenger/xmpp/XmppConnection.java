@@ -1022,7 +1022,6 @@ public class XmppConnection implements Runnable {
         delete.query("jabber:iq:register").addChild("remove");
         delete.setTo(Jid.of(account.getServer()));
         delete.setFrom(account.getJid().asBareJid());
-        Log.d(Config.LOGTAG, "Delete " + delete);
         sendUnmodifiedIqPacket(delete, (account, packet) -> {
             if (packet.getType() == IqPacket.TYPE.TIMEOUT) {
                 return;
