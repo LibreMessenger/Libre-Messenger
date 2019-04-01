@@ -1,11 +1,17 @@
 ![logo](/art/icon.png) 
 # Pix-Art Messenger [![CircleCI](https://circleci.com/gh/kriztan/Pix-Art-Messenger/tree/master.svg?style=shield)](https://circleci.com/gh/kriztan/Pix-Art-Messenger/tree/master)
 
-Pix-Art Messenger ist eine Kopie der offiziellen Android-App [Conversations](https://github.com/siacs/Conversations) mit einigen Änderungen, insbesondere zur Verbesserung der Benutzerfreundlichkeit, um den Umstieg von oftmals vorinstallierten Messengern zu erleichtern.
+Pix-Art Messenger ist eine Kopie der offiziellen Android-App [Conversations](https://github.com/siacs/Conversations) mit einigen Änderungen, insbesondere zur Verbesserung der Benutzerfreundlichkeit, um den Umstieg von oftmals vorinstallierten Messengern zu erleichtern. Die folgenden Bilder geben erste Eindrücke der App:
+
+<img src="https://user-images.githubusercontent.com/29168011/55349856-fe620e00-54ba-11e9-97ff-5ce894671af6.png" width="200"> <img src="https://user-images.githubusercontent.com/29168011/55349869-0621b280-54bb-11e9-8f8d-a6ebef553723.png" width="200"> <img src="https://user-images.githubusercontent.com/29168011/55349884-0de15700-54bb-11e9-8f9c-0ae78db9462c.png" width="200"> <img src="https://user-images.githubusercontent.com/29168011/55349906-176abf00-54bb-11e9-9c1e-1bf174827634.png" width="200"> <img src="https://user-images.githubusercontent.com/29168011/55349910-19348280-54bb-11e9-993e-7ac8af5f85e4.png" width="200"> <img src="https://user-images.githubusercontent.com/29168011/55349913-1afe4600-54bb-11e9-8451-2364966eeaa8.png" width="200"> <img src="https://user-images.githubusercontent.com/29168011/55349917-1c2f7300-54bb-11e9-8ffb-1f4591058a07.png" width="200"> 
+
+(Bilder wurden über http://freestockgallery.de bezogen)
+
+Download ist hier möglich:
 
 <a href='https://play.google.com/store/apps/details?id=de.pixart.messenger'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height="100"/></a> <a href="https://f-droid.org/app/de.pixart.messenger"><img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="100"></a>
 
-Alternativ kannst du den Messenger direkt aus hier von GitHub unter [Releases](https://github.com/kriztan/Pix-Art-Messenger/releases/latest) herunterladen.
+Alternativ kannst du den Messenger auch direkt hier von GitHub unter [Releases](https://github.com/kriztan/Pix-Art-Messenger/releases/latest) herunterladen.
 
 #### Wie kann ich bei der Übersetzung helfen?
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/pix-art-messenger/localized.svg)](https://crowdin.com/project/pix-art-messenger)
