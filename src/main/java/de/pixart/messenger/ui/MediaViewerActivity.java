@@ -382,7 +382,11 @@ public class MediaViewerActivity extends XmppActivity {
 
     private void hideFab() {
         new Handler().postDelayed(() -> {
-            binding.speedDial.hide();
+            if (binding.speedDial.isOpen()) {
+                hideFab();
+            } else {
+                binding.speedDial.hide();
+            }
         }, 3000);
     }
 
