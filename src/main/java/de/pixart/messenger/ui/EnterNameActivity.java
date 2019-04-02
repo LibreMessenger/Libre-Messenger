@@ -12,7 +12,6 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.databinding.ActivityEnterNameBinding;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.services.XmppConnectionService;
-import de.pixart.messenger.utils.AccountUtils;
 import de.pixart.messenger.utils.FirstStartManager;
 
 public class EnterNameActivity extends XmppActivity implements XmppConnectionService.OnAccountUpdate {
@@ -77,8 +76,10 @@ public class EnterNameActivity extends XmppActivity implements XmppConnectionSer
 
     @Override
     void onBackendConnected() {
-        this.account = AccountUtils.getFirst(xmppConnectionService);
-        checkSuggestPreviousNick();
+        this.account = extractAccount(getIntent());
+        if (this.account != null) {
+            checkSuggestPreviousNick();
+        }
         updateNextButton();
     }
 
