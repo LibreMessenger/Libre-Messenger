@@ -1,7 +1,10 @@
 ### Changelog
 
 #### Version 2.2.2
-* add activity to define some important privacy settings on first start
+* add activity to define some important privacy settings on first start (PAM)
+* add ability to delete account also from server (PAM)
+* add ability to kick users from room and not just ban them (PAM)
+* bug fixes
 
 #### Version 2.2.1
 * use extra activity for enter name during registration (PAM)
