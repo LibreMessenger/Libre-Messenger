@@ -140,7 +140,6 @@
     <string name="unpublish_pgp_message">Sigur doriți să vă ștergeți cheia publică OpenPGP din mesajele de prezență?\nContactele dumneavoastră nu vor mai putea să vă trimită mesaje criptate cu OpenPGP.</string>
     <string name="openpgp_has_been_published">Cheia publică OpenPGP a fost publicată.</string>
     <string name="mgmt_account_are_you_sure">Sigur doriți asta?</string>
-    <string name="mgmt_account_delete_confirm_text">Dacă vă ștergeți contul, întregul istoric de conversații va fi pierdut</string>
     <string name="attach_record_voice">Înregistrare voce</string>
     <string name="account_settings_jabber_id">ID-ul Jabber</string>
     <string name="account_settings_example_jabber_id">username@pix-art.de</string>
@@ -327,7 +326,6 @@
     <string name="advanced_mode">Mod avansat</string>
     <string name="grant_admin_privileges">Acordă privilegiile de administrator</string>
     <string name="remove_admin_privileges">Abrogă privilegiile de administrator</string>
-    <string name="remove_from_room">Înlătură din discuția de grup</string>
     <string name="could_not_change_affiliation">Nu s-a putut schimba afilierea lui %s</string>
     <string name="ban_from_conference">Interzice accesul la discuția de grup</string>
     <string name="ban_now">Interzice accesul acum</string>
@@ -432,8 +430,6 @@
     <string name="notify_only_when_highlighted">Notifică doar atunci când cineva vă menționează numele</string>
     <string name="notify_never">Notificări dezactivate</string>
     <string name="notify_paused">Notificări suspendate</string>
-    <string name="pref_picture_compression">Comprimă imaginile</string>
-    <string name="pref_picture_compression_summary">Redimensionează și comprimă imaginile</string>
     <string name="always">Mereu</string>
     <string name="battery_optimizations_enabled">Optimizare baterie activată</string>
     <string name="battery_optimizations_enabled_explained">Dispozitivul dumneavoastră încearcă să optimizeze agresiv consumul bateriei pentru Pix-Art Messenger, asta poate duce la notificări întârziate sau chiar pierderea mesajelor.\nEste recomandat sa dezactivați aceste optimizări.</string>

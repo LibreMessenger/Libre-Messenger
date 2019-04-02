@@ -386,8 +386,6 @@
     <string name="notify_on_all_messages">Notificar em todas as mensagens</string>
     <string name="notify_never">Notificações desativadas</string>
     <string name="notify_paused">Notificações interrompidas</string>
-    <string name="pref_picture_compression">Comprimir Imagens</string>
-    <string name="pref_picture_compression_summary">Redimensionar e comprimir fotografias</string>
     <string name="always">Sempre</string>
     <string name="battery_optimizations_enabled">Otimizações da bateria ativadas</string>
     <string name="battery_optimizations_enabled_explained">O seu dispositivo está a fazer otimizações de bateria bastante agressivas na aplicação Pix-Art Messenger que poderão levar a notificações atrasadas ou até mesmo a perda de mensagens.\nÉ recomendado que as desative.</string>

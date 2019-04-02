@@ -139,7 +139,6 @@
     <string name="unpublish_pgp_message">Weet je zeker dat je je OpenPGP-publieke sleutel uit je aanwezigheidsaankondiging wil verwijderen?\nJe contacten zullen je geen OpenPGP-versleutelde berichten meer kunnen sturen.</string>
     <string name="openpgp_has_been_published">OpenPGP-publieke sleutel is gepubliceerd.</string>
     <string name="mgmt_account_are_you_sure">Weet je het zeker?</string>
-    <string name="mgmt_account_delete_confirm_text">Als je je account verwijdert, wordt je volledige gespreksgeschiedenis gewist</string>
     <string name="attach_record_voice">Stem opnemen</string>
     <string name="account_settings_jabber_id">Jabber-ID:</string>
     <string name="account_settings_example_jabber_id">gebruikersnaam@voorbeeld.nl</string>
@@ -325,7 +324,6 @@
     <string name="advanced_mode">Geavanceerde modus</string>
     <string name="grant_admin_privileges">Beheerdersprivileges verlenen</string>
     <string name="remove_admin_privileges">Beheerdersprivileges ontzeggen</string>
-    <string name="remove_from_room">Verwijderen uit groepsgesprek</string>
     <string name="could_not_change_affiliation">Kon aansluiting niet wijzigen</string>
     <string name="ban_from_conference">Verbannen uit groepsgesprek</string>
     <string name="ban_now">Nu verbannen</string>
@@ -424,8 +422,6 @@
     <string name="notify_only_when_highlighted">Melding enkel wanneer aangesproken</string>
     <string name="notify_never">Meldingen uitgeschakeld</string>
     <string name="notify_paused">Meldingen gepauzeerd</string>
-    <string name="pref_picture_compression">Afbeeldingen comprimeren</string>
-    <string name="pref_picture_compression_summary">Verklein en comprimeer afbeeldingen</string>
     <string name="always">Altijd</string>
     <string name="battery_optimizations_enabled">Batterij-optimalisaties ingeschakeld</string>
     <string name="battery_optimizations_enabled_explained">Je apparaat voert sterke batterij-optimalisaties uit op Pix-Art Messenger, die kunnen leiden tot vertraagde meldingen of zelfs verlies van berichten.\nHet is aangeraden deze optimalisaties uit te schakelen.</string>

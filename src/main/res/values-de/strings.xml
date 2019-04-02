@@ -111,7 +111,7 @@
     <string name="pref_sound">Benachrichtigungston</string>
     <string name="pref_sound_summary">Benachrichtigungston wiedergeben</string>
     <string name="pref_send_crash">Absturzberichte senden</string>
-    <string name="pref_send_crash_summary">Wenn du Absturzberichte einschickst, hilfst du Pix-Art Messenger stetig zu verbessern</string>
+    <string name="pref_send_crash_summary">Wenn du Absturzberichte einschickst, hilfst du bei der Verbesserung von Pix-Art Messenger</string>
     <string name="pref_confirm_messages">Lese- und Empfangsbestätigung senden</string>
     <string name="pref_confirm_messages_summary">Informiere deine Kontakte, wenn du eine Nachricht empfangen und gelesen hast</string>
     <string name="pref_ui_options">Benutzeroberfläche</string>
@@ -157,7 +157,7 @@
     <string name="unpublish_pgp_message">Bist du sicher, dass du deinen öffentlichen OpenPGP-Schlüssel aus deiner Anwesenheitsmitteilung entfernen möchtest?\\nDeine Kontakte können dir dann keine OpenPGP-verschlüsselten Nachrichten senden.</string>
     <string name="openpgp_has_been_published">Öffentlicher OpenPGP-Schlüssel wurde veröffentlicht.</string>
     <string name="mgmt_account_are_you_sure">Bist du dir sicher?</string>
-    <string name="mgmt_account_delete_confirm_text">Wenn du dein Profil löschst, gehen alle Gesprächsverläufe verloren</string>
+    <string name="mgmt_account_delete_confirm_message">Wenn du dein Profil löschst, gehen deine lokal gespeicherten Chatverläufe verloren.\n\nWenn du dein Profil vom Server löschst, wird dein gesamtes Benutzerprofil ebenfalls gelöscht, du wirst dich nicht mehr einloggen können bis du ein neues Profil erstellt hast.</string>
     <string name="attach_record_voice">Sprache aufzeichnen</string>
     <string name="account_settings_jabber_id">Jabber-ID</string>
     <string name="account_settings_example_jabber_id">benutzer@pix-art.de</string>
@@ -365,11 +365,16 @@
     <string name="remove_membership">Mitgliedsrechte entziehen</string>
     <string name="grant_admin_privileges">Administratorrechte gewähren</string>
     <string name="remove_admin_privileges">Administratorrechte entziehen</string>
-    <string name="remove_from_room">Aus Gruppenchat entfernen</string>
+    <string name="kick_from_room">Aus Gruppenchat entfernen</string>
     <string name="could_not_change_affiliation">Zugehörigkeit von %s konnte nicht verändert werden</string>
     <string name="ban_from_conference">Von Gruppenchat ausschließen</string>
-    <string name="removing_from_public_conference">Du versuchst %s aus einem öffentlichen Gruppenchat zu entfernen. Die einzige Möglichkeit ist, den Kontakt von diesem Gruppenchat auszuschließen.</string>
-    <string name="ban_now">Kontakt ausschließen</string>
+    <string name="kick_from_conference">Aus Gruppenchat entfernen</string>
+    <string name="ban_from_public_conference_message">Du versuchst %s für immer von dem Channel auszuschließen.</string>
+    <string name="ban_from_conference_message">Du versuchst %s für immer von dem Gruppenchat auszuschließen</string>
+    <string name="kicking_from_public_conference">Du versuchst %s aus dem Channel zu entfernen.</string>
+    <string name="kicking_from_conference">Du versuchst %s aus dem Gruppenchat zu entfernen.</string>
+    <string name="ban_now">Jetzt ausschließen</string>
+    <string name="kick_now">Jetzt auschließen</string>
     <string name="non_anonymous">JIDs für alle sichtbar machen</string>
     <string name="moderated">Channel wird moderiert</string>
     <string name="you_are_not_participating">Du bist kein Mitglied</string>
@@ -481,10 +486,10 @@
     <string name="notify_only_when_highlighted">Nur benachrichtigen, wenn ich erwähnt werde</string>
     <string name="notify_never">Benachrichtigungen deaktiviert</string>
     <string name="notify_paused">Benachrichtigungen pausiert</string>
-    <string name="pref_picture_compression">Bilder komprimieren</string>
-    <string name="pref_picture_compression_summary">Bildgröße anpassen und komprimieren</string>
-    <string name="pref_video_compression">Videos komprimieren</string>
-    <string name="pref_video_compression_summary">Videogröße anpassen und komprimieren</string>
+    <string name="pref_picture_quality">Bildqualität</string>
+    <string name="pref_picture_quality_summary">Bildgröße anpassen und komprimieren</string>
+    <string name="pref_video_quality">Videoqualität</string>
+    <string name="pref_video_quality_summary">Videogröße anpassen und komprimieren</string>
     <string name="video_low">niedrig (144p)</string>
     <string name="video_mid">mittelmäßig (360p)</string>
     <string name="video_high">hoch (720p)</string>
@@ -513,7 +518,7 @@
     <string name="magic_create_text">Wir erstellen nun mit dir gemeinsam ein Profil mit einem zufällig generierten Passwort, welches du benutzen oder auf der nächsten Seite ändern kannst\nDanach kannst du mit Kontakten auf diesem und anderen Servern in Kontakt treten, indem du ihnen deine Jabber-ID gibst.</string>
     <string name="your_full_jid_will_be">Deine Jabber-ID lautet: %s</string>
     <string name="create_account">Neues Profil erstellen</string>
-    <string name="welcome_advanced_mode">Erweiterter Modus</string>
+    <string name="welcome_existing_account">Ich habe ein Profil</string>
     <string name="pick_your_username">Wähle deinen Benutzernamen</string>
     <string name="pref_manually_change_presence">Status manuell ändern</string>
     <string name="pref_manually_change_presence_summary">Lege deinen Status fest, wenn du deine Statusnachricht bearbeitest.</string>
@@ -824,7 +829,7 @@
     <string name="no_name_set_instructions">Keinen Nickname festgelegt.</string>
     <string name="autojoin_group_chat">Diesem Gruppenchat automatisch beitreten</string>
     <string name="pref_show_links_inside">Zeige eine Vorschau von Weblinks im Chat</string>
-    <string name="pref_show_links_inside_summary">Dies zeigt eine Vorschau von Weblinks im Chat an, dabei wird eine Verbindung zu dem im Link angegeben Server hergestellt.</string>
+    <string name="pref_show_links_inside_summary">Zeige eine Vorschau von Weblinks direkt im Chat, dabei wird eine Verbindung zu dem im Link angegebenen Server hergestellt.</string>
     <string name="pref_play_gif_inside">GIF-Dateien im Chat abspielen</string>
     <string name="pref_play_gif_inside_summary">GIF Dateien direkt im Chat abspielen.</string>
     <string name="open_with">Öffnen mit…</string>
@@ -890,4 +895,13 @@
     <string name="mgmt_account_password_forgotten">Passwort vergessen</string>
     <string name="password_forgotten_title">Passwort vergessen</string>
     <string name="password_forgotten_text">Du hast dein Passwort vergessen? Wir versuchen, die Support-Website deines Providers zu öffnen.</string>
+    <string name="set_settings_intro">Hier kannst du einige wichtige Einstellungen zur Privatsphäre nach deinen Wünschen vornehmen. Alle Änderungen können auch später angepasst werden.</string>
+    <string name="pref_show_mappreview_inside_summary">Zeige eine Vorschau von Standorten direkt im Chat, dabei wird eine Verbindung Pix-Art-Server hergestellt.</string>
+    <string name="pref_show_mappreview_inside">Zeige eine Vorschau von Karten im Chat</string>
+    <string name="pref_use_internal_updater_summary">Lasse den Messenger einmal am Tag nach einer neuen Version suchen</string>
+    <string name="pref_use_internal_updater">Nach Updates suchen</string>
+    <string name="attach">Anhängen</string>
+    <string name="delete_locally">Lokal löschen</string>
+    <string name="delete_from_server">Auf Server löschen</string>
+    <string name="go_online_to_delete">Du musst online sein, um dein Profil vom Server löschen zu können.</string>
 </resources>

@@ -135,7 +135,6 @@
     <string name="unpublish_pgp_message">Är du säker på att du vill ta bort din OpenPGP publik nyckel från din tillgänglighetsuppdatering?\nDina kontakter kommer inte längre att kunna skicka dig OpenPGP-krypterade meddelande.</string>
     <string name="openpgp_has_been_published">OpenPGP-nyckel har publicerats.</string>
     <string name="mgmt_account_are_you_sure">Är du säker?</string>
-    <string name="mgmt_account_delete_confirm_text">Om du tar bort ditt konto kommer hela konversationshistoriken att försvinna</string>
     <string name="attach_record_voice">Spela in röst</string>
     <string name="account_settings_jabber_id">Jabber-ID</string>
     <string name="account_settings_example_jabber_id">användarnamn@exempel.se</string>
@@ -402,8 +401,6 @@
     <string name="notify_on_all_messages">Notifiera för alla meddelanden</string>
     <string name="notify_never">Notifieringar deaktiverade</string>
     <string name="notify_paused">Notifieringar pausade</string>
-    <string name="pref_picture_compression">Komprimera bilder</string>
-    <string name="pref_picture_compression_summary">Storleksjustera och komprimera bilder</string>
     <string name="always">Alltid</string>
     <string name="battery_optimizations_enabled">Batterioptimeringar aktiverade</string>
     <string name="battery_optimizations_enabled_explained">Din enhet har kraftiga batterioptimeringar som påverkar Pix-Art Messenger på så sätt att inkommande meddelanden kan försenas eller kan till och med gå förlorade.\nDet är rekommenderat att deaktivera batterioptimeringarna.</string>

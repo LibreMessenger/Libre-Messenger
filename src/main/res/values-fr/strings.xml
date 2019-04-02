@@ -110,7 +110,6 @@
     <string name="pref_sound">Sonnerie</string>
     <string name="pref_sound_summary">Jouer un son lors de la réception d’un nouveau message</string>
     <string name="pref_send_crash">Envoyer les rapports de plantage</string>
-    <string name="pref_send_crash_summary">En envoyant des traces de pile, vous contribuez au développement continu de Pix-Art Messenger</string>
     <string name="pref_confirm_messages">Confirmation de lecture</string>
     <string name="pref_confirm_messages_summary">Informer vos contacts quand vous avez reçu et lu leurs messages</string>
     <string name="pref_ui_options">Interface</string>
@@ -156,7 +155,6 @@
     <string name="unpublish_pgp_message">Êtes vous sûr de vouloir supprimer votre clef publique OpenPGP de votre annonce de présence?\nVos contacts ne pourront plus vous envoyer de message chiffrés avec OpenPGP.</string>
     <string name="openpgp_has_been_published">La clef publique OpenPGP a été publiée</string>
     <string name="mgmt_account_are_you_sure">Êtes-vous sûr?</string>
-    <string name="mgmt_account_delete_confirm_text">Si vous supprimez votre compte ainsi que tout votre historique de conversation sera perdu</string>
     <string name="attach_record_voice">Enregistrer une voix</string>
     <string name="account_settings_jabber_id">Identifiant</string>
     <string name="account_settings_example_jabber_id">nom@exemple.com</string>
@@ -363,7 +361,6 @@
     <string name="remove_membership">Révoquer les privilèges de membre</string>
     <string name="grant_admin_privileges">Accorder des privilèges d’administrateur</string>
     <string name="remove_admin_privileges">Révoquer les privilèges d’administrateur</string>
-    <string name="remove_from_room">Retirer de la conférence</string>
     <string name="could_not_change_affiliation">Impossible de changer l’affiliation de %s</string>
     <string name="ban_from_conference">Bannir de la conférence</string>
     <string name="ban_now">Bannir maintenant</string>
@@ -478,10 +475,6 @@
     <string name="notify_only_when_highlighted">Notifier seulement en cas de mention</string>
     <string name="notify_never">Notifications désactivées</string>
     <string name="notify_paused">Notifications en pause</string>
-    <string name="pref_picture_compression">Compresser images</string>
-    <string name="pref_picture_compression_summary">Redimensionner et compresser les images</string>
-    <string name="pref_video_compression">Compression des vidéos</string>
-    <string name="pref_video_compression_summary">Redimensionner et compresser les vidéos</string>
     <string name="video_low">basse (144p)</string>
     <string name="video_mid">moyenne (360p)</string>
     <string name="video_high">haute (720p)</string>
@@ -509,7 +502,6 @@
     <string name="magic_create_text">Nous vous guiderons pendant toute la procédure de création d’un compte utilisateur avec un mot de passe aléatoire que vous pourrez utiliser ou modifier, au choix durant, la prochaine étape. \nEnsuite vous pourrez communiquer avec les utilisateur·trice·s des autres fournisseurs en leur transmettant votre identifiant complet de Jabber.</string>
     <string name="your_full_jid_will_be">Votre Jabber ID complet sera : %s</string>
     <string name="create_account">Création d’un nouveau compte</string>
-    <string name="welcome_advanced_mode">Mode expert</string>
     <string name="pick_your_username">Choisissez votre nom d’utilisateur</string>
     <string name="pref_manually_change_presence">Gérer la disponibilité manuellement</string>
     <string name="pref_manually_change_presence_summary">Paramètre votre disponibilité lorsque vous éditez votre message de statut.</string>
@@ -816,7 +808,6 @@
     <string name="no_name_set_instructions">Aucun psœudonyme n’a été spécifié.</string>
     <string name="autojoin_group_chat">Rejoindre automatiquement ce groupe de discussion</string>
     <string name="pref_show_links_inside">Afficher les aperçus des liens Web au sein de la discussion</string>
-    <string name="pref_show_links_inside_summary">Afficher les aperçus des liens Web directement dans la fenêtre de discussion.</string>
     <string name="pref_play_gif_inside">Animer les fichiers GIF dans la discussion</string>
     <string name="pref_play_gif_inside_summary">Animer les images GIF publiées directement dans la fenêtre de discussion.</string>
     <string name="open_with">Ouvrir avec …</string>

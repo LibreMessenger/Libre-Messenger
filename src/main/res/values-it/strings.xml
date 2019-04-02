@@ -157,7 +157,7 @@
     <string name="unpublish_pgp_message">Sei sicuro di volere rimuovere la tua chiave pubblica OpenPGP dalla dichiarazione di presenza?\nI tuoi contatti non potranno più inviarti messaggi cifrati con OpenPGP.</string>
     <string name="openpgp_has_been_published">La chiave pubblica OpenPGP è stata pubblicata.</string>
     <string name="mgmt_account_are_you_sure">Sei sicuro?</string>
-    <string name="mgmt_account_delete_confirm_text">Se elimini il tuo account perderai tutta la cronologia delle conversazioni</string>
+    <string name="mgmt_account_delete_confirm_message">Se elimini il tuo account, la tua cronologia locale delle conversazioni sarà persa.\n\nSe elimini l\'account dal server, tutto il tuo account sarà eliminato anche dal server, e non sarai in grado di accedere più finchè non registrerai un nuovo account.</string>
     <string name="attach_record_voice">Registra la voce</string>
     <string name="account_settings_jabber_id">ID Jabber</string>
     <string name="account_settings_example_jabber_id">utente@esempio.com</string>
@@ -365,10 +365,8 @@
     <string name="remove_membership">Revoca privilegi di membro</string>
     <string name="grant_admin_privileges">Concedi i privilegi di amministratore</string>
     <string name="remove_admin_privileges">Revoca i privilegi di amministratore</string>
-    <string name="remove_from_room">Rimuovi dalla conversazione di gruppo</string>
     <string name="could_not_change_affiliation">Impossibile cambiare l’affiliazione di %s</string>
     <string name="ban_from_conference">Bandisci dalla conversazione di gruppo</string>
-    <string name="removing_from_public_conference">Stai cercando di rimuovere %s da un canale pubblico. L\'unico modo di fare questo è di bandire quell\'utente per sempre.</string>
     <string name="ban_now">Bandisci</string>
     <string name="non_anonymous">Imposta gli ID Jabber visibili a chiunque</string>
     <string name="moderated">Rendi moderato il canale</string>
@@ -481,10 +479,10 @@
     <string name="notify_only_when_highlighted">Notifica solo quando menzionato</string>
     <string name="notify_never">Notifiche disabilitate</string>
     <string name="notify_paused">Notifiche in pausa</string>
-    <string name="pref_picture_compression">Comprimi immagini</string>
-    <string name="pref_picture_compression_summary">Ridimensiona e comprimi immagini</string>
-    <string name="pref_video_compression">Comprimi video</string>
-    <string name="pref_video_compression_summary">Riduci e comprimi video</string>
+    <string name="pref_picture_quality">Qualità immagine</string>
+    <string name="pref_picture_quality_summary">Rimpicciolisci e comprimi immagini</string>
+    <string name="pref_video_quality">Qualità video</string>
+    <string name="pref_video_quality_summary">Rimpicciolisci e comprimi video</string>
     <string name="video_low">bassa (144p)</string>
     <string name="video_mid">media (360p)</string>
     <string name="video_high">alta (720p)</string>
@@ -513,7 +511,7 @@
     <string name="magic_create_text">Ti guideremo nel processo di creazione di un account con una password casuale, che potrai utilizzare o cambiare con una tua nella prossima pagina. \nSuccessivamente potrai comunicare con altri utenti di questo e altri server dando loro il tuo ID-Jabber completo.</string>
     <string name="your_full_jid_will_be">Il tuo ID Jabber completo sarà: %s</string>
     <string name="create_account">Crea account</string>
-    <string name="welcome_advanced_mode">Modalità avanzata</string>
+    <string name="welcome_existing_account">Ho un account</string>
     <string name="pick_your_username">Scegli il tuo nome utente</string>
     <string name="pref_manually_change_presence">Gestisci disponibilità manualmente</string>
     <string name="pref_manually_change_presence_summary">Imposta la tua disponibilità quando modifichi il tuo messaggio di stato.</string>
@@ -824,7 +822,7 @@
     <string name="no_name_set_instructions">Nessun nome impostato.</string>
     <string name="autojoin_group_chat">Unisciti automaticamente a questa conversazione di gruppo</string>
     <string name="pref_show_links_inside">Mostra anteprime dei collegamenti web nella conversazione</string>
-    <string name="pref_show_links_inside_summary">Mostra anteprime dei collegamenti web direttamente all\'interno della schermata di conversazione.</string>
+    <string name="pref_show_links_inside_summary">Mostra anteprime dei collegamenti web direttamente all\'interno delle conversazioni, sarà stabilita una connessione al server specificato nel collegamento.</string>
     <string name="pref_play_gif_inside">Riproduci file GIF nelle conversazioni</string>
     <string name="pref_play_gif_inside_summary">Riproduci file GIF direttamente all\'interno della schermata di conversazione.</string>
     <string name="open_with">Apri con…</string>
@@ -890,4 +888,13 @@
     <string name="mgmt_account_password_forgotten">Password dimenticata</string>
     <string name="password_forgotten_title">Password dimenticata</string>
     <string name="password_forgotten_text">Hai dimenticato la password del tuo account? Ora proveremo ad aprire la pagina di supporto del sito del tuo fornitore.</string>
+    <string name="set_settings_intro">Qui puoi regolare alcune importanti impostazioni di privacy in base alle tue esigenze. Tutte le impostazioni potranno anche essere modificate in seguito.</string>
+    <string name="pref_show_mappreview_inside_summary">Mostra anteprime mappe direttamente all\'interno delle conversazioni, sarà stabilita una connessione al Pix-Art-Server.</string>
+    <string name="pref_show_mappreview_inside">Mostra anteprime delle posizioni nella conversazione</string>
+    <string name="pref_use_internal_updater_summary">Permetti all\'app di cercare gli aggiornamenti una volta al giorno</string>
+    <string name="pref_use_internal_updater">cerca aggiornamenti</string>
+    <string name="attach">Allega</string>
+    <string name="delete_locally">Elimina localmente</string>
+    <string name="delete_from_server">Elimina dal server</string>
+    <string name="go_online_to_delete">Devi attivare e/o andare online con l\'account che vuoi eliminare dal server.</string>
 </resources>

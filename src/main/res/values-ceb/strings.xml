@@ -102,7 +102,6 @@
     <string name="pref_sound">Ringtone</string>
     <string name="pref_sound_summary">Mutingog kung naay bag-o nga mensahe ang maabot</string>
     <string name="pref_send_crash">Pagpadala kung naay nabangga nga mga report</string>
-    <string name="pref_send_crash_summary">Sa pamaagi nga pagpadala sa stack traces, ikaw nakatabang sa nagpadayon nga paglambo sa Pix-Art Messenger</string>
     <string name="pref_confirm_messages">Pagmatuod sa mga mensahe</string>
     <string name="pref_confirm_messages_summary">Himua nga ang imung mga kontak makabalo nga naka dawat naka sa ilang mga mensahe</string>
     <string name="pref_ui_options">UI</string>
@@ -147,7 +146,6 @@
     <string name="unpublish_pgp_message">Sigurado ka nga imung tanggalun imung OpenPGP nga publik nga yawe gekan sa presensya sa pahibalo?\n Imung mga kontak kay dili na pwedi ipadala sa imuha ug OpenPGP nga naka-encrypt nga mga mensahe.</string>
     <string name="openpgp_has_been_published">Gilunsad ang publikong yawe sa OpenPGP.</string>
     <string name="mgmt_account_are_you_sure">Sure jud ka?</string>
-    <string name="mgmt_account_delete_confirm_text">Kon imong tangtangon ang imong account, ang imong tibuok kasaysayan sa gepaga-istoryahan kay mawala</string>
     <string name="attach_record_voice">Irekord ang tingog</string>
     <string name="account_settings_jabber_id">Jabber-ID</string>
     <string name="account_settings_example_jabber_id">username@pix-art.de</string>
@@ -416,10 +414,6 @@
     <string name="notify_only_when_highlighted">Pahibal-a kung ge-hisgutan</string>
     <string name="notify_never">Mga pahibalo kay baldado</string>
     <string name="notify_paused">Mga pahibalo kay gipa ungot</string>
-    <string name="pref_picture_compression">Isikit ang mga litrato</string>
-    <string name="pref_picture_compression_summary">Usaba ug sukod ug isikit ang mga litrato</string>
-    <string name="pref_video_compression">Isikit ang mga bidyo</string>
-    <string name="pref_video_compression_summary">Usaba ang sukod ug isikit ang mga bidyo</string>
     <string name="video_low">ubos (144p)</string>
     <string name="video_mid">tunga (360p)</string>
     <string name="video_high">taas (720p)</string>

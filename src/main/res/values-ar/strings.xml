@@ -299,8 +299,6 @@
     <string name="not_valid_hostname">اسم المضيف هذا غير صالح</string>
     <string name="load_more_messages">تحميل المزيد من الرسائل</string>
     <string name="sync_with_contacts">زامِن مع المراسِلين</string>
-    <string name="pref_picture_compression">ضغط الصور</string>
-    <string name="pref_video_compression">ضغط الفيديوهات</string>
     <string name="always">دائما</string>
     <string name="battery_optimizations_enabled">تم تشغيل تحسينات البطارية</string>
     <string name="disable">تعطيل</string>
@@ -316,7 +314,6 @@
     <string name="mgmt_account_reconnect">إعادة الاتصال</string>
     <string name="welcome_text">… هو تطبيق محادثة حر و آمن لجابر و XMPP.</string>
     <string name="create_account">إنشاء حساب جديد</string>
-    <string name="welcome_advanced_mode">الوضع المتقدم</string>
     <string name="pick_your_username">قم باختيار اسم مستخدم خاص بك</string>
     <string name="status_message">رسالة حالة الحضور</string>
     <string name="presence_chat">حر للمحادثة</string>

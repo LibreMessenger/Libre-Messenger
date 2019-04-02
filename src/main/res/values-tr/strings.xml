@@ -102,7 +102,6 @@
     <string name="pref_sound">Zil sesi</string>
     <string name="pref_sound_summary">Yeni bir mesaj geldiği zaman ses çıkar</string>
     <string name="pref_send_crash">Kilitlenme raporlarını gönderin</string>
-    <string name="pref_send_crash_summary">Yığın ipuçlarını göndererek, Pix-Art Messenger\'ın sürekli gelişmesine yardımcı oluyorsunuz</string>
     <string name="pref_confirm_messages">Mesajları Onayla</string>
     <string name="pref_confirm_messages_summary">Kişilerinize mesajlarınızı ne zaman aldığınızı ve okuduğunuzu bilmelerini sağlayın</string>
     <string name="pref_ui_options">UI</string>
@@ -147,7 +146,6 @@
     <string name="unpublish_pgp_message">OpenPGP genel anahtarınızı varlığınızın duyurusundan kaldırmak istediğinize emin misiniz? \ N Kişileriniz artık size OpenPGP şifrelenmiş mesajlar gönderemeyecek.</string>
     <string name="openpgp_has_been_published">OpenPGP genel anahtarı paylaşıldı.</string>
     <string name="mgmt_account_are_you_sure">Emin misiniz?</string>
-    <string name="mgmt_account_delete_confirm_text">Hesabınızı silerseniz, tüm görüşme geçmişiniz kaybolur</string>
     <string name="attach_record_voice">Kayıt sesi</string>
     <string name="account_settings_jabber_id">Jabber-ID</string>
     <string name="account_settings_example_jabber_id">kullanıcıadı@pix-art.de</string>
@@ -336,7 +334,6 @@
     <string name="advanced_mode">Gelişmiş mod</string>
     <string name="grant_admin_privileges">Yönetici ayrıcalıkları ver</string>
     <string name="remove_admin_privileges">Yönetici ayrıcalıklarını iptal et</string>
-    <string name="remove_from_room">Sohbet grubunu silin</string>
     <string name="could_not_change_affiliation">%s kullanıcısının üyeliği değiştirilemedi</string>
     <string name="ban_from_conference">Grup sohbetini engelle</string>
     <string name="ban_now">Şimdi engelle</string>
@@ -445,10 +442,6 @@
     <string name="notify_only_when_highlighted">Yalnızca bahsedildiğinde bildir</string>
     <string name="notify_never">Bildirimler devre dışı</string>
     <string name="notify_paused">Bildirimler duraklatıldı</string>
-    <string name="pref_picture_compression">Resimleri sıkıştır</string>
-    <string name="pref_picture_compression_summary">Resimleri yeniden boyutlandır ve sıkıştır</string>
-    <string name="pref_video_compression">Videoları sıkıştır</string>
-    <string name="pref_video_compression_summary">Videoları yeniden boyutlandırma ve sıkıştırma</string>
     <string name="video_low">düşük (144p)</string>
     <string name="video_mid">orta (360p)</string>
     <string name="video_high">yüksek (720p)</string>

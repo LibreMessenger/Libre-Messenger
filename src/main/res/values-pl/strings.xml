@@ -112,7 +112,6 @@ Nie spowoduje to usunięcia kopii wiadomości przechowywanych na innych urządze
     <string name="pref_sound">Dzwonek</string>
     <string name="pref_sound_summary">Odtwórz dźwięk gdy nadejdzie wiadomość</string>
     <string name="pref_send_crash">Wyślij raporty o awariach</string>
-    <string name="pref_send_crash_summary">Przesyłając raporty o awariach, pomagasz stale ulepszać Pix-Art Messenger</string>
     <string name="pref_confirm_messages">Potwierdzenia wiadomości</string>
     <string name="pref_confirm_messages_summary">Zezwól na wysyłanie do osób z twojej listy kontaktów informacji o tym, kiedy otrzymałeś i przeczytałeś wiadomość od nich</string>
     <string name="pref_ui_options">UI</string>
@@ -158,7 +157,6 @@ Nie spowoduje to usunięcia kopii wiadomości przechowywanych na innych urządze
     <string name="unpublish_pgp_message">Czy na pewno chcesz usunąć klucz publiczny OpenPGP ze swojej propagacji obecności?\nTwoje kontakty nie będą już mogły wysyłać Ci wiadomości zaszyfrowanych OpenPGP.</string>
     <string name="openpgp_has_been_published">Klucz publiczny OpenPGP został opublikowany.</string>
     <string name="mgmt_account_are_you_sure">Czy na pewno?</string>
-    <string name="mgmt_account_delete_confirm_text">Jeśli usuniesz swoje konto, cała historia wiadomości zostanie stracona.</string>
     <string name="attach_record_voice">Nagraj głos</string>
     <string name="account_settings_jabber_id">Jabber ID</string>
     <string name="account_settings_example_jabber_id">username@example.com</string>
@@ -362,10 +360,8 @@ Nie spowoduje to usunięcia kopii wiadomości przechowywanych na innych urządze
     <string name="advanced_mode">Tryb zaawansowany</string>
     <string name="grant_admin_privileges">Przyznaj uprawnienia administratora</string>
     <string name="remove_admin_privileges">Odbierz uprawnienia administratora</string>
-    <string name="remove_from_room">Usuń z czatu grupowego</string>
     <string name="could_not_change_affiliation">Nie udało się zmienić stanowiska dla %s</string>
     <string name="ban_from_conference">Wyklucz z czatu grupowego</string>
-    <string name="removing_from_public_conference">Próbujesz usunąć %s z publicznego czatu grupowego. Możliwe jest tylko wykluczenie tego użytkownika na zawsze.</string>
     <string name="ban_now">Zbanuj teraz</string>
     <string name="non_anonymous">Spraw aby Jabber ID była widoczna dla każdego</string>
     <string name="you_are_not_participating">Nie bierzesz udziału</string>
@@ -480,10 +476,6 @@ Nie spowoduje to usunięcia kopii wiadomości przechowywanych na innych urządze
     <string name="notify_only_when_highlighted">Powiadamiaj tylko w przypadku wzmianki o mnie</string>
     <string name="notify_never">Powiadomienia wyłączone</string>
     <string name="notify_paused">Powiadomienia wstrzymane</string>
-    <string name="pref_picture_compression">Kompresuj obrazki</string>
-    <string name="pref_picture_compression_summary">Zmień rozmiar i kompresuj obrazki</string>
-    <string name="pref_video_compression">Skompresuj filmik</string>
-    <string name="pref_video_compression_summary">Zmień rozmiar i kompresuj wideo</string>
     <string name="video_low">niski (144p)</string>
     <string name="video_mid">średnie (360p)</string>
     <string name="video_high">wysokie (720p)</string>
@@ -508,7 +500,6 @@ Nie spowoduje to usunięcia kopii wiadomości przechowywanych na innych urządze
     <string name="mgmt_account_reconnect">Połącz ponownie</string>
     <string name="your_full_jid_will_be">Twój pełen Jabber ID będzie następujący: %s</string>
     <string name="create_account">Utwórz Konto</string>
-    <string name="welcome_advanced_mode">Tryb zaawansowany</string>
     <string name="pick_your_username">Wybierz nazwę użytkownika</string>
     <string name="pref_manually_change_presence">Manualne zarządzanie dostępności</string>
     <string name="pref_manually_change_presence_summary">Ustaw swoją dostępność podczas edytowania statusu.</string>

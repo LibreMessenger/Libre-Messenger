@@ -139,7 +139,6 @@
     <string name="unpublish_pgp_message">Ziur zure OpenPGP gako publikoa zure presentzia eguneraketetatik kendu nahi duzula?\nZure kontaktuek ezin dizute gehiago OpenPGPz enkriptatutako mezuak bidali.</string>
     <string name="openpgp_has_been_published">OpenPGP gako publikoa argitaratu da.</string>
     <string name="mgmt_account_are_you_sure">Ziur al zaude?</string>
-    <string name="mgmt_account_delete_confirm_text">Zure kontua ezabatzen baduzu, zure elkarrizketen historia guztia galduko da</string>
     <string name="attach_record_voice">Ahotsa grabatu</string>
     <string name="account_settings_jabber_id">Jabber IDa</string>
     <string name="account_settings_example_jabber_id">erabiltzailea@adibidea.com</string>
@@ -325,7 +324,6 @@
     <string name="advanced_mode">Modu aurreratua</string>
     <string name="grant_admin_privileges">Administratzaile baimenak eman</string>
     <string name="remove_admin_privileges">Administratzaile baimenak ezeztatu</string>
-    <string name="remove_from_room">Taldetik kendu</string>
     <string name="could_not_change_affiliation">%s(r)en afiliazioa ezin izan da aldatu</string>
     <string name="ban_from_conference">Taldean egotea debekatu</string>
     <string name="ban_now">Debekatu orain</string>
@@ -424,8 +422,6 @@
     <string name="notify_only_when_highlighted">Jakinarazi aipatua izaterakoan soilik</string>
     <string name="notify_never">Jakinarazpenak ezgaituta</string>
     <string name="notify_paused">Jakinarazpenak gelditu dira</string>
-    <string name="pref_picture_compression">Irudiak konprimatu</string>
-    <string name="pref_picture_compression_summary">Irudiak konprimatu eta neurriz aldatu</string>
     <string name="always">Beti</string>
     <string name="battery_optimizations_enabled">Bateriaren optimizazioak gaituta</string>
     <string name="battery_optimizations_enabled_explained">Zure gailua jakinarazpen atzeratuak edota mezuen galera ekar lezaketen bateriaren optimizazio handiak egiten ari da Pix-Art Messenger en.\nHoriek ezgaitzea gomendatzen da.</string>

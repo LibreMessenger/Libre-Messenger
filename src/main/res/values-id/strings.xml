@@ -102,7 +102,6 @@
     <string name="pref_sound">Nada dering</string>
     <string name="pref_sound_summary">Memainkan suara ketika ada pesan baru</string>
     <string name="pref_send_crash">Kirim laporan kerusakan</string>
-    <string name="pref_send_crash_summary">Dengan mengirimkan riwayat anda telah membantu pengembangan Pix-Art Messenger yang sedang berlangsung</string>
     <string name="pref_confirm_messages">Konfirmasi pesan</string>
     <string name="pref_confirm_messages_summary">Biarkan kontak anda tahu kapan anda menerima dan membaca pesan mereka</string>
     <string name="pref_ui_options">Antarmuka</string>
@@ -147,7 +146,6 @@
     <string name="unpublish_pgp_message">Yakin ingin menghapus kunci terbuka OpenPGP dari pemberitahuan anda?\nkontak anda tidak lagi dapat mengirimkan pesan terenkripsi OpenPGP.</string>
     <string name="openpgp_has_been_published">Kunci terbuka OpenPGP telah ditampilkan.</string>
     <string name="mgmt_account_are_you_sure">Apakah kamu yakin?</string>
-    <string name="mgmt_account_delete_confirm_text">Jika anda menghapus akun anda, semua riwayat percakapan anda akan hilang</string>
     <string name="attach_record_voice">Rekam suara</string>
     <string name="account_settings_jabber_id">Obrolan-Data diri</string>
     <string name="account_settings_example_jabber_id">nama pengguna@pix-art.de</string>
@@ -336,7 +334,6 @@
     <string name="advanced_mode">Mode lanjutan</string>
     <string name="grant_admin_privileges">Berikan hak istimewa</string>
     <string name="remove_admin_privileges">Cabut hak istimewa</string>
-    <string name="remove_from_room">Hapus dari obrolan berkelompok</string>
     <string name="could_not_change_affiliation">Tidak dapat mengubah afiliasi %s</string>
     <string name="ban_from_conference">Larangan dari obrolan berkelompok</string>
     <string name="ban_now">Larang sekarang</string>
@@ -443,10 +440,6 @@
     <string name="notify_only_when_highlighted">Pemberitahuan hanya bila disebutkan</string>
     <string name="notify_never">Pemberitahuan tidak diaktifkan</string>
     <string name="notify_paused">Pemberitahuan dijeda</string>
-    <string name="pref_picture_compression">Meringkaskan gambar</string>
-    <string name="pref_picture_compression_summary">Ubah ukuran dan meringkaskan gambar</string>
-    <string name="pref_video_compression">Meringkaskan video</string>
-    <string name="pref_video_compression_summary">Ubah ukuran dan meringkaskan video</string>
     <string name="video_low">rendah (144p)</string>
     <string name="video_mid">menengah (360p)</string>
     <string name="video_high">tinggi (720p)</string>
