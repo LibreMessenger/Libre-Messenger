@@ -13,6 +13,8 @@ Download ist hier möglich:
 
 Alternativ kannst du den Messenger auch direkt hier von GitHub unter [Releases](https://github.com/kriztan/Pix-Art-Messenger/releases/latest) herunterladen.
 
+<a rel="me" href="https://social.tchncs.de/@pixart">Pix-Art Messenger bei Mastodon</a> 
+
 #### Wie kann ich bei der Übersetzung helfen?
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/pix-art-messenger/localized.svg)](https://crowdin.com/project/pix-art-messenger)
 
