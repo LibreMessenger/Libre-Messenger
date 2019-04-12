@@ -74,7 +74,7 @@ public class ConversationsOverviewFragment extends XmppFragment {
     public static Conversation getSuggestion(Activity activity) {
         final Conversation exception;
         Fragment fragment = activity.getFragmentManager().findFragmentById(R.id.main_fragment);
-        if (fragment != null && fragment instanceof ConversationsOverviewFragment) {
+        if (fragment instanceof ConversationsOverviewFragment) {
             exception = ((ConversationsOverviewFragment) fragment).swipedConversation.peek();
         } else {
             exception = null;
@@ -84,7 +84,7 @@ public class ConversationsOverviewFragment extends XmppFragment {
 
     public static Conversation getSuggestion(Activity activity, Conversation exception) {
         Fragment fragment = activity.getFragmentManager().findFragmentById(R.id.main_fragment);
-        if (fragment != null && fragment instanceof ConversationsOverviewFragment) {
+        if (fragment instanceof ConversationsOverviewFragment) {
             List<Conversation> conversations = ((ConversationsOverviewFragment) fragment).conversations;
             if (conversations.size() > 0) {
                 Conversation suggestion = conversations.get(0);

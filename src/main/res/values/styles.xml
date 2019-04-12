@@ -23,6 +23,10 @@
         <item name="android:textColorLink">?android:textColorPrimary</item>
     </style>
 
+    <style name="TextAppearance.Conversations.Body1.Warning" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">?color_warning</item>
+    </style>
+
     <style name="TextAppearance.Conversations.Body1.Linkified" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textSize">?TextSizeBody1</item>
     </style>
@@ -99,7 +103,11 @@
     </style>
 
     <style name="TextAppearance.Conversations.Caption.Warning" parent="TextAppearance.Conversations.Caption">
-        <item name="android:textColor">@color/red800</item>
+        <item name="android:textColor">@color/red700</item>
+    </style>
+
+    <style name="TextAppearance.Conversations.Caption.Warning.OnDark" parent="TextAppearance.Conversations.Caption">
+        <item name="android:textColor">@color/red500</item>
     </style>
 
     <style name="TextAppearance.Conversations.Caption.Highlight" parent="TextAppearance.Conversations.Caption">

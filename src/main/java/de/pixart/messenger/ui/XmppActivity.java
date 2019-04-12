@@ -112,7 +112,6 @@ public abstract class XmppActivity extends ActionBarActivity {
     public XmppConnectionService xmppConnectionService;
     public boolean xmppConnectionServiceBound = false;
 
-    protected int mColorRed;
     protected int mColorWarningButton;
     protected int mColorWhite;
 
@@ -405,7 +404,6 @@ public abstract class XmppActivity extends ActionBarActivity {
         ExceptionHelper.init(getApplicationContext());
         new EmojiService(this).init(getPreferences().getBoolean(USE_BUNDLED_EMOJIS, getResources().getBoolean(R.bool.use_bundled_emoji)));
         this.isCameraFeatureAvailable = getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
-        mColorRed = ContextCompat.getColor(this, R.color.red800);
         if (isDarkTheme()) {
             mColorWarningButton = ContextCompat.getColor(this, R.color.warning_button_dark);
         } else {
@@ -919,10 +917,6 @@ public abstract class XmppActivity extends ActionBarActivity {
                 mPendingConferenceInvite = null;
             }
         }
-    }
-
-    public int getWarningTextColor() {
-        return this.mColorRed;
     }
 
     public int getWarningButtonColor() {

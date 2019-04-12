@@ -29,7 +29,7 @@
     <color name="grey900_40">#66212121</color>
     <color name="red800">#ffc62828</color>  <!-- red 800 -->
     <color name="red500">#fff44336</color>  <!-- red 500 -->
-    <color name="red700">#ffd32f2f</color> <!-- red 700 -->
+    <color name="red700">#ffd50000</color> <!-- red 700 -->
     <color name="orange500">#ffff9800</color> <!-- orange 500 -->
     <color name="bubble">#ff37474f</color> <!-- blue grey 800 -->
     <color name="realwhite">#ffffffff</color> <!-- white -->
@@ -51,5 +51,5 @@
     <color name="warning_button_dark">#ffC62828</color> <!-- red 800 -->
 
     <!-- scanner -->
-    <color name="scan_result_dots">#ff4caf50</color>  <!-- green 500 -->
+    <color name="scan_result_dots">#ff4caf50</color>
 </resources>
