@@ -133,7 +133,7 @@ public class Contact implements ListItem, Blockable {
             return this.systemName;
         } else if (!TextUtils.isEmpty(this.serverName)) {
             return this.serverName;
-        } else if (!TextUtils.isEmpty(this.presenceName) && ((QuickConversationsService.isQuicksy() && Config.QUICKSY_DOMAIN.equals(jid.getDomain())) ||mutualPresenceSubscription())) {
+        } else if (!TextUtils.isEmpty(this.presenceName) && mutualPresenceSubscription()) {
             return this.presenceName;
         } else if (jid.getLocal() != null) {
             return JidHelper.localPartOrFallback(jid);
