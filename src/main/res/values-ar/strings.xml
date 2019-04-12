@@ -19,7 +19,9 @@
     <string name="title_activity_settings">الإعدادات</string>
     <string name="conference_details">تفاصيل فريق المحادثة</string>
     <string name="title_activity_contact_details">بيانات المُراسِل</string>
+    <string name="title_activity_start_conversation">ابدأ محادثة</string>
     <string name="title_activity_choose_contact">إختر مُراسلك</string>
+    <string name="title_activity_choose_contacts">اختر جهات الاتصال</string>
     <string name="title_activity_block_list">قائمة الحظر</string>
     <string name="just_now">الآن</string>
     <string name="minute_ago">منذ دقيقة</string>
@@ -71,6 +73,8 @@
     <string name="choose_presence">اختر الجهاز</string>
     <string name="send_unencrypted_message">ارسل رسالة غير مشفّرة</string>
     <string name="send_message_to_x">إرسال رسالة إلى %s</string>
+    <string name="send_omemo_message">إرسال رسالة مشفّرة بواسطة أوميمو</string>
+    <string name="send_omemo_x509_message">إرسال رسالة مشفّرة بواسطة أوميمو</string>
     <string name="send_pgp_message">ارسل رسالة مشفّرة بواسطة OpenPGP</string>
     <string name="your_nick_has_been_changed">لقد تم تغيير اسمك المستعار</string>
     <string name="send_unencrypted">أرسل من دون تشفير</string>
@@ -106,6 +110,7 @@
     <string name="account_status_unknown">مجهول</string>
     <string name="account_status_disabled">معطّل مؤقتا</string>
     <string name="account_status_online">متصل</string>
+    <string name="account_status_connecting">جارٍ الاتصال\u2026</string>
     <string name="account_status_offline">غير متصل</string>
     <string name="account_status_not_found">لم يتم العثور على الخادم</string>
     <string name="account_status_no_internet">لا يوجد اتصال</string>
@@ -151,6 +156,7 @@
     <string name="done">تم</string>
     <string name="verify">تحقق</string>
     <string name="decrypt">فك التشفير</string>
+    <string name="bookmarks">المحادثات الجماعية</string>
     <string name="search">بحث</string>
     <string name="enter_contact">أدخل مراسلا</string>
     <string name="delete_contact">حذف المراسِل</string>
@@ -181,7 +187,7 @@
     <string name="server_info_session_established">تم ربط الجلسة الحالية</string>
     <string name="skip">تخطي</string>
     <string name="disable_notifications">تعطيل الإشعارات</string>
-    <string name="enable">تمكين</string>
+    <string name="enable">تنشيط</string>
     <string name="conference_requires_password">تلزمك كلمة سرية الانضمام إلى فريق المحادثة</string>
     <string name="enter_password">ادخل الكلمة السرية</string>
     <string name="request_now">اطلب الآن</string>
@@ -207,6 +213,7 @@
     <string name="url_copied_to_clipboard">تم نسخ العنوان إلى الحافظة</string>
     <string name="scan_qr_code">امسح رمز الاستجابة السريعة QR</string>
     <string name="show_qr_code">إظهار رمز الكيو آر</string>
+    <string name="show_block_list">عرض قائمة الحظر</string>
     <string name="account_details">تفاصيل الحساب</string>
     <string name="shared_secret_hint">نصيحة أو سؤال</string>
     <string name="shared_secret_secret">الرمز السري المشترَك</string>
@@ -248,6 +255,7 @@
     <string name="advanced_mode">الوضع المتقدم</string>
     <string name="grant_admin_privileges">منح صلاحيات المُشرِف</string>
     <string name="remove_admin_privileges">الغاء صلاحيات المُشرِف</string>
+    <string name="moderated">وضع القناة تحت الإشراف</string>
     <string name="never">أبدًا</string>
     <string name="pref_display_enter_key">أظهر زر الإدخال</string>
     <string name="video">فيديو</string>
@@ -299,6 +307,9 @@
     <string name="not_valid_hostname">اسم المضيف هذا غير صالح</string>
     <string name="load_more_messages">تحميل المزيد من الرسائل</string>
     <string name="sync_with_contacts">زامِن مع المراسِلين</string>
+    <string name="pref_picture_quality">جودة الصورة</string>
+    <string name="pref_video_quality">جودة الفيديو</string>
+    <string name="video_original">أصلية (غير مضغوطة)</string>
     <string name="always">دائما</string>
     <string name="battery_optimizations_enabled">تم تشغيل تحسينات البطارية</string>
     <string name="disable">تعطيل</string>
@@ -314,7 +325,9 @@
     <string name="mgmt_account_reconnect">إعادة الاتصال</string>
     <string name="welcome_text">… هو تطبيق محادثة حر و آمن لجابر و XMPP.</string>
     <string name="create_account">إنشاء حساب جديد</string>
+    <string name="welcome_existing_account">لدي حساب</string>
     <string name="pick_your_username">قم باختيار اسم مستخدم خاص بك</string>
+    <string name="pref_manually_change_presence">إدارة حالة الحضور يدويا</string>
     <string name="status_message">رسالة حالة الحضور</string>
     <string name="presence_chat">حر للمحادثة</string>
     <string name="presence_online">متصل</string>
@@ -461,9 +474,25 @@
     <string name="ebook">كتاب إلكتروني</string>
     <string name="your_name">اسمك</string>
     <string name="enter_your_name">أدخل اسمك</string>
+    <string name="autojoin_group_chat">التحق بفريق المحادثة هذا افتراضيا</string>
     <string name="pref_play_gif_inside">تشغيل صور جيف المتحركة في المحادثة</string>
+    <string name="choose_account">اختر حسابا</string>
     <string name="restore_backup">استرجاع النسخة الاحتياطية</string>
     <string name="restore">إستعادة</string>
     <string name="unable_to_restore_backup">تعذرت عملية استعادة النسخة الاحتياطية.</string>
+    <string name="view_users">عرض المشاركين</string>
     <string name="message_deleted">تم حذف الرسالة</string>
+    <string name="channel_details">تفاصيل القناة</string>
+    <string name="join_public_channel">الانضمام إلى قناة عامة</string>
+    <string name="create_private_group_chat">إنشاء محادثة جماعية خاصة</string>
+    <string name="create_public_channel">إنشاء قناة عامة</string>
+    <string name="xmpp_address">عنوان XMPP</string>
+    <string name="please_enter_name">يرجى تقديم اسم للقناة</string>
+    <string name="channel_options">إعدادات القناة العامة</string>
+    <string name="destroy_channel">تدمير القناة</string>
+    <string name="destroy_channel_succeed">تم تدمير القناة بنجاح</string>
+    <string name="action_end_conversation_channel">غادر القناة</string>
+    <string name="autojoin_channel">التحق بهذه القناة افتراضيا</string>
+    <string name="mgmt_account_password_forgotten">نسيت الكلمة السرية</string>
+    <string name="password_forgotten_title">نسيت الكلمة السرية</string>
 </resources>
