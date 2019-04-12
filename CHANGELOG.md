@@ -1,5 +1,8 @@
 ### Changelog
 
+#### Version 2.2.3
+* bug fixes
+
 #### Version 2.2.2
 * add activity to define some important privacy settings on first start (PAM)
 * add ability to delete account also from server (PAM)
