@@ -1734,7 +1734,7 @@ public class XmppConnectionService extends Service {
     }
 
     public void pushBookmarks(Account account) {
-        if (account.getXmppConnection().getFeatures().bookmarksConversion()) {
+        if (account.getXmppConnection() != null && account.getXmppConnection().getFeatures().bookmarksConversion()) {
             pushBookmarksPep(account);
         } else {
             pushBookmarksPrivateXml(account);

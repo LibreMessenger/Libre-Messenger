@@ -19,8 +19,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Pattern;
@@ -134,7 +136,11 @@ public class RichPreview {
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
-            base_uri = base_uri != null ? base_uri.resolve(part) : null;
+            try {
+                base_uri = base_uri != null ? base_uri.resolve(URLEncoder.encode(part, "UTF-8")) : null;
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             return base_uri != null ? base_uri.toString() : null;
         }
     }
