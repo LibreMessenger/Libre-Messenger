@@ -19,7 +19,17 @@ before_script:
 build:
   stage: build
   script:
+  # generate version number
+  - export versionCode=`printf $(git rev-list --first-parent --count HEAD)`
+  - export versionName=`printf '%s-%05d' $(git describe --tag --abbrev=0) $versionCode`
+  - echo "set VersionCode '${versionCode}' and VersonName '${versionName}'"
+  - sed -i "s/^\(\s*versionCode\s*\).*$/\1$versionCode/" build.gradle
+  - sed -i "0,/versionName/s/^\(\s*versionName\).*/\1 \"$versionName\"/" build.gradle
+  - cat -n build.gradle
+  # build
   - ./gradlew assembleStandard
+  # publish on nightly fdroid repo
+  - fdroid nightly
   artifacts:
     paths:
     - build/outputs/
