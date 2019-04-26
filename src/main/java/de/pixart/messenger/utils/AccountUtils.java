@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.services.XmppConnectionService;
@@ -18,6 +20,19 @@ public class AccountUtils {
         MANAGE_ACCOUNT_ACTIVITY = getManageAccountActivityClass();
     }
 
+    public static List<String> getEnabledAccounts(final XmppConnectionService service) {
+        ArrayList<String> accounts = new ArrayList<>();
+        for (Account account : service.getAccounts()) {
+            if (account.getStatus() != Account.State.DISABLED) {
+                if (Config.DOMAIN_LOCK != null) {
+                    accounts.add(account.getJid().getLocal());
+                } else {
+                    accounts.add(account.getJid().asBareJid().toString());
+                }
+            }
+        }
+        return accounts;
+    }
 
     public static Account getFirstEnabled(XmppConnectionService service) {
         final List<Account> accounts = service.getAccounts();

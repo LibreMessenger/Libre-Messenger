@@ -904,4 +904,8 @@
     <string name="delete_locally">Delete locally</string>
     <string name="delete_from_server">Delete from server</string>
     <string name="go_online_to_delete">You have to activate and/or go online with the account you want to delete from server.</string>
+    <string name="discover_channels">Discover channels</string>
+    <string name="search_channels">Search channels</string>
+    <string name="channel_discovery_opt_in_title">Privacy notice</string>
+    <string name="channel_discover_opt_in_message"><![CDATA[Channel discovery uses a third party service called <a href="https://search.jabbercat.org">search.jabbercat.org</a>.<br><br>Using this feature will transmit your IP address and search terms to that service. See their <a href="https://search.jabbercat.org/privacy">Privacy Policy</a> for more information.]]></string>
 </resources>

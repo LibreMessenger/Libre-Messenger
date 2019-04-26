@@ -312,6 +312,9 @@
         <activity
             android:name=".ui.MucUsersActivity"
             android:label="@string/group_chat_members" />
+        <activity
+            android:name=".ui.ChannelDiscoveryActivity"
+            android:label="@string/discover_channels" />
 
         <service android:name=".services.ExportBackupService" />
         <service android:name=".services.ImportBackupService" />

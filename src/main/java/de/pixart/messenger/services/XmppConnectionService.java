@@ -78,6 +78,7 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -110,6 +111,7 @@ import de.pixart.messenger.generator.MessageGenerator;
 import de.pixart.messenger.generator.PresenceGenerator;
 import de.pixart.messenger.http.CustomURLStreamHandlerFactory;
 import de.pixart.messenger.http.HttpConnectionManager;
+import de.pixart.messenger.http.services.MuclumbusService;
 import de.pixart.messenger.parser.AbstractParser;
 import de.pixart.messenger.parser.IqParser;
 import de.pixart.messenger.parser.MessageParser;
@@ -162,13 +164,14 @@ import de.pixart.messenger.xmpp.stanzas.IqPacket;
 import de.pixart.messenger.xmpp.stanzas.MessagePacket;
 import de.pixart.messenger.xmpp.stanzas.PresencePacket;
 import me.leolin.shortcutbadger.ShortcutBadger;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.ui.SettingsActivity.CHAT_STATES;
 import static de.pixart.messenger.ui.SettingsActivity.CONFIRM_MESSAGES;
 import static de.pixart.messenger.ui.SettingsActivity.ENABLE_MULTI_ACCOUNTS;
 import static de.pixart.messenger.ui.SettingsActivity.INDICATE_RECEIVED;
-import static de.pixart.messenger.ui.SettingsActivity.ENABLE_MULTI_ACCOUNTS;
 
 public class XmppConnectionService extends Service {
 
@@ -255,9 +258,11 @@ public class XmppConnectionService extends Service {
     private long mLastActivity = 0;
     private MemorizingTrustManager mMemorizingTrustManager;
     private NotificationService mNotificationService = new NotificationService(this);
+    private ChannelDiscoveryService mChannelDiscoveryService = new ChannelDiscoveryService(this);
     private ShortcutService mShortcutService = new ShortcutService(this);
     private AtomicBoolean mInitialAddressbookSyncCompleted = new AtomicBoolean(false);
     protected AtomicBoolean mForceForegroundService = new AtomicBoolean(false);
+    private AtomicBoolean mForceDuringOnCreate = new AtomicBoolean(false);
     private OnMessagePacketReceived mMessageParser = new MessageParser(this);
     private OnPresencePacketReceived mPresenceParser = new PresenceParser(this);
     private IqParser mIqParser = new IqParser(this);
@@ -834,6 +839,10 @@ public class XmppConnectionService extends Service {
         editor.commit();
     }
 
+    public void discoverChannels(String query, ChannelDiscoveryService.OnChannelSearchResultsFound onChannelSearchResultsFound) {
+        mChannelDiscoveryService.discover(query, onChannelSearchResultsFound);
+    }
+
     public boolean isDataSaverDisabled() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
@@ -1144,6 +1153,7 @@ public class XmppConnectionService extends Service {
         if (Compatibility.runsTwentySix()) {
             mNotificationService.initializeChannels();
         }
+        mForceDuringOnCreate.set(Compatibility.runsAndTargetsTwentySix(this));
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
         final int cacheSize = maxMemory / 8;
         this.mBitmapCache = new LruCache<String, Bitmap>(cacheSize) {
@@ -1213,6 +1223,8 @@ public class XmppConnectionService extends Service {
             intentFilter.addAction(NotificationManager.ACTION_INTERRUPTION_FILTER_CHANGED);
             registerReceiver(this.mInternalEventReceiver, intentFilter);
         }
+        mForceDuringOnCreate.set(false);
+        toggleForegroundService();
         //start export log service every day at given time
         ScheduleAutomaticExport();
         // cancel scheduled exporter
@@ -1307,7 +1319,7 @@ public class XmppConnectionService extends Service {
 
     private void toggleForegroundService(boolean force) {
         final boolean status;
-        if (force || mForceForegroundService.get() || (Compatibility.keepForegroundService(this)/* && hasEnabledAccounts()*/)) {
+        if (force || mForceDuringOnCreate.get() || mForceForegroundService.get() || (Compatibility.keepForegroundService(this) && hasEnabledAccounts())) {
             final Notification notification = this.mNotificationService.createForegroundNotification();
             startForeground(NotificationService.FOREGROUND_NOTIFICATION_ID, notification);
             if (!mForceForegroundService.get()) {
