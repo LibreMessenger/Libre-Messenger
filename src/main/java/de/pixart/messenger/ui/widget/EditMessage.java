@@ -18,21 +18,22 @@ import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 
 public class EditMessage extends EmojiWrapperEditText {
 
     private static final InputFilter SPAN_FILTER = (source, start, end, dest, dstart, dend) -> source instanceof Spanned ? source.toString() : source;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
     protected Handler mTypingHandler = new Handler();
     protected KeyboardListener keyboardListener;
-
     private OnCommitContentListener mCommitContentListener = null;
     private String[] mimeTypes = null;
-
     private boolean isUserTyping = false;
-
-    protected Runnable mTypingTimeout = new Runnable() {
+    private final Runnable mTypingTimeout = new Runnable() {
         @Override
         public void run() {
             if (isUserTyping && keyboardListener != null) {
@@ -41,7 +42,6 @@ public class EditMessage extends EmojiWrapperEditText {
             }
         }
     };
-
     private boolean lastInputWasTab = false;
 
     public EditMessage(Context context, AttributeSet attrs) {
@@ -71,22 +71,30 @@ public class EditMessage extends EmojiWrapperEditText {
     }
 
     @Override
+    public int getAutofillType() {
+        return AUTOFILL_TYPE_NONE;
+    }
+
+    @Override
     public void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter);
         lastInputWasTab = false;
         if (this.mTypingHandler != null && this.keyboardListener != null) {
-            this.mTypingHandler.removeCallbacks(mTypingTimeout);
-            this.mTypingHandler.postDelayed(mTypingTimeout, Config.TYPING_TIMEOUT * 1000);
-            final int length = text.length();
-            if (!isUserTyping && length > 0) {
-                this.isUserTyping = true;
-                this.keyboardListener.onTypingStarted();
-            } else if (length == 0) {
-                this.isUserTyping = false;
-                this.keyboardListener.onTextDeleted();
-            }
-            this.keyboardListener.onTextChanged();
+            executor.execute(() -> triggerKeyboardEvents(text.length()));
         }
+    }
+
+    private void triggerKeyboardEvents(final int length) {
+        this.mTypingHandler.removeCallbacks(mTypingTimeout);
+        this.mTypingHandler.postDelayed(mTypingTimeout, Config.TYPING_TIMEOUT * 1000);
+        if (!isUserTyping && length > 0) {
+            this.isUserTyping = true;
+            this.keyboardListener.onTypingStarted();
+        } else if (length == 0) {
+            this.isUserTyping = false;
+            this.keyboardListener.onTextDeleted();
+        }
+        this.keyboardListener.onTextChanged();
     }
 
     public void setKeyboardListener(KeyboardListener listener) {
