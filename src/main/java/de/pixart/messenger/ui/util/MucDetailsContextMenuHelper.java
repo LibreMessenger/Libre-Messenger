@@ -182,7 +182,11 @@ public final class MucDetailsContextMenuHelper {
                 activity.privateMsgInMuc(conversation, user.getName());
                 return true;
             case R.id.invite:
-                activity.xmppConnectionService.directInvite(conversation, jid);
+                if (user.getAffiliation().ranks(MucOptions.Affiliation.MEMBER)) {
+                    activity.xmppConnectionService.directInvite(conversation, jid);
+                } else {
+                    activity.xmppConnectionService.invite(conversation, jid);
+                }
                 return true;
             case R.id.highlight_in_muc:
                 activity.highlightInMuc(conversation, user.getName());
