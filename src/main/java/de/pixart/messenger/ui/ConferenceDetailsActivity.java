@@ -218,25 +218,24 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                         return getString(R.string.invalid_muc_nick);
                     }
                 }));
+        this.binding.detailsMucAvatar.setOnClickListener(v -> {
+            final MucOptions mucOptions = mConversation.getMucOptions();
+            if (!mucOptions.hasVCards()) {
+                Toast.makeText(this, R.string.host_does_not_support_group_chat_avatars, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (!mucOptions.getSelf().getAffiliation().ranks(MucOptions.Affiliation.OWNER)) {
+                Toast.makeText(this, R.string.only_the_owner_can_change_group_chat_avatar, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            final Intent intent = new Intent(this, PublishGroupChatProfilePictureActivity.class);
+            intent.putExtra("uuid", mConversation.getUuid());
+            startActivity(intent);
+        });
         this.mAdvancedMode = getPreferences().getBoolean("advanced_muc_mode", false);
         this.binding.mucInfoMore.setVisibility(this.mAdvancedMode ? View.VISIBLE : View.GONE);
         this.binding.notificationStatusButton.setOnClickListener(this.mNotifyStatusClickListener);
-        if (mConversation != null) {
-            this.binding.detailsMucAvatar.setOnClickListener(v -> {
-                final MucOptions mucOptions = mConversation.getMucOptions();
-                if (!mucOptions.hasVCards()) {
-                    Toast.makeText(this, R.string.host_does_not_support_group_chat_avatars, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (!mucOptions.getSelf().getAffiliation().ranks(MucOptions.Affiliation.OWNER)) {
-                    Toast.makeText(this, R.string.only_the_owner_can_change_group_chat_avatar, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                final Intent intent = new Intent(this, PublishGroupChatProfilePictureActivity.class);
-                intent.putExtra("uuid", mConversation.getUuid());
-                startActivity(intent);
-            });
-        }
+
         this.binding.editMucNameButton.setOnClickListener(this::onMucEditButtonClicked);
         this.binding.mucEditTitle.addTextChangedListener(this);
         this.binding.mucEditSubject.addTextChangedListener(this);
