@@ -2876,7 +2876,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         if (broadcastLastActivity) {
             //service.sendPresence(conversation.getAccount(), false); //send new presence but don't include idle because we are not
         }
-        updateSendButton();
+        runOnUiThread(this::updateSendButton);
     }
 
     @Override
@@ -2902,15 +2902,15 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             service.sendChatState(conversation);
         }
         if (storeNextMessage()) {
-            activity.onConversationsListItemUpdated();
+            runOnUiThread(() -> activity.onConversationsListItemUpdated());
         }
-        updateSendButton();
+        runOnUiThread(this::updateSendButton);
     }
 
     @Override
     public void onTextChanged() {
         if (conversation != null && conversation.getCorrectingMessage() != null) {
-            updateSendButton();
+            runOnUiThread(this::updateSendButton);
         }
     }
 
