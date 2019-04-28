@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -25,11 +27,13 @@ import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.utils.CryptoHelper;
 import rocks.xmpp.addr.Jid;
 
-public class MagicCreateActivity extends XmppActivity implements TextWatcher, AdapterView.OnItemSelectedListener {
+public class MagicCreateActivity extends XmppActivity implements TextWatcher, AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
 
     private TextView mFullJidDisplay;
     private EditText mUsername;
+    private CheckBox mUseOwnProvider;
     private Spinner mServer;
+    private boolean useOwnProvider = false;
     String domain = null;
 
     @Override
@@ -66,16 +70,18 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher, Ad
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_selectable_list_item, domains);
         int defaultServer = adapter.getPosition("blabber.im");
         mUsername = findViewById(R.id.username);
+        mUseOwnProvider = findViewById(R.id.use_own);
+        mUseOwnProvider.setOnCheckedChangeListener(this);
         mServer = findViewById(R.id.server);
         mServer.setAdapter(adapter);
         mServer.setSelection(defaultServer);
         mServer.setOnItemSelectedListener(this);
-        adapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         Button next = findViewById(R.id.create_account);
         next.setOnClickListener(v -> {
             try {
                 String username = mUsername.getText().toString();
-                if (domain == null) {
+                if (domain == null || useOwnProvider) {
                     domain = Config.MAGIC_CREATE_DOMAIN;
                 }
                 Jid jid = Jid.of(username.toLowerCase(), domain, null);
@@ -96,6 +102,8 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher, Ad
                     Intent intent = new Intent(MagicCreateActivity.this, EditAccountActivity.class);
                     intent.putExtra("jid", account.getJid().asBareJid().toString());
                     intent.putExtra("init", true);
+                    intent.putExtra("existing", false);
+                    intent.putExtra("useownprovider", useOwnProvider);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -168,6 +176,19 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher, Ad
 
         } else {
             mFullJidDisplay.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (mUseOwnProvider.isChecked()) {
+            mServer.setEnabled(false);
+            mFullJidDisplay.setVisibility(View.GONE);
+            useOwnProvider = true;
+        } else {
+            mServer.setEnabled(true);
+            mFullJidDisplay.setVisibility(View.VISIBLE);
+            useOwnProvider = false;
         }
     }
 }

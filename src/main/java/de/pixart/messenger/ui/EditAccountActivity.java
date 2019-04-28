@@ -41,7 +41,6 @@ import org.openintents.openpgp.util.OpenPgpUtils;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -55,7 +54,6 @@ import de.pixart.messenger.databinding.DialogPresenceBinding;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.entities.PresenceTemplate;
-import de.pixart.messenger.entities.ServiceDiscoveryResult;
 import de.pixart.messenger.services.BarcodeProvider;
 import de.pixart.messenger.services.QuickConversationsService;
 import de.pixart.messenger.services.XmppConnectionService;
@@ -68,7 +66,6 @@ import de.pixart.messenger.ui.util.PendingItem;
 import de.pixart.messenger.ui.util.SoftKeyboardUtils;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.MenuDoubleTabUtil;
-import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.utils.Resolver;
 import de.pixart.messenger.utils.SignupUtils;
 import de.pixart.messenger.utils.TorServiceUtils;
@@ -103,6 +100,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     private boolean mInitMode = false;
     private boolean mUsernameMode = Config.DOMAIN_LOCK != null;
     private boolean mShowOptions = false;
+    private boolean useOwnProvider = false;
     private Account mAccount;
     private String messageFingerprint;
 
@@ -731,6 +729,8 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 }
             }
             boolean init = intent.getBooleanExtra("init", false);
+            boolean existing = intent.getBooleanExtra("existing", false);
+            useOwnProvider = intent.getBooleanExtra("useownprovider", false);
             boolean openedFromNotification = intent.getBooleanExtra(EXTRA_OPENED_FROM_NOTIFICATION, false);
             this.mInitMode = init || this.jidToEdit == null;
             this.messageFingerprint = intent.getStringExtra("fingerprint");
@@ -742,7 +742,13 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 this.binding.yourNameBox.setVisibility(View.GONE);
                 this.binding.avater.setVisibility(View.GONE);
                 configureActionBar(getSupportActionBar(), !(init && Config.MAGIC_CREATE_DOMAIN == null));
-                setTitle(R.string.action_add_account);
+                if (existing) {
+                    setTitle(R.string.action_add_existing_account);
+                    this.binding.accountRegisterNew.setVisibility(View.GONE);
+                } else {
+                    setTitle(R.string.action_add_new_account);
+                    this.binding.accountRegisterNew.setVisibility(View.VISIBLE);
+                }
             }
         }
         SharedPreferences preferences = getPreferences();
@@ -793,7 +799,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 xmppConnectionService.reconnectAccountInBackground(mAccount);
             }
             this.mInitMode |= this.mAccount.isOptionSet(Account.OPTION_REGISTER);
-            this.mUsernameMode |= mAccount.isOptionSet(Account.OPTION_MAGIC_CREATE) && mAccount.isOptionSet(Account.OPTION_REGISTER);
+            this.mUsernameMode |= mAccount.isOptionSet(Account.OPTION_MAGIC_CREATE) && mAccount.isOptionSet(Account.OPTION_REGISTER) && !useOwnProvider;
             if (this.mAccount.getPrivateKeyAlias() != null) {
                 binding.accountPassword.setHint(R.string.authenticate_with_certificate);
                 if (this.mInitMode) {
@@ -1101,7 +1107,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             if (this.mAccount.isOptionSet(Account.OPTION_REGISTER)) {
                 ActionBar actionBar = getSupportActionBar();
                 if (actionBar != null) {
-                    actionBar.setTitle(R.string.create_account);
+                    setTitle(R.string.action_add_new_account);
                 }
             }
             this.binding.accountRegisterNew.setVisibility(View.GONE);

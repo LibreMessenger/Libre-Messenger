@@ -6,7 +6,7 @@
 
     <include layout="@layout/toolbar" />
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
@@ -74,6 +74,12 @@
                     android:prompt="@string/server_hint"
                     android:spinnerMode="dialog" />
 
+                <CheckBox
+                    android:id="@+id/use_own"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/use_own_provider" />
+
                 <TextView
                     android:id="@+id/full_jid"
                     android:layout_width="wrap_content"
@@ -99,6 +105,7 @@
                     android:layout_gravity="end"
                     android:text="@string/next"
                     android:textColor="?attr/colorAccent" />
+
             </LinearLayout>
 
             <RelativeLayout

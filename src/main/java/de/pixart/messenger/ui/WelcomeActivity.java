@@ -81,14 +81,9 @@ public class WelcomeActivity extends XmppActivity {
         });
         final Button useExistingAccount = findViewById(R.id.use_existing_account);
         useExistingAccount.setOnClickListener(v -> {
-            List<Account> accounts = xmppConnectionService.getAccounts();
             Intent intent = new Intent(WelcomeActivity.this, EditAccountActivity.class);
-            if (accounts.size() == 1) {
-                intent.putExtra("jid", accounts.get(0).getJid().asBareJid().toString());
-                intent.putExtra("init", true);
-            } else if (accounts.size() >= 1) {
-                intent = new Intent(WelcomeActivity.this, ManageAccountActivity.class);
-            }
+            intent.putExtra("init", true);
+            intent.putExtra("existing", true);
             addInviteUri(intent);
             startActivity(intent);
             overridePendingTransition(R.animator.fade_in, R.animator.fade_out);

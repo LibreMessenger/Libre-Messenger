@@ -6,7 +6,7 @@
     <string name="action_end_conversation">End this conversation</string>
     <string name="action_contact_details">Contact details</string>
     <string name="action_secure">Secure conversation</string>
-    <string name="action_add_account">Add account</string>
+    <string name="action_add_new_account">Add new account</string>
     <string name="action_edit_contact">Edit name</string>
     <string name="action_add_phone_book">Add to address book</string>
     <string name="action_delete_contact">Delete from roster</string>
@@ -908,4 +908,6 @@
     <string name="search_channels">Search channels</string>
     <string name="channel_discovery_opt_in_title">Privacy notice</string>
     <string name="channel_discover_opt_in_message"><![CDATA[Channel discovery uses a third party service called <a href="https://search.jabbercat.org">search.jabbercat.org</a>.<br><br>Using this feature will transmit your IP address and search terms to that service. See their <a href="https://search.jabbercat.org/privacy">Privacy Policy</a> for more information.]]></string>
+    <string name="action_add_existing_account">Add existing account</string>
+    <string name="use_own_provider">Use own provider</string>
 </resources>
