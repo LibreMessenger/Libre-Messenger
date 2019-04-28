@@ -1,6 +1,7 @@
 package de.pixart.messenger.ui;
 
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -11,6 +12,7 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
+import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
@@ -44,7 +46,7 @@ import de.pixart.messenger.utils.MimeUtils;
 
 import static de.pixart.messenger.persistance.FileBackend.close;
 
-public class MediaViewerActivity extends XmppActivity {
+public class MediaViewerActivity extends XmppActivity implements AudioManager.OnAudioFocusChangeListener {
 
     Integer oldOrientation;
     ImageView mFullscreenbutton;
@@ -85,7 +87,7 @@ public class MediaViewerActivity extends XmppActivity {
                 return super.onDown(e);
             }
 
-            
+
         });
 
         ActionBar actionBar = getSupportActionBar();
@@ -279,12 +281,26 @@ public class MediaViewerActivity extends XmppActivity {
             binding.messageVideoView.setVideoURI(uri);
             mFullscreenbutton.setVisibility(View.INVISIBLE);
             binding.messageVideoView.setShouldAutoplay(true);
+            requestAudioFocus();
+            setVolumeControlStream(AudioManager.STREAM_MUSIC);
             binding.messageVideoView.setOnTouchListener((view, motionEvent) -> gestureDetector.onTouchEvent(motionEvent));
 
         } catch (IOException e) {
             Toast.makeText(this, getString(R.string.error_file_corrupt), Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
+    }
+
+    private void releaseAudiFocus() {
+        AudioManager am = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+        am.abandonAudioFocus(this);
+    }
+
+    private void requestAudioFocus() {
+        AudioManager am = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+        am.requestAudioFocus(this,
+                AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
     }
 
     private int getRotation(Uri image) {
@@ -348,6 +364,7 @@ public class MediaViewerActivity extends XmppActivity {
     @Override
     public void onStop() {
         binding.messageVideoView.reset();
+        releaseAudiFocus();
         WindowManager.LayoutParams layout = getWindow().getAttributes();
         if (useMaxBrightness()) {
             layout.screenBrightness = -1;
@@ -391,4 +408,12 @@ public class MediaViewerActivity extends XmppActivity {
     }
 
 
+    @Override
+    public void onAudioFocusChange(int focusChange) {
+        if (focusChange == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            Log.i(Config.LOGTAG, "Audio focus granted.");
+        } else if (focusChange == AudioManager.AUDIOFOCUS_REQUEST_FAILED) {
+            Log.i(Config.LOGTAG, "Audio focus failed.");
+        }
+    }
 }
