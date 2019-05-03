@@ -102,32 +102,52 @@
                     app:layoutManager="android.support.v7.widget.LinearLayoutManager"
                     tools:listitem="@layout/media_preview" />
 
-                <de.pixart.messenger.ui.widget.EditMessage
-                    android:id="@+id/textinput"
-                    style="@style/Widget.Conversations.EditText"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
                     android:layout_toStartOf="@+id/textSendButton"
                     android:layout_toLeftOf="@+id/textSendButton"
                     android:layout_toEndOf="@+id/recordVoiceButton"
                     android:layout_toRightOf="@+id/recordVoiceButton"
-                    android:background="@drawable/message_bubble_sent"
-                    android:ems="10"
-                    android:imeOptions="flagNoExtractUi|actionSend"
-                    android:inputType="textShortMessage|textMultiLine|textCapSentences"
-                    android:maxLines="6"
-                    android:minHeight="48dp"
-                    android:minLines="1"
-                    android:paddingStart="8dp"
-                    android:paddingLeft="8dp"
-                    android:paddingTop="12dp"
-                    android:paddingEnd="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingBottom="12dp"
-                    android:singleLine="false"
-                    android:textColor="?attr/text_Color_Main">
+                    android:orientation="vertical">
 
-                </de.pixart.messenger.ui.widget.EditMessage>
+                    <TextView
+                        android:id="@+id/text_input_hint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:maxLines="1"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:textAppearance="@style/TextAppearance.Conversations.Caption.Highlight"
+                        android:visibility="gone" />
+
+                    <de.pixart.messenger.ui.widget.EditMessage
+                        android:id="@+id/textinput"
+                        style="@style/Widget.Conversations.EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/message_bubble_sent"
+                        android:ems="10"
+                        android:imeOptions="flagNoExtractUi|actionSend"
+                        android:inputType="textShortMessage|textMultiLine|textCapSentences"
+                        android:maxLines="6"
+                        android:minHeight="48dp"
+                        android:minLines="1"
+                        android:paddingStart="8dp"
+                        android:paddingLeft="8dp"
+                        android:paddingTop="12dp"
+                        android:paddingEnd="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingBottom="12dp"
+                        android:singleLine="false"
+                        android:textColor="?attr/text_Color_Main">
+
+                        <requestFocus />
+                    </de.pixart.messenger.ui.widget.EditMessage>
+                </LinearLayout>
 
                 <ImageButton
                     android:id="@+id/textSendButton"

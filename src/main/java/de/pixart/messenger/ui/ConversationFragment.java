@@ -930,19 +930,24 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     public void updateChatMsgHint() {
         final boolean multi = conversation.getMode() == Conversation.MODE_MULTI;
         if (conversation.getCorrectingMessage() != null) {
+            this.binding.textInputHint.setVisibility(View.GONE);
             this.binding.textinput.setHint(R.string.send_corrected_message);
             hideMessageHint();
         } else if (multi && conversation.getNextCounterpart() != null) {
-            this.binding.textinput.setHint(getString(
+            this.binding.textinput.setHint(R.string.send_unencrypted_message);
+            this.binding.textInputHint.setVisibility(View.VISIBLE);
+            this.binding.textInputHint.setText(getString(
                     R.string.send_private_message_to,
                     conversation.getNextCounterpart().getResource()));
             showMessageHint(getString(
                     R.string.send_private_message_to,
                     conversation.getNextCounterpart().getResource()));
         } else if (multi && !conversation.getMucOptions().participating()) {
+            this.binding.textInputHint.setVisibility(View.GONE);
             this.binding.textinput.setHint(R.string.you_are_not_participating);
             hideMessageHint();
         } else {
+            this.binding.textInputHint.setVisibility(View.GONE);
             this.binding.textinput.setHint(UIHelper.getMessageHint(getActivity(), conversation));
             hideMessageHint();
             getActivity().invalidateOptionsMenu();
