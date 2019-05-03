@@ -350,7 +350,7 @@ public class FileBackend {
         if ((size == 0 || size >= mXmppConnectionService.getCompressImageSizePreference()) && mXmppConnectionService.getCompressImageSizePreference() != 0) {
             return false;
         }
-        if (mXmppConnectionService.getCompressImageResolutionPreference() == 0 && mXmppConnectionService.getCompressImageSizePreference() == 0 ) {
+        if (mXmppConnectionService.getCompressImageResolutionPreference() == 0 && mXmppConnectionService.getCompressImageSizePreference() == 0) {
             return true;
         }
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -679,7 +679,7 @@ public class FileBackend {
             frame = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
             frame.eraseColor(0xff000000);
         }
-        drawOverlay(frame,R.drawable.play_video,0.75f);
+        drawOverlay(frame, R.drawable.play_video, 0.75f);
         return frame;
     }
 
@@ -1036,6 +1036,7 @@ public class FileBackend {
     public void updateFileParams(Message message, URL url) {
         DownloadableFile file = getFile(message);
         final String mime = file.getMimeType();
+        final boolean privateMessage = message.isPrivateMessage();
         final boolean image = message.getType() == Message.TYPE_IMAGE || (mime != null && mime.startsWith("image/"));
         final boolean video = mime != null && mime.startsWith("video/");
         final boolean audio = mime != null && mime.startsWith("audio/");
@@ -1065,7 +1066,7 @@ public class FileBackend {
         }
         message.setBody(body.toString());
         message.setFileDeleted(false);
-        message.setType(image ? Message.TYPE_IMAGE : Message.TYPE_FILE);
+        message.setType(privateMessage ? Message.TYPE_PRIVATE_FILE : (image ? Message.TYPE_IMAGE : Message.TYPE_FILE));
     }
 
     private int getMediaRuntime(File file) {
@@ -1078,7 +1079,7 @@ public class FileBackend {
         }
     }
 
-    private String getAPK (File file, Context context) {
+    private String getAPK(File file, Context context) {
         String APKName;
         final PackageManager pm = context.getPackageManager();
         final PackageInfo pi = pm.getPackageArchiveInfo(file.toString(), 0);
@@ -1107,7 +1108,7 @@ public class FileBackend {
         return APKName;
     }
 
-    private String getVCard (File file) {
+    private String getVCard(File file) {
         VCard VCard = new VCard();
         String VCardName = "";
         try {

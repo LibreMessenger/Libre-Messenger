@@ -2,6 +2,20 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <de.pixart.messenger.ui.widget.CopyTextView
+        android:id="@+id/message_body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autoLink="web"
+        android:longClickable="true"
+        android:textAppearance="@style/TextAppearance.Conversations.Body1" />
+
+    <de.pixart.messenger.ui.widget.RichLinkView
+        android:id="@+id/richLinkView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxHeight="80dp" />
+
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/message_image"
         android:layout_width="wrap_content"
@@ -27,20 +41,6 @@
         android:maxHeight="500dp"
         android:scaleType="centerCrop"
         app:riv_corner_radius="@dimen/rounded_image_border" />
-
-    <de.pixart.messenger.ui.widget.RichLinkView
-        android:id="@+id/richLinkView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:maxHeight="80dp" />
-
-    <de.pixart.messenger.ui.widget.CopyTextView
-        android:id="@+id/message_body"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:autoLink="web"
-        android:longClickable="true"
-        android:textAppearance="@style/TextAppearance.Conversations.Body1" />
 
     <Button
         android:id="@+id/download_button"

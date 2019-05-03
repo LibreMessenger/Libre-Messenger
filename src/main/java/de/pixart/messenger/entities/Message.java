@@ -58,6 +58,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
     public static final int TYPE_FILE = 2;
     public static final int TYPE_STATUS = 3;
     public static final int TYPE_PRIVATE = 4;
+    public static final int TYPE_PRIVATE_FILE = 5;
 
     public static final String CONVERSATION = "conversationUuid";
     public static final String COUNTERPART = "counterpart";
@@ -153,12 +154,12 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
     }
 
     protected Message(final Conversational conversation, final String uuid, final String conversationUUid, final Jid counterpart,
-                    final Jid trueCounterpart, final String body, final long timeSent,
-                    final int encryption, final int status, final int type, final boolean carbon,
-                    final String remoteMsgId, final String relativeFilePath,
-                    final String serverMsgId, final String fingerprint, final boolean read, final boolean deleted,
-                    final String edited, final boolean oob, final String errorMessage, final Set<ReadByMarker> readByMarkers,
-                    final boolean markable, final boolean file_deleted) {
+                      final Jid trueCounterpart, final String body, final long timeSent,
+                      final int encryption, final int status, final int type, final boolean carbon,
+                      final String remoteMsgId, final String relativeFilePath,
+                      final String serverMsgId, final String fingerprint, final boolean read, final boolean deleted,
+                      final String edited, final boolean oob, final String errorMessage, final Set<ReadByMarker> readByMarkers,
+                      final boolean markable, final boolean file_deleted) {
         this.conversation = conversation;
         this.uuid = uuid;
         this.conversationUuid = conversationUUid;
@@ -264,7 +265,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
         } else {
             values.put(TRUE_COUNTERPART, trueCounterpart.toString());
         }
-        values.put(BODY, body.length() > Config.MAX_STORAGE_MESSAGE_CHARS ? body.substring(0,Config.MAX_STORAGE_MESSAGE_CHARS) : body);
+        values.put(BODY, body.length() > Config.MAX_STORAGE_MESSAGE_CHARS ? body.substring(0, Config.MAX_STORAGE_MESSAGE_CHARS) : body);
         values.put(TIME_SENT, timeSent);
         values.put(ENCRYPTION, encryption);
         values.put(STATUS, status);
@@ -504,8 +505,8 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
         return Collections.unmodifiableSet(this.readByMarkers);
     }
 
-    public boolean similar(Message message) {
-        if (type != TYPE_PRIVATE && this.serverMsgId != null && message.getServerMsgId() != null) {
+    boolean similar(Message message) {
+        if (!isPrivateMessage() && this.serverMsgId != null && message.getServerMsgId() != null) {
             return this.serverMsgId.equals(message.getServerMsgId());
         } else if (this.body == null || this.counterpart == null) {
             return false;
@@ -526,7 +527,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
                 }
                 return (message.getRemoteMsgId().equals(this.remoteMsgId) || message.getRemoteMsgId().equals(this.uuid))
                         && matchingCounterpart
-                        && (body.equals(otherBody) ||(message.getEncryption() == Message.ENCRYPTION_PGP && hasUuid));
+                        && (body.equals(otherBody) || (message.getEncryption() == Message.ENCRYPTION_PGP && hasUuid));
             } else {
                 return this.remoteMsgId == null
                         && matchingCounterpart
@@ -605,7 +606,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
                         this.edited() == message.edited() &&
                         (message.getTimeSent() - this.getTimeSent()) <= (Config.MESSAGE_MERGE_WINDOW * 1000) &&
                         this.getBody().length() + message.getBody().length() <= Config.MAX_DISPLAY_MESSAGE_CHARS &&
-                        !message.isGeoUri()&&
+                        !message.isGeoUri() &&
                         !this.isGeoUri() &&
                         !message.isWebUri() &&
                         !this.isWebUri() &&
@@ -876,8 +877,12 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
         this.mPreviousMessage = null;
     }
 
+    public boolean isPrivateMessage() {
+        return type == TYPE_PRIVATE || type == TYPE_PRIVATE_FILE;
+    }
+
     public boolean isFileOrImage() {
-        return type == TYPE_FILE || type == TYPE_IMAGE;
+        return type == TYPE_FILE || type == TYPE_IMAGE || type == TYPE_PRIVATE_FILE;
     }
 
     public boolean hasFileOnRemoteHost() {
@@ -954,5 +959,32 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
             return ENCRYPTION_AXOLOTL;
         }
         return encryption;
+    }
+
+    public static boolean configurePrivateMessage(final Message message) {
+        return configurePrivateMessage(message, false);
+    }
+
+    public static boolean configurePrivateFileMessage(final Message message) {
+        return configurePrivateMessage(message, true);
+    }
+
+    private static boolean configurePrivateMessage(final Message message, final boolean isFile) {
+        final Conversation conversation;
+        if (message.conversation instanceof Conversation) {
+            conversation = (Conversation) message.conversation;
+        } else {
+            return false;
+        }
+        if (conversation.getMode() == Conversation.MODE_MULTI) {
+            final Jid nextCounterpart = conversation.getNextCounterpart();
+            if (nextCounterpart != null) {
+                message.setCounterpart(nextCounterpart);
+                message.setTrueCounterpart(conversation.getMucOptions().getTrueCounterpart(nextCounterpart));
+                message.setType(isFile ? Message.TYPE_PRIVATE_FILE : Message.TYPE_PRIVATE);
+                return true;
+            }
+        }
+        return false;
     }
 }
