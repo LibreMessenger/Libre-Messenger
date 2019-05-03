@@ -935,7 +935,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             hideMessageHint();
         } else if (multi && conversation.getNextCounterpart() != null) {
             this.binding.textinput.setHint(R.string.send_unencrypted_message);
-            this.binding.textInputHint.setVisibility(View.VISIBLE);
+            this.binding.textInputHint.setVisibility(View.GONE);
             this.binding.textInputHint.setText(getString(
                     R.string.send_private_message_to,
                     conversation.getNextCounterpart().getResource()));
