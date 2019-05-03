@@ -73,7 +73,8 @@ public class BlocklistActivity extends AbstractSearchableListItemActivity implem
                 null,
                 account.getJid().asBareJid().toString(),
                 true,
-                xmppConnectionService.multipleAccounts()
+                xmppConnectionService.multipleAccounts(),
+                false
         );
 
         dialog.setOnEnterJidDialogPositiveListener((accountJid, contactJid) -> {

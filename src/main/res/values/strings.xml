@@ -910,4 +910,7 @@
     <string name="channel_discover_opt_in_message"><![CDATA[Channel discovery uses a third party service called <a href="https://search.jabbercat.org">search.jabbercat.org</a>.<br><br>Using this feature will transmit your IP address and search terms to that service. See their <a href="https://search.jabbercat.org/privacy">Privacy Policy</a> for more information.]]></string>
     <string name="action_add_existing_account">Add existing account</string>
     <string name="use_own_provider">Use own provider</string>
+    <string name="this_looks_like_a_domain">This looks like a domain address</string>
+    <string name="add_anway">Add anyway</string>
+    <string name="this_looks_like_channel">This looks like a channel address</string>
 </resources>

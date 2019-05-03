@@ -494,7 +494,8 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
                 prefilledJid,
                 null,
                 invite == null || !invite.hasFingerprints(),
-                multiAccount
+                multiAccount,
+                true
         );
 
         dialog.setOnEnterJidDialogPositiveListener((accountJid, contactJid) -> {
