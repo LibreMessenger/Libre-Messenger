@@ -22,6 +22,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import de.pixart.messenger.R;
 import de.pixart.messenger.databinding.ActivityChannelDiscoveryBinding;
 import de.pixart.messenger.entities.Account;
+import de.pixart.messenger.entities.Bookmark;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.http.services.MuclumbusService;
 import de.pixart.messenger.services.ChannelDiscoveryService;
@@ -189,8 +190,20 @@ public class ChannelDiscoveryActivity extends XmppActivity implements MenuItem.O
     }
 
     public void joinChannelSearchResult(String accountJid, MuclumbusService.Room result) {
+        final boolean syncAutojoin = getBooleanPreference("autojoin", R.bool.autojoin);
         Account account = xmppConnectionService.findAccountByJid(Jid.of(accountJid));
         final Conversation conversation = xmppConnectionService.findOrCreateConversation(account, result.getRoom(), true, true, true);
+        if (conversation.getBookmark() != null) {
+            if (!conversation.getBookmark().autojoin() && syncAutojoin) {
+                conversation.getBookmark().setAutojoin(true);
+                xmppConnectionService.pushBookmarks(account);
+            }
+        } else {
+            final Bookmark bookmark = new Bookmark(account, conversation.getJid().asBareJid());
+            bookmark.setAutojoin(syncAutojoin);
+            account.getBookmarks().add(bookmark);
+            xmppConnectionService.pushBookmarks(account);
+        }
         switchToConversation(conversation);
     }
 }
