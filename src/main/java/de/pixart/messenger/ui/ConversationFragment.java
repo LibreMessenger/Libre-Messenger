@@ -58,14 +58,12 @@ import android.widget.Toast;
 
 import net.java.otr4j.session.SessionStatus;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -94,7 +92,6 @@ import de.pixart.messenger.services.MessageArchiveService;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.adapter.MediaPreviewAdapter;
 import de.pixart.messenger.ui.adapter.MessageAdapter;
-import de.pixart.messenger.ui.interfaces.OnMediaLoaded;
 import de.pixart.messenger.ui.util.ActivityResult;
 import de.pixart.messenger.ui.util.Attachment;
 import de.pixart.messenger.ui.util.ConversationMenuConfigurator;
@@ -2574,73 +2571,66 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     }
 
     protected void updateStatusMessages() {
-        updateDateBubbles();
-        synchronized (this.messageList) {
-            if (showLoadMoreMessages(conversation)) {
-                this.messageList.add(0, Message.createLoadMoreMessage(conversation));
+        DateSeparator.addAll(this.messageList);
+        if (showLoadMoreMessages(conversation)) {
+            this.messageList.add(0, Message.createLoadMoreMessage(conversation));
+        }
+        if (conversation.getMode() == Conversation.MODE_MULTI) {
+            final MucOptions mucOptions = conversation.getMucOptions();
+            final List<MucOptions.User> allUsers = mucOptions.getUsers();
+            final Set<ReadByMarker> addedMarkers = new HashSet<>();
+            ChatState state = ChatState.COMPOSING;
+            List<MucOptions.User> users = conversation.getMucOptions().getUsersWithChatState(state, 5);
+            if (users.size() == 0) {
+                state = ChatState.PAUSED;
+                users = conversation.getMucOptions().getUsersWithChatState(state, 5);
             }
-            if (conversation.getMode() == Conversation.MODE_MULTI) {
-                final MucOptions mucOptions = conversation.getMucOptions();
-                final List<MucOptions.User> allUsers = mucOptions.getUsers();
-                final Set<ReadByMarker> addedMarkers = new HashSet<>();
-                ChatState state = ChatState.COMPOSING;
-                List<MucOptions.User> users = conversation.getMucOptions().getUsersWithChatState(state, 5);
-                if (users.size() == 0) {
-                    state = ChatState.PAUSED;
-                    users = conversation.getMucOptions().getUsersWithChatState(state, 5);
-                }
-                if (mucOptions.isPrivateAndNonAnonymous()) {
-                    for (int i = this.messageList.size() - 1; i >= 0; --i) {
-                        final Set<ReadByMarker> markersForMessage = messageList.get(i).getReadByMarkers();
-                        final List<MucOptions.User> shownMarkers = new ArrayList<>();
-                        for (ReadByMarker marker : markersForMessage) {
-                            if (!ReadByMarker.contains(marker, addedMarkers)) {
-                                addedMarkers.add(marker); //may be put outside this condition. set should do dedup anyway
-                                MucOptions.User user = mucOptions.findUser(marker);
-                                if (user != null && !users.contains(user)) {
-                                    shownMarkers.add(user);
-                                }
+            if (mucOptions.isPrivateAndNonAnonymous()) {
+                for (int i = this.messageList.size() - 1; i >= 0; --i) {
+                    final Set<ReadByMarker> markersForMessage = messageList.get(i).getReadByMarkers();
+                    final List<MucOptions.User> shownMarkers = new ArrayList<>();
+                    for (ReadByMarker marker : markersForMessage) {
+                        if (!ReadByMarker.contains(marker, addedMarkers)) {
+                            addedMarkers.add(marker); //may be put outside this condition. set should do dedup anyway
+                            MucOptions.User user = mucOptions.findUser(marker);
+                            if (user != null && !users.contains(user)) {
+                                shownMarkers.add(user);
                             }
                         }
-                        final ReadByMarker markerForSender = ReadByMarker.from(messageList.get(i));
-                        final Message statusMessage;
-                        final int size = shownMarkers.size();
-                        if (size > 1) {
-                            final String body;
-                            if (size <= 4) {
-                                body = getString(R.string.contacts_have_read_up_to_this_point, UIHelper.concatNames(shownMarkers));
-                            } else if (ReadByMarker.allUsersRepresented(allUsers, markersForMessage, markerForSender)) {
-                                body = getString(R.string.everyone_has_read_up_to_this_point);
-                            } else {
-                                body = getString(R.string.contacts_and_n_more_have_read_up_to_this_point, UIHelper.concatNames(shownMarkers, 3), size - 3);
-                            }
-                            statusMessage = Message.createStatusMessage(conversation, body);
-                            statusMessage.setCounterparts(shownMarkers);
-                        } else if (size == 1) {
-                            statusMessage = Message.createStatusMessage(conversation, getString(R.string.contact_has_read_up_to_this_point, UIHelper.getDisplayName(shownMarkers.get(0))));
-                            statusMessage.setCounterpart(shownMarkers.get(0).getFullJid());
-                            statusMessage.setTrueCounterpart(shownMarkers.get(0).getRealJid());
+                    }
+                    final ReadByMarker markerForSender = ReadByMarker.from(messageList.get(i));
+                    final Message statusMessage;
+                    final int size = shownMarkers.size();
+                    if (size > 1) {
+                        final String body;
+                        if (size <= 4) {
+                            body = getString(R.string.contacts_have_read_up_to_this_point, UIHelper.concatNames(shownMarkers));
+                        } else if (ReadByMarker.allUsersRepresented(allUsers, markersForMessage, markerForSender)) {
+                            body = getString(R.string.everyone_has_read_up_to_this_point);
                         } else {
-                            statusMessage = null;
+                            body = getString(R.string.contacts_and_n_more_have_read_up_to_this_point, UIHelper.concatNames(shownMarkers, 3), size - 3);
                         }
-                        if (statusMessage != null) {
-                            this.messageList.add(i + 1, statusMessage);
-                        }
-                        addedMarkers.add(markerForSender);
-                        if (ReadByMarker.allUsersRepresented(allUsers, addedMarkers)) {
-                            break;
-                        }
+                        statusMessage = Message.createStatusMessage(conversation, body);
+                        statusMessage.setCounterparts(shownMarkers);
+                    } else if (size == 1) {
+                        statusMessage = Message.createStatusMessage(conversation, getString(R.string.contact_has_read_up_to_this_point, UIHelper.getDisplayName(shownMarkers.get(0))));
+                        statusMessage.setCounterpart(shownMarkers.get(0).getFullJid());
+                        statusMessage.setTrueCounterpart(shownMarkers.get(0).getRealJid());
+                    } else {
+                        statusMessage = null;
+                    }
+                    if (statusMessage != null) {
+                        this.messageList.add(i + 1, statusMessage);
+                    }
+                    addedMarkers.add(markerForSender);
+                    if (ReadByMarker.allUsersRepresented(allUsers, addedMarkers)) {
+                        break;
                     }
                 }
             }
         }
     }
 
-    protected void updateDateBubbles() {
-        synchronized (this.messageList) {
-            DateSeparator.addAll(this.messageList);
-        }
-    }
 
     private void stopScrolling() {
         long now = SystemClock.uptimeMillis();
