@@ -691,7 +691,6 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.gifImage.setVisibility(View.GONE);
         Editable body = new SpannableStringBuilder(message.getBody());
-        listSelectionManager.onUpdate(viewHolder.messageBody, message);
         final boolean dataSaverDisabled = activity.xmppConnectionService.isDataSaverDisabled();
         viewHolder.richlinkview.setVisibility(View.VISIBLE);
         if (mShowLinksInside) {
@@ -863,27 +862,29 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 privateMarker = activity.getString(R.string.private_message_to, Strings.nullToEmpty(cp == null ? null : cp.getResource()));
             }
             body = new SpannableStringBuilder(privateMarker);
+            viewHolder.messageBody.setVisibility(View.VISIBLE);
             if (includeBody) {
                 body.append("\n");
                 body.append(message.getBody());
-                MyLinkify.addLinks(body, false);
-                viewHolder.messageBody.setAutoLinkMask(0);
-                viewHolder.messageBody.setTextIsSelectable(true);
-                viewHolder.messageBody.setMovementMethod(ClickableMovementMethod.getInstance());
             }
             body.setSpan(new ForegroundColorSpan(getMessageTextColor(darkBackground, false)), 0, privateMarker.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             body.setSpan(new StyleSpan(Typeface.BOLD), 0, privateMarker.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            MyLinkify.addLinks(body, false);
+            viewHolder.messageBody.setAutoLinkMask(0);
             viewHolder.messageBody.setText(body);
-            viewHolder.messageBody.setVisibility(View.VISIBLE);
+            viewHolder.messageBody.setTextIsSelectable(true);
+            viewHolder.messageBody.setMovementMethod(ClickableMovementMethod.getInstance());
+            listSelectionManager.onUpdate(viewHolder.messageBody, message);
         } else {
             if (includeBody) {
+                viewHolder.messageBody.setVisibility(View.VISIBLE);
                 body = new SpannableStringBuilder(message.getBody());
                 MyLinkify.addLinks(body, false);
-                viewHolder.messageBody.setVisibility(View.VISIBLE);
-                viewHolder.messageBody.setText(body);
                 viewHolder.messageBody.setAutoLinkMask(0);
+                viewHolder.messageBody.setText(body);
                 viewHolder.messageBody.setTextIsSelectable(true);
                 viewHolder.messageBody.setMovementMethod(ClickableMovementMethod.getInstance());
+                listSelectionManager.onUpdate(viewHolder.messageBody, message);
             } else {
                 viewHolder.messageBody.setVisibility(View.GONE);
             }

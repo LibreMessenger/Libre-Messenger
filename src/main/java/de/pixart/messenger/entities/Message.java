@@ -614,10 +614,10 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
                         !this.treatAsDownloadable() &&
                         !message.getBody().startsWith(ME_COMMAND) &&
                         !this.getBody().startsWith(ME_COMMAND) &&
-                        !this.bodyIsOnlyEmojis() &&
                         !message.bodyIsOnlyEmojis() &&
-                        !this.isXmppUri() &&
+                        !this.bodyIsOnlyEmojis() &&
                         !message.isXmppUri() &&
+                        !this.isXmppUri() &&
                         ((this.axolotlFingerprint == null && message.axolotlFingerprint == null) || this.axolotlFingerprint.equals(message.getFingerprint())) &&
                         UIHelper.sameDay(message.getTimeSent(), this.getTimeSent()) &&
                         this.getReadByMarkers().equals(message.getReadByMarkers()) &&

@@ -253,7 +253,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         public void onScroll(final AbsListView view, int firstVisibleItem, int visibleItemCount, final int totalItemCount) {
             toggleScrollDownButton(view);
             synchronized (ConversationFragment.this.messageList) {
-                if (firstVisibleItem < 25 && conversation != null && conversation.messagesLoaded.compareAndSet(true, false) && messageList.size() > 0) {
+                if (firstVisibleItem < 5 && conversation != null && conversation.messagesLoaded.compareAndSet(true, false) && messageList.size() > 0) {
                     long timestamp;
                     if (messageList.get(0).getType() == Message.TYPE_STATUS && messageList.size() >= 2) {
                         timestamp = messageList.get(1).getTimeSent();
