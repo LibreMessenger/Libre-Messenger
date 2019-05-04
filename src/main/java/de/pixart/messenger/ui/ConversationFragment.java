@@ -487,7 +487,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                             } else {
                                 binding.textinput.setText("");
                             }
-                            updateChatMsgHint();
                             updateSendButton();
                             updateEditablity();
                         }
@@ -917,26 +916,21 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     public void updateChatMsgHint() {
         final boolean multi = conversation.getMode() == Conversation.MODE_MULTI;
         if (conversation.getCorrectingMessage() != null) {
-            this.binding.textInputHint.setVisibility(View.GONE);
+            this.binding.textInputHint.setVisibility(View.VISIBLE);
+            this.binding.textInputHint.setText(R.string.send_corrected_message);
             this.binding.textinput.setHint(R.string.send_corrected_message);
-            hideMessageHint();
         } else if (multi && conversation.getNextCounterpart() != null) {
             this.binding.textinput.setHint(R.string.send_unencrypted_message);
-            this.binding.textInputHint.setVisibility(View.GONE);
+            this.binding.textInputHint.setVisibility(View.VISIBLE);
             this.binding.textInputHint.setText(getString(
-                    R.string.send_private_message_to,
-                    conversation.getNextCounterpart().getResource()));
-            showMessageHint(getString(
                     R.string.send_private_message_to,
                     conversation.getNextCounterpart().getResource()));
         } else if (multi && !conversation.getMucOptions().participating()) {
             this.binding.textInputHint.setVisibility(View.GONE);
             this.binding.textinput.setHint(R.string.you_are_not_participating);
-            hideMessageHint();
         } else {
             this.binding.textInputHint.setVisibility(View.GONE);
             this.binding.textinput.setHint(UIHelper.getMessageHint(getActivity(), conversation));
-            hideMessageHint();
             getActivity().invalidateOptionsMenu();
         }
     }
@@ -1153,7 +1147,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         binding.textinput.addTextChangedListener(new StylingHelper.MessageEditorStyler(binding.textinput));
         binding.textinput.setOnEditorActionListener(mEditorActionListener);
         binding.textinput.setRichContentListener(new String[]{"image/*"}, mEditorContentListener);
-        binding.textinput.setBackgroundResource(messageInputBubble());
+        binding.messageInputBox.setBackgroundResource(messageInputBubble());
 
         binding.textSendButton.setOnClickListener(this.mSendButtonListener);
         binding.textSendButton.setOnLongClickListener(this.mSendButtonLongListener);
@@ -1164,7 +1158,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         binding.messagesView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
         mediaPreviewAdapter = new MediaPreviewAdapter(this);
         binding.mediaPreview.setAdapter(mediaPreviewAdapter);
-        binding.mediaPreview.setBackgroundResource(messageInputBubble());
         messageListAdapter = new MessageAdapter((XmppActivity) getActivity(), this.messageList);
         messageListAdapter.setOnContactPictureClicked(this);
         messageListAdapter.setOnContactPictureLongClicked(this);
@@ -1980,7 +1973,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         }
         this.binding.textinput.setText("");
         this.conversation.setNextCounterpart(counterpart);
-        updateChatMsgHint();
         updateSendButton();
         updateEditablity();
     }
@@ -2538,6 +2530,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     }
 
     public void updateSendButton() {
+        updateChatMsgHint();
         boolean hasAttachments = mediaPreviewAdapter != null && mediaPreviewAdapter.hasAttachments();
         boolean useSendButtonToIndicateStatus = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("send_button_status", getResources().getBoolean(R.bool.send_button_status));
         final Conversation c = this.conversation;
@@ -2669,15 +2662,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 
     protected void hideSnackbar() {
         this.binding.snackbar.setVisibility(View.GONE);
-    }
-
-    protected void showMessageHint(final String message) {
-        this.binding.messagehint.setVisibility(View.VISIBLE);
-        this.binding.messagehintMessage.setText(message);
-    }
-
-    protected void hideMessageHint() {
-        this.binding.messagehint.setVisibility(View.GONE);
     }
 
     protected void sendMessage(Message message) {
