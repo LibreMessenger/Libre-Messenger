@@ -1035,7 +1035,10 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             mediaPreviewAdapter.notifyDataSetChanged();
             toggleInputMethod();
         };
-        if (conversation == null || conversation.getMode() == Conversation.MODE_MULTI || FileBackend.allFilesUnderSize(getActivity(), attachments, getMaxHttpUploadSize(conversation))) {
+        if (conversation == null
+                || conversation.getMode() == Conversation.MODE_MULTI
+                || Attachment.canBeSendInband(attachments)
+                || (conversation.getAccount().httpUploadAvailable() && FileBackend.allFilesUnderSize(getActivity(), attachments, getMaxHttpUploadSize(conversation)))) {
             callback.onPresenceSelected();
         } else {
             activity.selectPresence(conversation, callback);
@@ -1562,7 +1565,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 
                                 @Override
                                 public void success(Contact contact) {
-                                    selectPresenceToAttachFile(attachmentChoice);
+                                    invokeAttachFileIntent(attachmentChoice);
                                 }
 
                                 @Override
@@ -1578,19 +1581,19 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                             warning.show();
                         });
                     }
-                    selectPresenceToAttachFile(attachmentChoice);
+                    invokeAttachFileIntent(attachmentChoice);
                 } else {
                     showNoPGPKeyDialog(false, (dialog, which) -> {
                         conversation.setNextEncryption(Message.ENCRYPTION_NONE);
                         activity.xmppConnectionService.updateConversation(conversation);
-                        selectPresenceToAttachFile(attachmentChoice);
+                        invokeAttachFileIntent(attachmentChoice);
                     });
                 }
             } else {
                 activity.showInstallPgpDialog();
             }
         } else {
-            selectPresenceToAttachFile(attachmentChoice);
+            invokeAttachFileIntent(attachmentChoice);
         }
     }
 
@@ -1714,71 +1717,62 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         }
     }
 
-    protected void selectPresenceToAttachFile(final int attachmentChoice) {
-        final int encryption = conversation.getNextEncryption();
-        final Account account = conversation.getAccount();
-        final PresenceSelector.OnPresenceSelected callback = () -> {
-            Intent intent = new Intent();
-            boolean chooser = false;
-            switch (attachmentChoice) {
-                case ATTACHMENT_CHOICE_CHOOSE_IMAGE:
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                    }
-                    intent.setType("image/*");
-                    chooser = true;
-                    break;
-                case ATTACHMENT_CHOICE_CHOOSE_VIDEO:
-                    chooser = true;
-                    intent.setType("video/*");
-                    intent.addCategory(Intent.CATEGORY_OPENABLE);
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    break;
-                case ATTACHMENT_CHOICE_RECORD_VIDEO:
-                    intent.setAction(MediaStore.ACTION_VIDEO_CAPTURE);
-                    break;
-                case ATTACHMENT_CHOICE_TAKE_PHOTO:
-                    final Uri uri = activity.xmppConnectionService.getFileBackend().getTakePhotoUri();
-                    pendingTakePhotoUri.push(uri);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-                    intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-                    break;
-                case ATTACHMENT_CHOICE_CHOOSE_FILE:
-                    chooser = true;
-                    intent.setType("*/*");
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                    }
-                    intent.addCategory(Intent.CATEGORY_OPENABLE);
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    break;
-                case ATTACHMENT_CHOICE_RECORD_VOICE:
-                    intent = new Intent(getActivity(), RecordingActivity.class);
-                    break;
-                case ATTACHMENT_CHOICE_LOCATION:
-                    intent = new Intent(getActivity(), ShareLocationActivity.class);
-                    break;
-            }
-            if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-                Log.d(Config.LOGTAG, "Attachment: " + attachmentChoice);
-                if (chooser) {
-                    startActivityForResult(
-                            Intent.createChooser(intent, getString(R.string.perform_action_with)),
-                            attachmentChoice);
-                    activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
-                } else {
-                    startActivityForResult(intent, attachmentChoice);
-                    activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+    protected void invokeAttachFileIntent(final int attachmentChoice) {
+        Intent intent = new Intent();
+        boolean chooser = false;
+        switch (attachmentChoice) {
+            case ATTACHMENT_CHOICE_CHOOSE_IMAGE:
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                 }
+                intent.setType("image/*");
+                chooser = true;
+                break;
+            case ATTACHMENT_CHOICE_CHOOSE_VIDEO:
+                chooser = true;
+                intent.setType("video/*");
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                break;
+            case ATTACHMENT_CHOICE_RECORD_VIDEO:
+                intent.setAction(MediaStore.ACTION_VIDEO_CAPTURE);
+                break;
+            case ATTACHMENT_CHOICE_TAKE_PHOTO:
+                final Uri uri = activity.xmppConnectionService.getFileBackend().getTakePhotoUri();
+                pendingTakePhotoUri.push(uri);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+                break;
+            case ATTACHMENT_CHOICE_CHOOSE_FILE:
+                chooser = true;
+                intent.setType("*/*");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                }
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                break;
+            case ATTACHMENT_CHOICE_RECORD_VOICE:
+                intent = new Intent(getActivity(), RecordingActivity.class);
+                break;
+            case ATTACHMENT_CHOICE_LOCATION:
+                intent = new Intent(getActivity(), ShareLocationActivity.class);
+                break;
+        }
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            Log.d(Config.LOGTAG, "Attachment: " + attachmentChoice);
+            if (chooser) {
+                startActivityForResult(
+                        Intent.createChooser(intent, getString(R.string.perform_action_with)),
+                        attachmentChoice);
+                activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+            } else {
+                startActivityForResult(intent, attachmentChoice);
+                activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
             }
-        };
-        if ((account.httpUploadAvailable() || attachmentChoice == ATTACHMENT_CHOICE_LOCATION) && encryption != Message.ENCRYPTION_OTR) {
-            callback.onPresenceSelected();
-        } else {
-            activity.selectPresence(conversation, callback);
         }
     }
 
