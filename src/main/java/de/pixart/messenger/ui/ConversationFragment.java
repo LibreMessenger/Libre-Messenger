@@ -456,13 +456,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         }
     };
 
-    private OnClickListener mRecordVoiceButtonListener = new OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            attachFile(ATTACHMENT_CHOICE_RECORD_VOICE);
-        }
-    };
+    private OnClickListener mRecordVoiceButtonListener = v -> attachFile(ATTACHMENT_CHOICE_RECORD_VOICE);
 
     private OnClickListener mSendButtonListener = new OnClickListener() {
 
@@ -1122,7 +1116,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 menuArchiveChat.setTitle(R.string.action_end_conversation);
             }
             Fragment secondaryFragment = getFragmentManager().findFragmentById(R.id.secondary_fragment);
-            if (secondaryFragment != null && secondaryFragment instanceof ConversationFragment) {
+            if (secondaryFragment instanceof ConversationFragment) {
                 if (conversation.getMode() == Conversation.MODE_MULTI) {
                     menuGroupDetails.setTitle(conversation.getMucOptions().isPrivateAndNonAnonymous() ? R.string.action_group_details : R.string.channel_details);
                     menuGroupDetails.setVisible(true);

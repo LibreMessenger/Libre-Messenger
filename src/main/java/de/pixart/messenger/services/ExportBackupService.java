@@ -233,7 +233,10 @@ public class ExportBackupService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (running.compareAndSet(false, true)) {
             new Thread(() -> {
-                final Bundle extras = intent.getExtras();
+                Bundle extras = null;
+                if (intent != null && intent.getExtras() != null) {
+                    extras = intent.getExtras();
+                }
                 boolean notify = false;
                 if (extras != null && extras.containsKey("NOTIFY_ON_BACKUP_COMPLETE")) {
                     notify = extras.getBoolean("NOTIFY_ON_BACKUP_COMPLETE");
