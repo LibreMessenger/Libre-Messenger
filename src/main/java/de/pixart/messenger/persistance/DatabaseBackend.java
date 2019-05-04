@@ -780,14 +780,15 @@ public class DatabaseBackend extends SQLiteOpenHelper {
                     null, null, Message.TIME_SENT + " DESC",
                     String.valueOf(limit));
         }
-        if (cursor.getCount() > 0) {
-            cursor.moveToLast();
-            do {
-                Message message = Message.fromCursor(cursor, conversation);
+        while (cursor.moveToNext()) {
+            try {
+                final Message message = Message.fromCursor(cursor, conversation);
                 if (message != null && !message.isMessageDeleted()) {
-                    list.add(message);
+                    list.add(0, message);
                 }
-            } while (cursor.moveToPrevious());
+            } catch (Exception e) {
+                Log.e(Config.LOGTAG, "unable to restore message");
+            }
         }
         cursor.close();
         return list;
@@ -891,7 +892,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 
     public List<FilePathInfo> getFilePathInfo() {
         final SQLiteDatabase db = this.getReadableDatabase();
-        final Cursor cursor = db.query(Message.TABLENAME, new String[]{Message.UUID, Message.RELATIVE_FILE_PATH, Message.DELETED}, "type in (1,2,5) and "+Message.RELATIVE_FILE_PATH+" is not null", null, null, null, null);
+        final Cursor cursor = db.query(Message.TABLENAME, new String[]{Message.UUID, Message.RELATIVE_FILE_PATH, Message.DELETED}, "type in (1,2,5) and " + Message.RELATIVE_FILE_PATH + " is not null", null, null, null, null);
         final List<FilePathInfo> list = new ArrayList<>();
         while (cursor != null && cursor.moveToNext()) {
             list.add(new FilePathInfo(cursor.getString(0), cursor.getString(1), cursor.getInt(2) > 0));
