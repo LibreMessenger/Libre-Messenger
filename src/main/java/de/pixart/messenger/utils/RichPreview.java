@@ -61,7 +61,7 @@ public class RichPreview {
             FileInputStream fis = null;
             ObjectInputStream is = null;
             final File file = new File(context.getCacheDir(), RICH_LINK_METADATA + "/" + filename);
-            if(file.exists()) {
+            if (file.exists()) {
                 Calendar time = Calendar.getInstance();
                 time.add(Calendar.DAY_OF_YEAR, -7);
                 Date lastModified = new Date(file.lastModified());
@@ -234,7 +234,7 @@ public class RichPreview {
                     metaData.setImageurl(resolveURL(url, image));
                 }
             }
-            if (metaData.getImageurl().isEmpty()) {
+            if (metaData.getImageurl() != null && metaData.getImageurl().isEmpty()) {
                 String src = doc.select("link[rel=image_src]").attr("href");
                 if (!src.isEmpty()) {
                     metaData.setImageurl(resolveURL(url, src));
