@@ -207,7 +207,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
                 }
             }
         }
-        for(Message result : results) {
+        for (Message result : results) {
             onMessageFound.onMessageFound(result);
         }
     }
@@ -343,7 +343,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
                 }
             }
         }
-        for(Message result : results) {
+        for (Message result : results) {
             onMessageFound.onMessageFound(result);
         }
     }
@@ -568,7 +568,8 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
         }
     }
 
-    public @NonNull CharSequence getName() {
+    public @NonNull
+    CharSequence getName() {
         if (getMode() == MODE_MULTI) {
             final String roomName = getMucOptions().getName();
             final String subject = getMucOptions().getSubject();
@@ -933,12 +934,12 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
                     continue; //it's unsafe to use private messages as anchor. They could be coming from user archive
                 }
                 if (message.getStatus() == Message.STATUS_RECEIVED || message.isCarbon() || message.getServerMsgId() != null) {
-                    lastReceived = new MamReference(message.getTimeSent(),message.getServerMsgId());
+                    lastReceived = new MamReference(message.getTimeSent(), message.getServerMsgId());
                     break;
                 }
             }
         }
-        return MamReference.max(lastClear,lastReceived);
+        return MamReference.max(lastClear, lastReceived);
     }
 
     public void setMutedTill(long value) {
@@ -1131,7 +1132,7 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
             for (int i = this.messages.size() - 1; i >= 0; --i) {
                 Message message = this.messages.get(i);
                 if ((message.getType() == Message.TYPE_IMAGE || message.getType() == Message.TYPE_FILE) && message.getEncryption() != Message.ENCRYPTION_PGP) {
-                    if (message.getStatus() == Message.STATUS_SEND_FAILED && !message.isFileDeleted() && message.needsUploading()){
+                    if (message.getStatus() == Message.STATUS_SEND_FAILED && !message.isFileDeleted() && message.needsUploading()) {
                         ++count;
                     }
                 }

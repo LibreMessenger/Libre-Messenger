@@ -103,7 +103,7 @@ public final class Config {
     public static final int MAX_NUM_PAGES = 3;
     public static final int MAX_SEARCH_RESULTS = 300;
 
-    public static final int REFRESH_UI_INTERVAL = 250;
+    public static final int REFRESH_UI_INTERVAL = 500;
 
     public static final long OMEMO_AUTO_EXPIRY = 14 * MILLISECONDS_IN_DAY; // delete old OMEMO devices after 14 days of inactivity
     public static final boolean REMOVE_BROKEN_DEVICES = false;

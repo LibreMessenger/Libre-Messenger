@@ -312,8 +312,10 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
             if (account.getXmppConnection().getFeatures().bookmarksConversion()) {
                 final Element i = items.findChild("item");
                 final Element storage = i == null ? null : i.findChild("storage", Namespace.BOOKMARKS);
-                mXmppConnectionService.processBookmarks(account, storage, true);
-                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": processing bookmark PEP event");
+                new Thread(() -> {
+                    mXmppConnectionService.processBookmarks(account, storage, true);
+                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": processing bookmark PEP event");
+                }).start();
             } else {
                 Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": ignoring bookmark PEP event because bookmark conversion was not detected");
             }

@@ -313,6 +313,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
         this.body = body;
         this.isGeoUri = null;
         this.isXmppUri = null;
+        this.isWebUri = null;
         this.isEmojisOnly = null;
         this.treatAsDownloadable = null;
         this.fileParams = null;

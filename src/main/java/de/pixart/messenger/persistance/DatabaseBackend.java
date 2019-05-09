@@ -1097,13 +1097,15 @@ public class DatabaseBackend extends SQLiteOpenHelper {
     }
 
     public void expireOldMessages(long timestamp) {
+        long start = SystemClock.elapsedRealtime();
         final String[] args = {String.valueOf(timestamp)};
         SQLiteDatabase db = this.getReadableDatabase();
         db.beginTransaction();
         db.delete("messages_index", "uuid in (select uuid from messages where timeSent<?)", args);
-        db.delete(Message.TABLENAME, "timeSent<?", args);
+        int num = db.delete(Message.TABLENAME, "timeSent<?", args);
         db.setTransactionSuccessful();
         db.endTransaction();
+        Log.d(Config.LOGTAG, "deleted " + num + " expired messages in " + (SystemClock.elapsedRealtime() - start) + "ms");
     }
 
     public MamReference getLastMessageReceived(Account account) {

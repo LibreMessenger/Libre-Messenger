@@ -78,7 +78,6 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -111,7 +110,6 @@ import de.pixart.messenger.generator.MessageGenerator;
 import de.pixart.messenger.generator.PresenceGenerator;
 import de.pixart.messenger.http.CustomURLStreamHandlerFactory;
 import de.pixart.messenger.http.HttpConnectionManager;
-import de.pixart.messenger.http.services.MuclumbusService;
 import de.pixart.messenger.parser.AbstractParser;
 import de.pixart.messenger.parser.IqParser;
 import de.pixart.messenger.parser.MessageParser;
@@ -164,8 +162,6 @@ import de.pixart.messenger.xmpp.stanzas.IqPacket;
 import de.pixart.messenger.xmpp.stanzas.MessagePacket;
 import de.pixart.messenger.xmpp.stanzas.PresencePacket;
 import me.leolin.shortcutbadger.ShortcutBadger;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.ui.SettingsActivity.CHAT_STATES;
@@ -1066,7 +1062,7 @@ public class XmppConnectionService extends Service {
         Runnable runnable = () -> {
             long timestamp = getAutomaticMessageDeletionDate();
             if (timestamp > 0) {
-                expireOldMessages(timestamp);
+                expireOldMessages(timestamp, true);
                 synchronized (XmppConnectionService.this.conversations) {
                     for (Conversation conversation : XmppConnectionService.this.conversations) {
                         conversation.expireOldMessages(timestamp);
@@ -1758,9 +1754,9 @@ public class XmppConnectionService extends Service {
 
     public void pushBookmarks(Account account) {
         if (account.getXmppConnection() != null && account.getXmppConnection().getFeatures().bookmarksConversion()) {
-            pushBookmarksPep(account);
+            new Thread(() -> pushBookmarksPep(account)).start();
         } else {
-            pushBookmarksPrivateXml(account);
+            new Thread(() -> pushBookmarksPrivateXml(account)).start();
         }
     }
 
@@ -1838,7 +1834,7 @@ public class XmppConnectionService extends Service {
                 mLastExpiryRun.set(SystemClock.elapsedRealtime());
                 if (deletionDate > 0) {
                     Log.d(Config.LOGTAG, "deleting messages that are older than " + AbstractGenerator.getTimestamp(deletionDate));
-                    expireOldMessages(deletionDate);
+                    expireOldMessages(deletionDate, false);
                 }
                 Log.d(Config.LOGTAG, "restoring roster...");
                 for (Account account : accounts) {
@@ -4420,7 +4416,6 @@ public class XmppConnectionService extends Service {
         Runnable runnable = () -> {
             databaseBackend.deleteMessagesInConversation(conversation);
             databaseBackend.updateConversation(conversation);
-
         };
         mDatabaseWriterExecutor.execute(runnable);
     }
@@ -4809,12 +4804,21 @@ public class XmppConnectionService extends Service {
         }
     }
 
-    private void expireOldMessages(long timestamp) {
-        try {
+    private void expireOldMessages(long timestamp, boolean stepped) {
+        if (stepped) {
+            final int year = 365;
+            final long day = (long) 24 * 60 * 60 * 1000;
+            int count = 0;
+            while (count <= year) {
+                try {
+                    databaseBackend.expireOldMessages(timestamp - ((year - count) * day));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                count++;
+            }
+        } else {
             databaseBackend.expireOldMessages(timestamp);
-        } catch (Exception e) {
-            e.printStackTrace();
-            expireOldMessages(timestamp);
         }
     }
 }
