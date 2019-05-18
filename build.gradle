@@ -102,7 +102,7 @@ android {
         targetSdkVersion 28
 
         versionCode 259
-        versionName "2.2.3"
+        versionName "2.2.4 beta (2019-05-18)"
 
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"
