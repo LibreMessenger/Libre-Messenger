@@ -7,7 +7,7 @@
     <string name="action_end_conversation">Terminer cette conversation</string>
     <string name="action_contact_details">Détails du contact</string>
     <string name="action_secure">Conversation sécurisée</string>
-    <string name="action_add_account">Ajouter un compte</string>
+    <string name="action_add_new_account">Ajouter un nouveau compte</string>
     <string name="action_edit_contact">Modifier le nom</string>
     <string name="action_add_phone_book">Ajouter au carnet d’adresses</string>
     <string name="action_delete_contact">Retirer des contacts</string>
@@ -19,6 +19,7 @@
     <string name="title_activity_settings">Paramètres</string>
     <string name="conference_details">Détails du groupe de discussion</string>
     <string name="title_activity_contact_details">Détails du contact</string>
+    <string name="title_activity_sharewith">Partager avec la conversation</string>
     <string name="title_activity_start_conversation">Démarrer une conversation</string>
     <string name="title_activity_choose_contact">Choix du contact</string>
     <string name="title_activity_choose_contacts">Choisissez des contacts</string>
@@ -366,6 +367,7 @@
     <string name="ban_from_conference">Bannir de la conférence</string>
     <string name="kick_from_conference">Retirer de la conférence</string>
     <string name="ban_now">Bannir maintenant</string>
+    <string name="kick_now">Expulser maintenant</string>
     <string name="non_anonymous">Rendre l’identifiant Jabber visible à tout le monde</string>
     <string name="moderated">Rendre le canal modéré</string>
     <string name="you_are_not_participating">Vous ne participez pas</string>
@@ -881,8 +883,17 @@
     <string name="password_forgotten_title">Mot de passe oublié</string>
     <string name="password_forgotten_text">Vous avez oublié le mot de passe de votre compte ? Nous allons maintenant essayer d\'ouvrir le site Web d\'assistance de votre fournisseur.</string>
     <string name="pref_show_mappreview_inside">Afficher les aperçus localisations au sein de la discussion</string>
+    <string name="pref_use_internal_updater_summary">Laisser le messager vérifier la disponibilité de mise à jour une fois par jour</string>
     <string name="pref_use_internal_updater">rechercher des mise à jour</string>
     <string name="attach">Attacher</string>
     <string name="delete_locally">Supprimer localement</string>
     <string name="delete_from_server">Supprimer sur le serveur</string>
+    <string name="discover_channels">Découvrir des canaux</string>
+    <string name="search_channels">Rechercher des canaux</string>
+    <string name="channel_discovery_opt_in_title">Avis de confidentialité</string>
+    <string name="action_add_existing_account">Ajouter un compte existant</string>
+    <string name="use_own_provider">Recourir à un fournisseur personnalisé</string>
+    <string name="this_looks_like_a_domain">Il semble que ce soit une adresse d\'un domaine</string>
+    <string name="add_anway">Ajouter quand même</string>
+    <string name="this_looks_like_channel">Il semble que ce soit une adresse d\'un canal</string>
 </resources>

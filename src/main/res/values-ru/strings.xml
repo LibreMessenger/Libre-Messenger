@@ -7,7 +7,7 @@
     <string name="action_end_conversation">Закончить беседу</string>
     <string name="action_contact_details">Сведения о контакте</string>
     <string name="action_secure">Защищённый разговор</string>
-    <string name="action_add_account">Добавить аккаунт</string>
+    <string name="action_add_new_account">Добавить новый аккаунт</string>
     <string name="action_edit_contact">Изменить имя</string>
     <string name="action_add_phone_book">Добавить в адресную книгу</string>
     <string name="action_delete_contact">Удалить из контактов</string>
@@ -498,8 +498,8 @@
     <string name="no">Нет</string>
     <string name="no_accounts">(Нет активных аккаунтов)</string>
     <string name="this_field_is_required">Это обязательное поле</string>
-    <string name="correct_message">Верное сообщение</string>
-    <string name="send_corrected_message">Отправить верное сообщение</string>
+    <string name="correct_message">Изменить сообщение</string>
+    <string name="send_corrected_message">Отправить измененное сообщение</string>
     <string name="no_keys_just_confirm">Вы уже доверяете этому контакту. Нажимая \"Готово\" вы только подтвердите, что %s состоит в групповом чате.</string>
     <string name="contacts_have_no_pgp_keys">Pix-Art Messenger не может зашифровать ваши сообщения, поскольку ваши контакты не предоставляют своих публичных ключей.\n\n</string>
     <string name="this_account_is_disabled">Вы отключили данный аккаунт</string>
@@ -883,4 +883,9 @@
     <string name="delete_locally">Удалить с этого устройства</string>
     <string name="delete_from_server">Удалить с сервера</string>
     <string name="go_online_to_delete">Удаляемый аккаунт должен быть активирован и в режиме онлайн.</string>
+    <string name="discover_channels">Просмотреть каналы</string>
+    <string name="search_channels">Поиск каналов</string>
+    <string name="channel_discovery_opt_in_title">Уведомление о конфиденциальности</string>
+    <string name="action_add_existing_account">Добавить существующий аккаунт</string>
+    <string name="use_own_provider">Использовать свой сервер</string>
 </resources>
