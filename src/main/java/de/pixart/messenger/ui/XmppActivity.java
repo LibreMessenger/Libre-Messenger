@@ -399,7 +399,7 @@ public abstract class XmppActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         this.mTheme = findTheme();
         setTheme(this.mTheme);
-        setVolumeControlStream(AudioManager.STREAM_NOTIFICATION);
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
         metrics = getResources().getDisplayMetrics();
         ExceptionHelper.init(getApplicationContext());
         new EmojiService(this).init(getPreferences().getBoolean(USE_BUNDLED_EMOJIS, getResources().getBoolean(R.bool.use_bundled_emoji)));
