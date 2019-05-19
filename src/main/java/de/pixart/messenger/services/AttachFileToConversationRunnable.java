@@ -94,7 +94,7 @@ public class AttachFileToConversationRunnable implements Runnable, MediaTranscod
         Log.d(Config.LOGTAG, "processing file as video");
         mXmppConnectionService.startForcingForegroundNotification();
         SimpleDateFormat fileDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US);
-        message.setRelativeFilePath(fileDateFormat.format(new Date(message.getTimeSent())) + "_" + message.getUuid().substring(0, 4) + "_komp.mp4");
+        message.setRelativeFilePath("Sent/" + fileDateFormat.format(new Date(message.getTimeSent())) + "_" + message.getUuid().substring(0, 4) + "_komp.mp4");
         final DownloadableFile file = mXmppConnectionService.getFileBackend().getFile(message);
         file.getParentFile().mkdirs();
         final ParcelFileDescriptor parcelFileDescriptor = mXmppConnectionService.getContentResolver().openFileDescriptor(uri, "r");

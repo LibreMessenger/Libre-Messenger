@@ -85,6 +85,10 @@ public class FileBackend {
     private void createNoMedia() {
         final File nomedia_files = new File(getConversationsDirectory("Files") + ".nomedia");
         final File nomedia_audios = new File(getConversationsDirectory("Audios") + ".nomedia");
+        final File nomedia_videos_sent = new File(getConversationsDirectory("Videos/Sent") + ".nomedia");
+        final File nomedia_files_sent = new File(getConversationsDirectory("Files/Sent") + ".nomedia");
+        final File nomedia_audios_sent = new File(getConversationsDirectory("Audios/Sent") + ".nomedia");
+        final File nomedia_images_sent = new File(getConversationsDirectory("Images/Sent") + ".nomedia");
         if (!nomedia_files.exists()) {
             try {
                 nomedia_files.createNewFile();
@@ -97,6 +101,34 @@ public class FileBackend {
                 nomedia_audios.createNewFile();
             } catch (Exception e) {
                 Log.d(Config.LOGTAG, "could not create nomedia file for audio directory");
+            }
+        }
+        if (!nomedia_videos_sent.exists()) {
+            try {
+                nomedia_videos_sent.createNewFile();
+            } catch (Exception e) {
+                Log.d(Config.LOGTAG, "could not create nomedia file for videos sent directory");
+            }
+        }
+        if (!nomedia_files_sent.exists()) {
+            try {
+                nomedia_files_sent.createNewFile();
+            } catch (Exception e) {
+                Log.d(Config.LOGTAG, "could not create nomedia file for files sent directory");
+            }
+        }
+        if (!nomedia_audios_sent.exists()) {
+            try {
+                nomedia_audios_sent.createNewFile();
+            } catch (Exception e) {
+                Log.d(Config.LOGTAG, "could not create nomedia file for audios sent directory");
+            }
+        }
+        if (!nomedia_images_sent.exists()) {
+            try {
+                nomedia_images_sent.createNewFile();
+            } catch (Exception e) {
+                Log.d(Config.LOGTAG, "could not create nomedia file for images sent directory");
             }
         }
     }
@@ -269,7 +301,7 @@ public class FileBackend {
         for (DatabaseBackend.FilePath relativeFilePath : relativeFilePaths) {
             final String mime = MimeUtils.guessMimeTypeFromExtension(MimeUtils.extractRelevantExtension(relativeFilePath.path));
             final File file = getFileForPath(relativeFilePath.path, mime);
-            if (mime != null && (mime.startsWith("image/") || mime.startsWith("video/"))) {
+            if (file.exists() && mime != null && (mime.startsWith("image/") || mime.startsWith("video/"))) {
                 attachments.add(Attachment.of(relativeFilePath.uuid, file, mime));
             }
         }
@@ -437,7 +469,7 @@ public class FileBackend {
         if ("ogg".equals(extension) && type != null && type.startsWith("audio/")) {
             extension = "oga";
         }
-        String filename = fileDateFormat.format(new Date(message.getTimeSent())) + "_" + message.getUuid().substring(0, 4);
+        String filename = "Sent/" + fileDateFormat.format(new Date(message.getTimeSent())) + "_" + message.getUuid().substring(0, 4);
         message.setRelativeFilePath(filename + "." + extension);
         copyFileToPrivateStorage(mXmppConnectionService.getFileBackend().getFile(message), uri);
     }
@@ -544,7 +576,7 @@ public class FileBackend {
     }
 
     public void copyImageToPrivateStorage(Message message, Uri image) throws FileCopyException {
-        String filename = fileDateFormat.format(new Date(message.getTimeSent())) + "_" + message.getUuid().substring(0, 4);
+        String filename = "Sent/" + fileDateFormat.format(new Date(message.getTimeSent())) + "_" + message.getUuid().substring(0, 4);
         switch (Config.IMAGE_FORMAT) {
             case JPEG:
                 message.setRelativeFilePath(filename + ".jpg");
@@ -594,12 +626,13 @@ public class FileBackend {
         // If only the UUID were used, the first loaded thumbnail would be cached and the next loading
         // would get that thumbnail which would have the size of the first cached thumbnail
         // possibly leading to undesirable appearance of the displayed thumbnail.
-        final String key = message.getUuid() + String.valueOf(size);final String uuid = message.getUuid();
+        final String key = message.getUuid() + String.valueOf(size);
+        final String uuid = message.getUuid();
         final LruCache<String, Bitmap> cache = mXmppConnectionService.getBitmapCache();
-        Bitmap thumbnail = cache.get(key );
+        Bitmap thumbnail = cache.get(key);
         if ((thumbnail == null) && (!cacheOnly)) {
             synchronized (THUMBNAIL_LOCK) {
-                thumbnail = cache.get(key );
+                thumbnail = cache.get(key);
                 if (thumbnail != null) {
                     return thumbnail;
                 }
@@ -621,7 +654,7 @@ public class FileBackend {
                         thumbnail = withGifOverlay;
                     }
                 }
-                cache.put(key , thumbnail);
+                cache.put(key, thumbnail);
             }
         }
         return thumbnail;
