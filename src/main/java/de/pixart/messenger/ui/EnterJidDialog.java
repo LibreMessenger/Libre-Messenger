@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import de.pixart.messenger.Config;
@@ -40,6 +41,8 @@ public class EnterJidDialog extends DialogFragment implements OnBackendConnected
     private OnEnterJidDialogPositiveListener mListener = null;
 
     private KnownHostsAdapter knownHostsAdapter;
+    private Collection<String> whitelistedDomains = Collections.emptyList();
+
 
     private EnterJidDialogBinding binding;
     private AlertDialog dialog;
@@ -160,19 +163,19 @@ public class EnterJidDialog extends DialogFragment implements OnBackendConnected
         try {
             contactJid = Jid.of(binding.jid.getText().toString());
         } catch (final IllegalArgumentException e) {
-            binding.jid.setError(getActivity().getString(R.string.invalid_jid));
+            binding.jidLayout.setError(getActivity().getString(R.string.invalid_jid));
             return;
         }
 
         if (!issuedWarning && sanityCheckJid) {
             if (contactJid.isDomainJid()) {
-                binding.jid.setError(getActivity().getString(R.string.this_looks_like_a_domain));
+                binding.jidLayout.setError(getActivity().getString(R.string.this_looks_like_a_domain));
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setText(R.string.add_anway);
                 issuedWarning = true;
                 return;
             }
             if (suspiciousSubDomain(contactJid.getDomain())) {
-                binding.jid.setError(getActivity().getString(R.string.this_looks_like_channel));
+                binding.jidLayout.setError(getActivity().getString(R.string.this_looks_like_channel));
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setText(R.string.add_anway);
                 issuedWarning = true;
                 return;
@@ -185,7 +188,9 @@ public class EnterJidDialog extends DialogFragment implements OnBackendConnected
                     dialog.dismiss();
                 }
             } catch (JidError error) {
-                binding.jid.setError(error.toString());
+                binding.jidLayout.setError(error.toString());
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setText(R.string.add);
+                issuedWarning = false;
             }
         }
     }
@@ -204,6 +209,7 @@ public class EnterJidDialog extends DialogFragment implements OnBackendConnected
     public void afterTextChanged(Editable s) {
         if (issuedWarning) {
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setText(R.string.add);
+            binding.jidLayout.setError(null);
             issuedWarning = false;
         }
     }
@@ -222,6 +228,7 @@ public class EnterJidDialog extends DialogFragment implements OnBackendConnected
         if (activity instanceof XmppActivity) {
             Collection<String> hosts = ((XmppActivity) activity).xmppConnectionService.getKnownHosts();
             this.knownHostsAdapter.refresh(hosts);
+            this.whitelistedDomains = hosts;
         }
     }
 
@@ -250,7 +257,10 @@ public class EnterJidDialog extends DialogFragment implements OnBackendConnected
         }
     }
 
-    private static boolean suspiciousSubDomain(String domain) {
+    private boolean suspiciousSubDomain(String domain) {
+        if (this.whitelistedDomains.contains(domain)) {
+            return false;
+        }
         final String[] parts = domain.split("\\.");
         return parts.length >= 3 && SUSPICIOUS_DOMAINS.contains(parts[0]);
     }
