@@ -15,6 +15,14 @@ Alternativ kannst du den Messenger auch direkt hier von GitHub unter [Releases](
 
 <a rel="me" href="https://social.tchncs.de/@pixart">Pix-Art Messenger bei Mastodon</a> 
 
+#### Pix-Art-Messenger nightly bzw. beta
+
+Scanne den QR-Code und füge es zu deinen F-Droid Quellen hinzu:
+[![https://github.com/kriztan/Pix-Art-Messenger/blob/master/art/nightly-qr.png](Pix-Art Messenger nightly)](https://github.com/kriztan/Pix-Art-Messenger-nightly/raw/master/fdroid/repo)
+
+Google-Nutzer können dem Betaprogramm beitreten:
+[Pix-Art Messenger beta](https://play.google.com/apps/testing/de.pixart.messenger)
+
 #### Wie kann ich bei der Übersetzung helfen?
 [![Crowdin](https://d322cqt584bo4o.cloudfront.net/pix-art-messenger/localized.svg)](https://crowdin.com/project/pix-art-messenger)
 
