@@ -62,6 +62,7 @@ public class RichPreview {
             ObjectInputStream is = null;
             final File file = new File(context.getCacheDir(), RICH_LINK_METADATA + "/" + filename);
             if (file.exists()) {
+                // todo add this into a cron job
                 Calendar time = Calendar.getInstance();
                 time.add(Calendar.DAY_OF_YEAR, -7);
                 Date lastModified = new Date(file.lastModified());

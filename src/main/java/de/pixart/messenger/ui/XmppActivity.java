@@ -1022,6 +1022,9 @@ public abstract class XmppActivity extends ActionBarActivity {
     }
 
     private boolean AdHocInvite(Account account) {
+        if (!xmppConnectionServiceBound) {
+            return false;
+        }
         XmppConnection.Features features = account.getXmppConnection().getFeatures();
         Log.d(Config.LOGTAG, "Invite available: " + features.adhocinvite);
         return features.adhocinvite;

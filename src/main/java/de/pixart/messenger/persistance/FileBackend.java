@@ -1151,14 +1151,14 @@ public class FileBackend {
         String VCardName = "";
         try {
             VCard = Ezvcard.parse(file).first();
+            if (VCard != null) {
+                final String version = VCard.getVersion().toString();
+                Log.d(Config.LOGTAG, "VCard version: " + version);
+                final String name = VCard.getFormattedName().getValue();
+                VCardName = " (" + name + ")";
+            }
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        if (VCard != null) {
-            final String version = VCard.getVersion().toString();
-            Log.d(Config.LOGTAG, "VCard version: " + version);
-            final String name = VCard.getFormattedName().getValue();
-            VCardName = " (" + name + ")";
         }
         try {
             byte[] data = VCardName.getBytes("UTF-8");

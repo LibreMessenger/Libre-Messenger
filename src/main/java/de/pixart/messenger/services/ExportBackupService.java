@@ -233,6 +233,9 @@ public class ExportBackupService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (running.compareAndSet(false, true)) {
             new Thread(() -> {
+                if (intent == null) {
+                    return;
+                }
                 Bundle extras = null;
                 if (intent != null && intent.getExtras() != null) {
                     extras = intent.getExtras();
