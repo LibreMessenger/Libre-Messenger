@@ -2863,9 +2863,12 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         if (status == Account.State.ONLINE && conversation.setOutgoingChatState(Config.DEFAULT_CHATSTATE)) {
             service.sendChatState(conversation);
         }
-        if (storeNextMessage()) {
-            runOnUiThread(() -> activity.onConversationsListItemUpdated());
-        }
+        runOnUiThread(() -> {
+            if (activity == null) {
+                return;
+            }
+            activity.onConversationsListItemUpdated();
+        });
         runOnUiThread(this::updateSendButton);
     }
 
