@@ -4,7 +4,7 @@
 * added channel search via search.jabbercat.org
 * reworked onboarding screens
 * warn when trying to enter domain address or channel address in Add Contact dialog
-* set own OMEMO devices to inactive after not seeing them for 14 days. (was 7 days)
+* set own OMEMO devices to inactive after not seeing them for 60 days. (was 7 days)
 * bug fixes
 
 #### Version 2.2.3
