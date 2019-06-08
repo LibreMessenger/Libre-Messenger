@@ -17,7 +17,8 @@ Alternativ kannst du den Messenger auch direkt hier von GitHub unter [Releases](
 
 #### Pix-Art-Messenger nightly bzw. beta
 
-Scanne den QR-Code und füge es zu deinen F-Droid Quellen hinzu:
+Scanne den QR-Code und füge es zu deinen F-Droid Quellen hinzu: 
+
 <img src="https://raw.githubusercontent.com/kriztan/Pix-Art-Messenger-nightly/master/icon.png" width="220">
 
 Google-Nutzer können dem Betaprogramm beitreten:
