@@ -97,6 +97,7 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
     }
 
     private boolean init(ViewHolder viewHolder, Message message) {
+        messageAdapter.getActivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
         if (viewHolder.darkBackground) {
             viewHolder.runtime.setTextAppearance(this.messageAdapter.getContext(), R.style.TextAppearance_Conversations_Caption_OnDark);
         } else {
