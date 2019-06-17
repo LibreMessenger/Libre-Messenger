@@ -33,10 +33,14 @@ public abstract class ActionBarActivity extends AppCompatActivity {
     }
 
     void initializeScreenshotSecurity() {
-        if (isScreenSecurityEnabled()) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
-        } else {
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        try {
+            if (isScreenSecurityEnabled()) {
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+            } else {
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

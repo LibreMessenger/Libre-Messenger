@@ -433,10 +433,12 @@ public class FileBackend {
             is = mXmppConnectionService.getContentResolver().openInputStream(uri);
             byte[] buffer = new byte[1024];
             int length;
-            while ((length = is.read(buffer)) > 0) {
+            while ((length = is != null ? is.read(buffer) : 0) > 0) {
                 try {
                     os.write(buffer, 0, length);
                 } catch (IOException e) {
+                    throw new FileWriterException();
+                } catch (Exception e) {
                     throw new FileWriterException();
                 }
             }
@@ -452,6 +454,9 @@ public class FileBackend {
         } catch (IOException e) {
             e.printStackTrace();
             throw new FileCopyException(R.string.error_io_exception);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new FileCopyException(R.string.error_unable_to_create_temporary_file);
         } finally {
             close(os);
             close(is);
