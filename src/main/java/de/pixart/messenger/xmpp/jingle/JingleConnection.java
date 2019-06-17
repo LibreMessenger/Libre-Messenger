@@ -77,6 +77,7 @@ public class JingleConnection implements Transferable {
 
     private String contentName;
     private String contentCreator;
+    private Transport initialTransport;
 
     private int mProgress = 0;
 
@@ -168,6 +169,18 @@ public class JingleConnection implements Transferable {
         this.mFileOutputStream = AbstractConnectionManager.createOutputStream(this.file, message.getEncryption() == Message.ENCRYPTION_AXOLOTL);
         return this.mFileOutputStream;
     }
+
+    private OnTransportConnected onIbbTransportConnected = new OnTransportConnected() {
+        @Override
+        public void failed() {
+            Log.d(Config.LOGTAG, "ibb open failed");
+        }
+
+        @Override
+        public void established() {
+            JingleConnection.this.transport.send(file, onFileTransmissionStatusChanged);
+        }
+    };
 
     private OnProxyActivated onProxyActivated = new OnProxyActivated() {
 
@@ -368,9 +381,27 @@ public class JingleConnection implements Transferable {
         this.sessionId = packet.getSessionId();
         Content content = packet.getJingleContent();
         this.contentCreator = content.getAttribute("creator");
+        this.initialTransport = content.hasSocks5Transport() ? Transport.SOCKS : Transport.IBB;
         this.contentName = content.getAttribute("name");
         this.transportId = content.getTransportId();
-        this.mergeCandidates(JingleCandidate.parse(content.socks5transport().getChildren()));
+        if (this.initialTransport == Transport.SOCKS) {
+            this.mergeCandidates(JingleCandidate.parse(content.socks5transport().getChildren()));
+        } else if (this.initialTransport == Transport.IBB) {
+            final String receivedBlockSize = content.ibbTransport().getAttribute("block-size");
+            if (receivedBlockSize != null) {
+                try {
+                    this.ibbBlockSize = Math.min(Integer.parseInt(receivedBlockSize), this.ibbBlockSize);
+                } catch (NumberFormatException e) {
+                    this.sendCancel();
+                    this.fail();
+                    return;
+                }
+            } else {
+                this.sendCancel();
+                this.fail();
+                return;
+            }
+        }
         this.ftVersion = content.getVersion();
         if (ftVersion == null) {
             this.sendCancel();
@@ -558,6 +589,14 @@ public class JingleConnection implements Transferable {
         mJingleStatus = JINGLE_STATUS_ACCEPTED;
         this.mStatus = Transferable.STATUS_DOWNLOADING;
         this.mJingleConnectionManager.updateConversationUi(true);
+        if (initialTransport == Transport.SOCKS) {
+            sendAcceptSocks();
+        } else {
+            sendAcceptIbb();
+        }
+    }
+
+    private void sendAcceptSocks() {
         this.mJingleConnectionManager.getPrimaryCandidate(this.account, new OnPrimaryCandidateFound() {
             @Override
             public void onPrimaryCandidateFound(boolean success, final JingleCandidate candidate) {
@@ -600,6 +639,17 @@ public class JingleConnection implements Transferable {
                 }
             }
         });
+    }
+
+    private void sendAcceptIbb() {
+        this.transport = new JingleInbandTransport(this, this.transportId, this.ibbBlockSize);
+        final JinglePacket packet = bootstrapPacket("session-accept");
+        final Content content = new Content(contentCreator, contentName);
+        content.setFileOffer(fileOffer, ftVersion);
+        content.setTransportId(transportId);
+        content.ibbTransport().setAttribute("block-size", this.ibbBlockSize);
+        packet.setContent(content);
+        this.sendJinglePacket(packet);
     }
 
     private JinglePacket bootstrapPacket(String action) {
@@ -811,18 +861,6 @@ public class JingleConnection implements Transferable {
         this.sendJinglePacket(packet);
     }
 
-    OnTransportConnected onIbbTransportConnected = new OnTransportConnected() {
-        @Override
-        public void failed() {
-            Log.d(Config.LOGTAG, "ibb open failed");
-        }
-
-        @Override
-        public void established() {
-            JingleConnection.this.transport.send(file, onFileTransmissionStatusChanged);
-        }
-    };
-
     private boolean receiveFallbackToIbb(JinglePacket packet) {
         Log.d(Config.LOGTAG, "receiving fallack to ibb");
         String receivedBlockSize = packet.getJingleContent().ibbTransport()
@@ -836,8 +874,8 @@ public class JingleConnection implements Transferable {
         this.transportId = packet.getJingleContent().getTransportId();
         this.transport = new JingleInbandTransport(this, this.transportId, this.ibbBlockSize);
         JinglePacket answer = bootstrapPacket("transport-accept");
-        Content content = new Content("initiator", "a-file-offer");
-        content.setTransportId(this.transportId);
+        final Content content = new Content(contentCreator, contentName);
+        content.setFileOffer(fileOffer, ftVersion);
         content.ibbTransport().setAttribute("block-size", this.ibbBlockSize);
         answer.setContent(content);
 
