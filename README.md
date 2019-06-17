@@ -3,7 +3,7 @@
 
 Pix-Art Messenger ist eine Kopie der offiziellen Android-App [Conversations](https://github.com/siacs/Conversations) mit einigen Änderungen, insbesondere zur Verbesserung der Benutzerfreundlichkeit, um den Umstieg von oftmals vorinstallierten Messengern zu erleichtern. Die folgenden Bilder geben erste Eindrücke der App:
 
-<img src="https://user-images.githubusercontent.com/29168011/55349856-fe620e00-54ba-11e9-97ff-5ce894671af6.png" width="200"> <img src="https://user-images.githubusercontent.com/29168011/55349869-0621b280-54bb-11e9-8f8d-a6ebef553723.png" width="200"> <img src="https://user-images.githubusercontent.com/29168011/55349884-0de15700-54bb-11e9-8f9c-0ae78db9462c.png" width="200"> <img src="https://user-images.githubusercontent.com/29168011/55349906-176abf00-54bb-11e9-9c1e-1bf174827634.png" width="200"> <img src="https://user-images.githubusercontent.com/29168011/55349910-19348280-54bb-11e9-993e-7ac8af5f85e4.png" width="200"> <img src="https://user-images.githubusercontent.com/29168011/55349913-1afe4600-54bb-11e9-8451-2364966eeaa8.png" width="200"> <img src="https://user-images.githubusercontent.com/29168011/55349917-1c2f7300-54bb-11e9-8ffb-1f4591058a07.png" width="200"> 
+<img src="metadata/en-US/phoneScreenshots/00.png" width="200" /> <img src="metadata/en-US/phoneScreenshots/01.png" width="200" /> <img src="metadata/en-US/phoneScreenshots/02.png" width="200" /> <img src="metadata/en-US/phoneScreenshots/03.png" width="200" /> <img src="metadata/en-US/phoneScreenshots/04.png" width="200" /> <img src="metadata/en-US/phoneScreenshots/05.png" width="200" /> <img src="metadata/en-US/phoneScreenshots/06.png" width="200" />
 
 (Bilder wurden über http://freestockgallery.de bezogen)
 
