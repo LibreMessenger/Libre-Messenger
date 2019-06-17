@@ -280,13 +280,13 @@ public class HttpDownloadConnection implements Transferable {
         }
 
         private long retrieveFileSize() throws IOException {
-            PowerManager.WakeLock wakeLock = mHttpConnectionManager.createWakeLock("http_download_filesize" + message.getUuid());
             try {
-                wakeLock.acquire();
                 Log.d(Config.LOGTAG, "retrieve file size. interactive:" + String.valueOf(interactive));
                 changeStatus(STATUS_CHECKING);
                 HttpURLConnection connection;
-                if (mUseTor || message.getConversation().getAccount().isOnion()) {
+                final String hostname = mUrl.getHost();
+                final boolean onion = hostname != null && hostname.endsWith(".onion");
+                if (mUseTor || message.getConversation().getAccount().isOnion() || onion) {
                     connection = (HttpURLConnection) mUrl.openConnection(HttpConnectionManager.getProxy());
                 } else {
                     connection = (HttpURLConnection) mUrl.openConnection();
@@ -329,8 +329,6 @@ public class HttpDownloadConnection implements Transferable {
                 throw e;
             } catch (NumberFormatException e) {
                 throw new IOException();
-            } finally {
-                WakeLockHelper.release(wakeLock);
             }
         }
 
