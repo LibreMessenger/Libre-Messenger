@@ -1753,7 +1753,8 @@ public class XmppConnectionService extends Service {
     }
 
     public void pushBookmarks(Account account) {
-        if (account.getXmppConnection() != null && account.getXmppConnection().getFeatures().bookmarksConversion()) {
+        final XmppConnection connection = account.getXmppConnection();
+        if (connection != null && connection.getFeatures().bookmarksConversion()) {
             new Thread(() -> pushBookmarksPep(account)).start();
         } else {
             new Thread(() -> pushBookmarksPrivateXml(account)).start();
