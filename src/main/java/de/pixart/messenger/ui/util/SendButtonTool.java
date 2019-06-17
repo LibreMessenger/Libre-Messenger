@@ -43,7 +43,10 @@ import de.pixart.messenger.utils.UIHelper;
 
 public class SendButtonTool {
 
-    public static SendButtonAction getAction(Activity activity, Conversation c, String text) {
+    public static SendButtonAction getAction(final Activity activity, final Conversation c, final String text) {
+        if (activity == null) {
+            return SendButtonAction.TEXT;
+        }
         final boolean empty = text.length() == 0;
         final boolean conference = c.getMode() == Conversation.MODE_MULTI;
         if (c.getCorrectingMessage() != null && (empty || text.equals(c.getCorrectingMessage().getBody()))) {
@@ -66,14 +69,14 @@ public class SendButtonTool {
                     } else if (quickShareChoice(activity) && !AttachmentsVisible(c)) {
                         return SendButtonAction.TEXT;
                     } else {
-                        if (!setting.equals("none") && UIHelper.receivedLocationQuestion(c.getLatestMessage())) {
+                        if (!"none".equals(setting) && UIHelper.receivedLocationQuestion(c.getLatestMessage())) {
                             return SendButtonAction.SEND_LOCATION;
                         } else {
-                            if (setting.equals("recent")) {
+                            if ("recent".equals(setting)) {
                                 setting = preferences.getString(ConversationFragment.RECENTLY_USED_QUICK_ACTION, SendButtonAction.TEXT.toString());
-                                return SendButtonAction.valueOfOrDefault(setting, SendButtonAction.TEXT);
+                                return SendButtonAction.valueOfOrDefault(setting);
                             } else {
-                                return SendButtonAction.valueOfOrDefault(setting, SendButtonAction.TEXT);
+                                return SendButtonAction.valueOfOrDefault(setting);
                             }
                         }
                     }
