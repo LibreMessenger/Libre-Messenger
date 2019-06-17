@@ -1,6 +1,7 @@
 package de.pixart.messenger.xmpp.jingle.stanzas;
 
 import de.pixart.messenger.entities.DownloadableFile;
+import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.xml.Element;
 
 public class Content extends Element {
@@ -102,32 +103,28 @@ public class Content extends Element {
     }
 
     public Element socks5transport() {
-        Element transport = this.findChild("transport",
-                "urn:xmpp:jingle:transports:s5b:1");
+        Element transport = this.findChild("transport", Namespace.JINGLE_TRANSPORTS_S5B);
         if (transport == null) {
-            transport = this.addChild("transport",
-                    "urn:xmpp:jingle:transports:s5b:1");
+            transport = this.addChild("transport", Namespace.JINGLE_TRANSPORTS_S5B);
             transport.setAttribute("sid", this.transportId);
         }
         return transport;
     }
 
     public Element ibbTransport() {
-        Element transport = this.findChild("transport",
-                "urn:xmpp:jingle:transports:ibb:1");
+        Element transport = this.findChild("transport", Namespace.JINGLE_TRANSPORTS_IBB);
         if (transport == null) {
-            transport = this.addChild("transport",
-                    "urn:xmpp:jingle:transports:ibb:1");
+            transport = this.addChild("transport", Namespace.JINGLE_TRANSPORTS_IBB);
             transport.setAttribute("sid", this.transportId);
         }
         return transport;
     }
 
     public boolean hasSocks5Transport() {
-        return this.hasChild("transport", "urn:xmpp:jingle:transports:s5b:1");
+        return this.hasChild("transport", Namespace.JINGLE_TRANSPORTS_S5B);
     }
 
     public boolean hasIbbTransport() {
-        return this.hasChild("transport", "urn:xmpp:jingle:transports:ibb:1");
+        return this.hasChild("transport", Namespace.JINGLE_TRANSPORTS_IBB);
     }
 }
