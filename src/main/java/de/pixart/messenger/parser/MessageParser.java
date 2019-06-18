@@ -549,7 +549,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                 final boolean checkedForDuplicates = serverMsgId != null && remoteMsgId != null && !conversation.possibleDuplicate(serverMsgId, remoteMsgId);
 
                 if (origin != null) {
-                    message = parseAxolotlChat(axolotlEncrypted, origin, conversation, status,  checkedForDuplicates,query != null);
+                    message = parseAxolotlChat(axolotlEncrypted, origin, conversation, status, checkedForDuplicates, query != null);
                 } else {
                     Message trial = null;
                     for (Jid fallback : fallbacksBySourceId) {
@@ -999,7 +999,10 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
         public boolean execute(Account account) {
             if (jid != null) {
                 Conversation conversation = mXmppConnectionService.findOrCreateConversation(account, jid, true, false);
-                if (!conversation.getMucOptions().online()) {
+                if (conversation.getMucOptions().online()) {
+                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": received invite to " + jid + " but muc is considered to be online");
+                    mXmppConnectionService.mucSelfPingAndRejoin(conversation);
+                } else {
                     conversation.getMucOptions().setPassword(password);
                     mXmppConnectionService.databaseBackend.updateConversation(conversation);
                     mXmppConnectionService.joinMuc(conversation, inviter != null && inviter.mutualPresenceSubscription());
