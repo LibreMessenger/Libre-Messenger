@@ -541,7 +541,6 @@
     <string name="registration_password_too_weak">Error en el registro: La contraseña es demasiado débil</string>
     <string name="choose_participants">Elige a los participantes</string>
     <string name="creating_conference">Crear chat de grupo…</string>
-    <string name="import_text">Hay una copia de seguridad en tu dispositivo que se puede importar.\nTu aplicación se reiniciará durante el proceso. ¿Quieres importar la copia de seguridad?</string>
     <string name="import_database">Importar copia de seguridad</string>
     <string name="invite_again">Invitar de nuevo</string>
     <string name="inviteUser_Subject">te ha invitado a través de</string>

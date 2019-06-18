@@ -533,7 +533,6 @@
     <string name="registration_password_too_weak">Ошибка регистрации: Пароль слишком простой</string>
     <string name="choose_participants">Выберите участников</string>
     <string name="creating_conference">Создание группового чата...</string>
-    <string name="import_text">На вашем устройстве найдена резервная копия, которая может быть импортирована.\n Ваш мессенджер будет перезапущен во время процесса восстановления. Импортировать данные из резервной копии? </string>
     <string name="import_database">Импортировать резервную копию</string>
     <string name="invite_again">Пригласить снова</string>
     <string name="inviteUser_Subject">приглашает вас присоединиться через</string>

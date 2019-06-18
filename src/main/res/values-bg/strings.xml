@@ -536,7 +536,6 @@
     <string name="registration_password_too_weak">Неуспешна регистрация: Паролата е твърде слаба</string>
     <string name="choose_participants">Изберете участници</string>
     <string name="creating_conference">Създаване на групов чат...</string>
-    <string name="import_text">На устройството има резервно копие, което може да бъде възтанови.\nВашият Messenger ще бъде рестартиран по време на процеса на архивиране. Ще бъде ли възтановен архивът?</string>
     <string name="import_database">Възтановеване на резервно копие</string>
     <string name="invite_again">Покани отново</string>
     <string name="inviteUser_Subject">те покани чрез</string>

@@ -368,7 +368,6 @@
     <string name="registration_password_too_weak">فشلت عملية إنشاء الحساب: إنّ الكلمة السرية ضعيفة</string>
     <string name="choose_participants">اختر المشاركين</string>
     <string name="creating_conference">عملية انشاء فريق المحادثة جارية…</string>
-    <string name="import_text">إنّ جهازك يحتوي على نسخة احتياطية يمكنك استيرادها.\nسوف يتم إعادة تشغيل تطبيقك بعد عملية الإسترجاع. هل تريد استعادة تلك النسخة الإحتياطية؟ </string>
     <string name="import_database">استيراد نسخة احتياطية</string>
     <string name="invite_again">إعادة دعوته مجددا</string>
     <string name="inviteUser_Subject">قام بدعوتك عبر</string>

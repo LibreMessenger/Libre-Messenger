@@ -541,7 +541,6 @@
     <string name="registration_password_too_weak">Error en el registre: La contrasenya és massa dèbil</string>
     <string name="choose_participants">Escolleix als participants</string>
     <string name="creating_conference">Crear xat de grup…</string>
-    <string name="import_text">Hi ha una còpia de seguretat en el teu dispositiu que no es pot importar.\nLa teva aplicació és reiniciarà durant el procès. Vols importar la còpia de seguretat?</string>
     <string name="import_database">Importar còpia de seguretat</string>
     <string name="invite_again">Convidar de nou</string>
     <string name="inviteUser_Subject">t\'ha convidat a través de</string>

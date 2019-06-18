@@ -541,7 +541,6 @@
     <string name="registration_password_too_weak">Registrazione fallita: password troppo debole</string>
     <string name="choose_participants">Scegli i partecipanti</string>
     <string name="creating_conference">Creazione conversazione di gruppo…</string>
-    <string name="import_text">C\'è un backup sul tuo dispositivo che può essere importato.\nIl tuo Messenger sarà riavviato durante il processo di backup. Vorresti importare il backup? </string>
     <string name="import_database">Importa backup</string>
     <string name="invite_again">Invita di nuovo</string>
     <string name="inviteUser_Subject">ti ha invitato via</string>

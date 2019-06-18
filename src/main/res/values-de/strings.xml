@@ -541,7 +541,6 @@
     <string name="registration_password_too_weak">Registrierung fehlgeschlagen: Passwort zu schwach</string>
     <string name="choose_participants">Mitglieder auswählen</string>
     <string name="creating_conference">Gruppenchat wird erstellt…</string>
-    <string name="import_text">Es wurde ein Backup gefunden, welches importiert werden kann.\nDein Messenger startet während des Importvorgangs neu. Soll das Backup importiert werden?</string>
     <string name="import_database">Backup importieren</string>
     <string name="invite_again">Erneut hinzufügen</string>
     <string name="inviteUser_Subject">hat dich eingeladen über</string>

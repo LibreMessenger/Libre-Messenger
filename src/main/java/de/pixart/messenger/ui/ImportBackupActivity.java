@@ -81,7 +81,16 @@ public class ImportBackupActivity extends XmppActivity implements ServiceConnect
 
     @Override
     public void onBackupFilesLoaded(final List<ImportBackupService.BackupFile> files) {
-        runOnUiThread(() -> backupFileAdapter.setFiles(files));
+        runOnUiThread(() -> {
+            if (files.size() >= 1) {
+                this.binding.hint.setVisibility(View.GONE);
+                this.binding.list.setVisibility(View.VISIBLE);
+                backupFileAdapter.setFiles(files);
+            } else {
+                this.binding.list.setVisibility(View.GONE);
+                this.binding.hint.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     @Override
