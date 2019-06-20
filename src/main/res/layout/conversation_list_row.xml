@@ -30,6 +30,7 @@
                     app:riv_corner_radius="@dimen/rounded_image_border" />
 
                 <RelativeLayout
+                    android:id="@+id/message"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -192,7 +193,18 @@
                         android:paddingEnd="4dp"
                         android:paddingRight="4dp"
                         android:textAppearance="@style/TextAppearance.Conversations.Caption" />
+
+                    <TextView
+                        android:id="@+id/account"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/conversation_lastwrapper"
+                        android:layout_alignParentBottom="true"
+                        android:paddingTop="4dp"
+                        android:textAppearance="@style/TextAppearance.Conversations.Status"
+                        android:visibility="gone" />
                 </RelativeLayout>
+
             </RelativeLayout>
         </FrameLayout>
     </FrameLayout>

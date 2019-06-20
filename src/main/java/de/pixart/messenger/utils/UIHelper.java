@@ -18,6 +18,7 @@ import java.util.Locale;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
+import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Conversational;
@@ -553,20 +554,20 @@ public class UIHelper {
         return LOCATION_QUESTIONS.contains(body);
     }
 
-    public static ListItem.Tag getTagForStatus(Context context, Presence.Status status) {
+    public static ListItem.Tag getTagForStatus(Context context, Presence.Status status, Account account) {
         switch (status) {
             case CHAT:
-                return new ListItem.Tag(context.getString(R.string.presence_chat), 0xff259b24, 0);
+                return new ListItem.Tag(context.getString(R.string.presence_chat), 0xff259b24, 0, account);
             case AWAY:
-                return new ListItem.Tag(context.getString(R.string.presence_away), 0xffff9800, 0);
+                return new ListItem.Tag(context.getString(R.string.presence_away), 0xffff9800, 0, account);
             case XA:
-                return new ListItem.Tag(context.getString(R.string.presence_xa), 0xfff44336, 0);
+                return new ListItem.Tag(context.getString(R.string.presence_xa), 0xfff44336, 0, account);
             case DND:
-                return new ListItem.Tag(context.getString(R.string.presence_dnd), 0xfff44336, 0);
+                return new ListItem.Tag(context.getString(R.string.presence_dnd), 0xfff44336, 0, account);
             case OFFLINE:
-                return new ListItem.Tag(context.getString(R.string.presence_offline), 0xff808080, 1);
+                return new ListItem.Tag(context.getString(R.string.presence_offline), 0xff808080, 1, account);
             default:
-                return new ListItem.Tag(context.getString(R.string.presence_online), 0xff259b24, 0);
+                return new ListItem.Tag(context.getString(R.string.presence_online), 0xff259b24, 0, account);
         }
     }
 

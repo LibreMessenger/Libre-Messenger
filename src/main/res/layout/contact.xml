@@ -54,6 +54,12 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.Conversations.Fingerprint"
                 android:visibility="gone" />
+            <TextView
+                android:id="@+id/account"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Conversations.Status"
+                android:visibility="gone" />
         </LinearLayout>
 
     </RelativeLayout>

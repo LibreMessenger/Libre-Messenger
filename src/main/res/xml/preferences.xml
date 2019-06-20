@@ -81,6 +81,11 @@
             android:key="prefer_xmpp_avatar"
             android:summary="@string/pref_prefer_xmpp_avatar_summary"
             android:title="@string/pref_prefer_xmpp_avatar" />
+        <CheckBoxPreference
+            android:defaultValue="@bool/show_own_accounts"
+            android:key="show_own_accounts"
+            android:summary="@string/pref_show_own_accounts_summary"
+            android:title="@string/pref_show_own_accounts" />
     </PreferenceScreen>
     <!--Notifications-->
     <PreferenceScreen

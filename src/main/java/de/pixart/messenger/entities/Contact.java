@@ -20,7 +20,6 @@ import java.util.Locale;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.android.AbstractPhoneContact;
-import de.pixart.messenger.services.QuickConversationsService;
 import de.pixart.messenger.utils.JidHelper;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xml.Element;
@@ -159,12 +158,12 @@ public class Contact implements ListItem, Blockable {
     public List<Tag> getTags(Context context) {
         final ArrayList<Tag> tags = new ArrayList<>();
         for (final String group : getGroups(true)) {
-            tags.add(new Tag(group, UIHelper.getColorForName(group), 0));
+            tags.add(new Tag(group, UIHelper.getColorForName(group), 0, account));
         }
         Presence.Status status = getShownStatus();
-        tags.add(UIHelper.getTagForStatus(context, status));
+        tags.add(UIHelper.getTagForStatus(context, status, account));
         if (isBlocked()) {
-            tags.add(new Tag(context.getString(R.string.blocked), 0xff2e2f3b, 0));
+            tags.add(new Tag(context.getString(R.string.blocked), 0xff2e2f3b, 0, account));
         }
         return tags;
     }

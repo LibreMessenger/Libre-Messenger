@@ -117,6 +117,7 @@
     <bool name="show_links_inside">true</bool>
     <bool name="show_maps_inside">true</bool>
     <bool name="use_internal_updater">true</bool>
+    <bool name="show_own_accounts">true</bool>
 
     <string-array name="domains">
         <item>pix-art.de</item>

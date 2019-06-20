@@ -168,6 +168,7 @@ import static de.pixart.messenger.ui.SettingsActivity.CHAT_STATES;
 import static de.pixart.messenger.ui.SettingsActivity.CONFIRM_MESSAGES;
 import static de.pixart.messenger.ui.SettingsActivity.ENABLE_MULTI_ACCOUNTS;
 import static de.pixart.messenger.ui.SettingsActivity.INDICATE_RECEIVED;
+import static de.pixart.messenger.ui.SettingsActivity.SHOW_OWN_ACCOUNTS;
 
 public class XmppConnectionService extends Service {
 
@@ -4019,6 +4020,10 @@ public class XmppConnectionService extends Service {
 
     public boolean multipleAccounts() {
         return getBooleanPreference(ENABLE_MULTI_ACCOUNTS, R.bool.enable_multi_accounts);
+    }
+
+    public boolean showOwnAccounts() {
+        return getBooleanPreference(SHOW_OWN_ACCOUNTS, R.bool.show_own_accounts);
     }
 
     public int unreadCount() {

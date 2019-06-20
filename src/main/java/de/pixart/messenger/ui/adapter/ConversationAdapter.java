@@ -59,6 +59,13 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             viewHolder.binding.conversationName.setText(EmojiWrapper.transform(name));
         }
 
+        if (activity.xmppConnectionService.multipleAccounts() && activity.xmppConnectionService.showOwnAccounts()) {
+            viewHolder.binding.account.setVisibility(View.VISIBLE);
+            viewHolder.binding.account.setText(conversation.getAccount().getJid().asBareJid());
+        } else {
+            viewHolder.binding.account.setVisibility(View.GONE);
+        }
+
         if (conversation == ConversationFragment.getConversation(activity)) {
             viewHolder.binding.frame.setBackgroundColor(StyledAttributes.getColor(activity, R.attr.color_background_tertiary));
         } else {

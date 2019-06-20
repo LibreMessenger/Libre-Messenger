@@ -57,6 +57,7 @@ public class SettingsActivity extends XmppActivity implements
     public static final String SHOW_FOREGROUND_SERVICE = "show_foreground_service";
     public static final String USE_BUNDLED_EMOJIS = "use_bundled_emoji";
     public static final String ENABLE_MULTI_ACCOUNTS = "enable_multi_accounts";
+    public static final String SHOW_OWN_ACCOUNTS = "show_own_accounts";
     public static final String QUICK_SHARE_ATTACHMENT_CHOICE = "quick_share_attachment_choice";
     public static final String NUMBER_OF_ACCOUNTS = "number_of_accounts";
     public static final String PLAY_GIF_INSIDE = "play_gif_inside";
