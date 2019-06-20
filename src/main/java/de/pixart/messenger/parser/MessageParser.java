@@ -29,6 +29,7 @@ import de.pixart.messenger.crypto.axolotl.XmppAxolotlMessage;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
+import de.pixart.messenger.entities.Conversational;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.Presence;
@@ -356,6 +357,17 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                         packet.getId(),
                         Message.STATUS_SEND_FAILED,
                         extractErrorMessage(packet));
+                final Element error = packet.findChild("error");
+                final boolean notAcceptable = error != null && error.hasChild("not-acceptable");
+                if (notAcceptable) {
+                    Conversation conversation = mXmppConnectionService.find(account, from);
+                    if (conversation != null && conversation.getMode() == Conversational.MODE_MULTI) {
+                        if (conversation.getMucOptions().online()) {
+                            Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": received not-acceptable error for seemingly online muc at " + from);
+                            mXmppConnectionService.mucSelfPingAndRejoin(conversation);
+                        }
+                    }
+                }
                 if (message != null) {
                     if (message.getEncryption() == Message.ENCRYPTION_OTR) {
                         Conversation conversation = (Conversation) message.getConversation();
