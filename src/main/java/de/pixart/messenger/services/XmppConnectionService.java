@@ -380,8 +380,13 @@ public class XmppConnectionService extends Service {
                 }
                 List<Conversation> conversations = getConversations();
                 for (Conversation conversation : conversations) {
+                    final boolean inProgressJoin;
+                    synchronized (account.inProgressConferenceJoins) {
+                        inProgressJoin = account.inProgressConferenceJoins.contains(conversation);
+                    }
                     if (conversation.getAccount() == account
-                            && !account.pendingConferenceJoins.contains(conversation)) {
+                            && !account.pendingConferenceJoins.contains(conversation)
+                            && !inProgressJoin) {
                         if (!conversation.startOtrIfNeeded()) {
                             Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": couldn't start OTR with " + conversation.getContact().getJid() + " when needed");
                         }
@@ -1504,7 +1509,12 @@ public class XmppConnectionService extends Service {
                     message1 -> markMessage(message1, Message.STATUS_SEND_FAILED));
         }
 
-        if (account.isOnlineAndConnected()) {
+        final boolean inProgressJoin;
+        synchronized (account.inProgressConferenceJoins) {
+            inProgressJoin = conversation.getMode() == Conversational.MODE_MULTI && account.inProgressConferenceJoins.contains(conversation);
+        }
+
+        if (account.isOnlineAndConnected() && !inProgressJoin) {
             switch (message.getEncryption()) {
                 case Message.ENCRYPTION_NONE:
                     if (message.needsUploading()) {
@@ -2712,6 +2722,9 @@ public class XmppConnectionService extends Service {
         account.pendingConferenceJoins.remove(conversation);
         account.pendingConferenceLeaves.remove(conversation);
         if (account.getStatus() == Account.State.ONLINE) {
+            synchronized (account.inProgressConferenceJoins) {
+                account.inProgressConferenceJoins.add(conversation);
+            }
             sendPresencePacket(account, mPresenceGenerator.leave(conversation.getMucOptions()));
             conversation.resetMucOptions();
             if (onConferenceJoined != null) {
@@ -2765,7 +2778,10 @@ public class XmppConnectionService extends Service {
                             saveConversationAsBookmark(conversation, null);
                         }
                     }
-                    sendUnsentMessages(conversation);
+                    synchronized (account.inProgressConferenceJoins) {
+                        account.inProgressConferenceJoins.remove(conversation);
+                        sendUnsentMessages(conversation);
+                    }
                 }
 
                 @Override
@@ -2784,6 +2800,9 @@ public class XmppConnectionService extends Service {
                         return;
                     }
                     if (error != null && "remote-server-not-found".equals(error.getName())) {
+                        synchronized (account.inProgressConferenceJoins) {
+                            account.inProgressConferenceJoins.remove(conversation);
+                        }
                         conversation.getMucOptions().setError(MucOptions.Error.SERVER_NOT_FOUND);
                         updateConversationUi();
                     } else {
