@@ -66,6 +66,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -169,6 +170,7 @@ import static de.pixart.messenger.ui.SettingsActivity.CONFIRM_MESSAGES;
 import static de.pixart.messenger.ui.SettingsActivity.ENABLE_MULTI_ACCOUNTS;
 import static de.pixart.messenger.ui.SettingsActivity.INDICATE_RECEIVED;
 import static de.pixart.messenger.ui.SettingsActivity.SHOW_OWN_ACCOUNTS;
+import static de.pixart.messenger.utils.RichPreview.RICH_LINK_METADATA;
 
 public class XmppConnectionService extends Service {
 
@@ -757,8 +759,26 @@ public class XmppConnectionService extends Service {
         }
         if (SystemClock.elapsedRealtime() - mLastExpiryRun.get() >= Config.EXPIRY_INTERVAL) {
             expireOldMessages();
+            deleteWebpreviewCache();
         }
         return START_STICKY;
+    }
+
+    private void deleteWebpreviewCache() {
+        final String path = getApplicationContext().getCacheDir() + "/" + RICH_LINK_METADATA;
+        final Calendar time = Calendar.getInstance();
+        time.add(Calendar.DAY_OF_YEAR, -7);
+        final File directory = new File(path);
+        final File[] files = directory.listFiles();
+        int count = 0;
+        for (File file : files) {
+            Date lastModified = new Date(file.lastModified());
+            if (lastModified.before(time.getTime())) {
+                file.delete();
+                count++;
+            }
+        }
+        Log.d(Config.LOGTAG, "Deleted " + count + " old webpreview cache files");
     }
 
     private boolean processAccountState(Account account, boolean interactive, boolean isUiAction, boolean isAccountPushed, HashSet<Account> pingCandidates) {

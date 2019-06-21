@@ -3,7 +3,6 @@ package de.pixart.messenger.utils;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.view.View;
-import android.webkit.URLUtil;
 
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -15,7 +14,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -23,8 +21,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.regex.Pattern;
 
 import de.pixart.messenger.Config;
@@ -35,7 +31,7 @@ import de.pixart.messenger.Config;
 
 public class RichPreview {
 
-    private static final String RICH_LINK_METADATA = "richlink_meta_data";
+    public static final String RICH_LINK_METADATA = "richlink_meta_data";
     private MetaData metaData;
     private ResponseListener responseListener;
     private String url;
@@ -61,15 +57,6 @@ public class RichPreview {
             FileInputStream fis = null;
             ObjectInputStream is = null;
             final File file = new File(context.getCacheDir(), RICH_LINK_METADATA + "/" + filename);
-            if (file.exists()) {
-                // todo add this into a cron job
-                Calendar time = Calendar.getInstance();
-                time.add(Calendar.DAY_OF_YEAR, -7);
-                Date lastModified = new Date(file.lastModified());
-                if (lastModified.before(time.getTime())) {
-                    file.delete();
-                }
-            }
             try {
                 fis = new FileInputStream(file);
                 InputStreamReader isr = new InputStreamReader(fis);
