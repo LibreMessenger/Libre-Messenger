@@ -280,7 +280,7 @@ public class XmppConnection implements Runnable {
                 try {
                     startXmpp(localSocket);
                 } catch (InterruptedException e) {
-                    Log.d(Config.LOGTAG,account.getJid().asBareJid()+": thread was interrupted before beginning stream");
+                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": thread was interrupted before beginning stream");
                     return;
                 } catch (Exception e) {
                     throw new IOException(e.getMessage());
@@ -372,7 +372,7 @@ public class XmppConnection implements Runnable {
                             throw e;
                         }
                     } catch (InterruptedException e) {
-                        Log.d(Config.LOGTAG,account.getJid().asBareJid()+": thread was interrupted before beginning stream");
+                        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": thread was interrupted before beginning stream");
                         return;
                     } catch (final Throwable e) {
                         Log.d(Config.LOGTAG, account.getJid().asBareJid().toString() + ": " + e.getMessage() + "(" + e.getClass().getName() + ")");

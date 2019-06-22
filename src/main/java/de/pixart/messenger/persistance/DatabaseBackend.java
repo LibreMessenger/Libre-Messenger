@@ -28,11 +28,14 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -1052,16 +1055,55 @@ public class DatabaseBackend extends SQLiteOpenHelper {
         Log.d(Config.LOGTAG, "deleted " + num + " messages for " + conversation.getJid().asBareJid() + " in " + (SystemClock.elapsedRealtime() - start) + "ms");
     }
 
-    public void expireOldMessages(long timestamp) {
+    public long countExpireOldMessages(long timestamp) {
         long start = SystemClock.elapsedRealtime();
         final String[] args = {String.valueOf(timestamp)};
         SQLiteDatabase db = this.getReadableDatabase();
         db.beginTransaction();
-        db.delete("messages_index", "uuid in (select uuid from messages where timeSent<?)", args);
-        int num = db.delete(Message.TABLENAME, "timeSent<?", args);
+        long num = DatabaseUtils.queryNumEntries(db, Message.TABLENAME, "timeSent<?", args);
         db.setTransactionSuccessful();
         db.endTransaction();
+        Log.d(Config.LOGTAG, "found " + num + " expired messages in " + (SystemClock.elapsedRealtime() - start) + "ms");
+        return num;
+    }
+
+    public long getOldestMessages() {
+        Cursor cursor = null;
+        try {
+            SQLiteDatabase db = this.getReadableDatabase();
+            db.beginTransaction();
+            cursor = db.rawQuery("select timeSent from " + Message.TABLENAME + " ORDER BY " + Message.TIME_SENT + " ASC limit 1", null);
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            if (cursor.getCount() == 0) {
+                return 0;
+            } else {
+                cursor.moveToFirst();
+                return cursor.getLong(0);
+            }
+        } catch (Exception e) {
+            return 0;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+    public int expireOldMessages(long timestamp) {
+        long start = SystemClock.elapsedRealtime();
+        int num = 0;
+        if (countExpireOldMessages(timestamp) >= 1) {
+            final String[] args = {String.valueOf(timestamp)};
+            SQLiteDatabase db = this.getReadableDatabase();
+            db.beginTransaction();
+            db.delete("messages_index", "uuid in (select uuid from messages where timeSent<?)", args);
+            num = db.delete(Message.TABLENAME, "timeSent<?", args);
+            db.setTransactionSuccessful();
+            db.endTransaction();
+        }
         Log.d(Config.LOGTAG, "deleted " + num + " expired messages in " + (SystemClock.elapsedRealtime() - start) + "ms");
+        return num;
     }
 
     public MamReference getLastMessageReceived(Account account) {

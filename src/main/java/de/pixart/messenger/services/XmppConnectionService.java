@@ -79,6 +79,7 @@ import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -4871,16 +4872,21 @@ public class XmppConnectionService extends Service {
 
     private void expireOldMessages(long timestamp, boolean stepped) {
         if (stepped) {
-            final int year = 365;
+            final long expiredMessagesCount = databaseBackend.countExpireOldMessages(timestamp);
+            final long days = TimeUnit.MILLISECONDS.toDays(Calendar.getInstance().getTimeInMillis() - databaseBackend.getOldestMessages());
             final long day = (long) 24 * 60 * 60 * 1000;
             int count = 0;
-            while (count <= year) {
+            int messagesCount = 0;
+            while (count <= days) {
                 try {
-                    databaseBackend.expireOldMessages(timestamp - ((year - count) * day));
+                    messagesCount += databaseBackend.expireOldMessages(timestamp - ((days - count) * day));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 count++;
+                if (expiredMessagesCount == messagesCount) {
+                    break;
+                }
             }
         } else {
             databaseBackend.expireOldMessages(timestamp);
