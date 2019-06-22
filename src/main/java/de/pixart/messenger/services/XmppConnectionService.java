@@ -860,11 +860,10 @@ public class XmppConnectionService extends Service {
     }
 
     private void storeNumberOfAccounts(int accounts) {
-        //write No of accounts to file
         final SharedPreferences.Editor editor = getPreferences().edit();
         Log.d(Config.LOGTAG, "Number of accounts is " + accounts);
         editor.putInt(SettingsActivity.NUMBER_OF_ACCOUNTS, accounts);
-        editor.commit();
+        editor.apply();
     }
 
     public void reinitializeMuclumbusService() {

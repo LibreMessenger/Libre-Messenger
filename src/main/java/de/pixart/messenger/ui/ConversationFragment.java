@@ -121,6 +121,7 @@ import de.pixart.messenger.xmpp.chatstate.ChatState;
 import de.pixart.messenger.xmpp.jingle.JingleConnection;
 import rocks.xmpp.addr.Jid;
 
+import static de.pixart.messenger.ui.SettingsActivity.WARN_UNENCRYPTED_CHAT;
 import static de.pixart.messenger.ui.XmppActivity.EXTRA_ACCOUNT;
 import static de.pixart.messenger.ui.XmppActivity.REQUEST_INVITE_TO_CONVERSATION;
 import static de.pixart.messenger.ui.util.SoftKeyboardUtils.hideSoftKeyboard;
@@ -376,17 +377,17 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         return true;
     };
 
-    private OnClickListener mHideUnencryptionHint = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (Config.supportOmemo() && Conversation.suitableForOmemoByDefault(conversation) && conversation.isSingleOrPrivateAndNonAnonymous()) {
-                conversation.setNextEncryption(Message.ENCRYPTION_AXOLOTL);
-                activity.xmppConnectionService.updateConversation(conversation);
-                activity.refreshUi();
-            }
-            hideSnackbar();
+    private OnClickListener mHideUnencryptionHint = v -> enableMessageEncryption();
+
+    private void enableMessageEncryption() {
+        if (Config.supportOmemo() && Conversation.suitableForOmemoByDefault(conversation) && conversation.isSingleOrPrivateAndNonAnonymous()) {
+            conversation.setNextEncryption(Message.ENCRYPTION_AXOLOTL);
+            activity.xmppConnectionService.updateConversation(conversation);
+            activity.refreshUi();
         }
-    };
+        hideSnackbar();
+    }
+
     private OnClickListener mAllowPresenceSubscription = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -2439,7 +2440,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 if (ENCRYPTION_EXCEPTIONS.contains(conversation.getJid().toString()) || conversation.getJid().toString().equals(account.getJid().getDomain())) {
                     hideSnackbar();
                 } else {
-                    showSnackbar(R.string.conversation_unencrypted_hint, R.string.ok, mHideUnencryptionHint, null);
+                    showSnackbar(R.string.conversation_unencrypted_hint, R.string.ok, showUnencryptionHintDialog);
                 }
             } else {
                 hideSnackbar();
@@ -2448,6 +2449,29 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             hideSnackbar();
         }
     }
+
+    private OnClickListener showUnencryptionHintDialog = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            activity.runOnUiThread(() -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(getString(R.string.message_encryption));
+                builder.setMessage(getString(R.string.enable_message_encryption));
+                builder.setNegativeButton(getString(R.string.cancel), null);
+                builder.setPositiveButton(getString(R.string.enable),
+                        (dialog, which) -> {
+                            enableMessageEncryption();
+                        });
+                builder.setNeutralButton(getString(R.string.hide_warning),
+                        (dialog, which) -> {
+                            SharedPreferences preferences = activity.getPreferences();
+                            preferences.edit().putBoolean(WARN_UNENCRYPTED_CHAT, false).apply();
+                            hideSnackbar();
+                        });
+                builder.create().show();
+            });
+        }
+    };
 
     @Override
     public void refresh() {
