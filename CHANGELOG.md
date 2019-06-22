@@ -5,6 +5,10 @@
 * reworked onboarding screens
 * warn when trying to enter domain address or channel address in Add Contact dialog
 * set own OMEMO devices to inactive after not seeing them for 60 days. (was 7 days)
+* bug fixes for peer to peer file transfer (Jingle)
+* fixed server info for unlimited/unknown max file size
+* make backup compatible to Conversations
+* performance improvements
 * bug fixes
 
 #### Version 2.2.3
