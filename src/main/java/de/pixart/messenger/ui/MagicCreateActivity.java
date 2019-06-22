@@ -115,6 +115,8 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher, Ad
                     messasge.append(getString(R.string.password));
                     messasge.append(": ");
                     messasge.append(password);
+                    messasge.append("\n\n");
+                    messasge.append(getString(R.string.change_password_in_next_step));
                     builder.setMessage(messasge);
                     builder.setPositiveButton(getString(R.string.copy_to_clipboard), (dialogInterface, i) -> {
                         if (copyTextToClipboard(password, R.string.create_account)) {
