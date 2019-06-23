@@ -1,5 +1,9 @@
 ### Changelog
 
+#### Version 2.2.5
+* make backup compatible to Conversations (only works for Android >= 8)
+* bug fix
+
 #### Version 2.2.4
 * added channel search via search.jabbercat.org
 * reworked onboarding screens
