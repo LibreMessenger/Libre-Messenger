@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -54,6 +55,8 @@ import de.pixart.messenger.utils.BackupFileHeader;
 import de.pixart.messenger.utils.Compatibility;
 import de.pixart.messenger.utils.WakeLockHelper;
 import rocks.xmpp.addr.Jid;
+
+import static de.pixart.messenger.utils.Compatibility.runsTwentySix;
 
 public class ExportBackupService extends Service {
 
@@ -261,7 +264,19 @@ public class ExportBackupService extends Service {
     }
 
     private void messageExport(SQLiteDatabase db, String uuid, PrintWriter writer, Progress progress) {
-        Cursor cursor = db.rawQuery("select messages.* from messages join conversations on conversations.uuid=messages.conversationUuid where conversations.accountUuid=?", new String[]{uuid});
+        Cursor cursor;
+        if (runsTwentySix()) {
+            // not select and create column Message.FILE_DELETED to be compareable with conversations
+            cursor = db.rawQuery("select messages." + String.join(", messages.", new String[]{
+                    Message.UUID, Message.CONVERSATION, Message.TIME_SENT, Message.COUNTERPART, Message.TRUE_COUNTERPART,
+                    Message.BODY, Message.ENCRYPTION, Message.STATUS, Message.TYPE, Message.RELATIVE_FILE_PATH,
+                    Message.SERVER_MSG_ID, Message.FINGERPRINT, Message.CARBON, Message.EDITED, Message.READ,
+                    Message.DELETED, Message.OOB, Message.ERROR_MESSAGE, Message.READ_BY_MARKERS, Message.MARKABLE,
+                    Message.REMOTE_MSG_ID, Message.CONVERSATION
+            }) + " from messages join conversations on conversations.uuid=messages.conversationUuid where conversations.accountUuid=?", new String[]{uuid});
+        } else {
+            cursor = db.rawQuery("select messages.* from messages join conversations on conversations.uuid=messages.conversationUuid where conversations.accountUuid=?", new String[]{uuid});
+        }
         int size = cursor != null ? cursor.getCount() : 0;
         Log.d(Config.LOGTAG, "exporting " + size + " messages");
         int i = 0;
