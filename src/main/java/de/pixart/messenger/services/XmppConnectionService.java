@@ -771,6 +771,9 @@ public class XmppConnectionService extends Service {
         time.add(Calendar.DAY_OF_YEAR, -7);
         final File directory = new File(path);
         final File[] files = directory.listFiles();
+        if (files == null) {
+            return;
+        }
         int count = 0;
         for (File file : files) {
             Date lastModified = new Date(file.lastModified());
