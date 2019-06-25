@@ -16,6 +16,7 @@ import java.util.List;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
 
+import static de.pixart.messenger.Config.DISALLOW_REGISTRATION_IN_UI;
 import static de.pixart.messenger.utils.PermissionUtils.allGranted;
 import static de.pixart.messenger.utils.PermissionUtils.writeGranted;
 
@@ -79,6 +80,9 @@ public class WelcomeActivity extends XmppActivity {
             addInviteUri(intent);
             startActivity(intent);
         });
+        if (DISALLOW_REGISTRATION_IN_UI) {
+            createAccount.setVisibility(View.GONE);
+        }
         final Button useExistingAccount = findViewById(R.id.use_existing_account);
         useExistingAccount.setOnClickListener(v -> {
             Intent intent = new Intent(WelcomeActivity.this, EditAccountActivity.class);

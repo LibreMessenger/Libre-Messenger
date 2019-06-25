@@ -81,8 +81,11 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher, Ad
         next.setOnClickListener(v -> {
             try {
                 String username = mUsername.getText().toString();
-                if (domain == null || useOwnProvider) {
+                if (domain == null && !useOwnProvider) {
                     domain = Config.MAGIC_CREATE_DOMAIN;
+                }
+                if (useOwnProvider) {
+                    domain = "your-domain.com";
                 }
                 Jid jid = Jid.of(username.toLowerCase(), domain, null);
                 if (!jid.getEscapedLocal().equals(jid.getLocal()) || username.length() < 3) {
