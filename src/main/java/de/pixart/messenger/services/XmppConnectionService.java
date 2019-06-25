@@ -766,6 +766,7 @@ public class XmppConnectionService extends Service {
     }
 
     private void deleteWebpreviewCache() {
+        long start = SystemClock.elapsedRealtime();
         final String path = getApplicationContext().getCacheDir() + "/" + RICH_LINK_METADATA;
         final Calendar time = Calendar.getInstance();
         time.add(Calendar.DAY_OF_YEAR, -7);
@@ -782,7 +783,7 @@ public class XmppConnectionService extends Service {
                 count++;
             }
         }
-        Log.d(Config.LOGTAG, "Deleted " + count + " old webpreview cache files");
+        Log.d(Config.LOGTAG, "Deleted " + count + " expired webpreview cache files in " + (SystemClock.elapsedRealtime() - start) + "ms");
     }
 
     private boolean processAccountState(Account account, boolean interactive, boolean isUiAction, boolean isAccountPushed, HashSet<Account> pingCandidates) {
