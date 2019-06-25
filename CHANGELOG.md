@@ -1,5 +1,8 @@
 ### Changelog
 
+#### Version 2.2.6
+* fixing connection issues
+
 #### Version 2.2.5
 * make backup compatible to Conversations (only works for Android >= 8)
 * bug fix
