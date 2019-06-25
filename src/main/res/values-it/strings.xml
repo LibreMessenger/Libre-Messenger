@@ -916,4 +916,8 @@
     <string name="no_backup_available">Nessun backup disponibile</string>
     <string name="pref_show_own_accounts_summary">Mostra i tuoi account nelle conversazioni e nei contatti se hai account multipli.</string>
     <string name="pref_show_own_accounts">Mostra i tuoi account</string>
+    <string name="message_encryption">Crittografia messaggio</string>
+    <string name="enable_message_encryption">Questa conversazione non è crittografata. Per motivi di sicurezza dovresti abilitare la crittografia dei messaggi, preferibilmente OMEMO. Se non dovesse funzionare qualcosa, puoi disabilitare la crittografia dei messaggi premendo l\'icona del lucchetto.</string>
+    <string name="hide_warning">Nascondi avviso</string>
+    <string name="change_password_in_next_step">Puoi cambiare a tuo piacimento la password generata automaticamente nel prossimo passo.</string>
 </resources>
