@@ -95,7 +95,7 @@ public class JingleSocks5Transport extends JingleTransport {
                     callback.onFileTransferAborted();
                     return;
                 }
-                final InputStream innerInputStream = AbstractConnectionManager.upgrade(file, fileInputStream, false);
+                final InputStream innerInputStream = AbstractConnectionManager.upgrade(file, fileInputStream);
                 long size = file.getExpectedSize();
                 long transmitted = 0;
                 int count;

@@ -118,7 +118,7 @@ public class HttpUploadConnection implements Transferable {
 
         if (method == Method.P1_S3) {
             try {
-                md5 = Checksum.md5(AbstractConnectionManager.upgrade(file, new FileInputStream(file), true));
+                md5 = Checksum.md5(AbstractConnectionManager.upgrade(file, new FileInputStream(file)));
             } catch (Exception e) {
                 Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": unable to calculate md5()", e);
                 fail(e.getMessage());
@@ -183,7 +183,7 @@ public class HttpUploadConnection implements Transferable {
             connection.setConnectTimeout(Config.SOCKET_TIMEOUT * 1000);
             connection.setReadTimeout(readTimeout);
             connection.connect();
-            final InputStream innerInputStream = AbstractConnectionManager.upgrade(file, fileInputStream, true);
+            final InputStream innerInputStream = AbstractConnectionManager.upgrade(file, fileInputStream);
             os = connection.getOutputStream();
             transmitted = 0;
             int count;

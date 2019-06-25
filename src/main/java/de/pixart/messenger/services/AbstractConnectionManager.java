@@ -39,20 +39,13 @@ public class AbstractConnectionManager {
         this.mXmppConnectionService = service;
     }
 
-    public static InputStream upgrade(DownloadableFile file, InputStream is, boolean gcm) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, InvalidKeyException, NoSuchPaddingException, NoSuchProviderException {
+    public static InputStream upgrade(DownloadableFile file, InputStream is) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, InvalidKeyException, NoSuchPaddingException, NoSuchProviderException {
         if (file.getKey() != null && file.getIv() != null) {
-            if (gcm) {
-                final Cipher cipher = Compatibility.twentyEight() ? Cipher.getInstance(CIPHERMODE) : Cipher.getInstance(CIPHERMODE, PROVIDER);
-                SecretKeySpec keySpec = new SecretKeySpec(file.getKey(), KEYTYPE);
-                IvParameterSpec ivSpec = new IvParameterSpec(file.getIv());
-                cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);
-                return new CipherInputStream(is, cipher);
-            } else {
-                IvParameterSpec ips = new IvParameterSpec(file.getIv());
-                final Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-                cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(file.getKey(), KEYTYPE), ips);
-                return new CipherInputStream(is, cipher);
-            }
+            final Cipher cipher = Compatibility.twentyEight() ? Cipher.getInstance(CIPHERMODE) : Cipher.getInstance(CIPHERMODE, PROVIDER);
+            SecretKeySpec keySpec = new SecretKeySpec(file.getKey(), KEYTYPE);
+            IvParameterSpec ivSpec = new IvParameterSpec(file.getIv());
+            cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);
+            return new CipherInputStream(is, cipher);
         } else {
             return is;
         }
@@ -61,6 +54,10 @@ public class AbstractConnectionManager {
 
     public static OutputStream createAppendedOutputStream(DownloadableFile file) {
         return createOutputStream(file, false, true);
+    }
+
+    public static OutputStream createOutputStream(DownloadableFile file) {
+        return createOutputStream(file, false);
     }
 
     public static OutputStream createOutputStream(DownloadableFile file, boolean gcm) {

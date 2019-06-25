@@ -204,7 +204,7 @@ public class JingleConnection implements Transferable {
         }
         this.file.getParentFile().mkdirs();
         this.file.createNewFile();
-        this.mFileOutputStream = AbstractConnectionManager.createOutputStream(this.file, message.getEncryption() == Message.ENCRYPTION_AXOLOTL);
+        this.mFileOutputStream = AbstractConnectionManager.createOutputStream(this.file);
         return this.mFileOutputStream;
     }
 
@@ -648,7 +648,7 @@ public class JingleConnection implements Transferable {
 
     private boolean receiveAccept(JinglePacket packet) {
         if (this.mJingleStatus != JINGLE_STATUS_INITIATED) {
-            Log.d(Config.LOGTAG,account.getJid().asBareJid()+": received out of order session-accept");
+            Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": received out of order session-accept");
             return false;
         }
         this.mJingleStatus = JINGLE_STATUS_ACCEPTED;

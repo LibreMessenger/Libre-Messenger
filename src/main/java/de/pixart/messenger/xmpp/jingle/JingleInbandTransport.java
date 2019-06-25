@@ -129,7 +129,7 @@ public class JingleInbandTransport extends JingleTransport {
                 callback.onFileTransferAborted();
                 return;
             }
-            innerInputStream = AbstractConnectionManager.upgrade(file, fileInputStream, false);
+            innerInputStream = AbstractConnectionManager.upgrade(file, fileInputStream);
             if (this.connected) {
                 this.sendNextBlock();
             }
