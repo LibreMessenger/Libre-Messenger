@@ -350,6 +350,12 @@ public class UpdaterActivity extends XmppActivity {
                 // might be -1: server did not report the length
                 int fileLength = connection.getContentLength();
 
+                // create folders
+                File parentDirectory = file.getParentFile();
+                if (parentDirectory.mkdirs()) {
+                    Log.d(Config.LOGTAG, "created " + parentDirectory.getAbsolutePath());
+                }
+                
                 // download the file
                 is = connection.getInputStream();
                 os = new FileOutputStream(file);
