@@ -2803,6 +2803,9 @@ public class XmppConnectionService extends Service {
                             saveConversationAsBookmark(conversation, null);
                         }
                     }
+                    if (mucOptions.push()) {
+                        enableMucPush(conversation);
+                    }
                     synchronized (account.inProgressConferenceJoins) {
                         account.inProgressConferenceJoins.remove(conversation);
                         sendUnsentMessages(conversation);
@@ -2843,6 +2846,35 @@ public class XmppConnectionService extends Service {
             conversation.setHasMessagesLeftOnServer(false);
             updateConversationUi();
         }
+    }
+
+    private void enableMucPush(final Conversation conversation) {
+        final Account account = conversation.getAccount();
+        final Jid room = conversation.getJid().asBareJid();
+        final IqPacket enable = mIqGenerator.enablePush(conversation.getAccount().getJid(), conversation.getUuid(), null);
+        enable.setTo(room);
+        sendIqPacket(account, enable, (a, response) -> {
+            if (response.getType() == IqPacket.TYPE.RESULT) {
+                Log.d(Config.LOGTAG, a.getJid().asBareJid() + ": enabled push for muc " + room);
+            } else if (response.getType() == IqPacket.TYPE.ERROR) {
+                Log.d(Config.LOGTAG, a.getJid().asBareJid() + ": unable to enable push for muc " + room + " " + response.getError());
+            }
+        });
+
+    }
+
+    private void disableMucPush(final Conversation conversation) {
+        final Account account = conversation.getAccount();
+        final Jid room = conversation.getJid().asBareJid();
+        final IqPacket disable = mIqGenerator.disablePush(conversation.getAccount().getJid(), conversation.getUuid());
+        disable.setTo(room);
+        sendIqPacket(account, disable, (a, response) -> {
+            if (response.getType() == IqPacket.TYPE.RESULT) {
+                Log.d(Config.LOGTAG, a.getJid().asBareJid() + ": disabled push for muc " + room);
+            } else if (response.getType() == IqPacket.TYPE.ERROR) {
+                Log.d(Config.LOGTAG, a.getJid().asBareJid() + ": unable to disable push for muc " + room + " " + response.getError());
+            }
+        });
     }
 
     private void fetchConferenceMembers(final Conversation conversation) {
@@ -3025,6 +3057,9 @@ public class XmppConnectionService extends Service {
         account.pendingConferenceJoins.remove(conversation);
         account.pendingConferenceLeaves.remove(conversation);
         if (account.getStatus() == Account.State.ONLINE || now) {
+            if (conversation.getMucOptions().push()) {
+                disableMucPush(conversation);
+            }
             sendPresencePacket(conversation.getAccount(), mPresenceGenerator.leave(conversation.getMucOptions()));
             conversation.getMucOptions().setOffline();
             Bookmark bookmark = conversation.getBookmark();

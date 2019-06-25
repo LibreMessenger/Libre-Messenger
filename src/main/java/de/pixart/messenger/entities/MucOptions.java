@@ -17,6 +17,7 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.services.AvatarService;
 import de.pixart.messenger.services.MessageArchiveService;
 import de.pixart.messenger.utils.JidHelper;
+import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 import de.pixart.messenger.xmpp.forms.Data;
@@ -112,6 +113,10 @@ public class MucOptions {
 
     public boolean mamSupport() {
         return MessageArchiveService.Version.has(getFeatures());
+    }
+
+    public boolean push() {
+        return getFeatures().contains(Namespace.PUSH);
     }
 
     public boolean updateConfiguration(ServiceDiscoveryResult serviceDiscoveryResult) {
