@@ -1,7 +1,11 @@
 ### Changelog
 
+#### Version 2.2.7
+* fixing crashes
+
 #### Version 2.2.6
 * fixing connection issues
+* fix broken updater
 
 #### Version 2.2.5
 * make backup compatible to Conversations (only works for Android >= 8)
