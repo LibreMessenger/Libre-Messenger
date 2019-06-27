@@ -767,23 +767,30 @@ public class XmppConnectionService extends Service {
 
     private void deleteWebpreviewCache() {
         long start = SystemClock.elapsedRealtime();
-        final String path = getApplicationContext().getCacheDir() + "/" + RICH_LINK_METADATA;
-        final Calendar time = Calendar.getInstance();
-        time.add(Calendar.DAY_OF_YEAR, -7);
-        final File directory = new File(path);
-        final File[] files = directory.listFiles();
-        if (files == null) {
-            return;
-        }
-        int count = 0;
-        for (File file : files) {
-            Date lastModified = new Date(file.lastModified());
-            if (lastModified.before(time.getTime())) {
-                file.delete();
-                count++;
+        try {
+            final String path = getApplicationContext().getCacheDir() + "/" + RICH_LINK_METADATA;
+            final Calendar time = Calendar.getInstance();
+            time.add(Calendar.DAY_OF_YEAR, -7);
+            final File directory = new File(path);
+            if (!directory.exists()) {
+                return;
             }
+            final File[] files = directory.listFiles();
+            if (files == null) {
+                return;
+            }
+            int count = 0;
+            for (File file : files) {
+                Date lastModified = new Date(file.lastModified());
+                if (lastModified.before(time.getTime())) {
+                    file.delete();
+                    count++;
+                }
+            }
+            Log.d(Config.LOGTAG, "Deleted " + count + " expired webpreview cache files in " + (SystemClock.elapsedRealtime() - start) + "ms");
+        } catch (Exception e) {
+            Log.d(Config.LOGTAG, "Deleted no expired webpreview cache files because of " + e + " in " + (SystemClock.elapsedRealtime() - start) + "ms");
         }
-        Log.d(Config.LOGTAG, "Deleted " + count + " expired webpreview cache files in " + (SystemClock.elapsedRealtime() - start) + "ms");
     }
 
     private boolean processAccountState(Account account, boolean interactive, boolean isUiAction, boolean isAccountPushed, HashSet<Account> pingCandidates) {
