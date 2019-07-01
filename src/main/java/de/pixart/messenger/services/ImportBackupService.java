@@ -197,11 +197,7 @@ public class ImportBackupService extends Service {
         } catch (Exception e) {
             Throwable throwable = e.getCause();
             final boolean reasonWasCrypto;
-            if (throwable instanceof BadPaddingException) {
-                reasonWasCrypto = true;
-            } else {
-                reasonWasCrypto = false;
-            }
+            reasonWasCrypto = throwable instanceof BadPaddingException;
             synchronized (mOnBackupProcessedListeners) {
                 for (OnBackupProcessed l : mOnBackupProcessedListeners) {
                     if (reasonWasCrypto) {

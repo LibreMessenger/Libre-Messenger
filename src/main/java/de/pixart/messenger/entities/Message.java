@@ -792,7 +792,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
             if (this.transferable != null) {
                 fileParams.size = this.transferable.getFileSize();
             }
-            String parts[] = body == null ? new String[0] : body.split("\\|");
+            String[] parts = body == null ? new String[0] : body.split("\\|");
             switch (parts.length) {
                 case 1:
                     try {

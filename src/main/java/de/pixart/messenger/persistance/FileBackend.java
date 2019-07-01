@@ -310,26 +310,26 @@ public class FileBackend {
 
     public static String getConversationsDirectory(final String type) {
         if (type.equalsIgnoreCase("null")) {
-            return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "Pix-Art Messenger" + "/";
+            return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Pix-Art Messenger" + File.separator;
         } else {
-            return getAppMediaDirectory() + "Pix-Art Messenger" + " " + type + "/";
+            return getAppMediaDirectory() + "Pix-Art Messenger" + " " + type + File.separator;
         }
     }
 
     public static String getAppMediaDirectory() {
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "Pix-Art Messenger" + "/Media/";
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Pix-Art Messenger" + File.separator + "Media" + File.separator;
     }
 
     public static String getBackupDirectory() {
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "Pix-Art Messenger" + "/Database/";
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Pix-Art Messenger" + File.separator + "Database" + File.separator;
     }
 
     public static String getAppLogsDirectory() {
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "Pix-Art Messenger" + "/Chats/";
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Pix-Art Messenger" + File.separator + "Chats" + File.separator;
     }
 
     public static String getAppUpdateDirectory() {
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "Pix-Art Messenger" + "/Update/";
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Pix-Art Messenger" + File.separator + "Update" + File.separator;
     }
 
     private Bitmap resize(final Bitmap originalBitmap, int size) throws IOException {
@@ -731,7 +731,7 @@ public class FileBackend {
     }
 
     public Uri getTakePhotoUri() {
-        File file = new File(getTakeFromCameraPath() + "IMG_" + this.fileDateFormat.format(new Date()) + ".jpg");
+        File file = new File(getTakeFromCameraPath() + "IMG_" + fileDateFormat.format(new Date()) + ".jpg");
         file.getParentFile().mkdirs();
         return getUriForFile(mXmppConnectionService, file);
     }
@@ -757,7 +757,7 @@ public class FileBackend {
     }
 
     public Uri getTakeVideoUri() {
-        File file = new File(getTakeFromCameraPath() + "VID_" + this.fileDateFormat.format(new Date()) + ".mp4");
+        File file = new File(getTakeFromCameraPath() + "VID_" + fileDateFormat.format(new Date()) + ".mp4");
         file.getParentFile().mkdirs();
         return getUriForFile(mXmppConnectionService, file);
     }
@@ -897,7 +897,7 @@ public class FileBackend {
             file = new File(getAvatarPath(avatar.getFilename()));
             avatar.size = file.length();
         } else {
-            file = new File(mXmppConnectionService.getCacheDir().getAbsolutePath() + "/" + UUID.randomUUID().toString());
+            file = new File(mXmppConnectionService.getCacheDir().getAbsolutePath() + File.separator + UUID.randomUUID().toString());
             if (file.getParentFile().mkdirs()) {
                 Log.d(Config.LOGTAG, "created cache directory");
             }

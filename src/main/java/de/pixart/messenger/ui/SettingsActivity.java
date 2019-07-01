@@ -367,7 +367,7 @@ public class SettingsActivity extends XmppActivity implements
 
     private void cleanPrivateFiles(final String type) {
         try {
-            File dir = new File(getFilesDir().getAbsolutePath(), "/" + type + "/");
+            File dir = new File(getFilesDir().getAbsolutePath(), File.separator + type + File.separator);
             File[] array = dir.listFiles();
             if (array != null) {
                 for (int b = 0; b < array.length; b++) {

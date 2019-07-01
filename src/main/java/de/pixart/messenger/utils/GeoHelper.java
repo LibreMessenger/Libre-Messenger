@@ -47,7 +47,6 @@ public class GeoHelper {
 
     private static GeoPoint parseGeoPoint(String body) throws IllegalArgumentException {
         Matcher matcher = GEO_URI.matcher(body);
-        ;
         if (!matcher.matches()) {
             throw new IllegalArgumentException("Invalid geo uri");
         }

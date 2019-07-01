@@ -204,7 +204,7 @@ public abstract class OmemoActivity extends XmppActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         ScanActivity.onRequestPermissionResult(this, requestCode, grantResults);
     }
 }

@@ -601,7 +601,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
                 continue;
             }
 
-            String updateArgs[] = {
+            String[] updateArgs = {
                     newJid,
                     cursor.getString(cursor.getColumnIndex(Conversation.UUID)),
             };
@@ -624,7 +624,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
                 continue;
             }
 
-            String updateArgs[] = {
+            String[] updateArgs = {
                     newJid,
                     cursor.getString(cursor.getColumnIndex(Contact.ACCOUNT)),
                     cursor.getString(cursor.getColumnIndex(Contact.JID)),
@@ -653,7 +653,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
                 continue;
             }
 
-            String updateArgs[] = {
+            String[] updateArgs = {
                     newServer,
                     cursor.getString(cursor.getColumnIndex(Account.UUID)),
             };
@@ -1052,7 +1052,7 @@ public class DatabaseBackend extends SQLiteOpenHelper {
     public void readRoster(Roster roster) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor;
-        String args[] = {roster.getAccount().getUuid()};
+        String[] args = {roster.getAccount().getUuid()};
         cursor = db.query(Contact.TABLENAME, null, Contact.ACCOUNT + "=?", args, null, null, null);
         while (cursor.moveToNext()) {
             roster.initContact(Contact.fromCursor(cursor));

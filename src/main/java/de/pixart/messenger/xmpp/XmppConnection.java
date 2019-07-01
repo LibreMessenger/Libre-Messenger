@@ -1570,8 +1570,8 @@ public class XmppConnection implements Runnable {
         if (socket != null) {
             try {
                 socket.close();
-            } catch (IOException e) {
-                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": io exception " + e.getMessage() + " during force close");
+            } catch (Exception e) {
+                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": exception " + e.getMessage() + " during force close");
             }
         } else {
             Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": socket was null during force close");

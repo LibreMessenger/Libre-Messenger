@@ -56,7 +56,7 @@ public class RichPreview {
         protected Void doInBackground(Void... params) {
             FileInputStream fis = null;
             ObjectInputStream is = null;
-            final File file = new File(context.getCacheDir(), RICH_LINK_METADATA + "/" + filename);
+            final File file = new File(context.getCacheDir(), RICH_LINK_METADATA + File.separator + filename);
             try {
                 fis = new FileInputStream(file);
                 InputStreamReader isr = new InputStreamReader(fis);
@@ -134,7 +134,7 @@ public class RichPreview {
     }
 
     private void saveMeta(MetaData metaData, Context context) {
-        final File file = new File(context.getCacheDir(), RICH_LINK_METADATA + "/" + filename);
+        final File file = new File(context.getCacheDir(), RICH_LINK_METADATA + File.separator + filename);
         file.getParentFile().mkdirs();
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;

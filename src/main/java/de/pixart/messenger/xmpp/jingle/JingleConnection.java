@@ -448,7 +448,7 @@ public class JingleConnection implements Transferable {
                 if (message.getType() == Message.TYPE_FILE) {
                     String suffix = "";
                     if (!fileNameElement.getContent().isEmpty()) {
-                        String parts[] = fileNameElement.getContent().split("/");
+                        String[] parts = fileNameElement.getContent().split("/");
                         suffix = parts[parts.length - 1];
                         if (message.getEncryption() == Message.ENCRYPTION_OTR && suffix.endsWith(".otr")) {
                             suffix = suffix.substring(0, suffix.length() - 4);

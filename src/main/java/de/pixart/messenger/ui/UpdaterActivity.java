@@ -360,7 +360,7 @@ public class UpdaterActivity extends XmppActivity {
                 is = connection.getInputStream();
                 os = new FileOutputStream(file);
 
-                byte data[] = new byte[4096];
+                byte[] data = new byte[4096];
                 long total = 0;
                 int count;
                 while ((count = is.read(data)) != -1) {
