@@ -171,7 +171,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
         }
 
         @Override
-        public void userInputRequried(PendingIntent pi, Conversation object) {
+        public void userInputRequired(PendingIntent pi, Conversation object) {
         }
     };
 
@@ -1050,7 +1050,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
             }
 
             @Override
-            public void userInputRequried(PendingIntent pi, Conversation object) {
+            public void userInputRequired(PendingIntent pi, Conversation object) {
 
             }
         });
