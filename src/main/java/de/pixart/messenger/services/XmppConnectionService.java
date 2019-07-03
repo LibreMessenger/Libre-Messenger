@@ -792,12 +792,11 @@ public class XmppConnectionService extends Service {
     }
 
     private void deleteWebpreviewCache() {
-        long start = SystemClock.elapsedRealtime();
         try {
-            final String path = getApplicationContext().getCacheDir() + File.separator + RICH_LINK_METADATA;
+            long start = SystemClock.elapsedRealtime();
             final Calendar time = Calendar.getInstance();
             time.add(Calendar.DAY_OF_YEAR, -7);
-            final File directory = new File(path);
+            final File directory = new File(getCacheDir().getAbsolutePath(), File.separator + RICH_LINK_METADATA);
             if (!directory.exists()) {
                 return;
             }
@@ -814,7 +813,7 @@ public class XmppConnectionService extends Service {
                 Log.d(Config.LOGTAG, "Deleted " + count + " expired webpreview cache files in " + (SystemClock.elapsedRealtime() - start) + "ms");
             }
         } catch (Exception e) {
-            Log.d(Config.LOGTAG, "Deleted no expired webpreview cache files because of " + e + " in " + (SystemClock.elapsedRealtime() - start) + "ms");
+            Log.d(Config.LOGTAG, "Deleted no expired webpreview cache files because of " + e);
         }
     }
 
