@@ -1567,15 +1567,8 @@ public class XmppConnection implements Runnable {
     }
 
     private void forceCloseSocket() {
-        if (socket != null) {
-            try {
-                socket.close();
-            } catch (Exception e) {
-                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": exception " + e.getMessage() + " during force close");
-            }
-        } else {
-            Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": socket was null during force close");
-        }
+        FileBackend.close(this.socket);
+        FileBackend.close(this.tagReader);
     }
 
     public void interrupt() {
@@ -1586,7 +1579,7 @@ public class XmppConnection implements Runnable {
 
     public void disconnect(final boolean force) {
         interrupt();
-        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": disconnecting force=" + Boolean.toString(force));
+        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": disconnecting force=" + force);
         if (force) {
             forceCloseSocket();
         } else {
