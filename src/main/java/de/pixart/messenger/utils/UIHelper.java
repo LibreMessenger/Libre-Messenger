@@ -27,6 +27,7 @@ import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.entities.Transferable;
+import de.pixart.messenger.services.ExportBackupService;
 import rocks.xmpp.addr.Jid;
 
 public class UIHelper {
@@ -477,8 +478,12 @@ public class UIHelper {
             return context.getString(R.string.pdf_document);
         } else if (mime.equals("application/vnd.android.package-archive")) {
             return context.getString(R.string.apk);
+        } else if (mime.equals(ExportBackupService.MIME_TYPE)) {
+            return context.getString(R.string.conversations_backup);
         } else if (mime.contains("vcard")) {
             return context.getString(R.string.vcard);
+        } else if (mime.equals("text/x-vcalendar") || mime.equals("text/calendar")) {
+            return context.getString(R.string.event);
         } else if (mime.equals("application/epub+zip") || mime.equals("application/vnd.amazon.mobi8-ebook")) {
             return context.getString(R.string.ebook);
         } else {

@@ -922,4 +922,7 @@
     <string name="change_password_in_next_step">You can change the generated password in the next step to your needs.</string>
     <string name="action_unblock_participant">Unblock participant</string>
     <string name="action_block_participant">Block participant</string>
+    <string name="share_backup_files">Share backup files</string>
+    <string name="conversations_backup">Conversations backup</string>
+    <string name="event">Event</string>
 </resources>

@@ -30,6 +30,7 @@ import java.util.Properties;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.entities.Transferable;
+import de.pixart.messenger.services.ExportBackupService;
 
 /**
  * Utilities for dealing with MIME types.
@@ -76,6 +77,7 @@ public final class MimeUtils {
         add("application/vnd.amazon.mobi8-ebook","kfx");
         add("application/vnd.android.package-archive", "apk");
         add("application/vnd.cinderella", "cdy");
+        add(ExportBackupService.MIME_TYPE, "ceb");
         add("application/vnd.ms-pki.stl", "stl");
         add("application/vnd.oasis.opendocument.database", "odb");
         add("application/vnd.oasis.opendocument.formula", "odf");
