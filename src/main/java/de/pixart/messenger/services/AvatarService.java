@@ -38,6 +38,7 @@ import de.pixart.messenger.entities.Conversational;
 import de.pixart.messenger.entities.ListItem;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.MucOptions;
+import de.pixart.messenger.entities.RawBlockable;
 import de.pixart.messenger.http.services.MuclumbusService;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.OnAdvancedStreamFeaturesLoaded;
@@ -86,7 +87,7 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
         } else if (avatarable instanceof MuclumbusService.Room) {
             return get((MuclumbusService.Room) avatarable, size, cachedOnly);
         }
-        throw new AssertionError("AvatarService does not know how to generate avatar from "+avatarable.getClass().getName());
+        throw new AssertionError("AvatarService does not know how to generate avatar from " + avatarable.getClass().getName());
     }
 
     private Bitmap get(final MuclumbusService.Room result, final int size, boolean cacheOnly) {
@@ -275,7 +276,9 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
     }
 
     public Bitmap get(ListItem item, int size, boolean cachedOnly) {
-        if (item instanceof Contact) {
+        if (item instanceof RawBlockable) {
+            return get(item.getDisplayName(), item.getJid().toEscapedString(), size, cachedOnly);
+        } else if (item instanceof Contact) {
             return get((Contact) item, size, cachedOnly);
         } else if (item instanceof Bookmark) {
             Bookmark bookmark = (Bookmark) item;

@@ -920,4 +920,6 @@
     <string name="enable_message_encryption">This chat is unencrypted. For security reasons you should enable message encryption, preferable OMEMO. If anything isn\'t working for you, you could disable message encryption by pressing the key lock icon.</string>
     <string name="hide_warning">Hide warning</string>
     <string name="change_password_in_next_step">You can change the generated password in the next step to your needs.</string>
+    <string name="action_unblock_participant">Unblock participant</string>
+    <string name="action_block_participant">Block participant</string>
 </resources>
