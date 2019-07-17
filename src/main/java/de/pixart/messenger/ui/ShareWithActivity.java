@@ -119,7 +119,7 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
             if (data != null && "geo".equals(data.getScheme())) {
                 this.share.uris.clear();
                 this.share.uris.add(data);
-            } else if (type != null && uri != null && (text == null || !type.equals("text/plain"))) {
+            } else if (type != null && uri != null) {
                 this.share.uris.clear();
                 this.share.uris.add(uri);
             } else {
