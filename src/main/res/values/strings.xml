@@ -927,4 +927,7 @@
     <string name="event">Event</string>
     <string name="pref_vibrate_in_chat_summary">Vibrate when a new message arrives in an open chat</string>
     <string name="pref_vibrate_in_chat">Vibrate in open chat</string>
+    <string name="open_backup">Open backup</string>
+    <string name="not_a_backup_file">The file you selected is not a Conversations backup file</string>
+    <string name="account_already_setup">This account has already been setup</string>
 </resources>
