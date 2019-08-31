@@ -28,6 +28,7 @@ import de.pixart.messenger.databinding.ActivityImportBackupBinding;
 import de.pixart.messenger.databinding.DialogEnterPasswordBinding;
 import de.pixart.messenger.services.ImportBackupService;
 import de.pixart.messenger.ui.adapter.BackupFileAdapter;
+import de.pixart.messenger.utils.ThemeHelper;
 
 public class ImportBackupActivity extends XmppActivity implements ServiceConnection, ImportBackupService.OnBackupFilesLoaded, BackupFileAdapter.OnItemClickedListener, ImportBackupService.OnBackupProcessed {
 
@@ -43,7 +44,7 @@ public class ImportBackupActivity extends XmppActivity implements ServiceConnect
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_import_backup);
         setSupportActionBar((Toolbar) binding.toolbar);
-        configureActionBar(getSupportActionBar());
+        setLoadingState(savedInstanceState != null && savedInstanceState.getBoolean("loading_state", false));
         this.backupFileAdapter = new BackupFileAdapter();
         this.binding.list.setAdapter(this.backupFileAdapter);
         this.backupFileAdapter.setOnItemClickedListener(this);
@@ -62,9 +63,27 @@ public class ImportBackupActivity extends XmppActivity implements ServiceConnect
     }
 
     @Override
+    public void onSaveInstanceState(Bundle bundle) {
+        bundle.putBoolean("loading_state", this.mLoadingState);
+        super.onSaveInstanceState(bundle);
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
-        bindService(new Intent(this, ImportBackupService.class), this, Context.BIND_AUTO_CREATE);
+        final int theme = ThemeHelper.find(this);
+        if (this.mTheme != theme) {
+            recreate();
+        } else {
+            bindService(new Intent(this, ImportBackupService.class), this, Context.BIND_AUTO_CREATE);
+        }
+        final Intent intent = getIntent();
+        if (intent != null && Intent.ACTION_VIEW.equals(intent.getAction()) && !this.mLoadingState) {
+            Uri uri = intent.getData();
+            if (uri != null) {
+                openBackupFileFromUri(uri, true);
+            }
+        }
     }
 
     @Override
@@ -110,26 +129,30 @@ public class ImportBackupActivity extends XmppActivity implements ServiceConnect
 
     @Override
     public void onClick(final ImportBackupService.BackupFile backupFile) {
-        showEnterPasswordDialog(backupFile);
+        showEnterPasswordDialog(backupFile, false);
     }
 
-    private void openBackupFileFromUri(final Uri uri) {
+    private void openBackupFileFromUri(final Uri uri, final boolean finishOnCancel) {
         try {
             final ImportBackupService.BackupFile backupFile = ImportBackupService.BackupFile.read(this, uri);
-            showEnterPasswordDialog(backupFile);
+            showEnterPasswordDialog(backupFile, finishOnCancel);
         } catch (IOException e) {
             Snackbar.make(binding.coordinator, R.string.not_a_backup_file, Snackbar.LENGTH_LONG).show();
         }
     }
 
-    private void showEnterPasswordDialog(final ImportBackupService.BackupFile backupFile) {
+    private void showEnterPasswordDialog(final ImportBackupService.BackupFile backupFile, final boolean finishOnCancel) {
         final DialogEnterPasswordBinding enterPasswordBinding = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.dialog_enter_password, null, false);
         Log.d(Config.LOGTAG, "attempting to import " + backupFile.getUri());
         enterPasswordBinding.explain.setText(getString(R.string.enter_password_to_restore, backupFile.getHeader().getJid().toString()));
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setView(enterPasswordBinding.getRoot());
         builder.setTitle(R.string.enter_password);
-        builder.setNegativeButton(R.string.cancel, null);
+        builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
+            if (finishOnCancel) {
+                finish();
+            }
+        });
         builder.setPositiveButton(R.string.restore, (dialog, which) -> {
             final String password = enterPasswordBinding.accountPassword.getEditableText().toString();
             final Uri uri = backupFile.getUri();
@@ -162,7 +185,7 @@ public class ImportBackupActivity extends XmppActivity implements ServiceConnect
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode == RESULT_OK) {
             if (requestCode == 0xbac) {
-                openBackupFileFromUri(intent.getData());
+                openBackupFileFromUri(intent.getData(), false);
             }
         }
     }
@@ -208,16 +231,15 @@ public class ImportBackupActivity extends XmppActivity implements ServiceConnect
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_open_backup_file:
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("*/*");
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
-                }
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                startActivityForResult(Intent.createChooser(intent, getString(R.string.open_backup)), 0xbac);
-                return true;
+        if (item.getItemId() == R.id.action_open_backup_file) {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("*/*");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+            }
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            startActivityForResult(Intent.createChooser(intent, getString(R.string.open_backup)), 0xbac);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

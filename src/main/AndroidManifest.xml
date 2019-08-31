@@ -165,7 +165,22 @@
         <activity
             android:name=".ui.ImportBackupActivity"
             android:label="@string/restore_backup"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="application/vnd.conversations.backup" />
+                <data android:scheme="content" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="application/vnd.conversations.backup" />
+                <data android:scheme="file" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.SettingsActivity"
             android:label="@string/title_activity_settings">
