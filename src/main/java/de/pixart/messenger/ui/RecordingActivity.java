@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
@@ -35,6 +37,8 @@ public class RecordingActivity extends Activity implements View.OnClickListener 
     private MediaRecorder mRecorder;
     private long mStartTime = 0;
 
+    private CountDownLatch outputFileWrittenLatch = new CountDownLatch(1);
+
     private Handler mHandler = new Handler();
     private Runnable mTickExecutor = new Runnable() {
         @Override
@@ -45,7 +49,6 @@ public class RecordingActivity extends Activity implements View.OnClickListener 
     };
 
     private File mOutputFile;
-    private boolean mShouldFinishAfterWrite = false;
 
     private FileObserver mFileObserver;
 
@@ -53,7 +56,7 @@ public class RecordingActivity extends Activity implements View.OnClickListener 
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(ThemeHelper.findDialog(this));
         super.onCreate(savedInstanceState);
-        this.binding = DataBindingUtil.setContentView(this,R.layout.activity_recording);
+        this.binding = DataBindingUtil.setContentView(this, R.layout.activity_recording);
         this.binding.cancelButton.setOnClickListener(this);
         this.binding.shareButton.setOnClickListener(this);
         this.setFinishOnTouchOutside(false);
@@ -105,14 +108,14 @@ public class RecordingActivity extends Activity implements View.OnClickListener 
         }
     }
 
-    protected void stopRecording(boolean saveFile) {
-        mShouldFinishAfterWrite = saveFile;
+    protected void stopRecording(final boolean saveFile) {
         try {
             mRecorder.stop();
             mRecorder.release();
         } catch (Exception e) {
             if (saveFile) {
-                Toast.makeText(this,R.string.unable_to_save_recording, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.unable_to_save_recording, Toast.LENGTH_SHORT).show();
+                return;
             }
         } finally {
             mRecorder = null;
@@ -120,8 +123,23 @@ public class RecordingActivity extends Activity implements View.OnClickListener 
         }
         if (!saveFile && mOutputFile != null) {
             if (mOutputFile.delete()) {
-                Log.d(Config.LOGTAG,"deleted canceled recording");
+                Log.d(Config.LOGTAG, "deleted canceled recording");
             }
+        }
+        if (saveFile) {
+            new Thread(() -> {
+                try {
+                    if (!outputFileWrittenLatch.await(2, TimeUnit.SECONDS)) {
+                        Log.d(Config.LOGTAG, "time out waiting for output file to be written");
+                    }
+                } catch (InterruptedException e) {
+                    Log.d(Config.LOGTAG, "interrupted while waiting for output file to be written", e);
+                }
+                runOnUiThread(() -> {
+                    setResult(Activity.RESULT_OK, new Intent().setData(Uri.fromFile(mOutputFile)));
+                    finish();
+                });
+            }).start();
         }
     }
 
@@ -156,10 +174,7 @@ public class RecordingActivity extends Activity implements View.OnClickListener 
             @Override
             public void onEvent(int event, String s) {
                 if (s != null && s.equals(mOutputFile.getName()) && event == FileObserver.CLOSE_WRITE) {
-                    if (mShouldFinishAfterWrite) {
-                        setResult(Activity.RESULT_OK, new Intent().setData(Uri.fromFile(mOutputFile)));
-                        finish();
-                    }
+                    outputFileWrittenLatch.countDown();
                 }
             }
         };
