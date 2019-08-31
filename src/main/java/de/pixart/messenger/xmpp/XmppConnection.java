@@ -1438,6 +1438,7 @@ public class XmppConnection implements Runnable {
         } else if (streamError.hasChild("host-unknown")) {
             throw new StateChangingException(Account.State.HOST_UNKNOWN);
         } else if (streamError.hasChild("policy-violation")) {
+            this.lastConnect = SystemClock.elapsedRealtime();
             final String text = streamError.findChildContent("text");
             if (text != null) {
                 Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": policy violation. " + text);
@@ -1686,7 +1687,8 @@ public class XmppConnection implements Runnable {
     }
 
     public int getTimeToNextAttempt() {
-        final int interval = Math.min((int) (25 * Math.pow(1.3, attempt)), 300);
+        final int additionalTime = account.getLastErrorStatus() == Account.State.POLICY_VIOLATION ? 3 : 0;
+        final int interval = Math.min((int) (25 * Math.pow(1.3, (additionalTime + attempt))), 300);
         final int secondsSinceLast = (int) ((SystemClock.elapsedRealtime() - this.lastConnect) / 1000);
         return interval - secondsSinceLast;
     }
