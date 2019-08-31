@@ -80,25 +80,23 @@ public class HttpDownloadConnection implements Transferable {
             } else {
                 mUrl = CryptoHelper.toHttpsUrl(new URL(message.getBody().split("\n")[0]));
             }
-            String[] parts = mUrl.getPath().toLowerCase().split("\\.");
-            String lastPart = parts.length >= 1 ? parts[parts.length - 1] : null;
-            String secondToLast = parts.length >= 2 ? parts[parts.length - 2] : null;
-            if ("pgp".equals(lastPart) || "gpg".equals(lastPart)) {
+            final AbstractConnectionManager.Extension extension = AbstractConnectionManager.Extension.of(mUrl.getPath());
+            if (VALID_CRYPTO_EXTENSIONS.contains(extension.main)) {
                 this.message.setEncryption(Message.ENCRYPTION_PGP);
             } else if (message.getEncryption() != Message.ENCRYPTION_OTR
                     && message.getEncryption() != Message.ENCRYPTION_AXOLOTL) {
                 this.message.setEncryption(Message.ENCRYPTION_NONE);
             }
-            String extension;
-            if (VALID_CRYPTO_EXTENSIONS.contains(lastPart)) {
-                extension = secondToLast;
+            final String ext;
+            if (VALID_CRYPTO_EXTENSIONS.contains(extension.main)) {
+                ext = extension.secondary;
             } else {
-                extension = lastPart;
+                ext = extension.main;
             }
             if (message.getStatus() == Message.STATUS_RECEIVED){
-                message.setRelativeFilePath(fileDateFormat.format(new Date(message.getTimeSent())) + "_" + message.getUuid().substring(0, 4) + (extension != null ? ("." + extension) : ""));
+                message.setRelativeFilePath(fileDateFormat.format(new Date(message.getTimeSent())) + "_" + message.getUuid().substring(0, 4) + (ext != null ? ("." + ext) : ""));
             } else {
-                message.setRelativeFilePath("Sent/" + fileDateFormat.format(new Date(message.getTimeSent())) + "_" + message.getUuid().substring(0, 4) + (extension != null ? ("." + extension) : ""));
+                message.setRelativeFilePath("Sent/" + fileDateFormat.format(new Date(message.getTimeSent())) + "_" + message.getUuid().substring(0, 4) + (ext != null ? ("." + ext) : ""));
             }
             this.file = mXmppConnectionService.getFileBackend().getFile(message, false);
             final String reference = mUrl.getRef();

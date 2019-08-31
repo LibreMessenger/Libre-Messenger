@@ -417,25 +417,25 @@ public class JingleConnection implements Transferable {
                 this.mXmppAxolotlMessage = XmppAxolotlMessage.fromElement(encrypted, packet.getFrom().asBareJid());
             }
             Element fileSize = fileOffer.findChild("size");
-            Element fileNameElement = fileOffer.findChild("name");
-            if (fileNameElement != null) {
-                String[] filename = fileNameElement.getContent()
-                        .toLowerCase(Locale.US).toLowerCase().split("\\.");
-                String filename_new = fileDateFormat.format(new Date(message.getTimeSent())) + "_" + message.getUuid().substring(0, 4);
-                String extension = filename[filename.length - 1];
-                if (VALID_IMAGE_EXTENSIONS.contains(extension)) {
+            final String path = fileOffer.findChildContent("name");
+            if (path != null) {
+                AbstractConnectionManager.Extension extension = AbstractConnectionManager.Extension.of(path);
+                if (VALID_IMAGE_EXTENSIONS.contains(extension.main)) {
                     message.setType(Message.TYPE_IMAGE);
-                    message.setRelativeFilePath(filename_new + "." + extension);
-                } else if (VALID_CRYPTO_EXTENSIONS.contains(
-                        filename[filename.length - 1])) {
-                    if (filename.length == 3) {
-                        extension = filename[filename.length - 2];
-                        if (VALID_IMAGE_EXTENSIONS.contains(extension)) {
-                            message.setType(Message.TYPE_IMAGE);
-                            message.setRelativeFilePath(filename_new + "." + extension);
-                        } else {
-                            message.setType(Message.TYPE_FILE);
-                        }
+                    message.setRelativeFilePath(message.getUuid() + "." + extension.main);
+                } else if (VALID_CRYPTO_EXTENSIONS.contains(extension.main)) {
+                    if (VALID_IMAGE_EXTENSIONS.contains(extension.secondary)) {
+                        message.setType(Message.TYPE_IMAGE);
+                        message.setRelativeFilePath(message.getUuid() + "." + extension.main);
+                    } else {
+                        message.setType(Message.TYPE_FILE);
+                        message.setRelativeFilePath(message.getUuid() + (extension.secondary != null ? ("." + extension.secondary) : ""));
+                    }
+                    // only for OTR compatibility
+                    Element fileNameElement = fileOffer.findChild("name");
+                    if (fileNameElement != null) {
+                        String[] filename = fileNameElement.getContent()
+                                .toLowerCase(Locale.US).toLowerCase().split("\\.");
                         if (filename[filename.length - 1].equals("otr")) {
                             message.setEncryption(Message.ENCRYPTION_OTR);
                         } else {
@@ -444,21 +444,9 @@ public class JingleConnection implements Transferable {
                     }
                 } else {
                     message.setType(Message.TYPE_FILE);
+                    message.setRelativeFilePath(message.getUuid() + (extension.main != null ? ("." + extension.main) : ""));
                 }
-                if (message.getType() == Message.TYPE_FILE) {
-                    String suffix = "";
-                    if (!fileNameElement.getContent().isEmpty()) {
-                        String[] parts = fileNameElement.getContent().split("/");
-                        suffix = parts[parts.length - 1];
-                        if (message.getEncryption() == Message.ENCRYPTION_OTR && suffix.endsWith(".otr")) {
-                            suffix = suffix.substring(0, suffix.length() - 4);
-                        } else if (message.getEncryption() == Message.ENCRYPTION_PGP && (suffix.endsWith(".pgp") || suffix.endsWith(".gpg"))) {
-                            suffix = suffix.substring(0, suffix.length() - 4);
-                        }
-                    }
-                    message.setRelativeFilePath(filename_new + "_" + suffix);
-                }
-                long size = Long.parseLong(fileSize.getContent());
+                long size = parseLong(fileSize, 0);
                 message.setBody(Long.toString(size));
                 conversation.add(message);
                 mJingleConnectionManager.updateConversationUi(true);
@@ -500,6 +488,18 @@ public class JingleConnection implements Transferable {
         } else {
             this.sendCancel();
             this.fail();
+        }
+    }
+
+    private static long parseLong(final Element element, final long l) {
+        final String input = element == null ? null : element.getContent();
+        if (input == null) {
+            return l;
+        }
+        try {
+            return Long.parseLong(input);
+        } catch (Exception e) {
+            return l;
         }
     }
 
