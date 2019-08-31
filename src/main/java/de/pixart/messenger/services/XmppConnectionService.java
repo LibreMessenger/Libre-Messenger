@@ -3105,16 +3105,8 @@ public class XmppConnectionService extends Service {
                     callback.error(R.string.nick_in_use, conversation);
                 }
             });
-
-            PresencePacket packet = new PresencePacket();
+            final PresencePacket packet = mPresenceGenerator.selfPresence(account, Presence.Status.ONLINE, options.nonanonymous());
             packet.setTo(joinJid);
-            packet.setFrom(conversation.getAccount().getJid());
-
-            String sig = account.getPgpSignature();
-            if (sig != null) {
-                packet.addChild("status").setContent("online");
-                packet.addChild("x", "jabber:x:signed").setContent(sig);
-            }
             sendPresencePacket(account, packet);
         } else {
             conversation.setContactJid(joinJid);
@@ -4461,11 +4453,7 @@ public class XmppConnectionService extends Service {
         } else {
             status = getTargetPresence();
         }
-        PresencePacket packet = mPresenceGenerator.selfPresence(account, status);
-        String message = account.getPresenceStatusMessage();
-        if (message != null && !message.isEmpty()) {
-            packet.addChild(new Element("status").setContent(message));
-        }
+        final PresencePacket packet = mPresenceGenerator.selfPresence(account, status);
         if (mLastActivity > 0 && includeIdleTimestamp) {
             long since = Math.min(mLastActivity, System.currentTimeMillis()); //don't send future dates
             packet.addChild("idle", Namespace.IDLE).setAttribute("since", AbstractGenerator.getTimestamp(since));
