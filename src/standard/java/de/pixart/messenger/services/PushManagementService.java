@@ -1,6 +1,7 @@
 package de.pixart.messenger.services;
 
 import de.pixart.messenger.entities.Account;
+import de.pixart.messenger.entities.Conversation;
 
 public class PushManagementService {
 
