@@ -15,8 +15,7 @@ import de.pixart.messenger.ui.WelcomeActivity;
 public class SignupUtils {
 
     public static Intent getSignUpIntent(final Activity activity) {
-        Intent intent = new Intent(activity, WelcomeActivity.class);
-        StartConversationActivity.addInviteUri(intent, activity.getIntent());
+        final Intent intent = new Intent(activity, WelcomeActivity.class);
         return intent;
     }
 
