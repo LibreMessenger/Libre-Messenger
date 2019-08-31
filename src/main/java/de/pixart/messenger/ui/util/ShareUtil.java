@@ -39,6 +39,7 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.entities.DownloadableFile;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.persistance.FileBackend;
+import de.pixart.messenger.ui.ConversationsActivity;
 import de.pixart.messenger.ui.XmppActivity;
 import de.pixart.messenger.utils.Patterns;
 import de.pixart.messenger.utils.XmppUri;
@@ -52,9 +53,11 @@ public class ShareUtil {
         if (message.isGeoUri()) {
             shareIntent.putExtra(Intent.EXTRA_TEXT, message.getBody());
             shareIntent.setType("text/plain");
+            shareIntent.putExtra(ConversationsActivity.EXTRA_AS_QUOTE, true);
         } else if (!message.isFileOrImage()) {
             shareIntent.putExtra(Intent.EXTRA_TEXT, message.getMergedBody().toString());
             shareIntent.setType("text/plain");
+            shareIntent.putExtra(ConversationsActivity.EXTRA_AS_QUOTE, true);
         } else {
             final DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
             try {
