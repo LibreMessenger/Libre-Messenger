@@ -139,6 +139,8 @@ public class ImportBackupActivity extends XmppActivity implements ServiceConnect
             showEnterPasswordDialog(backupFile, finishOnCancel);
         } catch (IOException e) {
             Snackbar.make(binding.coordinator, R.string.not_a_backup_file, Snackbar.LENGTH_LONG).show();
+        } catch (IllegalArgumentException e) {
+            Snackbar.make(binding.coordinator, R.string.not_a_backup_file, Snackbar.LENGTH_LONG).show();
         }
     }
 
