@@ -123,6 +123,8 @@ public class JingleConnection implements Transferable {
                     }
                     Log.d(Config.LOGTAG, "successfully transmitted file:" + file.getAbsolutePath() + " (" + CryptoHelper.bytesToHex(file.getSha1Sum()) + ")");
                     return;
+                } else if (message.getEncryption() == Message.ENCRYPTION_PGP) {
+                    account.getPgpDecryptionService().decrypt(message, true);
                 }
             } else {
                 if (ftVersion == Content.Version.FT_5) { //older Conversations will break when receiving a session-info
@@ -426,21 +428,16 @@ public class JingleConnection implements Transferable {
                 } else if (VALID_CRYPTO_EXTENSIONS.contains(extension.main)) {
                     if (VALID_IMAGE_EXTENSIONS.contains(extension.secondary)) {
                         message.setType(Message.TYPE_IMAGE);
-                        message.setRelativeFilePath(message.getUuid() + "." + extension.main);
+                        message.setRelativeFilePath(message.getUuid() + "." + extension.secondary);
                     } else {
                         message.setType(Message.TYPE_FILE);
                         message.setRelativeFilePath(message.getUuid() + (extension.secondary != null ? ("." + extension.secondary) : ""));
                     }
                     // only for OTR compatibility
-                    Element fileNameElement = fileOffer.findChild("name");
-                    if (fileNameElement != null) {
-                        String[] filename = fileNameElement.getContent()
-                                .toLowerCase(Locale.US).toLowerCase().split("\\.");
-                        if (filename[filename.length - 1].equals("otr")) {
-                            message.setEncryption(Message.ENCRYPTION_OTR);
-                        } else {
-                            message.setEncryption(Message.ENCRYPTION_PGP);
-                        }
+                    if (extension.main.equals("otr")) {
+                        message.setEncryption(Message.ENCRYPTION_OTR);
+                    } else {
+                        message.setEncryption(Message.ENCRYPTION_PGP);
                     }
                 } else {
                     message.setType(Message.TYPE_FILE);
