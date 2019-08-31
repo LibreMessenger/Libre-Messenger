@@ -658,9 +658,13 @@ public class JingleConnection implements Transferable {
         } else if (content.hasIbbTransport()) {
             String receivedBlockSize = packet.getJingleContent().ibbTransport().getAttribute("block-size");
             if (receivedBlockSize != null) {
-                int bs = Integer.parseInt(receivedBlockSize);
-                if (bs > this.ibbBlockSize) {
-                    this.ibbBlockSize = bs;
+                try {
+                    int bs = Integer.parseInt(receivedBlockSize);
+                    if (bs > this.ibbBlockSize) {
+                        this.ibbBlockSize = bs;
+                    }
+                } catch (Exception e) {
+                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": unable to parse block size in session-accept");
                 }
             }
             this.transport = new JingleInbandTransport(this, this.transportId, this.ibbBlockSize);
@@ -847,12 +851,16 @@ public class JingleConnection implements Transferable {
 
 
     private boolean receiveFallbackToIbb(JinglePacket packet) {
-        Log.d(Config.LOGTAG, "receiving fallack to ibb");
+        Log.d(Config.LOGTAG, "receiving fallback to ibb");
         final String receivedBlockSize = packet.getJingleContent().ibbTransport().getAttribute("block-size");
         if (receivedBlockSize != null) {
-            final int bs = Integer.parseInt(receivedBlockSize);
-            if (bs < this.ibbBlockSize) {
-                this.ibbBlockSize = bs;
+            try {
+                final int bs = Integer.parseInt(receivedBlockSize);
+                if (bs < this.ibbBlockSize) {
+                    this.ibbBlockSize = bs;
+                }
+            } catch (NumberFormatException e) {
+                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": unable to parse block size in transport-replace");
             }
         }
         this.transportId = packet.getJingleContent().getTransportId();
@@ -861,8 +869,8 @@ public class JingleConnection implements Transferable {
         final JinglePacket answer = bootstrapPacket("transport-accept");
 
         final Content content = new Content(contentCreator, contentName);
-        content.setFileOffer(fileOffer, ftVersion);
         content.ibbTransport().setAttribute("block-size", this.ibbBlockSize);
+        content.ibbTransport().setAttribute("sid", this.transportId);
         answer.setContent(content);
 
 
@@ -885,9 +893,13 @@ public class JingleConnection implements Transferable {
             String receivedBlockSize = packet.getJingleContent().ibbTransport()
                     .getAttribute("block-size");
             if (receivedBlockSize != null) {
-                int bs = Integer.parseInt(receivedBlockSize);
-                if (bs > this.ibbBlockSize) {
-                    this.ibbBlockSize = bs;
+                try {
+                    int bs = Integer.parseInt(receivedBlockSize);
+                    if (bs < this.ibbBlockSize) {
+                        this.ibbBlockSize = bs;
+                    }
+                } catch (NumberFormatException e) {
+                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": unable to parse block size in transport-accept");
                 }
             }
             this.transport = new JingleInbandTransport(this, this.transportId, this.ibbBlockSize);
