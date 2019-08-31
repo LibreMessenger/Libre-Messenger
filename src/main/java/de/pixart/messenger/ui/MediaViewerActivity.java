@@ -246,6 +246,7 @@ public class MediaViewerActivity extends XmppActivity implements AudioManager.On
                 binding.messageGifView.setOnTouchListener((view, motionEvent) -> gestureDetector.onTouchEvent(motionEvent));
             } else {
                 binding.messageImageView.setVisibility(View.VISIBLE);
+                binding.messageImageView.setOrientation(rotation);
                 binding.messageImageView.setImage(ImageSource.uri(FileUri));
                 binding.messageImageView.setOnTouchListener((view, motionEvent) -> gestureDetector.onTouchEvent(motionEvent));
             }
