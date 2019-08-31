@@ -141,6 +141,11 @@
             android:summary="@string/pref_vibrate_summary"
             android:title="@string/pref_vibrate" />
         <CheckBoxPreference
+            android:defaultValue="@bool/vibrate_in_chat"
+            android:key="vibrate_in_chat"
+            android:summary="@string/pref_vibrate_in_chat_summary"
+            android:title="@string/pref_vibrate_in_chat" />
+        <CheckBoxPreference
             android:defaultValue="@bool/led"
             android:key="led"
             android:summary="@string/pref_led_summary"

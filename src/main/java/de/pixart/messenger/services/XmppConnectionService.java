@@ -4172,9 +4172,12 @@ public class XmppConnectionService extends Service {
     }
 
     public void vibrate() {
-        Log.d(Config.LOGTAG, "Notification: short vibrate");
-        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-        vibrator.vibrate(100);
+        final boolean vibrateInChat = getBooleanPreference("vibrate_in_chat", R.bool.vibrate_in_chat);
+        if (!isPhoneSilenced() && vibrateInChat) {
+            Log.d(Config.LOGTAG, "Notification: short vibrate");
+            Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+            vibrator.vibrate(100);
+        }
     }
 
     private <T> List<T> threadSafeList(Set<T> set) {

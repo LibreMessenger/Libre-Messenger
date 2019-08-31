@@ -316,11 +316,14 @@ public class NotificationService {
 
     private void pushNow(final Message message) {
         mXmppConnectionService.updateUnreadCountBadge();
+        final boolean isScreenOn = mXmppConnectionService.isInteractive();
         if (!notify(message)) {
+            if (this.mIsInForeground && isScreenOn && this.mOpenConversation == message.getConversation()) {
+                mXmppConnectionService.vibrate();
+        }
             Log.d(Config.LOGTAG, message.getConversation().getAccount().getJid().asBareJid() + ": suppressing notification because turned off");
             return;
         }
-        final boolean isScreenOn = mXmppConnectionService.isInteractive();
         if (this.mIsInForeground && isScreenOn && this.mOpenConversation == message.getConversation()) {
             mXmppConnectionService.vibrate();
             Log.d(Config.LOGTAG, message.getConversation().getAccount().getJid().asBareJid() + ": suppressing notification because conversation is open");
