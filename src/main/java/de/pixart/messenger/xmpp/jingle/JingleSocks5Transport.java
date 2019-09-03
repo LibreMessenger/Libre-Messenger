@@ -22,9 +22,10 @@ import de.pixart.messenger.utils.WakeLockHelper;
 import de.pixart.messenger.xmpp.jingle.stanzas.Content;
 
 public class JingleSocks5Transport extends JingleTransport {
-    private JingleCandidate candidate;
-    private JingleConnection connection;
-    private String destination;
+
+    private final JingleCandidate candidate;
+    private final JingleConnection connection;
+    private final String destination;
     private OutputStream outputStream;
     private InputStream inputStream;
     private boolean isEstablished = false;
@@ -32,30 +33,30 @@ public class JingleSocks5Transport extends JingleTransport {
     private Socket socket;
 
     JingleSocks5Transport(JingleConnection jingleConnection, JingleCandidate candidate) {
+        final MessageDigest messageDigest;
+        try {
+            messageDigest = MessageDigest.getInstance("SHA-1");
+        } catch (NoSuchAlgorithmException e) {
+            throw new AssertionError(e);
+        }
         this.candidate = candidate;
         this.connection = jingleConnection;
-        try {
-            MessageDigest mDigest = MessageDigest.getInstance("SHA-1");
-            StringBuilder destBuilder = new StringBuilder();
-            if (jingleConnection.getFtVersion() == Content.Version.FT_3) {
-                Log.d(Config.LOGTAG, this.connection.getAccount().getJid().asBareJid() + ": using session Id instead of transport Id for proxy destination");
-                destBuilder.append(jingleConnection.getSessionId());
-            } else {
-                destBuilder.append(jingleConnection.getTransportId());
-            }
-            if (candidate.isOurs()) {
-                destBuilder.append(jingleConnection.getAccount().getJid());
-                destBuilder.append(jingleConnection.getCounterPart());
-            } else {
-                destBuilder.append(jingleConnection.getCounterPart());
-                destBuilder.append(jingleConnection.getAccount().getJid());
-            }
-            mDigest.reset();
-            this.destination = CryptoHelper.bytesToHex(mDigest
-                    .digest(destBuilder.toString().getBytes()));
-        } catch (NoSuchAlgorithmException e) {
-
+        final StringBuilder destBuilder = new StringBuilder();
+        if (jingleConnection.getFtVersion() == Content.Version.FT_3) {
+            Log.d(Config.LOGTAG, this.connection.getAccount().getJid().asBareJid() + ": using session Id instead of transport Id for proxy destination");
+            destBuilder.append(jingleConnection.getSessionId());
+        } else {
+            destBuilder.append(jingleConnection.getTransportId());
         }
+        if (candidate.isOurs()) {
+            destBuilder.append(jingleConnection.getAccount().getJid());
+            destBuilder.append(jingleConnection.getCounterPart());
+        } else {
+            destBuilder.append(jingleConnection.getCounterPart());
+            destBuilder.append(jingleConnection.getAccount().getJid());
+        }
+        messageDigest.reset();
+        this.destination = CryptoHelper.bytesToHex(messageDigest.digest(destBuilder.toString().getBytes()));
     }
 
     public void connect(final OnTransportConnected callback) {

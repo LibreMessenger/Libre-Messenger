@@ -309,7 +309,7 @@ public class JingleConnection implements Transferable {
         if (this.initialTransport == Transport.IBB) {
             this.sendInitRequest();
         } else if (this.candidates.size() > 0) {
-            this.sendInitRequest();
+            this.sendInitRequest(); //TODO we will never get here? Can probably be removed
         } else {
             this.mJingleConnectionManager.getPrimaryCandidate(account, (success, candidate) -> {
                 if (success) {
@@ -1097,6 +1097,7 @@ public class JingleConnection implements Transferable {
     }
 
     private void mergeCandidates(List<JingleCandidate> candidates) {
+        Collections.sort(candidates, (a, b) -> Integer.compare(b.getPriority(), a.getPriority()));
         for (JingleCandidate c : candidates) {
             mergeCandidate(c);
         }
