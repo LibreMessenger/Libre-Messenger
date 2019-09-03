@@ -6,7 +6,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.1'
+        classpath 'com.android.tools.build:gradle:3.4.2'
     }
 }
 
@@ -57,7 +57,7 @@ dependencies {
     implementation 'org.whispersystems:signal-protocol-java:2.6.2'
     implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation 'jetty:javax.servlet:5.1.12'
-    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.android.support:support-v13:28.0.0'
     implementation 'com.android.support:appcompat-v7:28.0.0'
@@ -102,7 +102,7 @@ android {
         targetSdkVersion 28
 
         versionCode 266
-        versionName "2.2.7"
+        versionName "2.2.8 beta (2019-09-03)"
 
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"

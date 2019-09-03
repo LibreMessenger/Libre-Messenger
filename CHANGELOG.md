@@ -1,5 +1,14 @@
 ### Changelog
 
+#### Version 2.2.8
+* stability improvements for group chats and channels
+* allow backups to be restored from anywhere
+* make short vibrate in open chat configurable and respect silent mode (PAM)
+* fixes for Jingle file transfer
+* fixed some rare crashes
+* when sharing a message from and to messenger insert it as quote
+* bug fixes
+
 #### Version 2.2.7
 * fixing crashes
 
@@ -8,7 +17,7 @@
 * fix broken updater
 
 #### Version 2.2.5
-* make backup compatible to Conversations (only works for Android >= 8)
+* make backup compatible to Conversations (only works for Android >= 8) (PAM)
 * bug fix
 
 #### Version 2.2.4
@@ -18,7 +27,7 @@
 * set own OMEMO devices to inactive after not seeing them for 60 days. (was 7 days)
 * bug fixes for peer to peer file transfer (Jingle)
 * fixed server info for unlimited/unknown max file size
-* make backup compatible to Conversations
+* make backup compatible to Conversations (PAM)
 * performance improvements
 * bug fixes
 
