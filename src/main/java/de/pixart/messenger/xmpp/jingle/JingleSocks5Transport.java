@@ -94,15 +94,15 @@ public class JingleSocks5Transport extends JingleTransport {
 
     private void acceptIncomingSocketConnection(Socket socket) throws IOException {
         Log.d(Config.LOGTAG, "accepted connection from " + socket.getInetAddress().getHostAddress());
-        byte[] authBegin = new byte[2];
-        InputStream inputStream = socket.getInputStream();
-        OutputStream outputStream = socket.getOutputStream();
+        final byte[] authBegin = new byte[2];
+        final InputStream inputStream = socket.getInputStream();
+        final OutputStream outputStream = socket.getOutputStream();
         inputStream.read(authBegin);
         if (authBegin[0] != 0x5) {
             socket.close();
         }
-        short methodCount = authBegin[1];
-        byte[] methods = new byte[methodCount];
+        final short methodCount = authBegin[1];
+        final byte[] methods = new byte[methodCount];
         inputStream.read(methods);
         if (SocksSocketFactory.contains((byte) 0x00, methods)) {
             outputStream.write(new byte[]{0x05, 0x00});
@@ -113,18 +113,18 @@ public class JingleSocks5Transport extends JingleTransport {
         inputStream.read(connectCommand);
         if (connectCommand[0] == 0x05 && connectCommand[1] == 0x01 && connectCommand[3] == 0x03) {
             int destinationCount = inputStream.read();
-            byte[] destination = new byte[destinationCount];
+            final byte[] destination = new byte[destinationCount];
             inputStream.read(destination);
-            int port = inputStream.read();
+            final int port = inputStream.read();
             final String receivedDestination = new String(destination);
-            Log.d(Config.LOGTAG, "received destination " + receivedDestination + ":" + port + " - expected " + this.destination);
             final ByteBuffer response = ByteBuffer.allocate(7 + destination.length);
             final byte[] responseHeader;
             final boolean success;
-            if (receivedDestination.equals(this.destination)) {
+            if (receivedDestination.equals(this.destination) && this.socket == null) {
                 responseHeader = new byte[]{0x05, 0x00, 0x00, 0x03};
                 success = true;
             } else {
+                Log.d(Config.LOGTAG, connection.getAccount().getJid().asBareJid() + ": destination mismatch. received " + receivedDestination + " (expected " + this.destination + ")");
                 responseHeader = new byte[]{0x05, 0x04, 0x00, 0x03};
                 success = false;
             }
@@ -139,6 +139,7 @@ public class JingleSocks5Transport extends JingleTransport {
                 this.inputStream = inputStream;
                 this.outputStream = outputStream;
                 this.isEstablished = true;
+                FileBackend.close(serverSocket);
             }
         } else {
             socket.close();
@@ -154,7 +155,7 @@ public class JingleSocks5Transport extends JingleTransport {
                 } else {
                     socket = new Socket();
                     SocketAddress address = new InetSocketAddress(candidate.getHost(), candidate.getPort());
-                    socket.connect(address, Config.SOCKET_TIMEOUT * 1000);
+                    socket.connect(address, 5000);
                 }
                 inputStream = socket.getInputStream();
                 outputStream = socket.getOutputStream();
