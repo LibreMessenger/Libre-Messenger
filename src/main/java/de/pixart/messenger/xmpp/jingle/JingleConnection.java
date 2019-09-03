@@ -178,7 +178,9 @@ public class JingleConnection implements Transferable {
         @Override
         public void failed() {
             Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": proxy activation failed");
-            //TODO: when initiating send fallback to ibb
+            if (initiating()) {
+                sendFallbackToIbb();
+            }
         }
     };
 
@@ -783,11 +785,11 @@ public class JingleConnection implements Transferable {
                     mXmppConnectionService.sendIqPacket(account, activation, (account, response) -> {
                         if (response.getType() != IqPacket.TYPE.RESULT) {
                             Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": " + response.toString());
+                            sendProxyError();
                             onProxyActivated.failed();
-                            //TODO send proxy-error
                         } else {
-                            onProxyActivated.success();
                             sendProxyActivated(connection.getCandidate().getCid());
+                            onProxyActivated.success();
                         }
                     });
                 } else {
@@ -871,7 +873,7 @@ public class JingleConnection implements Transferable {
 
 
     private boolean receiveFallbackToIbb(JinglePacket packet) {
-        Log.d(Config.LOGTAG, "receiving fallback to ibb");
+        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": receiving fallback to ibb");
         final String receivedBlockSize = packet.getJingleContent().ibbTransport().getAttribute("block-size");
         if (receivedBlockSize != null) {
             try {
@@ -1059,10 +1061,19 @@ public class JingleConnection implements Transferable {
     }
 
     private void sendProxyActivated(String cid) {
-        JinglePacket packet = bootstrapPacket("transport-info");
-        Content content = new Content(this.contentCreator, this.contentName);
+        final JinglePacket packet = bootstrapPacket("transport-info");
+        final Content content = new Content(this.contentCreator, this.contentName);
         content.setTransportId(this.transportId);
         content.socks5transport().addChild("activated").setAttribute("cid", cid);
+        packet.setContent(content);
+        this.sendJinglePacket(packet);
+    }
+
+    private void sendProxyError() {
+        final JinglePacket packet = bootstrapPacket("transport-info");
+        final Content content = new Content(this.contentCreator, this.contentName);
+        content.setTransportId(this.transportId);
+        content.socks5transport().addChild("proxy-error");
         packet.setContent(content);
         this.sendJinglePacket(packet);
     }
