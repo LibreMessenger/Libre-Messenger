@@ -923,12 +923,12 @@
     <string name="action_unblock_participant">Unblock participant</string>
     <string name="action_block_participant">Block participant</string>
     <string name="share_backup_files">Share backup files</string>
-    <string name="conversations_backup">Conversations backup</string>
+    <string name="conversations_backup">Pix-Art Messenger backup</string>
     <string name="event">Event</string>
     <string name="pref_vibrate_in_chat_summary">Vibrate when a new message arrives in an open chat</string>
     <string name="pref_vibrate_in_chat">Vibrate in open chat</string>
     <string name="open_backup">Open backup</string>
-    <string name="not_a_backup_file">The file you selected is not a Conversations backup file</string>
+    <string name="not_a_backup_file">The file you selected is not a Pix-Art Messenger backup file</string>
     <string name="account_already_setup">This account has already been setup</string>
     <string name="please_enter_password">Please enter the password for this account</string>
     <string name="unable_to_perform_this_action">Unable to perform this action</string>
