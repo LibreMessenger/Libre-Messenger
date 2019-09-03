@@ -719,7 +719,10 @@ public class FileBackend {
             frame = metadataRetriever.getFrameAtTime(0);
             metadataRetriever.release();
             frame = resize(frame, size);
-        } catch (IOException | RuntimeException e) {
+        } catch (IOException e) {
+            frame = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+            frame.eraseColor(0xff000000);
+        } catch (RuntimeException e) {
             frame = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
             frame.eraseColor(0xff000000);
         }
@@ -880,7 +883,9 @@ public class FileBackend {
             avatar.width = options.outWidth;
             avatar.type = options.outMimeType;
             return avatar;
-        } catch (NoSuchAlgorithmException | IOException e) {
+        } catch (NoSuchAlgorithmException e) {
+            return null;
+        } catch (IOException e) {
             return null;
         } finally {
             close(is);
@@ -934,7 +939,11 @@ public class FileBackend {
                     return false;
                 }
                 avatar.size = bytes.length;
-            } catch (IllegalArgumentException | IOException | NoSuchAlgorithmException e) {
+            } catch (IllegalArgumentException e) {
+                return false;
+            } catch (IOException e) {
+                return false;
+            } catch (NoSuchAlgorithmException e) {
                 return false;
             } finally {
                 close(os);
@@ -970,7 +979,10 @@ public class FileBackend {
                 input = rotate(input, getRotation(image));
                 return cropCenterSquare(input, size);
             }
-        } catch (FileNotFoundException | SecurityException e) {
+        } catch (FileNotFoundException e) {
+            Log.d(Config.LOGTAG, "unable to open file " + image.toString(), e);
+            return null;
+        } catch (SecurityException e) {
             Log.d(Config.LOGTAG, "unable to open file " + image.toString(), e);
             return null;
         } finally {

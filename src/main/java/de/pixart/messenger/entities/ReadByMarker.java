@@ -111,12 +111,16 @@ public class ReadByMarker {
         ReadByMarker marker = new ReadByMarker();
         try {
             marker.fullJid = Jid.of(jsonObject.getString("fullJid"));
-        } catch (JSONException | IllegalArgumentException e) {
+        } catch (JSONException e) {
+            marker.fullJid = null;
+        } catch (IllegalArgumentException e) {
             marker.fullJid = null;
         }
         try {
             marker.realJid = Jid.of(jsonObject.getString("realJid"));
-        } catch (JSONException | IllegalArgumentException e) {
+        } catch (JSONException e) {
+            marker.realJid = null;
+        } catch (IllegalArgumentException e) {
             marker.realJid = null;
         }
         return marker;
@@ -125,7 +129,9 @@ public class ReadByMarker {
     public static Set<ReadByMarker> fromJsonString(String json) {
         try {
             return fromJson(new JSONArray(json));
-        } catch (JSONException | NullPointerException e) {
+        } catch (JSONException e) {
+            return new HashSet<>();
+        } catch (NullPointerException e) {
             return new HashSet<>();
         }
     }

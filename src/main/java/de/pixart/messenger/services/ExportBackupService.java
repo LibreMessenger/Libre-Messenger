@@ -160,7 +160,9 @@ public class ExportBackupService extends Service {
         try {
             SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
             return factory.generateSecret(new PBEKeySpec(password.toCharArray(), salt, 1024, 128)).getEncoded();
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+        } catch (NoSuchAlgorithmException e) {
+            throw new AssertionError(e);
+        } catch (InvalidKeySpecException e) {
             throw new AssertionError(e);
         }
     }

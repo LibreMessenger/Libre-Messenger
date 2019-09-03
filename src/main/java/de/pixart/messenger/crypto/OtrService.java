@@ -95,7 +95,9 @@ public class OtrService extends OtrCryptoEngineImpl implements OtrEngineHost {
             this.account.setKey("otr_p", privateKeySpec.getP().toString(16));
             this.account.setKey("otr_q", privateKeySpec.getQ().toString(16));
             this.account.setKey("otr_y", publicKeySpec.getY().toString(16));
-        } catch (final NoSuchAlgorithmException | InvalidKeySpecException e) {
+        } catch (final NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (final InvalidKeySpecException e) {
             e.printStackTrace();
         }
 

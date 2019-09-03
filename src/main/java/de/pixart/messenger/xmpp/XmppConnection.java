@@ -408,11 +408,17 @@ public class XmppConnection implements Runnable {
             this.changeStatus(Account.State.MISSING_INTERNET_PERMISSION);
         } catch (final StateChangingException e) {
             this.changeStatus(e.state);
-        } catch (final UnknownHostException | ConnectException e) {
+        } catch (final UnknownHostException e) {
+            this.changeStatus(Account.State.SERVER_NOT_FOUND);
+        } catch (final ConnectException e) {
             this.changeStatus(Account.State.SERVER_NOT_FOUND);
         } catch (final SocksSocketFactory.SocksProxyNotFoundException e) {
             this.changeStatus(Account.State.TOR_NOT_AVAILABLE);
-        } catch (final IOException | XmlPullParserException e) {
+        } catch (final IOException e) {
+            Log.d(Config.LOGTAG, account.getJid().asBareJid().toString() + ": " + e.getMessage());
+            this.changeStatus(Account.State.OFFLINE);
+            this.attempt = Math.max(0, this.attempt - 1);
+        } catch (final XmlPullParserException e) {
             Log.d(Config.LOGTAG, account.getJid().asBareJid().toString() + ": " + e.getMessage());
             this.changeStatus(Account.State.OFFLINE);
             this.attempt = Math.max(0, this.attempt - 1);
@@ -640,7 +646,9 @@ public class XmppConnection implements Runnable {
                     if (acknowledgedMessages) {
                         mXmppConnectionService.updateConversationUi();
                     }
-                } catch (NumberFormatException | NullPointerException e) {
+                } catch (NumberFormatException e) {
+                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": server send ack without sequence number");
+                } catch (NullPointerException e) {
                     Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": server send ack without sequence number");
                 }
             } else if (nextTag.isStart("failed")) {
@@ -655,7 +663,9 @@ public class XmppConnection implements Runnable {
                     if (acknowledgedMessages) {
                         mXmppConnectionService.updateConversationUi();
                     }
-                } catch (NumberFormatException | NullPointerException e) {
+                } catch (NumberFormatException e) {
+                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": resumption failed");
+                } catch (NullPointerException e) {
                     Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": resumption failed");
                 }
                 resetStreamId();
@@ -859,7 +869,10 @@ public class XmppConnection implements Runnable {
                 throw new StateChangingException(Account.State.STREAM_OPENING_ERROR);
             }
             sslSocket.close();
-        } catch (final NoSuchAlgorithmException | KeyManagementException e1) {
+        } catch (final NoSuchAlgorithmException e1) {
+            Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": TLS certificate verification failed");
+            throw new StateChangingException(Account.State.TLS_ERROR);
+        } catch (final KeyManagementException e1) {
             Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": TLS certificate verification failed");
             throw new StateChangingException(Account.State.TLS_ERROR);
         }

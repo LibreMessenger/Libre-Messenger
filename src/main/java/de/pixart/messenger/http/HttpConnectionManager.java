@@ -104,7 +104,8 @@ public class HttpConnectionManager extends AbstractConnectionManager {
             final SSLSocketFactory sf = new TLSSocketFactory(new X509TrustManager[]{trustManager}, mXmppConnectionService.getRNG());
             connection.setSSLSocketFactory(sf);
             connection.setHostnameVerifier(hostnameVerifier);
-        } catch (final KeyManagementException | NoSuchAlgorithmException ignored) {
+        } catch (final KeyManagementException ignored) {
+        } catch (final NoSuchAlgorithmException ignored) {
         }
     }
 }

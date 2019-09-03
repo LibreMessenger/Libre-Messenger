@@ -179,7 +179,16 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 } else {
                     jid = Jid.of(binding.accountJid.getText().toString());
                 }
-            } catch (final NullPointerException | IllegalArgumentException e) {
+            } catch (final NullPointerException e) {
+                if (mUsernameMode) {
+                    binding.accountJidLayout.setError(getString(R.string.invalid_username));
+                } else {
+                    binding.accountJidLayout.setError(getString(R.string.invalid_jid));
+                }
+                binding.accountJid.requestFocus();
+                removeErrorsOnAllBut(binding.accountJidLayout);
+                return;
+            } catch (final IllegalArgumentException e) {
                 if (mUsernameMode) {
                     binding.accountJidLayout.setError(getString(R.string.invalid_username));
                 } else {
@@ -724,7 +733,9 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         } else if (intent != null) {
             try {
                 this.jidToEdit = Jid.of(intent.getStringExtra("jid"));
-            } catch (final IllegalArgumentException | NullPointerException ignored) {
+            } catch (final IllegalArgumentException ignored) {
+                this.jidToEdit = null;
+            } catch (final NullPointerException ignored) {
                 this.jidToEdit = null;
             }
             if (jidToEdit != null && intent.getData() != null && intent.getBooleanExtra("scanned", false)) {

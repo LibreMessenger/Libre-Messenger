@@ -406,7 +406,9 @@ public class HttpDownloadConnection implements Transferable {
                     long reportedContentLengthOnGet;
                     try {
                         reportedContentLengthOnGet = Long.parseLong(connection.getHeaderField("Content-Length"));
-                    } catch (NumberFormatException | NullPointerException e) {
+                    } catch (NumberFormatException e) {
+                        reportedContentLengthOnGet = 0;
+                    } catch (NullPointerException e) {
                         reportedContentLengthOnGet = 0;
                     }
                     if (expected != reportedContentLengthOnGet) {
@@ -437,7 +439,10 @@ public class HttpDownloadConnection implements Transferable {
                 } catch (IOException e) {
                     throw new FileWriterException();
                 }
-            } catch (CancellationException | IOException e) {
+            } catch (CancellationException e) {
+                Log.d(Config.LOGTAG, "http download failed " + e.getMessage());
+                throw e;
+            } catch (IOException e) {
                 Log.d(Config.LOGTAG, "http download failed " + e.getMessage());
                 throw e;
             } finally {

@@ -115,7 +115,13 @@ public class XmppAxolotlSession implements Comparable<XmppAxolotlSession> {
                         SignalMessage signalMessage = new SignalMessage(encryptedKey.key);
                         try {
                             plaintext = cipher.decrypt(signalMessage);
-                        } catch (InvalidMessageException | NoSessionException e) {
+                        } catch (InvalidMessageException e) {
+                            if (iterator.hasNext()) {
+                                Log.w(Config.LOGTAG, account.getJid().asBareJid() + ": ignoring crypto exception because possible keys left to try", e);
+                                continue;
+                            }
+                            throw new BrokenSessionException(this.remoteAddress, e);
+                        } catch (NoSessionException e) {
                             if (iterator.hasNext()) {
                                 Log.w(Config.LOGTAG, account.getJid().asBareJid() + ": ignoring crypto exception because possible keys left to try", e);
                                 continue;

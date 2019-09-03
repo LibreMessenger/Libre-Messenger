@@ -108,7 +108,10 @@ public class JingleInbandTransport extends JingleTransport {
                 return;
             }
             this.remainingSize = this.fileSize = file.getExpectedSize();
-        } catch (final NoSuchAlgorithmException | IOException e) {
+        } catch (final NoSuchAlgorithmException e) {
+            Log.d(Config.LOGTAG, account.getJid().asBareJid() + " " + e.getMessage());
+            callback.onFileTransferAborted();
+        } catch (final IOException e) {
             Log.d(Config.LOGTAG, account.getJid().asBareJid() + " " + e.getMessage());
             callback.onFileTransferAborted();
         }

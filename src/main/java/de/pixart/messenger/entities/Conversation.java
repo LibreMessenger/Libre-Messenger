@@ -737,7 +737,9 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
                 }
                 DSAPublicKey remotePubKey = (DSAPublicKey) getOtrSession().getRemotePublicKey();
                 this.otrFingerprint = getAccount().getOtrService().getFingerprint(remotePubKey).toLowerCase(Locale.US);
-            } catch (final OtrCryptoException | UnsupportedOperationException ignored) {
+            } catch (final OtrCryptoException ignored) {
+                return null;
+            } catch (final UnsupportedOperationException ignored) {
                 return null;
             }
         }

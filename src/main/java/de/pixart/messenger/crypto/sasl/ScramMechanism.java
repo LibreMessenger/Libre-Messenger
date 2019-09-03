@@ -43,7 +43,9 @@ abstract class ScramMechanism extends SaslMechanism {
                     clientKey = hmac(saltedPassword, CLIENT_KEY_BYTES);
 
                     return new KeyPair(clientKey, serverKey);
-                } catch (final InvalidKeyException | NumberFormatException e) {
+                } catch (final InvalidKeyException e) {
+                    return null;
+                } catch (final NumberFormatException e) {
                     return null;
                 }
             }

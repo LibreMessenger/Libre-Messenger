@@ -1115,7 +1115,18 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
                             callback.onSessionBuildSuccessful();
                         }
                     }
-                } catch (UntrustedIdentityException | InvalidKeyException e) {
+                } catch (UntrustedIdentityException e) {
+                    Log.e(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Error building session for " + address + ": "
+                            + e.getClass().getName() + ", " + e.getMessage());
+                    fetchStatusMap.put(address, FetchStatus.ERROR);
+                    finishBuildingSessionsFromPEP(address);
+                    if (oneOfOurs && cleanedOwnDeviceIds.add(address.getDeviceId())) {
+                        removeFromDeviceAnnouncement(address.getDeviceId());
+                    }
+                    if (callback != null) {
+                        callback.onSessionBuildFailed();
+                    }
+                } catch (InvalidKeyException e) {
                     Log.e(Config.LOGTAG, AxolotlService.getLogprefix(account) + "Error building session for " + address + ": "
                             + e.getClass().getName() + ", " + e.getMessage());
                     fetchStatusMap.put(address, FetchStatus.ERROR);

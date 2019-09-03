@@ -4582,24 +4582,28 @@ public class XmppConnectionService extends Service {
     }
 
     public void clearConversationHistory(final Conversation conversation) {
-        final long clearDate;
-        final String reference;
-        if (conversation.countMessages() > 0) {
-            Message latestMessage = conversation.getLatestMessage();
-            clearDate = latestMessage.getTimeSent() + 1000;
-            reference = latestMessage.getServerMsgId();
-        } else {
-            clearDate = System.currentTimeMillis();
-            reference = null;
+        try {
+            final long clearDate;
+            final String reference;
+            if (conversation.countMessages() > 0) {
+                Message latestMessage = conversation.getLatestMessage();
+                clearDate = latestMessage.getTimeSent() + 1000;
+                reference = latestMessage.getServerMsgId();
+            } else {
+                clearDate = System.currentTimeMillis();
+                reference = null;
+            }
+            conversation.clearMessages();
+            conversation.setHasMessagesLeftOnServer(false); //avoid messages getting loaded through mam
+            conversation.setLastClearHistory(clearDate, reference);
+            Runnable runnable = () -> {
+                databaseBackend.deleteMessagesInConversation(conversation);
+                databaseBackend.updateConversation(conversation);
+            };
+            mDatabaseWriterExecutor.execute(runnable);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        conversation.clearMessages();
-        conversation.setHasMessagesLeftOnServer(false); //avoid messages getting loaded through mam
-        conversation.setLastClearHistory(clearDate, reference);
-        Runnable runnable = () -> {
-            databaseBackend.deleteMessagesInConversation(conversation);
-            databaseBackend.updateConversation(conversation);
-        };
-        mDatabaseWriterExecutor.execute(runnable);
     }
 
     public boolean sendBlockRequest(final Blockable blockable, boolean reportSpam) {
@@ -4845,22 +4849,26 @@ public class XmppConnectionService extends Service {
         //start export log service every day at given time
         if (Config.ExportLogs) {
             if (Config.ExportLogs_Hour >= 0 && Config.ExportLogs_Hour <= 23 && Config.ExportLogs_Minute >= 0 && Config.ExportLogs_Minute <= 59) {
-                Calendar now = Calendar.getInstance();
-                now.setTimeInMillis(System.currentTimeMillis());
-                Calendar timetoexport = Calendar.getInstance();
-                timetoexport.setTimeInMillis(System.currentTimeMillis());
-                Intent intent = new Intent(this, AlarmReceiver.class);
-                intent.setAction("exportlogs");
-                Log.d(Config.LOGTAG, "Schedule automatic export logs at " + Config.ExportLogs_Hour + ":" + Config.ExportLogs_Minute);
-                timetoexport.set(Calendar.HOUR_OF_DAY, Config.ExportLogs_Hour);
-                timetoexport.set(Calendar.MINUTE, Config.ExportLogs_Minute);
-                if (timetoexport.before(now)) {
-                    SimpleDateFormat newDate = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
-                    timetoexport.add(Calendar.DAY_OF_YEAR, 1); //DATE or DAY_OF_MONTH
-                    Log.d(Config.LOGTAG, "Schedule automatic export logs, for today, the export time is in the past, scheduling first export run for the next day (" + newDate.format(timetoexport.getTimeInMillis()) + ").");
+                try {
+                    Calendar now = Calendar.getInstance();
+                    now.setTimeInMillis(System.currentTimeMillis());
+                    Calendar timetoexport = Calendar.getInstance();
+                    timetoexport.setTimeInMillis(System.currentTimeMillis());
+                    Intent intent = new Intent(this, AlarmReceiver.class);
+                    intent.setAction("exportlogs");
+                    Log.d(Config.LOGTAG, "Schedule automatic export logs at " + Config.ExportLogs_Hour + ":" + Config.ExportLogs_Minute);
+                    timetoexport.set(Calendar.HOUR_OF_DAY, Config.ExportLogs_Hour);
+                    timetoexport.set(Calendar.MINUTE, Config.ExportLogs_Minute);
+                    if (timetoexport.before(now)) {
+                        SimpleDateFormat newDate = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
+                        timetoexport.add(Calendar.DAY_OF_YEAR, 1); //DATE or DAY_OF_MONTH
+                        Log.d(Config.LOGTAG, "Schedule automatic export logs, for today, the export time is in the past, scheduling first export run for the next day (" + newDate.format(timetoexport.getTimeInMillis()) + ").");
+                    }
+                    final PendingIntent ScheduleExportIntent = PendingIntent.getBroadcast(this, AlarmReceiver.SCHEDULE_ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    ((AlarmManager) getSystemService(ALARM_SERVICE)).setInexactRepeating(AlarmManager.RTC_WAKEUP, timetoexport.getTimeInMillis(), AlarmManager.INTERVAL_DAY, ScheduleExportIntent);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                final PendingIntent ScheduleExportIntent = PendingIntent.getBroadcast(this, AlarmReceiver.SCHEDULE_ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                ((AlarmManager) getSystemService(ALARM_SERVICE)).setInexactRepeating(AlarmManager.RTC_WAKEUP, timetoexport.getTimeInMillis(), AlarmManager.INTERVAL_DAY, ScheduleExportIntent);
             }
         }
     }

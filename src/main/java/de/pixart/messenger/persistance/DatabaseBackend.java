@@ -1009,12 +1009,14 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 
     private List<Account> getAccounts(SQLiteDatabase db) {
         List<Account> list = new ArrayList<>();
-        Cursor cursor = db.query(Account.TABLENAME, null, null, null, null,
-                null, null);
-        while (cursor.moveToNext()) {
-            list.add(Account.fromCursor(cursor));
+        try (Cursor cursor = db.query(Account.TABLENAME, null, null, null, null,
+                null, null)) {
+            while (cursor.moveToNext()) {
+                list.add(Account.fromCursor(cursor));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        cursor.close();
         return list;
     }
 

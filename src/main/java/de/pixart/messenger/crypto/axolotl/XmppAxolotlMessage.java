@@ -189,9 +189,19 @@ public class XmppAxolotlMessage {
                 System.arraycopy(this.innerKey, 0, authtagPlusInnerKey, 0, this.innerKey.length);
                 this.ciphertext = ciphertext;
             }
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
-                | IllegalBlockSizeException | BadPaddingException | NoSuchProviderException
-                | InvalidAlgorithmParameterException e) {
+        } catch (NoSuchAlgorithmException e) {
+            throw new CryptoFailedException(e);
+        } catch (NoSuchPaddingException e) {
+            throw new CryptoFailedException(e);
+        } catch (InvalidKeyException e) {
+            throw new CryptoFailedException(e);
+        } catch (IllegalBlockSizeException e) {
+            throw new CryptoFailedException(e);
+        } catch (BadPaddingException e) {
+            throw new CryptoFailedException(e);
+        } catch (NoSuchProviderException e) {
+            throw new CryptoFailedException(e);
+        } catch (InvalidAlgorithmParameterException e) {
             throw new CryptoFailedException(e);
         }
     }
@@ -308,9 +318,19 @@ public class XmppAxolotlMessage {
                 String plaintext = new String(cipher.doFinal(ciphertext));
                 plaintextMessage = new XmppAxolotlPlaintextMessage(Config.OMEMO_PADDING ? plaintext.trim() : plaintext, session.getFingerprint());
 
-            } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException
-                    | InvalidAlgorithmParameterException | IllegalBlockSizeException
-                    | BadPaddingException | NoSuchProviderException e) {
+            } catch (NoSuchAlgorithmException e) {
+                throw new CryptoFailedException(e);
+            } catch (NoSuchPaddingException e) {
+                throw new CryptoFailedException(e);
+            } catch (InvalidKeyException e) {
+                throw new CryptoFailedException(e);
+            } catch (InvalidAlgorithmParameterException e) {
+                throw new CryptoFailedException(e);
+            } catch (IllegalBlockSizeException e) {
+                throw new CryptoFailedException(e);
+            } catch (BadPaddingException e) {
+                throw new CryptoFailedException(e);
+            } catch (NoSuchProviderException e) {
                 throw new CryptoFailedException(e);
             }
         }
