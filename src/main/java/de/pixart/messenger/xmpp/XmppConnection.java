@@ -1033,7 +1033,6 @@ public class XmppConnection implements Runnable {
     public void sendDeleteRequest() {
         final IqPacket delete = new IqPacket(IqPacket.TYPE.SET);
         delete.query(Namespace.REGISTER).addChild("remove");
-        delete.setTo(Jid.of(account.getServer()));
         delete.setFrom(account.getJid().asBareJid());
         sendUnmodifiedIqPacket(delete, (account, packet) -> {
             if (packet.getType() == IqPacket.TYPE.TIMEOUT) {
