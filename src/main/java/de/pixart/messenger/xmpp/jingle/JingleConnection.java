@@ -324,22 +324,20 @@ public class JingleConnection implements Transferable {
 
                         @Override
                         public void failed() {
-                            Log.d(Config.LOGTAG,
-                                    "connection to our own primary candidete failed");
+                            Log.d(Config.LOGTAG, "connection to our own proxy65 candidete failed");
                             sendInitRequest();
                         }
 
                         @Override
                         public void established() {
-                            Log.d(Config.LOGTAG,
-                                    "successfully connected to our own primary candidate");
+                            Log.d(Config.LOGTAG, "successfully connected to our own proxy65 candidate");
                             mergeCandidate(candidate);
                             sendInitRequest();
                         }
                     });
                     mergeCandidate(candidate);
                 } else {
-                    Log.d(Config.LOGTAG, "no primary candidate of our own was found");
+                    Log.d(Config.LOGTAG, "no proxy65 candidate of our own was found");
                     sendInitRequest();
                 }
             });
@@ -626,7 +624,7 @@ public class JingleConnection implements Transferable {
 
                     @Override
                     public void failed() {
-                        Log.d(Config.LOGTAG, "connection to our own primary candidate failed");
+                        Log.d(Config.LOGTAG, "connection to our own proxy65 candidate failed");
                         content.socks5transport().setChildren(getCandidatesAsElements());
                         packet.setContent(content);
                         sendJinglePacket(packet);
@@ -635,7 +633,7 @@ public class JingleConnection implements Transferable {
 
                     @Override
                     public void established() {
-                        Log.d(Config.LOGTAG, "connected to primary candidate");
+                        Log.d(Config.LOGTAG, "connected to proxy candidate");
                         mergeCandidate(candidate);
                         content.socks5transport().setChildren(getCandidatesAsElements());
                         packet.setContent(content);
@@ -644,7 +642,7 @@ public class JingleConnection implements Transferable {
                     }
                 });
             } else {
-                Log.d(Config.LOGTAG, "did not find a primary candidate for ourselves");
+                Log.d(Config.LOGTAG, "did not find a proxy65 candidate for ourselves");
                 content.socks5transport().setChildren(getCandidatesAsElements());
                 packet.setContent(content);
                 sendJinglePacket(packet);
