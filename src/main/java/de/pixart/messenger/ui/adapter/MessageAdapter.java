@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.preference.PreferenceManager;
@@ -1051,7 +1052,11 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             } else if (transferable != null && transferable.getStatus() == Transferable.STATUS_OFFER_CHECK_FILESIZE) {
                 displayDownloadableMessage(viewHolder, message, activity.getString(R.string.check_x_filesize, UIHelper.getFileDescriptionString(activity, message)), darkBackground);
             } else {
-                displayInfoMessage(viewHolder, UIHelper.getMessagePreview(activity, message).first, darkBackground);
+                if (checkFileExistence(message, view, viewHolder)) {
+                    markFileExisting(message);
+                } else {
+                    displayInfoMessage(viewHolder, UIHelper.getMessagePreview(activity, message).first, darkBackground);
+                }
             }
         } else if (message.isFileOrImage() && message.getEncryption() != Message.ENCRYPTION_PGP && message.getEncryption() != Message.ENCRYPTION_DECRYPTION_FAILED) {
             if (message.getFileParams().width > 0 && message.getFileParams().height > 0) {
@@ -1139,6 +1144,28 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
         displayStatus(viewHolder, message, type, darkBackground);
         return view;
+    }
+
+    private void markFileExisting(Message message) {
+        new Thread(() -> {
+            message.setFileDeleted(false);
+            activity.xmppConnectionService.updateMessage(message, false);
+            notifyDataSetChanged();
+        }).start();
+    }
+
+    private boolean checkFileExistence(Message message, View view, ViewHolder viewHolder) {
+        Rect scrollBounds = new Rect();
+        view.getHitRect(scrollBounds);
+        if (viewHolder.messageBody.getText().equals(activity.getResources().getString(R.string.file_deleted)) && viewHolder.messageBody.getLocalVisibleRect(scrollBounds)) {
+            if (activity.xmppConnectionService.getFileBackend().getFile(message).exists()) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     private void promptOpenKeychainInstall(View view) {
