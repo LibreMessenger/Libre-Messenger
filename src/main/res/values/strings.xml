@@ -328,7 +328,7 @@
     <string name="pref_show_dynamic_tags">Show dynamic tags</string>
     <string name="pref_show_dynamic_tags_summary">Display read-only tags underneath contacts</string>
     <string name="no_conference_server_found">No group chat server found</string>
-    <string name="conference_creation_failed">Group chat creation failed!</string>s
+    <string name="conference_creation_failed">Group chat creation failed!</string>
     <string name="account_image_description">Account avatar</string>
     <string name="copy_otr_clipboard_description">Copy OTR fingerprint to clipboard</string>
     <string name="copy_omemo_clipboard_description">Copy OMEMO fingerprint to clipboard</string>
@@ -839,7 +839,7 @@
     <string name="restore_backup">Restore backup</string>
     <string name="restore">Restore</string>
     <string name="enter_password_to_restore">Enter your password for the account %s to restore the backup.</string>
-    <string name="restore_warning">Do not use the restore backup feature in an attempt to clone (run simultaneously) an installation. Restoring a backup is only meant for migrations or in case you have lost the original device.</string>
+    <string name="restore_warning">Don\'t use the restore feature under any circumstances except in the case of migrating or losing your device.</string>
     <string name="unable_to_restore_backup">Unable to restore backup.</string>
     <string name="unable_to_decrypt_backup">Unable to decrypt backup. Is the password correct?</string>
     <string name="pref_prefer_xmpp_avatar_summary">Prefer the user\'s XMPP avatar instead of the one from your address book</string>
