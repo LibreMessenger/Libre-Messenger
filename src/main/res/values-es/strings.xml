@@ -839,7 +839,7 @@
     <string name="restore_backup">Restaurar copia de seguridad</string>
     <string name="restore">Restaurar</string>
     <string name="enter_password_to_restore">Escribe tu contraseña para la cuenta %s para restaurar la copia de seguridad.</string>
-    <string name="restore_warning">No use la característica de restaurar copia de seguridad para intentar clonar (ejecutar simultáneamente) una instalación. La restauración de copia de seguridad es solo para migraciones o para el caso de que haya perdido el dispositivo original.</string>
+    <string name="restore_warning">No use la característica de restauración bajo ninguna circunstancia excepto en caso de migración o pérdida de su dispositivo.</string>
     <string name="unable_to_restore_backup">No se puede restaurar la copia de seguridad.</string>
     <string name="unable_to_decrypt_backup">No se puede descifrar la copia de seguridad. ¿Es correcta la contraseña?</string>
     <string name="pref_prefer_xmpp_avatar_summary">Preferir el avatar de usuarios XMPP en lugar del de tu lista de contactos</string>
@@ -920,4 +920,16 @@
     <string name="enable_message_encryption">Este chat no está cifrado. Por razones de seguridad deberías habilitar el cifrado de mensajes, preferiblemente con OMEMO. Si hay algo que no te funciona, puedes deshabilitar el cifrado de mensajes pulsando en el icono del candado.</string>
     <string name="hide_warning">Ocultar advertencia</string>
     <string name="change_password_in_next_step">Puedes cambiar la contraseña generado en el siguiente paso según tus necesidades.</string>
+    <string name="action_unblock_participant">Desbloquear participante</string>
+    <string name="action_block_participant">Bloquear participante</string>
+    <string name="share_backup_files">Compartir archivos de backup</string>
+    <string name="conversations_backup">Backup de Pix-Art Messenger</string>
+    <string name="event">Evento</string>
+    <string name="pref_vibrate_in_chat_summary">Vibrar cuando llega un nuevo mensaje en un conversación abierta</string>
+    <string name="pref_vibrate_in_chat">Vibrar en una conversación abierta</string>
+    <string name="open_backup">Abrir backup</string>
+    <string name="not_a_backup_file">El archivo que has seleccionado no es un backup de Pix-Art Messenger</string>
+    <string name="account_already_setup">Esta cuenta ya ha sido configurada</string>
+    <string name="please_enter_password">Por favor entrar la contraseña para esta cuenta</string>
+    <string name="unable_to_perform_this_action">No se pudo realizar la acción</string>
 </resources>
