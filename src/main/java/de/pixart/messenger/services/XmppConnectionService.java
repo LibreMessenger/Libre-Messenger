@@ -201,6 +201,7 @@ public class XmppConnectionService extends Service {
     private final SerialSingleThreadExecutor mNotificationExecutor = new SerialSingleThreadExecutor("NotificationExecutor");
     public final SerialSingleThreadExecutor mUploadExecutor = new SerialSingleThreadExecutor("FileUpload");
     public final SerialSingleThreadExecutor mDownloadExecutor = new SerialSingleThreadExecutor("FileDownload");
+    public final SerialSingleThreadExecutor mWebPreviewExecutor = new SerialSingleThreadExecutor("WebPreview");
     private final ReplacingTaskManager mRosterSyncTaskManager = new ReplacingTaskManager();
     private final IBinder mBinder = new XmppConnectionBinder();
     private final List<Conversation> conversations = new CopyOnWriteArrayList<>();

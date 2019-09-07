@@ -24,6 +24,7 @@ import java.net.URLEncoder;
 import java.util.regex.Pattern;
 
 import de.pixart.messenger.Config;
+import de.pixart.messenger.services.XmppConnectionService;
 
 /**
  * Created by ponna on 16-01-2018.
@@ -43,14 +44,21 @@ public class RichPreview {
         metaData = new MetaData();
     }
 
-    public void getPreview(final String url, final String filename, final Context context) {
+    public void getPreview(final String url, final String filename, final Context context, final XmppConnectionService mXmppConnectionService) {
         this.url = url;
         this.filename = filename;
         this.context = context;
-        new getData().execute();
+        mXmppConnectionService.mWebPreviewExecutor.execute(() -> {
+            new getData(mXmppConnectionService).execute();
+        });
     }
 
     private class getData extends AsyncTask<Void, Void, Void> {
+        XmppConnectionService service;
+
+        getData(XmppConnectionService xmppConnectionService) {
+            this.service = xmppConnectionService;
+        }
 
         @Override
         protected Void doInBackground(Void... params) {
@@ -68,29 +76,33 @@ public class RichPreview {
                 }
                 String string = sb.substring(sb.indexOf("{"), sb.lastIndexOf("}") + 1);
                 JSONObject json = new JSONObject(string);
-                if (json.has("url")) {
-                    metaData.setUrl(json.getString("url"));
-                }
-                if (json.has("imageurl")) {
-                    metaData.setImageurl(json.getString("imageurl"));
-                }
-                if (json.has("title")) {
-                    metaData.setTitle(json.getString("title"));
-                }
-                if (json.has("description")) {
-                    metaData.setDescription(json.getString("description"));
-                }
-                if (json.has("sitename")) {
-                    metaData.setSitename(json.getString("sitename"));
-                }
-                if (json.has("mediatype")) {
-                    metaData.setMediatype(json.getString("mediatype"));
-                }
-                if (json.has("favicon")) {
-                    metaData.setFavicon(json.getString("favicon"));
+                if (json.has("offline") && json.getString("offline").equals("false")) {
+                    if (json.has("url")) {
+                        metaData.setUrl(json.getString("url"));
+                    }
+                    if (json.has("imageurl")) {
+                        metaData.setImageurl(json.getString("imageurl"));
+                    }
+                    if (json.has("title")) {
+                        metaData.setTitle(json.getString("title"));
+                    }
+                    if (json.has("description")) {
+                        metaData.setDescription(json.getString("description"));
+                    }
+                    if (json.has("sitename")) {
+                        metaData.setSitename(json.getString("sitename"));
+                    }
+                    if (json.has("mediatype")) {
+                        metaData.setMediatype(json.getString("mediatype"));
+                    }
+                    if (json.has("favicon")) {
+                        metaData.setFavicon(json.getString("favicon"));
+                    }
+                } else {
+                    retrieveMeta(url, context, service);
                 }
             } catch (Exception e) {
-                retrieveMeta(url, context);
+                retrieveMeta(url, context, service);
                 e.printStackTrace();
             } finally {
                 try {
@@ -133,7 +145,7 @@ public class RichPreview {
         }
     }
 
-    private void saveMeta(MetaData metaData, Context context) {
+    private void saveMeta(MetaData metaData, Context context, final XmppConnectionService xmppConnectionService) {
         final File file = new File(context.getCacheDir(), RICH_LINK_METADATA + File.separator + filename);
         file.getParentFile().mkdirs();
         FileOutputStream fos = null;
@@ -150,6 +162,7 @@ public class RichPreview {
             json.put("sitename", metaData.getSitename());
             json.put("mediatype", metaData.getMediatype());
             json.put("favicon", metaData.getFavicon());
+            json.put("offline", !xmppConnectionService.hasInternetConnection());
             oos.writeObject(json.toString());
         } catch (Exception e) {
             e.printStackTrace();
@@ -165,7 +178,7 @@ public class RichPreview {
         }
     }
 
-    private void retrieveMeta(String url, Context context) {
+    private void retrieveMeta(String url, Context context, XmppConnectionService xmppConnectionService) {
         Document doc = null;
         try {
             doc = Jsoup.connect(url)
@@ -280,7 +293,7 @@ public class RichPreview {
                 metaData.setUrl(uri != null ? uri.getHost() : null);
             }
         }
-        saveMeta(metaData, context);
+        saveMeta(metaData, context, xmppConnectionService);
     }
 
     public interface ResponseListener {

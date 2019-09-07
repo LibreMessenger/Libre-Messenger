@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 
 import de.pixart.messenger.R;
+import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.utils.MetaData;
 import de.pixart.messenger.utils.RichPreview;
 
@@ -163,7 +164,7 @@ public class RichLinkView extends RelativeLayout {
         return meta;
     }
 
-    public void setLink(final String url, final String filename, final boolean dataSaverDisabled, final RichPreview.ViewListener viewListener) {
+    public void setLink(final String url, final String filename, final boolean dataSaverDisabled, final XmppConnectionService mXmppConnectionService, final RichPreview.ViewListener viewListener) {
         main_url = url;
         RichPreview richPreview = new RichPreview(new RichPreview.ResponseListener() {
             @Override
@@ -180,6 +181,6 @@ public class RichLinkView extends RelativeLayout {
                 viewListener.onError(e);
             }
         });
-        richPreview.getPreview(url, filename, context);
+        richPreview.getPreview(url, filename, context, mXmppConnectionService);
     }
 }

@@ -691,6 +691,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.audioPlayer.setVisibility(View.GONE);
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.gifImage.setVisibility(View.GONE);
+        viewHolder.download_button.setVisibility(View.GONE);
         Editable body = new SpannableStringBuilder(message.getBody());
         final boolean dataSaverDisabled = activity.xmppConnectionService.isDataSaverDisabled();
         viewHolder.richlinkview.setVisibility(View.VISIBLE);
@@ -715,7 +716,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             } else {
                 weburl = "http://" + removeTrailingBracket(url);
             }
-            viewHolder.richlinkview.setLink(weburl, message.getUuid(), dataSaverDisabled, new RichPreview.ViewListener() {
+            viewHolder.richlinkview.setLink(weburl, message.getUuid(), dataSaverDisabled, activity.xmppConnectionService, new RichPreview.ViewListener() {
 
                 @Override
                 public void onSuccess(boolean status) {
