@@ -134,8 +134,10 @@ public class HttpUploadConnection implements Transferable {
             @Override
             public void success(SlotRequester.Slot slot) {
                 if (!cancelled) {
-                    HttpUploadConnection.this.slot = slot;
-                    new Thread(HttpUploadConnection.this::upload).start();
+                    mXmppConnectionService.mUploadExecutor.execute(() -> {
+                        HttpUploadConnection.this.slot = slot;
+                        HttpUploadConnection.this.upload();
+                    });
                 }
             }
 

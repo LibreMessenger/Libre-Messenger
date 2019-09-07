@@ -344,22 +344,25 @@ public class HttpDownloadConnection implements Transferable {
 
         @Override
         public void run() {
-            try {
-                changeStatus(STATUS_DOWNLOADING);
-                download();
-                updateImageBounds();
-                finish();
-            } catch (SSLHandshakeException e) {
-                changeStatus(STATUS_OFFER);
-            } catch (Exception e) {
-                if (interactive) {
-                    showToastForException(e);
-                } else {
-                    HttpDownloadConnection.this.acceptedAutomatically = false;
-                    HttpDownloadConnection.this.mXmppConnectionService.getNotificationService().push(message);
+            changeStatus(STATUS_DOWNLOADING);
+            mXmppConnectionService.mDownloadExecutor.execute(() -> {
+                try {
+                    changeStatus(STATUS_DOWNLOADING);
+                    download();
+                    updateImageBounds();
+                    finish();
+                } catch (SSLHandshakeException e) {
+                    changeStatus(STATUS_OFFER);
+                } catch (Exception e) {
+                    if (interactive) {
+                        showToastForException(e);
+                    } else {
+                        HttpDownloadConnection.this.acceptedAutomatically = false;
+                        HttpDownloadConnection.this.mXmppConnectionService.getNotificationService().push(message);
+                    }
+                    cancel();
                 }
-                cancel();
-            }
+            });
         }
 
         private void download() throws Exception {

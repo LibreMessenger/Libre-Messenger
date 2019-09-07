@@ -199,6 +199,8 @@ public class XmppConnectionService extends Service {
     private final SerialSingleThreadExecutor mDatabaseWriterExecutor = new SerialSingleThreadExecutor("DatabaseWriter");
     private final SerialSingleThreadExecutor mDatabaseReaderExecutor = new SerialSingleThreadExecutor("DatabaseReader");
     private final SerialSingleThreadExecutor mNotificationExecutor = new SerialSingleThreadExecutor("NotificationExecutor");
+    public final SerialSingleThreadExecutor mUploadExecutor = new SerialSingleThreadExecutor("FileUpload");
+    public final SerialSingleThreadExecutor mDownloadExecutor = new SerialSingleThreadExecutor("FileDownload");
     private final ReplacingTaskManager mRosterSyncTaskManager = new ReplacingTaskManager();
     private final IBinder mBinder = new XmppConnectionBinder();
     private final List<Conversation> conversations = new CopyOnWriteArrayList<>();
