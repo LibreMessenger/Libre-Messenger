@@ -212,7 +212,7 @@ public abstract class XmppActivity extends ActionBarActivity {
         mToast.show();
     }
 
-    protected final void refreshUi() {
+    public final void refreshUi() {
         final long diff = SystemClock.elapsedRealtime() - mLastUiRefresh;
         if (diff > Config.REFRESH_UI_INTERVAL) {
             mRefreshUiHandler.removeCallbacks(mRefreshUiRunnable);

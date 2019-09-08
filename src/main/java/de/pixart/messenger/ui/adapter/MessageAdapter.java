@@ -1151,7 +1151,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         new Thread(() -> {
             message.setFileDeleted(false);
             activity.xmppConnectionService.updateMessage(message, false);
-            notifyDataSetChanged();
+            activity.refreshUi();
         }).start();
     }
 
