@@ -1,5 +1,16 @@
 ### Changelog
 
+#### Version 2.2.9
+* stability improvements for group chats and channels
+* allow backups to be restored from anywhere
+* make short vibrate in open chat configurable and respect silent mode (PAM)
+* fixes for Jingle file transfer
+* fixed some rare crashes
+* when sharing a message from and to messenger insert it as quote
+* find orphaned files and show them in the chat again instead of showing them deleted
+* introduce file uploads/downloads with queue (PAM)
+* bug fixes
+
 #### Version 2.2.8
 * stability improvements for group chats and channels
 * allow backups to be restored from anywhere
