@@ -27,7 +27,6 @@
     <string name="just_now">только что</string>
     <string name="minute_ago">1 мин. назад</string>
     <string name="minutes_ago">%d мин. назад</string>
-    <string name="unread_conversations">непрочитанные диалоги</string>
     <string name="sending">отправка…</string>
     <string name="message_decrypting">Расшифровка сообщения. Пожалуйста подождите…</string>
     <string name="pgp_message">Зашифрованное OpenPGP сообщение</string>

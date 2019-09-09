@@ -26,7 +26,6 @@
     <string name="just_now">الآن</string>
     <string name="minute_ago">منذ دقيقة</string>
     <string name="minutes_ago">منذ %d دقيقة</string>
-    <string name="unread_conversations">محادثات غير مقروءة</string>
     <string name="sending">الإرسال جارٍ…</string>
     <string name="message_decrypting">جارٍ فك تشفير الرسالة. الرجاء الإنتظار…</string>
     <string name="pgp_message">OpenPGP رسالة مشفرة</string>

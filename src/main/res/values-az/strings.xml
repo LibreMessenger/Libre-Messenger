@@ -27,7 +27,6 @@
     <string name="just_now">elə indicə</string>
     <string name="minute_ago">1 dəq əvvəl</string>
     <string name="minutes_ago">%d dəq əvvəl</string>
-    <string name="unread_conversations">oxunmamış danışıq</string>
     <string name="sending">göndərilir…</string>
     <string name="message_decrypting">Mesaj şifrəsi açılır. Zəhmət olmasa gözləyin…</string>
     <string name="pgp_message">OpenPGP şifrələnmiş mesaj</string>
