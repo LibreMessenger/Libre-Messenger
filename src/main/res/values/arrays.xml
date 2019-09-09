@@ -69,6 +69,7 @@
     </string-array>
 
     <string-array name="video_compression_values">
+        <item>verylow</item>
         <item>low</item>
         <item>mid</item>
         <item>high</item>
@@ -76,6 +77,7 @@
     </string-array>
 
     <string-array name="video_compression_entries">
+        <item>@string/video_very_low</item>
         <item>@string/video_low</item>
         <item>@string/video_mid</item>
         <item>@string/video_high</item>

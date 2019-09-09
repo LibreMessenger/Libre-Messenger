@@ -1022,21 +1022,25 @@ public class XmppConnectionService extends Service {
 
     public int getCompressVideoResolutionPreference() {
         switch (getPreferences().getString("video_compression", getResources().getString(R.string.video_compression))) {
-            case "low":
+            case "verylow":
                 return 144;
-            case "mid":
+            case "low":
                 return 360;
-            case "high":
+            case "mid":
                 return 720;
+            case "high":
+                return 1080;
             case "uncompressed":
                 return 0;
             default:
-                return 360;
+                return 720;
         }
     }
 
     public int getCompressVideoBitratePreference() {
         switch (getPreferences().getString("video_compression", getResources().getString(R.string.video_compression))) {
+            case "verylow":
+                return 100000;
             case "low":
                 return 100000;
             case "mid":

@@ -487,9 +487,6 @@
     <string name="pref_picture_quality_summary">调整尺寸和压缩图片</string>
     <string name="pref_video_quality">视频画质</string>
     <string name="pref_video_quality_summary">调整尺寸和压缩视频</string>
-    <string name="video_low">低(144p)</string>
-    <string name="video_mid">标准(360p)</string>
-    <string name="video_high">高 (720p)</string>
     <string name="video_original">原文件(未压缩)</string>
     <string name="always">总是</string>
     <string name="battery_optimizations_enabled">电池优化已启用</string>
