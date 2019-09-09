@@ -254,6 +254,8 @@ public class UIHelper {
         final Transferable d = message.getTransferable();
         if (d != null) {
             switch (d.getStatus()) {
+                case Transferable.STATUS_WAITING:
+                    return new Pair<>(context.getString(R.string.waiting_for_transfer), true);
                 case Transferable.STATUS_CHECKING:
                     return new Pair<>(context.getString(R.string.checking_x,
                             getFileDescriptionString(context, message)), true);

@@ -47,6 +47,7 @@ public class HttpUploadConnection implements Transferable {
     private String mime;
     private SlotRequester.Slot slot;
     private byte[] key = null;
+    private int mStatus = Transferable.STATUS_UNKNOWN;
 
     private long transmitted = 0;
 
@@ -66,7 +67,7 @@ public class HttpUploadConnection implements Transferable {
 
     @Override
     public int getStatus() {
-        return STATUS_UPLOADING;
+        return this.mStatus;
     }
 
     @Override
@@ -134,7 +135,9 @@ public class HttpUploadConnection implements Transferable {
             @Override
             public void success(SlotRequester.Slot slot) {
                 if (!cancelled) {
+                    changeStatus(STATUS_WAITING);
                     mXmppConnectionService.mUploadExecutor.execute(() -> {
+                        changeStatus(STATUS_UPLOADING);
                         HttpUploadConnection.this.slot = slot;
                         HttpUploadConnection.this.upload();
                     });
@@ -240,6 +243,11 @@ public class HttpUploadConnection implements Transferable {
             }
             WakeLockHelper.release(wakeLock);
         }
+    }
+
+    private void changeStatus(int status) {
+        this.mStatus = status;
+        mHttpConnectionManager.updateConversationUi(true);
     }
 
     public Message getMessage() {

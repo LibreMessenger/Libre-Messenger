@@ -344,7 +344,7 @@ public class HttpDownloadConnection implements Transferable {
 
         @Override
         public void run() {
-            changeStatus(STATUS_DOWNLOADING);
+            changeStatus(STATUS_WAITING);
             mXmppConnectionService.mDownloadExecutor.execute(() -> {
                 try {
                     changeStatus(STATUS_DOWNLOADING);
