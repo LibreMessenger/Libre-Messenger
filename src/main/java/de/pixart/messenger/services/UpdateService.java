@@ -181,18 +181,24 @@ public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapp
         }
         int i = 0;
         // set index to first non-equal ordinal or length of shortest localVersion string
-        if (remote != null && installed != null) {
-            while (i < remote.length && i < installed.length && remote[i].equals(installed[i])) {
-                i++;
+        try {
+            if (remote != null && installed != null) {
+                while (i < remote.length && i < installed.length && remote[i].equals(installed[i])) {
+                    i++;
+                }
+                // compare first non-equal ordinal number
+                if (i < remote.length && i < installed.length) {
+                    int diff = Integer.valueOf(remote[i]).compareTo(Integer.valueOf(installed[i]));
+                    return Integer.signum(diff);
+                }
+                // the strings are equal or one string is a substring of the other
+                // e.g. "1.2.3" = "1.2.3" or "1.2.3" < "1.2.3.4"
+                return Integer.signum(remote.length - installed.length);
             }
-            // compare first non-equal ordinal number
-            if (i < remote.length && i < installed.length) {
-                int diff = Integer.valueOf(remote[i]).compareTo(Integer.valueOf(installed[i]));
-                return Integer.signum(diff);
-            }
-            // the strings are equal or one string is a substring of the other
-            // e.g. "1.2.3" = "1.2.3" or "1.2.3" < "1.2.3.4"
-            return Integer.signum(remote.length - installed.length);
+        } catch (Exception e) {
+            showToastMessage(true, true);
+            e.printStackTrace();
+            return 0;
         }
         return 0;
     }
