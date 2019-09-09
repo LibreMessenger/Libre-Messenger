@@ -1522,7 +1522,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             if (!hasPermissions(attachmentChoice, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)) {
                 return;
             }
-        } else if (attachmentChoice != ATTACHMENT_CHOICE_LOCATION) {
+        } else if (attachmentChoice == ATTACHMENT_CHOICE_CHOOSE_FILE || attachmentChoice == ATTACHMENT_CHOICE_CHOOSE_IMAGE || attachmentChoice == ATTACHMENT_CHOICE_CHOOSE_VIDEO) {
             if (!hasPermissions(attachmentChoice, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 return;
             }
