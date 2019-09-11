@@ -31,6 +31,7 @@ package de.pixart.messenger.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.preference.PreferenceManager;
@@ -48,7 +49,13 @@ public class ThemeHelper {
     public static int find(Context context) {
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         final Resources resources = context.getResources();
-        final boolean dark = sharedPreferences.getString(SettingsActivity.THEME, resources.getString(R.string.theme)).equals("dark");
+        final boolean auto = sharedPreferences.getString(SettingsActivity.THEME, resources.getString(R.string.theme)).equals("auto");
+        boolean dark;
+        if (auto) {
+            dark = nightMode(context);
+        } else {
+            dark = sharedPreferences.getString(SettingsActivity.THEME, resources.getString(R.string.theme)).equals("dark");
+        }
         final String fontSize = sharedPreferences.getString("font_size", resources.getString(R.string.default_font_size));
         switch (fontSize) {
             case "medium":
@@ -58,6 +65,19 @@ public class ThemeHelper {
             default:
                 return dark ? R.style.ConversationsTheme_Dark : R.style.ConversationsTheme;
         }
+    }
+
+    private static boolean nightMode(Context context) {
+        int nightModeFlags = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        switch (nightModeFlags) {
+            case Configuration.UI_MODE_NIGHT_YES:
+                return true;
+            case Configuration.UI_MODE_NIGHT_NO:
+                return false;
+            case Configuration.UI_MODE_NIGHT_UNDEFINED:
+                return false;
+        }
+        return false;
     }
 
     public static int findDialog(Context context) {
@@ -71,7 +91,7 @@ public class ThemeHelper {
             case "large":
                 return dark ? R.style.ConversationsTheme_Dark_Dialog_Large : R.style.ConversationsTheme_Dialog_Large;
             default:
-                return dark ? R.style.ConversationsTheme_Dark_Dialog: R.style.ConversationsTheme_Dialog;
+                return dark ? R.style.ConversationsTheme_Dark_Dialog : R.style.ConversationsTheme_Dialog;
         }
     }
 

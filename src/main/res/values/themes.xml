@@ -104,7 +104,8 @@
         <item name="icon_settings" type="reference">@drawable/ic_settings_black_24dp</item>
         <item name="icon_delete" type="reference">@drawable/ic_delete_black_24dp</item>
         <item name="icon_share" type="reference">@drawable/ic_share_black_24dp</item>
-        <item name="ic_cloud_download" type="reference">@drawable/ic_cloud_download_white_24dp</item>
+        <item name="ic_cloud_download" type="reference">@drawable/ic_cloud_download_white_24dp
+        </item>
         <item name="icon_scan_qr_code" type="reference">@drawable/ic_qrcode_scan_white_24dp</item>
         <item name="icon_scroll_down" type="reference">@drawable/ic_scroll_to_end_black</item>
 
@@ -369,7 +370,7 @@
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimaryDark">@color/grey300</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
         <item name="android:windowBackground">@drawable/background</item>
     </style>
 

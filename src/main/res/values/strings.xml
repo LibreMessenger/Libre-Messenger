@@ -738,6 +738,7 @@
     <string name="default_off">Off by default</string>
     <string name="pref_theme_light">Light theme</string>
     <string name="pref_theme_dark">Dark theme</string>
+    <string name="pref_theme_auto">Automatic</string>
     <string name="pref_theme_options_summary">Select the color palette</string>
     <string name="pref_theme_options">Theme</string>
     <string name="chooce_account">Choose account</string>
