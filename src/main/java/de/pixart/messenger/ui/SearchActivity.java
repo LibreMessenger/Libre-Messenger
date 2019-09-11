@@ -149,13 +149,14 @@ public class SearchActivity extends XmppActivity implements TextWatcher, OnSearc
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         final Message message = selectedMessageReference.get();
+        final String user = selectedMessageReference.get().getContact().getDisplayName();
         if (message != null) {
             switch (item.getItemId()) {
                 case R.id.open_conversation:
                     switchToConversation(wrap(message.getConversation()));
                     break;
                 case R.id.share_with:
-                    ShareUtil.share(this, message);
+                    ShareUtil.share(this, message, user);
                     break;
                 case R.id.copy_message:
                     ShareUtil.copyToClipboard(this, message);
@@ -164,7 +165,7 @@ public class SearchActivity extends XmppActivity implements TextWatcher, OnSearc
                     ShareUtil.copyUrlToClipboard(this, message);
                     break;
                 case R.id.quote_message:
-                    quote(message);
+                    quote(message, user);
                     break;
             }
         }
@@ -180,8 +181,8 @@ public class SearchActivity extends XmppActivity implements TextWatcher, OnSearc
         super.onSaveInstanceState(bundle);
     }
 
-    private void quote(Message message) {
-        switchToConversationAndQuote(wrap(message.getConversation()), MessageUtils.prepareQuote(message));
+    private void quote(Message message, String user) {
+        switchToConversationAndQuote(wrap(message.getConversation()), MessageUtils.prepareQuote(message), user);
     }
 
     private Conversation wrap(Conversational conversational) {

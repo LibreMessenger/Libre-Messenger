@@ -934,4 +934,5 @@
     <string name="please_enter_password">Please enter the password for this account</string>
     <string name="unable_to_perform_this_action">Unable to perform this action</string>
     <string name="waiting_for_transfer">Waiting for transfer</string>
+    <string name="x_has_written">%s has written:</string>
 </resources>

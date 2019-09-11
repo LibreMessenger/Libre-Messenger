@@ -47,17 +47,18 @@ import rocks.xmpp.addr.Jid;
 
 public class ShareUtil {
 
-    public static void share(XmppActivity activity, Message message) {
+    public static void share(XmppActivity activity, Message message, String user) {
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
         if (message.isGeoUri()) {
             shareIntent.putExtra(Intent.EXTRA_TEXT, message.getBody());
             shareIntent.setType("text/plain");
-            shareIntent.putExtra(ConversationsActivity.EXTRA_AS_QUOTE, true);
+            shareIntent.putExtra(ConversationsActivity.EXTRA_AS_QUOTE, false);
         } else if (!message.isFileOrImage()) {
             shareIntent.putExtra(Intent.EXTRA_TEXT, message.getMergedBody().toString());
             shareIntent.setType("text/plain");
             shareIntent.putExtra(ConversationsActivity.EXTRA_AS_QUOTE, true);
+            shareIntent.putExtra(ConversationsActivity.EXTRA_USER, user);
         } else {
             final DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
             try {

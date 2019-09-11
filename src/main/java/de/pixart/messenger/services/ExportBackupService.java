@@ -445,6 +445,7 @@ public class ExportBackupService extends Service {
                         case Message.STATUS_SEND:
                         case Message.STATUS_SEND_RECEIVED:
                         case Message.STATUS_SEND_DISPLAYED:
+                        case Message.STATUS_SEND_FAILED:
                             jid = accountJid.asBareJid().toString();
                             break;
                     }

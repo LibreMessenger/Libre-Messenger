@@ -75,6 +75,7 @@ import de.pixart.messenger.databinding.DialogQuickeditBinding;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
+import de.pixart.messenger.entities.Conversational;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.Presences;
 import de.pixart.messenger.services.AvatarService;
@@ -470,8 +471,8 @@ public abstract class XmppActivity extends ActionBarActivity {
         switchToConversation(conversation, null);
     }
 
-    public void switchToConversationAndQuote(Conversation conversation, String text) {
-        switchToConversation(conversation, text, true, null, false, false);
+    public void switchToConversationAndQuote(Conversation conversation, String text, String user) {
+        switchToConversation(conversation, text, true, user, false, false);
     }
 
     public void switchToConversation(Conversation conversation, String text) {
@@ -498,6 +499,7 @@ public abstract class XmppActivity extends ActionBarActivity {
             intent.putExtra(Intent.EXTRA_TEXT, text);
             if (asQuote) {
                 intent.putExtra(ConversationsActivity.EXTRA_AS_QUOTE, true);
+                intent.putExtra(ConversationsActivity.EXTRA_ACCOUNT, nick);
             }
         }
         if (nick != null) {
@@ -966,8 +968,8 @@ public abstract class XmppActivity extends ActionBarActivity {
         }
         if (!xmppConnectionService.multipleAccounts()) {
             Account mAccount = xmppConnectionService.getAccounts().get(0);
-            String user = Jid.of(mAccount.getJid()).getLocal();
-            String domain = Jid.of(mAccount.getJid()).getDomain();
+            String user = Jid.ofEscaped(mAccount.getJid()).getLocal();
+            String domain = Jid.ofEscaped(mAccount.getJid()).getDomain();
             String inviteURL = AdHocInviteUri(mAccount);
             if (inviteURL == null) {
                 inviteURL = Config.inviteUserURL + user + "/" + domain;

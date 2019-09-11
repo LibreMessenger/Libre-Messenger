@@ -1162,7 +1162,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         messageListAdapter = new MessageAdapter((XmppActivity) getActivity(), this.messageList);
         messageListAdapter.setOnContactPictureClicked(this);
         messageListAdapter.setOnContactPictureLongClicked(this);
-        messageListAdapter.setOnQuoteListener(this::quoteText);
+        messageListAdapter.setOnQuoteListener(text -> quoteText(text, conversation.getContact().getDisplayName()));
         binding.messagesView.setAdapter(messageListAdapter);
 
         registerForContextMenu(binding.messagesView);
@@ -1184,9 +1184,14 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         }
     }
 
-    private void quoteText(String text) {
+    private void quoteText(String text, String user) {
         if (binding.textinput.isEnabled()) {
-            binding.textinput.insertAsQuote(text);
+            String username = "";
+            if (user != null && user.length() > 0) {
+                String res = "*" + user + "*";
+                username = getString(R.string.x_has_written, res) + System.getProperty("line.separator");
+            }
+            binding.textinput.insertAsQuote(username + text);
             binding.textinput.requestFocus();
             InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             if (inputMethodManager != null) {
@@ -1207,8 +1212,8 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         binding.recordVoiceButton.setImageResource(activity.getThemeResource(R.attr.ic_send_voice_offline, R.drawable.ic_send_voice_offline));
     }
 
-    private void quoteMessage(Message message) {
-        quoteText(MessageUtils.prepareQuote(message));
+    private void quoteMessage(Message message, String user) {
+        quoteText(MessageUtils.prepareQuote(message), user);
     }
 
     @Override
@@ -1322,9 +1327,31 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        String user;
+        try {
+            final Contact contact = selectedMessage.getContact();
+            if (conversation.getMode() == Conversation.MODE_MULTI) {
+                if (contact != null) {
+                    user = contact.getDisplayName();
+                } else {
+                    user = UIHelper.getDisplayedMucCounterpart(selectedMessage.getCounterpart());
+                }
+            } else {
+                user = contact != null ? contact.getDisplayName() : null;
+            }
+            if (selectedMessage.getStatus() == Message.STATUS_SEND
+                    || selectedMessage.getStatus() == Message.STATUS_SEND_FAILED
+                    || selectedMessage.getStatus() == Message.STATUS_SEND_RECEIVED
+                    || selectedMessage.getStatus() == Message.STATUS_SEND_DISPLAYED) {
+                user = getString(R.string.me);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            user = null;
+        }
         switch (item.getItemId()) {
             case R.id.share_with:
-                ShareUtil.share(activity, selectedMessage);
+                ShareUtil.share(activity, selectedMessage, user);
                 return true;
             case R.id.correct_message:
                 correctMessage(selectedMessage);
@@ -1336,7 +1363,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 ShareUtil.copyLinkToClipboard(activity, selectedMessage);
                 return true;
             case R.id.quote_message:
-                quoteMessage(selectedMessage);
+                quoteMessage(selectedMessage, selectedMessage.getContact().getDisplayName());
                 return true;
             case R.id.send_again:
                 resendMessage(selectedMessage);
@@ -2244,6 +2271,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         final String text = extras.getString(Intent.EXTRA_TEXT);
         final String nick = extras.getString(ConversationsActivity.EXTRA_NICK);
         final boolean asQuote = extras.getBoolean(ConversationsActivity.EXTRA_AS_QUOTE);
+        final String user = extras.getString(ConversationsActivity.EXTRA_USER);
         final boolean pm = extras.getBoolean(ConversationsActivity.EXTRA_IS_PRIVATE_MESSAGE, false);
         final boolean doNotAppend = extras.getBoolean(ConversationsActivity.EXTRA_DO_NOT_APPEND, false);
         final List<Uri> uris = extractUris(extras);
@@ -2278,7 +2306,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 toggleInputMethod();
                 return;
             } else if (text != null && asQuote) {
-                quoteText(text);
+                quoteText(text, user);
             } else {
                 appendText(text, doNotAppend);
             }
