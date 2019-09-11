@@ -267,19 +267,24 @@
         <activity
             android:name=".ui.RecordingActivity"
             android:configChanges="orientation|screenSize"
+            android:launchMode="singleTask"
             android:theme="@style/ConversationsTheme.Dialog" />
         <activity
             android:name=".ui.ShareLocationActivity"
-            android:label="@string/share_location" />
+            android:label="@string/share_location"
+            android:launchMode="singleTask" />
         <activity
             android:name=".ui.ShowLocationActivity"
-            android:label="@string/show_location"></activity>
+            android:label="@string/show_location"
+            android:launchMode="singleTask" />
         <activity
             android:name=".ui.SearchActivity"
-            android:label="@string/search_messages" />
+            android:label="@string/search_messages"
+            android:launchMode="singleTask" />
         <activity
             android:name=".ui.MediaViewerActivity"
             android:configChanges="orientation|screenSize"
+            android:launchMode="singleTask"
             android:theme="@style/ConversationsTheme.FullScreen" />
         <activity
             android:name=".ui.TrustKeysActivity"
@@ -288,14 +293,15 @@
         <activity
             android:name=".ui.AboutActivity"
             android:label="@string/title_activity_about"
+            android:launchMode="singleTask"
             android:parentActivityName=".ui.SettingsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.SettingsActivity" />
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.PREFERENCE" />
             </intent-filter>
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.SettingsActivity" />
         </activity>
         <activity
             android:name=".ui.UpdaterActivity"
@@ -305,18 +311,21 @@
             android:theme="@style/ConversationsTheme" />
         <activity
             android:name=".ui.ShortcutActivity"
-            android:label="@string/contact">
+            android:label="@string/contact"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
             </intent-filter>
         </activity>
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:launchMode="singleTask"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity android:name=".ui.MemorizingActivity" />
         <activity
             android:name=".ui.MediaBrowserActivity"
-            android:label="@string/media_browser" />
+            android:label="@string/media_browser"
+            android:launchMode="singleTask" />
         <activity
             android:name=".ui.EnterNameActivity"
             android:label="@string/enter_your_name"
@@ -327,10 +336,12 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".ui.MucUsersActivity"
-            android:label="@string/group_chat_members" />
+            android:label="@string/group_chat_members"
+            android:launchMode="singleTask" />
         <activity
             android:name=".ui.ChannelDiscoveryActivity"
-            android:label="@string/discover_channels" />
+            android:label="@string/discover_channels"
+            android:launchMode="singleTask" />
 
         <service android:name=".services.ExportBackupService" />
         <service android:name=".services.ImportBackupService" />
