@@ -69,31 +69,8 @@ public class Element {
         return element == null ? null : element.getContent();
     }
 
-    public String findInternationalizedChildContent(String name) {
-        return findInternationalizedChildContent(name, Locale.getDefault().getLanguage());
-    }
-
-    private String findInternationalizedChildContent(String name, @NonNull String language) {
-        final HashMap<String, String> contents = new HashMap<>();
-        for (Element child : this.children) {
-            if (name.equals(child.getName())) {
-                String lang = child.getAttribute("xml:lang");
-                String content = child.getContent();
-                if (content != null) {
-                    if (language.equals(lang)) {
-                        return content;
-                    } else {
-                        contents.put(lang, content);
-                    }
-                }
-            }
-        }
-        final String value = contents.get(null);
-        if (value != null) {
-            return value;
-        }
-        final String[] values = contents.values().toArray(new String[0]);
-        return values.length == 0 ? null : values[0];
+    public LocalizedContent findInternationalizedChildContentInDefaultNamespace(String name) {
+        return LocalizedContent.get(this, name);
     }
 
     public Element findChild(String name, String xmlns) {

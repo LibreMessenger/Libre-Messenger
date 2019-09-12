@@ -82,6 +82,7 @@ import de.pixart.messenger.utils.SSLSocketHelper;
 import de.pixart.messenger.utils.SocksSocketFactory;
 import de.pixart.messenger.utils.XmlHelper;
 import de.pixart.messenger.xml.Element;
+import de.pixart.messenger.xml.LocalizedContent;
 import de.pixart.messenger.xml.Tag;
 import de.pixart.messenger.xml.TagWriter;
 import de.pixart.messenger.xml.XmlReader;
@@ -1454,7 +1455,7 @@ public class XmppConnection implements Runnable {
         final Tag stream = Tag.start("stream:stream");
         stream.setAttribute("to", account.getServer());
         stream.setAttribute("version", "1.0");
-        stream.setAttribute("xml:lang", "en");
+        stream.setAttribute("xml:lang", LocalizedContent.STREAM_LANGUAGE);
         stream.setAttribute("xmlns", "jabber:client");
         stream.setAttribute("xmlns:stream", "http://etherx.jabber.org/streams");
         tagWriter.writeTag(stream);

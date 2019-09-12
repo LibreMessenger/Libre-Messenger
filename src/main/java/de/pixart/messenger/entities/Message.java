@@ -64,6 +64,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
     public static final String COUNTERPART = "counterpart";
     public static final String TRUE_COUNTERPART = "trueCounterpart";
     public static final String BODY = "body";
+    public static final String BODY_LANGUAGE = "bodyLanguage";
     public static final String TIME_SENT = "timeSent";
     public static final String ENCRYPTION = "encryption";
     public static final String STATUS = "status";
@@ -102,6 +103,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
     protected boolean read = true;
     protected boolean deleted = false;
     protected String remoteMsgId = null;
+    private String bodyLanguage = null;
     protected String serverMsgId = null;
     private final Conversational conversation;
     protected Transferable transferable = null;
@@ -150,7 +152,8 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
                 null,
                 null,
                 false,
-                false);
+                false,
+                null);
     }
 
     protected Message(final Conversational conversation, final String uuid, final String conversationUUid, final Jid counterpart,
@@ -159,7 +162,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
                       final String remoteMsgId, final String relativeFilePath,
                       final String serverMsgId, final String fingerprint, final boolean read, final boolean deleted,
                       final String edited, final boolean oob, final String errorMessage, final Set<ReadByMarker> readByMarkers,
-                      final boolean markable, final boolean file_deleted) {
+                      final boolean markable, final boolean file_deleted, final String bodyLanguage) {
         this.conversation = conversation;
         this.uuid = uuid;
         this.conversationUuid = conversationUUid;
@@ -183,6 +186,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
         this.readByMarkers = readByMarkers == null ? new HashSet<ReadByMarker>() : readByMarkers;
         this.markable = markable;
         this.file_deleted = file_deleted;
+        this.bodyLanguage = bodyLanguage;
     }
 
     public static Message fromCursor(Cursor cursor, Conversation conversation) {
@@ -208,7 +212,9 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
                 cursor.getString(cursor.getColumnIndex(ERROR_MESSAGE)),
                 ReadByMarker.fromJsonString(cursor.getString(cursor.getColumnIndex(READ_BY_MARKERS))),
                 cursor.getInt(cursor.getColumnIndex(MARKABLE)) > 0,
-                cursor.getInt(cursor.getColumnIndex(FILE_DELETED)) > 0);
+                cursor.getInt(cursor.getColumnIndex(FILE_DELETED)) > 0,
+                cursor.getString(cursor.getColumnIndex(BODY_LANGUAGE))
+        );
     }
 
     private static Jid fromString(String value) {
@@ -270,6 +276,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
         values.put(READ_BY_MARKERS, ReadByMarker.toJson(readByMarkers).toString());
         values.put(MARKABLE, markable ? 1 : 0);
         values.put(FILE_DELETED, file_deleted ? 1 : 0);
+        values.put(BODY_LANGUAGE, bodyLanguage);
         return values;
     }
 
@@ -438,6 +445,14 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
 
     public void setEdited(String edited) {
         this.edited = edited;
+    }
+
+    public String getBodyLanguage() {
+        return this.bodyLanguage;
+    }
+
+    public void setBodyLanguage(String language) {
+        this.bodyLanguage = language;
     }
 
     public boolean edited() {

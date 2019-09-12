@@ -4,6 +4,7 @@ import android.util.Pair;
 
 import de.pixart.messenger.parser.AbstractParser;
 import de.pixart.messenger.xml.Element;
+import de.pixart.messenger.xml.LocalizedContent;
 
 public class MessagePacket extends AbstractAcknowledgeableStanza {
     public static final int TYPE_CHAT = 0;
@@ -16,8 +17,8 @@ public class MessagePacket extends AbstractAcknowledgeableStanza {
         super("message");
     }
 
-    public String getBody() {
-        return findChildContent("body");
+    public LocalizedContent getBody() {
+        return findInternationalizedChildContentInDefaultNamespace("body");
     }
 
     public void setBody(String text) {
