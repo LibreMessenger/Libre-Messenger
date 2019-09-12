@@ -183,6 +183,7 @@ public class RichPreview {
         try {
             doc = Jsoup.connect(url)
                     .timeout(Config.CONNECT_TIMEOUT * 1000)
+                    .userAgent(xmppConnectionService.getIqGenerator().getUserAgent())
                     .get();
         } catch (Exception e) {
             e.printStackTrace();

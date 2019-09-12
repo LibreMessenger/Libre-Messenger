@@ -5,6 +5,8 @@ import android.util.Log;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -14,7 +16,9 @@ import java.util.concurrent.TimeUnit;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.http.HttpConnectionManager;
 import de.pixart.messenger.http.services.MuclumbusService;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,6 +47,7 @@ public class ChannelDiscoveryService {
                 throw new RuntimeException("Unable to use Tor proxy", e);
             }
         }
+        builder.networkInterceptors().add(new UserAgentInterceptor(service.getIqGenerator().getUserAgent()));
         Retrofit retrofit = new Retrofit.Builder()
                 .client(builder.build())
                 .baseUrl(Config.CHANNEL_DISCOVERY)
@@ -117,5 +122,23 @@ public class ChannelDiscoveryService {
 
     public interface OnChannelSearchResultsFound {
         void onChannelSearchResultsFound(List<MuclumbusService.Room> results);
+    }
+
+    private class UserAgentInterceptor implements Interceptor {
+        private final String userAgent;
+
+        UserAgentInterceptor(String userAgent) {
+            this.userAgent = userAgent;
+        }
+
+        @NotNull
+        @Override
+        public okhttp3.Response intercept(Chain chain) throws IOException {
+            Request originalRequest = chain.request();
+            Request requestWithUserAgent = originalRequest.newBuilder()
+                    .header("User-Agent", userAgent)
+                    .build();
+            return chain.proceed(requestWithUserAgent);
+        }
     }
 }
