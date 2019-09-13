@@ -257,7 +257,7 @@ public class ExportBackupService extends Service {
                 List<File> files;
                 try {
                     files = export();
-                    success = true;
+                    success = files != null;
                 } catch (Exception e) {
                     success = false;
                     files = Collections.emptyList();
@@ -325,6 +325,10 @@ public class ExportBackupService extends Service {
         final SecureRandom secureRandom = new SecureRandom();
         final List<File> files = new ArrayList<>();
         for (Account account : this.mAccounts) {
+            final String password = account.getPassword();
+            if (password.isEmpty() || password.equals("")) {
+                return null;
+            }
             final byte[] IV = new byte[12];
             final byte[] salt = new byte[16];
             secureRandom.nextBytes(IV);
@@ -342,7 +346,7 @@ public class ExportBackupService extends Service {
             dataOutputStream.flush();
 
             final Cipher cipher = Compatibility.twentyEight() ? Cipher.getInstance(CIPHERMODE) : Cipher.getInstance(CIPHERMODE, PROVIDER);
-            byte[] key = getKey(account.getPassword(), salt);
+            byte[] key = getKey(password, salt);
             Log.d(Config.LOGTAG, backupFileHeader.toString());
             SecretKeySpec keySpec = new SecretKeySpec(key, KEYTYPE);
             IvParameterSpec ivSpec = new IvParameterSpec(IV);
