@@ -2629,12 +2629,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             final MucOptions mucOptions = conversation.getMucOptions();
             final List<MucOptions.User> allUsers = mucOptions.getUsers();
             final Set<ReadByMarker> addedMarkers = new HashSet<>();
-            ChatState state = ChatState.COMPOSING;
-            List<MucOptions.User> users = conversation.getMucOptions().getUsersWithChatState(state, 5);
-            if (users.size() == 0) {
-                state = ChatState.PAUSED;
-                users = conversation.getMucOptions().getUsersWithChatState(state, 5);
-            }
             if (mucOptions.isPrivateAndNonAnonymous()) {
                 for (int i = this.messageList.size() - 1; i >= 0; --i) {
                     final Set<ReadByMarker> markersForMessage = messageList.get(i).getReadByMarkers();
@@ -2643,7 +2637,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                         if (!ReadByMarker.contains(marker, addedMarkers)) {
                             addedMarkers.add(marker); //may be put outside this condition. set should do dedup anyway
                             MucOptions.User user = mucOptions.findUser(marker);
-                            if (user != null && !users.contains(user)) {
+                            if (user != null) {
                                 shownMarkers.add(user);
                             }
                         }
