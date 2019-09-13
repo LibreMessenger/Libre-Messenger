@@ -5,22 +5,22 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
-import android.webkit.URLUtil;
+
+import org.json.JSONException;
 
 import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.crypto.axolotl.FingerprintStatus;
 import de.pixart.messenger.services.AvatarService;
-import de.pixart.messenger.ui.util.MyLinkify;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.Emoticons;
 import de.pixart.messenger.utils.GeoHelper;
@@ -98,7 +98,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
     protected boolean file_deleted = false;
     protected boolean carbon = false;
     protected boolean oob = false;
-    protected String edited = null;
+    protected List<Edited> edits = new ArrayList<>();
     protected String relativeFilePath;
     protected boolean read = true;
     protected boolean deleted = false;
@@ -180,10 +180,10 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
         this.axolotlFingerprint = fingerprint;
         this.read = read;
         this.deleted = deleted;
-        this.edited = edited;
+        this.edits = Edited.fromJson(edited);
         this.oob = oob;
         this.errorMessage = errorMessage;
-        this.readByMarkers = readByMarkers == null ? new HashSet<ReadByMarker>() : readByMarkers;
+        this.readByMarkers = readByMarkers == null ? new HashSet<>() : readByMarkers;
         this.markable = markable;
         this.file_deleted = file_deleted;
         this.bodyLanguage = bodyLanguage;
@@ -270,7 +270,11 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
         values.put(FINGERPRINT, axolotlFingerprint);
         values.put(READ, read ? 1 : 0);
         values.put(DELETED, deleted ? 1 : 0);
-        values.put(EDITED, edited);
+        try {
+            values.put(EDITED, Edited.toJson(edits));
+        } catch (JSONException e) {
+            Log.e(Config.LOGTAG, "error persisting json for edits", e);
+        }
         values.put(OOB, oob ? 1 : 0);
         values.put(ERROR_MESSAGE, errorMessage);
         values.put(READ_BY_MARKERS, ReadByMarker.toJson(readByMarkers).toString());
@@ -443,8 +447,8 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
         this.carbon = carbon;
     }
 
-    public void setEdited(String edited) {
-        this.edited = edited;
+    public void putEdited(String edited, String serverMsgId) {
+        this.edits.add(new Edited(edited, serverMsgId));
     }
 
     public String getBodyLanguage() {
@@ -456,7 +460,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
     }
 
     public boolean edited() {
-        return this.edited != null;
+        return this.edits.size() > 0;
     }
 
     public void setTrueCounterpart(Jid trueCounterpart) {
@@ -510,7 +514,9 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
 
     boolean similar(Message message) {
         if (!isPrivateMessage() && this.serverMsgId != null && message.getServerMsgId() != null) {
-            return this.serverMsgId.equals(message.getServerMsgId());
+            return this.serverMsgId.equals(message.getServerMsgId()) || Edited.wasPreviouslyEditedServerMsgId(edits, message.getServerMsgId());
+        } else if (Edited.wasPreviouslyEditedServerMsgId(edits, message.getServerMsgId())) {
+            return true;
         } else if (this.body == null || this.counterpart == null) {
             return false;
         } else {
@@ -525,7 +531,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
             final boolean matchingCounterpart = this.counterpart.equals(message.getCounterpart());
             if (message.getRemoteMsgId() != null) {
                 final boolean hasUuid = CryptoHelper.UUID_PATTERN.matcher(message.getRemoteMsgId()).matches();
-                if (hasUuid && this.edited != null && matchingCounterpart && this.edited.equals(message.getRemoteMsgId())) {
+                if (hasUuid && matchingCounterpart && Edited.wasPreviouslyEditedRemoteMsgId(edits, message.getRemoteMsgId())) {
                     return true;
                 }
                 return (message.getRemoteMsgId().equals(this.remoteMsgId) || message.getRemoteMsgId().equals(this.uuid))
@@ -738,7 +744,11 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
     }
 
     public String getEditedId() {
-        return edited;
+        if (edits.size() > 0) {
+            return edits.get(edits.size() - 1).getEditedId();
+        } else {
+            throw new IllegalStateException("Attempting to store unedited message");
+        }
     }
 
     public void setOob(boolean isOob) {

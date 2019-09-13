@@ -873,7 +873,8 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         } else {
             message = conversation.getCorrectingMessage();
             message.setBody(body);
-            message.setEdited(message.getUuid());
+            message.putEdited(message.getUuid(), message.getServerMsgId());
+            message.setServerMsgId(null);
             message.setUuid(UUID.randomUUID().toString());
         }
         switch (conversation.getNextEncryption()) {
@@ -1886,7 +1887,8 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 this.conversation.setCorrectingMessage(finalMessage);
                 Message deletedmessage = conversation.getCorrectingMessage();
                 deletedmessage.setBody(getString(R.string.message_deleted));
-                deletedmessage.setEdited(deletedmessage.getUuid());
+                deletedmessage.putEdited(deletedmessage.getUuid(), deletedmessage.getServerMsgId());
+                deletedmessage.setServerMsgId(null);
                 deletedmessage.setUuid(UUID.randomUUID().toString());
                 sendMessage(deletedmessage);
                 activity.xmppConnectionService.deleteMessage(conversation, deletedmessage);
