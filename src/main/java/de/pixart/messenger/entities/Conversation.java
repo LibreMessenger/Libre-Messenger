@@ -365,11 +365,12 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
     public Message findMessageWithRemoteIdAndCounterpart(String id, Jid counterpart, boolean received, boolean carbon) {
         synchronized (this.messages) {
             for (int i = this.messages.size() - 1; i >= 0; --i) {
-                Message message = messages.get(i);
+                final Message message = messages.get(i);
                 if (counterpart.equals(message.getCounterpart())
                         && ((message.getStatus() == Message.STATUS_RECEIVED) == received)
                         && (carbon == message.isCarbon() || received)) {
-                    if (id.equals(message.getRemoteMsgId()) && !message.isFileOrImage() && !message.treatAsDownloadable()) {
+                    final boolean idMatch = id.equals(message.getRemoteMsgId()) || message.remoteMsgIdMatchInEdit(id);
+                    if (idMatch && !message.isFileOrImage() && !message.treatAsDownloadable()) {
                         return message;
                     } else {
                         return null;

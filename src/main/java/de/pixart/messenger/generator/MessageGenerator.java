@@ -14,7 +14,6 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.crypto.axolotl.XmppAxolotlMessage;
 import de.pixart.messenger.entities.Account;
-import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.http.P1S3UrlStreamHandler;
@@ -63,7 +62,7 @@ public class MessageGenerator extends AbstractGenerator {
         packet.setId(message.getUuid());
         packet.addChild("origin-id", Namespace.STANZA_IDS).setAttribute("id", message.getUuid());
         if (message.edited()) {
-            packet.addChild("replace", "urn:xmpp:message-correct:0").setAttribute("id", message.getEditedId());
+            packet.addChild("replace", "urn:xmpp:message-correct:0").setAttribute("id", message.getEditedIdWireFormat());
         }
         return packet;
     }
