@@ -22,6 +22,10 @@
 -dontwarn java.lang.**
 -dontwarn javax.lang.**
 
+-keepclassmembers class de.pixart.messenger.http.services.** {
+  !transient <fields>;
+}
+
 # JSR 305 annotations are for embedding nullability information.
 -dontwarn javax.annotation.**
 

@@ -81,7 +81,7 @@ public interface MuclumbusService {
     }
 
     class SearchRequest {
-        public Set<String> keywords;
+        public final Set<String> keywords;
 
         public SearchRequest(String keyword) {
             this.keywords = Collections.singleton(keyword);
