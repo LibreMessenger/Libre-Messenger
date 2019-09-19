@@ -357,7 +357,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         if (message.getStatus() <= Message.STATUS_RECEIVED) {
             ;
             if ((filesize != null) && (info != null)) {
-                viewHolder.time.setText(formattedTime + " \u00B7 " + filesize + " \u00B7 " + info + bodyLanguage);
+                viewHolder.time.setText(formattedTime + " \u00B7 " + filesize + " \u00B7 " + info + bodyLanguageInfo);
             } else if ((filesize == null) && (info != null)) {
                 viewHolder.time.setText(formattedTime + " \u00B7 " + info + bodyLanguageInfo);
             } else if ((filesize != null) && (info == null)) {
@@ -1151,11 +1151,8 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     }
 
     private void markFileExisting(Message message) {
-        new Thread(() -> {
-            message.setFileDeleted(false);
-            activity.xmppConnectionService.updateMessage(message, false);
-            activity.refreshUi();
-        }).start();
+        message.setFileDeleted(false);
+        activity.xmppConnectionService.updateMessage(message, false);
     }
 
     private boolean checkFileExistence(Message message, View view, ViewHolder viewHolder) {
