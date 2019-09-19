@@ -2,12 +2,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_change_presence"
-        android:icon="@drawable/ic_new_releases_white_24dp"
-        android:title="@string/edit_status_message"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/action_share"
         android:icon="@drawable/ic_share_white_24dp"
         android:title="@string/share_uri_with"

@@ -44,111 +44,12 @@
                         android:layout_height="wrap_content"
                         android:padding="@dimen/card_padding_regular">
 
-                        <RelativeLayout
-                            android:id="@+id/your_name_box"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentTop="true"
-                            android:layout_marginBottom="@dimen/activity_vertical_margin"
-                            android:visibility="gone">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:layout_alignParentLeft="true"
-                                android:layout_centerVertical="true"
-                                android:layout_toStartOf="@+id/action_edit_your_name"
-                                android:layout_toLeftOf="@+id/action_edit_your_name"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:id="@+id/your_name"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/no_name_set_instructions"
-                                    android:textAppearance="@style/TextAppearance.Conversations.Body1.Tertiary" />
-
-                                <TextView
-                                    android:id="@+id/your_name_desc"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/your_name"
-                                    android:textAppearance="@style/TextAppearance.Conversations.Caption" />
-                            </LinearLayout>
-
-                            <ImageButton
-                                android:id="@+id/action_edit_your_name"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:alpha="?attr/icon_alpha"
-                                android:background="?attr/selectableItemBackgroundBorderless"
-                                android:padding="@dimen/image_button_padding"
-                                android:src="?attr/icon_edit_body"
-                                android:visibility="visible" />
-                        </RelativeLayout>
-
-                        <com.makeramen.roundedimageview.RoundedImageView
-                            android:id="@+id/avater"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/your_name_box"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginBottom="@dimen/avatar_item_distance"
-                            android:adjustViewBounds="true"
-                            android:contentDescription="@string/account_image_description"
-                            android:maxWidth="384dp"
-                            android:maxHeight="384dp"
-                            android:padding="1dp"
-                            app:riv_corner_radius="@dimen/rounded_image_border" />
-
                         <LinearLayout
                             android:id="@+id/jid_password_box"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/avater"
+                            android:layout_below="@+id/nick_avatar_box"
                             android:orientation="vertical">
-
-                            <android.support.design.widget.TextInputLayout
-                                android:id="@+id/account_jid_layout"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:hint="@string/account_settings_jabber_id"
-                                app:errorTextAppearance="@style/TextAppearance.Conversations.Design.Error"
-                                app:hintTextAppearance="@style/TextAppearance.Conversations.Design.Hint">
-
-                                <AutoCompleteTextView
-                                    android:id="@+id/account_jid"
-                                    style="@style/Widget.Conversations.EditText"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:imeOptions="actionNext"
-                                    android:inputType="textEmailAddress"
-                                    android:textColor="?attr/edit_text_color" />
-                            </android.support.design.widget.TextInputLayout>
-
-                            <android.support.design.widget.TextInputLayout
-                                android:id="@+id/account_password_layout"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                app:errorTextAppearance="@style/TextAppearance.Conversations.Design.Error"
-                                app:hintTextAppearance="@style/TextAppearance.Conversations.Design.Hint"
-                                app:passwordToggleDrawable="@drawable/visibility_toggle_drawable"
-                                app:passwordToggleEnabled="true"
-                                app:passwordToggleTint="?android:textColorSecondary">
-
-                                <de.pixart.messenger.ui.widget.TextInputEditText
-                                    android:id="@+id/account_password"
-                                    style="@style/Widget.Conversations.EditText"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:hint="@string/password"
-                                    android:inputType="textPassword"
-                                    android:textColor="?attr/edit_text_color" />
-                            </android.support.design.widget.TextInputLayout>
 
                             <LinearLayout
                                 android:id="@+id/name_port"
@@ -206,13 +107,43 @@
                                 </LinearLayout>
                             </LinearLayout>
 
-                            <CheckBox
-                                android:id="@+id/account_register_new"
-                                style="@style/Widget.Conversations.CheckBox"
-                                android:layout_width="wrap_content"
+                            <android.support.design.widget.TextInputLayout
+                                android:id="@+id/account_jid_layout"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/register_account" />
+                                android:hint="@string/account_settings_jabber_id"
+                                app:errorTextAppearance="@style/TextAppearance.Conversations.Design.Error"
+                                app:hintTextAppearance="@style/TextAppearance.Conversations.Design.Hint">
+
+                                <AutoCompleteTextView
+                                    android:id="@+id/account_jid"
+                                    style="@style/Widget.Conversations.EditText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:imeOptions="actionNext"
+                                    android:inputType="textEmailAddress"
+                                    android:textColor="?attr/edit_text_color" />
+                            </android.support.design.widget.TextInputLayout>
+
+                            <android.support.design.widget.TextInputLayout
+                                android:id="@+id/account_password_layout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:errorTextAppearance="@style/TextAppearance.Conversations.Design.Error"
+                                app:hintTextAppearance="@style/TextAppearance.Conversations.Design.Hint"
+                                app:passwordToggleDrawable="@drawable/visibility_toggle_drawable"
+                                app:passwordToggleEnabled="true"
+                                app:passwordToggleTint="?android:textColorSecondary">
+
+                                <de.pixart.messenger.ui.widget.TextInputEditText
+                                    android:id="@+id/account_password"
+                                    style="@style/Widget.Conversations.EditText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="@string/password"
+                                    android:inputType="textPassword"
+                                    android:textColor="?attr/edit_text_color" />
+                            </android.support.design.widget.TextInputLayout>
                         </LinearLayout>
 
                         <LinearLayout
@@ -241,6 +172,139 @@
                                 android:text="@string/show_termsofuse"
                                 android:visibility="gone" />
                         </LinearLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/nick_avatar_box"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginBottom="@dimen/activity_vertical_margin"
+                            android:orientation="horizontal">
+
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_toEndOf="@+id/avater"
+                                android:layout_toRightOf="@+id/avater"
+                                android:orientation="vertical">
+
+                                <RelativeLayout
+                                    android:id="@+id/your_name_box"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:visibility="gone">
+
+                                    <ImageButton
+                                        android:id="@+id/action_edit_your_name"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentEnd="true"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_centerVertical="true"
+                                        android:alpha="?attr/icon_alpha"
+                                        android:background="?attr/selectableItemBackgroundBorderless"
+                                        android:padding="@dimen/image_button_padding"
+                                        android:src="?attr/icon_edit_body"
+                                        android:visibility="visible" />
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentStart="true"
+                                        android:layout_alignParentLeft="true"
+                                        android:layout_centerVertical="true"
+                                        android:layout_toStartOf="@+id/action_edit_your_name"
+                                        android:layout_toLeftOf="@+id/action_edit_your_name"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:id="@+id/your_name_desc"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/your_name"
+                                            android:textAppearance="@style/TextAppearance.Conversations.Caption" />
+
+                                        <TextView
+                                            android:id="@+id/your_name"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/no_name_set_instructions"
+                                            android:textAppearance="@style/TextAppearance.Conversations.Body1.Tertiary" />
+                                    </LinearLayout>
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:id="@+id/your_status_box"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@+id/your_name_box"
+                                    android:visibility="gone">
+
+                                    <ImageButton
+                                        android:id="@+id/action_edit_your_status"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentEnd="true"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_centerVertical="true"
+                                        android:alpha="?attr/icon_alpha"
+                                        android:background="?attr/selectableItemBackgroundBorderless"
+                                        android:padding="@dimen/image_button_padding"
+                                        android:src="?attr/icon_edit_body"
+                                        android:visibility="visible" />
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentStart="true"
+                                        android:layout_alignParentLeft="true"
+                                        android:layout_centerVertical="true"
+                                        android:layout_toStartOf="@+id/action_edit_your_status"
+                                        android:layout_toLeftOf="@+id/action_edit_your_status"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:id="@+id/your_status_desc"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/your_status"
+                                            android:textAppearance="@style/TextAppearance.Conversations.Caption" />
+
+                                        <TextView
+                                            android:id="@+id/your_status"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text=""
+                                            android:textAppearance="@style/TextAppearance.Conversations.Body1.Tertiary" />
+                                    </LinearLayout>
+                                </RelativeLayout>
+                            </RelativeLayout>
+
+                            <com.makeramen.roundedimageview.RoundedImageView
+                                android:id="@+id/avater"
+                                android:layout_width="@dimen/avatar_on_details_screen_size"
+                                android:layout_height="@dimen/avatar_on_details_screen_size"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentLeft="true"
+                                android:layout_centerHorizontal="false"
+                                android:layout_margin="6dp"
+                                android:layout_marginBottom="@dimen/avatar_item_distance"
+                                android:adjustViewBounds="true"
+                                android:contentDescription="@string/account_image_description"
+                                android:maxWidth="@dimen/avatar_on_details_screen_size"
+                                android:maxHeight="@dimen/avatar_on_details_screen_size"
+                                android:visibility="gone"
+                                app:riv_corner_radius="@dimen/rounded_image_border" />
+                        </RelativeLayout>
+
+                        <CheckBox
+                            android:id="@+id/account_register_new"
+                            style="@style/Widget.Conversations.CheckBox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/jid_password_box"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/register_account" />
                     </RelativeLayout>
                 </android.support.v7.widget.CardView>
 
@@ -327,36 +391,161 @@
                         android:orientation="vertical"
                         android:padding="@dimen/card_padding_regular">
 
-                        <TableLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:shrinkColumns="0"
-                            android:stretchColumns="1">
+                        <RelativeLayout
+                            android:id="@+id/pgp_fingerprint_box"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="32dp">
 
-                            <TableRow
-                                android:layout_width="fill_parent"
+                            <ImageButton
+                                android:id="@+id/action_delete_pgp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                tools:ignore="UselessParent">
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:alpha="1.0"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:padding="@dimen/image_button_padding"
+                                android:src="?attr/icon_remove"
+                                android:visibility="visible" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentLeft="true"
+                                android:layout_centerVertical="true"
+                                android:layout_toStartOf="@+id/action_delete_pgp"
+                                android:layout_toLeftOf="@+id/action_delete_pgp"
+                                android:orientation="vertical">
 
                                 <TextView
+                                    android:id="@+id/pgp_fingerprint"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:ellipsize="end"
-                                    android:singleLine="true"
-                                    android:text="@string/server_info_session_established"
-                                    android:textAppearance="@style/TextAppearance.Conversations.Body1" />
+                                    android:textAppearance="@style/TextAppearance.Conversations.Fingerprint" />
 
                                 <TextView
-                                    android:id="@+id/session_est"
+                                    android:id="@+id/pgp_fingerprint_desc"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_gravity="end"
-                                    android:paddingStart="4dp"
-                                    android:paddingLeft="4dp"
-                                    android:textAppearance="@style/TextAppearance.Conversations.Body1" />
-                            </TableRow>
+                                    android:text="@string/openpgp_key_id"
+                                    android:textAppearance="@style/TextAppearance.Conversations.Caption" />
+                            </LinearLayout>
+                        </RelativeLayout>
 
-                        </TableLayout>
+                        <RelativeLayout
+                            android:id="@+id/otr_fingerprint_box"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="24dp">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentLeft="true"
+                                android:layout_centerVertical="true"
+                                android:layout_toStartOf="@+id/key_actions"
+                                android:layout_toLeftOf="@+id/key_actions"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/otr_fingerprint"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="@style/TextAppearance.Conversations.Fingerprint" />
+
+                                <TextView
+                                    android:id="@+id/otr_fingerprint_desc"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/otr_fingerprint"
+                                    android:textAppearance="@style/TextAppearance.Conversations.Caption" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/key_actions"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:orientation="horizontal">
+
+                                <ImageButton
+                                    android:id="@+id/action_copy_to_clipboard"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:contentDescription="@string/copy_otr_clipboard_description"
+                                    android:padding="@dimen/image_button_padding"
+                                    android:src="?attr/icon_copy"
+                                    android:visibility="visible" />
+                            </LinearLayout>
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/axolotl_fingerprint_box"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="24dp">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentLeft="true"
+                                android:layout_centerVertical="true"
+                                android:layout_toStartOf="@+id/axolotl_actions"
+                                android:layout_toLeftOf="@+id/axolotl_actions"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/axolotl_fingerprint"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="@style/TextAppearance.Conversations.Fingerprint" />
+
+                                <TextView
+                                    android:id="@+id/own_fingerprint_desc"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="@style/TextAppearance.Conversations.Caption" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/axolotl_actions"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:orientation="horizontal">
+
+                                <ImageButton
+                                    android:id="@+id/action_copy_axolotl_to_clipboard"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:contentDescription="@string/copy_omemo_clipboard_description"
+                                    android:padding="@dimen/image_button_padding"
+                                    android:src="?attr/icon_copy"
+                                    android:visibility="visible" />
+
+                                <ImageButton
+                                    android:id="@+id/action_regenerate_omemo_key"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:contentDescription="@string/regenerate_omemo_key"
+                                    android:padding="@dimen/image_button_padding"
+                                    android:src="?attr/icon_refresh"
+                                    android:visibility="gone" />
+                            </LinearLayout>
+                        </RelativeLayout>
 
                         <TableLayout
                             android:id="@+id/server_info_more"
@@ -590,165 +779,40 @@
                             </TableRow>
                         </TableLayout>
 
+                        <TableLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:shrinkColumns="0"
+                            android:stretchColumns="1">
+
+                            <TableRow
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                tools:ignore="UselessParent">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:ellipsize="end"
+                                    android:singleLine="true"
+                                    android:text="@string/server_info_session_established"
+                                    android:textAppearance="@style/TextAppearance.Conversations.Body1" />
+
+                                <TextView
+                                    android:id="@+id/session_est"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="end"
+                                    android:paddingStart="4dp"
+                                    android:paddingLeft="4dp"
+                                    android:textAppearance="@style/TextAppearance.Conversations.Body1" />
+                            </TableRow>
+
+                        </TableLayout>
+
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="8dp" />
-
-                        <RelativeLayout
-                            android:id="@+id/pgp_fingerprint_box"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginTop="32dp">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:layout_alignParentLeft="true"
-                                android:layout_centerVertical="true"
-                                android:layout_toStartOf="@+id/action_delete_pgp"
-                                android:layout_toLeftOf="@+id/action_delete_pgp"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:id="@+id/pgp_fingerprint"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textAppearance="@style/TextAppearance.Conversations.Fingerprint" />
-
-                                <TextView
-                                    android:id="@+id/pgp_fingerprint_desc"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/openpgp_key_id"
-                                    android:textAppearance="@style/TextAppearance.Conversations.Caption" />
-                            </LinearLayout>
-
-                            <ImageButton
-                                android:id="@+id/action_delete_pgp"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:alpha="1.0"
-                                android:background="?attr/selectableItemBackgroundBorderless"
-                                android:padding="@dimen/image_button_padding"
-                                android:src="?attr/icon_remove"
-                                android:visibility="visible" />
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:id="@+id/otr_fingerprint_box"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginTop="24dp">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:layout_alignParentLeft="true"
-                                android:layout_centerVertical="true"
-                                android:layout_toStartOf="@+id/key_actions"
-                                android:layout_toLeftOf="@+id/key_actions"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:id="@+id/otr_fingerprint"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textAppearance="@style/TextAppearance.Conversations.Fingerprint" />
-
-                                <TextView
-                                    android:id="@+id/otr_fingerprint_desc"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/otr_fingerprint"
-                                    android:textAppearance="@style/TextAppearance.Conversations.Caption" />
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:id="@+id/key_actions"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:orientation="horizontal">
-
-                                <ImageButton
-                                    android:id="@+id/action_copy_to_clipboard"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:background="?attr/selectableItemBackgroundBorderless"
-                                    android:contentDescription="@string/copy_otr_clipboard_description"
-                                    android:padding="@dimen/image_button_padding"
-                                    android:src="?attr/icon_copy"
-                                    android:visibility="visible" />
-                            </LinearLayout>
-                        </RelativeLayout>
-
-                        <RelativeLayout
-                            android:id="@+id/axolotl_fingerprint_box"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginTop="24dp">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:layout_alignParentLeft="true"
-                                android:layout_centerVertical="true"
-                                android:layout_toStartOf="@+id/axolotl_actions"
-                                android:layout_toLeftOf="@+id/axolotl_actions"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:id="@+id/axolotl_fingerprint"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textAppearance="@style/TextAppearance.Conversations.Fingerprint" />
-
-                                <TextView
-                                    android:id="@+id/own_fingerprint_desc"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textAppearance="@style/TextAppearance.Conversations.Caption" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:id="@+id/axolotl_actions"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:layout_alignParentRight="true"
-                                android:layout_centerVertical="true"
-                                android:orientation="horizontal">
-
-                                <ImageButton
-                                    android:id="@+id/action_copy_axolotl_to_clipboard"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:background="?attr/selectableItemBackgroundBorderless"
-                                    android:contentDescription="@string/copy_omemo_clipboard_description"
-                                    android:padding="@dimen/image_button_padding"
-                                    android:src="?attr/icon_copy"
-                                    android:visibility="visible" />
-
-                                <ImageButton
-                                    android:id="@+id/action_regenerate_omemo_key"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:background="?attr/selectableItemBackgroundBorderless"
-                                    android:contentDescription="@string/regenerate_omemo_key"
-                                    android:padding="@dimen/image_button_padding"
-                                    android:src="?attr/icon_refresh"
-                                    android:visibility="gone" />
-                            </LinearLayout>
-                        </RelativeLayout>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
 

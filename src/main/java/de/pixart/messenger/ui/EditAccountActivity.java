@@ -99,6 +99,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     private final AtomicBoolean redirectInProgress = new AtomicBoolean(false);
     private Jid jidToEdit;
     private boolean mInitMode = false;
+    private boolean mExisting = false;
     private Boolean mForceRegister = null;
     private boolean mUsernameMode = Config.DOMAIN_LOCK != null;
     private boolean mShowOptions = false;
@@ -535,11 +536,19 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             this.binding.saveButton.setEnabled(true);
             if (!mInitMode) {
                 if (mAccount != null && mAccount.isOnlineAndConnected()) {
+                    this.binding.yourStatusBox.setVisibility(View.VISIBLE);
                     this.binding.saveButton.setText(R.string.save);
                     if (!accountInfoEdited) {
                         this.binding.saveButton.setEnabled(false);
                     }
+                    if (!mUsernameMode && Jid.of(mAccount.getJid()).getDomain().toLowerCase().equals("pix-art.de")) {
+                        this.binding.showPrivacyPolicy.setVisibility(View.VISIBLE);
+                        this.binding.showTermsOfUse.setVisibility(View.VISIBLE);
+                    }
                 } else {
+                    this.binding.yourStatusBox.setVisibility(View.GONE);
+                    this.binding.showPrivacyPolicy.setVisibility(View.GONE);
+                    this.binding.showTermsOfUse.setVisibility(View.GONE);
                     XmppConnection connection = mAccount == null ? null : mAccount.getXmppConnection();
                     URL url = connection != null && mAccount.getStatus() == Account.State.PAYMENT_REQUIRED ? connection.getRedirectionUrl() : null;
                     if (url != null) {
@@ -621,6 +630,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         this.binding.saveButton.setOnClickListener(this.mSaveButtonClickListener);
         this.binding.cancelButton.setOnClickListener(this.mCancelButtonClickListener);
         this.binding.actionEditYourName.setOnClickListener(this::onEditYourNameClicked);
+        this.binding.actionEditYourStatus.setOnClickListener(this::onEditYourStatusClicked);
         if (savedInstanceState != null && savedInstanceState.getBoolean("showMoreTable")) {
             changeMoreTableVisibility(true);
         }
@@ -656,6 +666,10 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         }, true);
     }
 
+    private void onEditYourStatusClicked(View view) {
+        changePresence();
+    }
+
     private void refreshAvatar() {
         AvatarWorkerTask.loadAvatar(mAccount, binding.avater, R.dimen.avatar_on_details_screen_size);
     }
@@ -671,7 +685,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         final MenuItem showPassword = menu.findItem(R.id.action_show_password);
         final MenuItem renewCertificate = menu.findItem(R.id.action_renew_certificate);
         final MenuItem mamPrefs = menu.findItem(R.id.action_mam_prefs);
-        final MenuItem changePresence = menu.findItem(R.id.action_change_presence);
         final MenuItem actionShare = menu.findItem(R.id.action_share);
         final MenuItem shareBarcode = menu.findItem(R.id.action_share_barcode);
         final MenuItem shareQRCode = menu.findItem(R.id.action_show_qr_code);
@@ -690,7 +703,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             announcePGP.setVisible(true);
             forgotPassword.setVisible(true);
             mamPrefs.setVisible(mAccount.getXmppConnection().getFeatures().mam());
-            changePresence.setVisible(!mInitMode);
         } else {
             announcePGP.setVisible(false);
             forgotPassword.setVisible(false);
@@ -699,7 +711,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             showMoreInfo.setVisible(false);
             changePassword.setVisible(false);
             mamPrefs.setVisible(false);
-            changePresence.setVisible(false);
             actionShare.setVisible(false);
             shareBarcode.setVisible(false);
             shareQRCode.setVisible(false);
@@ -754,13 +765,18 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             this.mForceRegister = intent.hasExtra(EXTRA_FORCE_REGISTER) ? intent.getBooleanExtra(EXTRA_FORCE_REGISTER, false) : null;
             Log.d(Config.LOGTAG, "force register=" + mForceRegister);
             this.mInitMode = init || this.jidToEdit == null;
+            this.mExisting = existing;
             this.messageFingerprint = intent.getStringExtra("fingerprint");
+            if (mExisting) {
+                this.binding.accountRegisterNew.setVisibility(View.GONE);
+            }
             if (!mInitMode) {
                 this.binding.accountRegisterNew.setVisibility(View.GONE);
                 setTitle(getString(R.string.account_details));
                 configureActionBar(getSupportActionBar(), !openedFromNotification);
             } else {
                 this.binding.yourNameBox.setVisibility(View.GONE);
+                this.binding.yourStatusBox.setVisibility(View.GONE);
                 this.binding.avater.setVisibility(View.GONE);
                 configureActionBar(getSupportActionBar(), !(init && Config.MAGIC_CREATE_DOMAIN == null));
                 if (mForceRegister != null) {
@@ -797,6 +813,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     public void onSaveInstanceState(final Bundle savedInstanceState) {
         if (mAccount != null) {
             savedInstanceState.putString("account", mAccount.getJid().asBareJid().toString());
+            savedInstanceState.putBoolean("existing", mExisting);
             savedInstanceState.putBoolean("initMode", mInitMode);
             savedInstanceState.putBoolean("showMoreTable", binding.serverInfoMore.getVisibility() == View.VISIBLE);
         }
@@ -912,9 +929,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             case R.id.action_renew_certificate:
                 renewCertificate();
                 break;
-            case R.id.action_change_presence:
-                changePresence();
-                break;
             case R.id.action_show_password:
                 showPassword();
                 break;
@@ -994,7 +1008,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         boolean manualStatus = sharedPreferences.getBoolean(SettingsActivity.MANUALLY_CHANGE_PRESENCE, getResources().getBoolean(R.bool.manually_change_presence));
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final DialogPresenceBinding binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.dialog_presence, null, false);
-        String current = mAccount.getPresenceStatusMessage();
+        final String current = mAccount.getPresenceStatusMessage();
         if (current != null && !current.trim().isEmpty()) {
             binding.statusMessage.append(current);
         }
@@ -1017,6 +1031,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             } else {
                 xmppConnectionService.changeStatus(mAccount, template, null);
             }
+            updatePresenceStatus(getPresenceStatus(getAvailabilityRadioButton(binding)), binding.statusMessage.getText().toString().trim());
         });
         builder.create().show();
     }
@@ -1076,6 +1091,22 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         }
     }
 
+    private String getPresenceStatus(Presence.Status status) {
+        if (status == null) {
+            return getString(R.string.presence_online);
+        }
+        switch (status) {
+            case DND:
+                return getString(R.string.presence_dnd);
+            case XA:
+                return getString(R.string.presence_xa);
+            case AWAY:
+                return getString(R.string.presence_away);
+            default:
+                return getString(R.string.presence_online);
+        }
+    }
+
     @Override
     public void alias(String alias) {
         if (alias != null) {
@@ -1110,7 +1141,9 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 
         final String displayName = mAccount.getDisplayName();
         updateDisplayName(displayName);
-
+        final String presenceStatus = getPresenceStatus(mAccount.getPresenceStatus());
+        final String presenceStatusMessage = mAccount.getPresenceStatusMessage();
+        updatePresenceStatus(presenceStatus, presenceStatusMessage);
         final boolean tooglePassword = mAccount.isOptionSet(Account.OPTION_MAGIC_CREATE) || !mAccount.isOptionSet(Account.OPTION_LOGGED_IN_SUCCESSFULLY);
         final boolean editPassword = !mAccount.isOptionSet(Account.OPTION_MAGIC_CREATE) || (!mAccount.isOptionSet(Account.OPTION_LOGGED_IN_SUCCESSFULLY) && QuickConversationsService.isConversations()) || mAccount.getLastErrorStatus() == Account.State.UNAUTHORIZED;
         this.binding.accountPasswordLayout.setPasswordVisibilityToggleEnabled(tooglePassword);
@@ -1121,7 +1154,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 
         if (!mInitMode) {
             binding.avater.setVisibility(View.VISIBLE);
-            AvatarWorkerTask.loadAvatar(mAccount, binding.avater, R.dimen.avatar_big);
+            AvatarWorkerTask.loadAvatar(mAccount, binding.avater, R.dimen.avatar_on_details_screen_size);
             this.binding.accountJid.setEnabled(false);
         } else {
             binding.avater.setVisibility(View.GONE);
@@ -1137,18 +1170,24 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             this.binding.accountRegisterNew.setVisibility(View.GONE);
         } else if (this.mAccount.isOptionSet(Account.OPTION_REGISTER) && mForceRegister == null) {
             this.binding.accountRegisterNew.setVisibility(View.VISIBLE);
+        } else if (mExisting) {
+            this.binding.accountRegisterNew.setVisibility(View.GONE);
         } else {
-            this.binding.accountRegisterNew.setVisibility(mInitMode ? View.VISIBLE : View.GONE);
+            if (mInitMode) {
+                this.binding.accountRegisterNew.setVisibility(View.VISIBLE);
+            } else {
+                this.binding.accountRegisterNew.setVisibility(View.GONE);
+            }
         }
         this.binding.yourNameBox.setVisibility(mInitMode ? View.GONE : View.VISIBLE);
+        this.binding.yourStatusBox.setVisibility(mInitMode ? View.GONE : View.VISIBLE);
         if (this.mAccount.isOnlineAndConnected() && !this.mFetchingAvatar) {
             Features features = this.mAccount.getXmppConnection().getFeatures();
             this.binding.stats.setVisibility(View.VISIBLE);
             boolean showBatteryWarning = !xmppConnectionService.getPushManagementService().available(mAccount) && isOptimizingBattery();
             boolean showDataSaverWarning = isAffectedByDataSaver();
             showOsOptimizationWarning(showBatteryWarning, showDataSaverWarning);
-            this.binding.sessionEst.setText(UIHelper.readableTimeDifferenceFull(this, this.mAccount.getXmppConnection()
-                    .getLastSessionEstablished()));
+            this.binding.sessionEst.setText(UIHelper.readableTimeDifferenceFull(this, this.mAccount.getXmppConnection().getLastSessionEstablished()));
             if (features.rosterVersioning()) {
                 this.binding.serverInfoRosterVersion.setText(R.string.server_info_available);
             } else {
@@ -1320,6 +1359,15 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             this.binding.yourName.setText(displayName);
             this.binding.yourName.setTextAppearance(this, R.style.TextAppearance_Conversations_Body1);
         }
+    }
+
+    private void updatePresenceStatus(String presenceStatus, String presenceStatusMessage) {
+        String status = presenceStatus;
+        if (!TextUtils.isEmpty(presenceStatusMessage)) {
+            status = presenceStatus + ": " + presenceStatusMessage;
+        }
+        this.binding.yourStatus.setText(status);
+        this.binding.yourStatus.setTextAppearance(this, R.style.TextAppearance_Conversations_Body1);
     }
 
     private void removeErrorsOnAllBut(TextInputLayout exception) {
