@@ -2481,6 +2481,7 @@ public class XmppConnectionService extends Service {
                     } else if (conversation.getMode() == Conversation.MODE_SINGLE) {
                         conversation.endOtrIfNeeded();
                     }
+                    mNotificationService.clear(conversation);
                     conversations.remove(conversation);
                 }
             }
@@ -2496,7 +2497,7 @@ public class XmppConnectionService extends Service {
             this.accounts.remove(account);
             this.mRosterSyncTaskManager.clear(account);
             updateAccountUi();
-            getNotificationService().updateErrorNotification();
+            mNotificationService.updateErrorNotification();
             syncEnabledAccountSetting();
             toggleForegroundService();
         }
