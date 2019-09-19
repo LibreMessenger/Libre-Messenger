@@ -2843,6 +2843,9 @@ public class XmppConnectionService extends Service {
                     Account account = conversation.getAccount();
                     final MucOptions mucOptions = conversation.getMucOptions();
                     if (mucOptions.nonanonymous() && !mucOptions.membersOnly() && !conversation.getBooleanAttribute("accept_non_anonymous", false)) {
+                        synchronized (account.inProgressConferenceJoins) {
+                            account.inProgressConferenceJoins.remove(conversation);
+                        }
                         mucOptions.setError(MucOptions.Error.NON_ANONYMOUS);
                         updateConversationUi();
                         if (onConferenceJoined != null) {
@@ -3299,7 +3302,9 @@ public class XmppConnectionService extends Service {
                     }
 
                     updateConversationUi();
-                } else if (packet.getType() == IqPacket.TYPE.ERROR) {
+                } else if (packet.getType() == IqPacket.TYPE.TIMEOUT) {
+                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": received timeout waiting for conference configuration fetch");
+                } else {
                     if (callback != null) {
                         callback.onFetchFailed(conversation, packet.getError());
                     }

@@ -1775,7 +1775,8 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 intent = new Intent(getActivity(), ShareLocationActivity.class);
                 break;
         }
-        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+        final Context context = getActivity();
+        if (context != null && intent.resolveActivity(context.getPackageManager()) != null) {
             Log.d(Config.LOGTAG, "Attachment: " + attachmentChoice);
             if (chooser) {
                 startActivityForResult(

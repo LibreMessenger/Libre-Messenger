@@ -16,6 +16,7 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.databinding.SearchResultItemBinding;
 import de.pixart.messenger.http.services.MuclumbusService;
 import de.pixart.messenger.ui.util.AvatarWorkerTask;
+import rocks.xmpp.addr.Jid;
 
 
 public class ChannelSearchResultAdapter extends ListAdapter<MuclumbusService.Room, ChannelSearchResultAdapter.ViewHolder> {
@@ -62,7 +63,8 @@ public class ChannelSearchResultAdapter extends ListAdapter<MuclumbusService.Roo
             viewHolder.binding.language.setText("(" + language.toUpperCase(Locale.ENGLISH) + ")");
             viewHolder.binding.language.setVisibility(View.VISIBLE);
         }
-        viewHolder.binding.room.setText(searchResult.getRoom().asBareJid().toString());
+        final Jid room = searchResult.getRoom();
+        viewHolder.binding.room.setText(room != null ? room.asBareJid().toString() : "");
         AvatarWorkerTask.loadAvatar(searchResult, viewHolder.binding.avatar, R.dimen.avatar);
         viewHolder.binding.getRoot().setOnClickListener(v -> listener.onChannelSearchResult(searchResult));
     }
