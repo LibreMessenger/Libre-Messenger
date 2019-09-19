@@ -212,7 +212,7 @@ public class IrregularUnicodeDetector {
         }
         return flat;
     }
-    
+
     private static boolean containsOnlyAmbiguousCyrillic(Collection<String> codePoints) {
         for (String codePoint : codePoints) {
             if (!AMBIGUOUS_CYRILLIC.contains(codePoint)) {
