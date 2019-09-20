@@ -76,7 +76,7 @@ dependencies {
     implementation 'com.googlecode.ez-vcard:ez-vcard:0.10.5'
     implementation project(':libs:xmpp-addr')
     implementation 'org.hsluv:hsluv:0.2'
-    implementation 'org.conscrypt:conscrypt-android:1.4.2'
+    implementation 'org.conscrypt:conscrypt-android:2.2.1'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.15' // 1.2.15 is last working version for minSDK 16
     implementation 'me.drakeet.support:toastcompat:1.1.0'
     implementation 'org.osmdroid:osmdroid-android:6.1.0'
