@@ -671,7 +671,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     }
 
     private void refreshAvatar() {
-        AvatarWorkerTask.loadAvatar(mAccount, binding.avater, R.dimen.avatar_on_details_screen_size);
+        AvatarWorkerTask.loadAvatar(mAccount, binding.avater, R.dimen.avatar_on_details_screen_size, true);
     }
 
     @Override
@@ -1154,7 +1154,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
 
         if (!mInitMode) {
             binding.avater.setVisibility(View.VISIBLE);
-            AvatarWorkerTask.loadAvatar(mAccount, binding.avater, R.dimen.avatar_on_details_screen_size);
+            refreshAvatar();
             this.binding.accountJid.setEnabled(false);
         } else {
             binding.avater.setVisibility(View.GONE);

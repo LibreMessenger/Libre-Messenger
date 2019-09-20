@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -21,14 +22,15 @@ import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
-import androidx.annotation.RequiresApi;
-import androidx.core.content.FileProvider;
 import android.system.Os;
 import android.system.StructStat;
 import android.util.Base64;
 import android.util.Base64OutputStream;
 import android.util.Log;
 import android.util.LruCache;
+
+import androidx.annotation.RequiresApi;
+import androidx.core.content.FileProvider;
 
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
@@ -677,7 +679,7 @@ public class FileBackend {
         }
     }
 
-    private void drawOverlay(Bitmap bitmap, int resource, float factor) {
+    public void drawOverlay(final Bitmap bitmap, final int resource, final float factor) {
         Bitmap overlay = BitmapFactory.decodeResource(mXmppConnectionService.getResources(), resource);
         Canvas canvas = new Canvas(bitmap);
         float targetSize = Math.min(canvas.getWidth(), canvas.getHeight()) * factor;
@@ -686,6 +688,31 @@ public class FileBackend {
         float top = (canvas.getHeight() - targetSize) / 2.0f;
         RectF dst = new RectF(left, top, left + targetSize - 1, top + targetSize - 1);
         canvas.drawBitmap(overlay, null, dst, createAntiAliasingPaint());
+    }
+
+    public void drawOverlayFromDrawable(final Drawable drawable, final int resource, final float factor) {
+        Bitmap overlay = BitmapFactory.decodeResource(mXmppConnectionService.getResources(), resource);
+        Bitmap original = drawableToBitmap(drawable);
+        Canvas canvas = new Canvas(original);
+        float targetSize = Math.min(canvas.getWidth(), canvas.getHeight()) * factor;
+        Log.d(Config.LOGTAG, "target size overlay: " + targetSize + " overlay bitmap size was " + overlay.getHeight());
+        float left = (canvas.getWidth() - targetSize) / 2.0f;
+        float top = (canvas.getHeight() - targetSize) / 2.0f;
+        RectF dst = new RectF(left, top, left + targetSize - 1, top + targetSize - 1);
+        canvas.drawBitmap(overlay, null, dst, createAntiAliasingPaint());
+    }
+
+    private static Bitmap drawableToBitmap(Drawable drawable) {
+        Bitmap bitmap = null;
+        if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+        } else {
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        }
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
     }
 
     private static Paint createAntiAliasingPaint() {

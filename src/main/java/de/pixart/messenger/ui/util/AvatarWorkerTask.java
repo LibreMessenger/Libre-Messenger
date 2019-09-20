@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import androidx.annotation.DimenRes;
 import android.widget.ImageView;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.RejectedExecutionException;
 
+import de.pixart.messenger.R;
 import de.pixart.messenger.services.AvatarService;
 import de.pixart.messenger.ui.XmppActivity;
 
@@ -72,22 +74,36 @@ public class AvatarWorkerTask extends AsyncTask<AvatarService.Avatarable, Void, 
     }
 
     public static void loadAvatar(final AvatarService.Avatarable avatarable, final ImageView imageView, final @DimenRes int size) {
+        loadAvatar(avatarable, imageView, size, false);
+    }
+
+    public static void loadAvatar(final AvatarService.Avatarable avatarable, final ImageView imageView, final @DimenRes int size, final boolean overlay) {
         if (cancelPotentialWork(avatarable, imageView)) {
             final XmppActivity activity = XmppActivity.find(imageView);
             if (activity == null) {
                 return;
             }
-            final Bitmap bm = activity.avatarService().get(avatarable, (int) activity.getResources().getDimension(size), true);
+            final Bitmap bm = activity.avatarService().get(avatarable, (int) activity.getResources().getDimension(size), false);
             if (bm != null) {
                 cancelPotentialWork(avatarable, imageView);
-                imageView.setImageBitmap(bm);
+                if (overlay) {
+                    activity.xmppConnectionService.fileBackend.drawOverlay(bm, R.drawable.pencil_overlay, 1.0f);
+                    imageView.setImageBitmap(bm);
+                } else {
+                    imageView.setImageBitmap(bm);
+                }
                 imageView.setBackgroundColor(0x00000000);
             } else {
                 imageView.setBackgroundColor(avatarable.getAvatarBackgroundColor());
                 imageView.setImageDrawable(null);
                 final AvatarWorkerTask task = new AvatarWorkerTask(imageView, size);
                 final AsyncDrawable asyncDrawable = new AsyncDrawable(activity.getResources(), null, task);
-                imageView.setImageDrawable(asyncDrawable);
+                if (overlay) {
+                    activity.xmppConnectionService.fileBackend.drawOverlayFromDrawable(asyncDrawable, R.drawable.pencil_overlay, 1.0f);
+                    imageView.setImageDrawable(asyncDrawable);
+                } else {
+                    imageView.setImageDrawable(asyncDrawable);
+                }
                 try {
                     task.execute(avatarable);
                 } catch (final RejectedExecutionException ignored) {
