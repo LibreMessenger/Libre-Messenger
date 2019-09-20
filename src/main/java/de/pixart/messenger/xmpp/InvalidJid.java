@@ -29,7 +29,7 @@
 
 package de.pixart.messenger.xmpp;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import de.pixart.messenger.xmpp.stanzas.AbstractStanza;
 import rocks.xmpp.addr.Jid;

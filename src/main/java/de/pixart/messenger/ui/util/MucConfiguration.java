@@ -2,7 +2,7 @@ package de.pixart.messenger.ui.util;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.MucOptions;

@@ -1,8 +1,8 @@
 package de.pixart.messenger.ui;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import android.text.Editable;
 import android.widget.Toast;
 
@@ -11,7 +11,6 @@ import java.util.Collections;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Blockable;
-import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.ListItem;
 import de.pixart.messenger.entities.RawBlockable;
 import de.pixart.messenger.ui.interfaces.OnBackendConnected;

@@ -28,7 +28,7 @@
  */
 package de.pixart.messenger.ui.interfaces;
 
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 
 public interface OnAvatarPublication {
 

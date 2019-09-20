@@ -10,8 +10,8 @@ import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.support.annotation.BoolRes;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.BoolRes;
+import androidx.core.content.ContextCompat;
 import android.util.Log;
 
 import java.util.Arrays;

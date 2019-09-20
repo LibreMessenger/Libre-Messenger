@@ -63,7 +63,7 @@
                                 android:padding="@dimen/image_button_padding"
                                 android:src="@drawable/ic_help_circle_outline_black_24dp" />
 
-                            <android.support.v7.widget.AppCompatCheckBox
+                            <androidx.appcompat.widget.AppCompatCheckBox
                                 android:id="@+id/forbid_screenshots"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
@@ -94,7 +94,7 @@
                                 android:padding="@dimen/image_button_padding"
                                 android:src="@drawable/ic_help_circle_outline_black_24dp" />
 
-                            <android.support.v7.widget.AppCompatCheckBox
+                            <androidx.appcompat.widget.AppCompatCheckBox
                                 android:id="@+id/show_links"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
@@ -124,7 +124,7 @@
                                 android:padding="@dimen/image_button_padding"
                                 android:src="@drawable/ic_help_circle_outline_black_24dp" />
 
-                            <android.support.v7.widget.AppCompatCheckBox
+                            <androidx.appcompat.widget.AppCompatCheckBox
                                 android:id="@+id/show_mappreview"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
@@ -154,7 +154,7 @@
                                 android:padding="@dimen/image_button_padding"
                                 android:src="@drawable/ic_help_circle_outline_black_24dp" />
 
-                            <android.support.v7.widget.AppCompatCheckBox
+                            <androidx.appcompat.widget.AppCompatCheckBox
                                 android:id="@+id/chat_states"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
@@ -184,7 +184,7 @@
                                 android:padding="@dimen/image_button_padding"
                                 android:src="@drawable/ic_help_circle_outline_black_24dp" />
 
-                            <android.support.v7.widget.AppCompatCheckBox
+                            <androidx.appcompat.widget.AppCompatCheckBox
                                 android:id="@+id/confirm_messages"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
@@ -214,7 +214,7 @@
                                 android:padding="@dimen/image_button_padding"
                                 android:src="@drawable/ic_help_circle_outline_black_24dp" />
 
-                            <android.support.v7.widget.AppCompatCheckBox
+                            <androidx.appcompat.widget.AppCompatCheckBox
                                 android:id="@+id/last_seen"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"

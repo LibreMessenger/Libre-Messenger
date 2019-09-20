@@ -1,8 +1,8 @@
 package de.pixart.messenger.services;
 
 import android.content.Context;
-import android.support.text.emoji.EmojiCompat;
-import android.support.text.emoji.bundled.BundledEmojiCompatConfig;
+import androidx.emoji.text.EmojiCompat;
+import androidx.emoji.bundled.BundledEmojiCompatConfig;
 
 public class EmojiService extends AbstractEmojiService {
 

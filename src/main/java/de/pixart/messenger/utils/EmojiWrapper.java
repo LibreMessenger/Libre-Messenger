@@ -28,7 +28,7 @@
  */
 package de.pixart.messenger.utils;
 
-import android.support.text.emoji.EmojiCompat;
+import androidx.emoji.text.EmojiCompat;
 
 public class EmojiWrapper {
 

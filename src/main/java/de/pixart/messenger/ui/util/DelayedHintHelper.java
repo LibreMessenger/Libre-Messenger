@@ -30,7 +30,7 @@
 package de.pixart.messenger.ui.util;
 
 import android.os.Handler;
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 import android.widget.EditText;
 
 public class DelayedHintHelper {

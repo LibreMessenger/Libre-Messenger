@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:visibility="gone" />
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/account_jid_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:imeOptions="actionDone|flagNoExtractUi"
                 android:inputType="textEmailAddress" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <CheckBox
             android:id="@+id/bookmark"

@@ -2,7 +2,7 @@ package de.pixart.messenger.services;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.text.emoji.EmojiCompat;
+import androidx.emoji.text.EmojiCompat;
 import android.util.Log;
 
 import de.pixart.messenger.Config;

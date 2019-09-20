@@ -1,8 +1,8 @@
 package de.pixart.messenger.ui;
 
-import android.databinding.DataBindingUtil;
-import android.support.annotation.StringRes;
-import android.support.v7.app.AlertDialog;
+import androidx.databinding.DataBindingUtil;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
 import android.view.View;
 import android.widget.Toast;
 

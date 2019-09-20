@@ -1,6 +1,6 @@
 package de.pixart.messenger.parser;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Base64;
 import android.util.Log;
 import android.util.Pair;

@@ -29,7 +29,7 @@
 package de.pixart.messenger.utils;
 
 import android.content.Context;
-import android.support.annotation.PluralsRes;
+import androidx.annotation.PluralsRes;
 
 import de.pixart.messenger.R;
 

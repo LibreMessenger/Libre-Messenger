@@ -1,12 +1,10 @@
 package de.pixart.messenger.xml;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Locale;
 
 import de.pixart.messenger.utils.XmlHelper;
 import de.pixart.messenger.xmpp.InvalidJid;

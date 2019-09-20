@@ -24,7 +24,7 @@
             android:transcriptMode="normal"
             tools:listitem="@layout/message_sent" />
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/scroll_to_bottom_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -107,7 +107,7 @@
                         android:textAppearance="@style/TextAppearance.Conversations.Caption.Highlight"
                         android:visibility="gone" />
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/media_preview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -115,7 +115,7 @@
                         android:paddingTop="8dp"
                         android:requiresFadingEdge="horizontal"
                         android:visibility="gone"
-                        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         tools:listitem="@layout/media_preview" />
 
                     <de.pixart.messenger.ui.widget.EditMessage
