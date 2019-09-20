@@ -69,6 +69,7 @@ public class SettingsActivity extends XmppActivity implements
     public static final String FORBID_SCREENSHOTS = "screen_security";
     public static final String CONFIRM_MESSAGES = "confirm_messages";
     public static final String INDICATE_RECEIVED = "indicate_received";
+    public static final String USE_INVIDIOUS = "use_invidious";
 
     public static final int REQUEST_CREATE_BACKUP = 0xbf8701;
     Preference multiAccountPreference;

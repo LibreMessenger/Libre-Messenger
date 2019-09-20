@@ -39,7 +39,6 @@ public final class Config {
         return (ENCRYPTION_MASK & (ENCRYPTION_MASK - 1)) != 0;
     }
 
-
     public static final String LOGTAG = "Pix-Art_Messenger";
 
     public static final Jid BUG_REPORTS = Jid.of("bugs@pix-art.de");
@@ -55,6 +54,7 @@ public final class Config {
     public static final String MAGIC_CREATE_DOMAIN = "blabber.im";
     public static final String QUICKSY_DOMAIN = "quicksy.im";
     public static final String CHANNEL_DISCOVERY = "https://search.jabbercat.org";
+    public static final String DEFAULT_INVIDIOUS_HOST = "invidio.us";
     public static final boolean DISALLOW_REGISTRATION_IN_UI = false; //hide the register checkbox
 
     public static final boolean USE_RANDOM_RESOURCE_ON_EVERY_BIND = false;

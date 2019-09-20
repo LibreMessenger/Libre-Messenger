@@ -262,7 +262,7 @@
             android:summary="@string/pref_treat_vibrate_as_dnd_summary"
             android:title="@string/pref_treat_vibrate_as_silent" />
     </PreferenceScreen>
-    <!--Security-->
+    <!--Security and Privacy-->
     <PreferenceScreen
         android:icon="?attr/ic_settings_security"
         android:key="security"
@@ -337,6 +337,11 @@
             android:key="crashreport"
             android:summary="@string/pref_send_crash_summary"
             android:title="@string/pref_send_crash" />
+        <CheckBoxPreference
+            android:defaultValue="@bool/use_invidious"
+            android:key="use_invidious"
+            android:summary="@string/pref_use_invidious_summary"
+            android:title="@string/pref_use_invidious" />
         <PreferenceCategory android:title="@string/pref_create_backup">
             <Preference
                 android:key="create_backup"

@@ -29,6 +29,8 @@ import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 import rocks.xmpp.addr.Jid;
 
+import static de.pixart.messenger.ui.util.MyLinkify.replaceYoutube;
+
 public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapter.ConversationViewHolder> {
 
     private XmppActivity activity;
@@ -104,7 +106,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
 
         if (draft != null) {
             viewHolder.binding.conversationLastmsgImg.setVisibility(View.GONE);
-            viewHolder.binding.conversationLastmsg.setText(EmojiWrapper.transform(draft.getMessage()));
+            viewHolder.binding.conversationLastmsg.setText(EmojiWrapper.transform(replaceYoutube(activity.getApplicationContext(), draft.getMessage())));
             viewHolder.binding.senderName.setText(R.string.draft);
             viewHolder.binding.senderName.setVisibility(View.VISIBLE);
             viewHolder.binding.conversationLastmsg.setTypeface(null, Typeface.NORMAL);
@@ -147,7 +149,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             }
             final Pair<CharSequence, Boolean> preview = UIHelper.getMessagePreview(activity, message, viewHolder.binding.conversationLastmsg.getCurrentTextColor());
             if (showPreviewText) {
-                viewHolder.binding.conversationLastmsg.setText(EmojiWrapper.transform(UIHelper.shorten(preview.first)));
+                viewHolder.binding.conversationLastmsg.setText(EmojiWrapper.transform(UIHelper.shorten(replaceYoutube(activity.getApplicationContext(), preview.first.toString()))));
             } else {
                 viewHolder.binding.conversationLastmsgImg.setContentDescription(preview.first);
             }

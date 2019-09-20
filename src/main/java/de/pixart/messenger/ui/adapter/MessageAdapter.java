@@ -90,6 +90,7 @@ import static de.pixart.messenger.ui.SettingsActivity.PLAY_GIF_INSIDE;
 import static de.pixart.messenger.ui.SettingsActivity.SHOW_LINKS_INSIDE;
 import static de.pixart.messenger.ui.SettingsActivity.SHOW_MAPS_INSIDE;
 import static de.pixart.messenger.ui.util.MyLinkify.removeTrailingBracket;
+import static de.pixart.messenger.ui.util.MyLinkify.replaceYoutube;
 
 public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextView.CopyHandler {
 
@@ -536,7 +537,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.messageBody.setTypeface(null, Typeface.NORMAL);
         if (message.getBody() != null) {
             final String nick = UIHelper.getMessageDisplayName(message);
-            SpannableStringBuilder body = message.getMergedBody();
+            SpannableStringBuilder body = new SpannableStringBuilder(replaceYoutube(activity.getApplicationContext(), message.getMergedBody().toString()));
             boolean hasMeCommand = message.hasMeCommand();
             if (hasMeCommand) {
                 body = body.replace(0, Message.ME_COMMAND.length(), nick);
@@ -695,7 +696,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.gifImage.setVisibility(View.GONE);
         viewHolder.download_button.setVisibility(View.GONE);
-        Editable body = new SpannableStringBuilder(message.getBody());
+        SpannableStringBuilder body = new SpannableStringBuilder(replaceYoutube(activity.getApplicationContext(), message.getMergedBody().toString()));
         final boolean dataSaverDisabled = activity.xmppConnectionService.isDataSaverDisabled();
         viewHolder.richlinkview.setVisibility(View.VISIBLE);
         if (mShowLinksInside) {
@@ -857,6 +858,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     }
 
     private void toggleWhisperInfo(ViewHolder viewHolder, final Message message, final boolean includeBody, final boolean darkBackground) {
+        SpannableStringBuilder messageBody = new SpannableStringBuilder(replaceYoutube(activity.getApplicationContext(), message.getBody()));
         Editable body;
         if (message.isPrivateMessage()) {
             final String privateMarker;
@@ -870,7 +872,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             viewHolder.messageBody.setVisibility(View.VISIBLE);
             if (includeBody) {
                 body.append("\n");
-                body.append(message.getBody());
+                body.append(messageBody);
             }
             body.setSpan(new ForegroundColorSpan(getMessageTextColor(darkBackground, false)), 0, privateMarker.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             body.setSpan(new StyleSpan(Typeface.BOLD), 0, privateMarker.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -883,7 +885,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         } else {
             if (includeBody) {
                 viewHolder.messageBody.setVisibility(View.VISIBLE);
-                body = new SpannableStringBuilder(message.getBody());
+                body = new SpannableStringBuilder(messageBody);
                 MyLinkify.addLinks(body, false);
                 viewHolder.messageBody.setAutoLinkMask(0);
                 viewHolder.messageBody.setText(body);
