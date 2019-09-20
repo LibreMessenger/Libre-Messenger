@@ -1496,7 +1496,7 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
         while (iterator.hasNext()) {
             final XmppAxolotlSession session = iterator.next();
             if (trustedOrPreviouslyResponded(session)) {
-                completeSession(iterator.next());
+                completeSession(session);
             }
             iterator.remove();
         }

@@ -33,15 +33,16 @@ import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.security.KeyChain;
-import androidx.annotation.BoolRes;
-import androidx.annotation.IntegerRes;
-import androidx.core.app.RemoteInput;
-import androidx.core.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.LruCache;
 import android.util.Pair;
+
+import androidx.annotation.BoolRes;
+import androidx.annotation.IntegerRes;
+import androidx.core.app.RemoteInput;
+import androidx.core.content.ContextCompat;
 
 import net.java.otr4j.OtrException;
 import net.java.otr4j.session.Session;
@@ -1586,10 +1587,7 @@ public class XmppConnectionService extends Service {
                     message1 -> markMessage(message1, Message.STATUS_SEND_FAILED));
         }
 
-        final boolean inProgressJoin;
-        synchronized (account.inProgressConferenceJoins) {
-            inProgressJoin = conversation.getMode() == Conversational.MODE_MULTI && (account.inProgressConferenceJoins.contains(conversation) || account.pendingConferenceJoins.contains(conversation));
-        }
+        final boolean inProgressJoin = isJoinInProgress(conversation);
 
         if (account.isOnlineAndConnected() && !inProgressJoin) {
             switch (message.getEncryption()) {
@@ -1743,6 +1741,23 @@ public class XmppConnectionService extends Service {
             }
             Log.d(Config.LOGTAG, packet.toString());
             sendMessagePacket(account, packet);
+        }
+    }
+
+    private boolean isJoinInProgress(final Conversation conversation) {
+        final Account account = conversation.getAccount();
+        synchronized (account.inProgressConferenceJoins) {
+            if (conversation.getMode() == Conversational.MODE_MULTI) {
+                final boolean inProgress = account.inProgressConferenceJoins.contains(conversation);
+                final boolean pending = account.pendingConferenceJoins.contains(conversation);
+                final boolean inProgressJoin = inProgress || pending;
+                if (inProgressJoin) {
+                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": holding back message to group. inProgress=" + inProgress + ", pending=" + pending);
+                }
+                return inProgressJoin;
+            } else {
+                return false;
+            }
         }
     }
 
