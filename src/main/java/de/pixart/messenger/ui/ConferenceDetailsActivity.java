@@ -54,6 +54,7 @@ import me.drakeet.support.toast.ToastCompat;
 import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.entities.Bookmark.printableValue;
+import static de.pixart.messenger.ui.util.IntroHelper.showIntro;
 import static de.pixart.messenger.utils.StringUtils.changed;
 
 public class ConferenceDetailsActivity extends XmppActivity implements OnConversationUpdate, OnMucRosterUpdate, XmppConnectionService.OnAffiliationChanged, XmppConnectionService.OnConfigurationPushed, TextWatcher, OnMediaLoaded {
@@ -262,6 +263,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             intent.putExtra("uuid", mConversation.getUuid());
             startActivity(intent);
         });
+        showIntro(this, true);
     }
 
     @Override

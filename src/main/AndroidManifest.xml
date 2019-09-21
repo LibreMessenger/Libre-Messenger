@@ -342,6 +342,9 @@
             android:name=".ui.ChannelDiscoveryActivity"
             android:label="@string/discover_channels"
             android:launchMode="singleTask" />
+        <activity android:name=".ui.IntroActivity"
+            android:launchMode="singleTask"
+            android:label="@string/app_name" />
 
         <service android:name=".services.ExportBackupService" />
         <service android:name=".services.ImportBackupService" />

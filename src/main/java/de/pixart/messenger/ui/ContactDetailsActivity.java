@@ -67,6 +67,8 @@ import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.XmppConnection;
 import rocks.xmpp.addr.Jid;
 
+import static de.pixart.messenger.ui.util.IntroHelper.showIntro;
+
 public class ContactDetailsActivity extends OmemoActivity implements OnAccountUpdate, OnRosterUpdate, OnUpdateBlocklist, OnKeyStatusUpdated, OnMediaLoaded {
     public static final String ACTION_VIEW_CONTACT = "view_contact";
 
@@ -278,6 +280,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
         mMediaAdapter = new MediaAdapter(this, R.dimen.media_size);
         this.binding.media.setAdapter(mMediaAdapter);
         GridManager.setupLayoutManager(this, this.binding.media, R.dimen.media_size);
+        showIntro(this, false);
     }
 
     @Override

@@ -15,11 +15,12 @@ import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 
 import java.io.File;
 import java.security.KeyStoreException;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
@@ -37,6 +39,7 @@ import de.pixart.messenger.services.ExportBackupService;
 import de.pixart.messenger.services.MemorizingTrustManager;
 import de.pixart.messenger.ui.util.StyledAttributes;
 import de.pixart.messenger.utils.TimeframeUtils;
+import me.drakeet.support.toast.ToastCompat;
 import rocks.xmpp.addr.Jid;
 
 public class SettingsActivity extends XmppActivity implements
@@ -262,6 +265,15 @@ public class SettingsActivity extends XmppActivity implements
                 if (hasStoragePermission(REQUEST_CREATE_BACKUP)) {
                     createBackup(true);
                 }
+                return true;
+            });
+        }
+
+        final Preference showIntroAgainPreference = mSettingsFragment.findPreference("show_intro");
+        if (showIntroAgainPreference != null) {
+            showIntroAgainPreference.setSummary(getString(R.string.pref_show_intro_summary));
+            showIntroAgainPreference.setOnPreferenceClickListener(preference -> {
+                showIntroAgain();
                 return true;
             });
         }
@@ -518,5 +530,22 @@ public class SettingsActivity extends XmppActivity implements
         int NumberOfAccounts = preferences.getInt(NUMBER_OF_ACCOUNTS, 0);
         Log.d(Config.LOGTAG, "Get number of accounts from file: " + NumberOfAccounts);
         return NumberOfAccounts;
+    }
+
+    private void showIntroAgain() {
+        SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
+        Map<String, ?> allEntries = getPrefs.getAll();
+        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+            if (entry.getKey().contains("intro_shown_on_activity")) {
+                SharedPreferences.Editor e = getPrefs.edit();
+                e.putBoolean(entry.getKey(), true);
+                if (e.commit()) {
+                    ToastCompat.makeText(this, R.string.show_intro_again, ToastCompat.LENGTH_SHORT).show();
+                } else {
+                    ToastCompat.makeText(this, R.string.show_intro_again_failed, ToastCompat.LENGTH_SHORT).show();
+                }
+
+            }
+        }
     }
 }

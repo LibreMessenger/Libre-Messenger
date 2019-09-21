@@ -86,6 +86,9 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.6.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
     implementation 'com.google.guava:guava:28.1-jre'
+    implementation ('com.github.AppIntro:AppIntro:5.1.0') {
+        exclude group: 'org.jetbrains' , module:'annotations'
+    }
 }
 
 ext {

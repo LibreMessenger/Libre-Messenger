@@ -9,14 +9,16 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import android.util.Log;
 
 import java.util.List;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.ui.util.IntroHelper;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -33,6 +35,7 @@ public class StartUI extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_ui);
+        IntroHelper.showIntro(this, false);
         requestNeededPermissions();
     }
 

@@ -40,17 +40,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import androidx.databinding.DataBindingUtil;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import androidx.annotation.IdRes;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -58,6 +53,12 @@ import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
+import androidx.databinding.DataBindingUtil;
 
 import net.java.otr4j.session.SessionStatus;
 
@@ -73,6 +74,7 @@ import de.pixart.messenger.crypto.OmemoSetting;
 import de.pixart.messenger.databinding.ActivityConversationsBinding;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Conversation;
+import de.pixart.messenger.entities.Conversational;
 import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.Presence;
 import de.pixart.messenger.services.XmppConnectionService;
@@ -83,6 +85,7 @@ import de.pixart.messenger.ui.interfaces.OnConversationSelected;
 import de.pixart.messenger.ui.interfaces.OnConversationsListItemUpdated;
 import de.pixart.messenger.ui.util.ActivityResult;
 import de.pixart.messenger.ui.util.ConversationMenuConfigurator;
+import de.pixart.messenger.ui.util.IntroHelper;
 import de.pixart.messenger.ui.util.PendingItem;
 import de.pixart.messenger.utils.EmojiWrapper;
 import de.pixart.messenger.utils.ExceptionHelper;
@@ -531,6 +534,7 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
         } else {
             invalidateActionBarTitle();
         }
+        IntroHelper.showIntro(this, conversation.getMode() == Conversational.MODE_MULTI);
     }
 
     public boolean onXmppUriClicked(Uri uri) {
