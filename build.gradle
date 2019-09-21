@@ -38,7 +38,7 @@ configurations {
 
 dependencies {
     implementation project(':libs:android-transcoder')
-    standardPushImplementation ('com.google.firebase:firebase-messaging:17.3.4') {
+    standardPushImplementation('com.google.firebase:firebase-messaging:20.0.0') {
         exclude group: 'com.google.firebase', module: 'firebase-core'
         exclude group: 'com.google.firebase', module: 'firebase-analytics'
         exclude group: 'com.google.firebase', module: 'firebase-measurement-connector'
@@ -85,7 +85,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.12.2' // versions > 3.12.x don't support API level < 21 anymore
     implementation 'com.squareup.retrofit2:retrofit:2.6.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
-    implementation 'com.google.guava:guava:27.1-android'
+    implementation 'com.google.guava:guava:28.1-jre'
 }
 
 ext {
