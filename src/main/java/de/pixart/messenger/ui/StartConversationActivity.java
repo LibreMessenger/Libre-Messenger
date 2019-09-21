@@ -9,21 +9,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import androidx.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.fragment.app.ListFragment;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -46,6 +34,19 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.fragment.app.ListFragment;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -396,15 +397,18 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
 
     protected void shareBookmarkUri(int position) {
         Bookmark bookmark = (Bookmark) conferences.get(position);
+        shareAsChannel(this, bookmark.getJid().asBareJid().toEscapedString());
+    }
+
+    public static void shareAsChannel(final Context context, final String address) {
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, "xmpp:" + bookmark.getJid().asBareJid().toEscapedString() + "?join");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "xmpp:" + address + "?join");
         shareIntent.setType("text/plain");
         try {
-            startActivity(Intent.createChooser(shareIntent, getText(R.string.share_uri_with)));
-            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+            context.startActivity(Intent.createChooser(shareIntent, context.getText(R.string.share_uri_with)));
         } catch (ActivityNotFoundException e) {
-            Toast.makeText(this, R.string.no_application_to_share_uri, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.no_application_to_share_uri, Toast.LENGTH_SHORT).show();
         }
     }
 

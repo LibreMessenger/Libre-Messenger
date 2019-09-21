@@ -1,27 +1,30 @@
 package de.pixart.messenger.ui.adapter;
 
-import androidx.databinding.DataBindingUtil;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.ListAdapter;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.RecyclerView;
+import android.app.Activity;
 import android.text.TextUtils;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.Locale;
 
 import de.pixart.messenger.R;
 import de.pixart.messenger.databinding.SearchResultItemBinding;
 import de.pixart.messenger.http.services.MuclumbusService;
+import de.pixart.messenger.ui.XmppActivity;
 import de.pixart.messenger.ui.util.AvatarWorkerTask;
 import rocks.xmpp.addr.Jid;
 
 
-public class ChannelSearchResultAdapter extends ListAdapter<MuclumbusService.Room, ChannelSearchResultAdapter.ViewHolder> {
+public class ChannelSearchResultAdapter extends ListAdapter<MuclumbusService.Room, ChannelSearchResultAdapter.ViewHolder> implements View.OnCreateContextMenuListener {
 
-    private OnChannelSearchResultSelected listener;
 
     private static final DiffUtil.ItemCallback<MuclumbusService.Room> DIFF = new DiffUtil.ItemCallback<MuclumbusService.Room>() {
         @Override
@@ -34,6 +37,9 @@ public class ChannelSearchResultAdapter extends ListAdapter<MuclumbusService.Roo
             return a.equals(b);
         }
     };
+
+    private OnChannelSearchResultSelected listener;
+    private MuclumbusService.Room current;
 
     public ChannelSearchResultAdapter() {
         super(DIFF);
@@ -66,11 +72,28 @@ public class ChannelSearchResultAdapter extends ListAdapter<MuclumbusService.Roo
         final Jid room = searchResult.getRoom();
         viewHolder.binding.room.setText(room != null ? room.asBareJid().toString() : "");
         AvatarWorkerTask.loadAvatar(searchResult, viewHolder.binding.avatar, R.dimen.avatar);
-        viewHolder.binding.getRoot().setOnClickListener(v -> listener.onChannelSearchResult(searchResult));
+        final View root = viewHolder.binding.getRoot();
+        root.setTag(searchResult);
+        root.setOnClickListener(v -> listener.onChannelSearchResult(searchResult));
+        root.setOnCreateContextMenuListener(this);
     }
 
     public void setOnChannelSearchResultSelectedListener(OnChannelSearchResultSelected listener) {
         this.listener = listener;
+    }
+
+    public MuclumbusService.Room getCurrent() {
+        return this.current;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        final Activity activity = XmppActivity.find(v);
+        final Object tag = v.getTag();
+        if (activity != null && tag instanceof MuclumbusService.Room) {
+            activity.getMenuInflater().inflate(R.menu.channel_item_context, menu);
+            this.current = (MuclumbusService.Room) tag;
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
