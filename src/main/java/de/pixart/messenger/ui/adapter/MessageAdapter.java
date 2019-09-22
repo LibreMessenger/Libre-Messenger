@@ -9,8 +9,10 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -1039,16 +1041,14 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             }
 
         });
-        viewHolder.contact_picture
-                .setOnLongClickListener(v -> {
-                    if (MessageAdapter.this.mOnContactPictureLongClickedListener != null) {
-                        MessageAdapter.this.mOnContactPictureLongClickedListener
-                                .onContactPictureLongClicked(v, message);
-                        return true;
-                    } else {
-                        return false;
-                    }
-                });
+        viewHolder.contact_picture.setOnLongClickListener(v -> {
+            if (MessageAdapter.this.mOnContactPictureLongClickedListener != null) {
+                MessageAdapter.this.mOnContactPictureLongClickedListener.onContactPictureLongClicked(v, message);
+                return true;
+            } else {
+                return false;
+            }
+        });
 
         final Transferable transferable = message.getTransferable();
         if (message.isFileDeleted() || (transferable != null && transferable.getStatus() != Transferable.STATUS_UPLOADING)) {

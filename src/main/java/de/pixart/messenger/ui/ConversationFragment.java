@@ -3078,7 +3078,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 final User user = userByRealJid != null ? userByRealJid : conversation.getMucOptions().findUserByFullJid(cp);
                 popupMenu.inflate(R.menu.muc_details_context);
                 final Menu menu = popupMenu.getMenu();
-                MucDetailsContextMenuHelper.configureMucDetailsContextMenu(activity, menu, conversation, user);
+                MucDetailsContextMenuHelper.configureMucDetailsContextMenu(activity, menu, conversation, user, true, getUsername(message));
                 popupMenu.setOnMenuItemClickListener(menuItem -> MucDetailsContextMenuHelper.onContextItemSelected(menuItem, user, activity, fingerprint));
             } else {
                 popupMenu.inflate(R.menu.one_on_one_context);
@@ -3110,6 +3110,32 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             });
         }
         popupMenu.show();
+    }
+
+    private String getUsername(Message message) {
+        String user;
+        try {
+            final Contact contact = message.getContact();
+            if (conversation.getMode() == Conversation.MODE_MULTI) {
+                if (contact != null) {
+                    user = contact.getDisplayName();
+                } else {
+                    user = UIHelper.getDisplayedMucCounterpart(message.getCounterpart());
+                }
+            } else {
+                user = contact != null ? contact.getDisplayName() : null;
+            }
+            if (message.getStatus() == Message.STATUS_SEND
+                    || message.getStatus() == Message.STATUS_SEND_FAILED
+                    || message.getStatus() == Message.STATUS_SEND_RECEIVED
+                    || message.getStatus() == Message.STATUS_SEND_DISPLAYED) {
+                user = getString(R.string.me);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            user = null;
+        }
+        return user;
     }
 
     @Override

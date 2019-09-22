@@ -1,15 +1,21 @@
 package de.pixart.messenger.ui.util;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.preference.PreferenceManager;
-import androidx.appcompat.app.AlertDialog;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.text.style.TypefaceSpan;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import androidx.appcompat.app.AlertDialog;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
@@ -26,6 +32,8 @@ import de.pixart.messenger.ui.XmppActivity;
 import rocks.xmpp.addr.Jid;
 
 public final class MucDetailsContextMenuHelper {
+
+    private static int titleColor = 0xff0091ea;
 
     public static void onCreateContextMenu(ContextMenu menu, View v) {
         final XmppActivity activity = XmppActivity.find(v);
@@ -48,9 +56,24 @@ public final class MucDetailsContextMenuHelper {
     }
 
     public static void configureMucDetailsContextMenu(Activity activity, Menu menu, Conversation conversation, User user) {
+        configureMucDetailsContextMenu(activity, menu, conversation, user, false, null);
+    }
+
+    public static void configureMucDetailsContextMenu(Activity activity, Menu menu, Conversation conversation, User user, boolean forceContextMenu, String username) {
         final boolean advancedMode = PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("advanced_muc_mode", false);
         final MucOptions mucOptions = conversation.getMucOptions();
         final boolean isGroupChat = mucOptions.isPrivateAndNonAnonymous();
+        MenuItem title = menu.findItem(R.id.title);
+        if (forceContextMenu && username != null) {
+            SpannableStringBuilder menuTitle = new SpannableStringBuilder(username);
+            menuTitle.setSpan(new ForegroundColorSpan(titleColor), 0, menuTitle.length(), 0);
+            menuTitle.setSpan(new StyleSpan(Typeface.BOLD), 0, menuTitle.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            menuTitle.setSpan(new RelativeSizeSpan(0.875f), 0, menuTitle.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            title.setTitle(menuTitle);
+            title.setVisible(true);
+        } else {
+            title.setVisible(false);
+        }
         MenuItem sendPrivateMessage = menu.findItem(R.id.send_private_message);
         if (user != null && user.getRealJid() != null) {
             MenuItem showContactDetails = menu.findItem(R.id.action_contact_details);
