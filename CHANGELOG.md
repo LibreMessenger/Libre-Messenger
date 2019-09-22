@@ -1,5 +1,14 @@
 ### Changelog
 
+#### WIP
+* show name in quotes (PAM)
+* introduce theme based on systems theme (PAM)
+* increase default video quality (720p instead of 360p)
+* replace YouTube links with Invidious links (PAM)
+* rework profile view (PAM)
+* introduce app intro and some help screens (PAM)
+* bug fixes
+
 #### Version 2.2.9
 * bug fixes
 
