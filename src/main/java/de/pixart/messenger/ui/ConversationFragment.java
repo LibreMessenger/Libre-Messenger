@@ -1364,7 +1364,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 ShareUtil.copyLinkToClipboard(activity, selectedMessage);
                 return true;
             case R.id.quote_message:
-                quoteMessage(selectedMessage, selectedMessage.getContact().getDisplayName());
+                quoteMessage(selectedMessage, user);
                 return true;
             case R.id.send_again:
                 resendMessage(selectedMessage);
