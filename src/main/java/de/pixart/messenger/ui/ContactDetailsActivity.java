@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import androidx.databinding.DataBindingUtil;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,10 +12,9 @@ import android.preference.PreferenceManager;
 import android.provider.ContactsContract.CommonDataKinds;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Intents;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,6 +25,12 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.databinding.DataBindingUtil;
 
 import org.openintents.openpgp.util.OpenPgpUtils;
 
@@ -56,6 +60,7 @@ import de.pixart.messenger.ui.util.JidDialog;
 import de.pixart.messenger.utils.Compatibility;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.EmojiWrapper;
+import de.pixart.messenger.utils.Emoticons;
 import de.pixart.messenger.utils.IrregularUnicodeDetector;
 import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import de.pixart.messenger.utils.Namespace;
@@ -440,14 +445,19 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             List<String> statusMessages = contact.getPresences().getStatusMessages();
             if (statusMessages.size() == 0) {
                 binding.statusMessage.setVisibility(View.GONE);
+            } else if (statusMessages.size() == 1) {
+                final String message = statusMessages.get(0);
+                binding.statusMessage.setVisibility(View.VISIBLE);
+                final Spannable span = new SpannableString(message);
+                if (Emoticons.isOnlyEmoji(message)) {
+                    span.setSpan(new RelativeSizeSpan(2.0f), 0, message.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                binding.statusMessage.setText(span);
             } else {
                 StringBuilder builder = new StringBuilder();
                 binding.statusMessage.setVisibility(View.VISIBLE);
                 int s = statusMessages.size();
                 for (int i = 0; i < s; ++i) {
-                    if (s > 1) {
-                        builder.append("• ");
-                    }
                     builder.append(statusMessages.get(i));
                     if (i < s - 1) {
                         builder.append("\n");
