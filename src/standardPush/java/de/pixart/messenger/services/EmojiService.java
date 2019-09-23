@@ -47,7 +47,7 @@ public class EmojiService {
         // a) when using the ondemand emoji font (play store) flags don’t work
         // b) the text preview has annoying glitches when the cut of text contains emojis (the emoji will be half visible)
         // c) can trigger a hardware rendering bug https://issuetracker.google.com/issues/67102093
-        fontRequest.setReplaceAll(useBundledEmoji && Build.VERSION.SDK_INT < Build.VERSION_CODES.O);
-        EmojiCompat.init(config);
+        fontRequestEmojiCompatConfig.setReplaceAll(useBundledEmoji && Build.VERSION.SDK_INT < Build.VERSION_CODES.O);
+        EmojiCompat.init(fontRequestEmojiCompatConfig);
     }
 }
