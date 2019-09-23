@@ -2,10 +2,31 @@ package de.pixart.messenger.services;
 
 import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 
+import androidx.core.provider.FontRequest;
 import androidx.emoji.text.EmojiCompat;
+import androidx.emoji.text.FontRequestEmojiCompatConfig;
+
+import de.pixart.messenger.Config;
+import de.pixart.messenger.R;
 
 public class EmojiService {
+
+    private final EmojiCompat.InitCallback initCallback = new EmojiCompat.InitCallback() {
+        @Override
+        public void onInitialized() {
+            super.onInitialized();
+            Log.d(Config.LOGTAG, "EmojiService succeeded in loading fonts");
+
+        }
+
+        @Override
+        public void onFailed(Throwable throwable) {
+            super.onFailed(throwable);
+            Log.d(Config.LOGTAG, "EmojiService failed to load fonts", throwable);
+        }
+    };
 
     private final Context context;
 
