@@ -532,7 +532,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                 }
             }
             final Message message;
-            if (body.content != null && body.content.startsWith("?OTR") && Config.supportOtr()) {
+            if (body != null && body.content.startsWith("?OTR") && Config.supportOtr()) {
                 if (!isForwarded && !isTypeGroupChat && isProperlyAddressed && !conversationMultiMode) {
                     message = parseOtrChat(body.content, from, remoteMsgId, conversation);
                     if (message == null) {
