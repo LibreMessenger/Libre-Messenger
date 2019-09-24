@@ -944,11 +944,11 @@
     <string name="intro_desc_main">Learn how to use Pix-Art Messenger.</string>
     <string name="welcome_header">Welcome to Pix-Art Messenger</string>
     <string name="intro_permissions">Permissions</string>
-    <string name="intro_desc_permissions">Pix-Art Messenger will ask you for granting a few permissions. We need to have at least access to your external storage. Any other permissions are requested as required. Note: We will ask you for contacts permissions to read Jabber-IDs from your addressbook. We will not share, upload or copy any of your contacts.</string>
+    <string name="intro_desc_permissions">Pix-Art Messenger will ask you for granting a few permissions. We need to have at least access to your external storage. Any other permissions are requested as required and are not mandatory. </string>
     <string name="intro_account">Your account</string>
-    <string name="intro_desc_account">To start over, you will need an own account. This works like e-mail works. If you have an own account, just login with your Jabber-ID and password. If you would like to create a new account, you have the choice between choosing a suggested server from the drop-down menu or use a custom one. You have also the possibility to import an existing account into the app.</string>
+    <string name="intro_desc_account">To start over, you will need an own account. If you have an own account, just login with your Jabber-ID and password.</string>
     <string name="intro_start_chatting">Start chatting</string>
-    <string name="intro_desc_start_chatting">Congratulations! But how about chatting? Just add Jabber-IDs of your contacts, or if you have given contacts permissions and Jabber-IDs in your addressbook they will be shown up. You can also add or join group chats or join public channels.</string>
+    <string name="intro_desc_start_chatting">Congratulations! But how about chatting? Just add Jabber-IDs of your contacts, or if you have given contacts permissions and Jabber-IDs in your address book they will be shown up. You can also add or create group chats or join public channels.</string>
     <string name="intro_desc_open_chat">Now you can start chatting, share locations, files, videos and images or send voice messages.</string>
     <string name="intro_chat_details">Chat details</string>
     <string name="intro_desc_chat_details">You want to open the chat details? Just tip on the chat name in the menu bar on the top.</string>
@@ -959,4 +959,8 @@
     <string name="pref_show_intro">Show intro again</string>
     <string name="show_intro_again">Intro screens will be shown again</string>
     <string name="show_intro_again_failed">Resetting intro screens failed. Try again…</string>
+    <string name="intro_desc_whats_xmpp">XMPP, also called jabber, is a decentralized communication network and it works like e-mail works. You need an address, which is called Jabber-ID and a password.</string>
+    <string name="intro_whats_xmpp">What is XMPP / Jabber?</string>
+    <string name="intro_desc_contacts_permissions">We will also ask you for granting permissions to read your address book, to read out Jabber-IDs from your contacts. We will never share, upload or copy any of your contacts.</string>
+    <string name="intro_desc_account2">If you would like to create a new account, you have the choice between choosing a suggested server from the drop-down menu or use a custom one.</string>
 </resources>

@@ -57,6 +57,13 @@ public class IntroActivity extends AppIntro {
                 welcome.setBgColor(backgroundColor);
                 addSlide(AppIntroFragment.newInstance(welcome));
 
+                SliderPage xmpp = new SliderPage();
+                xmpp.setTitle(getString(R.string.intro_whats_xmpp));
+                xmpp.setDescription(getString(R.string.intro_desc_whats_xmpp));
+                xmpp.setImageDrawable(R.drawable.intro_xmpp_icon);
+                xmpp.setBgColor(backgroundColor);
+                addSlide(AppIntroFragment.newInstance(xmpp));
+
                 SliderPage permissions = new SliderPage();
                 permissions.setTitle(getString(R.string.intro_permissions));
                 permissions.setDescription(getString(R.string.intro_desc_permissions));
@@ -64,12 +71,26 @@ public class IntroActivity extends AppIntro {
                 permissions.setBgColor(backgroundColor);
                 addSlide(AppIntroFragment.newInstance(permissions));
 
+                SliderPage permissions2 = new SliderPage();
+                permissions2.setTitle(getString(R.string.intro_permissions));
+                permissions2.setDescription(getString(R.string.intro_desc_contacts_permissions));
+                permissions2.setImageDrawable(R.drawable.intro_contacts_icon);
+                permissions2.setBgColor(backgroundColor);
+                addSlide(AppIntroFragment.newInstance(permissions2));
+
                 SliderPage account = new SliderPage();
                 account.setTitle(getString(R.string.intro_account));
                 account.setDescription(getString(R.string.intro_desc_account));
                 account.setImageDrawable(R.drawable.intro_account_icon);
                 account.setBgColor(backgroundColor);
                 addSlide(AppIntroFragment.newInstance(account));
+
+                SliderPage account2 = new SliderPage();
+                account2.setTitle(getString(R.string.intro_account));
+                account2.setDescription(getString(R.string.intro_desc_account2));
+                account2.setImageDrawable(R.drawable.intro_account_icon);
+                account2.setBgColor(backgroundColor);
+                addSlide(AppIntroFragment.newInstance(account2));
 
                 SliderPage startChatting = new SliderPage();
                 startChatting.setTitle(getString(R.string.intro_start_chatting));
@@ -129,6 +150,5 @@ public class IntroActivity extends AppIntro {
     @Override
     public void onSlideChanged(@Nullable Fragment oldFragment, @Nullable Fragment newFragment) {
         super.onSlideChanged(oldFragment, newFragment);
-        // Do something when the slide changes.
     }
 }
