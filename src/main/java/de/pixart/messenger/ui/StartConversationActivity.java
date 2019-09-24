@@ -48,6 +48,8 @@ import androidx.fragment.app.ListFragment;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.textfield.TextInputLayout;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -820,6 +822,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
                 if (uri != null) {
                     Invite invite = new Invite(intent.getData(), intent.getBooleanExtra("scanned", false));
                     invite.account = intent.getStringExtra("account");
+                    invite.forceDialog = intent.getBooleanExtra("force_dialog", false);
                     return invite.invite();
                 } else {
                     return false;
@@ -832,7 +835,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
         List<Contact> contacts = xmppConnectionService.findContacts(invite.getJid(), invite.account);
         if (invite.isAction(XmppUri.ACTION_JOIN)) {
             Conversation muc = xmppConnectionService.findFirstMuc(invite.getJid());
-            if (muc != null) {
+            if (muc != null && !invite.forceDialog) {
                 switchToConversationDoNotAppend(muc, invite.getBody());
                 return true;
             } else {
@@ -985,7 +988,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
     }
 
     @Override
-    public void onJoinDialogPositiveClick(Dialog dialog, Spinner spinner, AutoCompleteTextView jid, boolean isBookmarkChecked) {
+    public void onJoinDialogPositiveClick(Dialog dialog, Spinner spinner, TextInputLayout layout, AutoCompleteTextView jid, boolean isBookmarkChecked) {
         if (!xmppConnectionServiceBound) {
             return;
         }
@@ -993,17 +996,26 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
         if (account == null) {
             return;
         }
-        final Jid conferenceJid;
+        final String input = jid.getText().toString();
+        Jid conferenceJid;
         try {
-            conferenceJid = Jid.of(jid.getText().toString());
+            conferenceJid = Jid.of(input);
         } catch (final IllegalArgumentException e) {
-            jid.setError(getString(R.string.invalid_jid));
-            return;
+            final XmppUri xmppUri = new XmppUri(input);
+            if (xmppUri.isJidValid() && xmppUri.isAction(XmppUri.ACTION_JOIN)) {
+                final Editable editable = jid.getEditableText();
+                editable.clear();
+                editable.append(xmppUri.getJid().toEscapedString());
+                conferenceJid = xmppUri.getJid();
+            } else {
+                layout.setError(getString(R.string.invalid_jid));
+                return;
+            }
         }
 
         if (isBookmarkChecked) {
             if (account.hasBookmarkFor(conferenceJid)) {
-                jid.setError(getString(R.string.bookmark_already_exists));
+                layout.setError(getString(R.string.bookmark_already_exists));
             } else {
                 final Bookmark bookmark = new Bookmark(account, conferenceJid.asBareJid());
                 bookmark.setAutojoin(getBooleanPreference("autojoin", R.bool.autojoin));
@@ -1240,6 +1252,8 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
     private class Invite extends XmppUri {
 
         public String account;
+
+        public boolean forceDialog = false;
 
         public Invite(final Uri uri) {
             super(uri);

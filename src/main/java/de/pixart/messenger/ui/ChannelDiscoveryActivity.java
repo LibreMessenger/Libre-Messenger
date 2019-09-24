@@ -2,10 +2,10 @@ package de.pixart.messenger.ui;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import androidx.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
 import android.text.Html;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -14,6 +14,9 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.databinding.DataBindingUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -196,6 +199,13 @@ public class ChannelDiscoveryActivity extends XmppActivity implements MenuItem.O
             switch (item.getItemId()) {
                 case R.id.share_with:
                     StartConversationActivity.shareAsChannel(this, room.address);
+                    return true;
+                case R.id.open_join_dialog:
+                    final Intent intent = new Intent(this, StartConversationActivity.class);
+                    intent.setAction(Intent.ACTION_VIEW);
+                    intent.putExtra("force_dialog", true);
+                    intent.setData(Uri.parse(String.format("xmpp:%s?join", room.address)));
+                    startActivity(intent);
                     return true;
             }
         }

@@ -964,4 +964,5 @@
     <string name="intro_whats_xmpp">What is XMPP / Jabber?</string>
     <string name="intro_desc_contacts_permissions">We will also ask you for granting permissions to read your address book, to read out Jabber-IDs from your contacts. We will never share, upload or copy any of your contacts.</string>
     <string name="intro_desc_account2">If you would like to create a new account, you have the choice between choosing a suggested server from the drop-down menu or use a custom one.</string>
+    <string name="open_join_dialog">Join public channel…</string>
 </resources>
