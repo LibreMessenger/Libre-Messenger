@@ -936,6 +936,7 @@
     <string name="unable_to_perform_this_action">Unable to perform this action</string>
     <string name="waiting_for_transfer">Waiting for transfer</string>
     <string name="x_has_written">%s has written:</string>
+    <string name="i_have_written">I have written:</string>
     <string name="no_status_set_instructions">You have not set a presence status message</string>
     <string name="your_status">Your status</string>
     <string name="pref_use_invidious">Replace YouTube links with Invidious</string>

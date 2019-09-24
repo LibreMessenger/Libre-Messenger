@@ -14,6 +14,8 @@ import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Build;
@@ -1163,7 +1165,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         messageListAdapter = new MessageAdapter((XmppActivity) getActivity(), this.messageList);
         messageListAdapter.setOnContactPictureClicked(this);
         messageListAdapter.setOnContactPictureLongClicked(this);
-        messageListAdapter.setOnQuoteListener(text -> quoteText(text, conversation.getContact().getDisplayName()));
+        messageListAdapter.setOnQuoteListener(text -> quoteText(text, getUsername(selectedMessage)));
         binding.messagesView.setAdapter(messageListAdapter);
 
         registerForContextMenu(binding.messagesView);
@@ -1189,8 +1191,11 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         if (binding.textinput.isEnabled()) {
             String username = "";
             if (user != null && user.length() > 0) {
-                String res = "*" + user + "*";
-                username = getString(R.string.x_has_written, res) + System.getProperty("line.separator");
+                if (user.equals(getString(R.string.me))) {
+                    username = getString(R.string.i_have_written) + System.getProperty("line.separator");
+                } else {
+                    username = getString(R.string.x_has_written, user) + System.getProperty("line.separator");
+                }
             }
             binding.textinput.insertAsQuote(username + text);
             binding.textinput.requestFocus();
@@ -1213,7 +1218,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         binding.recordVoiceButton.setImageResource(activity.getThemeResource(R.attr.ic_send_voice_offline, R.drawable.ic_send_voice_offline));
     }
 
-    private void quoteMessage(Message message, String user) {
+    private void quoteMessage(Message message, @Nullable String user) {
         quoteText(MessageUtils.prepareQuote(message), user);
     }
 
@@ -1364,7 +1369,11 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 ShareUtil.copyLinkToClipboard(activity, selectedMessage);
                 return true;
             case R.id.quote_message:
-                quoteMessage(selectedMessage, user);
+                if (conversation.getMode() == Conversation.MODE_MULTI) {
+                    quoteMessage(selectedMessage, user);
+                } else {
+                    quoteMessage(selectedMessage, null);
+                }
                 return true;
             case R.id.send_again:
                 resendMessage(selectedMessage);
