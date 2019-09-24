@@ -7,6 +7,8 @@
 * replace YouTube links with Invidious links (PAM)
 * rework profile view (PAM)
 * introduce app intro and some help screens (PAM)
+* fixed minor security issues
+* share XMPP uri from channel search by long pressing a result
 * bug fixes
 
 #### Version 2.2.9
@@ -19,8 +21,11 @@
 * fixes for Jingle file transfer
 * fixed some rare crashes
 * when sharing a message from and to messenger insert it as quote
-* find orphaned files and show them in the chat again instead of showing them deleted
+* find orphaned files and show them in the chat again instead of showing them deleted (PAM)
 * introduce file uploads/downloads with queue (PAM)
+* fixed connection issues over Tor
+* P2P file transfer (Jingle) now offers direct candidates
+* support XEP-0396: Jingle Encrypted Transports - OMEMO
 * bug fixes
 
 #### Version 2.2.7
