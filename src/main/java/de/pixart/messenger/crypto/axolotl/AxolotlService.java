@@ -2,10 +2,11 @@ package de.pixart.messenger.crypto.axolotl;
 
 import android.os.Bundle;
 import android.security.KeyChain;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.util.Log;
 import android.util.Pair;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.whispersystems.libsignal.IdentityKey;
@@ -837,6 +838,13 @@ public class AxolotlService implements OnAdvancedStreamFeaturesLoaded {
                 }
             }
         });
+    }
+
+    public void deleteOmemoIdentity() {
+        final String node = AxolotlService.PEP_BUNDLES + ":" + getOwnDeviceId();
+        final IqPacket deleteBundleNode = mXmppConnectionService.getIqGenerator().deleteNode(node);
+        mXmppConnectionService.sendIqPacket(account, deleteBundleNode, null);
+        publishDeviceIdsAndRefineAccessModel(getOwnDeviceIds());
     }
 
     public List<Jid> getCryptoTargets(Conversation conversation) {
