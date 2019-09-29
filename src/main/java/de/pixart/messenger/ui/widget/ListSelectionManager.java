@@ -18,7 +18,9 @@ public class ListSelectionManager {
     private static final int MESSAGE_SEND_RESET = 1;
     private static final int MESSAGE_RESET = 2;
     private static final int MESSAGE_START_SELECTION = 3;
-
+    private static final Field FIELD_EDITOR;
+    private static final Method METHOD_START_SELECTION;
+    private static final boolean SUPPORTED;
     private static final Handler HANDLER = new Handler(Looper.getMainLooper(), new Handler.Callback() {
 
         @Override
@@ -45,29 +47,57 @@ public class ListSelectionManager {
         }
     });
 
-    private static class StartSelectionHolder {
-
-        public final ListSelectionManager listSelectionManager;
-        public final TextView textView;
-        public final int start;
-        public final int end;
-
-        public StartSelectionHolder(ListSelectionManager listSelectionManager, TextView textView,
-                                    int start, int end) {
-            this.listSelectionManager = listSelectionManager;
-            this.textView = textView;
-            this.start = start;
-            this.end = end;
+    static {
+        Field editor;
+        try {
+            editor = TextView.class.getDeclaredField("mEditor");
+            editor.setAccessible(true);
+        } catch (Exception e) {
+            editor = null;
         }
+        FIELD_EDITOR = editor;
+        Method startSelection = null;
+        if (editor != null) {
+            String[] startSelectionNames = {"startSelectionActionMode", "startSelectionActionModeWithSelection"};
+            for (String startSelectionName : startSelectionNames) {
+                try {
+                    startSelection = editor.getType().getDeclaredMethod(startSelectionName);
+                    startSelection.setAccessible(true);
+                    break;
+                } catch (Exception e) {
+                    startSelection = null;
+                }
+            }
+        }
+        METHOD_START_SELECTION = startSelection;
+        SUPPORTED = FIELD_EDITOR != null && METHOD_START_SELECTION != null;
     }
 
     private ActionMode selectionActionMode;
     private Object selectionIdentifier;
     private TextView selectionTextView;
-
     private Object futureSelectionIdentifier;
     private int futureSelectionStart;
     private int futureSelectionEnd;
+
+    public static boolean isSupported() {
+        return SUPPORTED;
+    }
+
+    private static void startSelection(TextView textView, int start, int end) {
+        final CharSequence text = textView.getText();
+        if (SUPPORTED && start >= 0 && end > start && textView.isTextSelectable() && text instanceof Spannable) {
+            final Spannable spannable = (Spannable) text;
+            start = Math.min(start, spannable.length());
+            end = Math.min(end, spannable.length());
+            Selection.setSelection(spannable, start, end);
+            try {
+                final Object editor = FIELD_EDITOR != null ? FIELD_EDITOR.get(textView) : textView;
+                METHOD_START_SELECTION.invoke(editor);
+            } catch (Exception e) {
+            }
+        }
+    }
 
     public void onCreate(TextView textView, ActionMode.Callback additionalCallback) {
         final CustomCallback callback = new CustomCallback(textView, additionalCallback);
@@ -76,11 +106,14 @@ public class ListSelectionManager {
 
     public void onUpdate(TextView textView, Object identifier) {
         if (SUPPORTED) {
-            CustomCallback callback = (CustomCallback) textView.getCustomSelectionActionModeCallback();
-            callback.identifier = identifier;
-            if (futureSelectionIdentifier == identifier) {
-                HANDLER.obtainMessage(MESSAGE_START_SELECTION, new StartSelectionHolder(this,
-                        textView, futureSelectionStart, futureSelectionEnd)).sendToTarget();
+            final ActionMode.Callback callback = textView.getCustomSelectionActionModeCallback();
+            if (callback instanceof CustomCallback) {
+                final CustomCallback customCallback = (CustomCallback) textView.getCustomSelectionActionModeCallback();
+                customCallback.identifier = identifier;
+                if (futureSelectionIdentifier == identifier) {
+                    HANDLER.obtainMessage(MESSAGE_START_SELECTION, new StartSelectionHolder(this,
+                            textView, futureSelectionStart, futureSelectionEnd)).sendToTarget();
+                }
             }
         }
     }
@@ -109,13 +142,29 @@ public class ListSelectionManager {
         }
     }
 
+    private static class StartSelectionHolder {
+
+        final ListSelectionManager listSelectionManager;
+        final TextView textView;
+        public final int start;
+        public final int end;
+
+        StartSelectionHolder(ListSelectionManager listSelectionManager, TextView textView,
+                             int start, int end) {
+            this.listSelectionManager = listSelectionManager;
+            this.textView = textView;
+            this.start = start;
+            this.end = end;
+        }
+    }
+
     private class CustomCallback implements ActionMode.Callback {
 
         private final TextView textView;
         private final ActionMode.Callback additionalCallback;
-        public Object identifier;
+        Object identifier;
 
-        public CustomCallback(TextView textView, ActionMode.Callback additionalCallback) {
+        CustomCallback(TextView textView, ActionMode.Callback additionalCallback) {
             this.textView = textView;
             this.additionalCallback = additionalCallback;
         }
@@ -156,55 +205,6 @@ public class ListSelectionManager {
                 selectionActionMode = null;
                 selectionIdentifier = null;
                 selectionTextView = null;
-            }
-        }
-    }
-
-    private static final Field FIELD_EDITOR;
-    private static final Method METHOD_START_SELECTION;
-    private static final boolean SUPPORTED;
-
-    static {
-        Field editor;
-        try {
-            editor = TextView.class.getDeclaredField("mEditor");
-            editor.setAccessible(true);
-        } catch (Exception e) {
-            editor = null;
-        }
-        FIELD_EDITOR = editor;
-        Method startSelection = null;
-        if (editor != null) {
-            String[] startSelectionNames = {"startSelectionActionMode", "startSelectionActionModeWithSelection"};
-            for (String startSelectionName : startSelectionNames) {
-                try {
-                    startSelection = editor.getType().getDeclaredMethod(startSelectionName);
-                    startSelection.setAccessible(true);
-                    break;
-                } catch (Exception e) {
-                    startSelection = null;
-                }
-            }
-        }
-        METHOD_START_SELECTION = startSelection;
-        SUPPORTED = FIELD_EDITOR != null && METHOD_START_SELECTION != null;
-    }
-
-    public static boolean isSupported() {
-        return SUPPORTED;
-    }
-
-    public static void startSelection(TextView textView, int start, int end) {
-        final CharSequence text = textView.getText();
-        if (SUPPORTED && start >= 0 && end > start && textView.isTextSelectable() && text instanceof Spannable) {
-            final Spannable spannable = (Spannable) text;
-            start = Math.min(start, spannable.length());
-            end = Math.min(end, spannable.length());
-            Selection.setSelection(spannable, start, end);
-            try {
-                final Object editor = FIELD_EDITOR != null ? FIELD_EDITOR.get(textView) : textView;
-                METHOD_START_SELECTION.invoke(editor);
-            } catch (Exception e) {
             }
         }
     }
