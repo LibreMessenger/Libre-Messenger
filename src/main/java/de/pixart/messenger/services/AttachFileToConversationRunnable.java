@@ -1,10 +1,14 @@
 package de.pixart.messenger.services;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
-import androidx.annotation.RequiresApi;
+import android.preference.PreferenceManager;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import net.ypresto.androidtranscoder.MediaTranscoder;
 import net.ypresto.androidtranscoder.format.MediaFormatStrategyPresets;
@@ -176,6 +180,15 @@ public class AttachFileToConversationRunnable implements Runnable, MediaTranscod
         } else {
             processAsFile();
         }
+    }
+
+    private String getVideoCompression() {
+        return getVideoCompression(mXmppConnectionService);
+    }
+
+    public static String getVideoCompression(final Context context) {
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString("video_compression", context.getResources().getString(R.string.video_compression));
     }
 
     public FileBackend getFileBackend() {

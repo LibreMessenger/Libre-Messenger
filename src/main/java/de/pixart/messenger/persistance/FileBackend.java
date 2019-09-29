@@ -60,6 +60,7 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.DownloadableFile;
 import de.pixart.messenger.entities.Message;
+import de.pixart.messenger.services.AttachFileToConversationRunnable;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.util.Attachment;
 import de.pixart.messenger.utils.CryptoHelper;
@@ -271,6 +272,7 @@ public class FileBackend {
     }
 
     public static boolean allFilesUnderSize(Context context, List<Attachment> attachments, long max) {
+        final boolean compressVideo = !AttachFileToConversationRunnable.getVideoCompression(context).equals("uncompressed");
         if (max <= 0) {
             Log.d(Config.LOGTAG, "server did not report max file size for http upload");
             return true; //exception to be compatible with HTTP Upload < v0.2
@@ -280,7 +282,7 @@ public class FileBackend {
                 continue;
             }
             String mime = attachment.getMime();
-            if (mime != null && mime.startsWith("video/")) {
+            if (mime != null && mime.startsWith("video/") && compressVideo) {
                 try {
                     Dimensions dimensions = FileBackend.getVideoDimensions(context, attachment.getUri());
                     if (dimensions.getMin() >= 720) {
