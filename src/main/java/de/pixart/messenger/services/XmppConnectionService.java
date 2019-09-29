@@ -2488,21 +2488,24 @@ public class XmppConnectionService extends Service {
     }
 
     public void deleteAccount(final Account account) {
+        final boolean connected = account.getStatus() == Account.State.ONLINE;
         synchronized (this.conversations) {
-            account.getAxolotlService().deleteOmemoIdentity();
+            if (connected) {
+                account.getAxolotlService().deleteOmemoIdentity();
+            }
             for (final Conversation conversation : conversations) {
                 if (conversation.getAccount() == account) {
                     if (conversation.getMode() == Conversation.MODE_MULTI) {
-                        leaveMuc(conversation);
-                    } else if (conversation.getMode() == Conversation.MODE_SINGLE) {
-                        conversation.endOtrIfNeeded();
+                        if (connected) {
+                            leaveMuc(conversation);
+                        }
                     }
-                    mNotificationService.clear(conversation);
                     conversations.remove(conversation);
+                    mNotificationService.clear(conversation);
                 }
             }
             if (account.getXmppConnection() != null) {
-                new Thread(() -> disconnect(account, false)).start();
+                new Thread(() -> disconnect(account, !connected)).start();
             }
             final Runnable runnable = () -> {
                 if (!databaseBackend.deleteAccount(account)) {
