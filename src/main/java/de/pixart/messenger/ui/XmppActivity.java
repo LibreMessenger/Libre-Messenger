@@ -20,7 +20,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import androidx.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Point;
@@ -38,12 +37,6 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import androidx.annotation.BoolRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatDelegate;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -54,6 +47,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import androidx.annotation.BoolRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
+import androidx.databinding.DataBindingUtil;
 
 import net.java.otr4j.session.SessionID;
 
@@ -195,7 +196,7 @@ public abstract class XmppActivity extends ActionBarActivity {
         return null;
     }
 
-        protected void hideToast() {
+    protected void hideToast() {
         if (mToast != null) {
             mToast.cancel();
         }
@@ -421,7 +422,7 @@ public abstract class XmppActivity extends ActionBarActivity {
     }
 
     public int getThemeResource(int r_attr_name, int r_drawable_def) {
-        int[] attrs = {	r_attr_name };
+        int[] attrs = {r_attr_name};
         TypedArray ta = this.getTheme().obtainStyledAttributes(attrs);
 
         int res = ta.getResourceId(0, r_drawable_def);
@@ -565,7 +566,7 @@ public abstract class XmppActivity extends ActionBarActivity {
     }
 
     protected void inviteToConversation(Conversation conversation) {
-        startActivityForResult(ChooseContactActivity.create(this,conversation), REQUEST_INVITE_TO_CONVERSATION);
+        startActivityForResult(ChooseContactActivity.create(this, conversation), REQUEST_INVITE_TO_CONVERSATION);
     }
 
     protected void announcePgp(final Account account, final Conversation conversation, Intent intent, final Runnable onSuccess) {
@@ -732,7 +733,7 @@ public abstract class XmppActivity extends ActionBarActivity {
                            boolean password,
                            boolean permitEmpty) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        DialogQuickeditBinding binding = DataBindingUtil.inflate(getLayoutInflater(),R.layout.dialog_quickedit, null, false);
+        DialogQuickeditBinding binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.dialog_quickedit, null, false);
         if (password) {
             binding.inputEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         }
@@ -960,7 +961,7 @@ public abstract class XmppActivity extends ActionBarActivity {
             Toast.makeText(this, R.string.not_connected_try_again, Toast.LENGTH_SHORT).show();
             return;
         }
-        if (xmppConnectionService.getAccounts() == null){
+        if (xmppConnectionService.getAccounts() == null) {
             Toast.makeText(this, R.string.no_accounts, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -1038,7 +1039,7 @@ public abstract class XmppActivity extends ActionBarActivity {
             while (features.adhocinviteURI == null && counter <= 10) {
                 try {
                     Thread.sleep(500);
-                } catch(InterruptedException e) {
+                } catch (InterruptedException e) {
                     // Process exception
                 }
                 counter++;
@@ -1293,11 +1294,11 @@ public abstract class XmppActivity extends ActionBarActivity {
         int isUnknownAllowed = 0;
         if (Build.VERSION.SDK_INT >= 26) {
             /*
-            * On Android 8 with applications targeting lower versions,
-            * it's impossible to check unknown sources enabled: using old APIs will always return true
-            * and using the new one will always return false,
-            * so in order to avoid a stuck dialog that can't be bypassed we will assume true.
-            */
+             * On Android 8 with applications targeting lower versions,
+             * it's impossible to check unknown sources enabled: using old APIs will always return true
+             * and using the new one will always return false,
+             * so in order to avoid a stuck dialog that can't be bypassed we will assume true.
+             */
             installFromUnknownSource = this.getApplicationInfo().targetSdkVersion < Build.VERSION_CODES.O
                     || packageManager.canRequestPackageInstalls();
         } else if (Build.VERSION.SDK_INT >= 17 && Build.VERSION.SDK_INT < 26) {

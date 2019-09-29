@@ -943,7 +943,7 @@
     <string name="this_device">Este dispositivo</string>
     <string name="intro_desc_main">Aprende como usar Pix-Art Messenger.</string>
     <string name="welcome_header">Bienvenido a Pix-Art Messenger</string>
-    <string name="intro_permissions">Permisos</string>
+    <string name="intro_required_permissions">Permisos</string>
     <string name="intro_account">Tu cuenta</string>
     <string name="intro_start_chatting">Iniciar conversación</string>
     <string name="intro_desc_open_chat">Ahora ya puedes empezar a chatear, compartir ubicaciones, archivos, videos e imágenes, o enviar mensajes de voz.</string>

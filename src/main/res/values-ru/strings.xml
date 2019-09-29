@@ -918,7 +918,7 @@
     <string name="this_device">Это устройство</string>
     <string name="intro_desc_main">Узнайте как использовать Pix-Art Messenger.</string>
     <string name="welcome_header">Добро пожаловать в Pix-Art Messenger</string>
-    <string name="intro_permissions">Разрешения</string>
+    <string name="intro_required_permissions">Разрешения</string>
     <string name="intro_account">Ваш аккаунт</string>
     <string name="intro_start_chatting">Начать чат</string>
     <string name="intro_chat_details">Сведения о чате</string>

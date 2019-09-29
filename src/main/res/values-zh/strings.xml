@@ -935,7 +935,7 @@
     <string name="this_device">此设备</string>
     <string name="intro_desc_main">学习如何使用Pix-Art聊天</string>
     <string name="welcome_header">邀请至Pix-Art聊天</string>
-    <string name="intro_permissions">权限</string>
+    <string name="intro_required_permissions">权限</string>
     <string name="intro_account">您的帐户</string>
     <string name="intro_start_chatting">开始聊天</string>
     <string name="intro_chat_details">聊天详情</string>

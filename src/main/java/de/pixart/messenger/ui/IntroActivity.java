@@ -1,5 +1,6 @@
 package de.pixart.messenger.ui;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -30,10 +31,8 @@ public class IntroActivity extends AppIntro {
 
         final int backgroundColor = getResources().getColor(R.color.primary_dark);
         final int barColor = getResources().getColor(R.color.primary);
-        final int separatorColor = getResources().getColor(R.color.accent);
 
         setBarColor(barColor);
-        setSeparatorColor(separatorColor);
         setProgressButtonEnabled(true);
         showSkipButton(false);
         setBackButtonVisibilityWithDone(true);
@@ -57,6 +56,14 @@ public class IntroActivity extends AppIntro {
                 welcome.setBgColor(backgroundColor);
                 addSlide(AppIntroFragment.newInstance(welcome));
 
+                SliderPage privacy = new SliderPage();
+                privacy.setTitle(getString(R.string.intro_privacy));
+                privacy.setDescription(getString(R.string.intro_desc_privacy));
+                privacy.setImageDrawable(R.drawable.intro_security_icon);
+                privacy.setBgColor(backgroundColor);
+                addSlide(AppIntroFragment.newInstance(privacy));
+
+
                 SliderPage xmpp = new SliderPage();
                 xmpp.setTitle(getString(R.string.intro_whats_xmpp));
                 xmpp.setDescription(getString(R.string.intro_desc_whats_xmpp));
@@ -65,18 +72,25 @@ public class IntroActivity extends AppIntro {
                 addSlide(AppIntroFragment.newInstance(xmpp));
 
                 SliderPage permissions = new SliderPage();
-                permissions.setTitle(getString(R.string.intro_permissions));
-                permissions.setDescription(getString(R.string.intro_desc_permissions));
+                permissions.setTitle(getString(R.string.intro_required_permissions));
+                permissions.setDescription(getString(R.string.intro_desc_required_permissions));
                 permissions.setImageDrawable(R.drawable.intro_memory_icon);
                 permissions.setBgColor(backgroundColor);
                 addSlide(AppIntroFragment.newInstance(permissions));
 
                 SliderPage permissions2 = new SliderPage();
-                permissions2.setTitle(getString(R.string.intro_permissions));
-                permissions2.setDescription(getString(R.string.intro_desc_contacts_permissions));
+                permissions2.setTitle(getString(R.string.intro_optional_permissions));
+                permissions2.setDescription(getString(R.string.intro_desc_optional_permissions));
                 permissions2.setImageDrawable(R.drawable.intro_contacts_icon);
                 permissions2.setBgColor(backgroundColor);
                 addSlide(AppIntroFragment.newInstance(permissions2));
+
+                SliderPage permissions3 = new SliderPage();
+                permissions3.setTitle(getString(R.string.intro_optional_permissions));
+                permissions3.setDescription(getString(R.string.intro_desc_optional_permissions2));
+                permissions3.setImageDrawable(R.drawable.intro_location_icon);
+                permissions3.setBgColor(backgroundColor);
+                addSlide(AppIntroFragment.newInstance(permissions3));
 
                 SliderPage account = new SliderPage();
                 account.setTitle(getString(R.string.intro_account));
@@ -92,12 +106,33 @@ public class IntroActivity extends AppIntro {
                 account2.setBgColor(backgroundColor);
                 addSlide(AppIntroFragment.newInstance(account2));
 
+                SliderPage account3 = new SliderPage();
+                account3.setTitle(getString(R.string.intro_account));
+                account3.setDescription(getString(R.string.intro_desc_account3));
+                account3.setImageDrawable(R.drawable.intro_account_icon);
+                account3.setBgColor(backgroundColor);
+                addSlide(AppIntroFragment.newInstance(account3));
+
                 SliderPage startChatting = new SliderPage();
                 startChatting.setTitle(getString(R.string.intro_start_chatting));
                 startChatting.setDescription(getString(R.string.intro_desc_start_chatting));
                 startChatting.setImageDrawable(R.drawable.intro_start_chat_icon);
                 startChatting.setBgColor(backgroundColor);
                 addSlide(AppIntroFragment.newInstance(startChatting));
+
+                SliderPage startChatting2 = new SliderPage();
+                startChatting2.setTitle(getString(R.string.intro_start_chatting));
+                startChatting2.setDescription(getString(R.string.intro_desc_start_chatting2));
+                startChatting2.setImageDrawable(R.drawable.intro_start_chat_icon);
+                startChatting2.setBgColor(backgroundColor);
+                addSlide(AppIntroFragment.newInstance(startChatting2));
+
+                SliderPage startChatting3 = new SliderPage();
+                startChatting3.setTitle(getString(R.string.intro_start_chatting));
+                startChatting3.setDescription(getString(R.string.intro_desc_start_chatting3));
+                startChatting3.setImageDrawable(R.drawable.intro_start_chat_icon);
+                startChatting3.setBgColor(backgroundColor);
+                addSlide(AppIntroFragment.newInstance(startChatting3));
                 break;
             case CONVERSATIONS_ACTIVITY:
                 SliderPage openChat = new SliderPage();
