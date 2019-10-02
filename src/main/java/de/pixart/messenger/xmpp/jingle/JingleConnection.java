@@ -12,7 +12,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -21,11 +20,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
-import de.pixart.messenger.crypto.axolotl.OnMessageCreatedCallback;
 import de.pixart.messenger.crypto.axolotl.XmppAxolotlMessage;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Conversation;
-import de.pixart.messenger.entities.Conversational;
 import de.pixart.messenger.entities.DownloadableFile;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.Presence;
@@ -277,6 +274,8 @@ public class JingleConnection implements Transferable {
 
         } else {
             response = packet.generateResponse(IqPacket.TYPE.ERROR);
+            final Element error = response.addChild("error").setAttribute("type", "cancel");
+            error.addChild("not-acceptable", "urn:ietf:params:xml:ns:xmpp-stanzas");
         }
         mXmppConnectionService.sendIqPacket(account, response, null);
     }
@@ -939,8 +938,9 @@ public class JingleConnection implements Transferable {
 
     private boolean receiveTransportAccept(JinglePacket packet) {
         if (packet.getJingleContent().hasIbbTransport()) {
-            String receivedBlockSize = packet.getJingleContent().ibbTransport()
-                    .getAttribute("block-size");
+            final Element ibbTransport = packet.getJingleContent().ibbTransport();
+            final String receivedBlockSize = ibbTransport.getAttribute("block-size");
+            final String sid = ibbTransport.getAttribute("sid");
             if (receivedBlockSize != null) {
                 try {
                     int bs = Integer.parseInt(receivedBlockSize);
@@ -952,7 +952,9 @@ public class JingleConnection implements Transferable {
                 }
             }
             this.transport = new JingleInbandTransport(this, this.transportId, this.ibbBlockSize);
-
+            if (sid == null || !sid.equals(this.transportId)) {
+                Log.w(Config.LOGTAG, String.format("%s: sid in transport-accept (%s) did not match our sid (%s) ", account.getJid().asBareJid(), sid, transportId));
+            }
             //might be receive instead if we are not initiating
             if (initiating()) {
                 this.transport.connect(onIbbTransportConnected);
@@ -961,6 +963,7 @@ public class JingleConnection implements Transferable {
             }
             return true;
         } else {
+            Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": received invalid transport-accept");
             return false;
         }
     }

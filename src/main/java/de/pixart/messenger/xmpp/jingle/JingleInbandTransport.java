@@ -79,19 +79,13 @@ public class JingleInbandTransport extends JingleTransport {
         open.setAttribute("stanza", "iq");
         open.setAttribute("block-size", Integer.toString(this.blockSize));
         this.connected = true;
-        this.account.getXmppConnection().sendIqPacket(iq,
-                new OnIqPacketReceived() {
-
-                    @Override
-                    public void onIqPacketReceived(Account account,
-                                                   IqPacket packet) {
-                        if (packet.getType() != IqPacket.TYPE.RESULT) {
-                            callback.failed();
-                        } else {
-                            callback.established();
-                        }
-                    }
-                });
+        this.account.getXmppConnection().sendIqPacket(iq, (account, packet) -> {
+            if (packet.getType() != IqPacket.TYPE.RESULT) {
+                callback.failed();
+            } else {
+                callback.established();
+            }
+        });
     }
 
     @Override
