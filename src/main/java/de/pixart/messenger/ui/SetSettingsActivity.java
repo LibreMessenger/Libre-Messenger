@@ -24,6 +24,7 @@ import static de.pixart.messenger.ui.SettingsActivity.CONFIRM_MESSAGES;
 import static de.pixart.messenger.ui.SettingsActivity.FORBID_SCREENSHOTS;
 import static de.pixart.messenger.ui.SettingsActivity.SHOW_LINKS_INSIDE;
 import static de.pixart.messenger.ui.SettingsActivity.SHOW_MAPS_INSIDE;
+import static de.pixart.messenger.ui.SettingsActivity.USE_INVIDIOUS;
 
 public class SetSettingsActivity extends XmppActivity implements XmppConnectionService.OnAccountUpdate {
     ActivitySetSettingsBinding binding;
@@ -34,6 +35,7 @@ public class SetSettingsActivity extends XmppActivity implements XmppConnectionS
     static final int CHATSTATES = 4;
     static final int CONFIRMMESSAGES = 5;
     static final int LASTSEEN = 6;
+    static final int INVIDEOUS = 7;
 
     @Override
     protected void refreshUiReal() {
@@ -63,6 +65,7 @@ public class SetSettingsActivity extends XmppActivity implements XmppConnectionS
         this.binding.actionInfoChatStates.setOnClickListener(string -> showInfo(CHATSTATES));
         this.binding.actionInfoConfirmMessages.setOnClickListener(string -> showInfo(CONFIRMMESSAGES));
         this.binding.actionInfoLastSeen.setOnClickListener(string -> showInfo(LASTSEEN));
+        this.binding.actionInfoInvideous.setOnClickListener(string -> showInfo(INVIDEOUS));
     }
 
     private void getDefaults() {
@@ -72,6 +75,7 @@ public class SetSettingsActivity extends XmppActivity implements XmppConnectionS
         this.binding.chatStates.setChecked(getResources().getBoolean(R.bool.chat_states));
         this.binding.confirmMessages.setChecked(getResources().getBoolean(R.bool.confirm_messages));
         this.binding.lastSeen.setChecked(getResources().getBoolean(R.bool.last_activity));
+        this.binding.invideous.setChecked(getResources().getBoolean(R.bool.use_invidious));
     }
 
     private void next(View view) {
@@ -117,6 +121,10 @@ public class SetSettingsActivity extends XmppActivity implements XmppConnectionS
                 title = getString(R.string.pref_broadcast_last_activity);
                 message = getString(R.string.pref_broadcast_last_activity_summary);
                 break;
+            case INVIDEOUS:
+                title = getString(R.string.pref_use_invidious);
+                message = getString(R.string.pref_use_invidious_summary);
+                break;
             default:
                 title = getString(R.string.error);
                 message = getString(R.string.error);
@@ -161,6 +169,11 @@ public class SetSettingsActivity extends XmppActivity implements XmppConnectionS
             preferences.edit().putBoolean(BROADCAST_LAST_ACTIVITY, true).apply();
         } else {
             preferences.edit().putBoolean(BROADCAST_LAST_ACTIVITY, false).apply();
+        }
+        if (this.binding.invideous.isChecked()) {
+            preferences.edit().putBoolean(USE_INVIDIOUS, true).apply();
+        } else {
+            preferences.edit().putBoolean(USE_INVIDIOUS, false).apply();
         }
     }
 

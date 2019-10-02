@@ -86,7 +86,7 @@
     <bool name="use_max_brightness">true</bool>
     <bool name="auto_rotate">true</bool>
     <bool name="send_crashreport">true</bool>
-    <bool name="use_invidious">true</bool>
+    <bool name="use_invidious">false</bool>
     <bool name="plain_text_logs">false</bool>
     <bool name="validate_hostname">false</bool>
     <bool name="show_foreground_service">true</bool>
