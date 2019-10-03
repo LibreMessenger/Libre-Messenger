@@ -171,9 +171,17 @@ public class ChannelDiscoveryActivity extends XmppActivity implements MenuItem.O
     @Override
     public void onChannelSearchResultsFound(List<MuclumbusService.Room> results) {
         runOnUiThread(() -> {
-            adapter.submitList(results);
-            binding.list.setVisibility(View.VISIBLE);
-            binding.progressBar.setVisibility(View.GONE);
+            if (results.size() > 0) {
+                adapter.submitList(results);
+                binding.list.setVisibility(View.VISIBLE);
+                binding.progressBar.setVisibility(View.GONE);
+                this.binding.noResults.setVisibility(View.GONE);
+            } else {
+                adapter.submitList(results);
+                binding.list.setVisibility(View.GONE);
+                binding.progressBar.setVisibility(View.GONE);
+                this.binding.noResults.setVisibility(View.VISIBLE);
+            }
         });
     }
 
