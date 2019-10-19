@@ -393,7 +393,9 @@
                 android:summary="@string/pref_enable_multi_accounts_summary"
                 android:title="@string/pref_enable_multi_accounts_title" />
         </PreferenceCategory>
-        <PreferenceCategory android:title="@string/pref_ui_options">
+        <PreferenceCategory
+            android:key="UI"
+            android:title="@string/pref_ui_options">
             <CheckBoxPreference
                 android:defaultValue="@bool/show_dynamic_tags"
                 android:key="show_dynamic_tags"
