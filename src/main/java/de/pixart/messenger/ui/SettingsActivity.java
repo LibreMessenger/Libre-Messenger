@@ -298,9 +298,18 @@ public class SettingsActivity extends XmppActivity implements
         final Preference useBundledEmojis = mSettingsFragment.findPreference("use_bundled_emoji");
         if (useBundledEmojis != null) {
             Log.d(Config.LOGTAG, "Bundled Emoji checkbox checked: " + isBundledEmojiChecked);
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O && isBundledEmojiChecked) {
-                ((CheckBoxPreference) BundledEmojiPreference).setChecked(false);
-                useBundledEmojis.setEnabled(false);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (isBundledEmojiChecked) {
+                    ((CheckBoxPreference) BundledEmojiPreference).setChecked(false);
+                    useBundledEmojis.setEnabled(false);
+                }
+                PreferenceCategory UICatergory = (PreferenceCategory) mSettingsFragment.findPreference("UI");
+                UICatergory.removePreference(useBundledEmojis);
+                if (UICatergory.getPreferenceCount() == 0) {
+                    if (mainPreferenceScreen != null) {
+                        mainPreferenceScreen.removePreference(UICatergory);
+                    }
+                }
             }
         }
 
