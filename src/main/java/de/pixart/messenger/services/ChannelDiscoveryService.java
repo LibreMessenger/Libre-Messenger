@@ -49,7 +49,11 @@ public class ChannelDiscoveryService {
                 throw new RuntimeException("Unable to use Tor proxy", e);
             }
         }
-        builder.networkInterceptors().add(new UserAgentInterceptor(service.getIqGenerator().getUserAgent()));
+        try {
+            builder.networkInterceptors().add(new UserAgentInterceptor(service.getIqGenerator().getUserAgent()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Retrofit retrofit = new Retrofit.Builder()
                 .client(builder.build())
                 .baseUrl(Config.CHANNEL_DISCOVERY)
