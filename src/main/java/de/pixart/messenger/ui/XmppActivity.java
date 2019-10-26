@@ -65,6 +65,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -969,7 +970,16 @@ public abstract class XmppActivity extends ActionBarActivity {
             Account mAccount = xmppConnectionService.getAccounts().get(0);
             String user = Jid.ofEscaped(mAccount.getJid()).getLocal();
             String domain = Jid.ofEscaped(mAccount.getJid()).getDomain();
-            String inviteURL = AdHocInviteUri(mAccount);
+            String inviteURL;
+            try {
+                inviteURL = new getAdHocInviteUri(mAccount).execute().get();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+                inviteURL = Config.inviteUserURL + user + "/" + domain;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                inviteURL = Config.inviteUserURL + user + "/" + domain;
+            }
             if (inviteURL == null) {
                 inviteURL = Config.inviteUserURL + user + "/" + domain;
             }
@@ -1004,7 +1014,16 @@ public abstract class XmppActivity extends ActionBarActivity {
                         Account mAccount = xmppConnectionService.findAccountByJid(Jid.of(selection).asBareJid());
                         String user = Jid.of(mAccount.getJid()).getLocal();
                         String domain = Jid.of(mAccount.getJid()).getDomain();
-                        String inviteURL = AdHocInviteUri(mAccount);
+                        String inviteURL;
+                        try {
+                            inviteURL = new getAdHocInviteUri(mAccount).execute().get();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                            inviteURL = Config.inviteUserURL + user + "/" + domain;
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            inviteURL = Config.inviteUserURL + user + "/" + domain;
+                        }
                         if (inviteURL == null) {
                             inviteURL = Config.inviteUserURL + user + "/" + domain;
                         }
@@ -1031,24 +1050,35 @@ public abstract class XmppActivity extends ActionBarActivity {
         return features.adhocinvite;
     }
 
-    private String AdHocInviteUri(Account account) {
-        if (AdHocInvite(account)) {
-            int counter = 0;
-            XmppConnection.Features features = account.getXmppConnection().getFeatures();
-            account.getXmppConnection().getAdHocInviteUrl(Jid.ofDomain(account.getJid().getDomain()));
-            while (features.adhocinviteURI == null && counter <= 10) {
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    // Process exception
-                }
-                counter++;
-            }
-            String uri = features.adhocinviteURI;
-            features.adhocinviteURI = null;
-            return uri;
+    private class getAdHocInviteUri extends AsyncTask<Account, Void, String> {
+
+        private Account account;
+
+        public getAdHocInviteUri(Account a) {
+            this.account = a;
         }
-        return null;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(Account... params) {
+            if (AdHocInvite(account)) {
+                XmppConnection.Features features = account.getXmppConnection().getFeatures();
+                account.getXmppConnection().getAdHocInviteUrl(Jid.ofDomain(account.getJid().getDomain()));
+                String uri = features.adhocinviteURI;
+                features.adhocinviteURI = null;
+                return uri;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+        }
     }
 
     private void createIssue() {
