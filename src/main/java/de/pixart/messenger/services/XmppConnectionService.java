@@ -305,6 +305,7 @@ public class XmppConnectionService extends Service {
     private final Set<OnKeyStatusUpdated> mOnKeyStatusUpdated = Collections.newSetFromMap(new WeakHashMap<OnKeyStatusUpdated, Boolean>());
 
     private final Object LISTENER_LOCK = new Object();
+    public final Set<String> FILENAMES_TO_IGNORE_DELETION = new HashSet<>();
     private final OnBindListener mOnBindListener = new OnBindListener() {
 
         @Override
@@ -2073,6 +2074,12 @@ public class XmppConnectionService extends Service {
     }
 
     private void markFileDeleted(final String path) {
+        synchronized (FILENAMES_TO_IGNORE_DELETION) {
+            if (FILENAMES_TO_IGNORE_DELETION.remove(path)) {
+                Log.d(Config.LOGTAG, "ignored deletion of " + path);
+                return;
+            }
+        }
         final File file = new File(path);
         final boolean isInternalFile = fileBackend.isInternalFile(file);
         final List<String> uuids = databaseBackend.markFileAsDeleted(file, isInternalFile);
