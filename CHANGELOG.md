@@ -9,6 +9,8 @@
 * introduce app intro and some help screens (PAM)
 * fixed minor security issues
 * share XMPP uri from channel search by long pressing a result
+* jingle file transfer fixes
+* fixed OMEMO self healing (after backup restore) on servers w/o MAM
 * bug fixes
 
 #### Version 2.2.9

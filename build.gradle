@@ -34,6 +34,7 @@ repositories {
 
 configurations {
     standardPushImplementation
+    standardImplementation
 }
 
 dependencies {
@@ -64,7 +65,7 @@ dependencies {
     implementation 'androidx.exifinterface:exifinterface:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.emoji:emoji:1.0.0'
-    implementation 'androidx.emoji:emoji-bundled:1.0.0'
+    standardImplementation 'androidx.emoji:emoji-bundled:1.0.0'
     implementation 'androidx.emoji:emoji-appcompat:1.0.0'
     implementation 'androidx.exifinterface:exifinterface:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
@@ -80,7 +81,7 @@ dependencies {
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.15' // 1.2.15 is last working version for minSDK 16
     implementation 'me.drakeet.support:toastcompat:1.1.0'
     implementation 'org.osmdroid:osmdroid-android:6.1.0'
-    implementation 'com.leinardi.android:speed-dial:3.0.0' // version >= 3.0.0 needs android X libraries
+    implementation 'com.leinardi.android:speed-dial:3.1.1' // version >= 3.0.0 needs android X libraries
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.squareup.okhttp3:okhttp:3.12.5' // versions > 3.12.x don't support API level < 21 anymore
     implementation 'com.squareup.retrofit2:retrofit:2.6.1'
@@ -104,8 +105,8 @@ android {
         minSdkVersion 16
         targetSdkVersion 29
 
-        versionCode 272
-        versionName "2.2.10 beta (2019-09-29)"
+        versionCode 273
+        versionName "2.2.10 beta (2019-10-26)"
         //resConfigs "en"
 
         archivesBaseName += "-$versionName"
@@ -139,7 +140,9 @@ android {
         standardPush {
             dimension "distribution"
         }
-        standard
+        standard {
+            dimension "distribution"
+        }
     }
     if (project.hasProperty('mStoreFile') &&
             project.hasProperty('mStorePassword') &&
