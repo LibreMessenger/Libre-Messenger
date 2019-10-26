@@ -1879,7 +1879,7 @@ public class XmppConnectionService extends Service {
         final XmppConnection connection = account.getXmppConnection();
         if (connection.getFeatures().bookmarks2()) {
             final Element item = mIqGenerator.publishBookmarkItem(bookmark);
-            pushNodeAndEnforcePublishOptions(account, Namespace.BOOKMARK, item, bookmark.getJid().asBareJid().toEscapedString(), PublishOptions.persistentWhitelistAccessMaxItems());
+            pushNodeAndEnforcePublishOptions(account, Namespace.BOOKMARKS2, item, bookmark.getJid().asBareJid().toEscapedString(), PublishOptions.persistentWhitelistAccessMaxItems());
         } else if (connection.getFeatures().bookmarksConversion()) {
             pushBookmarksPep(account);
         } else {
@@ -1891,7 +1891,7 @@ public class XmppConnectionService extends Service {
         account.removeBookmark(bookmark);
         final XmppConnection connection = account.getXmppConnection();
         if (connection.getFeatures().bookmarksConversion()) {
-            IqPacket request = mIqGenerator.deleteItem(Namespace.BOOKMARK, bookmark.getJid().asBareJid().toEscapedString());
+            IqPacket request = mIqGenerator.deleteItem(Namespace.BOOKMARKS2, bookmark.getJid().asBareJid().toEscapedString());
             sendIqPacket(account, request, new OnIqPacketReceived() {
                 @Override
                 public void onIqPacketReceived(Account account, IqPacket packet) {

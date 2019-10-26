@@ -62,7 +62,7 @@ public class Bookmark extends Element implements ListItem {
             return Collections.emptyMap();
         }
         final Element items = pubsub.findChild("items");
-        if (items != null && Namespace.BOOKMARK.equals(items.getAttribute("node"))) {
+        if (items != null && Namespace.BOOKMARKS2.equals(items.getAttribute("node"))) {
             final Map<Jid, Bookmark> bookmarks = new HashMap<>();
             for (Element item : items.getChildren()) {
                 if (item.getName().equals("item")) {
@@ -89,7 +89,7 @@ public class Bookmark extends Element implements ListItem {
     }
 
     public static Bookmark parseFromItem(Element item, Account account) {
-        final Element conference = item.findChild("conference", Namespace.BOOKMARK);
+        final Element conference = item.findChild("conference", Namespace.BOOKMARKS2);
         if (conference == null) {
             return null;
         }

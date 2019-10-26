@@ -133,7 +133,7 @@ public abstract class AbstractGenerator {
             features.add(Namespace.IDLE);
         }
         if (connection != null && connection.getFeatures().bookmarks2()) {
-            features.add(Namespace.BOOKMARK + "+notify");
+            features.add(Namespace.BOOKMARKS + "+notify");
         } else {
             features.add(Namespace.BOOKMARKS + "+notify");
         }

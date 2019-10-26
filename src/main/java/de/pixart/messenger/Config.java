@@ -117,6 +117,7 @@ public final class Config {
     public static final int ExportLogs_Hour = 4; //Time - hours: valid values from 0 to 23
     public static final int ExportLogs_Minute = 0; //Time - minutes: valid values from 0 to 59
 
+    public static final boolean USE_BOOKMARKS2 = false;
     public static final boolean DISABLE_PROXY_LOOKUP = false; //useful to debug ibb
     public static final boolean USE_DIRECT_JINGLE_CANDIDATES = true;
     public static final boolean DISABLE_HTTP_UPLOAD = false;
