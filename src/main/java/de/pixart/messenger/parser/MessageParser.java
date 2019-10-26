@@ -12,11 +12,11 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -319,13 +319,29 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
             if (account.getXmppConnection().getFeatures().bookmarksConversion()) {
                 final Element i = items.findChild("item");
                 final Element storage = i == null ? null : i.findChild("storage", Namespace.BOOKMARKS);
-                new Thread(() -> {
-                    Collection<Bookmark> bookmarks = Bookmark.parseFromStorage(storage, account);
-                    mXmppConnectionService.processBookmarksInitial(account, bookmarks, true);
-                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": processing bookmark PEP event");
-                }).start();
+                Map<Jid, Bookmark> bookmarks = Bookmark.parseFromStorage(storage, account);
+                mXmppConnectionService.processBookmarksInitial(account, bookmarks, true);
+                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": processing bookmark PEP event");
             } else {
                 Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": ignoring bookmark PEP event because bookmark conversion was not detected");
+            }
+        } else if (Namespace.BOOKMARK.equals(node) && account.getJid().asBareJid().equals(from)) {
+            final Element item = items.findChild("item");
+            final Element retract = items.findChild("retract");
+            if (item != null) {
+                final Bookmark bookmark = Bookmark.parseFromItem(item, account);
+                if (bookmark != null) {
+                    //TODO find conversation
+                    account.putBookmark(bookmark);
+                    //TODO handle autojoin
+                }
+            }
+            if (retract != null) {
+                final Jid id = InvalidJid.getNullForInvalid(retract.getAttributeAsJid("id"));
+                if (id != null) {
+                    account.removeBookmark(id);
+                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": deleted bookmark for " + id);
+                }
             }
         } else {
             Log.d(Config.LOGTAG, account.getJid().asBareJid() + " received pubsub notification for node=" + node);

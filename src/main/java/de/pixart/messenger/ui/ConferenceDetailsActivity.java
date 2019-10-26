@@ -3,11 +3,8 @@ package de.pixart.messenger.ui;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
@@ -17,6 +14,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.databinding.DataBindingUtil;
 
 import java.util.Collections;
 import java.util.List;
@@ -246,7 +247,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                 final Bookmark bookmark = mConversation.getBookmark();
                 if (bookmark != null) {
                     bookmark.setAutojoin(this.binding.autojoinCheckbox.isChecked());
-                    xmppConnectionService.pushBookmarks(bookmark.getAccount());
+                    xmppConnectionService.createBookmark(mConversation.getAccount(), bookmark);
                     updateView();
                 }
             }
@@ -419,13 +420,10 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
     }
 
     protected void deleteBookmark() {
-        Account account = mConversation.getAccount();
-        Bookmark bookmark = mConversation.getBookmark();
-        if (bookmark != null) {
-            account.getBookmarks().remove(bookmark);
-            bookmark.setConversation(null);
-        }
-        xmppConnectionService.pushBookmarks(account);
+        final Account account = mConversation.getAccount();
+        final Bookmark bookmark = mConversation.getBookmark();
+        bookmark.setConversation(null);
+        xmppConnectionService.deleteBookmark(account, bookmark);
         updateView();
     }
 
