@@ -8,7 +8,6 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
-import androidx.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
@@ -17,8 +16,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -27,6 +24,10 @@ import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.databinding.DataBindingUtil;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 
@@ -256,27 +257,27 @@ public class MediaViewerActivity extends XmppActivity implements AudioManager.On
     }
 
     private void DisplayVideo(final Uri uri) {
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(uri.getPath());
-        Bitmap bitmap = null;
         try {
-            bitmap = retriever.getFrameAtTime();
-            height = bitmap.getHeight();
-            width = bitmap.getWidth();
-        } catch (Exception e) {
-            height = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
-            width = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
-        } finally {
-            if (bitmap != null) {
-                bitmap.recycle();
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            retriever.setDataSource(uri.getPath());
+            Bitmap bitmap = null;
+            try {
+                bitmap = retriever.getFrameAtTime();
+                height = bitmap.getHeight();
+                width = bitmap.getWidth();
+            } catch (Exception e) {
+                height = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
+                width = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+            } finally {
+                if (bitmap != null) {
+                    bitmap.recycle();
+                }
             }
-        }
-        rotation = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION));
-        Log.d(Config.LOGTAG, "Video height: " + height + ", width: " + width + ", rotation: " + rotation);
-        if (useAutoRotateScreen()) {
-            rotateScreen(width, height, rotation);
-        }
-        try {
+            rotation = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION));
+            Log.d(Config.LOGTAG, "Video height: " + height + ", width: " + width + ", rotation: " + rotation);
+            if (useAutoRotateScreen()) {
+                rotateScreen(width, height, rotation);
+            }
             binding.messageVideoView.setVisibility(View.VISIBLE);
             binding.messageVideoView.setVideoURI(uri);
             mFullscreenbutton.setVisibility(View.INVISIBLE);
@@ -284,9 +285,8 @@ public class MediaViewerActivity extends XmppActivity implements AudioManager.On
             requestAudioFocus();
             setVolumeControlStream(AudioManager.STREAM_MUSIC);
             binding.messageVideoView.setOnTouchListener((view, motionEvent) -> gestureDetector.onTouchEvent(motionEvent));
-
-        } catch (IOException e) {
-            Toast.makeText(this, getString(R.string.error_file_corrupt), Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            open();
             e.printStackTrace();
         }
     }
