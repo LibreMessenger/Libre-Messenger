@@ -205,7 +205,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
         }
     }
 
-    private Message parseAxolotlChat(Element axolotlMessage, Jid from, Conversation conversation, int status, boolean checkedForDuplicates, boolean postpone) {
+    private Message parseAxolotlChat(Element axolotlMessage, Jid from, Conversation conversation, int status, final boolean checkedForDuplicates, boolean postpone) {
         final AxolotlService service = conversation.getAccount().getAxolotlService();
         final XmppAxolotlMessage xmppAxolotlMessage;
         try {
@@ -229,7 +229,6 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                     }
                 } else {
                     Log.d(Config.LOGTAG, "ignoring broken session exception because checkForDuplicates failed");
-                    //TODO should be still emit a failed message?
                     return null;
                 }
             } catch (NotEncryptedForThisDeviceException e) {
@@ -606,8 +605,8 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                     fallbacksBySourceId = Collections.emptySet();
                     origin = from;
                 }
-                //TODO either or is probably fine?
-                final boolean checkedForDuplicates = serverMsgId != null && remoteMsgId != null && !conversation.possibleDuplicate(serverMsgId, remoteMsgId);
+                final boolean liveMessage = query == null && !isTypeGroupChat && mucUserElement == null;
+                final boolean checkedForDuplicates = liveMessage || (serverMsgId != null && remoteMsgId != null && !conversation.possibleDuplicate(serverMsgId, remoteMsgId));
 
                 if (origin != null) {
                     message = parseAxolotlChat(axolotlEncrypted, origin, conversation, status, checkedForDuplicates, query != null);
