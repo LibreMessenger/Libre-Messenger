@@ -568,8 +568,11 @@ public class JingleConnection implements Transferable {
             content.setTransportId(this.transportId);
             if (this.initialTransport == Transport.IBB) {
                 content.ibbTransport().setAttribute("block-size", Integer.toString(this.ibbBlockSize));
+                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": sending IBB offer");
             } else {
-                content.socks5transport().setChildren(getCandidatesAsElements());
+                final List<Element> candidates = getCandidatesAsElements();
+                Log.d(Config.LOGTAG, String.format("%s: sending S5B offer with %d candidates", account.getJid().asBareJid(), candidates.size()));
+                content.socks5transport().setChildren(candidates);
             }
             packet.setContent(content);
             this.sendJinglePacket(packet, (account, response) -> {
