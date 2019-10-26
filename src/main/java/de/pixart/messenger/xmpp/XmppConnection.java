@@ -5,11 +5,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.SystemClock;
 import android.security.KeyChain;
-import androidx.annotation.NonNull;
 import android.util.Base64;
 import android.util.Log;
 import android.util.Pair;
 import android.util.SparseArray;
+
+import androidx.annotation.NonNull;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -1997,6 +1998,10 @@ public class XmppConnection implements Runnable {
 
         public boolean stanzaIds() {
             return hasDiscoFeature(account.getJid().asBareJid(), Namespace.STANZA_IDS);
+        }
+
+        public boolean bookmarks2() {
+            return true; //hasDiscoFeature(account.getJid().asBareJid(), Namespace.BOOKMARK);
         }
     }
 }

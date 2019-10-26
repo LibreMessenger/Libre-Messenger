@@ -19,6 +19,7 @@ import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.utils.PhoneHelper;
+import de.pixart.messenger.xmpp.XmppConnection;
 import de.pixart.messenger.xmpp.jingle.stanzas.Content;
 
 public abstract class AbstractGenerator {
@@ -38,7 +39,6 @@ public abstract class AbstractGenerator {
             "http://jabber.org/protocol/disco#info",
             "urn:xmpp:avatar:metadata+notify",
             Namespace.NICK + "+notify",
-            Namespace.BOOKMARK + "+notify",
             "urn:xmpp:ping",
             "jabber:iq:version",
             "http://jabber.org/protocol/chatstates"
@@ -112,7 +112,8 @@ public abstract class AbstractGenerator {
     }
 
     public List<String> getFeatures(Account account) {
-        ArrayList<String> features = new ArrayList<>(Arrays.asList(FEATURES));
+        final XmppConnection connection = account.getXmppConnection();
+        final ArrayList<String> features = new ArrayList<>(Arrays.asList(FEATURES));
         if (mXmppConnectionService.confirmMessages()) {
             features.addAll(Arrays.asList(MESSAGE_CONFIRMATION_FEATURES));
         }
@@ -130,6 +131,11 @@ public abstract class AbstractGenerator {
         }
         if (mXmppConnectionService.broadcastLastActivity()) {
             features.add(Namespace.IDLE);
+        }
+        if (connection != null && connection.getFeatures().bookmarks2()) {
+            features.add(Namespace.BOOKMARK + "+notify");
+        } else {
+            features.add(Namespace.BOOKMARKS + "+notify");
         }
         Collections.sort(features);
         return features;

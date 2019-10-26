@@ -58,12 +58,6 @@ public class IqGenerator extends AbstractGenerator {
         return packet;
     }
 
-    public IqPacket purgeOfflineMessages() {
-        final IqPacket packet = new IqPacket(IqPacket.TYPE.SET);
-        packet.addChild("offline", Namespace.FLEXIBLE_OFFLINE_MESSAGE_RETRIEVAL).addChild("purge");
-        return packet;
-    }
-
     public IqPacket versionResponse(final IqPacket request) {
         final IqPacket packet = request.generateResponse(IqPacket.TYPE.RESULT);
         Element query = packet.query("jabber:iq:version");
@@ -94,6 +88,12 @@ public class IqGenerator extends AbstractGenerator {
         }
         String minutes = String.format(Locale.US, "%02d", offsetMinutes);
         time.addChild("tzo").setContent(hours + ":" + minutes);
+        return packet;
+    }
+
+    public IqPacket purgeOfflineMessages() {
+        final IqPacket packet = new IqPacket(IqPacket.TYPE.SET);
+        packet.addChild("offline", Namespace.FLEXIBLE_OFFLINE_MESSAGE_RETRIEVAL).addChild("purge");
         return packet;
     }
 
@@ -139,6 +139,15 @@ public class IqGenerator extends AbstractGenerator {
         IqPacket packet = new IqPacket(IqPacket.TYPE.SET);
         final Element pubsub = packet.addChild("pubsub", Namespace.PUBSUB_OWNER);
         pubsub.addChild("delete").setAttribute("node", node);
+        return packet;
+    }
+
+    public IqPacket deleteItem(final String node, final String id) {
+        IqPacket packet = new IqPacket(IqPacket.TYPE.SET);
+        final Element pubsub = packet.addChild("pubsub", Namespace.PUBSUB);
+        final Element retract = pubsub.addChild("retract");
+        retract.setAttribute("node", node);
+        retract.addChild("item").setAttribute("id", id);
         return packet;
     }
 
