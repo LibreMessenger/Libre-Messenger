@@ -79,6 +79,7 @@ public final class MucDetailsContextMenuHelper {
         if (user != null && user.getRealJid() != null) {
             MenuItem showContactDetails = menu.findItem(R.id.action_contact_details);
             MenuItem startConversation = menu.findItem(R.id.start_conversation);
+            MenuItem addToRoster = menu.findItem(R.id.add_contact);
             MenuItem giveMembership = menu.findItem(R.id.give_membership);
             MenuItem removeMembership = menu.findItem(R.id.remove_membership);
             MenuItem giveAdminPrivileges = menu.findItem(R.id.give_admin_privileges);
@@ -93,11 +94,13 @@ public final class MucDetailsContextMenuHelper {
             MenuItem invite = menu.findItem(R.id.invite);
             MenuItem highlightInMuc = menu.findItem(R.id.highlight_in_muc);
             startConversation.setVisible(true);
-            final Contact contact = user.getContact();
+            final Jid jid = user.getRealJid();
+            final Account account = conversation.getAccount();
+            final Contact contact = jid == null ? null : account.getRoster().getContact(jid);
             final User self = conversation.getMucOptions().getSelf();
-            if ((contact != null && contact.showInRoster()) || mucOptions.isPrivateAndNonAnonymous()) {
-                showContactDetails.setVisible(contact == null || !contact.isSelf());
-            }
+            addToRoster.setVisible(contact != null && !contact.showInRoster());
+            showContactDetails.setVisible(contact == null || !contact.isSelf());
+
             if ((activity instanceof ConferenceDetailsActivity || activity instanceof MucUsersActivity) && user.getRole() == MucOptions.Role.NONE) {
                 invite.setVisible(true);
             }
@@ -162,18 +165,20 @@ public final class MucDetailsContextMenuHelper {
     public static boolean onContextItemSelected(MenuItem item, User user, XmppActivity activity, final String fingerprint) {
         final Conversation conversation = user.getConversation();
         final XmppConnectionService.OnAffiliationChanged onAffiliationChanged = activity instanceof XmppConnectionService.OnAffiliationChanged ? (XmppConnectionService.OnAffiliationChanged) activity : null;
-        Jid jid = user.getRealJid();
+        final Jid jid = user.getRealJid();
+        final Account account = conversation.getAccount();
+        final Contact contact = jid == null ? null : account.getRoster().getContact(jid);
         switch (item.getItemId()) {
             case R.id.action_contact_details:
-                final Jid realJid = user.getRealJid();
-                final Account account = conversation.getAccount();
-                final Contact contact = realJid == null ? null : account.getRoster().getContact(realJid);
                 if (contact != null) {
                     activity.switchToContactDetails(contact, fingerprint);
                 }
                 return true;
             case R.id.start_conversation:
                 startConversation(user, activity);
+                return true;
+            case R.id.add_contact:
+                activity.showAddToRosterDialog(contact);
                 return true;
             case R.id.give_admin_privileges:
                 activity.xmppConnectionService.changeAffiliationInConference(conversation, jid, MucOptions.Affiliation.ADMIN, onAffiliationChanged);

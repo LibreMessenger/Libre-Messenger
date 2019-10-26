@@ -666,11 +666,11 @@ public abstract class XmppActivity extends ActionBarActivity {
 
     }
 
-    protected void showAddToRosterDialog(final Conversation conversation) {
+    public void showAddToRosterDialog(final Conversation conversation) {
         showAddToRosterDialog(conversation.getContact());
     }
 
-    protected void showAddToRosterDialog(final Contact contact) {
+    public void showAddToRosterDialog(final Contact contact) {
         if (contact == null) {
             return;
         }
