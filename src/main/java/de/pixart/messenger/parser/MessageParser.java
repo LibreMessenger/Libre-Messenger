@@ -12,6 +12,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +28,7 @@ import de.pixart.messenger.crypto.axolotl.BrokenSessionException;
 import de.pixart.messenger.crypto.axolotl.NotEncryptedForThisDeviceException;
 import de.pixart.messenger.crypto.axolotl.XmppAxolotlMessage;
 import de.pixart.messenger.entities.Account;
+import de.pixart.messenger.entities.Bookmark;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.Conversational;
@@ -318,12 +320,15 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                 final Element i = items.findChild("item");
                 final Element storage = i == null ? null : i.findChild("storage", Namespace.BOOKMARKS);
                 new Thread(() -> {
-                    mXmppConnectionService.processBookmarks(account, storage, true);
+                    Collection<Bookmark> bookmarks = Bookmark.parseFromStorage(storage, account);
+                    mXmppConnectionService.processBookmarksInitial(account, bookmarks, true);
                     Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": processing bookmark PEP event");
                 }).start();
             } else {
                 Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": ignoring bookmark PEP event because bookmark conversion was not detected");
             }
+        } else {
+            Log.d(Config.LOGTAG, account.getJid().asBareJid() + " received pubsub notification for node=" + node);
         }
     }
 

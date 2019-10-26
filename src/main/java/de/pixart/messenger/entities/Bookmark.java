@@ -1,14 +1,19 @@
 package de.pixart.messenger.entities;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.utils.StringUtils;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xml.Element;
@@ -33,20 +38,70 @@ public class Bookmark extends Element implements ListItem {
         this.account = account;
     }
 
+    public static Collection<Bookmark> parseFromStorage(Element storage, Account account) {
+        if (storage == null) {
+            return Collections.emptyList();
+        }
+        final HashMap<Jid, Bookmark> bookmarks = new HashMap<>();
+        for (final Element item : storage.getChildren()) {
+            if (item.getName().equals("conference")) {
+                final Bookmark bookmark = Bookmark.parse(item, account);
+                if (bookmark != null) {
+                    final Bookmark old = bookmarks.put(bookmark.getJid(), bookmark);
+                    if (old != null && old.getBookmarkName() != null && bookmark.getBookmarkName() == null) {
+                        bookmark.setBookmarkName(old.getBookmarkName());
+                    }
+                }
+            }
+        }
+        return bookmarks.values();
+    }
+
+    public static Collection<Bookmark> parseFromPubsub(Element pubsub, Account account) {
+        if (pubsub == null) {
+            return Collections.emptyList();
+        }
+        final Element items = pubsub.findChild("items");
+        if (items != null && Namespace.BOOKMARK.equals(items.getAttribute("node"))) {
+            final List<Bookmark> bookmarks = new ArrayList<>();
+            for (Element item : items.getChildren()) {
+                if (item.getName().equals("item")) {
+                    final Bookmark bookmark = Bookmark.parseFromItem(item, account);
+                    if (bookmark != null) {
+                        bookmarks.add(bookmark);
+                    }
+                }
+            }
+            return bookmarks;
+        }
+        return Collections.emptyList();
+    }
+
     public static Bookmark parse(Element element, Account account) {
         Bookmark bookmark = new Bookmark(account);
         bookmark.setAttributes(element.getAttributes());
         bookmark.setChildren(element.getChildren());
         bookmark.jid = InvalidJid.getNullForInvalid(bookmark.getAttributeAsJid("jid"));
+        if (bookmark.jid == null) {
+            return null;
+        }
         return bookmark;
     }
 
-    public static boolean printableValue(@Nullable String value, boolean permitNone) {
-        return value != null && !value.trim().isEmpty() && (permitNone || !"None".equals(value));
-    }
-
-    public static boolean printableValue(@Nullable String value) {
-        return printableValue(value, true);
+    public static Bookmark parseFromItem(Element item, Account account) {
+        final Element conference = item.findChild("conference", Namespace.BOOKMARK);
+        if (conference == null) {
+            return null;
+        }
+        final Bookmark bookmark = new Bookmark(account);
+        bookmark.jid = InvalidJid.getNullForInvalid(item.getAttributeAsJid("id"));
+        if (bookmark.jid == null) {
+            return null;
+        }
+        bookmark.setBookmarkName(conference.getAttribute("name"));
+        bookmark.setAutojoin(conference.getAttributeAsBoolean("autojoin"));
+        bookmark.setNick(conference.findChildContent("nick"));
+        return bookmark;
     }
 
     public void setAutojoin(boolean autojoin) {
@@ -80,6 +135,14 @@ public class Bookmark extends Element implements ListItem {
     @Override
     public int getOffline() {
         return 0;
+    }
+
+    public static boolean printableValue(@Nullable String value, boolean permitNone) {
+        return value != null && !value.trim().isEmpty() && (permitNone || !"None".equals(value));
+    }
+
+    public static boolean printableValue(@Nullable String value) {
+        return printableValue(value, true);
     }
 
     @Override
