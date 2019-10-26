@@ -1,9 +1,10 @@
 package de.pixart.messenger.entities;
 
 import android.annotation.SuppressLint;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -417,7 +418,7 @@ public class MucOptions {
         }
     }
 
-    private String getProposedNick() {
+    public String getProposedNick() {
         final Bookmark bookmark = this.conversation.getBookmark();
         final String bookmarkedNick = normalize(account.getJid(), bookmark == null ? null : bookmark.getNick());
         if (bookmarkedNick != null) {
