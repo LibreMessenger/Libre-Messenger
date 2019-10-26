@@ -118,7 +118,8 @@ public class JingleSocks5Transport extends JingleTransport {
             int destinationCount = inputStream.read();
             final byte[] destination = new byte[destinationCount];
             inputStream.read(destination);
-            final int port = inputStream.read();
+            final byte[] port = new byte[2];
+            inputStream.read(port);
             final String receivedDestination = new String(destination);
             final ByteBuffer response = ByteBuffer.allocate(7 + destination.length);
             final byte[] responseHeader;
@@ -134,7 +135,7 @@ public class JingleSocks5Transport extends JingleTransport {
             response.put(responseHeader);
             response.put((byte) destination.length);
             response.put(destination);
-            response.putShort((short) port);
+            response.put(port);
             outputStream.write(response.array());
             outputStream.flush();
             if (success) {
