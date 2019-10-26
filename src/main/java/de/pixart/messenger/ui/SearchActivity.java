@@ -149,7 +149,7 @@ public class SearchActivity extends XmppActivity implements TextWatcher, OnSearc
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         final Message message = selectedMessageReference.get();
-        final String user = selectedMessageReference.get().getContact().getDisplayName();
+        final String user = selectedMessageReference.get().getConversation().getContact().getDisplayName();
         if (message != null) {
             switch (item.getItemId()) {
                 case R.id.open_conversation:
