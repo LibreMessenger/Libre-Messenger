@@ -19,6 +19,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.MucOptions;
@@ -94,8 +95,8 @@ public final class MucDetailsContextMenuHelper {
             startConversation.setVisible(true);
             final Contact contact = user.getContact();
             final User self = conversation.getMucOptions().getSelf();
-            if (contact != null && contact.showInRoster()) {
-                showContactDetails.setVisible(!contact.isSelf());
+            if ((contact != null && contact.showInRoster()) || mucOptions.isPrivateAndNonAnonymous()) {
+                showContactDetails.setVisible(contact == null || !contact.isSelf());
             }
             if ((activity instanceof ConferenceDetailsActivity || activity instanceof MucUsersActivity) && user.getRole() == MucOptions.Role.NONE) {
                 invite.setVisible(true);
@@ -164,7 +165,9 @@ public final class MucDetailsContextMenuHelper {
         Jid jid = user.getRealJid();
         switch (item.getItemId()) {
             case R.id.action_contact_details:
-                Contact contact = user.getContact();
+                final Jid realJid = user.getRealJid();
+                final Account account = conversation.getAccount();
+                final Contact contact = realJid == null ? null : account.getRoster().getContact(realJid);
                 if (contact != null) {
                     activity.switchToContactDetails(contact, fingerprint);
                 }
