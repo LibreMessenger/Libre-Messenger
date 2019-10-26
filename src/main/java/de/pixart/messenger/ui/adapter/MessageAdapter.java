@@ -9,10 +9,6 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -38,6 +34,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.common.base.Strings;
 import com.squareup.picasso.Picasso;
@@ -230,7 +229,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         if (message.isFileOrImage() || transferable != null) {
             FileParams params = message.getFileParams();
             filesize = params.size > 0 ? UIHelper.filesizeToString(params.size) : null;
-            if (transferable != null && transferable.getStatus() == Transferable.STATUS_FAILED) {
+            if (transferable != null && (transferable.getStatus() == Transferable.STATUS_FAILED || transferable.getStatus() == Transferable.STATUS_CANCELLED)) {
                 error = true;
             }
         }

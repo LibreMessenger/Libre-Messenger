@@ -47,10 +47,15 @@ public class JingleInbandTransport extends JingleTransport {
     private OnIqPacketReceived onAckReceived = new OnIqPacketReceived() {
         @Override
         public void onIqPacketReceived(Account account, IqPacket packet) {
-            if (connected && packet.getType() == IqPacket.TYPE.RESULT) {
+            if (!connected) {
+                return;
+            }
+            if (packet.getType() == IqPacket.TYPE.RESULT) {
                 if (remainingSize > 0) {
                     sendNextBlock();
                 }
+            } else if (packet.getType() == IqPacket.TYPE.ERROR) {
+                onFileTransmissionStatusChanged.onFileTransferAborted();
             }
         }
     };

@@ -1,11 +1,12 @@
 package de.pixart.messenger.utils;
 
 import android.content.Context;
-import androidx.annotation.ColorInt;
 import android.text.SpannableStringBuilder;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.util.Pair;
+
+import androidx.annotation.ColorInt;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -269,6 +270,8 @@ public class UIHelper {
                             getFileDescriptionString(context, message)), true);
                 case Transferable.STATUS_FAILED:
                     return new Pair<>(context.getString(R.string.file_transmission_failed), true);
+                case Transferable.STATUS_CANCELLED:
+                    return new Pair<>(context.getString(R.string.file_transmission_cancelled), true);
                 case Transferable.STATUS_UPLOADING:
                     if (message.getStatus() == Message.STATUS_OFFERED) {
                         return new Pair<>(context.getString(R.string.offering_x_file,
@@ -315,12 +318,12 @@ public class UIHelper {
                             continue;
                         }
                         char first = l.charAt(0);
-                        if ((first != '>' || !isPositionFollowedByQuoteableCharacter(l,0)) && first != '\u00bb') {
+                        if ((first != '>' || !isPositionFollowedByQuoteableCharacter(l, 0)) && first != '\u00bb') {
                             CharSequence line = CharSequenceUtils.trim(l);
                             if (line.length() == 0) {
                                 continue;
                             }
-                            char last = line.charAt(line.length()-1);
+                            char last = line.charAt(line.length() - 1);
                             if (builder.length() != 0) {
                                 builder.append(' ');
                             }

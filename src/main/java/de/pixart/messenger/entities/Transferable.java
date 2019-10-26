@@ -19,6 +19,7 @@ public interface Transferable {
             "otr"
     );
 
+    int STATUS_WAITING = 0x199;
     int STATUS_UNKNOWN = 0x200;
     int STATUS_CHECKING = 0x201;
     int STATUS_FAILED = 0x202;
@@ -26,7 +27,7 @@ public interface Transferable {
     int STATUS_DOWNLOADING = 0x204;
     int STATUS_OFFER_CHECK_FILESIZE = 0x206;
     int STATUS_UPLOADING = 0x207;
-    int STATUS_WAITING = 0x199;
+    int STATUS_CANCELLED = 0x208;
 
 
     boolean start();

@@ -973,4 +973,5 @@
     <string name="intro_privacy">Your privacy\nYour sovereignty</string>
     <string name="intro_desc_privacy">Pix-Art Messenger will neither sell nor analyze your data and you decide which permissions you grant.</string>
     <string name="no_results">No results</string>
+    <string name="file_transmission_cancelled">file transmission cancelled</string>
 </resources>
