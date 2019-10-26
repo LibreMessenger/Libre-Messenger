@@ -269,6 +269,14 @@ public class SettingsActivity extends XmppActivity implements
             });
         }
 
+        final Preference prefereXmppAvatarPreference = mSettingsFragment.findPreference(PREFER_XMPP_AVATAR);
+        if (prefereXmppAvatarPreference != null) {
+            prefereXmppAvatarPreference.setOnPreferenceClickListener(preference -> {
+                new Thread(() -> xmppConnectionService.getBitmapCache().evictAll()).start();
+                return true;
+            });
+        }
+
         final Preference showIntroAgainPreference = mSettingsFragment.findPreference("show_intro");
         if (showIntroAgainPreference != null) {
             showIntroAgainPreference.setSummary(getString(R.string.pref_show_intro_summary));
