@@ -331,9 +331,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
             if (item != null) {
                 final Bookmark bookmark = Bookmark.parseFromItem(item, account);
                 if (bookmark != null) {
-                    //TODO find conversation
-                    account.putBookmark(bookmark);
-                    //TODO handle autojoin
+                    mXmppConnectionService.processModifiedBookmark(bookmark);
                 }
             }
             if (retract != null) {
@@ -341,6 +339,7 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                 if (id != null) {
                     account.removeBookmark(id);
                     Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": deleted bookmark for " + id);
+                    mXmppConnectionService.processDeletedBookmark(account, id);
                 }
             }
         } else {
