@@ -14,9 +14,6 @@ import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-
-import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,15 +21,6 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import androidx.annotation.IdRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-import androidx.core.view.inputmethod.InputConnectionCompat;
-import androidx.core.view.inputmethod.InputContentInfoCompat;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.view.menu.MenuBuilder;
-import androidx.appcompat.view.menu.MenuPopupHelper;
-import androidx.appcompat.widget.PopupMenu;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -57,6 +45,18 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
+
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.core.view.inputmethod.InputConnectionCompat;
+import androidx.core.view.inputmethod.InputContentInfoCompat;
+import androidx.databinding.DataBindingUtil;
 
 import net.java.otr4j.session.SessionStatus;
 
@@ -1244,7 +1244,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             if (m.getEncryption() == Message.ENCRYPTION_AXOLOTL_NOT_FOR_THIS_DEVICE || m.getEncryption() == Message.ENCRYPTION_AXOLOTL_FAILED) {
                 return;
             }
-
+            if (m.getStatus() == Message.STATUS_RECEIVED && t != null && (t.getStatus() == Transferable.STATUS_CANCELLED || t.getStatus() == Transferable.STATUS_FAILED)) {
+                return;
+            }
             final boolean deleted = m.isFileDeleted();
             final boolean encrypted = m.getEncryption() == Message.ENCRYPTION_DECRYPTION_FAILED
                     || m.getEncryption() == Message.ENCRYPTION_PGP;
