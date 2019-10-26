@@ -229,7 +229,7 @@ public class ChannelDiscoveryActivity extends XmppActivity implements MenuItem.O
         Bookmark bookmark = conversation.getBookmark();
         if (bookmark != null) {
             if (!bookmark.autojoin() && syncAutoJoin) {
-                conversation.getBookmark().setAutojoin(true);
+                bookmark.setAutojoin(true);
                 xmppConnectionService.createBookmark(account, bookmark);
             }
         } else {

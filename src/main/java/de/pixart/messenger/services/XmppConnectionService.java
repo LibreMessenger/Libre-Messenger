@@ -179,8 +179,8 @@ public class XmppConnectionService extends Service {
     public static final String ACTION_MARK_AS_READ = "mark_as_read";
     public static final String ACTION_SNOOZE = "snooze";
     public static final String ACTION_CLEAR_NOTIFICATION = "clear_notification";
-    public static final String ACTION_TRY_AGAIN = "try_again";
     public static final String ACTION_DISMISS_ERROR_NOTIFICATIONS = "dismiss_error";
+    public static final String ACTION_TRY_AGAIN = "try_again";
     public static final String ACTION_IDLE_PING = "idle_ping";
     public static final String ACTION_FCM_TOKEN_REFRESH = "fcm_token_refresh";
     public static final String ACTION_FCM_MESSAGE_RECEIVED = "fcm_message_received";
@@ -218,61 +218,21 @@ public class XmppConnectionService extends Service {
             }
         }
     };
-    //Ui callback listeners
-    private final Set<OnConversationUpdate> mOnConversationUpdates = Collections.newSetFromMap(new WeakHashMap<OnConversationUpdate, Boolean>());
-    private final Set<OnShowErrorToast> mOnShowErrorToasts = Collections.newSetFromMap(new WeakHashMap<OnShowErrorToast, Boolean>());
-    private final Set<OnAccountUpdate> mOnAccountUpdates = Collections.newSetFromMap(new WeakHashMap<OnAccountUpdate, Boolean>());
-    private final Set<OnCaptchaRequested> mOnCaptchaRequested = Collections.newSetFromMap(new WeakHashMap<OnCaptchaRequested, Boolean>());
-    private final Set<OnRosterUpdate> mOnRosterUpdates = Collections.newSetFromMap(new WeakHashMap<OnRosterUpdate, Boolean>());
-    private final Set<OnUpdateBlocklist> mOnUpdateBlocklist = Collections.newSetFromMap(new WeakHashMap<OnUpdateBlocklist, Boolean>());
-    private final Set<OnMucRosterUpdate> mOnMucRosterUpdate = Collections.newSetFromMap(new WeakHashMap<OnMucRosterUpdate, Boolean>());
-    private final Set<OnKeyStatusUpdated> mOnKeyStatusUpdated = Collections.newSetFromMap(new WeakHashMap<OnKeyStatusUpdated, Boolean>());
-    private final Object LISTENER_LOCK = new Object();
     public DatabaseBackend databaseBackend;
-    private final OnMessageAcknowledged mOnMessageAcknowledgedListener = new OnMessageAcknowledged() {
-
-        @Override
-        public boolean onMessageAcknowledged(Account account, String uuid) {
-            for (final Conversation conversation : getConversations()) {
-                if (conversation.getAccount() == account) {
-                    Message message = conversation.findUnsentMessageWithUuid(uuid);
-                    if (message != null) {
-                        message.setStatus(Message.STATUS_SEND);
-                        message.setErrorMessage(null);
-                        databaseBackend.updateMessage(message, false);
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-    };
-    public FileBackend fileBackend = new FileBackend(this);
-    private final ConversationsFileObserver fileObserver = new ConversationsFileObserver(
-            Environment.getExternalStorageDirectory().getAbsolutePath()
-    ) {
-        @Override
-        public void onEvent(int event, String path) {
-            markFileDeleted(path);
-        }
-    };
-    public HttpConnectionManager mHttpConnectionManager = new HttpConnectionManager(this);
     private ReplacingSerialSingleThreadExecutor mContactMergerExecutor = new ReplacingSerialSingleThreadExecutor("ContactMerger");
     private long mLastActivity = 0;
+    public FileBackend fileBackend = new FileBackend(this);
     private MemorizingTrustManager mMemorizingTrustManager;
     private NotificationService mNotificationService = new NotificationService(this);
     private ChannelDiscoveryService mChannelDiscoveryService = new ChannelDiscoveryService(this);
     private ShortcutService mShortcutService = new ShortcutService(this);
     private AtomicBoolean mInitialAddressbookSyncCompleted = new AtomicBoolean(false);
-    protected AtomicBoolean mForceForegroundService = new AtomicBoolean(false);
+    private AtomicBoolean mForceForegroundService = new AtomicBoolean(false);
     private AtomicBoolean mForceDuringOnCreate = new AtomicBoolean(false);
     private OnMessagePacketReceived mMessageParser = new MessageParser(this);
     private OnPresencePacketReceived mPresenceParser = new PresenceParser(this);
     private IqParser mIqParser = new IqParser(this);
     private MessageGenerator mMessageGenerator = new MessageGenerator(this);
-    private PresenceGenerator mPresenceGenerator = new PresenceGenerator(this);
-    private List<Account> accounts;
-    private JingleConnectionManager mJingleConnectionManager = new JingleConnectionManager(this);
     public OnContactStatusChanged onContactStatusChanged = (contact, online) -> {
         Conversation conversation = find(getConversations(), contact);
         if (conversation != null) {
@@ -292,6 +252,10 @@ public class XmppConnectionService extends Service {
             }
         }
     };
+    private PresenceGenerator mPresenceGenerator = new PresenceGenerator(this);
+    private List<Account> accounts;
+    private JingleConnectionManager mJingleConnectionManager = new JingleConnectionManager(
+            this);
     private final OnJinglePacketReceived jingleListener = new OnJinglePacketReceived() {
 
         @Override
@@ -299,10 +263,48 @@ public class XmppConnectionService extends Service {
             mJingleConnectionManager.deliverPacket(account, packet);
         }
     };
+    public HttpConnectionManager mHttpConnectionManager = new HttpConnectionManager(this);
     private AvatarService mAvatarService = new AvatarService(this);
     private MessageArchiveService mMessageArchiveService = new MessageArchiveService(this);
     private PushManagementService mPushManagementService = new PushManagementService(this);
     private QuickConversationsService mQuickConversationsService = new QuickConversationsService(this);
+    private final ConversationsFileObserver fileObserver = new ConversationsFileObserver(
+            Environment.getExternalStorageDirectory().getAbsolutePath()
+    ) {
+        @Override
+        public void onEvent(int event, String path) {
+            markFileDeleted(path);
+        }
+    };
+    private final OnMessageAcknowledged mOnMessageAcknowledgedListener = new OnMessageAcknowledged() {
+
+        @Override
+        public boolean onMessageAcknowledged(Account account, String uuid) {
+            for (final Conversation conversation : getConversations()) {
+                if (conversation.getAccount() == account) {
+                    Message message = conversation.findUnsentMessageWithUuid(uuid);
+                    if (message != null) {
+                        message.setStatus(Message.STATUS_SEND);
+                        message.setErrorMessage(null);
+                        databaseBackend.updateMessage(message, false);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+    };
+    //Ui callback listeners
+    private final Set<OnConversationUpdate> mOnConversationUpdates = Collections.newSetFromMap(new WeakHashMap<OnConversationUpdate, Boolean>());
+    private final Set<OnShowErrorToast> mOnShowErrorToasts = Collections.newSetFromMap(new WeakHashMap<OnShowErrorToast, Boolean>());
+    private final Set<OnAccountUpdate> mOnAccountUpdates = Collections.newSetFromMap(new WeakHashMap<OnAccountUpdate, Boolean>());
+    private final Set<OnCaptchaRequested> mOnCaptchaRequested = Collections.newSetFromMap(new WeakHashMap<OnCaptchaRequested, Boolean>());
+    private final Set<OnRosterUpdate> mOnRosterUpdates = Collections.newSetFromMap(new WeakHashMap<OnRosterUpdate, Boolean>());
+    private final Set<OnUpdateBlocklist> mOnUpdateBlocklist = Collections.newSetFromMap(new WeakHashMap<OnUpdateBlocklist, Boolean>());
+    private final Set<OnMucRosterUpdate> mOnMucRosterUpdate = Collections.newSetFromMap(new WeakHashMap<OnMucRosterUpdate, Boolean>());
+    private final Set<OnKeyStatusUpdated> mOnKeyStatusUpdated = Collections.newSetFromMap(new WeakHashMap<OnKeyStatusUpdated, Boolean>());
+
+    private final Object LISTENER_LOCK = new Object();
     private final OnBindListener mOnBindListener = new OnBindListener() {
 
         @Override
@@ -450,11 +452,11 @@ public class XmppConnectionService extends Service {
                     final int next = connection.getTimeToNextAttempt();
                     final boolean lowPingTimeoutMode = isInLowPingTimeoutMode(account);
                     if (next <= 0) {
-                        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": error connecting account. reconnecting now. lowPingTimeout=" + Boolean.toString(lowPingTimeoutMode));
+                        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": error connecting account. reconnecting now. lowPingTimeout=" + lowPingTimeoutMode);
                         reconnectAccount(account, true, false);
                     } else {
                         final int attempt = connection.getAttempt() + 1;
-                        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": error connecting account. try again in " + next + "s for the " + attempt + " time. lowPingTimeout=" + Boolean.toString(lowPingTimeoutMode));
+                        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": error connecting account. try again in " + next + "s for the " + attempt + " time. lowPingTimeout=" + lowPingTimeoutMode);
                         scheduleWakeUpCall(next, account.getUuid().hashCode());
                     }
                 }
@@ -776,15 +778,9 @@ public class XmppConnectionService extends Service {
             }
             if (pingNow) {
                 for (Account account : pingCandidates) {
-                    List<Conversation> conversations = getConversations();
-                    for (Conversation conversation : conversations) {
-                        if (conversation.getAccount() == account && !account.pendingConferenceJoins.contains(conversation)) {
-                            resendFailedFileMessages(conversation);
-                        }
-                    }
                     final boolean lowTimeout = isInLowPingTimeoutMode(account);
                     account.getXmppConnection().sendPing();
-                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + " send ping (action=" + action + ", lowTimeout=" + Boolean.toString(lowTimeout) + ")");
+                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + " send ping (action=" + action + ",lowTimeout=" + Boolean.toString(lowTimeout) + ")");
                     scheduleWakeUpCall(lowTimeout ? Config.LOW_PING_TIMEOUT : Config.PING_TIMEOUT, account.getUuid().hashCode());
                 }
             }
@@ -1229,6 +1225,12 @@ public class XmppConnectionService extends Service {
     @SuppressLint("TrulyRandom")
     @Override
     public void onCreate() {
+        if (Compatibility.runsTwentySix()) {
+            mNotificationService.initializeChannels();
+        }
+        mChannelDiscoveryService.initializeMuclumbusService();
+        mForceDuringOnCreate.set(Compatibility.runsAndTargetsTwentySix(this));
+        toggleForegroundService();
         this.destroyed = false;
         OmemoSetting.load(this);
         ExceptionHelper.init(getApplicationContext());
@@ -1240,11 +1242,6 @@ public class XmppConnectionService extends Service {
         Resolver.init(this);
         this.mRandom = new SecureRandom();
         updateMemorizingTrustmanager();
-        if (Compatibility.runsTwentySix()) {
-            mNotificationService.initializeChannels();
-        }
-        mChannelDiscoveryService.initializeMuclumbusService();
-        mForceDuringOnCreate.set(Compatibility.runsAndTargetsTwentySix(this));
         final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
         final int cacheSize = maxMemory / 8;
         this.mBitmapCache = new LruCache<String, Bitmap>(cacheSize) {
@@ -1728,7 +1725,9 @@ public class XmppConnectionService extends Service {
             if (saveInDb) {
                 databaseBackend.createMessage(message);
             } else if (message.edited()) {
-                databaseBackend.updateMessage(message, message.getEditedId());
+                if (!databaseBackend.updateMessage(message, message.getEditedId())) {
+                    Log.e(Config.LOGTAG, "error updated message in DB after edit");
+                }
             }
             updateConversationUi();
         }
@@ -1741,7 +1740,6 @@ public class XmppConnectionService extends Service {
                     packet.addChild(ChatState.toElement(conversation.getOutgoingChatState()));
                 }
             }
-            Log.d(Config.LOGTAG, packet.toString());
             sendMessagePacket(account, packet);
         }
     }
@@ -1902,10 +1900,9 @@ public class XmppConnectionService extends Service {
         final XmppConnection connection = account.getXmppConnection();
         if (connection.getFeatures().bookmarksConversion()) {
             IqPacket request = mIqGenerator.deleteItem(Namespace.BOOKMARKS2, bookmark.getJid().asBareJid().toEscapedString());
-            sendIqPacket(account, request, new OnIqPacketReceived() {
-                @Override
-                public void onIqPacketReceived(Account account, IqPacket packet) {
-                    Log.d(Config.LOGTAG, packet.toString());
+            sendIqPacket(account, request, (a, response) -> {
+                if (response.getType() == IqPacket.TYPE.ERROR) {
+                    Log.d(Config.LOGTAG, a.getJid().asBareJid() + ": unable to delete bookmark " + response.getError());
                 }
             });
         } else if (connection.getFeatures().bookmarksConversion()) {
@@ -2826,7 +2823,7 @@ public class XmppConnectionService extends Service {
                 XmppConnection connection = account.getXmppConnection();
                 if (connection != null) {
                     if (broadcastLastActivity) {
-                        sendPresence(account, broadcastLastActivity);
+                        sendPresence(account, true);
                     }
                     if (connection.getFeatures().csi()) {
                         connection.sendInactive();
@@ -2834,7 +2831,6 @@ public class XmppConnectionService extends Service {
                 }
             }
         }
-        Log.d(Config.LOGTAG, "XmppConnectionService switchToBackground(): setIsInForeground = false");
         this.mNotificationService.setIsInForeground(false);
         Log.d(Config.LOGTAG, "app switched into background");
     }
@@ -2962,8 +2958,17 @@ public class XmppConnectionService extends Service {
                     }
                     if (mucOptions.isPrivateAndNonAnonymous()) {
                         fetchConferenceMembers(conversation);
-                        if (followedInvite && conversation.getBookmark() == null) {
-                            saveConversationAsBookmark(conversation, null);
+
+                        if (followedInvite) {
+                            final Bookmark bookmark = conversation.getBookmark();
+                            if (bookmark != null) {
+                                if (!bookmark.autojoin()) {
+                                    bookmark.setAutojoin(true);
+                                    createBookmark(account, bookmark);
+                                }
+                            } else {
+                                saveConversationAsBookmark(conversation, null);
+                            }
                         }
                     }
                     if (mucOptions.push()) {
@@ -3396,11 +3401,11 @@ public class XmppConnectionService extends Service {
     }
 
     public void pushNodeConfiguration(Account account, final String node, final Bundle options, final OnConfigurationPushed callback) {
-        Log.d(Config.LOGTAG, "pushing node configuration");
         pushNodeConfiguration(account, account.getJid().asBareJid(), node, options, callback);
     }
 
     public void pushNodeConfiguration(Account account, final Jid jid, final String node, final Bundle options, final OnConfigurationPushed callback) {
+        Log.d(Config.LOGTAG, "pushing node configuration");
         sendIqPacket(account, mIqGenerator.requestPubsubConfiguration(jid, node), new OnIqPacketReceived() {
             @Override
             public void onIqPacketReceived(Account account, IqPacket packet) {
@@ -3956,54 +3961,57 @@ public class XmppConnectionService extends Service {
 
     private void fetchAvatarVcard(final Account account, final Avatar avatar, final UiCallback<Avatar> callback) {
         IqPacket packet = this.mIqGenerator.retrieveVcardAvatar(avatar);
-        this.sendIqPacket(account, packet, (account1, packet1) -> {
-            final boolean previouslyOmittedPepFetch;
-            synchronized (mInProgressAvatarFetches) {
-                final String KEY = generateFetchKey(account1, avatar);
-                mInProgressAvatarFetches.remove(KEY);
-                previouslyOmittedPepFetch = mOmittedPepAvatarFetches.remove(KEY);
-            }
-            if (packet1.getType() == IqPacket.TYPE.RESULT) {
-                Element vCard = packet1.findChild("vCard", "vcard-temp");
-                Element photo = vCard != null ? vCard.findChild("PHOTO") : null;
-                String image = photo != null ? photo.findChildContent("BINVAL") : null;
-                if (image != null) {
-                    avatar.image = image;
-                    if (getFileBackend().save(avatar)) {
-                        Log.d(Config.LOGTAG, account1.getJid().asBareJid()
-                                + ": successfully fetched vCard avatar for " + avatar.owner + " omittedPep=" + previouslyOmittedPepFetch);
-                        if (avatar.owner.isBareJid()) {
-                            if (account1.getJid().asBareJid().equals(avatar.owner) && account1.getAvatar() == null) {
-                                Log.d(Config.LOGTAG, account1.getJid().asBareJid() + ": had no avatar. replacing with vcard");
-                                account1.setAvatar(avatar.getFilename());
-                                databaseBackend.updateAccount(account1);
-                                getAvatarService().clear(account1);
-                                updateAccountUi();
-                            } else {
-                                Contact contact = account1.getRoster().getContact(avatar.owner);
-                                if (contact.setAvatar(avatar, previouslyOmittedPepFetch)) {
-                                    syncRoster(account1);
-                                    getAvatarService().clear(contact);
-                                    updateRosterUi();
-                                }
-                            }
-                            updateConversationUi();
-                        } else {
-                            Conversation conversation = find(account1, avatar.owner.asBareJid());
-                            if (conversation != null && conversation.getMode() == Conversation.MODE_MULTI) {
-                                MucOptions.User user = conversation.getMucOptions().findUserByFullJid(avatar.owner);
-                                if (user != null) {
-                                    if (user.setAvatar(avatar)) {
-                                        getAvatarService().clear(user);
-                                        updateConversationUi();
-                                        updateMucRosterUi();
+        this.sendIqPacket(account, packet, new OnIqPacketReceived() {
+            @Override
+            public void onIqPacketReceived(Account account, IqPacket packet) {
+                final boolean previouslyOmittedPepFetch;
+                synchronized (mInProgressAvatarFetches) {
+                    final String KEY = generateFetchKey(account, avatar);
+                    mInProgressAvatarFetches.remove(KEY);
+                    previouslyOmittedPepFetch = mOmittedPepAvatarFetches.remove(KEY);
+                }
+                if (packet.getType() == IqPacket.TYPE.RESULT) {
+                    Element vCard = packet.findChild("vCard", "vcard-temp");
+                    Element photo = vCard != null ? vCard.findChild("PHOTO") : null;
+                    String image = photo != null ? photo.findChildContent("BINVAL") : null;
+                    if (image != null) {
+                        avatar.image = image;
+                        if (getFileBackend().save(avatar)) {
+                            Log.d(Config.LOGTAG, account.getJid().asBareJid()
+                                    + ": successfully fetched vCard avatar for " + avatar.owner + " omittedPep=" + previouslyOmittedPepFetch);
+                            if (avatar.owner.isBareJid()) {
+                                if (account.getJid().asBareJid().equals(avatar.owner) && account.getAvatar() == null) {
+                                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": had no avatar. replacing with vcard");
+                                    account.setAvatar(avatar.getFilename());
+                                    databaseBackend.updateAccount(account);
+                                    getAvatarService().clear(account);
+                                    updateAccountUi();
+                                } else {
+                                    Contact contact = account.getRoster().getContact(avatar.owner);
+                                    if (contact.setAvatar(avatar, previouslyOmittedPepFetch)) {
+                                        syncRoster(account);
+                                        getAvatarService().clear(contact);
+                                        updateRosterUi();
                                     }
-                                    if (user.getRealJid() != null) {
-                                        Contact contact = account1.getRoster().getContact(user.getRealJid());
-                                        if (contact.setAvatar(avatar)) {
-                                            syncRoster(account1);
-                                            getAvatarService().clear(contact);
-                                            updateRosterUi();
+                                }
+                                updateConversationUi();
+                            } else {
+                                Conversation conversation = find(account, avatar.owner.asBareJid());
+                                if (conversation != null && conversation.getMode() == Conversation.MODE_MULTI) {
+                                    MucOptions.User user = conversation.getMucOptions().findUserByFullJid(avatar.owner);
+                                    if (user != null) {
+                                        if (user.setAvatar(avatar)) {
+                                            getAvatarService().clear(user);
+                                            updateConversationUi();
+                                            updateMucRosterUi();
+                                        }
+                                        if (user.getRealJid() != null) {
+                                            Contact contact = account.getRoster().getContact(user.getRealJid());
+                                            if (contact.setAvatar(avatar)) {
+                                                syncRoster(account);
+                                                getAvatarService().clear(contact);
+                                                updateRosterUi();
+                                            }
                                         }
                                     }
                                 }
@@ -4132,7 +4140,6 @@ public class XmppConnectionService extends Service {
     }
 
     public void resetSendingToWaiting(Account account) {
-        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": reset 'sending' messages to 'waiting'");
         for (Conversation conversation : getConversations()) {
             if (conversation.getAccount() == account) {
                 conversation.findUnsentTextMessages(message -> markMessage(message, Message.STATUS_WAITING));
@@ -4482,6 +4489,9 @@ public class XmppConnectionService extends Service {
                     }
                 }
             }
+        }
+        if (Config.QUICKSY_DOMAIN != null) {
+            hosts.remove(Config.QUICKSY_DOMAIN); //we only want to show this when we type a e164 number
         }
         if (Config.DOMAIN_LOCK != null) {
             hosts.add(Config.DOMAIN_LOCK);
