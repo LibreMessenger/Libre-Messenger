@@ -17,6 +17,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
+import android.util.DisplayMetrics;
+import android.util.Log;
+
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationCompat.BigPictureStyle;
@@ -26,10 +31,6 @@ import androidx.core.app.Person;
 import androidx.core.app.RemoteInput;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.IconCompat;
-import android.text.SpannableString;
-import android.text.style.StyleSpan;
-import android.util.DisplayMetrics;
-import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -918,32 +919,32 @@ public class NotificationService {
                     enabled++;
                 }
             }
-        }
-        if (accounts.size() == 1) {
-            mAccount = accounts.get(0);
-            if (mAccount.getStatus() == Account.State.ONLINE) {
-                status = "(" + mXmppConnectionService.getString(R.string.account_status_online) + ")";
-                status = " " + status;
-                Log.d(Config.LOGTAG, "Status: " + status);
-                mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.conversations_foreground_service) + status);
-            } else if (mAccount.getStatus() == Account.State.CONNECTING) {
-                status = "(" + mXmppConnectionService.getString(R.string.account_status_connecting) + ")";
-                status = " " + status;
-                Log.d(Config.LOGTAG, "Status: " + status);
-                mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.conversations_foreground_service) + status);
+            if (accounts.size() == 1) {
+                mAccount = accounts.get(0);
+                if (mAccount.getStatus() == Account.State.ONLINE) {
+                    status = "(" + mXmppConnectionService.getString(R.string.account_status_online) + ")";
+                    status = " " + status;
+                    Log.d(Config.LOGTAG, "Status: " + status);
+                    mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.conversations_foreground_service) + status);
+                } else if (mAccount.getStatus() == Account.State.CONNECTING) {
+                    status = "(" + mXmppConnectionService.getString(R.string.account_status_connecting) + ")";
+                    status = " " + status;
+                    Log.d(Config.LOGTAG, "Status: " + status);
+                    mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.conversations_foreground_service) + status);
+                } else {
+                    status = "(" + mXmppConnectionService.getString(R.string.account_status_offline) + ")";
+                    status = " " + status;
+                    Log.d(Config.LOGTAG, "Status: " + status);
+                    mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.conversations_foreground_service) + status);
+                }
+            } else if (accounts.size() > 1) {
+                mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.conversations_foreground_service));
             } else {
                 status = "(" + mXmppConnectionService.getString(R.string.account_status_offline) + ")";
                 status = " " + status;
                 Log.d(Config.LOGTAG, "Status: " + status);
                 mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.conversations_foreground_service) + status);
             }
-        } else if (accounts.size() > 1) {
-            mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.conversations_foreground_service));
-        } else {
-            status = "(" + mXmppConnectionService.getString(R.string.account_status_offline) + ")";
-            status = " " + status;
-            Log.d(Config.LOGTAG, "Status: " + status);
-            mBuilder.setContentTitle(mXmppConnectionService.getString(R.string.conversations_foreground_service) + status);
         }
         mBuilder.setContentText(mXmppConnectionService.getString(R.string.connected_accounts, connected, enabled));
         mBuilder.setContentIntent(createOpenConversationsIntent());

@@ -778,6 +778,12 @@ public class XmppConnectionService extends Service {
             }
             if (pingNow) {
                 for (Account account : pingCandidates) {
+                    List<Conversation> conversations = getConversations();
+                    for (Conversation conversation : conversations) {
+                        if (conversation.getAccount() == account && !account.pendingConferenceJoins.contains(conversation)) {
+                            resendFailedFileMessages(conversation);
+                        }
+                    }
                     final boolean lowTimeout = isInLowPingTimeoutMode(account);
                     account.getXmppConnection().sendPing();
                     Log.d(Config.LOGTAG, account.getJid().asBareJid() + " send ping (action=" + action + ",lowTimeout=" + Boolean.toString(lowTimeout) + ")");

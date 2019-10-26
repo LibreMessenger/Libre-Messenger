@@ -169,7 +169,7 @@ public class ChannelDiscoveryActivity extends XmppActivity implements MenuItem.O
     }
 
     @Override
-    public void onChannelSearchResultsFound(List<MuclumbusService.Room> results) {
+    public void onChannelSearchResultsFound(final List<MuclumbusService.Room> results) {
         runOnUiThread(() -> {
             if (results.size() > 0) {
                 adapter.submitList(results);
