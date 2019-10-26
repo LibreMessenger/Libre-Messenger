@@ -1397,7 +1397,8 @@ public class FileBackend {
         if (stream != null) {
             try {
                 stream.close();
-            } catch (IOException e) {
+            } catch (Exception e) {
+                Log.d(Config.LOGTAG, "unable to close stream", e);
             }
         }
     }
@@ -1407,6 +1408,7 @@ public class FileBackend {
             try {
                 socket.close();
             } catch (IOException e) {
+                Log.d(Config.LOGTAG, "unable to close socket", e);
             }
         }
     }
@@ -1416,6 +1418,7 @@ public class FileBackend {
             try {
                 socket.close();
             } catch (IOException e) {
+                Log.d(Config.LOGTAG, "unable to close socket", e);
             }
         }
     }
