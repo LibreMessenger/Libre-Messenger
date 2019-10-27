@@ -204,6 +204,7 @@ public final class MucDetailsContextMenuHelper {
                 if (activity instanceof ConversationsActivity) {
                     ConversationFragment conversationFragment = ConversationFragment.get(activity);
                     if (conversationFragment != null) {
+                        activity.invalidateOptionsMenu();
                         conversationFragment.privateMessageWith(user.getFullJid());
                         return true;
                     }

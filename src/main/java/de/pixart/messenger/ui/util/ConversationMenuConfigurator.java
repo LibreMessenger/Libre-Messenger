@@ -31,9 +31,10 @@ package de.pixart.messenger.ui.util;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
-import androidx.annotation.NonNull;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
@@ -69,14 +70,16 @@ public class ConversationMenuConfigurator {
             return;
         }
         final MenuItem menuAttach = menu.findItem(R.id.action_attach_file);
-        if (Quick_share_attachment_choice && !hasAttachments) {
+        final boolean isPM = conversation.getMode() == Conversation.MODE_MULTI && conversation.getNextCounterpart() != null;
+        if (Quick_share_attachment_choice && !hasAttachments && !isPM) {
             menuAttach.setVisible(false);
             return;
         }
 
         final boolean visible;
         if (conversation.getMode() == Conversation.MODE_MULTI) {
-            visible = conversation.getAccount().httpUploadAvailable() && conversation.getMucOptions().participating();
+            visible = conversation.getAccount().httpUploadAvailable() && conversation.getMucOptions().participating()
+                    || conversation.getAccount().httpUploadAvailable() && isPM;
         } else {
             visible = true;
         }
