@@ -17,7 +17,7 @@ public final class Config {
     private static final int OTR = 4;
     private static final int OMEMO = 8;
 
-    private static final int ENCRYPTION_MASK = BuildConfig.ENCRYPTION_MASK;
+    private static final int ENCRYPTION_MASK = UNENCRYPTED | OPENPGP | OTR | OMEMO;
 
     public static boolean supportUnencrypted() {
         return (ENCRYPTION_MASK & UNENCRYPTED) != 0;
@@ -56,6 +56,7 @@ public final class Config {
     public static final String CHANNEL_DISCOVERY = "https://search.jabber.network";
     public static final String DEFAULT_INVIDIOUS_HOST = "invidio.us";
     public static final boolean DISALLOW_REGISTRATION_IN_UI = false; //hide the register checkbox
+    public static final boolean SHOW_INTRO = BuildConfig.SHOW_INTRO;
 
     public static final boolean USE_RANDOM_RESOURCE_ON_EVERY_BIND = false;
 

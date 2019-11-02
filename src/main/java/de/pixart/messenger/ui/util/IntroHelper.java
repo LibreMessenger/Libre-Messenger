@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import de.pixart.messenger.Config;
 import de.pixart.messenger.ui.IntroActivity;
 
 import static de.pixart.messenger.ui.IntroActivity.ACTIVITY;
@@ -19,7 +20,7 @@ public class IntroHelper {
             String INTRO = "intro_shown_on_activity_" + activityname + "_MultiMode_" + mode_multi;
             boolean SHOW_INTRO = getPrefs.getBoolean(INTRO, true);
 
-            if (SHOW_INTRO) {
+            if (SHOW_INTRO && Config.SHOW_INTRO) {
                 final Intent i = new Intent(activity, IntroActivity.class);
                 i.putExtra(ACTIVITY, activityname);
                 i.putExtra(MULTICHAT, mode_multi);
