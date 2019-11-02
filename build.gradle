@@ -148,14 +148,19 @@ android {
         schulchat {
             dimension "mode"
             applicationId = 'de.schulchat.messenger'
+            resConfigs "en"
+
+            versionCode = 1
+            versionName = '1.0.0'
+
+            archivesBaseName += "-$versionName"
             resValue "string", "applicationId", applicationId
             resValue "string", "app_name", "Schulchat Messenger"
+
             buildConfigField("String", "DOMAIN_LOCK", '"kurswahl-online.de"')
             buildConfigField("String", "MAGIC_CREATE_DOMAIN", '"kurswahl-online.de"')
             buildConfigField("String", "LOGTAG", '"Schulchat_Messenger"')
             buildConfigField("boolean", "SHOW_INTRO", "false")
-            versionCode = 1
-            versionName = '1.0.0'
         }
         playstore {
             dimension "distribution"

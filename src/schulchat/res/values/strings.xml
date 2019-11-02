@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="crash_report_title">Schulchat Messenger has crashed</string>
+    <string name="crash_report_message">By sending in stack traces you are helping the ongoing development of Schulchat Messenger\n<b>Warning:</b> This will use your XMPP account to send the stack trace to the developer.</string>
+    <string name="openkeychain_required_long">Schulchat Messenger utilizes a third party app called <b>OpenKeychain</b> to encrypt and decrypt messages and to manage your public keys.\n\nOpenKeychain is licensed under GPLv3 and available on F-Droid and Google Play.\n\n<small>(Please restart Schulchat Messenger afterwards.)</small></string>
+    <string name="contact_has_no_pgp_key">Schulchat Messenger is unable to encrypt your messages because your contact is not announcing his or hers public key.\n\n<small>Please ask your contact to setup OpenPGP.</small></string>
+    <string name="pref_send_crash_summary">By sending stack traces you are helping the ongoing development of Schulchat Messenger</string>
+    <string name="conversations_foreground_service" translatable="false">Schulchat Messenger</string>
+    <string name="update_info">Schulchat Messenger is downloading and installing the new version automatically.\n\nPlease wait…</string>
+    <string name="no_storage_permission">Schulchat Messenger needs access to external storage</string>
+    <string name="sync_with_contacts_long">Schulchat Messenger wants to match your XMPP roster with your contacts to show their full names and avatars.\n\nSchulchat Messenger will only read your contacts and match them locally without uploading them to your server.\n\nYou will now be asked to grant permission to access your contacts.</string>
+    <string name="battery_optimizations_enabled_explained">Your device is doing some heavy battery optimizations on Schulchat Messenger that might lead to delayed notifications or even message loss.\nIt is recommended to disable those.</string>
+    <string name="battery_optimizations_enabled_dialog">Your device is doing some heavy battery optimizations on Schulchat Messenger that might lead to delayed notifications or even message loss.\n\nYou will now be asked to disable those.</string>
+    <string name="contacts_have_no_pgp_keys">Schulchat Messenger is unable to encrypt your messages because your contacts are not announcing their public keys.\n\n</string>
+    <string name="InviteText">Hello,\n\nthe user %s has invited you to Schulchat Messenger. If you are using Android, give it a try and click the following link to start over…</string>
+    <string name="pref_broadcast_last_activity_summary">Let all your contacts know when use Schulchat Messenger</string>
+    <string name="invite_user">Invite to Schulchat Messenger</string>
+    <string name="request_permissions_message">Schulchat Messenger will ask you to allow a few permissions. It is important that you allow all these permissions to use all features of this messenger. If you deny any of these permissions the app will close itself.</string>
+    <string name="request_permissions_message_again">You have denied some or all permissions needed for Schulchat Messenger. Would you like to jump to the settings and allow these permissions? If you denie any of these permissions, the app will close itself.</string>
+    <string name="data_saver_enabled_explained">Your operating system is restricting Schulchat Messenger from accessing the Internet when in background. To receive notifications of new messages you should allow Schulchat Messenger unrestricted access when Data saver is on.\n\nSchulchat Messenger will still make an effort to save data when possible.</string>
+    <string name="device_does_not_support_data_saver">Your device does not supporting disabling data saver for Schulchat Messenger.</string>
+    <string name="update_service">Schulchat Messenger update service</string>
+    <string name="huawei_protected_apps_summary">To keep receiving notifications, even when the screen is turned off, you need to add Schulchat Messenger to the list of protected apps.</string>
+    <string name="no_camera_permission">Schulchat Messenger needs access to the camera</string>
+    <string name="error_trustkey_general">Schulchat Messenger is unable to send encrypted messages to %1$s. This may be due to your contact using an outdated server or client that can not handle OMEMO.</string>
+    <string name="no_microphone_permission">Schulchat Messenger needs access to the microphone</string>
+    <string name="no_location_permission">Schulchat Messenger needs access to location services</string>
+    <string name="foreground_service_channel_description">This notification category is used to display a permanent notification indicating that Schulchat Messenger is running.</string>
+    <string name="set_profile_picture">Schulchat Messenger profile picture</string>
+    <string name="pref_show_mappreview_inside_summary">Show map previews directly inside the chat view, a connection to the Schulchat-Server will be established.</string>
+    <string name="conversations_backup">Schulchat Messenger backup</string>
+    <string name="not_a_backup_file">The file you selected is not a Schulchat Messenger backup file</string>
+    <string name="welcome_header">Welcome to\nSchulchat Messenger</string>
+    <string name="intro_whats_xmpp">What is XMPP / Jabber / Schulchat Messenger?</string>
+    <string name="intro_desc_privacy">Schulchat Messenger will neither sell nor analyze your data and you decide which permissions you grant.</string>
+</resources>
