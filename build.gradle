@@ -33,14 +33,14 @@ repositories {
 }
 
 configurations {
-    standardPushImplementation
-    standardImplementation
-    schulchatImplementation
+    playstoreImplementation
+    gitImplementation
+    playstoreschulchatImplementation
 }
 
 dependencies {
     implementation project(':libs:android-transcoder')
-    standardPushImplementation('com.google.firebase:firebase-messaging:20.0.0') {
+    playstoreImplementation('com.google.firebase:firebase-messaging:20.0.0') {
         exclude group: 'com.google.firebase', module: 'firebase-core'
         exclude group: 'com.google.firebase', module: 'firebase-analytics'
         exclude group: 'com.google.firebase', module: 'firebase-measurement-connector'
@@ -66,8 +66,8 @@ dependencies {
     implementation 'androidx.exifinterface:exifinterface:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.emoji:emoji:1.0.0'
-    standardImplementation 'androidx.emoji:emoji-bundled:1.0.0'
-    implementation 'androidx.emoji:emoji-appcompat:1.0.0'
+    gitImplementation 'androidx.emoji:emoji-appcompat:1.0.0'
+    gitImplementation 'androidx.emoji:emoji-bundled:1.0.0'
     implementation 'androidx.exifinterface:exifinterface:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
@@ -113,6 +113,7 @@ android {
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"
         multiDexEnabled true
+        buildConfigField("String", "LOGTAG", '"Pix-Art_Messenger"')
         buildConfigField("String", "UPDATE_URL", '"https://xmpp.pix-art.de/Pix-Art_Messenger/update/"')
         resValue "string", "applicationId", applicationId
         resValue "string", "app_name", "Pix-Art Messenger"
@@ -135,20 +136,28 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    flavorDimensions("distribution")
+    flavorDimensions("mode", "distribution")
 
     productFlavors {
-        standardPush {
-            dimension "distribution"
-        }
-        standard {
-            dimension "distribution"
+        pixart {
+            dimension "mode"
         }
         schulchat {
-            dimension "distribution"
+            dimension "mode"
             applicationId = 'de.schulchat.messenger'
+            resValue "string", "applicationId", applicationId
+            resValue "string", "app_name", "Schulchat Messenger"
+            buildConfigField("String", "LOGTAG", '"Schulchat_Messenger"')
             versionCode = 1
             versionName = '1.0.0'
+        }
+        playstore {
+            dimension "distribution"
+            versionNameSuffix "+_playstore"
+        }
+        git {
+            dimension "distribution"
+            versionNameSuffix "+_git"
         }
     }
     if (project.hasProperty('mStoreFile') &&
