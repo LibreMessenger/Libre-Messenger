@@ -114,6 +114,10 @@ android {
         applicationId "de.pixart.messenger"
         multiDexEnabled true
         buildConfigField("String", "LOGTAG", '"Pix-Art_Messenger"')
+        buildConfigField("String", "DOMAIN_LOCK", 'null')
+        buildConfigField("String", "MAGIC_CREATE_DOMAIN", '"blabber.im"')
+        buildConfigField("int", "ENCRYPTION_MASK", 'UNENCRYPTED | OPENPGP | OTR | OMEMO')
+
         buildConfigField("String", "UPDATE_URL", '"https://xmpp.pix-art.de/Pix-Art_Messenger/update/"')
         resValue "string", "applicationId", applicationId
         resValue "string", "app_name", "Pix-Art Messenger"
@@ -147,7 +151,10 @@ android {
             applicationId = 'de.schulchat.messenger'
             resValue "string", "applicationId", applicationId
             resValue "string", "app_name", "Schulchat Messenger"
+            buildConfigField("String", "DOMAIN_LOCK", '"kurswahl-online.de"')
+            buildConfigField("String", "MAGIC_CREATE_DOMAIN", '"kurswahl-online.de"')
             buildConfigField("String", "LOGTAG", '"Schulchat_Messenger"')
+            buildConfigField("int", "ENCRYPTION_MASK", 'UNENCRYPTED')
             versionCode = 1
             versionName = '1.0.0'
         }
