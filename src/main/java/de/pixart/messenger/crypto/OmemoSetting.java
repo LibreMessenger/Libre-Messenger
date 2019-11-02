@@ -39,10 +39,15 @@ import de.pixart.messenger.ui.SettingsActivity;
 public class OmemoSetting {
 
     private static boolean always = false;
+    private static boolean never = false;
     private static int encryption = Message.ENCRYPTION_AXOLOTL;
 
     public static boolean isAlways() {
         return always;
+    }
+
+    public static boolean isNever() {
+        return never;
     }
 
     public static int getEncryption() {
@@ -54,14 +59,22 @@ public class OmemoSetting {
         switch (value) {
             case "always":
                 always = true;
+                never = false;
                 encryption = Message.ENCRYPTION_AXOLOTL;
                 break;
             case "default_on":
                 always = false;
+                never = false;
                 encryption = Message.ENCRYPTION_AXOLOTL;
+                break;
+            case "always_off":
+                always = false;
+                never = true;
+                encryption = Message.ENCRYPTION_NONE;
                 break;
             default:
                 always = false;
+                never = false;
                 encryption = Message.ENCRYPTION_NONE;
                 break;
 

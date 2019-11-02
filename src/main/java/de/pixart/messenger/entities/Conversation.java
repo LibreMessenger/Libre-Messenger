@@ -805,6 +805,9 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
         if (OmemoSetting.isAlways()) {
             return suitableForOmemoByDefault(this) ? Message.ENCRYPTION_AXOLOTL : Message.ENCRYPTION_NONE;
         }
+        if (OmemoSetting.isNever()) {
+            return Message.ENCRYPTION_NONE;
+        }
         final int defaultEncryption;
         if (suitableForOmemoByDefault(this)) {
             defaultEncryption = OmemoSetting.getEncryption();

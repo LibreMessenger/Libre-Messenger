@@ -106,7 +106,7 @@ public class ConversationMenuConfigurator {
         final int next = conversation.getNextEncryption();
 
         boolean visible;
-        if (OmemoSetting.isAlways()) {
+        if (OmemoSetting.isAlways() || OmemoSetting.isNever()) {
             visible = false;
         } else if (conversation.getMode() == Conversation.MODE_MULTI) {
             if (next == Message.ENCRYPTION_NONE && !conversation.isPrivateAndNonAnonymous() && !conversation.getBooleanAttribute(Conversation.ATTRIBUTE_FORMERLY_PRIVATE_NON_ANONYMOUS, false)) {

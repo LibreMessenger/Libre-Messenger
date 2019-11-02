@@ -370,6 +370,9 @@ public class SettingsActivity extends XmppActivity implements
                 case "default_off":
                     omemoPreference.setSummary(R.string.pref_omemo_setting_summary_default_off);
                     break;
+                case "always_off":
+                    omemoPreference.setSummary(R.string.pref_omemo_setting_summary_always_off);
+                    break;
             }
         } else {
             Log.d(Config.LOGTAG, "unable to find preference named " + OMEMO_SETTING);
