@@ -1,6 +1,5 @@
 package de.pixart.messenger.ui;
 
-import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 

@@ -31,6 +31,7 @@
     <string name="conversations_backup">Schulchat Messenger backup</string>
     <string name="not_a_backup_file">The file you selected is not a Schulchat Messenger backup file</string>
     <string name="welcome_header">Welcome to\nSchulchat Messenger</string>
+    <string name="welcome_text">…is a free and secure XMPP/Jabber client for use with kurswahl-online.de.</string>
     <string name="intro_whats_xmpp">What is XMPP / Jabber / Schulchat Messenger?</string>
     <string name="intro_desc_privacy">Schulchat Messenger will neither sell nor analyze your data and you decide which permissions you grant.</string>
 </resources>
