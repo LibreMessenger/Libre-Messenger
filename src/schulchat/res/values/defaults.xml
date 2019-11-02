@@ -65,7 +65,7 @@
     <string name="image_compression">mid</string>
     <string name="video_compression">mid</string>
     <string name="quick_action">recent</string>
-    <string name="omemo_setting_default">default_off</string>
+    <string name="omemo_setting_default">always_off</string>
     <string name="theme">auto</string>
     <string name="default_font_size">small</string>
 
