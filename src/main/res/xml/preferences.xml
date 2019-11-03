@@ -178,6 +178,13 @@
                     android:value="messages" />
             </intent>
         </PreferenceScreen>
+        <ListPreference
+            android:defaultValue="@integer/grace_period"
+            android:entries="@array/grace_periods"
+            android:entryValues="@array/grace_periods_values"
+            android:key="grace_period_length"
+            android:summary="@string/pref_notification_grace_period_summary"
+            android:title="@string/pref_notification_grace_period" />
     </PreferenceScreen>
     <!--Attachments-->
     <PreferenceScreen
