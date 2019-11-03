@@ -213,7 +213,7 @@ public class SearchActivity extends XmppActivity implements TextWatcher, OnSearc
     private void changeBackground(boolean hasSearch, boolean hasResults) {
         if (hasSearch) {
             if (hasResults) {
-                binding.searchResults.setBackgroundColor(StyledAttributes.getColor(this, R.attr.color_background_secondary));
+                binding.searchResults.setBackgroundColor(StyledAttributes.getColor(this, R.attr.color_background_tertiary));
             } else {
                 binding.searchResults.setBackground(StyledAttributes.getDrawable(this, R.attr.activity_background_no_results));
             }

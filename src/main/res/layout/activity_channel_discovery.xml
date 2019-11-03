@@ -28,7 +28,8 @@
             android:padding="8dp"
             android:text="@string/no_results"
             android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.Conversations.Body1" />
+            android:textAppearance="@style/TextAppearance.Conversations.Body1"
+            android:visibility="gone" />
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/coordinator"
