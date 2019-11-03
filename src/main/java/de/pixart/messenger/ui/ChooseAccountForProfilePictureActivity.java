@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +76,12 @@ public class ChooseAccountForProfilePictureActivity extends XmppActivity {
             intent.putExtra(EXTRA_ACCOUNT, account.getJid().asBareJid().toString());
             intent.setData(uri);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            startActivity(intent);
+            try {
+                startActivity(intent);
+            } catch (SecurityException e) {
+                Toast.makeText(this, R.string.sharing_application_not_grant_permission, Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
         finish();
     }

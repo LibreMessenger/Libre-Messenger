@@ -4,12 +4,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -178,7 +179,12 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
         } else if (share.text != null) {
             intent.setAction(ConversationsActivity.ACTION_VIEW_CONVERSATION);
             intent.putExtra(Intent.EXTRA_TEXT, share.text);
-            intent.putExtra(ConversationsActivity.EXTRA_AS_QUOTE, share.asQuote);
+            try {
+                startActivity(intent);
+            } catch (SecurityException e) {
+                Toast.makeText(this, R.string.sharing_application_not_grant_permission, Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
         startActivity(intent);
         finish();
