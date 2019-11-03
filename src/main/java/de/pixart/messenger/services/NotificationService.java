@@ -457,6 +457,8 @@ public class NotificationService {
             } catch (SecurityException e) {
                 Log.d(Config.LOGTAG, "unable to use custom notification sound " + uri.toString());
             }
+        } else {
+            mBuilder.setLocalOnly(true);
         }
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mBuilder.setCategory(Notification.CATEGORY_MESSAGE);
