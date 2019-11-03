@@ -113,6 +113,7 @@ android {
         archivesBaseName += "-$versionName"
         applicationId "de.pixart.messenger"
         multiDexEnabled true
+
         buildConfigField("String", "LOGTAG", '"Pix-Art_Messenger"')
         buildConfigField("String", "DOMAIN_LOCK", 'null')
         buildConfigField("String", "MAGIC_CREATE_DOMAIN", '"blabber.im"')
@@ -120,7 +121,6 @@ android {
         buildConfigField("String", "UPDATE_URL", '"https://xmpp.pix-art.de/Pix-Art_Messenger/update/"')
         resValue "string", "applicationId", applicationId
         resValue "string", "app_name", "Pix-Art Messenger"
-        dimension "distribution"
     }
 
     dataBinding {
@@ -150,10 +150,6 @@ android {
             applicationId = 'de.schulchat.messenger'
             resConfigs "en"
 
-            versionCode = 1
-            versionName = '1.0.0'
-
-            archivesBaseName += "-$versionName"
             resValue "string", "applicationId", applicationId
             resValue "string", "app_name", "Schulchat Messenger"
 
@@ -164,11 +160,11 @@ android {
         }
         playstore {
             dimension "distribution"
-            versionNameSuffix "+_playstore"
+            versionNameSuffix "-playstore"
         }
         git {
             dimension "distribution"
-            versionNameSuffix "+_git"
+            versionNameSuffix "-git"
         }
     }
     if (project.hasProperty('mStoreFile') &&
