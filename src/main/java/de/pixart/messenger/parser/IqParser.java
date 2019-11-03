@@ -1,9 +1,11 @@
 package de.pixart.messenger.parser;
 
-import androidx.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.util.Pair;
+
+import androidx.annotation.NonNull;
 
 import org.whispersystems.libsignal.IdentityKey;
 import org.whispersystems.libsignal.ecc.Curve;
@@ -27,12 +29,14 @@ import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
+import de.pixart.messenger.entities.Room;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.utils.Namespace;
 import de.pixart.messenger.xml.Element;
 import de.pixart.messenger.xmpp.InvalidJid;
 import de.pixart.messenger.xmpp.OnIqPacketReceived;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
+import de.pixart.messenger.xmpp.forms.Data;
 import de.pixart.messenger.xmpp.stanzas.IqPacket;
 import rocks.xmpp.addr.Jid;
 
@@ -415,5 +419,56 @@ public class IqParser extends AbstractParser implements OnIqPacketReceived {
                 account.getXmppConnection().sendIqPacket(response, null);
             }
         }
+    }
+
+    public static List<Jid> items(IqPacket packet) {
+        ArrayList<Jid> items = new ArrayList<>();
+        final Element query = packet.findChild("query", Namespace.DISCO_ITEMS);
+        if (query == null) {
+            return items;
+        }
+        for (Element child : query.getChildren()) {
+            if ("item".equals(child.getName())) {
+                Jid jid = child.getAttributeAsJid("jid");
+                if (jid != null) {
+                    items.add(jid);
+                }
+            }
+        }
+        return items;
+    }
+
+    public static Room parseRoom(IqPacket packet) {
+        final Element query = packet.findChild("query", Namespace.DISCO_INFO);
+        if (query == null) {
+            return null;
+        }
+        final Element x = query.findChild("x");
+        if (x == null) {
+            return null;
+        }
+        final Element identity = query.findChild("identity");
+        Data data = Data.parse(x);
+        String address = packet.getFrom().toEscapedString();
+        String name = identity == null ? null : identity.getAttribute("name");
+        String roomName = data.getValue("muc#roomconfig_roomname");
+        ;
+        String description = data.getValue("muc#roominfo_description");
+        String language = data.getValue("muc#roominfo_lang");
+        String occupants = data.getValue("muc#roominfo_occupants");
+        int nusers;
+        try {
+            nusers = occupants == null ? 0 : Integer.parseInt(occupants);
+        } catch (NumberFormatException e) {
+            nusers = 0;
+        }
+
+        return new Room(
+                address,
+                TextUtils.isEmpty(roomName) ? name : roomName,
+                description,
+                language,
+                nusers
+        );
     }
 }

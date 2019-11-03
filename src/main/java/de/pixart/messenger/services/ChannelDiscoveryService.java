@@ -1,39 +1,48 @@
 package de.pixart.messenger.services;
 
-import androidx.annotation.NonNull;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import de.pixart.messenger.Config;
+import de.pixart.messenger.entities.Account;
+import de.pixart.messenger.entities.Room;
 import de.pixart.messenger.http.HttpConnectionManager;
 import de.pixart.messenger.http.services.MuclumbusService;
-import okhttp3.Interceptor;
+import de.pixart.messenger.parser.IqParser;
+import de.pixart.messenger.xmpp.OnIqPacketReceived;
+import de.pixart.messenger.xmpp.XmppConnection;
+import de.pixart.messenger.xmpp.stanzas.IqPacket;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rocks.xmpp.addr.Jid;
 
 public class ChannelDiscoveryService {
 
     private final XmppConnectionService service;
 
+
     private MuclumbusService muclumbusService;
 
-    private final Cache<String, List<MuclumbusService.Room>> cache;
+    private final Cache<String, List<Room>> cache;
 
     ChannelDiscoveryService(XmppConnectionService service) {
         this.service = service;
@@ -42,17 +51,13 @@ public class ChannelDiscoveryService {
 
     void initializeMuclumbusService() {
         final OkHttpClient.Builder builder = new OkHttpClient.Builder();
+
         if (service.useTorToConnect()) {
             try {
                 builder.proxy(HttpConnectionManager.getProxy());
             } catch (IOException e) {
                 throw new RuntimeException("Unable to use Tor proxy", e);
             }
-        }
-        try {
-            builder.networkInterceptors().add(new UserAgentInterceptor(service.getIqGenerator().getUserAgent()));
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         Retrofit retrofit = new Retrofit.Builder()
                 .client(builder.build())
@@ -63,21 +68,28 @@ public class ChannelDiscoveryService {
         this.muclumbusService = retrofit.create(MuclumbusService.class);
     }
 
-    void discover(String query, OnChannelSearchResultsFound onChannelSearchResultsFound) {
-        final boolean all = query == null || query.trim().isEmpty();
-        List<MuclumbusService.Room> result = cache.getIfPresent(all ? "" : query);
+    void cleanCache() {
+        cache.invalidateAll();
+    }
+
+    void discover(@NonNull final String query, Method method, OnChannelSearchResultsFound onChannelSearchResultsFound) {
+        List<Room> result = cache.getIfPresent(key(method, query));
         if (result != null) {
             onChannelSearchResultsFound.onChannelSearchResultsFound(result);
             return;
         }
-        if (all) {
-            discoverChannels(onChannelSearchResultsFound);
+        if (method == Method.LOCAL_SERVER) {
+            discoverChannelsLocalServers(query, onChannelSearchResultsFound);
         } else {
-            discoverChannels(query, onChannelSearchResultsFound);
+            if (query.isEmpty()) {
+                discoverChannelsJabberNetwork(onChannelSearchResultsFound);
+            } else {
+                discoverChannelsJabberNetwork(query, onChannelSearchResultsFound);
+            }
         }
     }
 
-    private void discoverChannels(OnChannelSearchResultsFound listener) {
+    private void discoverChannelsJabberNetwork(OnChannelSearchResultsFound listener) {
         Call<MuclumbusService.Rooms> call = muclumbusService.getRooms(1);
         try {
             call.enqueue(new Callback<MuclumbusService.Rooms>() {
@@ -89,7 +101,7 @@ public class ChannelDiscoveryService {
                         logError(response);
                         return;
                     }
-                    cache.put("", body.items);
+                    cache.put(key(Method.JABBER_NETWORK, ""), body.items);
                     listener.onChannelSearchResultsFound(body.items);
                 }
 
@@ -104,9 +116,10 @@ public class ChannelDiscoveryService {
         }
     }
 
-    private void discoverChannels(final String query, OnChannelSearchResultsFound listener) {
+    private void discoverChannelsJabberNetwork(final String query, OnChannelSearchResultsFound listener) {
         MuclumbusService.SearchRequest searchRequest = new MuclumbusService.SearchRequest(query);
         Call<MuclumbusService.SearchResult> searchResultCall = muclumbusService.search(searchRequest);
+
         searchResultCall.enqueue(new Callback<MuclumbusService.SearchResult>() {
             @Override
             public void onResponse(@NonNull Call<MuclumbusService.SearchResult> call, @NonNull Response<MuclumbusService.SearchResult> response) {
@@ -116,7 +129,7 @@ public class ChannelDiscoveryService {
                     logError(response);
                     return;
                 }
-                cache.put(query, body.result.items);
+                cache.put(key(Method.JABBER_NETWORK, query), body.result.items);
                 listener.onChannelSearchResultsFound(body.result.items);
             }
 
@@ -126,6 +139,102 @@ public class ChannelDiscoveryService {
                 listener.onChannelSearchResultsFound(Collections.emptyList());
             }
         });
+    }
+
+    private void discoverChannelsLocalServers(final String query, final OnChannelSearchResultsFound listener) {
+        final Map<Jid, Account> localMucService = getLocalMucServices();
+        Log.d(Config.LOGTAG, "checking with " + localMucService.size() + " muc services");
+        if (localMucService.size() == 0) {
+            listener.onChannelSearchResultsFound(Collections.emptyList());
+            return;
+        }
+        if (!query.isEmpty()) {
+            final List<Room> cached = cache.getIfPresent(key(Method.LOCAL_SERVER, ""));
+            if (cached != null) {
+                final List<Room> results = copyMatching(cached, query);
+                cache.put(key(Method.LOCAL_SERVER, query), results);
+                listener.onChannelSearchResultsFound(results);
+            }
+        }
+        final AtomicInteger queriesInFlight = new AtomicInteger();
+        final List<Room> rooms = new ArrayList<>();
+        for (Map.Entry<Jid, Account> entry : localMucService.entrySet()) {
+            IqPacket itemsRequest = service.getIqGenerator().queryDiscoItems(entry.getKey());
+            queriesInFlight.incrementAndGet();
+            service.sendIqPacket(entry.getValue(), itemsRequest, (account, itemsResponse) -> {
+                if (itemsResponse.getType() == IqPacket.TYPE.RESULT) {
+                    final List<Jid> items = IqParser.items(itemsResponse);
+                    for (Jid item : items) {
+                        IqPacket infoRequest = service.getIqGenerator().queryDiscoInfo(item);
+                        queriesInFlight.incrementAndGet();
+                        service.sendIqPacket(account, infoRequest, new OnIqPacketReceived() {
+                            @Override
+                            public void onIqPacketReceived(Account account, IqPacket infoResponse) {
+                                if (infoResponse.getType() == IqPacket.TYPE.RESULT) {
+                                    final Room room = IqParser.parseRoom(infoResponse);
+                                    if (room != null) {
+                                        rooms.add(room);
+                                    }
+                                    if (queriesInFlight.decrementAndGet() <= 0) {
+                                        finishDiscoSearch(rooms, query, listener);
+                                    }
+                                } else {
+                                    queriesInFlight.decrementAndGet();
+                                }
+                            }
+                        });
+                    }
+                }
+                if (queriesInFlight.decrementAndGet() <= 0) {
+                    finishDiscoSearch(rooms, query, listener);
+                }
+            });
+        }
+    }
+
+    private void finishDiscoSearch(List<Room> rooms, String query, OnChannelSearchResultsFound listener) {
+        Collections.sort(rooms);
+        cache.put(key(Method.LOCAL_SERVER, ""), rooms);
+        if (query.isEmpty()) {
+            listener.onChannelSearchResultsFound(rooms);
+        } else {
+            List<Room> results = copyMatching(rooms, query);
+            cache.put(key(Method.LOCAL_SERVER, query), results);
+            listener.onChannelSearchResultsFound(rooms);
+        }
+    }
+
+    private static List<Room> copyMatching(List<Room> haystack, String needle) {
+        ArrayList<Room> result = new ArrayList<>();
+        for (Room room : haystack) {
+            if (room.contains(needle)) {
+                result.add(room);
+            }
+        }
+        return result;
+    }
+
+    private Map<Jid, Account> getLocalMucServices() {
+        final HashMap<Jid, Account> localMucServices = new HashMap<>();
+        for (Account account : service.getAccounts()) {
+            if (account.isEnabled()) {
+                final XmppConnection xmppConnection = account.getXmppConnection();
+                if (xmppConnection == null) {
+                    continue;
+                }
+                for (final String mucService : xmppConnection.getMucServers()) {
+                    Jid jid = Jid.of(mucService);
+                    if (!localMucServices.containsKey(jid)) {
+                        localMucServices.put(jid, account);
+                    }
+                }
+            }
+        }
+        return localMucServices;
+    }
+
+    private static String key(Method method, String query) {
+        return String.format("%s\00%s", method, query);
     }
 
     private static void logError(final Response response) {
@@ -142,24 +251,11 @@ public class ChannelDiscoveryService {
     }
 
     public interface OnChannelSearchResultsFound {
-        void onChannelSearchResultsFound(List<MuclumbusService.Room> results);
+        void onChannelSearchResultsFound(List<Room> results);
     }
 
-    private class UserAgentInterceptor implements Interceptor {
-        private final String userAgent;
-
-        UserAgentInterceptor(String userAgent) {
-            this.userAgent = userAgent;
-        }
-
-        @NotNull
-        @Override
-        public okhttp3.Response intercept(Chain chain) throws IOException {
-            Request originalRequest = chain.request();
-            Request requestWithUserAgent = originalRequest.newBuilder()
-                    .header("User-Agent", userAgent)
-                    .build();
-            return chain.proceed(requestWithUserAgent);
-        }
+    public enum Method {
+        JABBER_NETWORK,
+        LOCAL_SERVER
     }
 }

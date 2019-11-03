@@ -346,6 +346,13 @@
             android:key="use_invidious"
             android:summary="@string/pref_use_invidious_summary"
             android:title="@string/pref_use_invidious" />
+        <ListPreference
+            android:defaultValue="@string/default_channel_discovery"
+            android:entries="@array/channel_discovery_entries"
+            android:entryValues="@array/channel_discover_values"
+            android:key="channel_discovery_method"
+            android:summary="@string/pref_channel_discovery_summary"
+            android:title="@string/pref_channel_discovery" />
         <PreferenceCategory android:title="@string/pref_create_backup">
             <Preference
                 android:key="create_backup"

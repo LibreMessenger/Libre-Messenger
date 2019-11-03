@@ -13,13 +13,14 @@ import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import androidx.annotation.ColorInt;
-import androidx.annotation.Nullable;
-import androidx.core.content.res.ResourcesCompat;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.LruCache;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +40,7 @@ import de.pixart.messenger.entities.ListItem;
 import de.pixart.messenger.entities.Message;
 import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.RawBlockable;
-import de.pixart.messenger.http.services.MuclumbusService;
+import de.pixart.messenger.entities.Room;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.OnAdvancedStreamFeaturesLoaded;
 import de.pixart.messenger.xmpp.XmppConnection;
@@ -84,13 +85,13 @@ public class AvatarService implements OnAdvancedStreamFeaturesLoaded {
             return get((ListItem) avatarable, size, cachedOnly);
         } else if (avatarable instanceof MucOptions.User) {
             return get((MucOptions.User) avatarable, size, cachedOnly);
-        } else if (avatarable instanceof MuclumbusService.Room) {
-            return get((MuclumbusService.Room) avatarable, size, cachedOnly);
+        } else if (avatarable instanceof Room) {
+            return get((Room) avatarable, size, cachedOnly);
         }
         throw new AssertionError("AvatarService does not know how to generate avatar from " + avatarable.getClass().getName());
     }
 
-    private Bitmap get(final MuclumbusService.Room result, final int size, boolean cacheOnly) {
+    private Bitmap get(final Room result, final int size, boolean cacheOnly) {
         final Jid room = result.getRoom();
         Conversation conversation = room != null ? mXmppConnectionService.findFirstMuc(room) : null;
         if (conversation != null) {
