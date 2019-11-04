@@ -4697,12 +4697,12 @@ public class XmppConnectionService extends Service {
         updateConversationUi();
     }
 
-    public void deleteMessage(final Conversation conversation, Message message) {
+    public void deleteMessage(final Conversation conversation, final Message message) {
         conversation.deleteMessage(message);
+        message.setMessageDeleted(true);
         Runnable runnable = () -> {
             databaseBackend.deleteMessageInConversation(message);
             databaseBackend.updateConversation(conversation);
-
         };
         mDatabaseWriterExecutor.execute(runnable);
     }

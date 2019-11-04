@@ -29,6 +29,7 @@ import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.chatstate.ChatState;
 import rocks.xmpp.addr.Jid;
 
+import static de.pixart.messenger.entities.Message.DELETED_MESSAGE_BODY;
 import static de.pixart.messenger.ui.util.MyLinkify.replaceYoutube;
 
 public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapter.ConversationViewHolder> {
@@ -149,7 +150,11 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             }
             final Pair<CharSequence, Boolean> preview = UIHelper.getMessagePreview(activity, message, viewHolder.binding.conversationLastmsg.getCurrentTextColor());
             if (showPreviewText) {
-                viewHolder.binding.conversationLastmsg.setText(EmojiWrapper.transform(UIHelper.shorten(replaceYoutube(activity.getApplicationContext(), preview.first.toString()))));
+                if (message.getBody().equals(DELETED_MESSAGE_BODY)) {
+                    viewHolder.binding.conversationLastmsg.setText(EmojiWrapper.transform(UIHelper.shorten(activity.getString(R.string.message_deleted))));
+                } else {
+                    viewHolder.binding.conversationLastmsg.setText(EmojiWrapper.transform(UIHelper.shorten(replaceYoutube(activity.getApplicationContext(), preview.first.toString()))));
+                }
             } else {
                 viewHolder.binding.conversationLastmsgImg.setContentDescription(preview.first);
             }

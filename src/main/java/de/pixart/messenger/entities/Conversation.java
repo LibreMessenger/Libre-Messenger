@@ -141,7 +141,9 @@ public class Conversation extends AbstractEntity implements Blockable, Comparabl
     }
 
     public void deleteMessage(Message message) {
-        this.messages.remove(message);
+        synchronized (this.messages) {
+            this.messages.remove(message);
+        }
     }
 
     public Message getFirstUnreadMessage() {

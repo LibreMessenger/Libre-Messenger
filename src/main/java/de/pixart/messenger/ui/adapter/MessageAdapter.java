@@ -87,6 +87,7 @@ import pl.droidsonroids.gif.GifImageView;
 import rocks.xmpp.addr.Jid;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import static de.pixart.messenger.entities.Message.DELETED_MESSAGE_BODY;
 import static de.pixart.messenger.ui.SettingsActivity.PLAY_GIF_INSIDE;
 import static de.pixart.messenger.ui.SettingsActivity.SHOW_LINKS_INSIDE;
 import static de.pixart.messenger.ui.SettingsActivity.SHOW_MAPS_INSIDE;
@@ -539,67 +540,71 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         if (message.getBody() != null) {
             final String nick = UIHelper.getMessageDisplayName(message);
             SpannableStringBuilder body = new SpannableStringBuilder(replaceYoutube(activity.getApplicationContext(), message.getMergedBody().toString()));
-            boolean hasMeCommand = message.hasMeCommand();
-            if (hasMeCommand) {
-                body = body.replace(0, Message.ME_COMMAND.length(), nick);
-            }
-            if (body.length() > Config.MAX_DISPLAY_MESSAGE_CHARS) {
-                body = new SpannableStringBuilder(body, 0, Config.MAX_DISPLAY_MESSAGE_CHARS);
-                body.append("\u2026");
-            }
-            Message.MergeSeparator[] mergeSeparators = body.getSpans(0, body.length(), Message.MergeSeparator.class);
-            for (Message.MergeSeparator mergeSeparator : mergeSeparators) {
-                int start = body.getSpanStart(mergeSeparator);
-                int end = body.getSpanEnd(mergeSeparator);
-                body.setSpan(new DividerSpan(true), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-            boolean startsWithQuote = handleTextQuotes(body, darkBackground);
-            if (!message.isPrivateMessage()) {
-                if (hasMeCommand) {
-                    body.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), 0, nick.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
+            if (message.getBody().equals(DELETED_MESSAGE_BODY)) {
+                body = body.replace(0, DELETED_MESSAGE_BODY.length(), activity.getString(R.string.message_deleted));
             } else {
-                String privateMarker;
-                if (message.getStatus() <= Message.STATUS_RECEIVED) {
-                    privateMarker = activity.getString(R.string.private_message);
-                } else {
-                    Jid cp = message.getCounterpart();
-                    privateMarker = activity.getString(R.string.private_message_to, Strings.nullToEmpty(cp == null ? null : cp.getResource()));
-                }
-                body.insert(0, privateMarker);
-                int privateMarkerIndex = privateMarker.length();
-                if (startsWithQuote) {
-                    body.insert(privateMarkerIndex, "\n\n");
-                    body.setSpan(new DividerSpan(false), privateMarkerIndex, privateMarkerIndex + 2,
-                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                } else {
-                    body.insert(privateMarkerIndex, " ");
-                }
-                body.setSpan(new ForegroundColorSpan(getMessageTextColor(darkBackground, false)), 0, privateMarkerIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                body.setSpan(new StyleSpan(Typeface.BOLD), 0, privateMarkerIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                boolean hasMeCommand = message.hasMeCommand();
                 if (hasMeCommand) {
-                    body.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), privateMarkerIndex + 1, privateMarkerIndex + 1 + nick.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    body = body.replace(0, Message.ME_COMMAND.length(), nick);
                 }
-            }
-            if (message.getConversation().getMode() == Conversation.MODE_MULTI && message.getStatus() == Message.STATUS_RECEIVED) {
-                if (message.getConversation() instanceof Conversation) {
-                    final Conversation conversation = (Conversation) message.getConversation();
-                    Pattern pattern = NotificationService.generateNickHighlightPattern(conversation.getMucOptions().getActualNick());
-                    Matcher matcher = pattern.matcher(body);
-                    while (matcher.find()) {
-                        body.setSpan(new StyleSpan(Typeface.BOLD), matcher.start(), matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                if (body.length() > Config.MAX_DISPLAY_MESSAGE_CHARS) {
+                    body = new SpannableStringBuilder(body, 0, Config.MAX_DISPLAY_MESSAGE_CHARS);
+                    body.append("\u2026");
+                }
+                Message.MergeSeparator[] mergeSeparators = body.getSpans(0, body.length(), Message.MergeSeparator.class);
+                for (Message.MergeSeparator mergeSeparator : mergeSeparators) {
+                    int start = body.getSpanStart(mergeSeparator);
+                    int end = body.getSpanEnd(mergeSeparator);
+                    body.setSpan(new DividerSpan(true), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                boolean startsWithQuote = handleTextQuotes(body, darkBackground);
+                if (!message.isPrivateMessage()) {
+                    if (hasMeCommand) {
+                        body.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), 0, nick.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                } else {
+                    String privateMarker;
+                    if (message.getStatus() <= Message.STATUS_RECEIVED) {
+                        privateMarker = activity.getString(R.string.private_message);
+                    } else {
+                        Jid cp = message.getCounterpart();
+                        privateMarker = activity.getString(R.string.private_message_to, Strings.nullToEmpty(cp == null ? null : cp.getResource()));
+                    }
+                    body.insert(0, privateMarker);
+                    int privateMarkerIndex = privateMarker.length();
+                    if (startsWithQuote) {
+                        body.insert(privateMarkerIndex, "\n\n");
+                        body.setSpan(new DividerSpan(false), privateMarkerIndex, privateMarkerIndex + 2,
+                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    } else {
+                        body.insert(privateMarkerIndex, " ");
+                    }
+                    body.setSpan(new ForegroundColorSpan(getMessageTextColor(darkBackground, false)), 0, privateMarkerIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    body.setSpan(new StyleSpan(Typeface.BOLD), 0, privateMarkerIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    if (hasMeCommand) {
+                        body.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), privateMarkerIndex + 1, privateMarkerIndex + 1 + nick.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
                 }
-            }
-            Matcher matcher = Emoticons.getEmojiPattern(body).matcher(body);
-            while (matcher.find()) {
-                if (matcher.start() < matcher.end()) {
-                    body.setSpan(new RelativeSizeSpan(1.5f), matcher.start(), matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                if (message.getConversation().getMode() == Conversation.MODE_MULTI && message.getStatus() == Message.STATUS_RECEIVED) {
+                    if (message.getConversation() instanceof Conversation) {
+                        final Conversation conversation = (Conversation) message.getConversation();
+                        Pattern pattern = NotificationService.generateNickHighlightPattern(conversation.getMucOptions().getActualNick());
+                        Matcher matcher = pattern.matcher(body);
+                        while (matcher.find()) {
+                            body.setSpan(new StyleSpan(Typeface.BOLD), matcher.start(), matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        }
+                    }
                 }
-            }
-            StylingHelper.format(body, viewHolder.messageBody.getCurrentTextColor());
-            if (highlightedTerm != null) {
-                StylingHelper.highlight(activity, body, highlightedTerm, StylingHelper.isDarkText(viewHolder.messageBody));
+                Matcher matcher = Emoticons.getEmojiPattern(body).matcher(body);
+                while (matcher.find()) {
+                    if (matcher.start() < matcher.end()) {
+                        body.setSpan(new RelativeSizeSpan(1.5f), matcher.start(), matcher.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                }
+                StylingHelper.format(body, viewHolder.messageBody.getCurrentTextColor());
+                if (highlightedTerm != null) {
+                    StylingHelper.highlight(activity, body, highlightedTerm, StylingHelper.isDarkText(viewHolder.messageBody));
+                }
             }
             MyLinkify.addLinks(body, true);
             viewHolder.messageBody.setAutoLinkMask(0);
@@ -607,7 +612,6 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             viewHolder.messageBody.setTextIsSelectable(true);
             viewHolder.messageBody.setMovementMethod(ClickableMovementMethod.getInstance());
             listSelectionManager.onUpdate(viewHolder.messageBody, message);
-
         } else {
             viewHolder.messageBody.setText("");
             viewHolder.messageBody.setTextIsSelectable(false);

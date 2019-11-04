@@ -123,6 +123,7 @@ import de.pixart.messenger.xmpp.chatstate.ChatState;
 import de.pixart.messenger.xmpp.jingle.JingleConnection;
 import rocks.xmpp.addr.Jid;
 
+import static de.pixart.messenger.entities.Message.DELETED_MESSAGE_BODY;
 import static de.pixart.messenger.ui.SettingsActivity.WARN_UNENCRYPTED_CHAT;
 import static de.pixart.messenger.ui.XmppActivity.EXTRA_ACCOUNT;
 import static de.pixart.messenger.ui.XmppActivity.REQUEST_INVITE_TO_CONVERSATION;
@@ -1876,11 +1877,10 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     }
 
     private void deleteMessage(Message message) {
+        Message relevantForCorrection = message;
         while (message.mergeable(message.next())) {
             message = message.next();
         }
-        final Conversation conversation = (Conversation) message.getConversation();
-        Message relevantForCorrection = message;
         while (relevantForCorrection.mergeable(relevantForCorrection.next())) {
             relevantForCorrection = relevantForCorrection.next();
         }
@@ -1888,8 +1888,8 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         builder.setNegativeButton(R.string.cancel, null);
         builder.setTitle(R.string.delete_message_dialog);
         builder.setMessage(R.string.delete_message_dialog_msg);
-        Message finalRelevantForCorrection = relevantForCorrection;
-        Message finalMessage = message;
+        final Message finalRelevantForCorrection = relevantForCorrection;
+        final Message finalMessage = message;
         builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
             if (finalRelevantForCorrection.getType() == Message.TYPE_TEXT
                     && !finalMessage.isGeoUri()
@@ -1898,13 +1898,12 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     && (((Conversation) finalMessage.getConversation()).getMucOptions().nonanonymous() || finalMessage.getConversation().getMode() == Conversation.MODE_SINGLE)) {
                 this.conversation.setCorrectingMessage(finalMessage);
                 Message deletedmessage = conversation.getCorrectingMessage();
-                deletedmessage.setBody(getString(R.string.message_deleted));
+                deletedmessage.setBody(DELETED_MESSAGE_BODY);
                 deletedmessage.putEdited(deletedmessage.getUuid(), deletedmessage.getServerMsgId());
                 deletedmessage.setServerMsgId(null);
                 deletedmessage.setUuid(UUID.randomUUID().toString());
                 sendMessage(deletedmessage);
                 activity.xmppConnectionService.deleteMessage(conversation, deletedmessage);
-                refresh();
             }
             activity.xmppConnectionService.deleteMessage(conversation, finalMessage);
             activity.onConversationsListItemUpdated();

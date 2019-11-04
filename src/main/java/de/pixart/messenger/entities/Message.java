@@ -84,6 +84,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
     public static final String FILE_DELETED = "file_deleted";
     public static final String ME_COMMAND = "/me";
     public static final String ERROR_MESSAGE_CANCELLED = "de.pixart.messenger.cancelled";
+    public static final String DELETED_MESSAGE_BODY = "de.pixart.messenger.message_deleted";
 
     public boolean markable = false;
     protected String conversationUuid;
@@ -403,6 +404,10 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
         return this.deleted;
     }
 
+    public void setMessageDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     public boolean isFileDeleted() {
         return this.file_deleted;
     }
@@ -622,6 +627,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
                         this.getCounterpart() != null &&
                         this.getCounterpart().equals(message.getCounterpart()) &&
                         this.edited() == message.edited() &&
+                        !this.isMessageDeleted() == !message.isMessageDeleted() &&
                         (message.getTimeSent() - this.getTimeSent()) <= (Config.MESSAGE_MERGE_WINDOW * 1000) &&
                         this.getBody().length() + message.getBody().length() <= Config.MAX_DISPLAY_MESSAGE_CHARS &&
                         !message.isGeoUri() &&

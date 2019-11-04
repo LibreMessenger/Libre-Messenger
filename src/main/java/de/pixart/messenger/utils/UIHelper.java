@@ -31,6 +31,8 @@ import de.pixart.messenger.entities.Transferable;
 import de.pixart.messenger.services.ExportBackupService;
 import rocks.xmpp.addr.Jid;
 
+import static de.pixart.messenger.entities.Message.DELETED_MESSAGE_BODY;
+
 public class UIHelper {
 
     private static int[] UNSAFE_COLORS = {
@@ -297,7 +299,9 @@ public class UIHelper {
             return new Pair<>(getFileDescriptionString(context, message), true);
         } else {
             final String body = MessageUtils.filterLtrRtl(message.getBody());
-            if (body.startsWith(Message.ME_COMMAND)) {
+            if (message.getBody().equals(DELETED_MESSAGE_BODY)) {
+                return new Pair<>(context.getString(R.string.message_deleted), false);
+            } else if (body.startsWith(Message.ME_COMMAND)) {
                 return new Pair<>(body.replaceAll("^" + Message.ME_COMMAND, UIHelper.getMessageDisplayName(message)), false);
             } else if (message.isGeoUri()) {
                 return new Pair<>(context.getString(R.string.location), true);
