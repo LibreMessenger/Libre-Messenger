@@ -79,6 +79,7 @@ public class FileBackend {
     private static final SimpleDateFormat fileDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.US);
 
     private static final String FILE_PROVIDER = ".files";
+    private static final String APP_DIRECTORY = "Pix-Art Messenger";
 
     private XmppConnectionService mXmppConnectionService;
 
@@ -315,26 +316,26 @@ public class FileBackend {
 
     public static String getConversationsDirectory(final String type) {
         if (type.equalsIgnoreCase("null")) {
-            return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Pix-Art Messenger" + File.separator;
+            return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + APP_DIRECTORY + File.separator;
         } else {
-            return getAppMediaDirectory() + "Pix-Art Messenger" + " " + type + File.separator;
+            return getAppMediaDirectory() + APP_DIRECTORY + " " + type + File.separator;
         }
     }
 
     public static String getAppMediaDirectory() {
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Pix-Art Messenger" + File.separator + "Media" + File.separator;
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + APP_DIRECTORY + File.separator + "Media" + File.separator;
     }
 
     public static String getBackupDirectory() {
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Pix-Art Messenger" + File.separator + "Database" + File.separator;
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + APP_DIRECTORY + File.separator + "Database" + File.separator;
     }
 
     public static String getAppLogsDirectory() {
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Pix-Art Messenger" + File.separator + "Chats" + File.separator;
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + APP_DIRECTORY + File.separator + "Chats" + File.separator;
     }
 
     public static String getAppUpdateDirectory() {
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Pix-Art Messenger" + File.separator + "Update" + File.separator;
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + APP_DIRECTORY + File.separator + "Update" + File.separator;
     }
 
     private Bitmap resize(final Bitmap originalBitmap, int size) throws IOException {
