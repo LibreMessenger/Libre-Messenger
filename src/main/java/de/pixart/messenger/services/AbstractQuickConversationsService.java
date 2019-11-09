@@ -11,7 +11,7 @@ public abstract class AbstractQuickConversationsService {
     public abstract void considerSync();
 
     public static boolean isQuicksy() {
-        return false;
+        return true;
     }
 
     public static boolean isConversations() {
