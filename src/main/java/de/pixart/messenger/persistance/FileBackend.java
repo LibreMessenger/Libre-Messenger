@@ -49,6 +49,7 @@ import java.net.URL;
 import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.acl.LastOwnerException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -683,12 +684,23 @@ public class FileBackend {
     }
 
     public void drawOverlay(final Bitmap bitmap, final int resource, final float factor) {
+        drawOverlay(bitmap, resource, factor, false);
+    }
+
+    public void drawOverlay(final Bitmap bitmap, final int resource, final float factor, final boolean corner) {
         Bitmap overlay = BitmapFactory.decodeResource(mXmppConnectionService.getResources(), resource);
         Canvas canvas = new Canvas(bitmap);
         float targetSize = Math.min(canvas.getWidth(), canvas.getHeight()) * factor;
         Log.d(Config.LOGTAG, "target size overlay: " + targetSize + " overlay bitmap size was " + overlay.getHeight());
-        float left = (canvas.getWidth() - targetSize) / 2.0f;
-        float top = (canvas.getHeight() - targetSize) / 2.0f;
+        float left;
+        float top;
+        if (corner) {
+            left = canvas.getWidth() - targetSize;
+            top = canvas.getHeight() - targetSize;
+        } else {
+            left = (canvas.getWidth() - targetSize) / 2.0f;
+            top = (canvas.getHeight() - targetSize) / 2.0f;
+        }
         RectF dst = new RectF(left, top, left + targetSize - 1, top + targetSize - 1);
         canvas.drawBitmap(overlay, null, dst, createAntiAliasingPaint());
     }
