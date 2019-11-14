@@ -948,7 +948,6 @@
     <string name="intro_desc_required_permissions">Am Ende des Intros wirst du gefragt, Zugriff auf externen Speicher zuzulassen (erforderlich), wenn du ihn nicht bereits erteilt hast. Zusätzliche Berechtigungen werden bei Bedarf angefragt und sind optional.</string>
     <string name="intro_account">Dein Profil</string>
     <string name="intro_desc_account">Wenn du bereits ein Profil hast, kannst du dich einfach mit deiner Jabber-ID und deinem Passwort anmelden</string>
-    <string name="intro_start_chatting">Kontakte</string>
     <string name="intro_desc_start_chatting">Hast du den Adressbuchzugriff erlaubt, werden bereits vorhandene Jabber-Kontakte automatisch in deiner Kontaktliste angezeigt. Andernfalls füge einfach Jabber-IDs hinzu</string>
     <string name="intro_desc_open_chat">Jetzt kannst du mit dem Chatten beginnen, Orte, Dateien, Videos und Bilder freigeben oder Sprachnachrichten senden.</string>
     <string name="intro_chat_details">Chat-Details</string>

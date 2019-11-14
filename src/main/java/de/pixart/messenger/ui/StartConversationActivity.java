@@ -71,6 +71,7 @@ import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.services.XmppConnectionService.OnRosterUpdate;
 import de.pixart.messenger.ui.adapter.ListItemAdapter;
 import de.pixart.messenger.ui.interfaces.OnBackendConnected;
+import de.pixart.messenger.ui.util.IntroHelper;
 import de.pixart.messenger.ui.util.JidDialog;
 import de.pixart.messenger.ui.util.PendingItem;
 import de.pixart.messenger.ui.util.SoftKeyboardUtils;
@@ -273,10 +274,10 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
         });
         mListPagerAdapter = new ListPagerAdapter(getSupportFragmentManager());
         binding.startConversationViewPager.setAdapter(mListPagerAdapter);
-
         mConferenceAdapter = new ListItemAdapter(this, conferences);
         mContactsAdapter = new ListItemAdapter(this, contacts);
         mContactsAdapter.setOnTagClickedListener(this.mOnTagClickedListener);
+        IntroHelper.showIntro(this, false);
         final SharedPreferences preferences = getPreferences();
 
         this.mHideOfflineContacts = QuickConversationsService.isConversations() && preferences.getBoolean("hide_offline", false);

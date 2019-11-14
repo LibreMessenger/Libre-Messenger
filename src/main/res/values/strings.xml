@@ -950,7 +950,7 @@
     <string name="intro_desc_required_permissions">At the end of the intro you will be asked to grant storage permissions (mandatory), if you have not already given them. Addition permissions are requested as needed and are optional.</string>
     <string name="intro_account">Your account</string>
     <string name="intro_desc_account">If you already have an account, you can simply log in with your Jabber-ID and password</string>
-    <string name="intro_start_chatting">Contacts</string>
+    <string name="intro_start_chatting">Start chatting</string>
     <string name="intro_desc_start_chatting">If you have given the contact permissions, already existing Jabber contacts are automatically displayed in your address book. Otherwise, just add Jabber-IDs</string>
     <string name="intro_desc_open_chat">Now you can start chatting, share locations, files, videos and images or send voice messages.</string>
     <string name="intro_chat_details">Chat details</string>
@@ -969,7 +969,7 @@
     <string name="open_join_dialog">Join public channel…</string>
     <string name="intro_optional_permissions">Optional permissions</string>
     <string name="intro_desc_optional_permissions2">Permissions for your location is needed if you would like to share your location.\nFor sharing voice messages it is required to get access to your microphone.</string>
-    <string name="intro_desc_account3">You have the option to import an existing account.\nJust touch to the import button. If there are backup files available, they will be shown. Choose an account to import.</string>
+    <string name="intro_desc_account3">You have the option to import an existing account.\nIf there are backup files available, they will be shown.</string>
     <string name="intro_desc_start_chatting2">You can also add, create or join multi user chats - so-called MUCs. They where distinguished  between private group chats and public group chats - so called channels.</string>
     <string name="intro_desc_start_chatting3">Congratulations!\nHere we go and have fun…</string>
     <string name="intro_privacy">Your privacy\nYour sovereignty</string>

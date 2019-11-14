@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import de.pixart.messenger.R;
+import de.pixart.messenger.ui.util.IntroHelper;
 
 import static de.pixart.messenger.Config.DISALLOW_REGISTRATION_IN_UI;
 import static de.pixart.messenger.utils.PermissionUtils.allGranted;
@@ -60,7 +61,7 @@ public class WelcomeActivity extends XmppActivity {
             ab.setDisplayShowHomeEnabled(false);
             ab.setDisplayHomeAsUpEnabled(false);
         }
-
+        IntroHelper.showIntro(this, false);
         final Button ImportDatabase = findViewById(R.id.import_database);
         final TextView ImportText = findViewById(R.id.import_text);
         if (hasStoragePermission(REQUEST_IMPORT_BACKUP)) {

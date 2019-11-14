@@ -947,7 +947,6 @@
     <string name="intro_required_permissions">Permisos necesarios</string>
     <string name="intro_account">Tu cuenta</string>
     <string name="intro_desc_account">Si ya tienes una cuenta, puedes simplemente entrar con tu Jabber-ID y contraseña</string>
-    <string name="intro_start_chatting">Contactos</string>
     <string name="intro_desc_open_chat">Ahora ya puedes empezar a chatear, compartir ubicaciones, archivos, videos e imágenes, o enviar mensajes de voz.</string>
     <string name="intro_chat_details">Detalles del chat</string>
     <string name="intro_desc_chat_details">¿Quieres abrir los detalles del chat? Pulsa el nombre del chat en la barra superior de menú.</string>

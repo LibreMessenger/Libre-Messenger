@@ -18,6 +18,8 @@ public class IntroActivity extends AppIntro {
     public static final String ACTIVITY = "activity";
     public static final String MULTICHAT = "multi_chat";
     public static final String START_UI = "StartUI";
+    public static final String WELCOME_ACTIVITY = "WelcomeActivity";
+    public static final String START_CONVERSATION_ACTIVITY = "StartConversationActivity";
     public static final String CONVERSATIONS_ACTIVITY = "ConversationsActivity";
     public static final String CONTACT_DETAILS_ACTIVITY = "ContactDetailsActivity";
     public static final String CONFERENCE_DETAILS_ACTIVITY = "ConferenceDetailsActivity";
@@ -90,7 +92,8 @@ public class IntroActivity extends AppIntro {
                 permissions3.setImageDrawable(R.drawable.intro_location_icon);
                 permissions3.setBgColor(backgroundColor);
                 addSlide(AppIntroFragment.newInstance(permissions3));
-
+                break;
+            case WELCOME_ACTIVITY:
                 SliderPage account = new SliderPage();
                 account.setTitle(getString(R.string.intro_account));
                 account.setDescription(getString(R.string.intro_desc_account));
@@ -111,7 +114,8 @@ public class IntroActivity extends AppIntro {
                 account3.setImageDrawable(R.drawable.intro_account_icon);
                 account3.setBgColor(backgroundColor);
                 addSlide(AppIntroFragment.newInstance(account3));
-
+                break;
+            case START_CONVERSATION_ACTIVITY:
                 SliderPage startChatting = new SliderPage();
                 startChatting.setTitle(getString(R.string.intro_start_chatting));
                 startChatting.setDescription(getString(R.string.intro_desc_start_chatting));
