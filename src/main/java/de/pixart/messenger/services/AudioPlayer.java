@@ -12,14 +12,15 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.PowerManager;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import java.lang.ref.WeakReference;
 import java.util.Locale;
@@ -89,7 +90,7 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
             audioPlayer.setTag(message);
             if (init(ViewHolder.get(audioPlayer), message)) {
                 this.audioPlayerLayouts.addWeakReferenceTo(audioPlayer);
-                executor.execute(()-> this.stopRefresher(true));
+                executor.execute(() -> this.stopRefresher(true));
             } else {
                 this.audioPlayerLayouts.removeWeakReferenceTo(audioPlayer);
             }
@@ -343,8 +344,12 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
             return false;
         }
         final ViewHolder viewHolder = ViewHolder.get(audioPlayer);
-        viewHolder.progress.setProgress(current * 100 / duration);
-        viewHolder.runtime.setText(formatTime(current) + " / " + formatTime(duration));
+        if (duration <= 0) {
+            viewHolder.progress.setProgress(100);
+        } else {
+            viewHolder.progress.setProgress(current * 100 / duration);
+        }
+        viewHolder.runtime.setText(String.format("%s / %s", formatTime(current), formatTime(duration)));
         return true;
     }
 
