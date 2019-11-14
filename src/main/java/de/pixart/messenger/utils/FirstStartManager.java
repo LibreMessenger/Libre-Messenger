@@ -15,7 +15,6 @@ public class FirstStartManager {
     public FirstStartManager(Context context) {
         this.context = context;
         pref = this.context.getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-        editor = pref.edit();
     }
 
     public void setFirstTimeLaunch(boolean isFirstTime) {
