@@ -6,7 +6,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath 'com.android.tools.build:gradle:3.5.2'
     }
 }
 
@@ -39,7 +39,7 @@ configurations {
 
 dependencies {
     implementation project(':libs:android-transcoder')
-    playstoreImplementation('com.google.firebase:firebase-messaging:20.0.0') {
+    playstoreImplementation('com.google.firebase:firebase-messaging:20.0.1') {
         exclude group: 'com.google.firebase', module: 'firebase-core'
         exclude group: 'com.google.firebase', module: 'firebase-analytics'
         exclude group: 'com.google.firebase', module: 'firebase-measurement-connector'
@@ -49,16 +49,16 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.android.support', module: 'exifinterface'
     }
-    implementation 'org.bouncycastle:bcmail-jdk15on:1.63'
+    implementation 'org.bouncycastle:bcmail-jdk15on:1.64'
     implementation 'org.jitsi:org.otr4j:0.22'
     implementation 'org.gnu.inet:libidn:1.15'
-    implementation 'com.google.zxing:core:3.3.3'
+    implementation 'com.google.zxing:core:3.4.0'
     implementation 'de.measite.minidns:minidns-hla:0.2.4'
     implementation 'me.leolin:ShortcutBadger:1.1.22@aar'
     implementation 'org.whispersystems:signal-protocol-java:2.6.2'
     implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation 'jetty:javax.servlet:5.1.12'
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
@@ -80,14 +80,14 @@ dependencies {
     implementation 'org.conscrypt:conscrypt-android:2.2.1'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.15' // 1.2.15 is last working version for minSDK 16
     implementation 'me.drakeet.support:toastcompat:1.1.0'
-    implementation 'org.osmdroid:osmdroid-android:6.1.0'
+    implementation 'org.osmdroid:osmdroid-android:6.1.2'
     implementation 'com.leinardi.android:speed-dial:3.1.1' // version >= 3.0.0 needs android X libraries
     implementation 'com.squareup.picasso:picasso:2.71828'
-    implementation 'com.squareup.okhttp3:okhttp:3.12.5' // versions > 3.12.x don't support API level < 21 anymore
-    implementation 'com.squareup.retrofit2:retrofit:2.6.1'
-    implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.6' // versions > 3.12.x don't support API level < 21 anymore
+    implementation 'com.squareup.retrofit2:retrofit:2.6.2'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
     implementation 'com.google.guava:guava:28.1-android'
-    implementation ('com.github.AppIntro:AppIntro:5.1.0') {
+    implementation('com.github.AppIntro:AppIntro:5.1.0') {
         exclude group: 'org.jetbrains' , module:'annotations'
     }
 }
@@ -106,7 +106,7 @@ android {
         targetSdkVersion 29
 
         versionCode 274
-        versionName "2.2.10 beta (2019-11-02)"
+        versionName "2.2.10 beta (2019-11-09)"
         //resConfigs "en"
 
         archivesBaseName += "-$versionName"
