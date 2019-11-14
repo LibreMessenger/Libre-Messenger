@@ -212,20 +212,21 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                     removeErrorsOnAllBut(binding.hostnameLayout);
                     return;
                 }
-                try {
-                    numericPort = Integer.parseInt(port);
-                    if (numericPort < 0 || numericPort > 65535) {
+                if (!hostname.isEmpty()) {
+                    try {
+                        numericPort = Integer.parseInt(port);
+                        if (numericPort < 0 || numericPort > 65535) {
+                            binding.portLayout.setError(getString(R.string.not_a_valid_port));
+                            removeErrorsOnAllBut(binding.portLayout);
+                            binding.port.requestFocus();
+                            return;
+                        }
+                    } catch (NumberFormatException e) {
                         binding.portLayout.setError(getString(R.string.not_a_valid_port));
                         removeErrorsOnAllBut(binding.portLayout);
                         binding.port.requestFocus();
                         return;
                     }
-
-                } catch (NumberFormatException e) {
-                    binding.portLayout.setError(getString(R.string.not_a_valid_port));
-                    removeErrorsOnAllBut(binding.portLayout);
-                    binding.port.requestFocus();
-                    return;
                 }
             }
 
@@ -512,8 +513,13 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     }
 
     private void updatePortLayout() {
-        String hostname = this.binding.hostname.getText().toString();
-        this.binding.portLayout.setEnabled(!TextUtils.isEmpty(hostname));
+        final String hostname = this.binding.hostname.getText().toString();
+        if (TextUtils.isEmpty(hostname)) {
+            this.binding.portLayout.setEnabled(false);
+            this.binding.portLayout.setError(null);
+        } else {
+            this.binding.portLayout.setEnabled(true);
+        }
     }
 
     protected void updateSaveButton() {
