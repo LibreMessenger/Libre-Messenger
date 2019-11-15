@@ -106,7 +106,7 @@ android {
         targetSdkVersion 29
 
         versionCode 275
-        versionName "2.2.10 beta (2019-11-14)"
+        versionName "2.2.10 beta (2019-11-15)"
         //resConfigs "en"
 
         archivesBaseName += "-$versionName"
