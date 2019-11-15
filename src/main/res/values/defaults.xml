@@ -39,6 +39,7 @@
     <bool name="validate_hostname">false</bool>
     <bool name="show_foreground_service">true</bool>
     <bool name="warn_unencrypted_chat">true</bool>
+    <bool name="hide_you_are_not_participating">false</bool>
     <bool name="use_bundled_emoji">true</bool>
     <bool name="enable_multi_accounts">false</bool>
     <bool name="show_qr_code_scan">true</bool>

@@ -124,6 +124,7 @@ import de.pixart.messenger.xmpp.jingle.JingleConnection;
 import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.entities.Message.DELETED_MESSAGE_BODY;
+import static de.pixart.messenger.ui.SettingsActivity.HIDE_YOU_ARE_NOT_PARTICIPATING;
 import static de.pixart.messenger.ui.SettingsActivity.WARN_UNENCRYPTED_CHAT;
 import static de.pixart.messenger.ui.XmppActivity.EXTRA_ACCOUNT;
 import static de.pixart.messenger.ui.XmppActivity.REQUEST_INVITE_TO_CONVERSATION;
@@ -503,6 +504,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             }
         }
     };
+
     private View.OnLongClickListener mSendButtonLongListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
@@ -513,6 +515,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             return true;
         }
     };
+
     private int completionIndex = 0;
     private int lastCompletionLength = 0;
     private String incomplete;
@@ -931,7 +934,8 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     R.string.send_private_message_to,
                     conversation.getNextCounterpart().getResource()));
         } else if (multi && !conversation.getMucOptions().participating()) {
-            this.binding.textInputHint.setVisibility(View.GONE);
+            this.binding.textInputHint.setVisibility(View.VISIBLE);
+            this.binding.textInputHint.setText(R.string.ask_for_writeaccess);
             this.binding.textinput.setHint(R.string.you_are_not_participating);
         } else {
             this.binding.textInputHint.setVisibility(View.GONE);
@@ -2226,7 +2230,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         messageListAdapter.updatePreferences();
         refresh(false);
         this.conversation.messagesLoaded.set(true);
-
+        hasWriteAccessInMUC();
         Log.d(Config.LOGTAG, "scrolledToBottomAndNoPending=" + Boolean.toString(scrolledToBottomAndNoPending));
 
         if (hasExtras || scrolledToBottomAndNoPending) {
@@ -2253,6 +2257,34 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         //TODO if we only do this when this fragment is running on main it won't *bing* in tablet layout which might be unnecessary since we can *see* it
         activity.xmppConnectionService.getNotificationService().setOpenConversation(this.conversation);
         return true;
+    }
+
+    private void hasWriteAccessInMUC() {
+        if ((conversation.getMode() == Conversation.MODE_MULTI && !conversation.getMucOptions().participating()) && !activity.xmppConnectionService.hideYouAreNotParticipating()) {
+            activity.runOnUiThread(() -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(getString(R.string.you_are_not_participating));
+                builder.setMessage(getString(R.string.no_write_access_in_public_muc));
+                builder.setNegativeButton(getString(R.string.hide_warning),
+                        (dialog, which) -> {
+                            SharedPreferences preferences = activity.getPreferences();
+                            preferences.edit().putBoolean(HIDE_YOU_ARE_NOT_PARTICIPATING, true).apply();
+                            hideSnackbar();
+                        });
+                builder.setPositiveButton(getString(R.string.ok),
+                        (dialog, which) -> {
+                            Intent intent = new Intent(getActivity(), ConferenceDetailsActivity.class);
+                            intent.setAction(ConferenceDetailsActivity.ACTION_VIEW_MUC);
+                            intent.putExtra("uuid", conversation.getUuid());
+                            startActivity(intent);
+                            activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+                        });
+                builder.create().show();
+            });
+
+
+            showSnackbar(R.string.no_write_access_in_public_muc, R.string.ok, clickToMuc);
+        }
     }
 
     private void resetUnreadMessagesCount() {
@@ -2455,9 +2487,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     hideSnackbar();
                     break;
             }
-        } else if ((mode == Conversation.MODE_MULTI
-                && !conversation.getMucOptions().participating())) {
-            showSnackbar(R.string.no_write_access_in_public_muc, R.string.ok, clickToMuc);
         } else if (account.hasPendingPgpIntent(conversation)) {
             showSnackbar(R.string.openpgp_messages_found, R.string.decrypt, clickToDecryptListener);
         } else if (mode == Conversation.MODE_SINGLE
@@ -2541,7 +2570,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     binding.unreadCountCustomView.setUnreadCount(conversation.getReceivedMessagesCountSinceUuid(lastMessageUuid));
                 }
                 this.messageListAdapter.notifyDataSetChanged();
-                updateChatMsgHint();
                 if (notifyConversationRead && activity != null) {
                     binding.messagesView.post(this::fireReadEvent);
                 }

@@ -53,6 +53,7 @@ public class SettingsActivity extends XmppActivity implements
     public static final String AUTOMATIC_MESSAGE_DELETION = "automatic_message_deletion";
     public static final String BROADCAST_LAST_ACTIVITY = "last_activity";
     public static final String WARN_UNENCRYPTED_CHAT = "warn_unencrypted_chat";
+    public static final String HIDE_YOU_ARE_NOT_PARTICIPATING = "hide_you_are_not_participating";
     public static final String THEME = "theme";
     public static final String SHOW_DYNAMIC_TAGS = "show_dynamic_tags";
     public static final String OMEMO_SETTING = "omemo";

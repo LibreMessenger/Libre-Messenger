@@ -4274,6 +4274,10 @@ public class XmppConnectionService extends Service {
         return getBooleanPreference(SettingsActivity.WARN_UNENCRYPTED_CHAT, R.bool.warn_unencrypted_chat);
     }
 
+
+    public boolean hideYouAreNotParticipating() {
+        return getBooleanPreference(SettingsActivity.HIDE_YOU_ARE_NOT_PARTICIPATING, R.bool.hide_you_are_not_participating);
+    }
     public boolean broadcastLastActivity() {
         return getBooleanPreference(SettingsActivity.BROADCAST_LAST_ACTIVITY, R.bool.last_activity);
     }
