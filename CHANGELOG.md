@@ -11,6 +11,8 @@
 * share XMPP uri from channel search by long pressing a result
 * jingle file transfer fixes
 * fixed OMEMO self healing (after backup restore) on servers w/o MAM
+* introduce expert setting to perform channel discovery on local server instead of [search.jabber.network](https://search.jabber.network)
+* introduce new orange theme color
 * bug fixes
 
 #### Version 2.2.9
