@@ -9,7 +9,7 @@ jobs:
           key: gradle-{{ checksum "build.gradle" }}-{{ checksum ".circleci/config.yml" }}
       - run: export GRADLE_USER_HOME=$PWD/.gradle
       - run: echo y | sdkmanager "platforms;android-$(sed -n 's,.*compileSdkVersion\s*\([0-9][0-9]*\).*,\1,p' build.gradle)" > /dev/null
-      - run: ./gradlew lintStandardDebug
+      - run: ./gradlew lintGitDebug
       - save_cache:
           paths:
             - .gradle/caches
@@ -28,7 +28,7 @@ jobs:
       - run: export GRADLE_USER_HOME=$PWD/.gradle
       - run: echo y | sdkmanager "platforms;android-$(sed -n 's,.*compileSdkVersion\s*\([0-9][0-9]*\).*,\1,p' build.gradle)" > /dev/null
       # build
-      - run: ./gradlew assembleStandard
+      - run: ./gradlew assembleGit
       - save_cache:
           paths:
             - ~/.android
@@ -52,7 +52,7 @@ jobs:
       - run: sed -i "0,/versionName/s/^\(\s*versionName\).*/\1 \"$(printf '%s-%05d' $(git describe --tag --abbrev=0) $(git rev-list --first-parent --count HEAD))\"/" build.gradle
       - run: cat -n build.gradle
       # build
-      - run: ./gradlew assembleStandard
+      - run: ./gradlew assembleGit
       # publish on nightly fdroid repo
       - run: fdroid nightly
       - save_cache:
