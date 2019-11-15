@@ -422,6 +422,10 @@ public abstract class XmppActivity extends ActionBarActivity {
         return ThemeHelper.isDark(mTheme);
     }
 
+    public boolean isOrangeTheme() {
+        return getStringPreference("theme_color", R.string.theme_color).equals("orange");
+    }
+
     public int getThemeResource(int r_attr_name, int r_drawable_def) {
         int[] attrs = {r_attr_name};
         TypedArray ta = this.getTheme().obtainStyledAttributes(attrs);
@@ -465,6 +469,10 @@ public abstract class XmppActivity extends ActionBarActivity {
 
     protected boolean getBooleanPreference(String name, @BoolRes int res) {
         return getPreferences().getBoolean(name, getResources().getBoolean(res));
+    }
+
+    protected String getStringPreference(String name, int res) {
+        return getPreferences().getString(name, getResources().getString(res));
     }
 
     public void switchToConversation(Conversation conversation) {

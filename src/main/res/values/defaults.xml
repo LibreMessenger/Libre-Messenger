@@ -68,6 +68,7 @@
     <string name="quick_action">recent</string>
     <string name="omemo_setting_default">default_off</string>
     <string name="theme">auto</string>
+    <string name="theme_color">blue</string>
     <string name="default_font_size">small</string>
     <string name="default_channel_discovery">JABBER_NETWORK</string>
 

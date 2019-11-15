@@ -70,6 +70,7 @@ import de.pixart.messenger.ui.text.DividerSpan;
 import de.pixart.messenger.ui.text.QuoteSpan;
 import de.pixart.messenger.ui.util.AvatarWorkerTask;
 import de.pixart.messenger.ui.util.MyLinkify;
+import de.pixart.messenger.ui.util.StyledAttributes;
 import de.pixart.messenger.ui.util.ViewUtil;
 import de.pixart.messenger.ui.widget.ClickableMovementMethod;
 import de.pixart.messenger.ui.widget.CopyTextView;
@@ -199,7 +200,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     }
 
     private int getMessageTextColorPrivate() {
-        return ContextCompat.getColor(activity, R.color.accent);
+        return StyledAttributes.getColor(activity, R.attr.colorAccent);
     }
 
     private int getWarningTextColor(boolean onDark) {
@@ -470,7 +471,12 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             body.insert(end, "\n");
             body.setSpan(new DividerSpan(false), end, end + 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-        int color = darkBackground ? this.getMessageTextColor(darkBackground, false) : ContextCompat.getColor(activity, R.color.bubble);
+        int color;
+        if (activity.isOrangeTheme()) {
+            color = darkBackground ? this.getMessageTextColor(darkBackground, false) : ContextCompat.getColor(activity, R.color.darkorange);
+        } else {
+            color = darkBackground ? this.getMessageTextColor(darkBackground, false) : ContextCompat.getColor(activity, R.color.darkblue);
+        }
         DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
         body.setSpan(new QuoteSpan(color, metrics), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
@@ -539,7 +545,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         } else {
             viewHolder.messageBody.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Body1);
         }
-        viewHolder.messageBody.setHighlightColor(darkBackground ? type == SENT ? ContextCompat.getColor(activity, R.color.accent) : ContextCompat.getColor(activity, R.color.accent) : ContextCompat.getColor(activity, R.color.accent));
+        viewHolder.messageBody.setHighlightColor(darkBackground ? type == SENT ? StyledAttributes.getColor(activity, R.attr.colorAccent) : StyledAttributes.getColor(activity, R.attr.colorAccent) : StyledAttributes.getColor(activity, R.attr.colorAccent));
         viewHolder.messageBody.setTypeface(null, Typeface.NORMAL);
         if (message.getBody() != null) {
             final String nick = UIHelper.getMessageDisplayName(message);
@@ -794,7 +800,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.download_button.setVisibility(View.GONE);
         final RelativeLayout audioPlayer = viewHolder.audioPlayer;
         audioPlayer.setVisibility(View.VISIBLE);
-        AudioPlayer.ViewHolder.get(audioPlayer).setDarkBackground(darkBackground);
+        AudioPlayer.ViewHolder.get(audioPlayer).setTheme(darkBackground, activity.isOrangeTheme());
         this.audioPlayer.init(audioPlayer, message);
     }
 
@@ -994,6 +1000,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
 
         boolean darkBackground = activity.isDarkTheme();
+        boolean isOrange = activity.isOrangeTheme();
 
         if (type == DATE_SEPARATOR) {
             if (UIHelper.today(message.getTimeSent())) {
@@ -1134,7 +1141,11 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         if (type == RECEIVED) {
             if (isInValidSession) {
                 if (message.isPrivateMessage()) {
-                    viewHolder.message_box.setBackgroundResource(darkBackground ? R.drawable.message_bubble_received_light_dark_private : R.drawable.message_bubble_received_light_private);
+                    if (activity.isOrangeTheme()) {
+                        viewHolder.message_box.setBackgroundResource(darkBackground ? R.drawable.message_bubble_received_light_orange_dark_private : R.drawable.message_bubble_received_light_orange_private);
+                    } else {
+                        viewHolder.message_box.setBackgroundResource(darkBackground ? R.drawable.message_bubble_received_light_dark_private : R.drawable.message_bubble_received_light_private);
+                    }
                 } else {
                     viewHolder.message_box.setBackgroundResource(darkBackground ? R.drawable.message_bubble_received_light_dark : R.drawable.message_bubble_received_light);
                 }
@@ -1158,9 +1169,17 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
         if (type == SENT) {
             if (message.isPrivateMessage()) {
-                viewHolder.message_box.setBackgroundResource(activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark_private : R.drawable.message_bubble_sent_private);
+                if (activity.isOrangeTheme()) {
+                    viewHolder.message_box.setBackgroundResource(activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark_orange_private : R.drawable.message_bubble_sent_orange_private);
+                } else {
+                    viewHolder.message_box.setBackgroundResource(activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark_private : R.drawable.message_bubble_sent_private);
+                }
             } else {
-                viewHolder.message_box.setBackgroundResource(activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark : R.drawable.message_bubble_sent);
+                if (activity.isOrangeTheme()) {
+                    viewHolder.message_box.setBackgroundResource(activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark_orange : R.drawable.message_bubble_sent_orange );
+                } else {
+                    viewHolder.message_box.setBackgroundResource(activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark : R.drawable.message_bubble_sent);
+                }
             }
         }
         displayStatus(viewHolder, message, type, darkBackground);

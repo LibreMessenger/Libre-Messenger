@@ -55,6 +55,7 @@ public class SettingsActivity extends XmppActivity implements
     public static final String WARN_UNENCRYPTED_CHAT = "warn_unencrypted_chat";
     public static final String HIDE_YOU_ARE_NOT_PARTICIPATING = "hide_you_are_not_participating";
     public static final String THEME = "theme";
+    public static final String THEME_COLOR = "theme_color";
     public static final String SHOW_DYNAMIC_TAGS = "show_dynamic_tags";
     public static final String OMEMO_SETTING = "omemo";
     public static final String SHOW_FOREGROUND_SERVICE = "show_foreground_service";
@@ -506,7 +507,7 @@ public class SettingsActivity extends XmppActivity implements
             xmppConnectionService.reinitializeMuclumbusService();
         } else if (name.equals(AUTOMATIC_MESSAGE_DELETION)) {
             xmppConnectionService.expireOldMessages(true);
-        } else if (name.equals(THEME)) {
+        } else if (name.equals(THEME) || name.equals(THEME_COLOR)) {
             updateTheme();
         }
     }

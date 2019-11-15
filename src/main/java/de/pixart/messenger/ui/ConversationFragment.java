@@ -1184,7 +1184,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             this.binding.textinput.setCustomInsertionActionModeCallback(new EditMessageActionModeCallback(this.binding.textinput));
         }
-        
+
         return binding.getRoot();
     }
 
@@ -3095,7 +3095,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     }
 
     private int messageInputBubble(final boolean isPrivate) {
-        return isPrivate ? activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark_private : R.drawable.message_bubble_sent_private : activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark : R.drawable.message_bubble_sent;
+        return isPrivate ? activity.isOrangeTheme() ? activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark_orange_private : R.drawable.message_bubble_sent_orange_private : activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark_private : R.drawable.message_bubble_sent_private : activity.isOrangeTheme() ? activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark_orange : R.drawable.message_bubble_sent_orange : activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark : R.drawable.message_bubble_sent;
     }
 
     public Conversation getConversation() {

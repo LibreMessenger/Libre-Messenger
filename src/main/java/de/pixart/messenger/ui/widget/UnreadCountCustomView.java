@@ -11,6 +11,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import de.pixart.messenger.R;
+import de.pixart.messenger.ui.util.StyledAttributes;
 
 public class UnreadCountCustomView extends View {
 
@@ -20,31 +21,31 @@ public class UnreadCountCustomView extends View {
 
     public UnreadCountCustomView(Context context) {
         super(context);
-        init();
+        init(context);
     }
 
     public UnreadCountCustomView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initXMLAttrs(context, attrs);
-        init();
+        init(context);
     }
 
     public UnreadCountCustomView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initXMLAttrs(context, attrs);
-        init();
+        init(context);
     }
 
     private void initXMLAttrs(Context context, AttributeSet attrs) {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.UnreadCountCustomView);
         //setBackgroundColor(a.getColor(a.getIndex(0), ContextCompat.getColor(context, R.color.accent)));
-        setBackgroundColor(ContextCompat.getColor(context, R.color.accent));
+        setBackgroundColor(StyledAttributes.getColor(context, R.attr.colorAccent));
         a.recycle();
     }
 
-    void init() {
+    void init(Context context) {
         paint = new Paint();
-        paint.setColor(backgroundColor);
+        paint.setColor(StyledAttributes.getColor(context, R.attr.colorAccent));
         paint.setAntiAlias(true);
         textPaint = new Paint();
         textPaint.setColor(Color.WHITE);

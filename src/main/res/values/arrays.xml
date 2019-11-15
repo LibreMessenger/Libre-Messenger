@@ -10,6 +10,14 @@
         <item>dark</item>
         <item>auto</item>
     </string-array>
+    <string-array name="themecolors">
+        <item>@string/pref_theme_blue</item>
+        <item>@string/pref_theme_orange</item>
+    </string-array>
+    <string-array name="themecolor_values">
+        <item>blue</item>
+        <item>orange</item>
+    </string-array>
 
     <string-array name="filesizes">
         <item>@string/never</item>

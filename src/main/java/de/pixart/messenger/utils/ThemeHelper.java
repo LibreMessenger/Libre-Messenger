@@ -35,11 +35,13 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.preference.PreferenceManager;
-import androidx.annotation.StyleRes;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.content.ContextCompat;
 import android.util.TypedValue;
 import android.widget.TextView;
+
+import androidx.annotation.StyleRes;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import de.pixart.messenger.R;
 import de.pixart.messenger.ui.SettingsActivity;
@@ -56,12 +58,27 @@ public class ThemeHelper {
         } else {
             dark = sharedPreferences.getString(SettingsActivity.THEME, resources.getString(R.string.theme)).equals("dark");
         }
+        final String themeColor = sharedPreferences.getString("theme_color", resources.getString(R.string.theme_color));
         final String fontSize = sharedPreferences.getString("font_size", resources.getString(R.string.default_font_size));
-        switch (fontSize) {
-            case "medium":
-                return dark ? R.style.ConversationsTheme_Dark_Medium : R.style.ConversationsTheme_Medium;
-            case "large":
-                return dark ? R.style.ConversationsTheme_Dark_Large : R.style.ConversationsTheme_Large;
+        switch (themeColor) {
+            case "c":
+                switch (fontSize) {
+                    case "medium":
+                        return dark ? R.style.ConversationsTheme_Dark_Medium : R.style.ConversationsTheme_Medium;
+                    case "large":
+                        return dark ? R.style.ConversationsTheme_Dark_Large : R.style.ConversationsTheme_Large;
+                    default:
+                        return dark ? R.style.ConversationsTheme_Dark : R.style.ConversationsTheme;
+                }
+            case "orange":
+                switch (fontSize) {
+                    case "medium":
+                        return dark ? R.style.ConversationsTheme_Orange_Dark_Medium : R.style.ConversationsTheme_Orange_Medium;
+                    case "large":
+                        return dark ? R.style.ConversationsTheme_Orange_Dark_Large : R.style.ConversationsTheme_Orange_Large;
+                    default:
+                        return dark ? R.style.ConversationsTheme_Orange_Dark : R.style.ConversationsTheme_Orange;
+                }
             default:
                 return dark ? R.style.ConversationsTheme_Dark : R.style.ConversationsTheme;
         }
@@ -85,11 +102,26 @@ public class ThemeHelper {
         final Resources resources = context.getResources();
         final boolean dark = sharedPreferences.getString(SettingsActivity.THEME, resources.getString(R.string.theme)).equals("dark");
         final String fontSize = sharedPreferences.getString("font_size", resources.getString(R.string.default_font_size));
-        switch (fontSize) {
-            case "medium":
-                return dark ? R.style.ConversationsTheme_Dark_Dialog_Medium : R.style.ConversationsTheme_Dialog_Medium;
-            case "large":
-                return dark ? R.style.ConversationsTheme_Dark_Dialog_Large : R.style.ConversationsTheme_Dialog_Large;
+        final String themeColor = sharedPreferences.getString("theme_color", resources.getString(R.string.theme_color));
+        switch (themeColor) {
+            case "blue":
+                switch (fontSize) {
+                    case "medium":
+                        return dark ? R.style.ConversationsTheme_Dark_Dialog_Medium : R.style.ConversationsTheme_Dialog_Medium;
+                    case "large":
+                        return dark ? R.style.ConversationsTheme_Dark_Dialog_Large : R.style.ConversationsTheme_Dialog_Large;
+                    default:
+                        return dark ? R.style.ConversationsTheme_Dark_Dialog : R.style.ConversationsTheme_Dialog;
+                }
+            case "orange":
+                switch (fontSize) {
+                    case "medium":
+                        return dark ? R.style.ConversationsTheme_Orange_Dark_Dialog_Medium : R.style.ConversationsTheme_Orange_Dialog_Medium;
+                    case "large":
+                        return dark ? R.style.ConversationsTheme_Orange_Dark_Dialog_Large : R.style.ConversationsTheme_Orange_Dialog_Large;
+                    default:
+                        return dark ? R.style.ConversationsTheme_Orange_Dark_Dialog : R.style.ConversationsTheme_Orange_Dialog;
+                }
             default:
                 return dark ? R.style.ConversationsTheme_Dark_Dialog : R.style.ConversationsTheme_Dialog;
         }
@@ -100,6 +132,9 @@ public class ThemeHelper {
             case R.style.ConversationsTheme_Dark:
             case R.style.ConversationsTheme_Dark_Large:
             case R.style.ConversationsTheme_Dark_Medium:
+            case R.style.ConversationsTheme_Orange_Dark:
+            case R.style.ConversationsTheme_Orange_Dark_Large:
+            case R.style.ConversationsTheme_Orange_Dark_Medium:
                 return true;
             default:
                 return false;

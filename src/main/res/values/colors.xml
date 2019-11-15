@@ -3,6 +3,13 @@
     <color name="realgreen">#ff388e3c</color>  <!-- green 700 -->
     <color name="primary">#ff0D47A1</color>  <!-- blue 900 -->
     <color name="primary_dark">#ff1A237E</color>  <!-- indigo 900 -->
+
+    <color name="primary_orange">#ffe59400</color>
+    <color name="primary_dark_orange">#ffB27300</color>
+    <color name="primary_orange_dark">#ffce8500</color>
+    <color name="primary_dark_orange_dark">#ffa06700</color>
+    <color name="accent_orange">#ffffa500 </color>
+
     <color name="accent">#ff0091ea</color> <!-- light blue accent -->
     <color name="black">#ff000000</color>
     <color name="black87">#de000309</color>
@@ -32,18 +39,20 @@
     <color name="red500">#fff44336</color>  <!-- red 500 -->
     <color name="red700">#ffd50000</color> <!-- red 700 -->
     <color name="orange500">#ffff9800</color> <!-- orange 500 -->
-    <color name="bubble">#ff37474f</color> <!-- blue grey 800 -->
     <color name="realwhite">#ffffffff</color> <!-- white -->
 
     <!-- bubbles -->
-    <color name="lightwhite">#fafafa</color> <!-- green 50 -->
-    <color name="lightblue">#bbdefb</color> <!-- blue 100 -->
+    <color name="lightwhite">#fffafafa</color> <!-- green 50 -->
+    <color name="lightblue">#ffbbdefb</color> <!-- blue 100 -->
     <color name="lightred">#ffffcdd2</color> <!-- red 100 -->
     <color name="lightgreen">#ffc8e6c9</color> <!-- green 100 -->
     <color name="darkwhite">#ff424242</color> <!-- grey 800 -->
     <color name="darkblue">#ff37474f</color> <!-- blue grey 800 -->
     <color name="darkred">#ffb71c1c</color>  <!-- red 900 -->
     <color name="darkgreen">#ff1b5e20</color>  <!-- green 900 -->
+
+    <color name="lightorange">#fffff6e5</color> <!-- blue 100 -->
+    <color name="darkorange">#ff4c3100</color>
 
     <color name="online">#ff388e3c</color> <!-- green 700 -->
     <color name="away">#ffff9800</color> <!-- orange 500 -->
