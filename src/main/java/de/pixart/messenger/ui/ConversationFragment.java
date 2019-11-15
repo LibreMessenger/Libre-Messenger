@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,7 +23,10 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -927,12 +931,12 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             this.binding.textInputHint.setVisibility(View.VISIBLE);
             this.binding.textInputHint.setText(R.string.send_corrected_message);
             this.binding.textinput.setHint(R.string.send_corrected_message);
-        } else if (multi && conversation.getNextCounterpart() != null) {
+        } else if (isPrivateMessage()) {
             this.binding.textinput.setHint(R.string.send_unencrypted_message);
             this.binding.textInputHint.setVisibility(View.VISIBLE);
-            this.binding.textInputHint.setText(getString(
-                    R.string.send_private_message_to,
-                    conversation.getNextCounterpart().getResource()));
+            SpannableStringBuilder hint = new SpannableStringBuilder(getString(R.string.send_private_message_to, conversation.getNextCounterpart().getResource()));
+            hint.setSpan(new StyleSpan(Typeface.BOLD), 0, hint.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            this.binding.textInputHint.setText(hint);
         } else if (multi && !conversation.getMucOptions().participating()) {
             this.binding.textInputHint.setVisibility(View.VISIBLE);
             this.binding.textInputHint.setText(R.string.ask_for_writeaccess);
@@ -942,6 +946,10 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             this.binding.textinput.setHint(UIHelper.getMessageHint(getActivity(), conversation));
             getActivity().invalidateOptionsMenu();
         }
+    }
+
+    private boolean isPrivateMessage() {
+        return conversation != null && conversation.getMode() == Conversation.MODE_MULTI && conversation.getNextCounterpart() != null;
     }
 
     public void setupIme() {
@@ -1156,7 +1164,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         binding.textinput.addTextChangedListener(new StylingHelper.MessageEditorStyler(binding.textinput));
         binding.textinput.setOnEditorActionListener(mEditorActionListener);
         binding.textinput.setRichContentListener(new String[]{"image/*"}, mEditorContentListener);
-        binding.messageInputBox.setBackgroundResource(messageInputBubble());
+        binding.messageInputBox.setBackgroundResource(messageInputBubble(false));
 
         binding.textSendButton.setOnClickListener(this.mSendButtonListener);
         binding.textSendButton.setOnLongClickListener(this.mSendButtonLongListener);
@@ -1172,13 +1180,11 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         messageListAdapter.setOnContactPictureLongClicked(this);
         messageListAdapter.setOnQuoteListener(text -> quoteText(text, getUsername(selectedMessage)));
         binding.messagesView.setAdapter(messageListAdapter);
-
         registerForContextMenu(binding.messagesView);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             this.binding.textinput.setCustomInsertionActionModeCallback(new EditMessageActionModeCallback(this.binding.textinput));
         }
-
+        
         return binding.getRoot();
     }
 
@@ -2632,6 +2638,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 
     public void updateSendButton() {
         updateChatMsgHint();
+        binding.messageInputBox.setBackgroundResource(messageInputBubble(isPrivateMessage()));
         boolean hasAttachments = mediaPreviewAdapter != null && mediaPreviewAdapter.hasAttachments();
         boolean useSendButtonToIndicateStatus = activity != null && PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("send_button_status", getResources().getBoolean(R.bool.send_button_status));
         final Conversation c = this.conversation;
@@ -3087,8 +3094,8 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         }
     }
 
-    private int messageInputBubble() {
-        return activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark : R.drawable.message_bubble_sent;
+    private int messageInputBubble(final boolean isPrivate) {
+        return isPrivate ? activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark_private : R.drawable.message_bubble_sent_private : activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark : R.drawable.message_bubble_sent;
     }
 
     public Conversation getConversation() {

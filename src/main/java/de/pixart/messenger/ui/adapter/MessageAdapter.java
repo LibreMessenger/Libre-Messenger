@@ -198,6 +198,10 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
     }
 
+    private int getMessageTextColorPrivate() {
+        return ContextCompat.getColor(activity, R.color.accent);
+    }
+
     private int getWarningTextColor(boolean onDark) {
         if (onDark) {
             return ContextCompat.getColor(activity, R.color.white70);
@@ -574,12 +578,11 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                     int privateMarkerIndex = privateMarker.length();
                     if (startsWithQuote) {
                         body.insert(privateMarkerIndex, "\n\n");
-                        body.setSpan(new DividerSpan(false), privateMarkerIndex, privateMarkerIndex + 2,
-                                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        body.setSpan(new DividerSpan(false), privateMarkerIndex, privateMarkerIndex + 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     } else {
                         body.insert(privateMarkerIndex, " ");
                     }
-                    body.setSpan(new ForegroundColorSpan(getMessageTextColor(darkBackground, false)), 0, privateMarkerIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    body.setSpan(new ForegroundColorSpan(getMessageTextColorPrivate()), 0, privateMarkerIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     body.setSpan(new StyleSpan(Typeface.BOLD), 0, privateMarkerIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     if (hasMeCommand) {
                         body.setSpan(new StyleSpan(Typeface.BOLD_ITALIC), privateMarkerIndex + 1, privateMarkerIndex + 1 + nick.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -879,7 +882,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 body.append("\n");
                 body.append(messageBody);
             }
-            body.setSpan(new ForegroundColorSpan(getMessageTextColor(darkBackground, false)), 0, privateMarker.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            body.setSpan(new ForegroundColorSpan(getMessageTextColorPrivate()), 0, privateMarker.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             body.setSpan(new StyleSpan(Typeface.BOLD), 0, privateMarker.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             MyLinkify.addLinks(body, false);
             viewHolder.messageBody.setAutoLinkMask(0);
@@ -1132,11 +1135,19 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
         if (type == RECEIVED) {
             if (isInValidSession) {
-                viewHolder.message_box.setBackgroundResource(darkBackground ? R.drawable.message_bubble_received_light_dark : R.drawable.message_bubble_received_light);
+                if (message.isPrivateMessage()) {
+                    viewHolder.message_box.setBackgroundResource(darkBackground ? R.drawable.message_bubble_received_light_dark_private : R.drawable.message_bubble_received_light_private);
+                } else {
+                    viewHolder.message_box.setBackgroundResource(darkBackground ? R.drawable.message_bubble_received_light_dark : R.drawable.message_bubble_received_light);
+                }
                 viewHolder.encryption.setVisibility(View.GONE);
                 viewHolder.encryption.setTextColor(this.getMessageTextColor(darkBackground, false));
             } else {
-                viewHolder.message_box.setBackgroundResource(darkBackground ? R.drawable.message_bubble_received_warning_dark : R.drawable.message_bubble_received_warning);
+                if (message.isPrivateMessage()) {
+                    viewHolder.message_box.setBackgroundResource(darkBackground ? R.drawable.message_bubble_received_warning_dark : R.drawable.message_bubble_received_warning);
+                } else {
+                    viewHolder.message_box.setBackgroundResource(darkBackground ? R.drawable.message_bubble_received_warning_dark : R.drawable.message_bubble_received_warning);
+                }
                 viewHolder.encryption.setVisibility(View.VISIBLE);
                 viewHolder.encryption.setTextColor(this.getWarningTextColor(darkBackground));
                 if (omemoEncryption && !message.isTrusted()) {
@@ -1148,7 +1159,11 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
 
         if (type == SENT) {
-            viewHolder.message_box.setBackgroundResource(activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark : R.drawable.message_bubble_sent);
+            if (message.isPrivateMessage()) {
+                viewHolder.message_box.setBackgroundResource(activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark_private : R.drawable.message_bubble_sent_private);
+            } else {
+                viewHolder.message_box.setBackgroundResource(activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark : R.drawable.message_bubble_sent);
+            }
         }
         displayStatus(viewHolder, message, type, darkBackground);
         return view;
