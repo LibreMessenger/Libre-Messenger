@@ -4506,7 +4506,7 @@ public class XmppConnectionService extends Service {
             for (final Contact contact : account.getRoster().getContacts()) {
                 if (contact.showInRoster()) {
                     final String server = contact.getServer();
-                    if (server != null && !hosts.contains(server)) {
+                    if (server != null) {
                         hosts.add(server);
                     }
                 }

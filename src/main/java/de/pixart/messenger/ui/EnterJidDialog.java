@@ -2,15 +2,16 @@ package de.pixart.messenger.ui;
 
 import android.app.Activity;
 import android.app.Dialog;
-import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
-import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ArrayAdapter;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.DialogFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +29,11 @@ import rocks.xmpp.addr.Jid;
 
 public class EnterJidDialog extends DialogFragment implements OnBackendConnected, TextWatcher {
 
+
     private static final List<String> SUSPICIOUS_DOMAINS = Arrays.asList("conference", "muc", "room", "rooms", "chat");
+
+    private OnEnterJidDialogPositiveListener mListener = null;
+
     private static final String TITLE_KEY = "title";
     private static final String POSITIVE_BUTTON_KEY = "positive_button";
     private static final String PREFILLED_JID_KEY = "prefilled_jid";
@@ -38,11 +43,8 @@ public class EnterJidDialog extends DialogFragment implements OnBackendConnected
     private static final String ACCOUNTS_LIST_KEY = "activated_accounts_list";
     private static final String SANITY_CHECK_JID = "sanity_check_jid";
 
-    private OnEnterJidDialogPositiveListener mListener = null;
-
     private KnownHostsAdapter knownHostsAdapter;
     private Collection<String> whitelistedDomains = Collections.emptyList();
-
 
     private EnterJidDialogBinding binding;
     private AlertDialog dialog;
@@ -101,7 +103,6 @@ public class EnterJidDialog extends DialogFragment implements OnBackendConnected
                 binding.jid.setCursorVisible(false);
             }
         }
-
         sanityCheckJid = getArguments().getBoolean(SANITY_CHECK_JID, false);
 
         DelayedHintHelper.setHint(R.string.account_settings_example_jabber_id, binding.jid);
@@ -135,6 +136,7 @@ public class EnterJidDialog extends DialogFragment implements OnBackendConnected
         View.OnClickListener dialogOnClick = v -> {
             handleEnter(binding, account);
         };
+
         binding.jid.setOnEditorActionListener((v, actionId, event) -> {
             handleEnter(binding, account);
             return true;
@@ -195,25 +197,6 @@ public class EnterJidDialog extends DialogFragment implements OnBackendConnected
         }
     }
 
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-        if (issuedWarning) {
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setText(R.string.add);
-            binding.jidLayout.setError(null);
-            issuedWarning = false;
-        }
-    }
-
     public void setOnEnterJidDialogPositiveListener(OnEnterJidDialogPositiveListener listener) {
         this.mListener = listener;
     }
@@ -233,12 +216,22 @@ public class EnterJidDialog extends DialogFragment implements OnBackendConnected
     }
 
     @Override
-    public void onDestroyView() {
-        Dialog dialog = getDialog();
-        if (dialog != null && getRetainInstance()) {
-            dialog.setDismissMessage(null);
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        if (issuedWarning) {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setText(R.string.add);
+            binding.jidLayout.setError(null);
+            issuedWarning = false;
         }
-        super.onDestroyView();
     }
 
     public interface OnEnterJidDialogPositiveListener {
@@ -255,6 +248,15 @@ public class EnterJidDialog extends DialogFragment implements OnBackendConnected
         public String toString() {
             return msg;
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        Dialog dialog = getDialog();
+        if (dialog != null && getRetainInstance()) {
+            dialog.setDismissMessage(null);
+        }
+        super.onDestroyView();
     }
 
     private boolean suspiciousSubDomain(String domain) {
