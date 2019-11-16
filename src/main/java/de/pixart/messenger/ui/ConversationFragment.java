@@ -1164,7 +1164,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         binding.textinput.addTextChangedListener(new StylingHelper.MessageEditorStyler(binding.textinput));
         binding.textinput.setOnEditorActionListener(mEditorActionListener);
         binding.textinput.setRichContentListener(new String[]{"image/*"}, mEditorContentListener);
-        binding.messageInputBox.setBackgroundResource(messageInputBubble(false));
 
         binding.textSendButton.setOnClickListener(this.mSendButtonListener);
         binding.textSendButton.setOnLongClickListener(this.mSendButtonLongListener);
@@ -2638,7 +2637,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 
     public void updateSendButton() {
         updateChatMsgHint();
-        binding.messageInputBox.setBackgroundResource(messageInputBubble(isPrivateMessage()));
+        messageListAdapter.setBubbleBackgroundColor(binding.messageInputBox, activity.getThemeColor(), 0, isPrivateMessage(), true);
         boolean hasAttachments = mediaPreviewAdapter != null && mediaPreviewAdapter.hasAttachments();
         boolean useSendButtonToIndicateStatus = activity != null && PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("send_button_status", getResources().getBoolean(R.bool.send_button_status));
         final Conversation c = this.conversation;
@@ -3092,10 +3091,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         if (pendingMediaPreviews.clear()) {
             Log.e(Config.LOGTAG, "cleared pending media previews");
         }
-    }
-
-    private int messageInputBubble(final boolean isPrivate) {
-        return isPrivate ? activity.isOrangeTheme() ? activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark_orange_private : R.drawable.message_bubble_sent_orange_private : activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark_private : R.drawable.message_bubble_sent_private : activity.isOrangeTheme() ? activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark_orange : R.drawable.message_bubble_sent_orange : activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark : R.drawable.message_bubble_sent;
     }
 
     public Conversation getConversation() {

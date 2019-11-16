@@ -26,7 +26,7 @@
         <item name="EmojiColor">@color/realblack</item>
 
         <item name="color_bubble_light">@color/lightwhite</item>
-        <item name="color_bubble_blue">@color/lightblue</item>
+        <item name="color_bubble_dark">@color/lightblue</item>
         <item name="color_bubble_date">@color/lightgreen</item>
         <item name="color_bubble_warning">@color/lightred</item>
 
@@ -185,7 +185,7 @@
         <item name="EmojiColor">@color/realwhite</item>
 
         <item name="color_bubble_light">@color/darkwhite</item>
-        <item name="color_bubble_blue">@color/darkblue</item>
+        <item name="color_bubble_dark">@color/darkblue</item>
         <item name="color_bubble_date">@color/darkgreen</item>
         <item name="color_bubble_warning">@color/darkred</item>
 
@@ -325,6 +325,11 @@
         <item name="colorAccent">@color/accent_orange</item>
         <item name="colorControlNormal">@color/accent_orange</item>
         <item name="colorControlActivated">@color/accent_orange</item>
+
+        <item name="color_bubble_light">@color/lightorange</item>
+        <item name="color_bubble_dark">@color/lightorange2</item>
+        <item name="color_bubble_date">@color/darkred</item>
+        <item name="color_bubble_warning">@color/darkgreen</item>
     </style>
 
     <style name="ConversationsTheme.Orange.Dark" parent="ConversationsTheme.Dark">
@@ -333,6 +338,11 @@
         <item name="colorAccent">@color/accent_orange</item>
         <item name="colorControlNormal">@color/accent_orange</item>
         <item name="colorControlActivated">@color/accent_orange</item>
+
+        <item name="color_bubble_light">@color/middleorange</item>
+        <item name="color_bubble_dark">@color/darkorange</item>
+        <item name="color_bubble_date">@color/darkred</item>
+        <item name="color_bubble_warning">@color/darkgreen</item>
     </style>
 
     <style name="ConversationsTheme.Dialog" parent="@style/Theme.AppCompat.Light.Dialog">

@@ -8,7 +8,7 @@
     <color name="primary_dark_orange">#ffB27300</color>
     <color name="primary_orange_dark">#ffce8500</color>
     <color name="primary_dark_orange_dark">#ffa06700</color>
-    <color name="accent_orange">#ffffa500 </color>
+    <color name="accent_orange">#ffffa500</color>
 
     <color name="accent">#ff0091ea</color> <!-- light blue accent -->
     <color name="black">#ff000000</color>
@@ -51,7 +51,9 @@
     <color name="darkred">#ffb71c1c</color>  <!-- red 900 -->
     <color name="darkgreen">#ff1b5e20</color>  <!-- green 900 -->
 
-    <color name="lightorange">#fffff6e5</color> <!-- blue 100 -->
+    <color name="lightorange">#ffffb732</color>
+    <color name="lightorange2">#ffcc8400</color>
+    <color name="middleorange">#ff996300</color>
     <color name="darkorange">#ff4c3100</color>
 
     <color name="online">#ff388e3c</color> <!-- green 700 -->

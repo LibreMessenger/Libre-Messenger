@@ -25,6 +25,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
@@ -50,6 +51,7 @@ import android.widget.Toast;
 
 import androidx.annotation.BoolRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -424,6 +426,19 @@ public abstract class XmppActivity extends ActionBarActivity {
 
     public boolean isOrangeTheme() {
         return getStringPreference("theme_color", R.string.theme_color).equals("orange");
+    }
+
+    public String getThemeColor() {
+        return getStringPreference("theme_color", R.string.theme_color);
+    }
+
+    public void setBubbleColor(final View v, final int backgroundColor, final int borderColor) {
+        GradientDrawable shape = (GradientDrawable)v.getBackground();
+        shape.setColor(backgroundColor);
+        if (borderColor != -1) {
+            shape.setStroke(2, borderColor);
+        }
+        v.setBackground(shape);
     }
 
     public int getThemeResource(int r_attr_name, int r_drawable_def) {

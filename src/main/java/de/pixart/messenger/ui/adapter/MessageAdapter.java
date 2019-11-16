@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.text.Editable;
@@ -82,6 +83,7 @@ import de.pixart.messenger.utils.Emoticons;
 import de.pixart.messenger.utils.GeoHelper;
 import de.pixart.messenger.utils.RichPreview;
 import de.pixart.messenger.utils.StylingHelper;
+import de.pixart.messenger.utils.ThemeHelper;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.mam.MamReference;
 import pl.droidsonroids.gif.GifImageView;
@@ -726,7 +728,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             viewHolder.richlinkview.setLayoutParams(layoutParams);
             final String url = body.toString();
             String weburl;
-            final String lcUrl = url.toLowerCase(Locale.US);
+            final String lcUrl = url.toLowerCase(Locale.US).trim();
             if (lcUrl.startsWith("http://") || lcUrl.startsWith("https://")) {
                 weburl = removeTrailingBracket(url);
             } else {
@@ -872,6 +874,11 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     private void toggleWhisperInfo(ViewHolder viewHolder, final Message message, final boolean includeBody, final boolean darkBackground) {
         SpannableStringBuilder messageBody = new SpannableStringBuilder(replaceYoutube(activity.getApplicationContext(), message.getBody()));
         Editable body;
+        if (darkBackground) {
+            viewHolder.messageBody.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Body1_OnDark);
+        } else {
+            viewHolder.messageBody.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Body1);
+        }
         if (message.isPrivateMessage()) {
             final String privateMarker;
             if (message.getStatus() <= Message.STATUS_RECEIVED) {
@@ -1000,7 +1007,6 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
 
         boolean darkBackground = activity.isDarkTheme();
-        boolean isOrange = activity.isOrangeTheme();
 
         if (type == DATE_SEPARATOR) {
             if (UIHelper.today(message.getTimeSent())) {
@@ -1140,23 +1146,11 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
         if (type == RECEIVED) {
             if (isInValidSession) {
-                if (message.isPrivateMessage()) {
-                    if (activity.isOrangeTheme()) {
-                        viewHolder.message_box.setBackgroundResource(darkBackground ? R.drawable.message_bubble_received_light_orange_dark_private : R.drawable.message_bubble_received_light_orange_private);
-                    } else {
-                        viewHolder.message_box.setBackgroundResource(darkBackground ? R.drawable.message_bubble_received_light_dark_private : R.drawable.message_bubble_received_light_private);
-                    }
-                } else {
-                    viewHolder.message_box.setBackgroundResource(darkBackground ? R.drawable.message_bubble_received_light_dark : R.drawable.message_bubble_received_light);
-                }
+                setBubbleBackgroundColor(viewHolder.message_box, activity.getThemeColor(), type, message.isPrivateMessage(), isInValidSession);
                 viewHolder.encryption.setVisibility(View.GONE);
                 viewHolder.encryption.setTextColor(this.getMessageTextColor(darkBackground, false));
             } else {
-                if (message.isPrivateMessage()) {
-                    viewHolder.message_box.setBackgroundResource(darkBackground ? R.drawable.message_bubble_received_warning_dark : R.drawable.message_bubble_received_warning);
-                } else {
-                    viewHolder.message_box.setBackgroundResource(darkBackground ? R.drawable.message_bubble_received_warning_dark : R.drawable.message_bubble_received_warning);
-                }
+                setBubbleBackgroundColor(viewHolder.message_box, activity.getThemeColor(), type, message.isPrivateMessage(), isInValidSession);
                 viewHolder.encryption.setVisibility(View.VISIBLE);
                 viewHolder.encryption.setTextColor(this.getWarningTextColor(darkBackground));
                 if (omemoEncryption && !message.isTrusted()) {
@@ -1168,19 +1162,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
 
         if (type == SENT) {
-            if (message.isPrivateMessage()) {
-                if (activity.isOrangeTheme()) {
-                    viewHolder.message_box.setBackgroundResource(activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark_orange_private : R.drawable.message_bubble_sent_orange_private);
-                } else {
-                    viewHolder.message_box.setBackgroundResource(activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark_private : R.drawable.message_bubble_sent_private);
-                }
-            } else {
-                if (activity.isOrangeTheme()) {
-                    viewHolder.message_box.setBackgroundResource(activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark_orange : R.drawable.message_bubble_sent_orange );
-                } else {
-                    viewHolder.message_box.setBackgroundResource(activity.isDarkTheme() ? R.drawable.message_bubble_sent_dark : R.drawable.message_bubble_sent);
-                }
-            }
+            setBubbleBackgroundColor(viewHolder.message_box, activity.getThemeColor(), type, message.isPrivateMessage(), isInValidSession);
         }
         displayStatus(viewHolder, message, type, darkBackground);
         return view;
@@ -1372,6 +1354,38 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
+        }
+    }
+
+    public void setBubbleBackgroundColor(final View viewHolder, final String themeColor, final int type, final boolean isPrivateMessage, final boolean isInValidSession) {
+        if (type == RECEIVED) {
+            if (isInValidSession) {
+                if (isPrivateMessage) {
+                    viewHolder.setBackgroundResource(R.drawable.message_bubble_received_light_private);
+                    activity.setBubbleColor(viewHolder, StyledAttributes.getColor(activity, R.attr.color_bubble_light), StyledAttributes.getColor(activity, R.attr.colorAccent));
+                } else {
+                    viewHolder.setBackgroundResource(R.drawable.message_bubble_received_light);
+                    activity.setBubbleColor(viewHolder, StyledAttributes.getColor(activity, R.attr.color_bubble_light), -1);
+                }
+            } else {
+                if (isPrivateMessage) {
+                    viewHolder.setBackgroundResource(R.drawable.message_bubble_received_warning_private);
+                    activity.setBubbleColor(viewHolder, StyledAttributes.getColor(activity, R.attr.color_bubble_warning), StyledAttributes.getColor(activity, R.attr.colorAccent));
+                } else {
+                    viewHolder.setBackgroundResource(R.drawable.message_bubble_received_warning);
+                    activity.setBubbleColor(viewHolder, StyledAttributes.getColor(activity, R.attr.color_bubble_warning), -1);
+                }
+            }
+        }
+
+        if (type == SENT) {
+            if (isPrivateMessage) {
+                viewHolder.setBackgroundResource(R.drawable.message_bubble_sent_private);
+                activity.setBubbleColor(viewHolder, StyledAttributes.getColor(activity, R.attr.color_bubble_dark), StyledAttributes.getColor(activity, R.attr.colorAccent));
+            } else {
+                viewHolder.setBackgroundResource(R.drawable.message_bubble_sent);
+                activity.setBubbleColor(viewHolder, StyledAttributes.getColor(activity, R.attr.color_bubble_dark), -1);
+            }
         }
     }
 }

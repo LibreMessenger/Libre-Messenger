@@ -61,7 +61,7 @@ public class ThemeHelper {
         final String themeColor = sharedPreferences.getString("theme_color", resources.getString(R.string.theme_color));
         final String fontSize = sharedPreferences.getString("font_size", resources.getString(R.string.default_font_size));
         switch (themeColor) {
-            case "c":
+            case "blue":
                 switch (fontSize) {
                     case "medium":
                         return dark ? R.style.ConversationsTheme_Dark_Medium : R.style.ConversationsTheme_Medium;

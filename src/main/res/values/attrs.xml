@@ -113,7 +113,7 @@
     <attr name="popupOverlayStyle" format="reference" />
 
     <attr name="color_bubble_light" format="reference|color" />
-    <attr name="color_bubble_blue" format="reference|color" />
+    <attr name="color_bubble_dark" format="reference|color" />
     <attr name="color_bubble_date" format="reference|color" />
     <attr name="color_bubble_warning" format="reference|color" />
 
