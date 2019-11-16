@@ -93,6 +93,11 @@
             android:key="show_own_accounts"
             android:summary="@string/pref_show_own_accounts_summary"
             android:title="@string/pref_show_own_accounts" />
+        <CheckBoxPreference
+            android:defaultValue="@bool/start_searching"
+            android:key="start_searching"
+            android:summary="@string/pref_start_search_summary"
+            android:title="@string/pref_start_search" />
         <Preference
             android:key="show_intro"
             android:summary="@string/pref_show_intro_summary"
@@ -473,11 +478,6 @@
                 android:title="@string/pref_show_connection_options" />
         </PreferenceCategory>
         <PreferenceCategory android:title="@string/pref_input_options">
-            <CheckBoxPreference
-                android:defaultValue="@bool/start_searching"
-                android:key="start_searching"
-                android:summary="@string/pref_start_search_summary"
-                android:title="@string/pref_start_search" />
             <CheckBoxPreference
                 android:defaultValue="@bool/enter_is_send"
                 android:key="enter_is_send"
