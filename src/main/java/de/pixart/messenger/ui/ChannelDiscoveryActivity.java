@@ -144,7 +144,6 @@ public class ChannelDiscoveryActivity extends XmppActivity implements MenuItem.O
     private void toggleLoadingScreen() {
         adapter.submitList(Collections.emptyList());
         binding.progressBar.setVisibility(View.VISIBLE);
-        binding.list.setBackgroundColor(StyledAttributes.getColor(this, R.attr.color_background_primary));
     }
 
     @Override
@@ -175,7 +174,6 @@ public class ChannelDiscoveryActivity extends XmppActivity implements MenuItem.O
     private void holdLoading() {
         adapter.submitList(Collections.emptyList());
         binding.progressBar.setVisibility(View.GONE);
-        binding.list.setBackgroundColor(StyledAttributes.getColor(this, R.attr.color_background_primary));
     }
 
     @Override
