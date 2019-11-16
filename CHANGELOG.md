@@ -1,6 +1,6 @@
 ### Changelog
 
-#### WIP
+#### Version 2.3.0
 * show name in quotes (PAM)
 * introduce theme based on systems theme (PAM)
 * increase default video quality (720p instead of 360p)
@@ -9,10 +9,9 @@
 * introduce app intro and some help screens (PAM)
 * fixed minor security issues
 * share XMPP uri from channel search by long pressing a result
-* jingle file transfer fixes
 * fixed OMEMO self healing (after backup restore) on servers w/o MAM
 * introduce expert setting to perform channel discovery on local server instead of [search.jabber.network](https://search.jabber.network)
-* introduce new orange theme color
+* introduce new orange theme color (PAM)
 * bug fixes
 
 #### Version 2.2.9
