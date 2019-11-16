@@ -4109,6 +4109,22 @@ public class XmppConnectionService extends Service {
         mDatabaseWriterExecutor.execute(() -> databaseBackend.updateConversation(conversation));
     }
 
+    private void reconnectAccount(final Account account) {
+        account.setOption(Account.OPTION_DISABLED, true);
+        if (!updateAccount(account)) {
+            Log.d(Config.LOGTAG, getString(R.string.unable_to_update_account));
+        }
+        account.setOption(Account.OPTION_DISABLED, false);
+        final XmppConnection connection = account.getXmppConnection();
+        if (connection != null) {
+            connection.resetEverything();
+        }
+        if (!updateAccount(account)) {
+            Log.d(Config.LOGTAG, getString(R.string.unable_to_update_account));
+        }
+    }
+
+
     private void reconnectAccount(final Account account, final boolean force, final boolean interactive) {
         synchronized (account) {
             XmppConnection connection = account.getXmppConnection();
@@ -4278,6 +4294,7 @@ public class XmppConnectionService extends Service {
     public boolean hideYouAreNotParticipating() {
         return getBooleanPreference(SettingsActivity.HIDE_YOU_ARE_NOT_PARTICIPATING, R.bool.hide_you_are_not_participating);
     }
+
     public boolean broadcastLastActivity() {
         return getBooleanPreference(SettingsActivity.BROADCAST_LAST_ACTIVITY, R.bool.last_activity);
     }
@@ -4789,6 +4806,9 @@ public class XmppConnectionService extends Service {
                     if (packet.getType() == IqPacket.TYPE.RESULT) {
                         account.getBlocklist().remove(jid);
                         updateBlocklistUi(OnUpdateBlocklist.Status.UNBLOCKED);
+                        if (blockable.getJid().isFullJid()) {
+                            reconnectAccount(account);
+                        }
                     }
                 }
             });

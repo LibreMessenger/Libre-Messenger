@@ -1,10 +1,11 @@
 package de.pixart.messenger.ui;
 
-import androidx.databinding.DataBindingUtil;
-import androidx.annotation.StringRes;
-import androidx.appcompat.app.AlertDialog;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
+import androidx.databinding.DataBindingUtil;
 
 import de.pixart.messenger.R;
 import de.pixart.messenger.databinding.DialogBlockContactBinding;

@@ -24,6 +24,7 @@ import de.pixart.messenger.entities.Contact;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.entities.MucOptions.User;
+import de.pixart.messenger.entities.RawBlockable;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.ConferenceDetailsActivity;
 import de.pixart.messenger.ui.ConversationFragment;
@@ -76,6 +77,7 @@ public final class MucDetailsContextMenuHelper {
             title.setVisible(false);
         }
         MenuItem sendPrivateMessage = menu.findItem(R.id.send_private_message);
+        MenuItem blockUnblockMUCUser = menu.findItem(R.id.context_muc_contact_block_unblock);
         if (user != null && user.getRealJid() != null) {
             MenuItem showContactDetails = menu.findItem(R.id.action_contact_details);
             MenuItem startConversation = menu.findItem(R.id.start_conversation);
@@ -152,9 +154,11 @@ public final class MucDetailsContextMenuHelper {
             managePermissions.setVisible(managePermissionsVisible);
             sendPrivateMessage.setVisible(true);
             sendPrivateMessage.setEnabled(mucOptions.allowPm());
+            blockUnblockMUCUser.setVisible(true);
         } else {
             sendPrivateMessage.setVisible(true);
             sendPrivateMessage.setEnabled(user != null && mucOptions.allowPm() && user.getRole().ranks(MucOptions.Role.VISITOR));
+            blockUnblockMUCUser.setVisible(user != null);
         }
     }
 
@@ -218,6 +222,15 @@ public final class MucDetailsContextMenuHelper {
                     activity.xmppConnectionService.invite(conversation, jid);
                 }
                 return true;
+            case R.id.context_muc_contact_block_unblock:
+                try {
+                    activity.xmppConnectionService.sendBlockRequest(new RawBlockable(account, user.getFullJid()), false);
+                    activity.xmppConnectionService.leaveMuc(conversation);
+                    activity.xmppConnectionService.joinMuc(conversation);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return true;
             case R.id.highlight_in_muc:
                 activity.highlightInMuc(conversation, user.getName());
                 return true;
@@ -226,7 +239,8 @@ public final class MucDetailsContextMenuHelper {
         }
     }
 
-    private static void kickFromRoom(final User user, XmppActivity activity, XmppConnectionService.OnAffiliationChanged onAffiliationChanged) {
+    private static void kickFromRoom(final User user, XmppActivity
+            activity, XmppConnectionService.OnAffiliationChanged onAffiliationChanged) {
         final Conversation conversation = user.getConversation();
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle(R.string.kick_from_conference);
@@ -252,7 +266,8 @@ public final class MucDetailsContextMenuHelper {
         builder.create().show();
     }
 
-    private static void banFromRoom(final User user, XmppActivity activity, XmppConnectionService.OnAffiliationChanged onAffiliationChanged) {
+    private static void banFromRoom(final User user, XmppActivity
+            activity, XmppConnectionService.OnAffiliationChanged onAffiliationChanged) {
         final Conversation conversation = user.getConversation();
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle(R.string.ban_from_conference);
