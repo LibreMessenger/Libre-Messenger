@@ -738,8 +738,6 @@
     <string name="pref_omemo_setting_summary_always_off">OMEMO non sarà mai utilizzato.</string>
     <string name="default_on">Predefinito attivo</string>
     <string name="default_off">Predefinito disattivo</string>
-    <string name="pref_theme_light">Tema chiaro</string>
-    <string name="pref_theme_dark">Tema scuro</string>
     <string name="pref_theme_auto">Automatico</string>
     <string name="pref_theme_options_summary">Scegli la palette di colori</string>
     <string name="pref_theme_options">Tema</string>
@@ -950,6 +948,7 @@
     <string name="intro_desc_required_permissions">Alla fine dell\'introduzione ti sarà chiesto di dare il permesso di archiviazione (obbligatorio), se già non l\'hai consentito. Altri permessi sono richiesti al bisogno e sono opzionali.</string>
     <string name="intro_account">Il tuo account</string>
     <string name="intro_desc_account">Se hai già un account, puoi semplicemente accedere con il tuo ID Jabber e password</string>
+    <string name="intro_start_chatting">Inizia a conversare</string>
     <string name="intro_desc_start_chatting">Se hai dato il permesso di leggere i contatti, i contatti Jabber già esistenti saranno automaticamente mostrati nella tua rubrica. Altrimenti, aggiungi semplicemente gli ID Jabber</string>
     <string name="intro_desc_open_chat">Ora puoi iniziare a chiaccherare, condividere posizioni, file, video e immagini o inviare messaggi vocali.</string>
     <string name="intro_chat_details">Dettagli della conversazione</string>
@@ -968,6 +967,7 @@
     <string name="open_join_dialog">Unisciti al canale pubblico…</string>
     <string name="intro_optional_permissions">Permessi opzionali</string>
     <string name="intro_desc_optional_permissions2">Il permesso per la localizzazione è richiesto se vuoi condividere la tua posizione.\nPer condividere messaggi vocali è richiesto l\'accesso al tuo microfono.</string>
+    <string name="intro_desc_account3">Hai la possibilità di importare un account esistente.\nSe ci sono file di backup disponibili, saranno mostrati.</string>
     <string name="intro_desc_start_chatting2">Puoi anche aggiungere, creare o unirti a conversazioni di gruppo - anche chiamate MUC. Si dividono in conversazioni di gruppo private e conversazioni di gruppo pubbliche - chiamate anche canali.</string>
     <string name="intro_desc_start_chatting3">Congratulazioni!\nComincia e divertiti…</string>
     <string name="intro_privacy">La tua privacy\nLa tua sovranità</string>
@@ -986,4 +986,7 @@
     <string name="gp_long">Lungo</string>
     <string name="pref_notification_grace_period">Periodo di Tregua</string>
     <string name="pref_notification_grace_period_summary">Il tempo durante il quale le notifiche saranno silenziate dopo che sarà rilevata dell\'attività su uno degli altri tuoi dispositivi.</string>
+    <string name="ask_for_writeaccess">Chiedi un accesso in scrittura</string>
+    <string name="pref_theme_color_options_summary">Scegli la palette di colori del tema</string>
+    <string name="pref_theme_color_options">Colore del tema</string>
 </resources>
