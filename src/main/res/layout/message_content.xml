@@ -10,6 +10,12 @@
         android:longClickable="true"
         android:textAppearance="@style/TextAppearance.Conversations.Body1" />
 
+    <TextView
+        android:id="@+id/message_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
     <de.pixart.messenger.ui.widget.RichLinkView
         android:id="@+id/richLinkView"
         android:layout_width="wrap_content"

@@ -1177,13 +1177,12 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         messageListAdapter = new MessageAdapter((XmppActivity) getActivity(), this.messageList);
         messageListAdapter.setOnContactPictureClicked(this);
         messageListAdapter.setOnContactPictureLongClicked(this);
-        messageListAdapter.setOnQuoteListener(text -> quoteText(text, getUsername(selectedMessage)));
+        messageListAdapter.setOnQuoteListener(ConversationFragment.this::quoteText);
         binding.messagesView.setAdapter(messageListAdapter);
         registerForContextMenu(binding.messagesView);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             this.binding.textinput.setCustomInsertionActionModeCallback(new EditMessageActionModeCallback(this.binding.textinput));
         }
-
         return binding.getRoot();
     }
 
@@ -3152,7 +3151,10 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         popupMenu.show();
     }
 
-    private String getUsername(Message message) {
+    public String getUsername(Message message) {
+        if (message == null) {
+            return null;
+        }
         String user;
         try {
             final Contact contact = message.getContact();

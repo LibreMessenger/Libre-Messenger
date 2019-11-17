@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.text.Editable;
@@ -83,7 +82,6 @@ import de.pixart.messenger.utils.Emoticons;
 import de.pixart.messenger.utils.GeoHelper;
 import de.pixart.messenger.utils.RichPreview;
 import de.pixart.messenger.utils.StylingHelper;
-import de.pixart.messenger.utils.ThemeHelper;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.mam.MamReference;
 import pl.droidsonroids.gif.GifImageView;
@@ -99,7 +97,7 @@ import static de.pixart.messenger.ui.util.MyLinkify.replaceYoutube;
 
 public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextView.CopyHandler {
 
-    ConversationFragment mConversationFragment;
+    private ConversationFragment mConversationFragment;
 
     public static final String DATE_SEPARATOR_BODY = "DATE_SEPARATOR";
     private static final int SENT = 0;
@@ -217,6 +215,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         String filesize = null;
         String info = null;
         boolean error = false;
+        viewHolder.user.setText(UIHelper.getMessageDisplayName(message));
         if (viewHolder.indicatorReceived != null) {
             viewHolder.indicatorReceived.setVisibility(View.GONE);
             viewHolder.indicatorRead.setVisibility(View.GONE);
@@ -965,6 +964,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                     viewHolder.gifImage = view.findViewById(R.id.message_image_gif);
                     viewHolder.richlinkview = view.findViewById(R.id.richLinkView);
                     viewHolder.messageBody = view.findViewById(R.id.message_body);
+                    viewHolder.user = view.findViewById(R.id.message_user);
                     viewHolder.time = view.findViewById(R.id.message_time);
                     viewHolder.indicatorReceived = view.findViewById(R.id.indicator_received);
                     viewHolder.indicatorRead = view.findViewById(R.id.indicator_read);
@@ -981,6 +981,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                     viewHolder.gifImage = view.findViewById(R.id.message_image_gif);
                     viewHolder.richlinkview = view.findViewById(R.id.richLinkView);
                     viewHolder.messageBody = view.findViewById(R.id.message_body);
+                    viewHolder.user = view.findViewById(R.id.message_user);
                     viewHolder.time = view.findViewById(R.id.message_time);
                     viewHolder.indicatorReceived = view.findViewById(R.id.indicator_received);
                     viewHolder.encryption = view.findViewById(R.id.message_encryption);
@@ -995,7 +996,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                     throw new AssertionError("Unknown view type");
             }
             if (viewHolder.messageBody != null) {
-                listSelectionManager.onCreate(viewHolder.messageBody, new MessageBodyActionModeCallback(viewHolder.messageBody));
+                listSelectionManager.onCreate(viewHolder.messageBody, new MessageBodyActionModeCallback(viewHolder.messageBody, viewHolder.user));
                 viewHolder.messageBody.setCopyHandler(this);
             }
             view.setTag(viewHolder);
@@ -1279,7 +1280,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
     }
 
     public interface OnQuoteListener {
-        void onQuote(String text);
+        void onQuote(String text, String user);
     }
 
     public interface OnContactPictureClicked {
@@ -1306,6 +1307,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         protected ImageView indicatorRead;
         protected TextView time;
         protected CopyTextView messageBody;
+        protected TextView user;
         protected ImageView contact_picture;
         protected TextView status_message;
         protected TextView encryption;
@@ -1313,10 +1315,12 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
     private class MessageBodyActionModeCallback implements ActionMode.Callback {
 
-        private final TextView textView;
+        private final TextView messageBody;
+        private final TextView messageUser;
 
-        public MessageBodyActionModeCallback(TextView textView) {
-            this.textView = textView;
+        public MessageBodyActionModeCallback(TextView messgebody, TextView user) {
+            this.messageBody = messgebody;
+            this.messageUser = user;
         }
 
         @Override
@@ -1338,12 +1342,13 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             if (item.getItemId() == android.R.id.button1) {
-                int start = textView.getSelectionStart();
-                int end = textView.getSelectionEnd();
+                int start = messageBody.getSelectionStart();
+                int end = messageBody.getSelectionEnd();
                 if (end > start) {
-                    String text = transformText(textView.getText(), start, end, false);
+                    String text = transformText(messageBody.getText(), start, end, false);
+                    String user = messageUser.getText().toString();
                     if (onQuoteListener != null) {
-                        onQuoteListener.onQuote(text);
+                        onQuoteListener.onQuote(text, user);
                     }
                     mode.finish();
                 }
