@@ -1,5 +1,8 @@
 ### Changelog
 
+#### Version 2.3.1
+* bug fixes
+
 #### Version 2.3.0
 * show name in quotes (PAM)
 * introduce theme based on systems theme (PAM)
