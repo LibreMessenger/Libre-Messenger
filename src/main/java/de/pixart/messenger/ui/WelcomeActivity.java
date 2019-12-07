@@ -3,20 +3,21 @@ package de.pixart.messenger.ui;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 import de.pixart.messenger.R;
 import de.pixart.messenger.ui.util.IntroHelper;
 
 import static de.pixart.messenger.Config.DISALLOW_REGISTRATION_IN_UI;
 import static de.pixart.messenger.utils.PermissionUtils.allGranted;
-import static de.pixart.messenger.utils.PermissionUtils.writeGranted;
+import static de.pixart.messenger.utils.PermissionUtils.readGranted;
 
 public class WelcomeActivity extends XmppActivity {
 
@@ -119,7 +120,7 @@ public class WelcomeActivity extends XmppActivity {
                 Toast.makeText(this, R.string.no_storage_permission, Toast.LENGTH_SHORT).show();
             }
         }
-        if (writeGranted(grantResults, permissions)) {
+        if (readGranted(grantResults, permissions)) {
             if (xmppConnectionService != null) {
                 xmppConnectionService.restartFileObserver();
             }

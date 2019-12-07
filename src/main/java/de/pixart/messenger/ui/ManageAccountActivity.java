@@ -5,9 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.security.KeyChain;
 import android.security.KeyChainAliasCallback;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import android.util.Pair;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -17,6 +14,10 @@ import android.view.View;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 
 import org.openintents.openpgp.util.OpenPgpApi;
 
@@ -35,7 +36,7 @@ import de.pixart.messenger.xmpp.XmppConnection;
 import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.utils.PermissionUtils.allGranted;
-import static de.pixart.messenger.utils.PermissionUtils.writeGranted;
+import static de.pixart.messenger.utils.PermissionUtils.readGranted;
 
 public class ManageAccountActivity extends XmppActivity implements OnAccountUpdate, KeyChainAliasCallback, XmppConnectionService.OnAccountCreated, AccountAdapter.OnTglAccountState {
 
@@ -222,7 +223,7 @@ public class ManageAccountActivity extends XmppActivity implements OnAccountUpda
                 Toast.makeText(this, R.string.no_storage_permission, Toast.LENGTH_SHORT).show();
             }
         }
-        if (writeGranted(grantResults, permissions)) {
+        if (readGranted(grantResults, permissions)) {
             if (xmppConnectionService != null) {
                 xmppConnectionService.restartFileObserver();
             }

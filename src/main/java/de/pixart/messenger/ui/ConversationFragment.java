@@ -135,7 +135,7 @@ import static de.pixart.messenger.ui.XmppActivity.REQUEST_INVITE_TO_CONVERSATION
 import static de.pixart.messenger.ui.util.SoftKeyboardUtils.hideSoftKeyboard;
 import static de.pixart.messenger.utils.PermissionUtils.allGranted;
 import static de.pixart.messenger.utils.PermissionUtils.getFirstDenied;
-import static de.pixart.messenger.utils.PermissionUtils.writeGranted;
+import static de.pixart.messenger.utils.PermissionUtils.readGranted;
 import static de.pixart.messenger.xmpp.Patches.ENCRYPTION_EXCEPTIONS;
 
 public class ConversationFragment extends XmppFragment implements EditMessage.KeyboardListener, MessageAdapter.OnContactPictureLongClicked, MessageAdapter.OnContactPictureClicked {
@@ -338,7 +338,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     return false;
                 }
             }
-            if (hasPermissions(REQUEST_ADD_EDITOR_CONTENT, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            if (hasPermissions(REQUEST_ADD_EDITOR_CONTENT, Manifest.permission.WRITE_EXTERNAL_STORAGE) && hasPermissions(REQUEST_ADD_EDITOR_CONTENT, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 attachEditorContentToConversation(inputContentInfo.getContentUri());
             } else {
                 mPendingEditorContent = inputContentInfo.getContentUri();
@@ -1014,7 +1014,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     }
 
     private void commitAttachments() {
-        if (!hasPermissions(REQUEST_COMMIT_ATTACHMENTS, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (!hasPermissions(REQUEST_COMMIT_ATTACHMENTS, Manifest.permission.WRITE_EXTERNAL_STORAGE) && hasPermissions(REQUEST_COMMIT_ATTACHMENTS, Manifest.permission.READ_EXTERNAL_STORAGE)) {
             return;
         }
         if (conversation.getNextEncryption() == Message.ENCRYPTION_AXOLOTL && trustKeysIfNeeded(REQUEST_TRUST_KEYS_ATTACHMENTS)) {
@@ -1555,11 +1555,11 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
 
     public void attachFile(final int attachmentChoice) {
         if (attachmentChoice == ATTACHMENT_CHOICE_RECORD_VOICE) {
-            if (!hasPermissions(attachmentChoice, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO)) {
+            if (!hasPermissions(attachmentChoice, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO)) {
                 return;
             }
         } else if (attachmentChoice == ATTACHMENT_CHOICE_TAKE_PHOTO || attachmentChoice == ATTACHMENT_CHOICE_RECORD_VIDEO) {
-            if (!hasPermissions(attachmentChoice, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)) {
+            if (!hasPermissions(attachmentChoice, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)) {
                 return;
             }
         } else if (attachmentChoice == ATTACHMENT_CHOICE_LOCATION) {
@@ -1567,7 +1567,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 return;
             }
         } else if (attachmentChoice == ATTACHMENT_CHOICE_CHOOSE_FILE || attachmentChoice == ATTACHMENT_CHOICE_CHOOSE_IMAGE || attachmentChoice == ATTACHMENT_CHOICE_CHOOSE_VIDEO) {
-            if (!hasPermissions(attachmentChoice, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            if (!hasPermissions(attachmentChoice, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 return;
             }
         }
@@ -1664,7 +1664,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 Toast.makeText(getActivity(), res, Toast.LENGTH_SHORT).show();
             }
         }
-        if (writeGranted(grantResults, permissions)) {
+        if (readGranted(grantResults, permissions)) {
             if (activity != null && activity.xmppConnectionService != null) {
                 activity.xmppConnectionService.restartFileObserver();
             }
@@ -1673,7 +1673,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     }
 
     public void startDownloadable(Message message) {
-        if (!hasPermissions(REQUEST_START_DOWNLOAD, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (!hasPermissions(REQUEST_START_DOWNLOAD, Manifest.permission.WRITE_EXTERNAL_STORAGE) && !hasPermissions(REQUEST_START_DOWNLOAD, Manifest.permission.READ_EXTERNAL_STORAGE)) {
             this.mPendingDownloadableMessage = message;
             return;
         }
@@ -1728,7 +1728,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             final List<String> missingPermissions = new ArrayList<>();
             for (String permission : permissions) {
-                if (Config.ONLY_INTERNAL_STORAGE && permission.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                if (Config.ONLY_INTERNAL_STORAGE && permission.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) && permission.equals(Manifest.permission.READ_EXTERNAL_STORAGE)) {
                     continue;
                 }
                 if (activity.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {

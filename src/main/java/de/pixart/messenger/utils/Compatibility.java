@@ -1,5 +1,6 @@
 package de.pixart.messenger.utils;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -35,7 +36,7 @@ public class Compatibility {
     private static final List<String> UNUSED_SETTINGS_PRE_TWENTYSIX = Collections.singletonList("more_notification_settings");
 
     public static boolean hasStoragePermission(Context context) {
-        return Build.VERSION.SDK_INT < Build.VERSION_CODES.M || ContextCompat.checkSelfPermission(context, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.M || (ContextCompat.checkSelfPermission(context, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
     }
 
     public static boolean runsTwentySix() {

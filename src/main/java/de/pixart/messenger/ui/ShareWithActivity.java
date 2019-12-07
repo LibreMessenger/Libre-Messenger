@@ -26,16 +26,27 @@ import rocks.xmpp.addr.Jid;
 public class ShareWithActivity extends XmppActivity implements XmppConnectionService.OnConversationUpdate {
 
     private static final int REQUEST_STORAGE_PERMISSION = 0x733f32;
-    private static final int REQUEST_START_NEW_CONVERSATION = 0x0501;
     private Conversation mPendingConversation = null;
-    private Share share;
-    private ConversationAdapter mAdapter;
-    private List<Conversation> mConversations = new ArrayList<>();
 
     @Override
     public void onConversationUpdate() {
         refreshUi();
     }
+
+    private class Share {
+        ArrayList<Uri> uris = new ArrayList<>();
+        public String account;
+        public String contact;
+        public String text;
+        public boolean asQuote = false;
+    }
+
+    private Share share;
+
+    private static final int REQUEST_START_NEW_CONVERSATION = 0x0501;
+    private ConversationAdapter mAdapter;
+    private List<Conversation> mConversations = new ArrayList<>();
+
 
     protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -53,7 +64,7 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         if (grantResults.length > 0)
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (requestCode == REQUEST_STORAGE_PERMISSION) {
@@ -186,7 +197,6 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
                 return;
             }
         }
-        startActivity(intent);
         finish();
     }
 
@@ -194,13 +204,5 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
         //TODO inject desired order to not resort on refresh
         xmppConnectionService.populateWithOrderedConversations(mConversations, this.share != null && this.share.uris.size() == 0, false);
         mAdapter.notifyDataSetChanged();
-    }
-
-    private class Share {
-        ArrayList<Uri> uris = new ArrayList<>();
-        public String account;
-        public String contact;
-        public String text;
-        public boolean asQuote = false;
     }
 }

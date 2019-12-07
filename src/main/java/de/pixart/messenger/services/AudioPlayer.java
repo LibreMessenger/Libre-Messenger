@@ -140,9 +140,9 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
     }
 
     private void startStop(ImageButton playPause) {
-        if (ContextCompat.checkSelfPermission(messageAdapter.getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(messageAdapter.getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(messageAdapter.getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             pendingOnClickView.push(new WeakReference<>(playPause));
-            ActivityCompat.requestPermissions(messageAdapter.getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, ConversationsActivity.REQUEST_PLAY_PAUSE);
+            ActivityCompat.requestPermissions(messageAdapter.getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, ConversationsActivity.REQUEST_PLAY_PAUSE);
             return;
         }
         initializeProximityWakeLock(playPause.getContext());

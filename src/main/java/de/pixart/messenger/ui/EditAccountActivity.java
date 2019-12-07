@@ -83,7 +83,7 @@ import de.pixart.messenger.xmpp.pep.Avatar;
 import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.utils.PermissionUtils.allGranted;
-import static de.pixart.messenger.utils.PermissionUtils.writeGranted;
+import static de.pixart.messenger.utils.PermissionUtils.readGranted;
 
 public class EditAccountActivity extends OmemoActivity implements OnAccountUpdate, OnUpdateBlocklist,
         OnKeyStatusUpdated, OnCaptchaRequested, KeyChainAliasCallback, XmppConnectionService.OnShowErrorToast, XmppConnectionService.OnMamPreferencesFetched {
@@ -1576,7 +1576,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 Toast.makeText(this, R.string.no_storage_permission, Toast.LENGTH_SHORT).show();
             }
         }
-        if (writeGranted(grantResults, permissions)) {
+        if (readGranted(grantResults, permissions)) {
             if (xmppConnectionService != null) {
                 xmppConnectionService.restartFileObserver();
             }
