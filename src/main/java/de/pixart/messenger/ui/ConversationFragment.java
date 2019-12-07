@@ -2631,6 +2631,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     }
 
     public void updateSendButton() {
+        if (!activity.xmppConnectionServiceBound) {
+            return;
+        }
         updateChatMsgHint();
         messageListAdapter.setBubbleBackgroundColor(binding.messageInputBox, activity.getThemeColor(), 0, isPrivateMessage(), true);
         boolean hasAttachments = mediaPreviewAdapter != null && mediaPreviewAdapter.hasAttachments();
