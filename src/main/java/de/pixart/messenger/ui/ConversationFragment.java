@@ -1348,11 +1348,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         try {
             final Contact contact = selectedMessage.getContact();
             if (conversation.getMode() == Conversation.MODE_MULTI) {
-                if (contact != null) {
-                    user = contact.getDisplayName();
-                } else {
-                    user = UIHelper.getDisplayedMucCounterpart(selectedMessage.getCounterpart());
-                }
+                user = UIHelper.getDisplayedMucCounterpart(selectedMessage.getCounterpart());
             } else {
                 user = contact != null ? contact.getDisplayName() : null;
             }
