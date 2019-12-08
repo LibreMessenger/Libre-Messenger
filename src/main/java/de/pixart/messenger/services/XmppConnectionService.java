@@ -168,6 +168,7 @@ import de.pixart.messenger.xmpp.stanzas.PresencePacket;
 import me.leolin.shortcutbadger.ShortcutBadger;
 import rocks.xmpp.addr.Jid;
 
+import static de.pixart.messenger.ui.SettingsActivity.ALLOW_MESSAGE_CORRECTION;
 import static de.pixart.messenger.ui.SettingsActivity.CHAT_STATES;
 import static de.pixart.messenger.ui.SettingsActivity.CONFIRM_MESSAGES;
 import static de.pixart.messenger.ui.SettingsActivity.ENABLE_MULTI_ACCOUNTS;
@@ -4266,7 +4267,7 @@ public class XmppConnectionService extends Service {
     }
 
     public boolean allowMessageCorrection() {
-        return getBooleanPreference("allow_message_correction", R.bool.allow_message_correction);
+        return getBooleanPreference(ALLOW_MESSAGE_CORRECTION, R.bool.allow_message_correction);
     }
 
     public boolean sendChatStates() {

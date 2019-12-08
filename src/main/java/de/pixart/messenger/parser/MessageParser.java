@@ -53,6 +53,8 @@ import de.pixart.messenger.xmpp.pep.Avatar;
 import de.pixart.messenger.xmpp.stanzas.MessagePacket;
 import rocks.xmpp.addr.Jid;
 
+import static de.pixart.messenger.entities.Message.DELETED_MESSAGE_BODY;
+
 public class MessageParser extends AbstractParser implements OnMessagePacketReceived {
 
     private static final List<String> CLIENTS_SENDING_HTML_IN_OTR = Arrays.asList("Pidgin", "Adium", "Trillian");
@@ -741,6 +743,9 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                         Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": received message correction but verification didn't check out");
                     }
                 }
+            } else if (replacementId != null && !mXmppConnectionService.allowMessageCorrection() && message.getBody().equals(DELETED_MESSAGE_BODY)) {
+                Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": received deleted message but LMC is deactivated");
+                return;
             }
 
             long deletionDate = mXmppConnectionService.getAutomaticMessageDeletionDate();
