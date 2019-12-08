@@ -1,5 +1,8 @@
 ### Changelog
 
+#### Version 2.3.3
+* fix missing send button
+
 #### Version 2.3.2
 * fix shareWithActivity
 
