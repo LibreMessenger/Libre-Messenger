@@ -55,6 +55,16 @@
         android:longClickable="true"
         android:visibility="gone" />
 
+    <ImageButton
+        android:id="@+id/answer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_gravity="right"
+        android:alpha="?attr/icon_alpha"
+        android:background="?android:selectableItemBackground"
+        android:visibility="gone" />
+
     <RelativeLayout
         android:id="@+id/audio_player"
         android:layout_width="@dimen/audio_player_width"

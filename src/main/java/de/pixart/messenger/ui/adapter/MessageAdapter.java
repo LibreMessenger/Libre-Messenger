@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -975,6 +976,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                     viewHolder.contact_picture = view.findViewById(R.id.message_photo);
                     viewHolder.audioPlayer = view.findViewById(R.id.audio_player);
                     viewHolder.download_button = view.findViewById(R.id.download_button);
+                    viewHolder.answer_button = view.findViewById(R.id.answer);
                     viewHolder.indicator = view.findViewById(R.id.security_indicator);
                     viewHolder.edit_indicator = view.findViewById(R.id.edit_indicator);
                     viewHolder.image = view.findViewById(R.id.message_image);
@@ -1146,6 +1148,26 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
 
         if (type == RECEIVED) {
+            if (message.isPrivateMessage()) {
+                viewHolder.answer_button.setVisibility(View.VISIBLE);
+                viewHolder.answer_button.setImageResource(R.drawable.ic_reply_circle_black_24dp);
+                viewHolder.answer_button.setOnClickListener(v -> {
+                    try {
+                        if (activity instanceof ConversationsActivity) {
+                            ConversationFragment conversationFragment = ConversationFragment.get(activity);
+                            if (conversationFragment != null) {
+                                activity.invalidateOptionsMenu();
+                                conversationFragment.privateMessageWith(message.getCounterpart());
+                            }
+                        }
+                    } catch (Exception e) {
+                        viewHolder.answer_button.setVisibility(View.GONE);
+                        e.printStackTrace();
+                    }
+                });
+            } else {
+                viewHolder.answer_button.setVisibility(View.GONE);
+            }
             if (isInValidSession) {
                 setBubbleBackgroundColor(viewHolder.message_box, activity.getThemeColor(), type, message.isPrivateMessage(), isInValidSession);
                 viewHolder.encryption.setVisibility(View.GONE);
@@ -1299,6 +1321,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         protected LinearLayout message_box;
         protected Button download_button;
         protected Button resend_button;
+        protected ImageButton answer_button;
         protected ImageView image;
         protected GifImageView gifImage;
         protected RichLinkView richlinkview;
