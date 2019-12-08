@@ -1,5 +1,8 @@
 ### Changelog
 
+#### Version 2.3.2
+* fix shareWithActivity
+
 #### Version 2.3.1
 * bug fixes
 
