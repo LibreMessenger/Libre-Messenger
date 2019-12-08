@@ -102,7 +102,7 @@ public abstract class AbstractGenerator {
         for (String feature : getFeatures(account)) {
             s.append(feature).append('<');
         }
-        byte[] sha1 = md.digest(s.toString().getBytes());
+        final byte[] sha1 = md.digest(s.toString().getBytes());
         return Base64.encodeToString(sha1, Base64.NO_WRAP);
     }
 
