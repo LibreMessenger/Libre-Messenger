@@ -51,6 +51,7 @@ import de.pixart.messenger.entities.Roster;
 import de.pixart.messenger.entities.ServiceDiscoveryResult;
 import de.pixart.messenger.services.ShortcutService;
 import de.pixart.messenger.utils.CryptoHelper;
+import de.pixart.messenger.utils.CursorUtils;
 import de.pixart.messenger.utils.FtsUtils;
 import de.pixart.messenger.utils.Resolver;
 import de.pixart.messenger.xmpp.InvalidJid;
@@ -793,12 +794,10 @@ public class DatabaseBackend extends SQLiteOpenHelper {
                     null, null, Message.TIME_SENT + " DESC",
                     String.valueOf(limit));
         }
+        CursorUtils.upgradeCursorWindowSize(cursor);
         while (cursor.moveToNext()) {
             try {
-                final Message message = Message.fromCursor(cursor, conversation);
-                if (message != null && !message.isMessageDeleted()) {
-                    list.add(0, message);
-                }
+                list.add(0, Message.fromCursor(cursor, conversation));
             } catch (Exception e) {
                 Log.e(Config.LOGTAG, "unable to restore message");
             }

@@ -112,7 +112,7 @@ public final class Config {
     public static final boolean PUT_AUTH_TAG_INTO_KEY = true;
 
     public static final int MAX_DISPLAY_MESSAGE_CHARS = 4096;
-    public static final int MAX_STORAGE_MESSAGE_CHARS = 1024 * 1024; //1MB
+    public static final int MAX_STORAGE_MESSAGE_CHARS = 2 * 1024 * 1024; //2MB
 
     public static final boolean ExportLogs = true; // automatically export logs
     public static final int ExportLogs_Hour = 4; //Time - hours: valid values from 0 to 23
