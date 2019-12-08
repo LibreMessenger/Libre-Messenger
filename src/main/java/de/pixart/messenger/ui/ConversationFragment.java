@@ -496,6 +496,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                             } else {
                                 binding.textinput.setText("");
                             }
+                            updateChatMsgHint();
                             updateSendButton();
                             updateEditablity();
                         }
@@ -2018,6 +2019,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         }
         this.binding.textinput.setText("");
         this.conversation.setNextCounterpart(counterpart);
+        updateChatMsgHint();
         updateSendButton();
         updateEditablity();
     }
@@ -2570,6 +2572,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     binding.unreadCountCustomView.setUnreadCount(conversation.getReceivedMessagesCountSinceUuid(lastMessageUuid));
                 }
                 this.messageListAdapter.notifyDataSetChanged();
+                updateChatMsgHint();
                 if (notifyConversationRead && activity != null) {
                     binding.messagesView.post(this::fireReadEvent);
                 }
@@ -2631,10 +2634,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     }
 
     public void updateSendButton() {
-        if (!activity.xmppConnectionServiceBound) {
-            return;
-        }
-        updateChatMsgHint();
         messageListAdapter.setBubbleBackgroundColor(binding.messageInputBox, activity.getThemeColor(), 0, isPrivateMessage(), true);
         boolean hasAttachments = mediaPreviewAdapter != null && mediaPreviewAdapter.hasAttachments();
         boolean useSendButtonToIndicateStatus = activity != null && PreferenceManager.getDefaultSharedPreferences(activity).getBoolean("send_button_status", getResources().getBoolean(R.bool.send_button_status));
