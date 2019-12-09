@@ -61,7 +61,7 @@ import rocks.xmpp.addr.Jid;
 public class DatabaseBackend extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "history";
-    public static final int DATABASE_VERSION = 49; // = Conversations DATABASE_VERSION + 4
+    public static final int DATABASE_VERSION = 50; // = Conversations DATABASE_VERSION + 4
     private static DatabaseBackend instance = null;
 
     private static String CREATE_CONTATCS_STATEMENT = "create table "
@@ -571,6 +571,10 @@ public class DatabaseBackend extends SQLiteOpenHelper {
 
         if (oldVersion < 49 && newVersion >= 49) {
             db.execSQL("ALTER TABLE " + Message.TABLENAME + " ADD COLUMN " + Message.BODY_LANGUAGE);
+        }
+
+        if (oldVersion < 50 && newVersion >= 50) {
+            db.execSQL("update " + Message.TABLENAME + " set " + Message.EDITED + "=NULL");
         }
     }
 
