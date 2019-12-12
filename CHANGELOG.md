@@ -1,5 +1,12 @@
 ### Changelog
 
+#### Version 2.3.4
+* fixes for Jingle IBB file transfer
+* fixes for repeated corrections filling up the database
+* switched to Last Message Correction v1.1
+* increase mam messages catchup
+* bug fixes
+
 #### Version 2.3.3
 * fix missing send button
 
