@@ -216,7 +216,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         String filesize = null;
         String info = null;
         boolean error = false;
-        viewHolder.user.setText(UIHelper.getMessageDisplayName(message));
+        viewHolder.user.setText(UIHelper.getDisplayedMucCounterpart(message.getCounterpart()));
         if (viewHolder.indicatorReceived != null) {
             viewHolder.indicatorReceived.setVisibility(View.GONE);
             viewHolder.indicatorRead.setVisibility(View.GONE);
@@ -998,7 +998,8 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                     throw new AssertionError("Unknown view type");
             }
             if (viewHolder.messageBody != null) {
-                listSelectionManager.onCreate(viewHolder.messageBody, new MessageBodyActionModeCallback(viewHolder.messageBody, viewHolder.user));
+                final boolean multi = message.getConversation().getMode() == Conversation.MODE_MULTI;
+                listSelectionManager.onCreate(viewHolder.messageBody, new MessageBodyActionModeCallback(viewHolder.messageBody, viewHolder.user, multi));
                 viewHolder.messageBody.setCopyHandler(this);
             }
             view.setTag(viewHolder);
@@ -1340,10 +1341,12 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
 
         private final TextView messageBody;
         private final TextView messageUser;
+        private final boolean multiuser;
 
-        public MessageBodyActionModeCallback(TextView messgebody, TextView user) {
+        public MessageBodyActionModeCallback(TextView messgebody, TextView user, final boolean multi) {
             this.messageBody = messgebody;
             this.messageUser = user;
+            this.multiuser = multi;
         }
 
         @Override
@@ -1369,7 +1372,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 int end = messageBody.getSelectionEnd();
                 if (end > start) {
                     String text = transformText(messageBody.getText(), start, end, false);
-                    String user = messageUser.getText().toString();
+                    String user = multiuser ? messageUser.getText().toString() : null;
                     if (onQuoteListener != null) {
                         onQuoteListener.onQuote(text, user);
                     }
