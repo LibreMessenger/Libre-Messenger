@@ -1379,7 +1379,7 @@ public class XmppConnection implements Runnable {
         });
     }
 
-    public void getAdHocInviteUrl(final Jid server) {
+    public String getAdHocInviteUrl(final Jid server) {
         IqPacket iqPacket = new IqPacket(IqPacket.TYPE.SET);
         iqPacket.setTo(Jid.ofDomain(server.getDomain()));
         iqPacket.setFrom(Jid.of(account.getJid().asBareJid()));
@@ -1403,10 +1403,12 @@ public class XmppConnection implements Runnable {
             if (packet.getType() != IqPacket.TYPE.TIMEOUT) {
                 if (mPendingServiceDiscoveries.decrementAndGet() == 0
                         && mWaitForDisco.compareAndSet(true, false)) {
+                    features.adhocinviteURI = "";
                     finalizeBind();
                 }
             }
         });
+        return features.adhocinviteURI;
     }
 
     private void sendEnableCarbons() {

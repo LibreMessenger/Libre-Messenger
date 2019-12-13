@@ -51,7 +51,6 @@ import android.widget.Toast;
 
 import androidx.annotation.BoolRes;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -433,7 +432,7 @@ public abstract class XmppActivity extends ActionBarActivity {
     }
 
     public void setBubbleColor(final View v, final int backgroundColor, final int borderColor) {
-        GradientDrawable shape = (GradientDrawable)v.getBackground();
+        GradientDrawable shape = (GradientDrawable) v.getBackground();
         shape.setColor(backgroundColor);
         if (borderColor != -1) {
             shape.setStroke(2, borderColor);
@@ -995,7 +994,7 @@ public abstract class XmppActivity extends ActionBarActivity {
             String domain = Jid.ofEscaped(mAccount.getJid()).getDomain();
             String inviteURL;
             try {
-                inviteURL = new getAdHocInviteUri(mAccount).execute().get();
+                inviteURL = new getAdHocInviteUri(mAccount.getXmppConnection(), mAccount).execute().get();
             } catch (ExecutionException e) {
                 e.printStackTrace();
                 inviteURL = Config.inviteUserURL + user + "/" + domain;
@@ -1039,7 +1038,7 @@ public abstract class XmppActivity extends ActionBarActivity {
                         String domain = Jid.of(mAccount.getJid()).getDomain();
                         String inviteURL;
                         try {
-                            inviteURL = new getAdHocInviteUri(mAccount).execute().get();
+                            inviteURL = new getAdHocInviteUri(mAccount.getXmppConnection(), mAccount).execute().get();
                         } catch (ExecutionException e) {
                             e.printStackTrace();
                             inviteURL = Config.inviteUserURL + user + "/" + domain;
@@ -1064,20 +1063,13 @@ public abstract class XmppActivity extends ActionBarActivity {
         }
     }
 
-    private boolean AdHocInvite(Account account) {
-        if (!xmppConnectionServiceBound) {
-            return false;
-        }
-        XmppConnection.Features features = account.getXmppConnection().getFeatures();
-        Log.d(Config.LOGTAG, "Invite available: " + features.adhocinvite);
-        return features.adhocinvite;
-    }
+    private class getAdHocInviteUri extends AsyncTask<XmppConnection, Account, String> {
 
-    private class getAdHocInviteUri extends AsyncTask<Account, Void, String> {
-
+        private XmppConnection connection;
         private Account account;
 
-        public getAdHocInviteUri(Account a) {
+        public getAdHocInviteUri(XmppConnection c, Account a) {
+            this.connection = c;
             this.account = a;
         }
 
@@ -1087,15 +1079,26 @@ public abstract class XmppActivity extends ActionBarActivity {
         }
 
         @Override
-        protected String doInBackground(Account... params) {
-            if (AdHocInvite(account)) {
-                XmppConnection.Features features = account.getXmppConnection().getFeatures();
-                account.getXmppConnection().getAdHocInviteUrl(Jid.ofDomain(account.getJid().getDomain()));
-                String uri = features.adhocinviteURI;
-                features.adhocinviteURI = null;
-                return uri;
+        protected String doInBackground(XmppConnection... params) {
+            String uri = null;
+            if (this.connection != null) {
+                XmppConnection.Features features = connection.getFeatures();
+                if (features.adhocinvite) {
+                    int i = 0;
+                    uri = this.connection.getAdHocInviteUrl(Jid.ofDomain(this.account.getJid().getDomain()));
+                    try {
+                        while (uri == null && i++ < 10) {
+                            uri = this.connection.getAdHocInviteUrl(Jid.ofDomain(this.account.getJid().getDomain()));
+                            Thread.sleep(1000);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        features.adhocinviteURI = null;
+                    }
+                }
             }
-            return null;
+            return uri;
         }
 
         @Override
