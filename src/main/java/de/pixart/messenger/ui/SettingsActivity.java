@@ -75,6 +75,7 @@ public class SettingsActivity extends XmppActivity implements
     public static final String INDICATE_RECEIVED = "indicate_received";
     public static final String USE_INVIDIOUS = "use_invidious";
     public static final String ALLOW_MESSAGE_CORRECTION = "allow_message_correction";
+    public static final String ENABLE_OTR_ENCRYPTION = "enable_otr_encryption";
 
     public static final int REQUEST_CREATE_BACKUP = 0xbf8701;
     Preference multiAccountPreference;

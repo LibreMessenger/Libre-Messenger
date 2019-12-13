@@ -55,6 +55,7 @@
     <bool name="use_internal_updater">true</bool>
     <bool name="show_own_accounts">true</bool>
     <bool name="vibrate_in_chat">true</bool>
+    <bool name="enable_otr">false</bool>
     <integer name="auto_accept_filesize_wifi">10485760</integer>
     <integer name="auto_accept_filesize_mobile">524288</integer>
     <integer name="auto_accept_filesize_roaming">0</integer>
