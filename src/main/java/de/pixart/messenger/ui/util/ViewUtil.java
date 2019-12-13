@@ -69,7 +69,7 @@ public class ViewUtil {
         } else {
             Intent openIntent = new Intent(Intent.ACTION_VIEW);
             openIntent.setDataAndType(uri, mime);
-            openIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            openIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             PackageManager manager = context.getPackageManager();
             List<ResolveInfo> info = manager.queryIntentActivities(openIntent, 0);
             if (info.size() == 0) {

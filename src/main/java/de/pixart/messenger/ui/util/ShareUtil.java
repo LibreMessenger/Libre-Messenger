@@ -67,7 +67,7 @@ public class ShareUtil {
                 Toast.makeText(activity, activity.getString(R.string.no_permission_to_access_x, file.getAbsolutePath()), Toast.LENGTH_SHORT).show();
                 return;
             }
-            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             String mime = message.getMimeType();
             if (mime == null) {
                 mime = "*/*";

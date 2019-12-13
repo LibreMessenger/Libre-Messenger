@@ -174,7 +174,7 @@ public class ImportBackupActivity extends XmppActivity implements ServiceConnect
                     intent.putExtra("file", uri.getPath());
                 } else {
                     intent.setData(uri);
-                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 }
                 setLoadingState(true);
                 ContextCompat.startForegroundService(this, intent);

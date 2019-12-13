@@ -581,7 +581,7 @@ public abstract class XmppActivity extends ActionBarActivity {
         Intent intent = new Intent(this, XmppConnectionService.class);
         intent.setAction(Intent.ACTION_SEND);
         intent.setData(uri);
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         try {
             startService(intent);
         } catch (Exception e) {
