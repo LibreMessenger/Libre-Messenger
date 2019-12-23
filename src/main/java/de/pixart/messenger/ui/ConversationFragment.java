@@ -256,7 +256,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         }
 
         @Override
-        public void onScroll(final AbsListView view, int firstVisibleItem, int visibleItemCount, final int totalItemCount) {
+        public void onScroll(final AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
             toggleScrollDownButton(view);
             synchronized (ConversationFragment.this.messageList) {
                 if (firstVisibleItem < 5 && conversation != null && conversation.messagesLoaded.compareAndSet(true, false) && messageList.size() > 0) {
@@ -1127,7 +1127,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 menuInviteContact.setVisible(false);
                 menuArchiveChat.setTitle(R.string.action_end_conversation);
             }
-            Fragment secondaryFragment = getFragmentManager().findFragmentById(R.id.secondary_fragment);
+            Fragment secondaryFragment = activity.getFragmentManager().findFragmentById(R.id.secondary_fragment);
             if (secondaryFragment instanceof ConversationFragment) {
                 if (conversation.getMode() == Conversation.MODE_MULTI) {
                     menuGroupDetails.setTitle(conversation.getMucOptions().isPrivateAndNonAnonymous() ? R.string.action_group_details : R.string.channel_details);

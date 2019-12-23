@@ -31,7 +31,7 @@ public class AbstractConnectionManager {
     private static final String KEYTYPE = "AES";
     private static final String CIPHERMODE = "AES/GCM/NoPadding";
     private static final String PROVIDER = "BC";
-    private static final int UI_REFRESH_THRESHOLD = 250;
+    private static final int UI_REFRESH_THRESHOLD = Config.REFRESH_UI_INTERVAL;
     private static final AtomicLong LAST_UI_UPDATE_CALL = new AtomicLong(0);
     protected XmppConnectionService mXmppConnectionService;
 
