@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.view.View.OnClickListener;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,6 +83,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
     private Conversation mConversation;
     ActivityContactDetailsBinding binding;
     private MediaAdapter mMediaAdapter;
+    private boolean mAdvancedMode = false;
     private DialogInterface.OnClickListener removeFromRoster = new DialogInterface.OnClickListener() {
 
         @Override
@@ -270,7 +273,6 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             }
         }
         this.messageFingerprint = getIntent().getStringExtra("fingerprint");
-
         this.binding = DataBindingUtil.setContentView(this, R.layout.activity_contact_details);
         setSupportActionBar((Toolbar) binding.toolbar);
         configureActionBar(getSupportActionBar());
@@ -326,35 +328,53 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             case R.id.action_share_uri:
                 shareLink(false);
                 break;
-            case R.id.action_edit_contact:
-                Uri systemAccount = contact.getSystemAccount();
-                if (systemAccount == null) {
-                    quickEdit(contact.getServerName(), R.string.contact_name, value -> {
-                        contact.setServerName(value);
-                        ContactDetailsActivity.this.xmppConnectionService.pushContactToServer(contact);
-                        populateView();
-                        return null;
-                    }, true);
-                } else {
-                    Intent intent = new Intent(Intent.ACTION_EDIT);
-                    intent.setDataAndType(systemAccount, Contacts.CONTENT_ITEM_TYPE);
-                    intent.putExtra("finishActivityOnSaveCompleted", true);
-                    try {
-                        startActivity(intent);
-                        overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
-                    } catch (ActivityNotFoundException e) {
-                        Toast.makeText(ContactDetailsActivity.this, R.string.no_application_found_to_view_contact, Toast.LENGTH_SHORT).show();
-                    }
-                }
-                break;
             case R.id.action_block:
                 BlockContactDialog.show(this, contact);
                 break;
             case R.id.action_unblock:
                 BlockContactDialog.show(this, contact);
                 break;
+            case R.id.action_advanced_mode:
+                this.mAdvancedMode = !menuItem.isChecked();
+                menuItem.setChecked(this.mAdvancedMode);
+                getPreferences().edit().putBoolean("advanced_mode", mAdvancedMode).apply();
+                invalidateOptionsMenu();
+                refreshUi();
+                break;
         }
         return super.onOptionsItemSelected(menuItem);
+    }
+
+    private void editContact() {
+        Uri systemAccount = contact.getSystemAccount();
+        if (systemAccount == null) {
+            quickEdit(contact.getServerName(), R.string.contact_name, value -> {
+                contact.setServerName(value);
+                ContactDetailsActivity.this.xmppConnectionService.pushContactToServer(contact);
+                populateView();
+                return null;
+            }, true);
+        } else {
+            Intent intent = new Intent(Intent.ACTION_EDIT);
+            intent.setDataAndType(systemAccount, Contacts.CONTENT_ITEM_TYPE);
+            intent.putExtra("finishActivityOnSaveCompleted", true);
+            try {
+                startActivity(intent);
+                overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(ContactDetailsActivity.this, R.string.no_application_found_to_view_contact, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem menuItemAdvancedMode = menu.findItem(R.id.action_advanced_mode);
+        menuItemAdvancedMode.setChecked(mAdvancedMode);
+        if (mConversation == null) {
+            return true;
+        }
+        return true;
     }
 
     @Override
@@ -362,7 +382,6 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
         getMenuInflater().inflate(R.menu.contact_details, menu);
         MenuItem block = menu.findItem(R.id.action_block);
         MenuItem unblock = menu.findItem(R.id.action_unblock);
-        MenuItem edit = menu.findItem(R.id.action_edit_contact);
         if (contact == null) {
             return true;
         }
@@ -376,9 +395,6 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
         } else {
             unblock.setVisible(false);
             block.setVisible(false);
-        }
-        if (!contact.showInRoster()) {
-            edit.setVisible(false);
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -408,7 +424,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
                 ab.setDisplayShowCustomEnabled(true);
                 TextView abtitle = findViewById(android.R.id.text1);
                 TextView absubtitle = findViewById(android.R.id.text2);
-                abtitle.setText(EmojiWrapper.transform(contact.getDisplayName()));
+                abtitle.setText(R.string.contact_details);
                 abtitle.setSelected(true);
                 abtitle.setClickable(false);
                 absubtitle.setVisibility(View.GONE);
@@ -418,11 +434,8 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
 
         invalidateOptionsMenu();
         setTitle(contact.getDisplayName());
-        if (contact.getServer().toString().toLowerCase().equals(accountJid.getDomain().toLowerCase())) {
-            binding.contactDisplayName.setText(contact.getDisplayName());
-        } else {
-            binding.contactDisplayName.setText(contact.getJid().toString());
-        }
+        binding.contactDisplayName.setText(contact.getDisplayName());
+        this.binding.jid.setVisibility(this.mAdvancedMode ? View.VISIBLE : View.GONE);
         if (contact.showInRoster()) {
             binding.detailsSendPresence.setVisibility(View.VISIBLE);
             binding.detailsReceivePresence.setVisibility(View.VISIBLE);
@@ -431,7 +444,10 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             binding.addContactButton.getBackground().setColorFilter(getWarningButtonColor(), PorterDuff.Mode.MULTIPLY);
             binding.detailsSendPresence.setOnCheckedChangeListener(null);
             binding.detailsReceivePresence.setOnCheckedChangeListener(null);
-
+            binding.editContactNameButton.setVisibility(View.VISIBLE);
+            binding.editContactNameButton.setOnClickListener(view -> {
+                editContact();
+            });
             binding.addContactButton.setOnClickListener(view -> {
                 final AlertDialog.Builder deleteFromRosterDialog = new AlertDialog.Builder(ContactDetailsActivity.this);
                 deleteFromRosterDialog.setNegativeButton(getString(R.string.cancel), null)
@@ -509,6 +525,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             binding.detailsSendPresence.setOnCheckedChangeListener(this.mOnSendCheckedChange);
             binding.detailsReceivePresence.setOnCheckedChangeListener(this.mOnReceiveCheckedChange);
         } else {
+            binding.editContactNameButton.setVisibility(View.GONE);
             binding.addContactButton.setVisibility(View.VISIBLE);
             binding.addContactButton.setText(getString(R.string.add_contact));
             binding.addContactButton.getBackground().clearColorFilter();
@@ -537,7 +554,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             }
         }
 
-        binding.detailsContactjid.setText(IrregularUnicodeDetector.style(this, contact.getJid()));
+        binding.jid.setText(IrregularUnicodeDetector.style(this, contact.getJid()));
         String account;
         if (Config.DOMAIN_LOCK != null) {
             account = contact.getAccount().getJid().getLocal();
@@ -545,9 +562,20 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             account = contact.getAccount().getJid().asBareJid().toString();
         }
         binding.detailsAccount.setText(getString(R.string.using_account, account));
-        AvatarWorkerTask.loadAvatar(contact, binding.detailsContactBadge, R.dimen.avatar_big);
+        AvatarWorkerTask.loadAvatar(contact, binding.detailsContactBadge, R.dimen.avatar_on_details_screen_size);
         binding.detailsContactBadge.setOnClickListener(this.onBadgeClick);
-
+        binding.detailsContactBadge.setOnLongClickListener(v -> {
+            ImageView view = new ImageView(ContactDetailsActivity.this);
+            view.setAdjustViewBounds(true);
+            view.setMaxHeight(R.dimen.avatar_big);
+            view.setMaxWidth(R.dimen.avatar_big);
+            view.setBackgroundColor(Color.WHITE);
+            AvatarWorkerTask.loadAvatar(mConversation, view, R.dimen.avatar_big);
+            AlertDialog.Builder builder = new AlertDialog.Builder(ContactDetailsActivity.this);
+            builder.setView(view);
+            builder.create().show();
+            return true;
+        });
         if (xmppConnectionService.multipleAccounts()) {
             binding.detailsAccount.setVisibility(View.VISIBLE);
         } else {

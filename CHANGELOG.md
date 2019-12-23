@@ -2,6 +2,8 @@
 
 #### Version 2.3.5
 * start removing OTR
+* rework conference and contact details (big avatar is available via long click)
+
 #### Version 2.3.4
 * fixes for Jingle IBB file transfer
 * fixes for repeated corrections filling up the database

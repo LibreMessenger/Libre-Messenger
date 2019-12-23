@@ -3,6 +3,8 @@ package de.pixart.messenger.ui;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.text.Editable;
@@ -13,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -234,6 +237,18 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             intent.putExtra("uuid", mConversation.getUuid());
             startActivity(intent);
         });
+        this.binding.detailsMucAvatar.setOnLongClickListener(v -> {
+            ImageView view = new ImageView(ConferenceDetailsActivity.this);
+            view.setAdjustViewBounds(true);
+            view.setMaxHeight(R.dimen.avatar_big);
+            view.setMaxWidth(R.dimen.avatar_big);
+            view.setBackgroundColor(Color.WHITE);
+            AvatarWorkerTask.loadAvatar(mConversation, view, R.dimen.avatar_big);
+            AlertDialog.Builder builder = new AlertDialog.Builder(ConferenceDetailsActivity.this);
+            builder.setView(view);
+            builder.create().show();
+            return true;
+        });
         this.mAdvancedMode = getPreferences().getBoolean("advanced_muc_mode", false);
         this.binding.mucInfoMore.setVisibility(this.mAdvancedMode ? View.VISIBLE : View.GONE);
         this.binding.notificationStatusButton.setOnClickListener(this.mNotifyStatusClickListener);
@@ -275,6 +290,17 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             recreate();
         }
         binding.mediaWrapper.setVisibility(Compatibility.hasStoragePermission(this) ? View.VISIBLE : View.GONE);
+    }
+
+    private boolean canChangeMUCAvatar() {
+        final MucOptions mucOptions = mConversation.getMucOptions();
+        if (!mucOptions.hasVCards()) {
+            return false;
+        } else if (!mucOptions.getSelf().getAffiliation().ranks(MucOptions.Affiliation.OWNER)) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     @Override
@@ -491,7 +517,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             this.binding.detailsAccount.setVisibility(View.GONE);
         }
         //todo add edit overlay to avatar and change layout
-        AvatarWorkerTask.loadAvatar(mConversation, binding.detailsMucAvatar, R.dimen.avatar_big);
+        AvatarWorkerTask.loadAvatar(mConversation, binding.detailsMucAvatar, R.dimen.avatar_on_details_screen_size, canChangeMUCAvatar());
         AvatarWorkerTask.loadAvatar(mConversation.getAccount(), binding.yourPhoto, R.dimen.avatar_on_details_screen_size);
 
         String roomName = mucOptions.getName();

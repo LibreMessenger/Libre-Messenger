@@ -67,7 +67,6 @@ dependencies {
     implementation 'androidx.emoji:emoji:1.0.0'
     gitImplementation 'androidx.emoji:emoji-appcompat:1.0.0'
     gitImplementation 'androidx.emoji:emoji-bundled:1.0.0'
-    implementation 'androidx.exifinterface:exifinterface:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
