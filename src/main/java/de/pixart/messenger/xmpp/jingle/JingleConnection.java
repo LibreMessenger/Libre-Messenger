@@ -215,7 +215,7 @@ public class JingleConnection implements Transferable {
         }
         this.file.getParentFile().mkdirs();
         this.file.createNewFile();
-        this.mFileOutputStream = AbstractConnectionManager.createOutputStream(this.file);
+        this.mFileOutputStream = AbstractConnectionManager.createOutputStream(this.file, false, true);
         return this.mFileOutputStream;
     }
 
