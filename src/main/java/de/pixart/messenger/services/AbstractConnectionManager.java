@@ -51,19 +51,6 @@ public class AbstractConnectionManager {
         }
     }
 
-
-    public static OutputStream createAppendedOutputStream(DownloadableFile file) {
-        return createOutputStream(file, false, true);
-    }
-
-    public static OutputStream createOutputStream(DownloadableFile file) {
-        return createOutputStream(file, false);
-    }
-
-    public static OutputStream createOutputStream(DownloadableFile file, boolean gcm) {
-        return createOutputStream(file, gcm, false);
-    }
-
     public static OutputStream createOutputStream(DownloadableFile file, boolean append, boolean decrypt) {
         FileOutputStream os;
         try {
