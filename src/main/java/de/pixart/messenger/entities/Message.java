@@ -460,7 +460,7 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
     }
 
     boolean remoteMsgIdMatchInEdit(String id) {
-        for(Edit edit : this.edits) {
+        for (Edit edit : this.edits) {
             if (id.equals(edit.getEditedId())) {
                 return true;
             }
@@ -677,6 +677,10 @@ public class Message extends AbstractEntity implements AvatarService.Avatarable 
         } else {
             return UIHelper.getColorForName(UIHelper.getMessageDisplayName(this));
         }
+    }
+
+    public boolean isOOb() {
+        return oob;
     }
 
     public static class MergeSeparator {

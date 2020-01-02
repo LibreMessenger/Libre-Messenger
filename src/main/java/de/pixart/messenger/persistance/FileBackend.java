@@ -49,7 +49,6 @@ import java.net.URL;
 import java.security.DigestOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.acl.LastOwnerException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -1165,6 +1164,12 @@ public class FileBackend {
         message.setBody(body.toString());
         message.setFileDeleted(false);
         message.setType(privateMessage ? Message.TYPE_PRIVATE_FILE : (image ? Message.TYPE_IMAGE : Message.TYPE_FILE));
+    }
+
+    public static void updateFileParams(Message message, URL url, long size) {
+        final StringBuilder body = new StringBuilder();
+        body.append(url.toString()).append('|').append(size);
+        message.setBody(body.toString());
     }
 
     private int getMediaRuntime(File file) {

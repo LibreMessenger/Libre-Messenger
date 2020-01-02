@@ -307,7 +307,7 @@ public class UIHelper {
                 return new Pair<>(context.getString(R.string.location), true);
             } else if (message.isXmppUri()) {
                 return new Pair<>(context.getString(R.string.contact), true);
-            } else if (message.treatAsDownloadable()) {
+            } else if (message.treatAsDownloadable() || MessageUtils.unInitiatedButKnownSize(message)) {
                 return new Pair<>(context.getString(R.string.x_file_offered_for_download,
                         getFileDescriptionString(context, message)), true);
             } else {
@@ -520,7 +520,7 @@ public class UIHelper {
                 final Account account = conversation.getAccount();
                 final Jid jid = account.getJid();
                 final String displayName = account.getDisplayName();
-                if (displayName != null ) {
+                if (displayName != null) {
                     return displayName;
                 } else {
                     if (jid.getLocal() != null) {

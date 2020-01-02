@@ -81,6 +81,7 @@ import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.EmojiWrapper;
 import de.pixart.messenger.utils.Emoticons;
 import de.pixart.messenger.utils.GeoHelper;
+import de.pixart.messenger.utils.MessageUtils;
 import de.pixart.messenger.utils.RichPreview;
 import de.pixart.messenger.utils.StylingHelper;
 import de.pixart.messenger.utils.UIHelper;
@@ -234,7 +235,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         final Transferable transferable = message.getTransferable();
         boolean multiReceived = message.getConversation().getMode() == Conversation.MODE_MULTI
                 && message.getMergedStatus() <= Message.STATUS_RECEIVED;
-        if (message.isFileOrImage() || transferable != null) {
+        if (message.isFileOrImage() || transferable != null || MessageUtils.unInitiatedButKnownSize(message)) {
             FileParams params = message.getFileParams();
             filesize = params.size > 0 ? UIHelper.filesizeToString(params.size) : null;
             if (transferable != null && (transferable.getStatus() == Transferable.STATUS_FAILED || transferable.getStatus() == Transferable.STATUS_CANCELLED)) {
@@ -1072,8 +1073,9 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         });
 
         final Transferable transferable = message.getTransferable();
-        if (message.isFileDeleted() || (transferable != null && transferable.getStatus() != Transferable.STATUS_UPLOADING)) {
-            if (transferable != null && transferable.getStatus() == Transferable.STATUS_OFFER) {
+        final boolean unInitiatedButKnownSize = MessageUtils.unInitiatedButKnownSize(message);
+        if (unInitiatedButKnownSize || message.isFileDeleted() || (transferable != null && transferable.getStatus() != Transferable.STATUS_UPLOADING)) {
+            if (unInitiatedButKnownSize || transferable != null && transferable.getStatus() == Transferable.STATUS_OFFER) {
                 displayDownloadableMessage(viewHolder, message, activity.getString(R.string.download_x_file, UIHelper.getFileDescriptionString(activity, message)), darkBackground);
             } else if (transferable != null && transferable.getStatus() == Transferable.STATUS_OFFER_CHECK_FILESIZE) {
                 displayDownloadableMessage(viewHolder, message, activity.getString(R.string.check_x_filesize, UIHelper.getFileDescriptionString(activity, message)), darkBackground);
