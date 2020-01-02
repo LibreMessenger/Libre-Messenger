@@ -417,7 +417,6 @@ public class XmppConnectionService extends Service {
                             Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": couldn't start OTR with " + conversation.getContact().getJid() + " when needed");
                         }
                         sendUnsentMessages(conversation);
-                        resendFailedFileMessages(conversation);
                     }
                 }
                 final List<Conversation> pendingLeaves;
@@ -804,29 +803,31 @@ public class XmppConnectionService extends Service {
     }
 
     private void deleteWebpreviewCache() {
-        try {
-            long start = SystemClock.elapsedRealtime();
-            final Calendar time = Calendar.getInstance();
-            time.add(Calendar.DAY_OF_YEAR, -7);
-            final File directory = new File(getCacheDir().getAbsolutePath(), File.separator + RICH_LINK_METADATA);
-            if (!directory.exists()) {
-                return;
-            }
-            final File[] files = directory.listFiles();
-            if (files != null) {
-                int count = 0;
-                for (File file : files) {
-                    Date lastModified = new Date(file.lastModified());
-                    if (lastModified.before(time.getTime())) {
-                        file.delete();
-                        count++;
-                    }
+        new Thread(() -> {
+            try {
+                long start = SystemClock.elapsedRealtime();
+                final Calendar time = Calendar.getInstance();
+                time.add(Calendar.DAY_OF_YEAR, -7);
+                final File directory = new File(getCacheDir().getAbsolutePath(), File.separator + RICH_LINK_METADATA);
+                if (!directory.exists()) {
+                    return;
                 }
-                Log.d(Config.LOGTAG, "Deleted " + count + " expired webpreview cache files in " + (SystemClock.elapsedRealtime() - start) + "ms");
+                final File[] files = directory.listFiles();
+                if (files != null) {
+                    int count = 0;
+                    for (File file : files) {
+                        Date lastModified = new Date(file.lastModified());
+                        if (lastModified.before(time.getTime())) {
+                            file.delete();
+                            count++;
+                        }
+                    }
+                    Log.d(Config.LOGTAG, "Deleted " + count + " expired webpreview cache files in " + (SystemClock.elapsedRealtime() - start) + "ms");
+                }
+            } catch (Exception e) {
+                Log.d(Config.LOGTAG, "Deleted no expired webpreview cache files because of " + e);
             }
-        } catch (Exception e) {
-            Log.d(Config.LOGTAG, "Deleted no expired webpreview cache files because of " + e);
-        }
+        }).start();
     }
 
     private boolean processAccountState(Account account, boolean interactive, boolean isUiAction, boolean isAccountPushed, HashSet<Account> pingCandidates) {
@@ -1775,7 +1776,9 @@ public class XmppConnectionService extends Service {
     }
 
     private void sendUnsentMessages(final Conversation conversation) {
-        conversation.findWaitingMessages(message -> resendMessage(message, true));
+        new Thread(() -> {
+            conversation.findWaitingMessages(message -> resendMessage(message, true));
+        }).start();
     }
 
     private void resendFailedFileMessages(final Conversation conversation) {
@@ -2017,14 +2020,18 @@ public class XmppConnectionService extends Service {
                 final long startMessageRestore = SystemClock.elapsedRealtime();
                 final Conversation quickLoad = QuickLoader.get(this.conversations);
                 if (quickLoad != null) {
-                    restoreMessages(quickLoad);
+                    new Thread(() -> {
+                        restoreMessages(quickLoad);
+                    }).start();
                     updateConversationUi();
                     final long diffMessageRestore = SystemClock.elapsedRealtime() - startMessageRestore;
                     Log.d(Config.LOGTAG, "quickly restored " + quickLoad.getName() + " after " + diffMessageRestore + "ms");
                 }
                 for (Conversation conversation : this.conversations) {
                     if (quickLoad != conversation) {
-                        restoreMessages(conversation);
+                        new Thread(() -> {
+                            restoreMessages(conversation);
+                        }).start();
                     }
                 }
                 mNotificationService.finishBacklog(false);
