@@ -2352,7 +2352,6 @@ public class XmppConnectionService extends Service {
                 return conversation;
             }
             conversation = databaseBackend.findConversation(account, jid);
-            final boolean loadMessagesFromDb;
             if (conversation != null) {
                 conversation.setStatus(Conversation.STATUS_AVAILABLE);
                 conversation.setAccount(account);
@@ -2364,7 +2363,6 @@ public class XmppConnectionService extends Service {
                     conversation.setContactJid(jid.asBareJid());
                 }
                 databaseBackend.updateConversation(conversation);
-                loadMessagesFromDb = conversation.messagesLoaded.compareAndSet(true, false);
             } else {
                 String conversationName;
                 Contact contact = account.getRoster().getContact(jid);
@@ -2380,21 +2378,7 @@ public class XmppConnectionService extends Service {
                     conversation = new Conversation(conversationName, account, jid.asBareJid(),
                             Conversation.MODE_SINGLE);
                 }
-                this.databaseBackend.createConversation(conversation);
-                loadMessagesFromDb = false;
             }
-            final Conversation c = conversation;
-            mDatabaseReaderExecutor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    if (loadMessagesFromDb) {
-                        c.addAll(0, databaseBackend.getMessages(c, Config.PAGE_SIZE));
-                        updateConversationUi();
-                        c.messagesLoaded.set(true);
-                    }
-                }
-            });
-            updateConversationUi();
             return conversation;
         }
     }

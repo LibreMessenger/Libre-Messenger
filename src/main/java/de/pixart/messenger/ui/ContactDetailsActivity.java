@@ -690,9 +690,6 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
                 return;
             }
             this.mConversation = xmppConnectionService.findConversation(account, contactJid, false);
-            if (this.mConversation != null) {
-                populateView();
-            }
             this.contact = account.getRoster().getContact(contactJid);
             if (mPendingFingerprintVerificationUri != null) {
                 processFingerprintVerification(mPendingFingerprintVerificationUri);
