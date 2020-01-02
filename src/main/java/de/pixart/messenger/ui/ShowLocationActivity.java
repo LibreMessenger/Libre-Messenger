@@ -66,7 +66,7 @@ public class ShowLocationActivity extends XmppActivity {
         setTitle(getString(R.string.show_location));
         setSupportActionBar(findViewById(R.id.toolbar));
         configureActionBar(getSupportActionBar());
-
+        showLocation(null, "");
         Intent intent = getIntent();
 
         this.mLocationName = intent != null ? intent.getStringExtra("name") : null;
@@ -136,12 +136,8 @@ public class ShowLocationActivity extends XmppActivity {
         super.onSaveInstanceState(outState);
     }
 
-    private void showLocation(@Nullable Location location, @Nullable String address) {
-        if (location == null && TextUtils.isEmpty(address)) { // no location and no address available
-            final WebView webView = findViewById(R.id.webView);
-            webView.getSettings().setJavaScriptEnabled(true);
-            webView.loadUrl("file:///android_asset/map.html");
-        } else if (location != null && TextUtils.isEmpty(address)) { // location but no address available
+    private void showLocation(Location location, String address) {
+        if (location != null && TextUtils.isEmpty(address)) { // location but no address available
             String LocationName = "<b>" + mLocationName + "</b>";
             final WebView webView = findViewById(R.id.webView);
             webView.getSettings().setJavaScriptEnabled(true);
@@ -150,7 +146,7 @@ public class ShowLocationActivity extends XmppActivity {
             String LocationName = "<b>" + mLocationName + "</b><br>" + address;
             final WebView webView = findViewById(R.id.webView);
             webView.getSettings().setJavaScriptEnabled(true);
-            webView.loadUrl("file:///android_asset/map.html?lat=" + location.getLatitude() + "&lon=" + location.getLongitude() + "&name=" + LocationName);
+            webView.loadUrl("javascript:toCoordinates(" + location.getLatitude() + "," + location.getLongitude() + "," + "'" + LocationName + "'" +");");
         }
     }
 
@@ -182,7 +178,7 @@ public class ShowLocationActivity extends XmppActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            showLocation(location, null);
+            showLocation(location, "");
         }
 
         @Override
