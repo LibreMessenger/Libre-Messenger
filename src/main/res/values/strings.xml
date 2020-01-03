@@ -517,7 +517,7 @@
     <string name="share_uri_with">Share URI with…</string>
     <string name="mgmt_account_reconnect">Reconnect</string>
     <string name="welcome_text">…is a free and secure XMPP/Jabber client.</string>
-    <string name="magic_create_text">We will guide you through the process of creating an account with a random password, which you can use or change to your own password on the next page. \nThan you will be able to communicate with users of this and other providers by giving them your full Jabber-ID.</string>
+    <string name="magic_create_text">We will guide you through the process of creating an account with a random password, which you can use or change to your own password on the next page. \nThen you will be able to communicate with users of this and other providers by giving them your full Jabber-ID.</string>
     <string name="your_full_jid_will_be">Your Jabber-ID will be: %s</string>
     <string name="create_account">Create new account</string>
     <string name="welcome_existing_account">I have an account</string>
@@ -768,7 +768,7 @@
     <string name="pref_start_search_summary">At ‘Start Conversation’ screen open keyboard and place cursor in search field</string>
     <string name="paste_as_quote">Paste as quote</string>
     <string name="group_chat_avatar">Group chat avatar</string>
-    <string name="host_does_not_support_group_chat_avatars">Host does not support avatars</string>
+    <string name="host_does_not_support_group_chat_avatars">Host does not support group chat avatars</string>
     <string name="only_the_owner_can_change_group_chat_avatar">Only the owner can change the avatar</string>
     <string name="contact_name">Contact name</string>
     <string name="nickname">Nickname for this group chat</string>
