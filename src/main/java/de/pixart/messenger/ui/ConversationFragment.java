@@ -2015,6 +2015,11 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     }
 
     public void privateMessageWith(final Jid counterpart) {
+        final Jid tcp = conversation.getMucOptions().getTrueCounterpart(counterpart);
+        if (!getConversation().getMucOptions().isUserInRoom(counterpart) && getConversation().getMucOptions().findUserByRealJid(tcp == null ? null : tcp.asBareJid()) == null) {
+            Toast.makeText(getActivity(), activity.getString(R.string.user_has_left_conference, counterpart.getResource()), Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (conversation.setOutgoingChatState(Config.DEFAULT_CHATSTATE)) {
             activity.xmppConnectionService.sendChatState(conversation);
         }
