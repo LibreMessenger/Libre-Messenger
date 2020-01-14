@@ -378,6 +378,7 @@ public class AudioPlayer implements View.OnClickListener, MediaPlayer.OnCompleti
                 try {
                     ViewHolder currentViewHolder = getCurrentViewHolder();
                     if (currentViewHolder != null) {
+                        messageAdapter.getActivity().setVolumeControlStream(streamType);
                         play(currentViewHolder, currentlyPlayingMessage, streamType == AudioManager.STREAM_VOICE_CALL, progress);
                     }
                 } catch (Exception e) {

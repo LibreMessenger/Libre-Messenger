@@ -26,7 +26,6 @@ import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -401,7 +400,6 @@ public abstract class XmppActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         this.mTheme = findTheme();
         setTheme(this.mTheme);
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
         metrics = getResources().getDisplayMetrics();
         ExceptionHelper.init(getApplicationContext());
         new EmojiService(this).init(getPreferences().getBoolean(USE_BUNDLED_EMOJIS, getResources().getBoolean(R.bool.use_bundled_emoji)));
