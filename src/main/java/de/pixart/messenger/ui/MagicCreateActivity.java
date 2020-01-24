@@ -31,9 +31,11 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher, Ad
     private boolean useOwnProvider = false;
     public static final String EXTRA_DOMAIN = "domain";
     public static final String EXTRA_PRE_AUTH = "pre_auth";
+    public static final String EXTRA_USERNAME = "username";
 
     private ActivityMagicCreateBinding binding;
     private String domain;
+    private String username;
     private String preAuth;
 
     @Override
@@ -60,6 +62,7 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher, Ad
         final Intent data = getIntent();
         this.domain = data == null ? null : data.getStringExtra(EXTRA_DOMAIN);
         this.preAuth = data == null ? null : data.getStringExtra(EXTRA_PRE_AUTH);
+        this.username = data == null ? null : data.getStringExtra(EXTRA_USERNAME);
         if (getResources().getBoolean(R.bool.portrait_only)) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
@@ -76,20 +79,37 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher, Ad
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         setSupportActionBar((Toolbar) this.binding.toolbar);
         configureActionBar(getSupportActionBar(), this.domain == null);
-        if (domain != null) {
+        if (username != null && domain != null) {
+            binding.title.setText(R.string.your_server_invitation);
+            binding.instructions.setText(getString(R.string.magic_create_text_fixed, domain));
+            binding.username.setEnabled(false);
+            binding.username.setText(this.username);
+            updateFullJidInformation(this.username);
+        } else if (domain != null) {
             binding.instructions.setText(getString(R.string.magic_create_text_on_x, domain));
         }
         binding.createAccount.setOnClickListener(v -> {
             try {
                 final String username = binding.username.getText().toString();
-                if (domain == null && !useOwnProvider) {
-                    domain = Config.MAGIC_CREATE_DOMAIN;
+                final boolean fixedUsername;
+                final Jid jid;
+                if (this.domain != null && this.username != null) {
+                    fixedUsername = true;
+                    jid = Jid.ofLocalAndDomain(this.username, this.domain);
+                } else if (this.domain != null) {
+                    fixedUsername = false;
+                    jid = Jid.ofLocalAndDomain(username, this.domain);
+                } else {
+                    fixedUsername = false;
+                    if (domain == null && !useOwnProvider) {
+                        domain = Config.MAGIC_CREATE_DOMAIN;
+                    }
+                    if (useOwnProvider) {
+                        domain = "your-domain.com";
+                    }
+                    jid = Jid.ofLocalAndDomain(username, domain);
                 }
-                if (useOwnProvider) {
-                    domain = "your-domain.com";
-                }
-                Jid jid = Jid.of(username.toLowerCase(), domain, null);
-                if (!jid.getEscapedLocal().equals(jid.getLocal()) || username.length() < 3) {
+                if (!jid.getEscapedLocal().equals(jid.getLocal()) || (this.username == null && username.length() < 3)) {
                     binding.username.setError(getString(R.string.invalid_username));
                     binding.username.requestFocus();
                 } else {
@@ -101,6 +121,7 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher, Ad
                         account.setOption(Account.OPTION_REGISTER, true);
                         account.setOption(Account.OPTION_DISABLED, true);
                         account.setOption(Account.OPTION_MAGIC_CREATE, true);
+                        account.setOption(Account.OPTION_FIXED_USERNAME, fixedUsername);
                         if (this.preAuth != null) {
                             account.setKey(Account.PRE_AUTH_REGISTRATION_TOKEN, this.preAuth);
                         }
@@ -134,8 +155,6 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher, Ad
                         }
                     });
                     builder.create().show();
-                    StartConversationActivity.addInviteUri(intent, getIntent());
-                    startActivity(intent);
                 }
             } catch (IllegalArgumentException e) {
                 binding.username.setError(getString(R.string.invalid_username));
@@ -157,37 +176,37 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher, Ad
 
     @Override
     public void afterTextChanged(Editable s) {
-        generateJID(s.toString());
+        updateFullJidInformation(s.toString());
     }
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        generateJID(binding.username.getText().toString());
+        updateFullJidInformation(binding.username.getText().toString());
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-        generateJID(binding.username.getText().toString());
+        updateFullJidInformation(binding.username.getText().toString());
     }
 
-    private void generateJID(String s) {
-        domain = binding.server.getSelectedItem().toString();
-        if (s.trim().length() > 0) {
+    private void updateFullJidInformation(String username) {
+        this.domain = binding.server.getSelectedItem().toString();
+        if (username.trim().isEmpty()) {
+            binding.fullJid.setVisibility(View.INVISIBLE);
+        } else {
             try {
                 binding.fullJid.setVisibility(View.VISIBLE);
                 final Jid jid;
                 if (this.domain == null) {
-                    jid = Jid.ofLocalAndDomain(s, Config.MAGIC_CREATE_DOMAIN);
+                    jid = Jid.ofLocalAndDomain(username, Config.MAGIC_CREATE_DOMAIN);
                 } else {
-                    jid = Jid.ofLocalAndDomain(s, this.domain);
+                    jid = Jid.ofLocalAndDomain(username, this.domain);
                 }
                 binding.fullJid.setText(getString(R.string.your_full_jid_will_be, jid.toEscapedString()));
             } catch (IllegalArgumentException e) {
                 binding.fullJid.setVisibility(View.INVISIBLE);
             }
 
-        } else {
-            binding.fullJid.setVisibility(View.INVISIBLE);
         }
     }
 
