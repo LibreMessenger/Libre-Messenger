@@ -87,7 +87,7 @@ public class UriHandlerActivity extends AppCompatActivity {
         final Intent intent;
         final XmppUri xmppUri = new XmppUri(uri);
         final List<Jid> accounts = DatabaseBackend.getInstance(this).getAccountJids(true);
-        if (SignupUtils.isSupportTokenRegistry() && xmppUri.isJidValid()) {
+        if (SignupUtils.isSupportTokenRegistry() && xmppUri.isValidJid()) {
             final String preauth = xmppUri.getParamater("preauth");
             final Jid jid = xmppUri.getJid();
             if (xmppUri.isAction(XmppUri.ACTION_REGISTER)) {
@@ -107,7 +107,7 @@ public class UriHandlerActivity extends AppCompatActivity {
             }
         }
         if (accounts.size() == 0) {
-            if (xmppUri.isJidValid()) {
+            if (xmppUri.isValidJid()) {
                 intent = SignupUtils.getSignUpIntent(this);
                 intent.putExtra(StartConversationActivity.EXTRA_INVITE_URI, xmppUri.toString());
                 startActivity(intent);
@@ -148,7 +148,7 @@ public class UriHandlerActivity extends AppCompatActivity {
             intent.putExtra("jid", xmppUri.getJid().asBareJid().toString());
             intent.setData(uri);
             intent.putExtra("scanned", scanned);
-        } else if (xmppUri.isJidValid()) {
+        } else if (xmppUri.isValidJid()) {
             intent = new Intent(getApplicationContext(), StartConversationActivity.class);
             intent.setAction(Intent.ACTION_VIEW);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);

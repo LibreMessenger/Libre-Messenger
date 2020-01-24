@@ -1,10 +1,13 @@
 package de.pixart.messenger.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,6 +27,7 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.databinding.ActivityMagicCreateBinding;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.utils.CryptoHelper;
+import de.pixart.messenger.utils.SignupUtils;
 import rocks.xmpp.addr.Jid;
 
 public class MagicCreateActivity extends XmppActivity implements TextWatcher, AdapterView.OnItemSelectedListener, CompoundButton.OnCheckedChangeListener {
@@ -208,6 +212,14 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher, Ad
             }
 
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d(Config.LOGTAG, "purge install referrer");
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences.edit().remove(SignupUtils.INSTALL_REFERRER).apply();
+        super.onDestroy();
     }
 
     @Override

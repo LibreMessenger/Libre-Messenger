@@ -1,8 +1,14 @@
 package de.pixart.messenger.ui;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -11,9 +17,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
+import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
+import de.pixart.messenger.databinding.WelcomeBinding;
+import de.pixart.messenger.services.InstallReferrerService;
 import de.pixart.messenger.ui.util.IntroHelper;
+import de.pixart.messenger.utils.SignupUtils;
+import de.pixart.messenger.utils.XmppUri;
+import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.Config.DISALLOW_REGISTRATION_IN_UI;
 import static de.pixart.messenger.utils.PermissionUtils.allGranted;
@@ -22,6 +35,45 @@ import static de.pixart.messenger.utils.PermissionUtils.readGranted;
 public class WelcomeActivity extends XmppActivity {
 
     private static final int REQUEST_IMPORT_BACKUP = 0x63fb;
+    private static final int REQUEST_READ_EXTERNAL_STORAGE = 0XD737;
+
+    private XmppUri inviteUri;
+
+    private BroadcastReceiver installReferrerBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent data) {
+            final String invite = data.getStringExtra(StartConversationActivity.EXTRA_INVITE_URI);
+            if (invite == null) {
+                return;
+            }
+            Log.d(Config.LOGTAG, "welcome activity received install referrer uri: " + invite);
+            final XmppUri xmppUri = new XmppUri(invite);
+            processXmppUri(xmppUri);
+        }
+    };
+
+    private boolean processXmppUri(final XmppUri xmppUri) {
+        if (xmppUri.isValidJid()) {
+            final String preauth = xmppUri.getParamater("preauth");
+            final Jid jid = xmppUri.getJid();
+            final Intent intent;
+            if (xmppUri.isAction(XmppUri.ACTION_REGISTER)) {
+                intent = SignupUtils.getTokenRegistrationIntent(this, jid, preauth);
+            } else if (xmppUri.isAction(XmppUri.ACTION_ROSTER) && "y".equals(xmppUri.getParamater("ibr"))) {
+                intent = SignupUtils.getTokenRegistrationIntent(this, Jid.ofDomain(jid.getDomain()), preauth);
+                intent.putExtra(StartConversationActivity.EXTRA_INVITE_URI, xmppUri.toString());
+            } else {
+                intent = null;
+            }
+            if (intent != null) {
+                startActivity(intent);
+                finish();
+                return true;
+            }
+            this.inviteUri = xmppUri;
+        }
+        return false;
+    }
 
     @Override
     protected void refreshUiReal() {
@@ -31,8 +83,6 @@ public class WelcomeActivity extends XmppActivity {
     void onBackendConnected() {
     }
 
-    private static final int REQUEST_READ_EXTERNAL_STORAGE = 0XD737;
-
     @Override
     public void onStart() {
         super.onStart();
@@ -40,6 +90,15 @@ public class WelcomeActivity extends XmppActivity {
         if (this.mTheme != theme) {
             recreate();
         }
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(InstallReferrerService.INSTALL_REFERRER_BROADCAST_ACTION);
+        registerReceiver(installReferrerBroadcastReceiver, intentFilter);
+    }
+
+    @Override
+    public void onStop() {
+        unregisterReceiver(installReferrerBroadcastReceiver);
+        super.onStop();
     }
 
     @Override
@@ -55,7 +114,13 @@ public class WelcomeActivity extends XmppActivity {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.welcome);
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        final String referrer = preferences.getString(SignupUtils.INSTALL_REFERRER, null);
+        final XmppUri referrerUri = referrer == null ? null : new XmppUri(referrer);
+        if (referrerUri != null && processXmppUri(referrerUri)) {
+            return;
+        }
+        WelcomeBinding binding = DataBindingUtil.setContentView(this, R.layout.welcome);
         setSupportActionBar(findViewById(R.id.toolbar));
         final ActionBar ab = getSupportActionBar();
         if (ab != null) {
@@ -63,27 +128,23 @@ public class WelcomeActivity extends XmppActivity {
             ab.setDisplayHomeAsUpEnabled(false);
         }
         IntroHelper.showIntro(this, false);
-        final Button ImportDatabase = findViewById(R.id.import_database);
-        final TextView ImportText = findViewById(R.id.import_text);
         if (hasStoragePermission(REQUEST_IMPORT_BACKUP)) {
-            ImportDatabase.setVisibility(View.VISIBLE);
-            ImportText.setVisibility(View.VISIBLE);
+            binding.importDatabase.setVisibility(View.VISIBLE);
+            binding.importText.setVisibility(View.VISIBLE);
         }
-        ImportDatabase.setOnClickListener(v -> startActivity(new Intent(this, ImportBackupActivity.class)));
+        binding.importDatabase.setOnClickListener(v -> startActivity(new Intent(this, ImportBackupActivity.class)));
 
 
-        final Button createAccount = findViewById(R.id.create_account);
-        createAccount.setOnClickListener(v -> {
+        binding.createAccount.setOnClickListener(v -> {
             final Intent intent = new Intent(WelcomeActivity.this, MagicCreateActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             addInviteUri(intent);
             startActivity(intent);
         });
         if (DISALLOW_REGISTRATION_IN_UI) {
-            createAccount.setVisibility(View.GONE);
+            binding.createAccount.setVisibility(View.GONE);
         }
-        final Button useExistingAccount = findViewById(R.id.use_existing_account);
-        useExistingAccount.setOnClickListener(v -> {
+        binding.useExistingAccount.setOnClickListener(v -> {
             Intent intent = new Intent(WelcomeActivity.this, EditAccountActivity.class);
             intent.putExtra("init", true);
             intent.putExtra("existing", true);
@@ -96,8 +157,15 @@ public class WelcomeActivity extends XmppActivity {
 
     }
 
-    public void addInviteUri(Intent intent) {
-        StartConversationActivity.addInviteUri(intent, getIntent());
+    public void addInviteUri(Intent to) {
+        final Intent from = getIntent();
+        if (from != null && from.hasExtra(StartConversationActivity.EXTRA_INVITE_URI)) {
+            final String invite = from.getStringExtra(StartConversationActivity.EXTRA_INVITE_URI);
+            to.putExtra(StartConversationActivity.EXTRA_INVITE_URI, invite);
+        } else if (this.inviteUri != null) {
+            Log.d(Config.LOGTAG, "injecting referrer uri into on-boarding flow");
+            to.putExtra(StartConversationActivity.EXTRA_INVITE_URI, this.inviteUri.toString());
+        }
     }
 
     public static void launch(AppCompatActivity activity) {

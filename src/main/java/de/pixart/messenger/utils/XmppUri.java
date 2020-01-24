@@ -182,7 +182,7 @@ public class XmppUri {
         }
     }
 
-    public boolean isJidValid() {
+    public boolean isValidJid() {
         if (jid == null) {
             return false;
         }
