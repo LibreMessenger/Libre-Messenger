@@ -8,11 +8,23 @@ import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.ConversationsActivity;
 import de.pixart.messenger.ui.EditAccountActivity;
+import de.pixart.messenger.ui.MagicCreateActivity;
 import de.pixart.messenger.ui.ManageAccountActivity;
 import de.pixart.messenger.ui.StartConversationActivity;
 import de.pixart.messenger.ui.WelcomeActivity;
 
 public class SignupUtils {
+
+    public static boolean isSupportTokenRegistry() {
+        return true;
+    }
+
+    public static Intent getTokenRegistrationIntent(final Activity activity, String domain, String preauth) {
+        final Intent intent = new Intent(activity, MagicCreateActivity.class);
+        intent.putExtra(MagicCreateActivity.EXTRA_DOMAIN, domain);
+        intent.putExtra(MagicCreateActivity.EXTRA_PRE_AUTH, preauth);
+        return intent;
+    }
 
     public static Intent getSignUpIntent(final Activity activity) {
         final Intent intent = new Intent(activity, WelcomeActivity.class);

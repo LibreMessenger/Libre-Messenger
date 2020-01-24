@@ -31,7 +31,9 @@ public class XmppUri {
     public static final String OMEMO_URI_PARAM = "omemo-sid-";
     private static final String OTR_URI_PARAM = "otr-fingerprint";
     public static final String ACTION_JOIN = "join";
+
     public static final String ACTION_MESSAGE = "message";
+    public static final String ACTION_REGISTER = "register";
 
     public static Pattern XMPP_URI = Patterns.XMPP_PATTERN;
 
@@ -197,6 +199,10 @@ public class XmppUri {
 
     public String getName() {
         return parameters.get("name");
+    }
+
+    public String getParamater(String key) {
+        return this.parameters.get(key);
     }
 
     public List<Fingerprint> getFingerprints() {
