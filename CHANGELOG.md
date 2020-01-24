@@ -3,6 +3,9 @@
 #### Version 2.3.5
 * start removing OTR
 * rework conference and contact details (big avatar is available via long click)
+* resume download of OMEMO encrypted files
+* Channels now use '#' as symbol in avatar
+* bug fixes
 
 #### Version 2.3.4
 * fixes for Jingle IBB file transfer
