@@ -34,6 +34,7 @@ public class XmppUri {
 
     public static final String ACTION_MESSAGE = "message";
     public static final String ACTION_REGISTER = "register";
+    public static final String ACTION_ROSTER = "roster";
 
     public static Pattern XMPP_URI = Patterns.XMPP_PATTERN;
 

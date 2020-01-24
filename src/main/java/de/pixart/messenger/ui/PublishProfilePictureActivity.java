@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.StringRes;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -12,6 +11,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.StringRes;
 
 import com.theartofdev.edmodo.cropper.CropImage;
 
@@ -95,11 +96,11 @@ public class PublishProfilePictureActivity extends XmppActivity implements XmppC
         });
         this.cancelButton.setOnClickListener(v -> {
             if (mInitialAccountSetup) {
-                Intent intent = new Intent(getApplicationContext(), StartConversationActivity.class);
+                final Intent intent = new Intent(getApplicationContext(), StartConversationActivity.class);
                 if (xmppConnectionService != null && xmppConnectionService.getAccounts().size() == 1) {
-                    StartConversationActivity.addInviteUri(intent, getIntent());
                     intent.putExtra("init", true);
                 }
+                StartConversationActivity.addInviteUri(intent, getIntent());
                 startActivity(intent);
             }
             finish();
