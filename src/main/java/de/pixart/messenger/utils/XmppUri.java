@@ -1,16 +1,23 @@
 package de.pixart.messenger.utils;
 
 import android.net.Uri;
-import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Pattern;
 
-import de.pixart.messenger.Config;
 import rocks.xmpp.addr.Jid;
 
 public class XmppUri {
@@ -19,9 +26,7 @@ public class XmppUri {
     protected String jid;
     protected String fingerprint;
     private List<Fingerprint> fingerprints = new ArrayList<>();
-    private String body;
-    private String name;
-    private String action;
+    private Map<String, String> parameters = Collections.emptyMap();
     private boolean safeSource = true;
     public static final String OMEMO_URI_PARAM = "omemo-sid-";
     private static final String OTR_URI_PARAM = "otr-fingerprint";
@@ -69,7 +74,6 @@ public class XmppUri {
                 try {
                     jid = Jid.of(lameUrlDecode(segments.get(1))).toString();
                 } catch (Exception e) {
-                    Log.d(Config.LOGTAG, "parsing failed ", e);
                     jid = null;
                 }
             } else if (segments.size() >= 3) {
@@ -77,30 +81,24 @@ public class XmppUri {
                 jid = segments.get(1) + "@" + segments.get(2);
             }
             if (segments.size() > 1 && "j".equalsIgnoreCase(segments.get(0))) {
-                action = ACTION_JOIN;
+                this.parameters = ImmutableMap.of(ACTION_JOIN, "");
             }
-            fingerprints = parseFingerprints(uri.getQuery(),'&');
+            final Map<String, String> parameters = parseParameters(uri.getQuery(), '&');
+            this.fingerprints = parseFingerprints(parameters);
         } else if ("xmpp".equalsIgnoreCase(scheme)) {
             // sample: xmpp:foo@bar.com
-            final String query = uri.getQuery();
-            if (hasAction(query, ACTION_JOIN)) {
-                this.action = ACTION_JOIN;
-            } else if (hasAction(query, ACTION_MESSAGE)) {
-                this.action = ACTION_MESSAGE;
-            }
+            this.parameters = parseParameters(uri.getQuery(), ';');
             if (uri.getAuthority() != null) {
                 jid = uri.getAuthority();
             } else {
-                String[] parts = uri.getSchemeSpecificPart().split("\\?");
+                final String[] parts = uri.getSchemeSpecificPart().split("\\?");
                 if (parts.length > 0) {
                     jid = parts[0];
                 } else {
                     return;
                 }
             }
-            this.fingerprints = parseFingerprints(uri.getQuery());
-            this.body = parseParameter("body", uri.getQuery());
-            this.name = parseParameter("name", uri.getQuery());
+            this.fingerprints = parseFingerprints(parameters);
         } else if ("imto".equalsIgnoreCase(scheme)) {
             // sample: imto://xmpp/foo@bar.com
             try {
@@ -117,6 +115,34 @@ public class XmppUri {
         }
     }
 
+    private static Map<String, String> parseParameters(final String query, final char seperator) {
+        final ImmutableMap.Builder<String, String> builder = new ImmutableMap.Builder<>();
+        final String[] pairs = query == null ? new String[0] : query.split(String.valueOf(seperator));
+        for (String pair : pairs) {
+            final String[] parts = pair.split("=", 2);
+            if (parts.length == 0) {
+                continue;
+            }
+            final String key = parts[0].toLowerCase(Locale.US);
+            final String value;
+            if (parts.length == 2) {
+                String decoded;
+                try {
+                    decoded = URLDecoder.decode(parts[1], "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    decoded = "";
+                }
+                value = decoded;
+            } else {
+                value = "";
+            }
+            builder.put(key, value);
+        }
+        return builder.build();
+    }
+
+    @Override
+    @NonNull
     public String toString() {
         if (uri != null) {
             return uri.toString();
@@ -124,60 +150,25 @@ public class XmppUri {
         return "";
     }
 
-    private List<Fingerprint> parseFingerprints(String query) {
-        return parseFingerprints(query, ';');
-    }
-
-    private List<Fingerprint> parseFingerprints(String query, char seperator) {
-        List<Fingerprint> fingerprints = new ArrayList<>();
-        String[] pairs = query == null ? new String[0] : query.split(String.valueOf(seperator));
-        for (String pair : pairs) {
-            String[] parts = pair.split("=", 2);
-            if (parts.length == 2) {
-                String key = parts[0].toLowerCase(Locale.US);
-                String value = parts[1].toLowerCase(Locale.US);
-                if (OTR_URI_PARAM.equals(key)) {
-                    fingerprints.add(new Fingerprint(FingerprintType.OTR, value));
-                }
-                if (key.startsWith(OMEMO_URI_PARAM)) {
-                    try {
-                        int id = Integer.parseInt(key.substring(OMEMO_URI_PARAM.length()));
-                        fingerprints.add(new Fingerprint(FingerprintType.OMEMO, value, id));
-                    } catch (Exception e) {
-                        //ignoring invalid device id
-                    }
-                }
-            }
-        }
-        return fingerprints;
-    }
-
-    private String parseParameter(String key, String query) {
-        for (String pair : query == null ? new String[0] : query.split(";")) {
-            final String[] parts = pair.split("=", 2);
-            if (parts.length == 2 && key.equals(parts[0].toLowerCase(Locale.US))) {
+    private static List<Fingerprint> parseFingerprints(Map<String, String> parameters) {
+        ImmutableList.Builder<Fingerprint> builder = new ImmutableList.Builder<>();
+        for (Map.Entry<String, String> parameter : parameters.entrySet()) {
+            final String key = parameter.getKey();
+            final String value = parameter.getValue().toLowerCase(Locale.US);
+            if (key.startsWith(OMEMO_URI_PARAM)) {
                 try {
-                    return URLDecoder.decode(parts[1], "UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    return null;
+                    final int id = Integer.parseInt(key.substring(OMEMO_URI_PARAM.length()));
+                    builder.add(new Fingerprint(FingerprintType.OMEMO, value, id));
+                } catch (Exception e) {
+                    //ignoring invalid device id
                 }
             }
         }
-        return null;
-    }
-
-    private boolean hasAction(String query, String action) {
-        for(String pair : query == null ? new String[0] : query.split(";")) {
-            final String[] parts = pair.split("=",2);
-            if (parts.length == 1 && parts[0].toLowerCase(Locale.US).startsWith(action)) {
-                return true;
-            }
-        }
-        return false;
+        return builder.build();
     }
 
     public boolean isAction(final String action) {
-        return this.action != null && this.action.equals(action);
+        return parameters.containsKey(action);
     }
 
     public Jid getJid() {
@@ -201,11 +192,11 @@ public class XmppUri {
     }
 
     public String getBody() {
-        return body;
+        return parameters.get("body");
     }
 
     public String getName() {
-        return name;
+        return parameters.get("name");
     }
 
     public List<Fingerprint> getFingerprints() {
@@ -221,10 +212,10 @@ public class XmppUri {
         OTR
     }
 
-    public static String getFingerprintUri(String base, List<XmppUri.Fingerprint> fingerprints, char seperator) {
+    public static String getFingerprintUri(String base, List<XmppUri.Fingerprint> fingerprints, char separator) {
         StringBuilder builder = new StringBuilder(base);
         builder.append('?');
-        for(int i = 0; i < fingerprints.size(); ++i) {
+        for (int i = 0; i < fingerprints.size(); ++i) {
             XmppUri.FingerprintType type = fingerprints.get(i).type;
             if (type == XmppUri.FingerprintType.OMEMO) {
                 builder.append(XmppUri.OMEMO_URI_PARAM);
@@ -234,8 +225,8 @@ public class XmppUri {
             }
             builder.append('=');
             builder.append(fingerprints.get(i).fingerprint);
-            if (i != fingerprints.size() -1) {
-                builder.append(seperator);
+            if (i != fingerprints.size() - 1) {
+                builder.append(separator);
             }
         }
         return builder.toString();
@@ -256,9 +247,10 @@ public class XmppUri {
             this.deviceId = deviceId;
         }
 
+        @NotNull
         @Override
         public String toString() {
-            return type.toString() + ": " + fingerprint + (deviceId != 0 ? " " + String.valueOf(deviceId) : "");
+            return type.toString() + ": " + fingerprint + (deviceId != 0 ? " " + deviceId : "");
         }
     }
 
