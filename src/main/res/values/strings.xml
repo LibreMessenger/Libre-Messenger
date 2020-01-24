@@ -848,7 +848,10 @@
     <string name="unable_to_decrypt_backup">Unable to decrypt backup. Is the password correct?</string>
     <string name="pref_prefer_xmpp_avatar_summary">Prefer the user\'s XMPP avatar instead of the one from your address book</string>
     <string name="pref_prefer_xmpp_avatar">Prefer XMPP avatar</string>
-    <string name="view_users">View participants</string>
+    <plurals name="view_users">
+        <item quantity="one">View %1$d Participant</item>
+        <item quantity="other">View %1$d Participants</item>
+    </plurals>
     <string name="group_chat_members">Participants</string>
     <string name="message_deleted">Message was deleted</string>
     <string name="channel_details">Channel details</string>
