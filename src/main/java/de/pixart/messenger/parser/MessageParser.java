@@ -26,6 +26,7 @@ import de.pixart.messenger.crypto.OtrService;
 import de.pixart.messenger.crypto.axolotl.AxolotlService;
 import de.pixart.messenger.crypto.axolotl.BrokenSessionException;
 import de.pixart.messenger.crypto.axolotl.NotEncryptedForThisDeviceException;
+import de.pixart.messenger.crypto.axolotl.OutdatedSenderException;
 import de.pixart.messenger.crypto.axolotl.XmppAxolotlMessage;
 import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Bookmark;
@@ -235,6 +236,8 @@ public class MessageParser extends AbstractParser implements OnMessagePacketRece
                 }
             } catch (NotEncryptedForThisDeviceException e) {
                 return new Message(conversation, "", Message.ENCRYPTION_AXOLOTL_NOT_FOR_THIS_DEVICE, status);
+            } catch (OutdatedSenderException e) {
+                return new Message(conversation, "", Message.ENCRYPTION_AXOLOTL_FAILED, status);
             }
             if (plaintextMessage != null) {
                 Message finishedMessage = new Message(conversation, plaintextMessage.getPlaintext(), Message.ENCRYPTION_AXOLOTL, status);

@@ -1753,7 +1753,7 @@ public class XmppConnectionService extends Service {
             if (delay) {
                 mMessageGenerator.addDelay(packet, message.getTimeSent());
             }
-            if (conversation.setOutgoingChatState(Config.DEFAULT_CHATSTATE)) {
+            if (conversation.setOutgoingChatState(Config.DEFAULT_CHAT_STATE)) {
                 if (this.sendChatStates()) {
                     packet.addChild(ChatState.toElement(conversation.getOutgoingChatState()));
                 }
@@ -2809,7 +2809,7 @@ public class XmppConnectionService extends Service {
             if (conversation.getMode() == Conversation.MODE_MULTI) {
                 conversation.getMucOptions().resetChatState();
             } else {
-                conversation.setIncomingChatState(Config.DEFAULT_CHATSTATE);
+                conversation.setIncomingChatState(Config.DEFAULT_CHAT_STATE);
             }
         }
         for (Account account : getAccounts()) {

@@ -2020,7 +2020,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             Toast.makeText(getActivity(), activity.getString(R.string.user_has_left_conference, counterpart.getResource()), Toast.LENGTH_SHORT).show();
             return;
         }
-        if (conversation.setOutgoingChatState(Config.DEFAULT_CHATSTATE)) {
+        if (conversation.setOutgoingChatState(Config.DEFAULT_CHAT_STATE)) {
             activity.xmppConnectionService.sendChatState(conversation);
         }
         this.binding.textinput.setText("");
@@ -2158,7 +2158,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
     }
 
     private void updateChatState(final Conversation conversation, final String msg) {
-        ChatState state = msg.length() == 0 ? Config.DEFAULT_CHATSTATE : ChatState.PAUSED;
+        ChatState state = msg.length() == 0 ? Config.DEFAULT_CHAT_STATE : ChatState.PAUSED;
         Account.State status = conversation.getAccount().getStatus();
         if (status == Account.State.ONLINE && conversation.setOutgoingChatState(state)) {
             activity.xmppConnectionService.sendChatState(conversation);
@@ -2967,7 +2967,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             return;
         }
         Account.State status = conversation.getAccount().getStatus();
-        if (status == Account.State.ONLINE && conversation.setOutgoingChatState(Config.DEFAULT_CHATSTATE)) {
+        if (status == Account.State.ONLINE && conversation.setOutgoingChatState(Config.DEFAULT_CHAT_STATE)) {
             service.sendChatState(conversation);
         }
         runOnUiThread(() -> {
