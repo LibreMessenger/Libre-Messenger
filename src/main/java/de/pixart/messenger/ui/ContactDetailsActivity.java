@@ -306,7 +306,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
         } else {
             final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
             this.showDynamicTags = preferences.getBoolean(SettingsActivity.SHOW_DYNAMIC_TAGS, false);
-            this.showLastSeen = preferences.getBoolean("last_activity", false);
+            this.showLastSeen = preferences.getBoolean("last_activity", getResources().getBoolean(R.bool.last_activity));
         }
         binding.mediaWrapper.setVisibility(Compatibility.hasStoragePermission(this) ? View.VISIBLE : View.GONE);
         mMediaAdapter.setAttachments(Collections.emptyList());
@@ -539,7 +539,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
                 binding.detailsLastseen.setVisibility(View.VISIBLE);
                 binding.detailsLastseen.setText(UIHelper.lastseen(getApplicationContext(), contact.isActive(), contact.getLastseen()));
             } else {
-                binding.detailsLastseen.setVisibility(View.GONE);
+                binding.detailsLastseen.setText(getString(R.string.account_status_online));
             }
         }
 
