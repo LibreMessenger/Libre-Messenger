@@ -110,7 +110,7 @@ android {
         //resConfigs "en"
 
         archivesBaseName += "-$versionName"
-        applicationId "de.pixart.messenger.test"
+        applicationId "de.pixart.messenger"
         multiDexEnabled true
 
         buildConfigField("String", "LOGTAG", '"Pix-Art_Messenger"')
@@ -119,7 +119,7 @@ android {
         buildConfigField("boolean", "SHOW_INTRO", 'true')
         buildConfigField("String", "UPDATE_URL", '"https://xmpp.pix-art.de/Pix-Art_Messenger/update/"')
         resValue "string", "applicationId", applicationId
-        resValue "string", "app_name", "Pix-Art Messenger Test"
+        resValue "string", "app_name", "Pix-Art Messenger"
     }
 
     dataBinding {
