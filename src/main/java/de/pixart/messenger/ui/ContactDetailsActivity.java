@@ -443,6 +443,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             binding.addContactButton.setVisibility(View.VISIBLE);
             binding.addContactButton.setText(getString(R.string.action_delete_contact));
             binding.addContactButton.getBackground().setColorFilter(getWarningButtonColor(), PorterDuff.Mode.MULTIPLY);
+            binding.addContactButton.setTextColor(getWarningTextColor());
             binding.addContactButton.setOnClickListener(view -> {
                 final AlertDialog.Builder deleteFromRosterDialog = new AlertDialog.Builder(ContactDetailsActivity.this);
                 deleteFromRosterDialog.setNegativeButton(getString(R.string.cancel), null)
@@ -523,6 +524,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             binding.addContactButton.setVisibility(View.VISIBLE);
             binding.addContactButton.setText(getString(R.string.add_contact));
             binding.addContactButton.getBackground().clearColorFilter();
+            binding.addContactButton.setTextColor(getDefaultButtonTextColor());
             binding.addContactButton.setOnClickListener(view -> showAddToRosterDialog(contact));
             binding.detailsSendPresence.setVisibility(View.GONE);
             binding.detailsReceivePresence.setVisibility(View.GONE);

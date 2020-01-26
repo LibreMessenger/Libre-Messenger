@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/activity_horizontal_margin"
@@ -220,8 +220,8 @@
 
                             <Button
                                 android:id="@+id/add_contact_button"
-                                style="?android:attr/buttonStyleSmall"
-                                android:layout_width="match_parent"
+                                style="@style/Widget.Conversations.Button"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginTop="24dp"
@@ -238,9 +238,9 @@
                                 android:visibility="visible" />
                         </LinearLayout>
                     </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/media_wrapper"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -289,9 +289,9 @@
                                 android:textColor="?attr/colorAccent" />
                         </LinearLayout>
                     </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/keys_wrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -325,7 +325,7 @@
 
                             <Button
                                 android:id="@+id/scan_button"
-                                style="?android:attr/borderlessButtonStyle"
+                                style="@style/Widget.Conversations.Button.Borderless"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:minWidth="0dp"
@@ -338,7 +338,7 @@
 
                             <Button
                                 android:id="@+id/show_inactive_devices"
-                                style="?android:attr/borderlessButtonStyle"
+                                style="@style/Widget.Conversations.Button.Borderless"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:minWidth="0dp"
@@ -350,7 +350,7 @@
                                 android:textColor="?attr/colorAccent" />
                         </LinearLayout>
                     </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

@@ -581,6 +581,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             if (self.getAffiliation().ranks(MucOptions.Affiliation.OWNER)) {
                 if (mAdvancedMode) {
                     this.binding.destroy.getBackground().setColorFilter(getWarningButtonColor(), PorterDuff.Mode.MULTIPLY);
+                    this.binding.destroy.setTextColor(getWarningTextColor());
                     this.binding.destroy.setVisibility(View.VISIBLE);
                 } else {
                     this.binding.destroy.setVisibility(View.GONE);
@@ -606,10 +607,12 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
                 LeaveMucDialog.create().show();
             });
             this.binding.leaveMuc.getBackground().setColorFilter(getWarningButtonColor(), PorterDuff.Mode.MULTIPLY);
+            this.binding.leaveMuc.setTextColor(getWarningTextColor());
             this.binding.addContactButton.setVisibility(View.VISIBLE);
             if (mConversation.getBookmark() != null) {
                 this.binding.addContactButton.setText(R.string.delete_bookmark);
                 this.binding.addContactButton.getBackground().setColorFilter(getWarningButtonColor(), PorterDuff.Mode.MULTIPLY);
+                this.binding.addContactButton.setTextColor(getWarningTextColor());
                 this.binding.addContactButton.setOnClickListener(v2 -> {
                     final AlertDialog.Builder deleteFromRosterDialog = new AlertDialog.Builder(ConferenceDetailsActivity.this);
                     deleteFromRosterDialog.setNegativeButton(getString(R.string.cancel), null);
@@ -624,6 +627,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
             } else {
                 this.binding.addContactButton.setText(R.string.save_as_bookmark);
                 this.binding.addContactButton.getBackground().clearColorFilter();
+                this.binding.addContactButton.setTextColor(getDefaultButtonTextColor());
                 this.binding.addContactButton.setOnClickListener(v2 -> {
                     saveAsBookmark();
                 });

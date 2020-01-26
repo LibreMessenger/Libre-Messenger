@@ -114,6 +114,8 @@ public abstract class XmppActivity extends ActionBarActivity {
     public boolean xmppConnectionServiceBound = false;
 
     protected int mColorWarningButton;
+    protected int mColorWarningText;
+    protected int mColorDefaultButtonText;
     protected int mColorWhite;
 
     protected static final String FRAGMENT_TAG_DIALOG = "dialog";
@@ -406,9 +408,12 @@ public abstract class XmppActivity extends ActionBarActivity {
         this.isCameraFeatureAvailable = getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
         if (isDarkTheme()) {
             mColorWarningButton = ContextCompat.getColor(this, R.color.warning_button_dark);
+            mColorWarningText = ContextCompat.getColor(this, R.color.warning_button);
         } else {
             mColorWarningButton = ContextCompat.getColor(this, R.color.warning_button);
+            mColorWarningText = ContextCompat.getColor(this, R.color.warning_button_dark);
         }
+        mColorDefaultButtonText = ContextCompat.getColor(this, R.color.realwhite);
         mColorWhite = ContextCompat.getColor(this, R.color.white70);
         this.mUsingEnterKey = usingEnterKey();
     }
@@ -676,8 +681,7 @@ public abstract class XmppActivity extends ActionBarActivity {
 
     protected void displayErrorDialog(final int errorCode) {
         runOnUiThread(() -> {
-            Builder builder = new Builder(
-                    XmppActivity.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(XmppActivity.this);
             builder.setIconAttribute(android.R.attr.alertDialogIcon);
             builder.setTitle(getString(R.string.error));
             builder.setMessage(errorCode);
@@ -943,6 +947,14 @@ public abstract class XmppActivity extends ActionBarActivity {
 
     public int getWarningButtonColor() {
         return this.mColorWarningButton;
+    }
+
+    public int getWarningTextColor() {
+        return this.mColorWarningText;
+    }
+
+    public int getDefaultButtonTextColor() {
+        return this.mColorDefaultButtonText;
     }
 
     public int getPixel(int dp) {

@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.text.Editable;
@@ -38,13 +39,13 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.google.common.base.Strings;
 import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -442,9 +443,15 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.download_button.setVisibility(View.VISIBLE);
         viewHolder.download_button.setText(add_contact);
         if (group) {
-            viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_account_multiple_plus_grey600_48dp, 0, 0, 0);
+            Drawable icon = activity.getResources().getDrawable(R.drawable.ic_account_multiple_plus_grey600_48dp);
+            Drawable drawable = DrawableCompat.wrap(icon);
+            DrawableCompat.setTint(drawable, StyledAttributes.getColor(getContext(), R.attr.colorAccent));
+            viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
         } else {
-            viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_account_plus_grey600_48dp, 0, 0, 0);
+            Drawable icon = activity.getResources().getDrawable(R.drawable.ic_account_plus_grey600_48dp);
+            Drawable drawable = DrawableCompat.wrap(icon);
+            DrawableCompat.setTint(drawable, StyledAttributes.getColor(getContext(), R.attr.colorAccent));
+            viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
         }
         viewHolder.download_button.setOnClickListener(v -> {
             try {
@@ -638,7 +645,10 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.richlinkview.setVisibility(View.GONE);
         viewHolder.download_button.setVisibility(View.VISIBLE);
         viewHolder.download_button.setText(text);
-        viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_download_grey600_48dp, 0, 0, 0);
+        Drawable icon = activity.getResources().getDrawable(R.drawable.ic_download_grey600_48dp);
+        Drawable drawable = DrawableCompat.wrap(icon);
+        DrawableCompat.setTint(drawable, StyledAttributes.getColor(getContext(), R.attr.colorAccent));
+        viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
         viewHolder.download_button.setOnClickListener(v -> ConversationFragment.downloadFile(activity, message));
     }
 
@@ -651,7 +661,10 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.download_button.setVisibility(View.VISIBLE);
         final String mimeType = message.getMimeType();
         if (mimeType != null && message.getMimeType().contains("pdf")) {
-            viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_file_pdf_grey600_48dp, 0, 0, 0);
+            Drawable icon = activity.getResources().getDrawable(R.drawable.ic_file_pdf_grey600_48dp);
+            Drawable drawable = DrawableCompat.wrap(icon);
+            DrawableCompat.setTint(drawable, StyledAttributes.getColor(getContext(), R.attr.colorAccent));
+            viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
             viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message)));
         } else if (mimeType != null && message.getMimeType().contains("vcard")) {
             try {
@@ -660,7 +673,10 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 e.printStackTrace();
             }
         } else if (mimeType != null && message.getMimeType().contains("calendar")) {
-            viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_calendar_grey600_48dp, 0, 0, 0);
+            Drawable icon = activity.getResources().getDrawable(R.drawable.ic_calendar_grey600_48dp);
+            Drawable drawable = DrawableCompat.wrap(icon);
+            DrawableCompat.setTint(drawable, StyledAttributes.getColor(getContext(), R.attr.colorAccent));
+            viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
             viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message)));
         } else if (mimeType != null && message.getMimeType().equals("application/vnd.android.package-archive")) {
             try {
@@ -669,7 +685,10 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 e.printStackTrace();
             }
         } else {
-            viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_file_grey600_48dp, 0, 0, 0);
+            Drawable icon = activity.getResources().getDrawable(R.drawable.ic_file_grey600_48dp);
+            Drawable drawable = DrawableCompat.wrap(icon);
+            DrawableCompat.setTint(drawable, StyledAttributes.getColor(getContext(), R.attr.colorAccent));
+            viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
             viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message)));
         }
         viewHolder.download_button.setOnClickListener(v -> openDownloadable(message));
@@ -686,7 +705,10 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 e.printStackTrace();
             }
         }
-        viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_android_grey600_48dp, 0, 0, 0);
+        Drawable icon = activity.getResources().getDrawable(R.drawable.ic_android_grey600_48dp);
+        Drawable drawable = DrawableCompat.wrap(icon);
+        DrawableCompat.setTint(drawable, StyledAttributes.getColor(getContext(), R.attr.colorAccent));
+        viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
         viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message) + APKName));
     }
 
@@ -701,7 +723,10 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 e.printStackTrace();
             }
         }
-        viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_account_card_details_grey600_48dp, 0, 0, 0);
+        Drawable icon = activity.getResources().getDrawable(R.drawable.ic_account_card_details_grey600_48dp);
+        Drawable drawable = DrawableCompat.wrap(icon);
+        DrawableCompat.setTint(drawable, StyledAttributes.getColor(getContext(), R.attr.colorAccent));
+        viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
         viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message) + VCardName));
     }
 
@@ -790,7 +815,10 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             viewHolder.image.setVisibility(View.GONE);
             viewHolder.download_button.setVisibility(View.VISIBLE);
             viewHolder.download_button.setText(R.string.show_location);
-            viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_map_marker_grey600_48dp, 0, 0, 0);
+            Drawable icon = activity.getResources().getDrawable(R.drawable.ic_map_marker_grey600_48dp);
+            Drawable drawable = DrawableCompat.wrap(icon);
+            DrawableCompat.setTint(drawable, StyledAttributes.getColor(getContext(), R.attr.colorAccent));
+            viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
             viewHolder.download_button.setOnClickListener(v -> showLocation(message));
         }
     }

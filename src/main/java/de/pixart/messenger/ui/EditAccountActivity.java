@@ -1,7 +1,6 @@
 package de.pixart.messenger.ui;
 
 import android.app.Activity;
-import android.app.AlertDialog.Builder;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -1468,7 +1467,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
     }
 
     public void showWipePepDialog() {
-        Builder builder = new Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.clear_other_devices));
         builder.setIconAttribute(android.R.attr.alertDialogIcon);
         builder.setMessage(getString(R.string.clear_other_devices_desc));
@@ -1560,7 +1559,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             if (mFetchingMamPrefsToast != null) {
                 mFetchingMamPrefsToast.cancel();
             }
-            Builder builder = new Builder(EditAccountActivity.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(EditAccountActivity.this);
             builder.setTitle(R.string.server_side_mam_prefs);
             String defaultAttr = prefs.getAttribute("default");
             final List<String> defaults = Arrays.asList("never", "roster", "always");

@@ -50,6 +50,7 @@
 
     <Button
         android:id="@+id/download_button"
+        style="@style/Widget.Conversations.Button.Outline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:longClickable="true"

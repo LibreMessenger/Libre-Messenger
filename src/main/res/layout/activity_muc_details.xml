@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/activity_horizontal_margin"
@@ -286,7 +286,7 @@
 
                             <Button
                                 android:id="@+id/destroy"
-                                style="?android:attr/buttonStyleSmall"
+                                style="@style/Widget.Conversations.Button"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
@@ -294,8 +294,8 @@
 
                             <Button
                                 android:id="@+id/add_contact_button"
-                                style="?android:attr/buttonStyleSmall"
-                                android:layout_width="match_parent"
+                                style="@style/Widget.Conversations.Button"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginTop="24dp"
@@ -312,9 +312,9 @@
                                 android:visibility="gone" />
                         </LinearLayout>
                     </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/activity_horizontal_margin"
@@ -400,17 +400,17 @@
 
                             <Button
                                 android:id="@+id/leave_muc"
-                                style="?android:attr/buttonStyleSmall"
-                                android:layout_width="match_parent"
+                                style="@style/Widget.Conversations.Button"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginTop="24dp" />
 
                         </LinearLayout>
                     </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/users_wrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -462,8 +462,6 @@
                                 style="@style/Widget.Conversations.Button.Borderless"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:layout_alignParentLeft="true"
                                 android:minWidth="0dp"
                                 android:paddingStart="16dp"
                                 android:paddingLeft="16dp"
@@ -486,9 +484,9 @@
                                 tools:text="View n Participants" />
                         </LinearLayout>
                     </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/media_wrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -539,7 +537,7 @@
                                 android:textColor="?attr/colorAccent" />
                         </LinearLayout>
                     </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
