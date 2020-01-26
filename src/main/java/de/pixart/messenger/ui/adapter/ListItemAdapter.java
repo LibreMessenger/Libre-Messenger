@@ -52,7 +52,7 @@ public class ListItemAdapter extends ArrayAdapter<ListItem> {
 
     public void refreshSettings() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        this.showDynamicTags = preferences.getBoolean(SettingsActivity.SHOW_DYNAMIC_TAGS, false);
+        this.showDynamicTags = preferences.getBoolean(SettingsActivity.SHOW_DYNAMIC_TAGS, activity.getResources().getBoolean(R.bool.show_dynamic_tags));
     }
 
     @Override
