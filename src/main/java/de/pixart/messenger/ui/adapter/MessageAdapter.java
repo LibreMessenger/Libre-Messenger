@@ -44,6 +44,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -366,7 +367,6 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         final String bodyLanguage = message.getBodyLanguage();
         final String bodyLanguageInfo = bodyLanguage == null ? "" : String.format(" \u00B7 %s", bodyLanguage.toUpperCase(Locale.US));
         if (message.getStatus() <= Message.STATUS_RECEIVED) {
-            ;
             if ((filesize != null) && (info != null)) {
                 viewHolder.time.setText(formattedTime + " \u00B7 " + filesize + " \u00B7 " + info + bodyLanguageInfo);
             } else if ((filesize == null) && (info != null)) {
@@ -1172,11 +1172,11 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 viewHolder.answer_button.setVisibility(View.GONE);
             }
             if (isInValidSession) {
-                setBubbleBackgroundColor(viewHolder.message_box, activity.getThemeColor(), type, message.isPrivateMessage(), isInValidSession);
+                setBubbleBackgroundColor(viewHolder.message_box, type, message.isPrivateMessage(), isInValidSession);
                 viewHolder.encryption.setVisibility(View.GONE);
                 viewHolder.encryption.setTextColor(this.getMessageTextColor(darkBackground, false));
             } else {
-                setBubbleBackgroundColor(viewHolder.message_box, activity.getThemeColor(), type, message.isPrivateMessage(), isInValidSession);
+                setBubbleBackgroundColor(viewHolder.message_box, type, message.isPrivateMessage(), isInValidSession);
                 viewHolder.encryption.setVisibility(View.VISIBLE);
                 viewHolder.encryption.setTextColor(this.getWarningTextColor(darkBackground));
                 if (omemoEncryption && !message.isTrusted()) {
@@ -1188,26 +1188,23 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
 
         if (type == SENT) {
-            setBubbleBackgroundColor(viewHolder.message_box, activity.getThemeColor(), type, message.isPrivateMessage(), isInValidSession);
+            setBubbleBackgroundColor(viewHolder.message_box, type, message.isPrivateMessage(), isInValidSession);
         }
         displayStatus(viewHolder, message, type, darkBackground);
         return view;
     }
 
     private void markFileExisting(Message message) {
+        Log.d(Config.LOGTAG, "Found and restored orphaned file");
         message.setFileDeleted(false);
         activity.xmppConnectionService.updateMessage(message, false);
     }
 
     private boolean checkFileExistence(Message message, View view, ViewHolder viewHolder) {
-        Rect scrollBounds = new Rect();
+        final Rect scrollBounds = new Rect();
         view.getHitRect(scrollBounds);
-        if (viewHolder.messageBody.getText().equals(activity.getResources().getString(R.string.file_deleted)) && viewHolder.messageBody.getLocalVisibleRect(scrollBounds)) {
-            if (activity.xmppConnectionService.getFileBackend().getFile(message).exists()) {
-                return true;
-            } else {
-                return false;
-            }
+        if (message.isFileDeleted() && viewHolder.messageBody.getLocalVisibleRect(scrollBounds)) {
+            return activity.xmppConnectionService.getFileBackend().getFile(message).exists();
         } else {
             return false;
         }
@@ -1390,7 +1387,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
     }
 
-    public void setBubbleBackgroundColor(final View viewHolder, final String themeColor, final int type, final boolean isPrivateMessage, final boolean isInValidSession) {
+    public void setBubbleBackgroundColor(final View viewHolder, final int type, final boolean isPrivateMessage, final boolean isInValidSession) {
         if (type == RECEIVED) {
             if (isInValidSession) {
                 if (isPrivateMessage) {
