@@ -10,4 +10,5 @@
     <string name="action_add_new_account">ಹೊಸ ಖಾತೆ ಸೇರಿಸಿ</string>
     <string name="action_edit_contact">ಹೆಸರು ತಿದ್ದು</string>
     <string name="action_add_phone_book">ವಿಳಾಸ ಪುಸ್ತಕಕ್ಕೆ ಸೇರಿಸಿ</string>
+    <string name="action_delete_contact">ಸಂಪರ್ಕ ಅಳಿಸಿ</string>
 </resources>
