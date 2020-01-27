@@ -12,6 +12,12 @@
     <string name="action_add_phone_book">ವಿಳಾಸ ಪುಸ್ತಕಕ್ಕೆ ಸೇರಿಸಿ</string>
     <string name="action_delete_contact">ಸಂಪರ್ಕ ಅಳಿಸಿ</string>
     <string name="action_block_contact">ಸಂಪರ್ಕ ನಿರ್ಬಂಧಿಸಿ</string>
-    <string name="action_unblock_contact">ಸಂಪರ್ಕ ನಿರ್ಬಂಸಧ ತೆರೆ</string>
+    <string name="action_unblock_contact">ಸಂಪರ್ಕ ನಿರ್ಬಂಧ ತೆರೆ</string>
     <string name="action_block_domain">ಅಂತರ್ಜಾಲ ಧಾಮ ನಿರ್ಬಂಧಿಸಿ</string>
+    <string name="action_unblock_domain">ಧಾಮ ನಿರ್ಬಂಧನೆ ತೆರೆ</string>
+    <string name="title_activity_manage_accounts">ಖಾತೆಗಳನ್ನು ನಿರ್ವಹಿಸಿ</string>
+    <string name="title_activity_settings">ಬದಲಾವಣೆ</string>
+    <string name="conference_details">ಗುಂಪು ಸಂಭಾಷಣೆ ವಿವರ</string>
+    <string name="contact_details">ಸಂಪರ್ಕ ವಿವರ</string>
+    <string name="title_activity_sharewith">ಸಂಭಾಷಣೆಗೆ ಹಂಚಿ</string>
 </resources>
