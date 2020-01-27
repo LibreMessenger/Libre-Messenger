@@ -460,7 +460,6 @@
     <string name="share_uri_with">Bagikan URI dengan…</string>
     <string name="mgmt_account_reconnect">Sambung kembali</string>
     <string name="welcome_text">... adalah klien XMPP/Jabber yang bebas dan aman.</string>
-    <string name="magic_create_text">Kami akan memandu anda dalam proses pembuatan akun dengan kata kunci acak, yang dapat anda gunakan atau ubah ke kata sandi anda sendiri di halaman berikutnya.\nAnda akan dapat berkomunikasi dengan pengguna dan penyedia layanan lainnya dengan memberi mereka Jabber-ID anda.</string>
     <string name="your_full_jid_will_be">Jabber-ID anda adalah: %s</string>
     <string name="create_account">Buat akun baru</string>
     <string name="pick_your_username">Pilih nama pengguna Anda</string>
@@ -559,9 +558,6 @@
     <string name="pref_use_tor">Terhubung melalui Tor</string>
     <string name="pref_use_tor_summary">Menghubungkan semua koneksi melalui jaringan Tor.</string>
     <string name="pref_connection_options">Pilihan koneksi</string>
-    <string name="image_low">rendah (720p)</string>
-    <string name="image_mid">tengah (1920p)</string>
-    <string name="image_high">tinggi (3840 p)</string>
     <string name="last_seen_just_away">baru saja</string>
     <string name="send_message">Mengirim pesan</string>
     <string name="send_failed_resend">pengiriman gagal, kirim ulang…</string>
@@ -570,8 +566,6 @@
     <string name="retry_decryption">Deskripsi kembali</string>
     <string name="session_failure">Kegagalan sesi</string>
     <string name="sasl_downgrade">Menurunkan mekanisme SASL</string>
-    <string name="action_take_photo">ambil foto</string>
-    <string name="action_take_video">merekam video</string>
     <string name="account_status_regis_web">Server membutuhkan registrasi di situs web</string>
     <string name="application_found_to_open_website">Tidak ada aplikasi yang ditemukan untuk membuka situs web</string>
     <string name="open_website">Buka situs web</string>
