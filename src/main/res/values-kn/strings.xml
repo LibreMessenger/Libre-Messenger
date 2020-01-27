@@ -34,4 +34,9 @@
     <string name="nick_in_use">ಈ ಉಪನಾಮ ಆಗಲೇ ಬಳಕೆಯಲ್ಲಿದೆ</string>
     <string name="admin">ನಿರ್ವಾಹಕರು</string>
     <string name="owner">ಮಾಲೀಕರು</string>
+    <string name="moderator">ಉಪಶಾಮಕರು</string>
+    <string name="participant">ಪ್ರತಿ ಭಾಗಿ</string>
+    <string name="visitor">ಅತಿಥಿ</string>
+    <string name="remove_contact_text">ನಿಮ್ಮ ಪಟ್ಟಿಯಿಂದ %s ಅನ್ನು ತೆಗೆದುಹಾಕಲು ಬಯಸುವಿರಾ? ಈ ಸಂಪರ್ಕಕ್ಕೆ ಸಂಬಂಧಿಸಿದ ಸಂಭಾಷಣೆಯನ್ನು ತೆಗೆದುಹಾಕುವುದಿಲ್ಲ.</string>
+    <string name="block_contact_text">ನಿಮಗೆ ಸಂದೇಶಗಳನ್ನು ಕಳುಹಿಸುವುದರಿಂದ %s ಅನ್ನು ನಿರ್ಬಂಧಿಸಲು ಬಯಸುವಿರಾ?</string>
 </resources>
