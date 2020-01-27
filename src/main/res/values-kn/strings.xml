@@ -27,4 +27,6 @@
     <string name="just_now">ಇದೀಗ</string>
     <string name="minute_ago">1 ನಿಮಿಷ ಹಿಂದೆ</string>
     <string name="minutes_ago">%d ನಿಮಿಷ ಮುಂಚೆ</string>
+    <string name="x_unread_conversations">%d ಓದಿರದ ಸಂಭಾಷಣೆಗಳು</string>
+    <string name="sending">ಕಳಿಸುತ್ತಿದೆ…</string>
 </resources>
