@@ -20,4 +20,11 @@
     <string name="conference_details">ಗುಂಪು ಸಂಭಾಷಣೆ ವಿವರ</string>
     <string name="contact_details">ಸಂಪರ್ಕ ವಿವರ</string>
     <string name="title_activity_sharewith">ಸಂಭಾಷಣೆಗೆ ಹಂಚಿ</string>
+    <string name="title_activity_start_conversation">ಸಂಭಾಷಣೆ ಪ್ರಾರಂಭಿಸಿ</string>
+    <string name="title_activity_choose_contact">ಸಂಪರ್ಕ ಆರಿಸಿ</string>
+    <string name="title_activity_choose_contacts">ಸಂಪರ್ಕಗಳ ಆರಿಸಿ</string>
+    <string name="title_activity_block_list">ನಿರ್ಬಂಧನಾ ಪಟ್ಟಿ</string>
+    <string name="just_now">ಇದೀಗ</string>
+    <string name="minute_ago">1 ನಿಮಿಷ ಹಿಂದೆ</string>
+    <string name="minutes_ago">%d ನಿಮಿಷ ಮುಂಚೆ</string>
 </resources>
