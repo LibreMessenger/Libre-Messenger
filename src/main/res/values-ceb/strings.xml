@@ -434,6 +434,7 @@
     <string name="share_uri_with">Ipaambit ang URI kauban…</string>
     <string name="mgmt_account_reconnect">Konek ug balik</string>
     <string name="welcome_text">…usa ka libre ug luwas nga kliyente sa XMPP / Jabber.</string>
+    <string name="magic_create_text">Giyahan ka namo sa pag proseso sa pagmugna og usa ka account gamit ang random nga password, nga mahimo nimong gamiton o usbon sa imong kaugalingong password sa sunod nga pahina. \nLabaw kay makahimo ka sa pagpakig-estorya sa mga tiggamit niini ug sa ubang mga tighatag pinaagi sa paghatag kanila sa imong full Jabber-ID.</string>
     <string name="your_full_jid_will_be">Ang imong Jabber-ID mahimong: %s</string>
     <string name="create_account">Buhat ug bag-o nga account</string>
     <string name="pick_your_username">Pili ug imung username</string>
@@ -526,6 +527,9 @@
     <string name="pref_use_tor">Konek pinaagi Tor</string>
     <string name="pref_use_tor_summary">I-tunel ang tanan nga koneksyon pinaagi sa Tor network.</string>
     <string name="pref_connection_options">Mga kapilian sa koneksyon</string>
+    <string name="image_low">ubos (720p)</string>
+    <string name="image_mid">tunga (1920p)</string>
+    <string name="image_high">taas (3840p)</string>
     <string name="last_seen_just_away">bag-uhay ra</string>
     <string name="send_message">Pagpadala ug mensahe</string>
     <string name="send_failed_resend">napakyas ang pag deliver, nag send ug usab…</string>
@@ -534,6 +538,8 @@
     <string name="retry_decryption">Usaba ang pag-decryption</string>
     <string name="session_failure">Napakyas ang sesyon</string>
     <string name="sasl_downgrade">Gipaubos ang mekanismo sa SASL</string>
+    <string name="action_take_photo">kuha ug litrato</string>
+    <string name="action_take_video">irekord ang bidyo</string>
     <string name="account_status_regis_web">Kinahanglan sa server ang pagrehistro sa website</string>
     <string name="application_found_to_open_website">Walay aplikasyon nga makita sa pag-abli sa website</string>
     <string name="open_website">Abli ug website</string>
