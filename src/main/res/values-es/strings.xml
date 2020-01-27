@@ -490,11 +490,11 @@
     <string name="pref_picture_quality_summary">Redimensionar y comprimir las imágenes</string>
     <string name="pref_video_quality">Calidad de vídeo</string>
     <string name="pref_video_quality_summary">Redimensionar y comprimir los vídeos</string>
-    <string name="video_very_low">muy baja (144p)</string>
-    <string name="video_low">baja (360p)</string>
-    <string name="video_mid">media (720p)</string>
-    <string name="video_high">alta (1080p)</string>
-    <string name="video_original">original (sin comprimir)</string>
+    <string name="video_very_low">Muy baja (144p)</string>
+    <string name="video_low">Baja (360p)</string>
+    <string name="video_mid">Media (720p)</string>
+    <string name="video_high">Alta (1080p)</string>
+    <string name="video_original">Original (sin comprimir)</string>
     <string name="always">Siempre</string>
     <string name="always_off">Siempre desactivado</string>
     <string name="battery_optimizations_enabled">Optimizaciones de uso de batería habilitadas</string>
@@ -517,7 +517,7 @@
     <string name="share_uri_with">Compartir URI con...</string>
     <string name="mgmt_account_reconnect">Reconectar</string>
     <string name="welcome_text">... es una aplicación XMPP/Jabber gratuita y segura.</string>
-    <string name="magic_create_text">A continuación crearemos un perfil con una contraseña generada aleatoriamente que podrás utilizar o cambiar en la página siguiente\ny posteriormente podrás ponerte en contacto con los contactos de este y otros servidores dándoles tu Jabber-ID.</string>
+    <string name="magic_create_text">Te guiaremos en el proceso de creación de cuenta con una contraseña aleatoria, que puedes usar o cambiar en la siguiente página. \nDespués podrás comunicar con usuarios de este y de otros proveedores proporcionándoles tu identificador completo.</string>
     <string name="your_full_jid_will_be">Tu identificador Jabber será: %s</string>
     <string name="create_account">Crear cuenta</string>
     <string name="welcome_existing_account">Tengo una cuenta</string>
@@ -655,10 +655,10 @@
     <string name="pref_use_tor">Conectar via Tor</string>
     <string name="pref_use_tor_summary">Todas las conexiones se realizan a través de la red TOR. Requiere Orbot</string>
     <string name="pref_connection_options">Conexión</string>
-    <string name="image_low">baja (720p)</string>
-    <string name="image_mid">medio (1920p)</string>
-    <string name="image_high">alto (3840p)</string>
-    <string name="image_original">original (sin comprimir)</string>
+    <string name="image_low">Baja (720p)</string>
+    <string name="image_mid">Media (1920p)</string>
+    <string name="image_high">Alta (3840p)</string>
+    <string name="image_original">Original (sin comprimir)</string>
     <string name="last_seen_just_away">recientemente</string>
     <string name="send_message">Enviar mensaje</string>
     <string name="send_failed_resend">entrega fallida, reenvío…</string>
@@ -668,7 +668,7 @@
     <string name="session_failure">Fallo de sesión</string>
     <string name="sasl_downgrade">Mecanismo de autentificación SASL degradado</string>
     <string name="action_take_photo">Hacer una foto</string>
-    <string name="action_take_video">grabar un Vídeo</string>
+    <string name="action_take_video">Grabar vídeo</string>
     <string name="account_status_regis_web">El servidor requiere registro en su página web</string>
     <string name="application_found_to_open_website">No se ha encontrado aplicación para abrir la página web</string>
     <string name="open_website">Abrir página web</string>
@@ -768,7 +768,7 @@
     <string name="pref_start_search_summary">En la pantalla \'Comenzar conversación\', abrir el teclado y situar el cursor en el campo de búsqueda</string>
     <string name="paste_as_quote">Pegar como cita</string>
     <string name="group_chat_avatar">Imagen de perfil del grupo</string>
-    <string name="host_does_not_support_group_chat_avatars">El servidor no soporta imágenes de perfil</string>
+    <string name="host_does_not_support_group_chat_avatars">El servidor no soporta imágenes de perfil de grupos de chat</string>
     <string name="only_the_owner_can_change_group_chat_avatar">Solo el propietario puede cambiar la imagen de perfil</string>
     <string name="contact_name">Nombre de contacto</string>
     <string name="nickname">Apodo para este grupo de conversación</string>
@@ -848,7 +848,10 @@
     <string name="unable_to_decrypt_backup">No se puede descifrar la copia de seguridad. ¿Es correcta la contraseña?</string>
     <string name="pref_prefer_xmpp_avatar_summary">Preferir el avatar de usuarios XMPP en lugar del de tu lista de contactos</string>
     <string name="pref_prefer_xmpp_avatar">Preferir avatar XMPP</string>
-    <string name="view_users">Ver participantes</string>
+    <plurals name="view_users">
+        <item quantity="one">Ver %1$d participantes</item>
+        <item quantity="other">Ver %1$d participantes</item>
+    </plurals>
     <string name="group_chat_members">Participantes</string>
     <string name="message_deleted">El mensaje fue eliminado</string>
     <string name="channel_details">Detalles del canal</string>
@@ -903,7 +906,7 @@
     <string name="pref_show_mappreview_inside_summary">Mostrar previsualizaciones de mapas directamente en la vista de chat, se establecerá una conexión al servidor Pix-Art.</string>
     <string name="pref_show_mappreview_inside">Mostrar previsualizaciones de localizaciones en el chat</string>
     <string name="pref_use_internal_updater_summary">Permitir que la aplicación busque actualizaciones una vez al día</string>
-    <string name="pref_use_internal_updater">buscar actualizaciones</string>
+    <string name="pref_use_internal_updater">Buscar actualizaciones</string>
     <string name="attach">Adjuntar</string>
     <string name="delete_locally">Eliminar localmente</string>
     <string name="delete_from_server">Eliminar en el servidor</string>
@@ -993,4 +996,9 @@
     <string name="pref_theme_orange">Naranja</string>
     <string name="pref_theme_color_options_summary">Selecciona la paleta de color del tema</string>
     <string name="pref_theme_color_options">Color del tema</string>
+    <string name="pref_enable_otr_summary">Habilitar OTR para el cifrado de mensajes</string>
+    <string name="pref_enable_otr">Habilitar cifrado OTR</string>
+    <string name="account_status_regis_invalid_token">Referencia de registro inválida</string>
+    <string name="magic_create_text_fixed">Has sido invitado a %1$s. Ya se ha seleccionado un nombre de usuario para ti. Te guiaremos en el proceso de creación de cuenta.\nPodrás comunicarte con usuarios de otros proveedores proporcionándoles tu dirección XMPP completa.</string>
+    <string name="your_server_invitation">Tu invitación al servidor</string>
 </resources>
