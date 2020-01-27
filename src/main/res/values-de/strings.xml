@@ -490,11 +490,11 @@
     <string name="pref_picture_quality_summary">Bildgröße anpassen und komprimieren</string>
     <string name="pref_video_quality">Videoqualität</string>
     <string name="pref_video_quality_summary">Videogröße anpassen und komprimieren</string>
-    <string name="video_very_low">sehr niedrig (144p)</string>
-    <string name="video_low">niedrig (360p)</string>
-    <string name="video_mid">mittelmäßig (720p)</string>
-    <string name="video_high">hoch (1080p)</string>
-    <string name="video_original">original (unkomprimiert)</string>
+    <string name="video_very_low">Sehr niedrig (144p)</string>
+    <string name="video_low">Niedrig (360p)</string>
+    <string name="video_mid">Mittel (720p)</string>
+    <string name="video_high">Hoch (1080p)</string>
+    <string name="video_original">Original (unkomprimiert)</string>
     <string name="always">Immer</string>
     <string name="always_off">Immer aus</string>
     <string name="battery_optimizations_enabled">Batterieoptimierung aktiv</string>
@@ -655,10 +655,10 @@
     <string name="pref_use_tor">Über Tor verbinden</string>
     <string name="pref_use_tor_summary">Alle Verbindungen über das Tor-Netzwerk tunneln. Benötigt Orbot</string>
     <string name="pref_connection_options">Verbindung</string>
-    <string name="image_low">niedrig (720p)</string>
-    <string name="image_mid">mittelmäßig  (1920p)</string>
-    <string name="image_high">hoch (3840p)</string>
-    <string name="image_original">original (unkomprimiert)</string>
+    <string name="image_low">Niedrig (720p)</string>
+    <string name="image_mid">Mittel (1920p)</string>
+    <string name="image_high">Hoch (3840p)</string>
+    <string name="image_original">Original (unkomprimiert)</string>
     <string name="last_seen_just_away">kürzlich</string>
     <string name="send_message">Nachricht senden</string>
     <string name="send_failed_resend">Zustellung fehlgeschlagen, sende erneut…</string>
@@ -848,7 +848,10 @@
     <string name="unable_to_decrypt_backup">Sicherung kann nicht entschlüsselt werden. Stimmt das Kennwort?</string>
     <string name="pref_prefer_xmpp_avatar_summary">Bevorzuge den vom Benutzer gesetzten Avatar anstatt des Profilbildes in deinem Adressbuch</string>
     <string name="pref_prefer_xmpp_avatar">XMPP-Avatar bevorzugen</string>
-    <string name="view_users">Teilnehmer anzeigen</string>
+    <plurals name="view_users">
+        <item quantity="one">%1$d Teilnehmer anzeigen</item>
+        <item quantity="other">%1$d Teilnehmer anzeigen</item>
+    </plurals>
     <string name="group_chat_members">Teilnehmer</string>
     <string name="message_deleted">Nachricht wurde gelöscht</string>
     <string name="channel_details">Channel-Details</string>
@@ -993,4 +996,10 @@
     <string name="pref_theme_orange">Orange</string>
     <string name="pref_theme_color_options_summary">Wähle das Farbschema</string>
     <string name="pref_theme_color_options">Designfarbe</string>
+    <string name="pref_enable_otr_summary">Aktiviere OTR-Verschlüsselung für die Nachrichtenverschlüsselung</string>
+    <string name="pref_enable_otr">OTR-Verschlüsselung aktivieren</string>
+    <string name="magic_create_text_on_x">Du wurdest zu %1$s eingeladen. Wir erstellen nun mit dir gemeinsam ein Profil.\\nWenn du %1$s als deinen Provider wählst, kannst du mit Kontakten auf diesem und anderen Servern in Kontakt treten, indem du ihnen deine Jabber-ID gibst.</string>
+    <string name="account_status_regis_invalid_token">Falscher Registrierungsschlüssel</string>
+    <string name="magic_create_text_fixed">Du wurdest zu %1$s eingeladen. Ein Nutzername wurde für dich bereits voreingestellt. Wir erstellen nun mit dir gemeinsam ein Profil.\nDu kannst mit Kontakten auf diesem und anderen Servern in Kontakt treten, indem du ihnen deine Jabber-ID gibst.</string>
+    <string name="your_server_invitation">Deine Server-Einladung</string>
 </resources>
