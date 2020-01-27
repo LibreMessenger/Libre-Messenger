@@ -658,8 +658,16 @@
     <string name="nickname">Bu qrup söhbətinin adı</string>
     <string name="group_chat_name">Ad</string>
     <string name="providing_a_name_is_optional">Bir adın verilməsi istəyə bağlıdır</string>
+    <string name="create_dialog_group_chat_name">Qrup çat adı</string>
+    <string name="everyone_has_read_up_to_this_point">Hər kəs bu vaxta qədər oxumuşdur</string>
     <string name="conference_resource_constraint">Resurs məhdudiyyəti</string>
+    <string name="delete_message">Mesaji sil</string>
     <string name="conference_destroyed">Bu qrup söhbət məhv edilmişdir</string>
+    <string name="no_application_found_to_view_contact">Kontaktı görmək üçün heç bir tətbiq tapılmadı</string>
+    <string name="welcome_server_info">Blabber.im-in provayderiniz kimi istifadəsini tövsiyə edirik.</string>
+    <string name="no_location_permission">Pix-Art Messenger məkan xidmətlərinə girişə ehtiyac duyur</string>
+    <string name="pref_show_record_voice_btn_summary">Səsli səs düyməsini sürətli hərəkət kimi göstərin</string>
+    <string name="pref_show_record_voice_btn">Qeyd səs düyməsini göstər</string>
     <string name="backup_channel_name">Ehtiyat nüsxə və bərpa etmək</string>
     <string name="app_update_channel_name">Tətbiq yeniləmə</string>
     <string name="action_group_details">Qrupun detalları</string>
