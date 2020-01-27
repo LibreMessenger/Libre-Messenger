@@ -18,7 +18,7 @@
     <string name="title_activity_manage_accounts">Впорядкувати облікові записи</string>
     <string name="title_activity_settings">Налаштування</string>
     <string name="conference_details">Деталі групи</string>
-    <string name="contact_details">Деталі контакту</string>
+    <string name="contact_details">Переглянути деталі контакту</string>
     <string name="title_activity_sharewith">Поділитися в Розмови</string>
     <string name="title_activity_start_conversation">Почати розмову</string>
     <string name="title_activity_choose_contact">Вибрати контакт</string>
@@ -494,11 +494,11 @@
     <string name="pref_picture_quality_summary">Змінити розмір та стиснути зображення</string>
     <string name="pref_video_quality">Якість відео</string>
     <string name="pref_video_quality_summary">Змінити розмір та стиснути відео</string>
-    <string name="video_very_low">Дуже низька (144p)</string>
-    <string name="video_low">Низька (360p)</string>
-    <string name="video_mid">Середня (720p)</string>
-    <string name="video_high">Висока (1080p)</string>
-    <string name="video_original">Оригінал (не стиснено)</string>
+    <string name="video_very_low">дуже низька (144p)</string>
+    <string name="video_low">низька (360p)</string>
+    <string name="video_mid">середня (720p)</string>
+    <string name="video_high">висока (1080p)</string>
+    <string name="video_original">Оригінал (не стиснений)</string>
     <string name="always">Завжди</string>
     <string name="always_off">Завжди вимкнено</string>
     <string name="battery_optimizations_enabled">Оптимізацію батареї задіяно</string>
@@ -521,6 +521,7 @@
     <string name="share_uri_with">Поділитися URI з…</string>
     <string name="mgmt_account_reconnect">Перез’єднатися</string>
     <string name="welcome_text">…вільний та безпечний клієнт XMPP/Jabber.</string>
+    <string name="magic_create_text">Ми допоможемо вам створити обліковий запис. На наступній сторінці ви зможете змінити автоматично зґенерований пароль.\nПодалі ви зможете спілкуватися з користувачами вашого чи будь-якого іншого, для цього потрібно буде надати користувачеві вашу повну XMPP-адресу.</string>
     <string name="your_full_jid_will_be">Ваша повна адреса XMPP буде: %s</string>
     <string name="create_account">Створити обліковий запис</string>
     <string name="welcome_existing_account">Я маю обліковий запис</string>
@@ -670,10 +671,10 @@
     <string name="pref_use_tor">З\'єднання через Tor</string>
     <string name="pref_use_tor_summary">Тунелювати всі з\'єднання через мережу Tor. Потребує Orbot</string>
     <string name="pref_connection_options">З\'єднання</string>
-    <string name="image_low">Низька (720p)</string>
-    <string name="image_mid">Середня (1920p)</string>
-    <string name="image_high">Висока (3840p)</string>
-    <string name="image_original">Оригінал (не стиснено)</string>
+    <string name="image_low">низька (720p)</string>
+    <string name="image_mid">середня (1920p)</string>
+    <string name="image_high">висока (3840p)</string>
+    <string name="image_original">оригінал (нестиснено)</string>
     <string name="last_seen_just_away">нещодавно</string>
     <string name="send_message">Відправити повідомленн</string>
     <string name="send_failed_resend">не вдалося доставити, повторюю…</string>
@@ -682,8 +683,8 @@
     <string name="retry_decryption">Спробувати знову розшифрувати</string>
     <string name="session_failure">Помилка сесії</string>
     <string name="sasl_downgrade">Застарілий механізм SASL</string>
-    <string name="action_take_photo">Зробити світлину</string>
-    <string name="action_take_video">Записати відео</string>
+    <string name="action_take_photo">сфотографувати</string>
+    <string name="action_take_video">записати відео</string>
     <string name="account_status_regis_web">Сервер вимагає реєстрації через сайт</string>
     <string name="application_found_to_open_website">Не знайдено програми для перегляду сайту</string>
     <string name="open_website">Відкрити сайт</string>
@@ -783,6 +784,7 @@
     <string name="pref_start_search_summary">На екрані початку розмови відкривати клавіатуру й розміщувати курсор в поле пошуку</string>
     <string name="paste_as_quote">Вставити як цитату</string>
     <string name="group_chat_avatar">Іконка групи</string>
+    <string name="host_does_not_support_group_chat_avatars">Сервер не підтримує іконки для груп</string>
     <string name="only_the_owner_can_change_group_chat_avatar">Лише власник може змінити іконку групи</string>
     <string name="contact_name">Ім\'я контакта</string>
     <string name="nickname">Прізвисько</string>
@@ -916,7 +918,7 @@
     <string name="pref_show_mappreview_inside_summary">Показувати попередній перегляд мапи безпосередньо у вікні чату. Для цього буде встановлено з\'єднання з сервером Pix-Art.</string>
     <string name="pref_show_mappreview_inside">Показувати попередній перегляд місця розташування у чаті</string>
     <string name="pref_use_internal_updater_summary">Дозволити месенджеру щодня шукати оновлення</string>
-    <string name="pref_use_internal_updater">Шукати оновлення</string>
+    <string name="pref_use_internal_updater">шукати оновлення</string>
     <string name="attach">Долучити</string>
     <string name="delete_locally">Вилучити в себе</string>
     <string name="delete_from_server">Вилучити віддалено</string>
