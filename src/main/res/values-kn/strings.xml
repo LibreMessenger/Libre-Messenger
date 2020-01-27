@@ -31,4 +31,7 @@
     <string name="sending">ಕಳಿಸುತ್ತಿದೆ…</string>
     <string name="message_decrypting">ಸಂಧೇಶ ನಿರ್ಗೂಢಿಸಲಾಗುತ್ತಿದೆ. ದಯವಿಟ್ಟು ತಾಳಿ…</string>
     <string name="pgp_message">OpenPGP ಬದ್ಧ ಸಂದೇಶ</string>
+    <string name="nick_in_use">ಈ ಉಪನಾಮ ಆಗಲೇ ಬಳಕೆಯಲ್ಲಿದೆ</string>
+    <string name="admin">ನಿರ್ವಾಹಕರು</string>
+    <string name="owner">ಮಾಲೀಕರು</string>
 </resources>
