@@ -29,4 +29,6 @@
     <string name="minutes_ago">%d ನಿಮಿಷ ಮುಂಚೆ</string>
     <string name="x_unread_conversations">%d ಓದಿರದ ಸಂಭಾಷಣೆಗಳು</string>
     <string name="sending">ಕಳಿಸುತ್ತಿದೆ…</string>
+    <string name="message_decrypting">ಸಂಧೇಶ ನಿರ್ಗೂಢಿಸಲಾಗುತ್ತಿದೆ. ದಯವಿಟ್ಟು ತಾಳಿ…</string>
+    <string name="pgp_message">OpenPGP ಬದ್ಧ ಸಂದೇಶ</string>
 </resources>
