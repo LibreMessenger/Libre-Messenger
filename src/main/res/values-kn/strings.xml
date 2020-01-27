@@ -39,4 +39,9 @@
     <string name="visitor">ಅತಿಥಿ</string>
     <string name="remove_contact_text">ನಿಮ್ಮ ಪಟ್ಟಿಯಿಂದ %s ಅನ್ನು ತೆಗೆದುಹಾಕಲು ಬಯಸುವಿರಾ? ಈ ಸಂಪರ್ಕಕ್ಕೆ ಸಂಬಂಧಿಸಿದ ಸಂಭಾಷಣೆಯನ್ನು ತೆಗೆದುಹಾಕುವುದಿಲ್ಲ.</string>
     <string name="block_contact_text">ನಿಮಗೆ ಸಂದೇಶಗಳನ್ನು ಕಳುಹಿಸುವುದರಿಂದ %s ಅನ್ನು ನಿರ್ಬಂಧಿಸಲು ಬಯಸುವಿರಾ?</string>
+    <string name="unblock_contact_text">%s ಅನ್ನು ಅನಿರ್ಬಂಧಿಸಲು ಮತ್ತು ನಿಮಗೆ ಸಂದೇಶಗಳನ್ನು ಕಳುಹಿಸಲು ಅನುಮತಿಸಲು ಬಯಸುವಿರಾ?</string>
+    <string name="block_domain_text">%s ನಿಂದ ಎಲ್ಲಾ ಸಂಪರ್ಕಗಳನ್ನು ತಡಿಯುವುದೇ?</string>
+    <string name="unblock_domain_text">%s ನಿಂದ ಎಲ್ಲಾ ಸಂಪರ್ಕಗಳನ್ನು ಅನಿರ್ಬಂಧಿಸುವುದೇ?</string>
+    <string name="contact_blocked">ಸಂಪರ್ಕ ನಿರ್ಬಂಧಿಸಲಾಯಿತು</string>
+    <string name="blocked">ನಿರ್ಬಂಧಿಸಲಾಯಿತು</string>
 </resources>
