@@ -1926,6 +1926,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
             if (activity.xmppConnectionService.getFileBackend().deleteFile(message)) {
                 message.setFileDeleted(true);
+                activity.xmppConnectionService.evictPreview(message.getUuid());
                 activity.xmppConnectionService.updateMessage(message, false);
                 activity.onConversationsListItemUpdated();
                 refresh();
