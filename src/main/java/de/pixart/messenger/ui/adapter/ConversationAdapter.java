@@ -38,6 +38,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
     private XmppActivity activity;
     private List<Conversation> conversations;
     private OnConversationClickListener listener;
+    private boolean hasInternetConnection = false;
 
     public ConversationAdapter(XmppActivity activity, List<Conversation> conversations) {
         this.activity = activity;
@@ -57,6 +58,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
             return;
         }
         CharSequence name = conversation.getName();
+        hasInternetConnection = activity.xmppConnectionService.hasInternetConnection();
         if (name instanceof Jid) {
             viewHolder.binding.conversationName.setText(IrregularUnicodeDetector.style(activity, (Jid) name));
         } else {
@@ -220,21 +222,26 @@ public class ConversationAdapter extends RecyclerView.Adapter<ConversationAdapte
         viewHolder.itemView.setOnClickListener(v -> listener.onConversationClick(v, conversation));
 
         if (conversation.getMode() == Conversation.MODE_SINGLE && ShowPresenceColoredNames()) {
-            switch (conversation.getContact().getPresences().getShownStatus()) {
-                case CHAT:
-                case ONLINE:
-                    viewHolder.binding.conversationName.setTextColor(ContextCompat.getColor(activity, R.color.online));
-                    break;
-                case AWAY:
-                    viewHolder.binding.conversationName.setTextColor(ContextCompat.getColor(activity, R.color.away));
-                    break;
-                case XA:
-                case DND:
-                    viewHolder.binding.conversationName.setTextColor(ContextCompat.getColor(activity, R.color.notavailable));
-                    break;
-                default:
-                    viewHolder.binding.conversationName.setTextColor(StyledAttributes.getColor(activity, R.attr.text_Color_Main));
-                    break;
+            if (hasInternetConnection) {
+                switch (conversation.getContact().getPresences().getShownStatus()) {
+                    case CHAT:
+                    case ONLINE:
+                        viewHolder.binding.conversationName.setTextColor(ContextCompat.getColor(activity, R.color.online));
+                        break;
+                    case AWAY:
+                        viewHolder.binding.conversationName.setTextColor(ContextCompat.getColor(activity, R.color.away));
+                        break;
+                    case XA:
+                    case DND:
+                        viewHolder.binding.conversationName.setTextColor(ContextCompat.getColor(activity, R.color.notavailable));
+                        break;
+                    case OFFLINE:
+                    default:
+                        viewHolder.binding.conversationName.setTextColor(StyledAttributes.getColor(activity, R.attr.text_Color_Main));
+                        break;
+                }
+            } else {
+                viewHolder.binding.conversationName.setTextColor(StyledAttributes.getColor(activity, R.attr.text_Color_Main));
             }
         } else {
             viewHolder.binding.conversationName.setTextColor(StyledAttributes.getColor(activity, R.attr.text_Color_Main));
