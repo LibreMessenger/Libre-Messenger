@@ -684,6 +684,24 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else if (mimeType != null && message.getMimeType().contains("video")) {
+            Drawable icon = activity.getResources().getDrawable(R.drawable.ic_video_grey600_48dp);
+            Drawable drawable = DrawableCompat.wrap(icon);
+            DrawableCompat.setTint(drawable, StyledAttributes.getColor(getContext(), R.attr.colorAccent));
+            viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+            viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message)));
+        } else if (mimeType != null && message.getMimeType().contains("image")) {
+            Drawable icon = activity.getResources().getDrawable(R.drawable.ic_image_grey600_48dp);
+            Drawable drawable = DrawableCompat.wrap(icon);
+            DrawableCompat.setTint(drawable, StyledAttributes.getColor(getContext(), R.attr.colorAccent));
+            viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+            viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message)));
+        } else if (mimeType != null && message.getMimeType().contains("audio")) {
+            Drawable icon = activity.getResources().getDrawable(R.drawable.ic_audio_grey600_48dp);
+            Drawable drawable = DrawableCompat.wrap(icon);
+            DrawableCompat.setTint(drawable, StyledAttributes.getColor(getContext(), R.attr.colorAccent));
+            viewHolder.download_button.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null);
+            viewHolder.download_button.setText(activity.getString(R.string.open_x_file, UIHelper.getFileDescriptionString(activity, message)));
         } else {
             Drawable icon = activity.getResources().getDrawable(R.drawable.ic_file_grey600_48dp);
             Drawable drawable = DrawableCompat.wrap(icon);
