@@ -40,16 +40,15 @@ import rocks.xmpp.addr.Jid;
 
 public class HttpDownloadConnection implements Transferable {
 
+    private final Message message;
+    private final boolean mUseTor;
     private HttpConnectionManager mHttpConnectionManager;
     private XmppConnectionService mXmppConnectionService;
-
     private URL mUrl;
-    private final Message message;
     private DownloadableFile file;
     private int mStatus = Transferable.STATUS_UNKNOWN;
     private boolean acceptedAutomatically = false;
     private int mProgress = 0;
-    private final boolean mUseTor;
     private boolean canceled = false;
     private Method method = Method.HTTP_UPLOAD;
 
@@ -83,6 +82,7 @@ public class HttpDownloadConnection implements Transferable {
             } else if (message.isFileOrImage()) {
                 message.setType(Message.TYPE_TEXT);
             }
+            message.setOob(true);
             message.setFileDeleted(false);
             mXmppConnectionService.updateMessage(message);
         }
@@ -114,15 +114,13 @@ public class HttpDownloadConnection implements Transferable {
             } else {
                 message.setRelativeFilePath("Sent/" + fileDateFormat.format(new Date(message.getTimeSent())) + "_" + message.getUuid().substring(0, 4) + (ext != null ? ("." + ext) : ""));
             }
-            if (message.getEncryption() == Message.ENCRYPTION_AXOLOTL) {
+            final String reference = mUrl.getRef();
+            if (reference != null && AesGcmURLStreamHandler.IV_KEY.matcher(reference).matches()) {
                 this.file = new DownloadableFile(mXmppConnectionService.getCacheDir().getAbsolutePath() + "/" + message.getUuid());
+                this.file.setKeyAndIv(CryptoHelper.hexToBytes(reference));
                 Log.d(Config.LOGTAG, "create temporary OMEMO encrypted file: " + this.file.getAbsolutePath() + "(" + message.getMimeType() + ")");
             } else {
                 this.file = mXmppConnectionService.getFileBackend().getFile(message, false);
-            }
-            final String reference = mUrl.getRef();
-            if (reference != null && AesGcmURLStreamHandler.IV_KEY.matcher(reference).matches()) {
-                this.file.setKeyAndIv(CryptoHelper.hexToBytes(reference));
             }
 
             if ((this.message.getEncryption() == Message.ENCRYPTION_OTR
@@ -162,34 +160,30 @@ public class HttpDownloadConnection implements Transferable {
         mHttpConnectionManager.updateConversationUi(true);
     }
 
-    private void decryptOmemoFile() {
+    private void decryptFile() throws IOException {
         final DownloadableFile outputFile = mXmppConnectionService.getFileBackend().getFile(message, true);
 
         if (outputFile.getParentFile().mkdirs()) {
             Log.d(Config.LOGTAG, "created parent directories for " + outputFile.getAbsolutePath());
         }
 
-        try {
-            outputFile.createNewFile();
-            final InputStream is = new FileInputStream(this.file);
+        if (!outputFile.createNewFile()) {
+            Log.w(Config.LOGTAG, "unable to create output file " + outputFile.getAbsolutePath());
+        }
 
-            outputFile.setKey(this.file.getKey());
-            outputFile.setIv(this.file.getIv());
-            final OutputStream os = AbstractConnectionManager.createOutputStream(outputFile, false, true);
+        final InputStream is = new FileInputStream(this.file);
 
-            ByteStreams.copy(is, os);
+        outputFile.setKey(this.file.getKey());
+        outputFile.setIv(this.file.getIv());
+        final OutputStream os = AbstractConnectionManager.createOutputStream(outputFile, false, true);
 
-            FileBackend.close(is);
-            FileBackend.close(os);
+        ByteStreams.copy(is, os);
 
-            if (!file.delete()) {
-                Log.w(Config.LOGTAG, "unable to delete temporary OMEMO encrypted file " + file.getAbsolutePath());
-            }
+        FileBackend.close(is);
+        FileBackend.close(os);
 
-            message.setRelativeFilePath(outputFile.getPath());
-        } catch (IOException e) {
-            message.setEncryption(Message.ENCRYPTION_DECRYPTION_FAILED);
-            mXmppConnectionService.updateMessage(message);
+        if (!file.delete()) {
+            Log.w(Config.LOGTAG, "unable to delete temporary OMEMO encrypted file " + file.getAbsolutePath());
         }
     }
 
@@ -210,9 +204,9 @@ public class HttpDownloadConnection implements Transferable {
         });
     }
 
-    private void decryptIfNeeded() {
-        if (message.getEncryption() == Message.ENCRYPTION_AXOLOTL) {
-            decryptOmemoFile();
+    private void decryptIfNeeded() throws IOException {
+        if (file.getKey() != null && file.getIv() != null) {
+            decryptFile();
         }
     }
 
@@ -268,6 +262,7 @@ public class HttpDownloadConnection implements Transferable {
         FileSizeChecker(boolean interactive) {
             this.interactive = interactive;
         }
+
 
         @Override
         public void run() {
@@ -361,7 +356,6 @@ public class HttpDownloadConnection implements Transferable {
                 connection.setUseCaches(false);
                 Log.d(Config.LOGTAG, "url: " + connection.getURL().toString());
                 connection.setRequestProperty("User-Agent", mXmppConnectionService.getIqGenerator().getUserAgent());
-                connection.setRequestProperty("Accept-Encoding", "identity");
                 if (connection instanceof HttpsURLConnection) {
                     mHttpConnectionManager.setupTrustManager((HttpsURLConnection) connection, interactive);
                 }
@@ -445,17 +439,17 @@ public class HttpDownloadConnection implements Transferable {
                 }
                 connection.setUseCaches(false);
                 connection.setRequestProperty("User-Agent", mXmppConnectionService.getIqGenerator().getUserAgent());
-                connection.setRequestProperty("Accept-Encoding", "identity");
                 final long expected = file.getExpectedSize();
                 final boolean tryResume = file.exists() && file.getSize() > 0 && file.getSize() < expected;
                 long resumeSize = 0;
+
                 if (tryResume) {
                     resumeSize = file.getSize();
                     Log.d(Config.LOGTAG, "http download trying resume after " + resumeSize + " of " + expected);
                     connection.setRequestProperty("Range", "bytes=" + resumeSize + "-");
                 }
                 connection.setConnectTimeout(Config.SOCKET_TIMEOUT * 1000);
-                connection.setReadTimeout(Config.CONNECT_TIMEOUT * 1000);
+                connection.setReadTimeout(Config.SOCKET_TIMEOUT * 1000);
                 connection.connect();
                 is = new BufferedInputStream(connection.getInputStream());
                 final String contentRange = connection.getHeaderField("Content-Range");
@@ -507,10 +501,10 @@ public class HttpDownloadConnection implements Transferable {
                     throw new FileWriterException();
                 }
             } catch (CancellationException e) {
-                Log.d(Config.LOGTAG, "http download failed " + e.getMessage());
+                Log.d(Config.LOGTAG, message.getConversation().getAccount().getJid().asBareJid() + ": http download failed", e);
                 throw e;
             } catch (IOException e) {
-                Log.d(Config.LOGTAG, "http download failed " + e.getMessage());
+                Log.d(Config.LOGTAG, message.getConversation().getAccount().getJid().asBareJid() + ": http download failed", e);
                 throw e;
             } finally {
                 FileBackend.close(os);
