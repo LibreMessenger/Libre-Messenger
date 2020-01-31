@@ -11,9 +11,10 @@ import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.util.Log;
+
 import androidx.annotation.BoolRes;
 import androidx.core.content.ContextCompat;
-import android.util.Log;
 
 import java.util.Arrays;
 import java.util.Collections;

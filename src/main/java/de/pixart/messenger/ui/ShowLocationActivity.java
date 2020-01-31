@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
@@ -20,7 +19,7 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 import android.widget.Toast;
 
-import org.jetbrains.annotations.Nullable;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.lang.ref.WeakReference;
 import java.util.List;

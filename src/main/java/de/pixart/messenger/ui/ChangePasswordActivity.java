@@ -2,10 +2,11 @@ package de.pixart.messenger.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import com.google.android.material.textfield.TextInputLayout;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.google.android.material.textfield.TextInputLayout;
 
 import de.pixart.messenger.R;
 import de.pixart.messenger.entities.Account;

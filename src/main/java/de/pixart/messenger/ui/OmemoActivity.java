@@ -2,14 +2,15 @@ package de.pixart.messenger.ui;
 
 
 import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
-import androidx.appcompat.app.AlertDialog;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.databinding.DataBindingUtil;
 
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;

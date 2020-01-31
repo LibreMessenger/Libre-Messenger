@@ -33,8 +33,6 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Process;
 import android.os.Vibrator;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Surface;
@@ -43,6 +41,9 @@ import android.view.TextureView.SurfaceTextureListener;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
