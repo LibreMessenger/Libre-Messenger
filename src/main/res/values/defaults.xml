@@ -63,7 +63,6 @@
     <integer name="grace_period">144</integer>
     <string name="default_resource" translatable="false">Phone</string>
     <string name="notification_ringtone">content://settings/system/notification_sound</string>
-    <string name="picture_compression">auto</string>
     <string name="image_compression">mid</string>
     <string name="video_compression">mid</string>
     <string name="quick_action">recent</string>

@@ -3,7 +3,6 @@ package de.pixart.messenger.ui;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.AlertDialog.Builder;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
@@ -971,10 +970,6 @@ public abstract class XmppActivity extends ActionBarActivity {
             return true;
         }
         return false;
-    }
-
-    protected boolean neverCompressPictures() {
-        return getPreferences().getString("picture_compression", getResources().getString(R.string.picture_compression)).equals("never");
     }
 
     protected boolean manuallyChangePresence() {

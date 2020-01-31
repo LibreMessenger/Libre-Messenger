@@ -572,10 +572,9 @@ public class XmppConnectionService extends Service {
 
     public void attachImageToConversation(final Conversation conversation, final Uri uri, final UiCallback<Message> callback) {
         final String mimeType = MimeUtils.guessMimeTypeFromUri(this, uri);
-        final String compressPictures = getCompressPicturesPreference();
-
-        if ("never".equals(compressPictures)
-                || ("auto".equals(compressPictures) && getFileBackend().useImageAsIs(uri))
+        final boolean compressPictures = getCompressImageResolutionPreference() != 0;
+        if (!compressPictures
+                || getFileBackend().useImageAsIs(uri)
                 || (mimeType != null && mimeType.endsWith("/gif"))
                 || getFileBackend().unusualBounds(uri)) {
             Log.d(Config.LOGTAG, conversation.getAccount().getJid().asBareJid() + ": not compressing picture. sending as file");
@@ -1000,12 +999,8 @@ public class XmppConnectionService extends Service {
         return getBooleanPreference(SettingsActivity.AWAY_WHEN_SCREEN_IS_OFF, R.bool.away_when_screen_off);
     }
 
-    private String getCompressPicturesPreference() {
-        return getPreferences().getString("picture_compression", getResources().getString(R.string.picture_compression));
-    }
-
     public int getCompressImageResolutionPreference() {
-        switch (getPreferences().getString("image_compression", getResources().getString(R.string.picture_compression))) {
+        switch (getPreferences().getString("image_compression", getResources().getString(R.string.image_compression))) {
             case "low":
                 return 720;
             case "mid":
@@ -1020,7 +1015,7 @@ public class XmppConnectionService extends Service {
     }
 
     public int getCompressImageSizePreference() {
-        switch (getPreferences().getString("image_compression", getResources().getString(R.string.picture_compression))) {
+        switch (getPreferences().getString("image_compression", getResources().getString(R.string.image_compression))) {
             case "low":
                 return 209715; // 0.2 * 1024 * 1024 = 209715 (0.2 MiB)
             case "mid":
