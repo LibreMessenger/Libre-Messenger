@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Arrays;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -82,7 +83,7 @@ public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapp
             JSONObject json = new JSONObject(jsonString.toString());
             if (json.getBoolean("success") && json.has("latestVersion") && json.has("appURI") && json.has("filesize")) {
                 String version = json.getString("latestVersion");
-                String[] ownVersion = BuildConfig.VERSION_NAME.split("-");
+                String[] ownVersion = BuildConfig.VERSION_NAME.split(" ");
                 String url = json.getString("appURI");
                 String filesize = json.getString("filesize");
                 String changelog = "";
@@ -90,11 +91,11 @@ public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapp
                     changelog = json.getString("changelog");
                 }
                 if (checkVersion(version, ownVersion[0]) >= 1) {
-                    Log.d(Config.LOGTAG, "AppUpdater: Version " + ownVersion[0] + " should be updated to " + version);
+                    Log.d(Config.LOGTAG, "AppUpdater: Version " + Arrays.toString(ownVersion) + " should be updated to " + version);
                     UpdateAvailable = true;
                     showNotification(url, changelog, version, filesize, store);
                 } else {
-                    Log.d(Config.LOGTAG, "AppUpdater: Version " + ownVersion[0] + " is up to date");
+                    Log.d(Config.LOGTAG, "AppUpdater: Version " + Arrays.toString(ownVersion) + " is up to date");
                     UpdateAvailable = false;
                 }
             }
