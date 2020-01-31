@@ -100,7 +100,7 @@ public class JingleConnection implements Transferable {
             if (mJingleStatus != JINGLE_STATUS_FAILED && mJingleStatus != JINGLE_STATUS_FINISHED) {
                 fail(IqParser.extractErrorMessage(packet));
             } else {
-                Log.d(Config.LOGTAG,"ignoring late delivery of jingle packet to jingle session with status="+mJingleStatus+": "+packet.toString());
+                Log.d(Config.LOGTAG, "ignoring late delivery of jingle packet to jingle session with status=" + mJingleStatus + ": " + packet.toString());
             }
         }
     };
@@ -1086,7 +1086,7 @@ public class JingleConnection implements Transferable {
         FileBackend.close(mFileOutputStream);
         if (this.message != null) {
             if (responding()) {
-                this.message.setTransferable(new TransferablePlaceholder(Transferable.STATUS_FAILED));
+                this.message.setTransferable(new TransferablePlaceholder(cancelled ? Transferable.STATUS_CANCELLED : Transferable.STATUS_FAILED));
                 if (this.file != null) {
                     file.delete();
                 }
