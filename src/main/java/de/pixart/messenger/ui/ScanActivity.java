@@ -61,6 +61,7 @@ import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.ui.service.CameraManager;
 import de.pixart.messenger.ui.widget.ScannerView;
+import me.drakeet.support.toast.ToastCompat;
 
 /**
  * @author Andreas Schildbach
@@ -290,7 +291,7 @@ public final class ScanActivity extends Activity implements SurfaceTextureListen
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 scan(activity);
             } else {
-                Toast.makeText(activity, R.string.qr_code_scanner_needs_access_to_camera, Toast.LENGTH_SHORT).show();
+                ToastCompat.makeText(activity, R.string.qr_code_scanner_needs_access_to_camera, Toast.LENGTH_SHORT).show();
             }
         }
     }

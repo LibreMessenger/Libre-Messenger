@@ -28,6 +28,7 @@ import java.util.Locale;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.utils.MenuDoubleTabUtil;
+import me.drakeet.support.toast.ToastCompat;
 
 public class ShowLocationActivity extends XmppActivity {
     FloatingActionButton fab;
@@ -161,7 +162,7 @@ public class ShowLocationActivity extends XmppActivity {
             startActivity(intent);
             overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
         } catch (ActivityNotFoundException e) {
-            Toast.makeText(this, R.string.no_application_found_to_display_location, Toast.LENGTH_SHORT).show();
+            ToastCompat.makeText(this, R.string.no_application_found_to_display_location, Toast.LENGTH_SHORT).show();
         }
     }
 

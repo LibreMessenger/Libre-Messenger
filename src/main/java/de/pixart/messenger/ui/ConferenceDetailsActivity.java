@@ -225,11 +225,11 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
         this.binding.detailsMucAvatar.setOnClickListener(v -> {
             final MucOptions mucOptions = mConversation.getMucOptions();
             if (!mucOptions.hasVCards()) {
-                Toast.makeText(this, R.string.host_does_not_support_group_chat_avatars, Toast.LENGTH_SHORT).show();
+                ToastCompat.makeText(this, R.string.host_does_not_support_group_chat_avatars, Toast.LENGTH_SHORT).show();
                 return;
             }
             if (!mucOptions.getSelf().getAffiliation().ranks(MucOptions.Affiliation.OWNER)) {
-                Toast.makeText(this, R.string.only_the_owner_can_change_group_chat_avatar, Toast.LENGTH_SHORT).show();
+                ToastCompat.makeText(this, R.string.only_the_owner_can_change_group_chat_avatar, Toast.LENGTH_SHORT).show();
                 return;
             }
             final Intent intent = new Intent(this, PublishGroupChatProfilePictureActivity.class);
@@ -335,7 +335,7 @@ public class ConferenceDetailsActivity extends XmppActivity implements OnConvers
     public boolean onContextItemSelected(MenuItem item) {
         final User user = mUserPreviewAdapter.getSelectedUser();
         if (user == null) {
-            Toast.makeText(this, R.string.unable_to_perform_this_action, Toast.LENGTH_SHORT).show();
+            ToastCompat.makeText(this, R.string.unable_to_perform_this_action, Toast.LENGTH_SHORT).show();
             return true;
         }
         if (!MucDetailsContextMenuHelper.onContextItemSelected(item, mUserPreviewAdapter.getSelectedUser(), this)) {

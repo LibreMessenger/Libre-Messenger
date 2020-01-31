@@ -24,6 +24,7 @@ import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.interfaces.OnAvatarPublication;
 import de.pixart.messenger.utils.PhoneHelper;
+import me.drakeet.support.toast.ToastCompat;
 
 public class PublishProfilePictureActivity extends XmppActivity implements XmppConnectionService.OnAccountUpdate, OnAvatarPublication {
 
@@ -59,7 +60,7 @@ public class PublishProfilePictureActivity extends XmppActivity implements XmppC
                 intent.putExtra("init", true);
                 startActivity(intent);
             }
-            Toast.makeText(PublishProfilePictureActivity.this,
+            ToastCompat.makeText(PublishProfilePictureActivity.this,
                     R.string.avatar_has_been_published,
                     Toast.LENGTH_SHORT).show();
             finish();
@@ -137,7 +138,7 @@ public class PublishProfilePictureActivity extends XmppActivity implements XmppC
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
                 if (error != null) {
-                    Toast.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                    ToastCompat.makeText(this, error.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         }

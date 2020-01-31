@@ -21,6 +21,7 @@ import de.pixart.messenger.entities.Account;
 import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.adapter.ConversationAdapter;
+import me.drakeet.support.toast.ToastCompat;
 import rocks.xmpp.addr.Jid;
 
 public class ShareWithActivity extends XmppActivity implements XmppConnectionService.OnConversationUpdate {
@@ -75,7 +76,7 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
                     }
                 }
             } else {
-                Toast.makeText(this, R.string.no_storage_permission, Toast.LENGTH_SHORT).show();
+                ToastCompat.makeText(this, R.string.no_storage_permission, Toast.LENGTH_SHORT).show();
             }
     }
 
@@ -195,7 +196,7 @@ public class ShareWithActivity extends XmppActivity implements XmppConnectionSer
         try {
             startActivity(intent);
         } catch (SecurityException e) {
-            Toast.makeText(this, R.string.sharing_application_not_grant_permission, Toast.LENGTH_SHORT).show();
+            ToastCompat.makeText(this, R.string.sharing_application_not_grant_permission, Toast.LENGTH_SHORT).show();
             return;
         }
         finish();

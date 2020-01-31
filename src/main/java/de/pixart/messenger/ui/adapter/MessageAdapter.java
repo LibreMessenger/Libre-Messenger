@@ -88,6 +88,7 @@ import de.pixart.messenger.utils.RichPreview;
 import de.pixart.messenger.utils.StylingHelper;
 import de.pixart.messenger.utils.UIHelper;
 import de.pixart.messenger.xmpp.mam.MamReference;
+import me.drakeet.support.toast.ToastCompat;
 import pl.droidsonroids.gif.GifImageView;
 import rocks.xmpp.addr.Jid;
 
@@ -460,7 +461,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 activity.startActivity(intent);
                 activity.overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
             } catch (Exception e) {
-                Toast.makeText(activity, R.string.no_application_found_to_view_contact, Toast.LENGTH_LONG).show();
+                ToastCompat.makeText(activity, R.string.no_application_found_to_view_contact, Toast.LENGTH_LONG).show();
             }
 
         });
@@ -860,7 +861,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.richlinkview.setVisibility(View.GONE);
         DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
         if (!file.exists()) {
-            Toast.makeText(activity, R.string.file_deleted, Toast.LENGTH_SHORT).show();
+            ToastCompat.makeText(activity, R.string.file_deleted, Toast.LENGTH_SHORT).show();
             return;
         }
         String mime = file.getMimeType();
@@ -976,9 +977,9 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         conversation.messagesLoaded.set(true);
         MessageArchiveService.Query query = activity.xmppConnectionService.getMessageArchiveService().query(conversation, new MamReference(0), timestamp, false);
         if (query != null) {
-            Toast.makeText(activity, R.string.fetching_history_from_server, Toast.LENGTH_LONG).show();
+            ToastCompat.makeText(activity, R.string.fetching_history_from_server, Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(activity, R.string.not_fetching_history_retention_period, Toast.LENGTH_SHORT).show();
+            ToastCompat.makeText(activity, R.string.not_fetching_history_retention_period, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1332,7 +1333,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 return;
             }
         }
-        Toast.makeText(activity, R.string.no_application_found_to_display_location, Toast.LENGTH_SHORT).show();
+        ToastCompat.makeText(activity, R.string.no_application_found_to_display_location, Toast.LENGTH_SHORT).show();
     }
 
     public void updatePreferences() {

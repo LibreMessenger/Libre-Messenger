@@ -72,6 +72,7 @@ import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xmpp.OnKeyStatusUpdated;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.XmppConnection;
+import me.drakeet.support.toast.ToastCompat;
 import rocks.xmpp.addr.Jid;
 
 import static de.pixart.messenger.ui.util.IntroHelper.showIntro;
@@ -144,7 +145,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
             try {
                 ContactDetailsActivity.this.startActivityForResult(intent, 0);
             } catch (ActivityNotFoundException e) {
-                Toast.makeText(ContactDetailsActivity.this, R.string.no_application_found_to_view_contact, Toast.LENGTH_SHORT).show();
+                ToastCompat.makeText(ContactDetailsActivity.this, R.string.no_application_found_to_view_contact, Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -169,7 +170,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
                     startActivity(intent);
                     overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                 } catch (ActivityNotFoundException e) {
-                    Toast.makeText(ContactDetailsActivity.this, R.string.no_application_found_to_view_contact, Toast.LENGTH_SHORT).show();
+                    ToastCompat.makeText(ContactDetailsActivity.this, R.string.no_application_found_to_view_contact, Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -363,7 +364,7 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
                 startActivity(intent);
                 overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
             } catch (ActivityNotFoundException e) {
-                Toast.makeText(ContactDetailsActivity.this, R.string.no_application_found_to_view_contact, Toast.LENGTH_SHORT).show();
+                ToastCompat.makeText(ContactDetailsActivity.this, R.string.no_application_found_to_view_contact, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -716,10 +717,10 @@ public class ContactDetailsActivity extends OmemoActivity implements OnAccountUp
     protected void processFingerprintVerification(XmppUri uri) {
         if (contact != null && contact.getJid().asBareJid().equals(uri.getJid()) && uri.hasFingerprints()) {
             if (xmppConnectionService.verifyFingerprints(contact, uri.getFingerprints())) {
-                Toast.makeText(this, R.string.verified_fingerprints, Toast.LENGTH_SHORT).show();
+                ToastCompat.makeText(this, R.string.verified_fingerprints, Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, R.string.invalid_barcode, Toast.LENGTH_SHORT).show();
+            ToastCompat.makeText(this, R.string.invalid_barcode, Toast.LENGTH_SHORT).show();
         }
     }
 

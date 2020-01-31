@@ -26,6 +26,7 @@ import de.pixart.messenger.entities.Conversation;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.utils.CryptoHelper;
 import de.pixart.messenger.utils.XmppUri;
+import me.drakeet.support.toast.ToastCompat;
 import rocks.xmpp.addr.Jid;
 
 public class VerifyOTRActivity extends XmppActivity implements XmppConnectionService.OnConversationUpdate {
@@ -58,7 +59,7 @@ public class VerifyOTRActivity extends XmppActivity implements XmppConnectionSer
         public void onClick(DialogInterface dialogInterface, int click) {
             mConversation.verifyOtrFingerprint();
             xmppConnectionService.syncRosterToDisk(mConversation.getAccount());
-            Toast.makeText(VerifyOTRActivity.this, R.string.verified, Toast.LENGTH_SHORT).show();
+            ToastCompat.makeText(VerifyOTRActivity.this, R.string.verified, Toast.LENGTH_SHORT).show();
             finish();
         }
     };
@@ -174,18 +175,18 @@ public class VerifyOTRActivity extends XmppActivity implements XmppConnectionSer
         Contact contact = mConversation.getContact();
         if (this.mConversation.getContact().getJid().equals(uri.getJid()) && uri.hasFingerprints()) {
             xmppConnectionService.verifyFingerprints(contact, uri.getFingerprints());
-            Toast.makeText(this, R.string.verified, Toast.LENGTH_SHORT).show();
+            ToastCompat.makeText(this, R.string.verified, Toast.LENGTH_SHORT).show();
             updateView();
             return true;
         } else {
-            Toast.makeText(this, R.string.could_not_verify_fingerprint, Toast.LENGTH_SHORT).show();
+            ToastCompat.makeText(this, R.string.could_not_verify_fingerprint, Toast.LENGTH_SHORT).show();
             return false;
         }
     }
 
     protected boolean isAccountOnline() {
         if (this.mAccount.getStatus() != Account.State.ONLINE) {
-            Toast.makeText(this, R.string.not_connected_try_again, Toast.LENGTH_SHORT).show();
+            ToastCompat.makeText(this, R.string.not_connected_try_again, Toast.LENGTH_SHORT).show();
             return false;
         } else {
             return true;

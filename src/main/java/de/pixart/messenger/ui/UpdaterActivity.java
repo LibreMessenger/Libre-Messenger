@@ -34,6 +34,7 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.utils.WakeLockHelper;
+import me.drakeet.support.toast.ToastCompat;
 
 import static de.pixart.messenger.http.HttpConnectionManager.getProxy;
 import static de.pixart.messenger.services.XmppConnectionService.FDroid;
@@ -93,13 +94,13 @@ public class UpdaterActivity extends XmppActivity {
             try {
                 appURI = getIntent().getStringExtra("url");
             } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), getText(R.string.failed), Toast.LENGTH_LONG).show();
+                ToastCompat.makeText(getApplicationContext(), getText(R.string.failed), Toast.LENGTH_LONG).show();
                 UpdaterActivity.this.finish();
             }
             try {
                 changelog = getIntent().getStringExtra("changelog");
             } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), getText(R.string.failed), Toast.LENGTH_LONG).show();
+                ToastCompat.makeText(getApplicationContext(), getText(R.string.failed), Toast.LENGTH_LONG).show();
                 UpdaterActivity.this.finish();
             }
             try {
@@ -157,7 +158,7 @@ public class UpdaterActivity extends XmppActivity {
                                     overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                                 }
                             } else {
-                                Toast.makeText(getApplicationContext(), getText(R.string.download_started), Toast.LENGTH_LONG).show();
+                                ToastCompat.makeText(getApplicationContext(), getText(R.string.download_started), Toast.LENGTH_LONG).show();
                                 downloadTask = new DownloadTask(UpdaterActivity.this);
                                 downloadTask.execute(appURI);
                             }
@@ -186,7 +187,7 @@ public class UpdaterActivity extends XmppActivity {
             //show the alert message
             builder.create().show();
         } else {
-            Toast.makeText(getApplicationContext(), getText(R.string.failed), Toast.LENGTH_LONG).show();
+            ToastCompat.makeText(getApplicationContext(), getText(R.string.failed), Toast.LENGTH_LONG).show();
             UpdaterActivity.this.finish();
         }
     }
@@ -341,7 +342,7 @@ public class UpdaterActivity extends XmppActivity {
                 // expect HTTP 200 OK, so we don't mistakenly save error report
                 // instead of the file
                 if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                    Toast.makeText(getApplicationContext(), getText(R.string.failed), Toast.LENGTH_LONG).show();
+                    ToastCompat.makeText(getApplicationContext(), getText(R.string.failed), Toast.LENGTH_LONG).show();
                     return connection.getResponseCode() + ": " + connection.getResponseMessage();
                 }
 
@@ -397,7 +398,7 @@ public class UpdaterActivity extends XmppActivity {
             WakeLockHelper.release(mWakeLock);
             mProgressDialog.dismiss();
             if (result != null) {
-                Toast.makeText(getApplicationContext(), getString(R.string.failed), Toast.LENGTH_LONG).show();
+                ToastCompat.makeText(getApplicationContext(), getString(R.string.failed), Toast.LENGTH_LONG).show();
                 Log.d(Config.LOGTAG, "AppUpdater: failed with " + result);
                 UpdaterActivity.this.finish();
             } else {

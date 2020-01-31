@@ -30,6 +30,7 @@ import de.pixart.messenger.R;
 import de.pixart.messenger.databinding.ActivityRecordingBinding;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.utils.ThemeHelper;
+import me.drakeet.support.toast.ToastCompat;
 
 public class RecordingActivity extends Activity implements View.OnClickListener {
 
@@ -115,7 +116,7 @@ public class RecordingActivity extends Activity implements View.OnClickListener 
             mRecorder.release();
         } catch (Exception e) {
             if (saveFile) {
-                Toast.makeText(this, R.string.unable_to_save_recording, Toast.LENGTH_SHORT).show();
+                ToastCompat.makeText(this, R.string.unable_to_save_recording, Toast.LENGTH_SHORT).show();
                 return;
             }
         } finally {

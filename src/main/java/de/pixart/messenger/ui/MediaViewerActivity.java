@@ -49,6 +49,7 @@ import de.pixart.messenger.databinding.ActivityMediaViewerBinding;
 import de.pixart.messenger.persistance.FileBackend;
 import de.pixart.messenger.utils.ExifHelper;
 import de.pixart.messenger.utils.MimeUtils;
+import me.drakeet.support.toast.ToastCompat;
 
 import static de.pixart.messenger.persistance.FileBackend.close;
 
@@ -140,7 +141,7 @@ public class MediaViewerActivity extends XmppActivity implements AudioManager.On
             startActivity(Intent.createChooser(share, getText(R.string.share_with)));
         } catch (ActivityNotFoundException e) {
             //This should happen only on faulty androids because normally chooser is always available
-            Toast.makeText(this, R.string.no_application_found_to_open_file, Toast.LENGTH_SHORT).show();
+            ToastCompat.makeText(this, R.string.no_application_found_to_open_file, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -163,7 +164,7 @@ public class MediaViewerActivity extends XmppActivity implements AudioManager.On
             uri = FileBackend.getUriForFile(this, mFile);
         } catch (SecurityException e) {
             Log.d(Config.LOGTAG, "No permission to access " + mFile.getAbsolutePath(), e);
-            Toast.makeText(this, this.getString(R.string.no_permission_to_access_x, mFile.getAbsolutePath()), Toast.LENGTH_SHORT).show();
+            ToastCompat.makeText(this, this.getString(R.string.no_permission_to_access_x, mFile.getAbsolutePath()), Toast.LENGTH_SHORT).show();
             return;
         }
         String mime = MimeUtils.guessMimeTypeFromUri(this, uri);
@@ -179,7 +180,7 @@ public class MediaViewerActivity extends XmppActivity implements AudioManager.On
             this.startActivity(openIntent);
             finish();
         } catch (ActivityNotFoundException e) {
-            Toast.makeText(this, R.string.no_application_found_to_open_file, Toast.LENGTH_SHORT).show();
+            ToastCompat.makeText(this, R.string.no_application_found_to_open_file, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -203,11 +204,11 @@ public class MediaViewerActivity extends XmppActivity implements AudioManager.On
                     } catch (Exception e) {
                         isImage = false;
                         Log.d(Config.LOGTAG, "Illegal exeption :" + e);
-                        Toast.makeText(MediaViewerActivity.this, getString(R.string.error_file_corrupt), Toast.LENGTH_SHORT).show();
+                        ToastCompat.makeText(MediaViewerActivity.this, getString(R.string.error_file_corrupt), Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 } else {
-                    Toast.makeText(MediaViewerActivity.this, getString(R.string.file_deleted), Toast.LENGTH_SHORT).show();
+                    ToastCompat.makeText(MediaViewerActivity.this, getString(R.string.file_deleted), Toast.LENGTH_SHORT).show();
                 }
             } else if (intent.hasExtra("video")) {
                 mFileUri = intent.getParcelableExtra("video");
@@ -219,11 +220,11 @@ public class MediaViewerActivity extends XmppActivity implements AudioManager.On
                     } catch (Exception e) {
                         isVideo = false;
                         Log.d(Config.LOGTAG, "Illegal exeption :" + e);
-                        Toast.makeText(MediaViewerActivity.this, getString(R.string.error_file_corrupt), Toast.LENGTH_SHORT).show();
+                        ToastCompat.makeText(MediaViewerActivity.this, getString(R.string.error_file_corrupt), Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 } else {
-                    Toast.makeText(MediaViewerActivity.this, getString(R.string.file_deleted), Toast.LENGTH_SHORT).show();
+                    ToastCompat.makeText(MediaViewerActivity.this, getString(R.string.file_deleted), Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -252,7 +253,7 @@ public class MediaViewerActivity extends XmppActivity implements AudioManager.On
                 binding.messageImageView.setOnTouchListener((view, motionEvent) -> gestureDetector.onTouchEvent(motionEvent));
             }
         } catch (Exception e) {
-            Toast.makeText(this, getString(R.string.error_file_corrupt), Toast.LENGTH_LONG).show();
+            ToastCompat.makeText(this, getString(R.string.error_file_corrupt), Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
     }

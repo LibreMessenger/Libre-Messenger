@@ -79,6 +79,7 @@ import de.pixart.messenger.utils.MenuDoubleTabUtil;
 import de.pixart.messenger.utils.XmppUri;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.XmppConnection;
+import me.drakeet.support.toast.ToastCompat;
 import rocks.xmpp.addr.Jid;
 
 public class StartConversationActivity extends XmppActivity implements XmppConnectionService.OnConversationUpdate, OnRosterUpdate, OnUpdateBlocklist, CreatePrivateGroupChatDialog.CreateConferenceDialogListener, JoinConferenceDialog.JoinConferenceDialogListener, CreatePublicChannelDialog.CreatePublicChannelDialogListener {
@@ -245,7 +246,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
 
     protected void replaceToast(String msg) {
         hideToast();
-        mToast = Toast.makeText(this, msg, Toast.LENGTH_LONG);
+        mToast = ToastCompat.makeText(this, msg, Toast.LENGTH_LONG);
         mToast.show();
     }
 
@@ -408,14 +409,14 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
         try {
             context.startActivity(Intent.createChooser(shareIntent, context.getText(R.string.share_uri_with)));
         } catch (ActivityNotFoundException e) {
-            Toast.makeText(context, R.string.no_application_to_share_uri, Toast.LENGTH_SHORT).show();
+            ToastCompat.makeText(context, R.string.no_application_to_share_uri, Toast.LENGTH_SHORT).show();
         }
     }
 
     protected void openConversationsForBookmark(Bookmark bookmark) {
         final Jid jid = bookmark.getFullJid();
         if (jid == null) {
-            Toast.makeText(this, R.string.invalid_jid, Toast.LENGTH_SHORT).show();
+            ToastCompat.makeText(this, R.string.invalid_jid, Toast.LENGTH_SHORT).show();
             return;
         }
         Conversation conversation = xmppConnectionService.findOrCreateConversation(bookmark.getAccount(), jid, true, true, true);
@@ -711,7 +712,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
                     final List<Jid> jids = ChooseContactActivity.extractJabberIds(intent);
                     if (account != null && jids.size() > 0) {
                         if (xmppConnectionService.createAdhocConference(account, name, jids, mAdhocConferenceCallback)) {
-                            mToast = Toast.makeText(this, R.string.creating_conference, Toast.LENGTH_LONG);
+                            mToast = ToastCompat.makeText(this, R.string.creating_conference, Toast.LENGTH_LONG);
                             mToast.show();
                         }
                     }
@@ -841,7 +842,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
             } else {
                 if (invite.hasFingerprints()) {
                     if (xmppConnectionService.verifyFingerprints(contact, invite.getFingerprints())) {
-                        Toast.makeText(this, R.string.verified_fingerprints, Toast.LENGTH_SHORT).show();
+                        ToastCompat.makeText(this, R.string.verified_fingerprints, Toast.LENGTH_SHORT).show();
                     }
                 }
                 if (invite.account != null) {
@@ -1034,7 +1035,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
 
     @Override
     public void onCreatePublicChannel(Account account, String name, Jid address) {
-        mToast = Toast.makeText(this, R.string.creating_channel, Toast.LENGTH_LONG);
+        mToast = ToastCompat.makeText(this, R.string.creating_channel, Toast.LENGTH_LONG);
         mToast.show();
         xmppConnectionService.createPublicChannel(account, name, address, new UiCallback<Conversation>() {
             @Override
@@ -1254,7 +1255,7 @@ public class StartConversationActivity extends XmppActivity implements XmppConne
 
         boolean invite() {
             if (!isValidJid()) {
-                Toast.makeText(StartConversationActivity.this, R.string.invalid_jid, Toast.LENGTH_SHORT).show();
+                ToastCompat.makeText(StartConversationActivity.this, R.string.invalid_jid, Toast.LENGTH_SHORT).show();
                 return false;
             }
             if (getJid() != null) {

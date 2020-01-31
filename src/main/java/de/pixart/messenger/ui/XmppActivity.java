@@ -93,6 +93,7 @@ import de.pixart.messenger.utils.ThemeHelper;
 import de.pixart.messenger.xmpp.OnKeyStatusUpdated;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
 import de.pixart.messenger.xmpp.XmppConnection;
+import me.drakeet.support.toast.ToastCompat;
 import pl.droidsonroids.gif.GifDrawable;
 import rocks.xmpp.addr.Jid;
 
@@ -125,7 +126,7 @@ public abstract class XmppActivity extends ActionBarActivity {
     protected boolean mUsingEnterKey = false;
 
     protected Toast mToast;
-    protected Runnable onOpenPGPKeyPublished = () -> Toast.makeText(XmppActivity.this, R.string.openpgp_has_been_published, Toast.LENGTH_SHORT).show();
+    protected Runnable onOpenPGPKeyPublished = () -> ToastCompat.makeText(XmppActivity.this, R.string.openpgp_has_been_published, Toast.LENGTH_SHORT).show();
     protected ConferenceInvite mPendingConferenceInvite = null;
     protected ServiceConnection mConnection = new ServiceConnection() {
 
@@ -210,7 +211,7 @@ public abstract class XmppActivity extends ActionBarActivity {
 
     protected void replaceToast(String msg, boolean showlong) {
         hideToast();
-        mToast = Toast.makeText(this, msg, showlong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT);
+        mToast = ToastCompat.makeText(this, msg, showlong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT);
         mToast.show();
     }
 
@@ -936,7 +937,7 @@ public abstract class XmppActivity extends ActionBarActivity {
             mPendingConferenceInvite = ConferenceInvite.parse(data);
             if (xmppConnectionServiceBound && mPendingConferenceInvite != null) {
                 if (mPendingConferenceInvite.execute(this)) {
-                    mToast = Toast.makeText(this, R.string.creating_conference, Toast.LENGTH_LONG);
+                    mToast = ToastCompat.makeText(this, R.string.creating_conference, Toast.LENGTH_LONG);
                     mToast.show();
                 }
                 mPendingConferenceInvite = null;
@@ -986,11 +987,11 @@ public abstract class XmppActivity extends ActionBarActivity {
 
     public void inviteUser() {
         if (!xmppConnectionServiceBound) {
-            Toast.makeText(this, R.string.not_connected_try_again, Toast.LENGTH_SHORT).show();
+            ToastCompat.makeText(this, R.string.not_connected_try_again, Toast.LENGTH_SHORT).show();
             return;
         }
         if (xmppConnectionService.getAccounts() == null) {
-            Toast.makeText(this, R.string.no_accounts, Toast.LENGTH_SHORT).show();
+            ToastCompat.makeText(this, R.string.no_accounts, Toast.LENGTH_SHORT).show();
             return;
         }
         if (!xmppConnectionService.multipleAccounts()) {
@@ -1132,7 +1133,7 @@ public abstract class XmppActivity extends ActionBarActivity {
             startActivity(Intent.createChooser(intent, getText(R.string.share_uri_with)));
             overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
         } catch (ActivityNotFoundException e) {
-            Toast.makeText(this, R.string.no_application_to_share_uri, Toast.LENGTH_SHORT).show();
+            ToastCompat.makeText(this, R.string.no_application_to_share_uri, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1143,7 +1144,7 @@ public abstract class XmppActivity extends ActionBarActivity {
                     pgp.getIntentForKey(keyId).getIntentSender(), 0, null, 0,
                     0, 0);
         } catch (Throwable e) {
-            Toast.makeText(XmppActivity.this, R.string.openpgp_error, Toast.LENGTH_SHORT).show();
+            ToastCompat.makeText(XmppActivity.this, R.string.openpgp_error, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1407,7 +1408,7 @@ public abstract class XmppActivity extends ActionBarActivity {
                 try {
                     startActivityForResult(intent, REQUEST_UNKNOWN_SOURCE_OP);
                 } catch (ActivityNotFoundException e) {
-                    Toast.makeText(XmppActivity.this, R.string.device_does_not_support_unknown_source_op, Toast.LENGTH_SHORT).show();
+                    ToastCompat.makeText(XmppActivity.this, R.string.device_does_not_support_unknown_source_op, Toast.LENGTH_SHORT).show();
                 } finally {
                     UpdateService task = new UpdateService(this, xmppConnectionService.installedFrom(), xmppConnectionService);
                     task.executeOnExecutor(UpdateService.THREAD_POOL_EXECUTOR, ShowToast);

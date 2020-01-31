@@ -22,6 +22,7 @@ import de.pixart.messenger.BuildConfig;
 import de.pixart.messenger.Config;
 import de.pixart.messenger.R;
 import de.pixart.messenger.ui.UpdaterActivity;
+import me.drakeet.support.toast.ToastCompat;
 
 import static de.pixart.messenger.http.HttpConnectionManager.getProxy;
 
@@ -131,7 +132,7 @@ public class UpdateService extends AsyncTask<String, Object, UpdateService.Wrapp
             } else {
                 ToastMessage = context.getString(R.string.no_update_available);
             }
-            Toast.makeText(context, ToastMessage, Toast.LENGTH_LONG).show();
+            ToastCompat.makeText(context, ToastMessage, Toast.LENGTH_LONG).show();
         });
     }
 

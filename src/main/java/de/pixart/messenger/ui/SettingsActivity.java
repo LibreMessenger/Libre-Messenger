@@ -522,7 +522,7 @@ public class SettingsActivity extends XmppActivity implements
                     createBackup(true);
                 }
             } else {
-                Toast.makeText(this, R.string.no_storage_permission, Toast.LENGTH_SHORT).show();
+                ToastCompat.makeText(this, R.string.no_storage_permission, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -534,7 +534,7 @@ public class SettingsActivity extends XmppActivity implements
     }
 
     private void displayToast(final String msg) {
-        runOnUiThread(() -> Toast.makeText(SettingsActivity.this, msg, Toast.LENGTH_LONG).show());
+        runOnUiThread(() -> ToastCompat.makeText(SettingsActivity.this, msg, Toast.LENGTH_LONG).show());
     }
 
     private void reconnectAccounts() {

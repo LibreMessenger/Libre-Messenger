@@ -16,6 +16,7 @@ import de.pixart.messenger.entities.ListItem;
 import de.pixart.messenger.entities.RawBlockable;
 import de.pixart.messenger.ui.interfaces.OnBackendConnected;
 import de.pixart.messenger.xmpp.OnUpdateBlocklist;
+import me.drakeet.support.toast.ToastCompat;
 import rocks.xmpp.addr.Jid;
 
 public class BlocklistActivity extends AbstractSearchableListItemActivity implements OnUpdateBlocklist {
@@ -88,7 +89,7 @@ public class BlocklistActivity extends AbstractSearchableListItemActivity implem
         dialog.setOnEnterJidDialogPositiveListener((accountJid, contactJid) -> {
             Blockable blockable = new RawBlockable(account, contactJid);
             if (xmppConnectionService.sendBlockRequest(blockable, false)) {
-                Toast.makeText(BlocklistActivity.this, R.string.corresponding_conversations_closed, Toast.LENGTH_SHORT).show();
+                ToastCompat.makeText(BlocklistActivity.this, R.string.corresponding_conversations_closed, Toast.LENGTH_SHORT).show();
             }
             return true;
         });

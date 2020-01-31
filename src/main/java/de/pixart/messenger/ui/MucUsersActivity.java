@@ -28,6 +28,7 @@ import de.pixart.messenger.entities.MucOptions;
 import de.pixart.messenger.services.XmppConnectionService;
 import de.pixart.messenger.ui.adapter.UserAdapter;
 import de.pixart.messenger.ui.util.MucDetailsContextMenuHelper;
+import me.drakeet.support.toast.ToastCompat;
 import rocks.xmpp.addr.Jid;
 
 public class MucUsersActivity extends XmppActivity implements XmppConnectionService.OnMucRosterUpdate, XmppConnectionService.OnAffiliationChanged, MenuItem.OnActionExpandListener, TextWatcher {
@@ -104,7 +105,7 @@ public class MucUsersActivity extends XmppActivity implements XmppConnectionServ
     }
 
     private void displayToast(final String msg) {
-        runOnUiThread(() -> Toast.makeText(this, msg, Toast.LENGTH_SHORT).show());
+        runOnUiThread(() -> ToastCompat.makeText(this, msg, Toast.LENGTH_SHORT).show());
     }
 
     @Override
