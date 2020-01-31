@@ -22,7 +22,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -30,10 +29,17 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -49,7 +55,7 @@ import static de.pixart.messenger.persistance.FileBackend.close;
 public class MediaViewerActivity extends XmppActivity implements AudioManager.OnAudioFocusChangeListener {
 
     Integer oldOrientation;
-    ImageView mFullscreenbutton;
+    SimpleExoPlayer player;
     Uri mFileUri;
     File mFile;
     int height = 0;
@@ -86,8 +92,6 @@ public class MediaViewerActivity extends XmppActivity implements AudioManager.On
                 showFab();
                 return super.onDown(e);
             }
-
-
         });
 
         ActionBar actionBar = getSupportActionBar();
@@ -104,7 +108,6 @@ public class MediaViewerActivity extends XmppActivity implements AudioManager.On
         getWindow().setAttributes(layout);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        mFullscreenbutton = findViewById(R.id.vcv_img_fullscreen);
         binding.speedDial.inflate(R.menu.media_viewer);
         binding.speedDial.setOnActionSelectedListener(actionItem -> {
             switch (actionItem.getId()) {
@@ -226,9 +229,8 @@ public class MediaViewerActivity extends XmppActivity implements AudioManager.On
         }
     }
 
-    private void DisplayImage(final File file, final Uri FileUri) {
-        boolean gif = false;
-        gif = "image/gif".equalsIgnoreCase(getMimeType(file.toString()));
+    private void DisplayImage(final File file, final Uri uri) {
+        final boolean gif = "image/gif".equalsIgnoreCase(getMimeType(file.toString()));
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(new File(file.getPath()).getAbsolutePath(), options);
@@ -242,12 +244,11 @@ public class MediaViewerActivity extends XmppActivity implements AudioManager.On
         try {
             if (gif) {
                 binding.messageGifView.setVisibility(View.VISIBLE);
-                binding.messageGifView.setImageURI(FileUri);
+                binding.messageGifView.setImageURI(uri);
                 binding.messageGifView.setOnTouchListener((view, motionEvent) -> gestureDetector.onTouchEvent(motionEvent));
             } else {
                 binding.messageImageView.setVisibility(View.VISIBLE);
-                binding.messageImageView.setOrientation(rotation);
-                binding.messageImageView.setImage(ImageSource.uri(FileUri));
+                binding.messageImageView.setImage(ImageSource.uri(uri));
                 binding.messageImageView.setOnTouchListener((view, motionEvent) -> gestureDetector.onTouchEvent(motionEvent));
             }
         } catch (Exception e) {
@@ -262,7 +263,7 @@ public class MediaViewerActivity extends XmppActivity implements AudioManager.On
             retriever.setDataSource(uri.getPath());
             Bitmap bitmap = null;
             try {
-                bitmap = retriever.getFrameAtTime();
+                bitmap = retriever.getFrameAtTime(0);
                 height = bitmap.getHeight();
                 width = bitmap.getWidth();
             } catch (Exception e) {
@@ -273,21 +274,35 @@ public class MediaViewerActivity extends XmppActivity implements AudioManager.On
                     bitmap.recycle();
                 }
             }
-            rotation = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION));
+            try {
+                rotation = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION));
+            } catch (Exception e) {
+                rotation = 0;
+            }
             Log.d(Config.LOGTAG, "Video height: " + height + ", width: " + width + ", rotation: " + rotation);
             if (useAutoRotateScreen()) {
                 rotateScreen(width, height, rotation);
             }
             binding.messageVideoView.setVisibility(View.VISIBLE);
-            binding.messageVideoView.setVideoURI(uri);
-            mFullscreenbutton.setVisibility(View.INVISIBLE);
-            binding.messageVideoView.setShouldAutoplay(true);
+            player = new SimpleExoPlayer.Builder(this).build();
+            player.setPlayWhenReady(true);
+            player.addListener(new SimpleExoPlayer.EventListener() {
+                @Override
+                public void onPlayerError(ExoPlaybackException error) {
+                    open();
+                }
+            });
+            player.setRepeatMode(Player.REPEAT_MODE_OFF);
+            binding.messageVideoView.setPlayer(player);
+            DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, "de.pixart.messenger"));
+            MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(uri);
+            player.prepare(videoSource);
             requestAudioFocus();
             setVolumeControlStream(AudioManager.STREAM_MUSIC);
             binding.messageVideoView.setOnTouchListener((view, motionEvent) -> gestureDetector.onTouchEvent(motionEvent));
         } catch (Exception e) {
-            open();
             e.printStackTrace();
+            open();
         }
     }
 
@@ -331,6 +346,34 @@ public class MediaViewerActivity extends XmppActivity implements AudioManager.On
         }
     }
 
+    private void pausePlayer() {
+        if (isVideo && isPlaying()) {
+            player.setPlayWhenReady(false);
+            player.getPlaybackState();
+        }
+    }
+
+    private void startPlayer() {
+        if (isVideo && !isPlaying()) {
+            player.setPlayWhenReady(true);
+            player.getPlaybackState();
+        }
+    }
+
+    private void stopPlayer() {
+        if (isVideo && isPlaying()) {
+            player.stop(true);
+            player.release();
+        }
+    }
+
+    private boolean isPlaying() {
+        return player != null
+                && player.getPlaybackState() != Player.STATE_ENDED
+                && player.getPlaybackState() != Player.STATE_IDLE
+                && player.getPlayWhenReady();
+    }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -344,13 +387,13 @@ public class MediaViewerActivity extends XmppActivity implements AudioManager.On
         }
         getWindow().setAttributes(layout);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        binding.messageVideoView.setShouldAutoplay(true);
+        startPlayer();
         super.onResume();
     }
 
     @Override
     public void onPause() {
-        binding.messageVideoView.reset();
+        pausePlayer();
         WindowManager.LayoutParams layout = getWindow().getAttributes();
         if (useMaxBrightness()) {
             layout.screenBrightness = -1;
@@ -363,7 +406,7 @@ public class MediaViewerActivity extends XmppActivity implements AudioManager.On
 
     @Override
     public void onStop() {
-        binding.messageVideoView.reset();
+        stopPlayer();
         releaseAudiFocus();
         WindowManager.LayoutParams layout = getWindow().getAttributes();
         if (useMaxBrightness()) {

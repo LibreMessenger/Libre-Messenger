@@ -376,6 +376,7 @@ public final class MimeUtils {
         add("video/mpeg", "mpg");
         add("video/mpeg", "mpe");
         add("video/mp4", "mp4");
+        add("video/mp4", "gifv");
         add("video/mpeg", "VOB");
         add("video/quicktime", "qt");
         add("video/quicktime", "mov");
