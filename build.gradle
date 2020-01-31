@@ -69,7 +69,6 @@ dependencies {
     gitImplementation 'androidx.emoji:emoji-appcompat:1.0.0'
     gitImplementation 'androidx.emoji:emoji-bundled:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
-    implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
     implementation 'com.google.android.exoplayer:exoplayer-core:2.11.1'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.11.1'
@@ -107,7 +106,7 @@ android {
         targetSdkVersion 29
 
         versionCode 282
-        versionName "2.3.5-beta (2020-01-02)"
+        versionName "2.3.5 beta (2020-01-31)"
         //resConfigs "en"
 
         archivesBaseName += "-$versionName"

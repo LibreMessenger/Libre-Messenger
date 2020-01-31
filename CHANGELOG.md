@@ -4,7 +4,9 @@
 * start removing OTR
 * rework conference and contact details (big avatar is available via long click)
 * resume download of OMEMO encrypted files
-* Channels now use '#' as symbol in avatar
+* channels now use '#' as symbol in avatar
+* support for ?register and ?register;preauth XMPP uri parameters
+* use ExoPlayer for video playback
 * bug fixes
 
 #### Version 2.3.4
