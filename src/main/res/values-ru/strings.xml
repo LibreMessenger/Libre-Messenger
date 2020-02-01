@@ -8,7 +8,6 @@
     <string name="action_contact_details">Сведения о контакте</string>
     <string name="action_secure">Защищённый разговор</string>
     <string name="action_add_new_account">Добавить новый аккаунт</string>
-    <string name="action_edit_contact">Изменить имя</string>
     <string name="action_add_phone_book">Добавить в адресную книгу</string>
     <string name="action_delete_contact">Удалить из контактов</string>
     <string name="action_block_contact">Заблокировать контакт</string>
@@ -310,12 +309,10 @@
     <string name="notification_restored_backup_title">Ваша резервная копия была восстановлена</string>
     <string name="notification_restored_backup_subtitle">Не забудьте активировать аккаунт.</string>
     <string name="choose_file">Выберите файл</string>
-    <string name="receiving_x_file">Получение %1$s (%2$d%% завершено)</string>
     <string name="download_x_file">Скачать %s</string>
     <string name="delete_x_file">Удалить %s</string>
     <string name="file">файл</string>
     <string name="open_x_file">Открыть %s</string>
-    <string name="sending_file">получение (%1$d%% завершено)</string>
     <string name="preparing_file">Подготовка файла к передаче</string>
     <string name="x_file_offered_for_download">%s предложен для загрузки</string>
     <string name="cancel_transmission">Закончить передачу</string>
@@ -736,7 +733,6 @@
     <string name="pref_scroll_to_bottom">Прокрутить вниз</string>
     <string name="no_camera_permission">Pix-Art Messenger нужен доступ к камере</string>
     <string name="edit_status_message_title">Редактировать статус</string>
-    <string name="edit_status_message">Редактировать статус</string>
     <string name="pref_automatically_delete_messages_description">Автоматически удалять с этого устройства сообщения старше заданного времени.</string>
     <string name="pref_automatically_delete_messages">Автоматическое удаление сообщений</string>
     <string name="disable_encryption">Отключить шифрование</string>
@@ -926,7 +922,6 @@
     <string name="pref_use_internal_updater_summary">Разрешить мессенджеру проверять обновления раз в день</string>
     <string name="pref_use_internal_updater">Проверять наличие обновлений</string>
     <string name="attach">Прикрепить</string>
-    <string name="delete_locally">Удалить с этого устройства</string>
     <string name="delete_from_server">Удалить с сервера</string>
     <string name="go_online_to_delete">Удаляемый аккаунт должен быть активирован и в режиме онлайн.</string>
     <string name="discover_channels">Просмотреть каналы</string>
@@ -960,7 +955,6 @@
     <string name="waiting_for_transfer">Ожидание передачи</string>
     <string name="x_has_written">%s написал:</string>
     <string name="i_have_written">Я написал:</string>
-    <string name="no_status_set_instructions">Вы не установили сообщение о состоянии присутствия</string>
     <string name="your_status">Ваш статус</string>
     <string name="pref_use_invidious">Заменить ссылки YouTube на Invidious</string>
     <string name="pref_use_invidious_summary">Invidious - это дружественная к конфиденциальности альтернатива YouTube</string>
@@ -998,7 +992,6 @@
     <string name="no_results">Нет результата</string>
     <string name="file_transmission_cancelled">передача файла прервана</string>
     <string name="sharing_application_not_grant_permission">Приложение общего доступа не предоставило разрешения на доступ к этому файлу.</string>
-    <string name="group_chats_and_channels"><![CDATA[Групповые Чаты И Каналы]]></string>
     <string name="jabber_network">jabber.сеть</string>
     <string name="local_server">Локальный сервер</string>
     <string name="pref_channel_discovery_summary">Большинство пользователей должны выбрать \" jabber.сети для лучшего предложения в совокупности экосистемы.</string>
