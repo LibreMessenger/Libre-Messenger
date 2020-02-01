@@ -247,35 +247,30 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         switch (message.getMergedStatus()) {
             case Message.STATUS_WAITING:
                 info = getContext().getString(R.string.waiting);
-                viewHolder.progressBar.setVisibility(View.GONE);
                 break;
             case Message.STATUS_UNSEND:
                 if (transferable != null) {
                     info = getContext().getString(R.string.sending);
-                    showProgressBar(viewHolder, transferable);
+                    showProgress(viewHolder, transferable);
                 } else {
                     info = getContext().getString(R.string.sending);
                 }
                 break;
             case Message.STATUS_OFFERED:
                 info = getContext().getString(R.string.offering);
-                viewHolder.progressBar.setVisibility(View.GONE);
                 break;
             case Message.STATUS_SEND_RECEIVED:
                 if (mIndicateReceived) {
                     viewHolder.indicatorReceived.setVisibility(View.VISIBLE);
                 }
-                viewHolder.progressBar.setVisibility(View.GONE);
                 break;
             case Message.STATUS_SEND_DISPLAYED:
                 if (mIndicateReceived) {
                     viewHolder.indicatorReceived.setVisibility(View.VISIBLE);
                     viewHolder.indicatorRead.setVisibility(View.VISIBLE);
                 }
-                viewHolder.progressBar.setVisibility(View.GONE);
                 break;
             case Message.STATUS_SEND_FAILED:
-                viewHolder.progressBar.setVisibility(View.GONE);
                 DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
                 if (isResendable && file.exists()) {
                     info = getContext().getString(R.string.send_failed_resend);
@@ -306,13 +301,6 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 error = true;
                 break;
             default:
-                if (transferable == null) {
-                    viewHolder.progressBar.setVisibility(View.GONE);
-                } else if (transferable.getStatus() != Transferable.STATUS_DOWNLOADING) {
-                    viewHolder.progressBar.setVisibility(View.GONE);
-                } else {
-                    viewHolder.progressBar.setVisibility(View.VISIBLE);
-                }
                 if (multiReceived) {
                     info = UIHelper.getMessageDisplayName(message);
                 }
@@ -413,9 +401,10 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.gifImage.setVisibility(View.GONE);
         viewHolder.richlinkview.setVisibility(View.GONE);
+        viewHolder.progressBar.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.VISIBLE);
         viewHolder.messageBody.setText(text);
-        showProgressBar(viewHolder, message.getTransferable());
+        showProgress(viewHolder, message.getTransferable());
         if (darkBackground) {
             viewHolder.messageBody.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Body1_Secondary_OnDark);
         } else {
@@ -424,12 +413,9 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.messageBody.setTextIsSelectable(false);
     }
 
-    private void showProgressBar(final ViewHolder viewHolder, final Transferable transferable) {
+    private void showProgress(final ViewHolder viewHolder, final Transferable transferable) {
         if (transferable != null) {
-            if (transferable.getStatus() == Transferable.STATUS_DOWNLOADING) {
-                viewHolder.progressBar.setVisibility(View.VISIBLE);
-                viewHolder.progressBar.setProgress(transferable.getProgress());
-            } else if (transferable.getStatus() == Transferable.STATUS_UPLOADING) {
+            if (transferable.getStatus() == Transferable.STATUS_DOWNLOADING || transferable.getStatus() == Transferable.STATUS_UPLOADING) {
                 viewHolder.progressBar.setVisibility(View.VISIBLE);
                 viewHolder.progressBar.setProgress(transferable.getProgress());
             } else {
@@ -446,6 +432,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.gifImage.setVisibility(View.GONE);
         viewHolder.richlinkview.setVisibility(View.GONE);
+        viewHolder.progressBar.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.VISIBLE);
         if (darkBackground) {
             viewHolder.messageBody.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Body1_Emoji_OnDark);
@@ -497,6 +484,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.gifImage.setVisibility(View.GONE);
         viewHolder.richlinkview.setVisibility(View.GONE);
+        viewHolder.progressBar.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.GONE);
 
     }
@@ -578,6 +566,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.gifImage.setVisibility(View.GONE);
         viewHolder.richlinkview.setVisibility(View.GONE);
+        viewHolder.progressBar.setVisibility(View.GONE);
         viewHolder.audioPlayer.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.VISIBLE);
         if (darkBackground) {
@@ -673,6 +662,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.gifImage.setVisibility(View.GONE);
         viewHolder.richlinkview.setVisibility(View.GONE);
+        viewHolder.progressBar.setVisibility(View.GONE);
         viewHolder.download_button.setVisibility(View.VISIBLE);
         viewHolder.download_button.setText(text);
         Drawable icon = activity.getResources().getDrawable(R.drawable.ic_download_grey600_48dp);
@@ -688,6 +678,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.gifImage.setVisibility(View.GONE);
         viewHolder.richlinkview.setVisibility(View.GONE);
+        viewHolder.progressBar.setVisibility(View.GONE);
         viewHolder.download_button.setVisibility(View.VISIBLE);
         final String mimeType = message.getMimeType();
         if (mimeType != null && message.getMimeType().contains("pdf")) {
@@ -784,6 +775,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.gifImage.setVisibility(View.GONE);
         viewHolder.download_button.setVisibility(View.GONE);
+        viewHolder.progressBar.setVisibility(View.GONE);
         SpannableStringBuilder body = new SpannableStringBuilder(replaceYoutube(activity.getApplicationContext(), message.getMergedBody().toString()));
         final boolean dataSaverDisabled = activity.xmppConnectionService.isDataSaverDisabled();
         viewHolder.richlinkview.setVisibility(View.VISIBLE);
@@ -831,6 +823,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         String url = GeoHelper.MapPreviewUri(message);
         viewHolder.gifImage.setVisibility(View.GONE);
         viewHolder.richlinkview.setVisibility(View.GONE);
+        viewHolder.progressBar.setVisibility(View.GONE);
         if (mShowMapsInside) {
             viewHolder.image.setVisibility(View.VISIBLE);
             double target = metrics.density * 200;
@@ -876,6 +869,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.image.setVisibility(View.GONE);
         viewHolder.gifImage.setVisibility(View.GONE);
         viewHolder.richlinkview.setVisibility(View.GONE);
+        viewHolder.progressBar.setVisibility(View.GONE);
         viewHolder.download_button.setVisibility(View.GONE);
         final RelativeLayout audioPlayer = viewHolder.audioPlayer;
         audioPlayer.setVisibility(View.VISIBLE);
@@ -888,6 +882,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.download_button.setVisibility(View.GONE);
         viewHolder.audioPlayer.setVisibility(View.GONE);
         viewHolder.richlinkview.setVisibility(View.GONE);
+        viewHolder.progressBar.setVisibility(View.GONE);
         DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
         if (!file.exists()) {
             ToastCompat.makeText(activity, R.string.file_deleted, Toast.LENGTH_SHORT).show();
