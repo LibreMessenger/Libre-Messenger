@@ -8,7 +8,6 @@
     <string name="action_contact_details">Dettagli del contatto</string>
     <string name="action_secure">Conversazione sicura</string>
     <string name="action_add_new_account">Aggiungi nuovo account</string>
-    <string name="action_edit_contact">Modifica il nome</string>
     <string name="action_add_phone_book">Aggiungi alla rubrica</string>
     <string name="action_delete_contact">Cancella dalla lista</string>
     <string name="action_block_contact">Blocca contatto</string>
@@ -310,12 +309,10 @@
     <string name="notification_restored_backup_title">Il tuo backup è stato ripristinato</string>
     <string name="notification_restored_backup_subtitle">Non dimenticarti di abilitare l\'account.</string>
     <string name="choose_file">Scegli un file</string>
-    <string name="receiving_x_file">Ricezione di %1$s file (%2$d%% completato)</string>
     <string name="download_x_file">Scarica %s</string>
     <string name="delete_x_file">Elimina %s</string>
     <string name="file">file</string>
     <string name="open_x_file">Apri %s</string>
-    <string name="sending_file">invio (%1$d%% completato)</string>
     <string name="preparing_file">Preparazione alla trasmissione del file</string>
     <string name="x_file_offered_for_download">%s offerto da scaricare</string>
     <string name="cancel_transmission">Annulla trasmissione</string>
@@ -720,7 +717,6 @@
     <string name="pref_scroll_to_bottom">Scorri in fondo</string>
     <string name="no_camera_permission">Pix-Art Messenger ha bisogno di accedere alla fotocamera</string>
     <string name="edit_status_message_title">Modifica Messaggio di Stato</string>
-    <string name="edit_status_message">Modifica messaggio di stato</string>
     <string name="pref_automatically_delete_messages_description">Elimina automaticamente da questo dispositivo i messaggi più vecchi del lasso di tempo configurato.</string>
     <string name="pref_automatically_delete_messages">Eliminazione automatica dei messaggi</string>
     <string name="disable_encryption">Disabilita crittografia</string>
@@ -908,7 +904,6 @@
     <string name="pref_use_internal_updater_summary">Permetti all\'app di cercare gli aggiornamenti una volta al giorno</string>
     <string name="pref_use_internal_updater">Cerca aggiornamenti</string>
     <string name="attach">Allega</string>
-    <string name="delete_locally">Elimina localmente</string>
     <string name="delete_from_server">Elimina dal server</string>
     <string name="go_online_to_delete">Devi attivare e/o andare online con l\'account che vuoi eliminare dal server.</string>
     <string name="discover_channels">Scopri canali</string>
@@ -942,7 +937,6 @@
     <string name="waiting_for_transfer">In attesa di trasferimento</string>
     <string name="x_has_written">%s ha scritto:</string>
     <string name="i_have_written">Io ho scritto:</string>
-    <string name="no_status_set_instructions">Non hai impostato un messaggio di stato di presenza</string>
     <string name="your_status">Il tuo stato</string>
     <string name="pref_use_invidious">Rimpiazza i collegamenti a YouTube con Invidious</string>
     <string name="pref_use_invidious_summary">Invidious è un\'interfaccia alternativa di YouTube che rispetta la tua privacy</string>
@@ -980,7 +974,6 @@
     <string name="no_results">Nessun risultato</string>
     <string name="file_transmission_cancelled">trasmissione del file annullata</string>
     <string name="sharing_application_not_grant_permission">L\'applicazione che sta condividendo non ha concesso il permesso per accedere a questo file.</string>
-    <string name="group_chats_and_channels"><![CDATA[Conversazioni di Gruppo & Canali]]></string>
     <string name="jabber_network">jabber.network</string>
     <string name="local_server">Server locale</string>
     <string name="pref_channel_discovery_summary">La maggior parte degli utenti dovrebbe scegliere \'jabber.network\' per migliori suggerimenti dall\'interezza dell\'ecosistema XMPP pubblico.</string>
