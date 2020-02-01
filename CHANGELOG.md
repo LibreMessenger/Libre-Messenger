@@ -7,6 +7,7 @@
 * channels now use '#' as symbol in avatar
 * support for ?register and ?register;preauth XMPP uri parameters
 * use ExoPlayer for video playback
+* UI improvements
 * bug fixes
 
 #### Version 2.3.4
