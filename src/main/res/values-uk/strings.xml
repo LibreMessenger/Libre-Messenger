@@ -8,7 +8,6 @@
     <string name="action_contact_details">Деталі контакту</string>
     <string name="action_secure">Захищена розмова</string>
     <string name="action_add_new_account">Додати новий обліковий запис</string>
-    <string name="action_edit_contact">Редагувати ім\'я</string>
     <string name="action_add_phone_book">Додати до контактів</string>
     <string name="action_delete_contact">Видалити зі списку розмов</string>
     <string name="action_block_contact">Заблокувати контакт</string>
@@ -310,12 +309,10 @@
     <string name="notification_restored_backup_title">Відтворено з резервної копії</string>
     <string name="notification_restored_backup_subtitle">Не забудьте включити обліковий запис</string>
     <string name="choose_file">Вибрати файл</string>
-    <string name="receiving_x_file">Отримання %1$s (%2$d%% завершено)</string>
     <string name="download_x_file">Завантажити %s</string>
     <string name="delete_x_file">Видалити %s</string>
     <string name="file">файл</string>
     <string name="open_x_file">Відкрити %s</string>
-    <string name="sending_file">надсилання (%1$d%% завершено)</string>
     <string name="preparing_file">Підготовка файлу до передачі</string>
     <string name="x_file_offered_for_download">%s запропоновано для завантаження</string>
     <string name="cancel_transmission">Припинити передачу</string>
@@ -737,7 +734,6 @@
     <string name="pref_scroll_to_bottom">Прокрутити до кінця</string>
     <string name="no_camera_permission">Програма потребує доступу до камери</string>
     <string name="edit_status_message_title">Редагувати повідомлення стану</string>
-    <string name="edit_status_message">Редагувати повідомлення стану</string>
     <string name="pref_automatically_delete_messages_description">Автоматично видаляти повідомлення з цього пристрою, старіші за вказаний часовий проміжок.</string>
     <string name="pref_automatically_delete_messages">Автоматичне видалення повідомлень</string>
     <string name="disable_encryption">Вимкнути шифрування</string>
@@ -920,7 +916,6 @@
     <string name="pref_use_internal_updater_summary">Дозволити месенджеру щодня шукати оновлення</string>
     <string name="pref_use_internal_updater">шукати оновлення</string>
     <string name="attach">Долучити</string>
-    <string name="delete_locally">Вилучити в себе</string>
     <string name="delete_from_server">Вилучити віддалено</string>
     <string name="go_online_to_delete">Вам потрібно або увімкнути, або з\'єднатися з мережею з обліковим записом, який ви хочете вилучити з сервера.</string>
     <string name="discover_channels">Знайти канали</string>
@@ -954,7 +949,6 @@
     <string name="waiting_for_transfer">Очікуємо на передачу</string>
     <string name="x_has_written">%s написав:</string>
     <string name="i_have_written">Я написав:</string>
-    <string name="no_status_set_instructions">Ви ще не встановили ваш стан у мережі</string>
     <string name="your_status">Ваш стан</string>
     <string name="pref_use_invidious">Замінювати посилання Youtube посиланнями з Invidious</string>
     <string name="pref_use_invidious_summary">Invidious це альтернатива YouTube, яка чутлива до питань конфіденційності</string>
@@ -983,7 +977,6 @@
     <string name="intro_desc_privacy">Месенджер Pix-Art ніколи не продаватиме або аналізуватиме ваші дані. Ви самі визначатимете, які надавати дозволи.</string>
     <string name="no_results">Нічого не знайдено</string>
     <string name="file_transmission_cancelled">скасовано передачу файлу</string>
-    <string name="group_chats_and_channels"><![CDATA[Групові чати та канали]]></string>
     <string name="local_server">Локальний сервер</string>
     <string name="pref_channel_discovery">Метод пошуку каналів</string>
     <string name="gp_disable">Вимкнути</string>
