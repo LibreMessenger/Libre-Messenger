@@ -8,7 +8,6 @@
     <string name="action_contact_details">Detalii contact</string>
     <string name="action_secure">Securizează conferința</string>
     <string name="action_add_new_account">Adăugaţi un cont nou</string>
-    <string name="action_edit_contact">Editează nume</string>
     <string name="action_add_phone_book">Adaugă la lista de contacte</string>
     <string name="action_delete_contact">Șterge din lista de contacte</string>
     <string name="action_block_contact">Blochează contact</string>
@@ -301,12 +300,10 @@
     <string name="notification_restored_backup_title">Copia de siguranță a fost restaurată</string>
     <string name="notification_restored_backup_subtitle">Nu uitați să activați contul.</string>
     <string name="choose_file">Alegeți un fișier</string>
-    <string name="receiving_x_file">Primesc %1$s (%2$d%% complet)</string>
     <string name="download_x_file">Descarcă %s</string>
     <string name="delete_x_file">Șterge %s</string>
     <string name="file">fișier</string>
     <string name="open_x_file">Deschide %s</string>
-    <string name="sending_file">trimit (%1$d%% complet)</string>
     <string name="preparing_file">Pregătire fișier pentru transmisie</string>
     <string name="x_file_offered_for_download">%s - fișier oferit spre descărcare</string>
     <string name="cancel_transmission">Anulează transmisiunea</string>
@@ -675,7 +672,6 @@ sau chiar pierderea mesajelor.\nÎn continuare veți fi rugați să dezactivați
     <string name="pref_scroll_to_bottom">Derulează până jos</string>
     <string name="no_camera_permission">Pix-Art Messenger are nevoie de acces la camera foto</string>
     <string name="edit_status_message_title">Editare mesaj de stare</string>
-    <string name="edit_status_message">Editare mesaj de stare</string>
     <string name="pref_automatically_delete_messages_description">De pe acest dispozitiv se vor șterge dacă sunt mai vechi de perioada selectată.</string>
     <string name="pref_automatically_delete_messages">Ștergerea automată a mesajelor</string>
     <string name="disable_encryption">Dezactivează criptarea</string>
@@ -865,7 +861,6 @@ sau chiar pierderea mesajelor.\nÎn continuare veți fi rugați să dezactivați
     <string name="no_results">Nici un rezultat</string>
     <string name="file_transmission_cancelled">transmisia fișierului a fost anulată</string>
     <string name="sharing_application_not_grant_permission">Aplicația care a partajat nu a permis accesul la acest fișier.</string>
-    <string name="group_chats_and_channels"><![CDATA[Discuții de grup & Canale]]></string>
     <string name="jabber_network">jabber.network</string>
     <string name="local_server">Server local</string>
     <string name="pref_channel_discovery_summary">Cei mai mulți utilizatori ar trebui să aleagă \'jabber.network\' pentru a primi sugestii mai bune din întregul ecosistem XMPP.</string>
