@@ -46,7 +46,7 @@ dependencies {
     }
     playstoreImplementation 'com.android.installreferrer:installreferrer:1.1.1'
     implementation 'org.sufficientlysecure:openpgp-api:10.0'
-    implementation('com.theartofdev.edmodo:android-image-cropper:2.7.+') {
+    implementation('com.theartofdev.edmodo:android-image-cropper:2.8.0') {
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.android.support', module: 'exifinterface'
     }
@@ -80,13 +80,13 @@ dependencies {
     implementation 'org.conscrypt:conscrypt-android:2.2.1'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.15' // 1.2.15 is last working version for minSDK 16
     implementation 'me.drakeet.support:toastcompat:1.1.0'
-    implementation 'org.osmdroid:osmdroid-android:6.1.2'
+    implementation 'org.osmdroid:osmdroid-android:6.1.5'
     implementation 'com.leinardi.android:speed-dial:3.1.1' // version >= 3.0.0 needs android X libraries
     implementation 'com.squareup.picasso:picasso:2.71828'
-    implementation 'com.squareup.okhttp3:okhttp:3.12.6' // versions > 3.12.x don't support API level < 21 anymore
-    implementation "com.squareup.retrofit2:retrofit:2.6.4" //retrofit needs to stick with 2.6.x (https://github.com/square/retrofit/blob/master/CHANGELOG.md)
-    implementation "com.squareup.retrofit2:converter-gson:2.6.4"
-    implementation 'com.google.guava:guava:28.1-android'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.8' // versions > 3.12.x don't support API level < 21 anymore
+    implementation 'com.squareup.retrofit2:retrofit:2.6.4' //retrofit needs to stick with 2.6.x (https://github.com/square/retrofit/blob/master/CHANGELOG.md)
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.4'
+    implementation 'com.google.guava:guava:28.2-android'
     implementation('com.github.AppIntro:AppIntro:5.1.0') {
         exclude group: 'org.jetbrains' , module:'annotations'
     }
