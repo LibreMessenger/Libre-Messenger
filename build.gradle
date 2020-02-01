@@ -128,6 +128,15 @@ android {
         enabled true
     }
 
+    packagingOptions {
+        //X86
+        exclude "lib/x86/libconscrypt_jni.so"
+        exclude "lib/x86/libpl_droidsonroids_gif.so"
+        //X86_64
+        exclude "lib/x86_64/libconscrypt_jni.so"
+        exclude "lib/x86_64/libpl_droidsonroids_gif.so"
+    }
+
     dexOptions {
         // Skip pre-dexing when running on Travis CI or when disabled via -Dpre-dex=false.
         preDexLibraries = preDexEnabled && !travisBuild
@@ -169,7 +178,6 @@ android {
                 signingConfig = signingConfigs.release
                 minifyEnabled true
                 shrinkResources true
-                android.enableR8.fullMode=true
                 runProguard true
                 proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             }
@@ -179,7 +187,6 @@ android {
                 buildTypes.release.signingConfig = null
                 minifyEnabled true
                 shrinkResources true
-                android.enableR8.fullMode=true
                 runProguard true
                 proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             }
