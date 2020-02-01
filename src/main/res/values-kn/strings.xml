@@ -8,7 +8,6 @@
     <string name="action_contact_details">ಸಂಪರ್ಕ ವಿವರಗಳು</string>
     <string name="action_secure">ಬದ್ಧ ಸಂಭಾಷಣೆ</string>
     <string name="action_add_new_account">ಹೊಸ ಖಾತೆ ಸೇರಿಸಿ</string>
-    <string name="action_edit_contact">ಹೆಸರು ತಿದ್ದು</string>
     <string name="action_add_phone_book">ವಿಳಾಸ ಪುಸ್ತಕಕ್ಕೆ ಸೇರಿಸಿ</string>
     <string name="action_delete_contact">ಸಂಪರ್ಕ ಅಳಿಸಿ</string>
     <string name="action_block_contact">ಸಂಪರ್ಕ ನಿರ್ಬಂಧಿಸಿ</string>
