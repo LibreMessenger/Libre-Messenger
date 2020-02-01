@@ -105,7 +105,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 29
 
-        versionCode 282
+        versionCode 283
         versionName "2.3.5"
         versionNameSuffix "beta (2020-02-01)" //beta (XXXX-XX-XX)
         //resConfigs "en"
