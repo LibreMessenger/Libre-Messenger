@@ -8,7 +8,6 @@
     <string name="action_contact_details">联系人详情</string>
     <string name="action_secure">安全会话</string>
     <string name="action_add_new_account">添加账户</string>
-    <string name="action_edit_contact">编辑名称</string>
     <string name="action_add_phone_book">添加到地址簿</string>
     <string name="action_delete_contact">从XMPP联系人列表中删除</string>
     <string name="action_block_contact">封禁联系人</string>
@@ -310,12 +309,10 @@
     <string name="notification_restored_backup_title">您的备份已恢复</string>
     <string name="notification_restored_backup_subtitle">不要忘记启用帐户</string>
     <string name="choose_file">选择文件</string>
-    <string name="receiving_x_file">接收%1$s（已完成%2$d%%）</string>
     <string name="download_x_file">下载%s</string>
     <string name="delete_x_file">删除%s</string>
     <string name="file">文件</string>
     <string name="open_x_file">打开%s</string>
-    <string name="sending_file">正在发送（%1$d%%已完成）</string>
     <string name="preparing_file">正在为传输处理文件</string>
     <string name="x_file_offered_for_download">%s提供下载</string>
     <string name="cancel_transmission">取消传输</string>
@@ -711,7 +708,6 @@
     <string name="pref_scroll_to_bottom">滚动页面至底部</string>
     <string name="no_camera_permission">Pix-Art聊天需要访问相机</string>
     <string name="edit_status_message_title">编辑状态消息</string>
-    <string name="edit_status_message">编辑状态消息</string>
     <string name="pref_automatically_delete_messages_description">自动删除此设备中比设置的时间框架更早的消息。</string>
     <string name="pref_automatically_delete_messages">自动删除消息</string>
     <string name="disable_encryption">禁用加密</string>
@@ -839,7 +835,6 @@
     <string name="unable_to_decrypt_backup">无法解密备份。密码是否正确？</string>
     <string name="pref_prefer_xmpp_avatar_summary">首选用户的XMPP头像而不是通讯录中的头像</string>
     <string name="pref_prefer_xmpp_avatar">首选XMPP头像</string>
-    <string name="view_users">查看参与者</string>
     <string name="group_chat_members">参与者</string>
     <string name="message_deleted">消息已删除</string>
     <string name="channel_details">群聊详情</string>
@@ -896,7 +891,6 @@
     <string name="pref_use_internal_updater_summary">让应用每天查找更新</string>
     <string name="pref_use_internal_updater">寻找更新</string>
     <string name="attach">添加附件</string>
-    <string name="delete_locally">本地删除</string>
     <string name="delete_from_server">从服务器删除</string>
     <string name="go_online_to_delete">您需要登录想删除的账户。</string>
     <string name="discover_channels">发现群聊</string>
@@ -930,7 +924,6 @@
     <string name="waiting_for_transfer">等待传输</string>
     <string name="x_has_written">%s写道:</string>
     <string name="i_have_written">我写道:</string>
-    <string name="no_status_set_instructions">未设置在线状态消息</string>
     <string name="your_status">您的状态</string>
     <string name="pref_use_invidious">用 Invidio 链接替换 Youtube 链接</string>
     <string name="pref_use_invidious_summary">Invidious是一个更注重隐私的YouTube替代品</string>
@@ -969,7 +962,6 @@ Pix-Arr Messenger</string>
     <string name="no_results">无结果</string>
     <string name="file_transmission_cancelled">文件传输取消</string>
     <string name="sharing_application_not_grant_permission">分享文件的应用没有授予该文件的权限。</string>
-    <string name="group_chats_and_channels"><![CDATA[群组聊天及频道]]></string>
     <string name="jabber_network">jabber.network</string>
     <string name="local_server">本地服务器</string>
     <string name="pref_channel_discovery_summary">大多数用户会选择“jabber.network”以便从公共 XMPP 生态系统获得更好的建议。</string>

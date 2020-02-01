@@ -7,7 +7,6 @@
     <string name="action_contact_details">Contact details</string>
     <string name="action_secure">Secure conversation</string>
     <string name="action_add_new_account">Add new account</string>
-    <string name="action_edit_contact">Edit name</string>
     <string name="action_add_phone_book">Add to address book</string>
     <string name="action_delete_contact">Delete from roster</string>
     <string name="action_block_contact">Block contact</string>
@@ -310,13 +309,11 @@
     <string name="notification_restored_backup_title">Your backup has been restored</string>
     <string name="notification_restored_backup_subtitle">Do not forget to enable the account.</string>
     <string name="choose_file">Choose file</string>
-    <string name="receiving_x_file">Receiving %1$s (%2$d%% completed)</string>
     <string name="receiving_file">Receiving %1$s</string>
     <string name="download_x_file">Download %s</string>
     <string name="delete_x_file">Delete %s</string>
     <string name="file">file</string>
     <string name="open_x_file">Open %s</string>
-    <string name="sending_file">sending (%1$d%% completed)</string>
     <string name="preparing_file">Preparing file for transmission</string>
     <string name="x_file_offered_for_download">%s offered for download</string>
     <string name="cancel_transmission">Cancel transmission</string>
@@ -721,7 +718,6 @@
     <string name="pref_scroll_to_bottom">Scroll to bottom</string>
     <string name="no_camera_permission">Pix-Art Messenger needs access to the camera</string>
     <string name="edit_status_message_title">Edit Status Message</string>
-    <string name="edit_status_message">Edit status message</string>
     <string name="pref_automatically_delete_messages_description">Automatically delete messages from this device that are older than the configured time frame.</string>
     <string name="pref_automatically_delete_messages">Automatic message deletion</string>
     <string name="disable_encryption">Disable encryption</string>
@@ -909,7 +905,6 @@
     <string name="pref_use_internal_updater_summary">Let the messenger look for new app updates once a day</string>
     <string name="pref_use_internal_updater">Look for updates</string>
     <string name="attach">Attach</string>
-    <string name="delete_locally">Delete locally</string>
     <string name="delete_from_server">Delete from server</string>
     <string name="go_online_to_delete">You have to activate and/or go online with the account you want to delete from server.</string>
     <string name="discover_channels">Discover channels</string>
@@ -943,7 +938,6 @@
     <string name="waiting_for_transfer">Waiting for transfer</string>
     <string name="x_has_written">%s has written:</string>
     <string name="i_have_written">I have written:</string>
-    <string name="no_status_set_instructions">You have not set a presence status message</string>
     <string name="your_status">Your status</string>
     <string name="pref_use_invidious">Replace YouTube links with Invidious</string>
     <string name="pref_use_invidious_summary">Invidious is a privacy friendly alternative to YouTube</string>
@@ -981,7 +975,6 @@
     <string name="no_results">No results</string>
     <string name="file_transmission_cancelled">file transmission cancelled</string>
     <string name="sharing_application_not_grant_permission">The sharing application did not grant permission to access this file.</string>
-    <string name="group_chats_and_channels"><![CDATA[Group Chats & Channels]]></string>
     <string name="jabber_network">jabber.network</string>
     <string name="local_server">Local server</string>
     <string name="pref_channel_discovery_summary">Most users should choose ‘jabber.network’ for better suggestions from the entirety of the public XMPP ecosystem.</string>
