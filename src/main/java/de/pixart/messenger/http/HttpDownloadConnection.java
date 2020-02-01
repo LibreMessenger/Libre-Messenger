@@ -501,7 +501,7 @@ public class HttpDownloadConnection implements Transferable {
                     throw new FileWriterException();
                 }
             } catch (CancellationException e) {
-                Log.d(Config.LOGTAG, message.getConversation().getAccount().getJid().asBareJid() + ": http download failed", e);
+                Log.d(Config.LOGTAG, message.getConversation().getAccount().getJid().asBareJid() + ": http download canceled", e);
                 throw e;
             } catch (IOException e) {
                 Log.d(Config.LOGTAG, message.getConversation().getAccount().getJid().asBareJid() + ": http download failed", e);

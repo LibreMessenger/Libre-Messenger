@@ -33,6 +33,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -101,8 +102,6 @@ import static de.pixart.messenger.ui.util.MyLinkify.removeTrailingBracket;
 import static de.pixart.messenger.ui.util.MyLinkify.replaceYoutube;
 
 public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextView.CopyHandler {
-
-    //private ConversationFragment mConversationFragment;
 
     public static final String DATE_SEPARATOR_BODY = "DATE_SEPARATOR";
     private static final int SENT = 0;
@@ -248,29 +247,35 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         switch (message.getMergedStatus()) {
             case Message.STATUS_WAITING:
                 info = getContext().getString(R.string.waiting);
+                viewHolder.progressBar.setVisibility(View.GONE);
                 break;
             case Message.STATUS_UNSEND:
                 if (transferable != null) {
-                    info = getContext().getString(R.string.sending_file, transferable.getProgress());
+                    info = getContext().getString(R.string.sending);
+                    showProgressBar(viewHolder, transferable);
                 } else {
                     info = getContext().getString(R.string.sending);
                 }
                 break;
             case Message.STATUS_OFFERED:
                 info = getContext().getString(R.string.offering);
+                viewHolder.progressBar.setVisibility(View.GONE);
                 break;
             case Message.STATUS_SEND_RECEIVED:
                 if (mIndicateReceived) {
                     viewHolder.indicatorReceived.setVisibility(View.VISIBLE);
                 }
+                viewHolder.progressBar.setVisibility(View.GONE);
                 break;
             case Message.STATUS_SEND_DISPLAYED:
                 if (mIndicateReceived) {
                     viewHolder.indicatorReceived.setVisibility(View.VISIBLE);
                     viewHolder.indicatorRead.setVisibility(View.VISIBLE);
                 }
+                viewHolder.progressBar.setVisibility(View.GONE);
                 break;
             case Message.STATUS_SEND_FAILED:
+                viewHolder.progressBar.setVisibility(View.GONE);
                 DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
                 if (isResendable && file.exists()) {
                     info = getContext().getString(R.string.send_failed_resend);
@@ -301,6 +306,13 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 error = true;
                 break;
             default:
+                if (transferable == null) {
+                    viewHolder.progressBar.setVisibility(View.GONE);
+                } else if (transferable.getStatus() != Transferable.STATUS_DOWNLOADING) {
+                    viewHolder.progressBar.setVisibility(View.GONE);
+                } else {
+                    viewHolder.progressBar.setVisibility(View.VISIBLE);
+                }
                 if (multiReceived) {
                     info = UIHelper.getMessageDisplayName(message);
                 }
@@ -314,7 +326,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
             }
             DownloadableFile file = activity.xmppConnectionService.getFileBackend().getFile(message);
             if (file.exists()) {
-                if (activity.xmppConnectionService.mHttpConnectionManager.getAutoAcceptFileSize() >= message.getFileParams().size) {
+                if (activity.xmppConnectionService.mHttpConnectionManager.getAutoAcceptFileSize() >= message.getFileParams().size && (transferable != null && transferable.getStatus() == Transferable.STATUS_FAILED)) {
                     isResendable = true;
                     viewHolder.resend_button.setVisibility(View.GONE);
                 } else {
@@ -395,7 +407,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         }
     }
 
-    private void displayInfoMessage(ViewHolder viewHolder, CharSequence text, boolean darkBackground) {
+    private void displayInfoMessage(ViewHolder viewHolder, CharSequence text, boolean darkBackground, Message message) {
         viewHolder.download_button.setVisibility(View.GONE);
         viewHolder.audioPlayer.setVisibility(View.GONE);
         viewHolder.image.setVisibility(View.GONE);
@@ -403,12 +415,29 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         viewHolder.richlinkview.setVisibility(View.GONE);
         viewHolder.messageBody.setVisibility(View.VISIBLE);
         viewHolder.messageBody.setText(text);
+        showProgressBar(viewHolder, message.getTransferable());
         if (darkBackground) {
             viewHolder.messageBody.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Body1_Secondary_OnDark);
         } else {
             viewHolder.messageBody.setTextAppearance(getContext(), R.style.TextAppearance_Conversations_Body1_Secondary);
         }
         viewHolder.messageBody.setTextIsSelectable(false);
+    }
+
+    private void showProgressBar(final ViewHolder viewHolder, final Transferable transferable) {
+        if (transferable != null) {
+            if (transferable.getStatus() == Transferable.STATUS_DOWNLOADING) {
+                viewHolder.progressBar.setVisibility(View.VISIBLE);
+                viewHolder.progressBar.setProgress(transferable.getProgress());
+            } else if (transferable.getStatus() == Transferable.STATUS_UPLOADING) {
+                viewHolder.progressBar.setVisibility(View.VISIBLE);
+                viewHolder.progressBar.setProgress(transferable.getProgress());
+            } else {
+                viewHolder.progressBar.setVisibility(View.GONE);
+            }
+        } else {
+            viewHolder.progressBar.setVisibility(View.GONE);
+        }
     }
 
     private void displayEmojiMessage(final ViewHolder viewHolder, final String body, final boolean darkBackground) {
@@ -1017,6 +1046,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                     viewHolder.time = view.findViewById(R.id.message_time);
                     viewHolder.indicatorReceived = view.findViewById(R.id.indicator_received);
                     viewHolder.indicatorRead = view.findViewById(R.id.indicator_read);
+                    viewHolder.progressBar = view.findViewById(R.id.progressBar);
                     break;
                 case RECEIVED:
                     view = activity.getLayoutInflater().inflate(R.layout.message_received, parent, false);
@@ -1035,6 +1065,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                     viewHolder.time = view.findViewById(R.id.message_time);
                     viewHolder.indicatorReceived = view.findViewById(R.id.indicator_received);
                     viewHolder.encryption = view.findViewById(R.id.message_encryption);
+                    viewHolder.progressBar = view.findViewById(R.id.progressBar);
                     break;
                 case STATUS:
                     view = activity.getLayoutInflater().inflate(R.layout.message_status, parent, false);
@@ -1130,7 +1161,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
                 if (checkFileExistence(message, view, viewHolder)) {
                     markFileExisting(message);
                 } else {
-                    displayInfoMessage(viewHolder, UIHelper.getMessagePreview(activity, message).first, darkBackground);
+                    displayInfoMessage(viewHolder, UIHelper.getMessagePreview(activity, message).first, darkBackground, message);
                 }
             }
         } else if (message.isFileOrImage() && message.getEncryption() != Message.ENCRYPTION_PGP && message.getEncryption() != Message.ENCRYPTION_DECRYPTION_FAILED) {
@@ -1144,21 +1175,21 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         } else if (message.getEncryption() == Message.ENCRYPTION_PGP) {
             if (account.isPgpDecryptionServiceConnected()) {
                 if (conversation instanceof Conversation && !account.hasPendingPgpIntent((Conversation) conversation)) {
-                    displayInfoMessage(viewHolder, activity.getString(R.string.message_decrypting), darkBackground);
+                    displayInfoMessage(viewHolder, activity.getString(R.string.message_decrypting), darkBackground, message);
                 } else {
-                    displayInfoMessage(viewHolder, activity.getString(R.string.pgp_message), darkBackground);
+                    displayInfoMessage(viewHolder, activity.getString(R.string.pgp_message), darkBackground, message);
                 }
             } else {
-                displayInfoMessage(viewHolder, activity.getString(R.string.install_openkeychain), darkBackground);
+                displayInfoMessage(viewHolder, activity.getString(R.string.install_openkeychain), darkBackground, message);
                 viewHolder.message_box.setOnClickListener(this::promptOpenKeychainInstall);
                 viewHolder.messageBody.setOnClickListener(this::promptOpenKeychainInstall);
             }
         } else if (message.getEncryption() == Message.ENCRYPTION_DECRYPTION_FAILED) {
-            displayInfoMessage(viewHolder, activity.getString(R.string.decryption_failed), darkBackground);
+            displayInfoMessage(viewHolder, activity.getString(R.string.decryption_failed), darkBackground, message);
         } else if (message.getEncryption() == Message.ENCRYPTION_AXOLOTL_NOT_FOR_THIS_DEVICE) {
-            displayInfoMessage(viewHolder, activity.getString(R.string.not_encrypted_for_this_device), darkBackground);
+            displayInfoMessage(viewHolder, activity.getString(R.string.not_encrypted_for_this_device), darkBackground, message);
         } else if (message.getEncryption() == Message.ENCRYPTION_AXOLOTL_FAILED) {
-            displayInfoMessage(viewHolder, activity.getString(R.string.omemo_decryption_failed), darkBackground);
+            displayInfoMessage(viewHolder, activity.getString(R.string.omemo_decryption_failed), darkBackground, message);
         } else {
             if (message.isGeoUri()) {
                 displayLocationMessage(viewHolder, message, darkBackground);
@@ -1200,7 +1231,10 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         if (type == RECEIVED) {
             if (message.isPrivateMessage()) {
                 viewHolder.answer_button.setVisibility(View.VISIBLE);
-                viewHolder.answer_button.setImageResource(R.drawable.ic_reply_circle_black_24dp);
+                Drawable icon = activity.getResources().getDrawable(R.drawable.ic_reply_circle_black_24dp);
+                Drawable drawable = DrawableCompat.wrap(icon);
+                DrawableCompat.setTint(drawable, StyledAttributes.getColor(getContext(), R.attr.colorAccent));
+                viewHolder.answer_button.setImageDrawable(drawable);
                 viewHolder.answer_button.setOnClickListener(v -> {
                     try {
                         if (activity instanceof ConversationsActivity) {
@@ -1381,6 +1415,7 @@ public class MessageAdapter extends ArrayAdapter<Message> implements CopyTextVie
         protected ImageView contact_picture;
         protected TextView status_message;
         protected TextView encryption;
+        protected ProgressBar progressBar;
     }
 
     private class MessageBodyActionModeCallback implements ActionMode.Callback {

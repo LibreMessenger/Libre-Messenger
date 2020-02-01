@@ -311,6 +311,7 @@
     <string name="notification_restored_backup_subtitle">Do not forget to enable the account.</string>
     <string name="choose_file">Choose file</string>
     <string name="receiving_x_file">Receiving %1$s (%2$d%% completed)</string>
+    <string name="receiving_file">Receiving %1$s</string>
     <string name="download_x_file">Download %s</string>
     <string name="delete_x_file">Delete %s</string>
     <string name="file">file</string>
