@@ -1334,9 +1334,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                     deleteFile.setTitle(activity.getString(R.string.delete_x_file, UIHelper.getFileDescriptionString(activity, m)));
                 }
             }
-            if (showError) {
-                showErrorMessage.setVisible(true);
-            }
+            showErrorMessage.setVisible(showError);
             final String mime = m.isFileOrImage() ? m.getMimeType() : null;
             if ((m.isGeoUri() && GeoHelper.openInOsmAnd(getActivity(), m)) || (mime != null && mime.startsWith("audio/"))) {
                 openWith.setVisible(true);

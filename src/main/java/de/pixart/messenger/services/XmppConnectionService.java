@@ -695,7 +695,14 @@ public class XmppConnectionService extends Service {
                             restoredFromDatabaseLatch.await();
                             final Conversation c = findConversationByUuid(uuid);
                             if (c != null) {
-                                directReply(c, body.toString(), dismissNotification);
+                                boolean pn = false;
+                                if (c.getMode() == Conversational.MODE_MULTI) {
+                                    if (c.getLatestMessage().isPrivateMessage()) {
+                                        pn = true;
+                                        c.setNextCounterpart(c.getLatestMessage().getCounterpart());
+                                    }
+                                }
+                                directReply(c, body.toString(), dismissNotification, pn);
                             }
                         } catch (InterruptedException e) {
                             Log.d(Config.LOGTAG, "unable to process direct reply");
@@ -949,8 +956,11 @@ public class XmppConnectionService extends Service {
         }
     }
 
-    private void directReply(Conversation conversation, String body, final boolean dismissAfterReply) {
+    private void directReply(Conversation conversation, String body, final boolean dismissAfterReply, final boolean pn) {
         Message message = new Message(conversation, body, conversation.getNextEncryption());
+        if (pn) {
+            Message.configurePrivateMessage(message);
+        }
         message.markUnread();
         if (message.getEncryption() == Message.ENCRYPTION_PGP) {
             getPgpEngine().encrypt(message, new UiCallback<Message>() {
