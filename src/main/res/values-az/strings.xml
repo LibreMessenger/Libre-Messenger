@@ -8,7 +8,6 @@
     <string name="action_contact_details">Şəxs təfsilatları</string>
     <string name="action_secure">Təhlükəsiz danışıq</string>
     <string name="action_add_new_account">Yeni hesab əlavə edin</string>
-    <string name="action_edit_contact">Ada düzəliş et</string>
     <string name="action_add_phone_book">Ünvan kitabçasına əlavə et</string>
     <string name="action_delete_contact">Siyahıdan sil</string>
     <string name="action_block_contact">Şəxsi əngəllə</string>
@@ -312,12 +311,10 @@
     <string name="notification_restored_backup_title">Nüsxəniz bərpa edildi</string>
     <string name="notification_restored_backup_subtitle">Hesabı aktivləşdirməyi unutmayın.</string>
     <string name="choose_file">Fail seçin</string>
-    <string name="receiving_x_file">%1$s qəbul edilir (%2$d%% tamamlandı)</string>
     <string name="download_x_file">%s Endirilir</string>
     <string name="delete_x_file">%s silinsin</string>
     <string name="file">fayl</string>
     <string name="open_x_file">Aç %s</string>
-    <string name="sending_file">göndərilir (%1$d%% tamamlandı)</string>
     <string name="preparing_file">Köçürmə üçün təsvir hazırlanır</string>
     <string name="x_file_offered_for_download">%s yükləmək üçün təklif olunur</string>
     <string name="cancel_transmission">Ötürməni ləğv edin</string>
