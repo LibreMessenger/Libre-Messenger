@@ -260,6 +260,7 @@ public class SettingsActivity extends XmppActivity implements
                 removeCertsDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
                 return true;
             });
+            updateTheme();
         }
 
         final Preference createBackupPreference = mSettingsFragment.findPreference("create_backup");
