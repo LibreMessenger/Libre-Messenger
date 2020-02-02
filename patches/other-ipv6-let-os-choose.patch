@@ -1,0 +1,684 @@
+From e2cac8910b45987d80c4d7889e705682ba5940cb Mon Sep 17 00:00:00 2001
+From: Martin/Geno <geno+dev@fireorbit.de>
+Date: Sat, 10 Nov 2018 23:56:09 +0100
+Subject: [PATCH 1/3] Networkstack: let OS decide IPv4 or IPv6
+
+---
+ .../persistance/DatabaseBackend.java          |   1 -
+ .../de/pixart/messenger/utils/Resolver.java   | 119 +++---------------
+ .../pixart/messenger/xmpp/XmppConnection.java |  18 +--
+ 3 files changed, 22 insertions(+), 116 deletions(-)
+
+diff --git a/src/main/java/de/pixart/messenger/persistance/DatabaseBackend.java b/src/main/java/de/pixart/messenger/persistance/DatabaseBackend.java
+index 44e78015f..d5ebc3b97 100644
+--- a/src/main/java/de/pixart/messenger/persistance/DatabaseBackend.java
++++ b/src/main/java/de/pixart/messenger/persistance/DatabaseBackend.java
+@@ -152,7 +152,6 @@
+     private static String CREATE_RESOLVER_RESULTS_TABLE = "create table " + RESOLVER_RESULTS_TABLENAME + "("
+             + Resolver.Result.DOMAIN + " TEXT,"
+             + Resolver.Result.HOSTNAME + " TEXT,"
+-            + Resolver.Result.IP + " BLOB,"
+             + Resolver.Result.PRIORITY + " NUMBER,"
+             + Resolver.Result.DIRECT_TLS + " NUMBER,"
+             + Resolver.Result.AUTHENTICATED + " NUMBER,"
+diff --git a/src/main/java/de/pixart/messenger/utils/Resolver.java b/src/main/java/de/pixart/messenger/utils/Resolver.java
+index 30caa3a4a..9512733ea 100644
+--- a/src/main/java/de/pixart/messenger/utils/Resolver.java
++++ b/src/main/java/de/pixart/messenger/utils/Resolver.java
+@@ -7,9 +7,6 @@
+ 
+ import java.io.IOException;
+ import java.lang.reflect.Field;
+-import java.net.Inet4Address;
+-import java.net.InetAddress;
+-import java.net.UnknownHostException;
+ import java.util.ArrayList;
+ import java.util.Collections;
+ import java.util.List;
+@@ -25,11 +22,8 @@
+ import de.measite.minidns.hla.ResolverApi;
+ import de.measite.minidns.hla.ResolverResult;
+ import de.measite.minidns.iterative.ReliableDNSClient;
+-import de.measite.minidns.record.A;
+-import de.measite.minidns.record.AAAA;
+ import de.measite.minidns.record.CNAME;
+ import de.measite.minidns.record.Data;
+-import de.measite.minidns.record.InternetAddressRR;
+ import de.measite.minidns.record.SRV;
+ import de.pixart.messenger.Config;
+ import de.pixart.messenger.R;
+@@ -39,7 +33,7 @@
+ 
+     public static final int DEFAULT_PORT_XMPP = 5222;
+     private static final String DIRECT_TLS_SERVICE = "_xmpps-client";
+-    private static final String STARTTLS_SERICE = "_xmpp-client";
++    private static final String STARTTLS_SERVICE = "_xmpp-client";
+ 
+     private static XmppConnectionService SERVICE = null;
+ 
+@@ -151,91 +145,41 @@ public static boolean useDirectTls(final int port) {
+         if (!IP.matches(domain)) {
+             return Collections.emptyList();
+         }
+-        try {
+-            Result result = new Result();
+-            result.ip = InetAddress.getByName(domain);
+-            result.port = DEFAULT_PORT_XMPP;
+-            return Collections.singletonList(result);
+-        } catch (UnknownHostException e) {
+-            return Collections.emptyList();
+-        }
++        return Collections.singletonList(Result.createDefault(DNSName.from(domain)));
+     }
+ 
+     private static List<Result> resolveSrv(String domain, final boolean directTls) throws IOException {
+-        DNSName dnsName = DNSName.from((directTls ? DIRECT_TLS_SERVICE : STARTTLS_SERICE) + "._tcp." + domain);
++        DNSName dnsName = DNSName.from((directTls ? DIRECT_TLS_SERVICE : STARTTLS_SERVICE) + "._tcp." + domain);
+         ResolverResult<SRV> result = resolveWithFallback(dnsName, SRV.class);
+         final List<Result> results = new ArrayList<>();
+-        final List<Thread> threads = new ArrayList<>();
+         for (SRV record : result.getAnswersOrEmptySet()) {
+             if (record.name.length() == 0 && record.priority == 0) {
+                 continue;
+             }
+-            threads.add(new Thread(() -> {
+-                final List<Result> ipv4s = resolveIp(record, A.class, result.isAuthenticData(), directTls);
+-                if (ipv4s.size() == 0) {
+-                    Result resolverResult = Result.fromRecord(record, directTls);
+-                    resolverResult.authenticated = resolverResult.isAuthenticated();
+-                    ipv4s.add(resolverResult);
+-                }
+-                synchronized (results) {
+-                    results.addAll(ipv4s);
+-                }
+-
+-            }));
+-            threads.add(new Thread(() -> {
+-                final List<Result> ipv6s = resolveIp(record, AAAA.class, result.isAuthenticData(), directTls);
+-                synchronized (results) {
+-                    results.addAll(ipv6s);
+-                }
+-            }));
+-        }
+-        for (Thread thread : threads) {
+-            thread.start();
+-        }
+-        for (Thread thread : threads) {
+-            try {
+-                thread.join();
+-            } catch (InterruptedException e) {
+-                return Collections.emptyList();
+-            }
++            Result resolverResult = Result.fromRecord(record, directTls);
++            resolverResult.authenticated = result.isAuthenticData();
++            results.add(resolverResult);
+         }
+-        return results;
+-    }
+ 
+-    private static <D extends InternetAddressRR> List<Result> resolveIp(SRV srv, Class<D> type, boolean authenticated, boolean directTls) {
+-        List<Result> list = new ArrayList<>();
+-        try {
+-            ResolverResult<D> results = resolveWithFallback(srv.name, type, authenticated);
+-            for (D record : results.getAnswersOrEmptySet()) {
+-                Result resolverResult = Result.fromRecord(srv, directTls);
+-                resolverResult.authenticated = results.isAuthenticData() && authenticated;
+-                resolverResult.ip = record.getInetAddress();
+-                list.add(resolverResult);
+-            }
+-        } catch (Throwable t) {
+-            Log.d(Config.LOGTAG, Resolver.class.getSimpleName() + ": error resolving " + type.getSimpleName() + " " + t.getMessage());
+-        }
+-        return list;
++        return results;
+     }
+ 
+     private static List<Result> resolveNoSrvRecords(DNSName dnsName, boolean withCnames) {
+         List<Result> results = new ArrayList<>();
++        Boolean resolveCNAME = false;
+         try {
+-            for (A a : resolveWithFallback(dnsName, A.class, false).getAnswersOrEmptySet()) {
+-                results.add(Result.createDefault(dnsName, a.getInetAddress()));
+-            }
+-            for (AAAA aaaa : resolveWithFallback(dnsName, AAAA.class, false).getAnswersOrEmptySet()) {
+-                results.add(Result.createDefault(dnsName, aaaa.getInetAddress()));
+-            }
+-            if (results.size() == 0 && withCnames) {
++            if (withCnames) {
+                 for (CNAME cname : resolveWithFallback(dnsName, CNAME.class, false).getAnswersOrEmptySet()) {
+                     results.addAll(resolveNoSrvRecords(cname.name, false));
++                    resolveCNAME = true;
+                 }
+             }
+         } catch (Throwable throwable) {
+             Log.d(Config.LOGTAG, Resolver.class.getSimpleName() + "error resolving fallback records", throwable);
+         }
+-        results.add(Result.createDefault(dnsName));
++        if(!resolveCNAME) {
++            results.add(Result.createDefault(dnsName));
++        }
+         return results;
+     }
+ 
+@@ -266,13 +210,11 @@ private static boolean validateHostname() {
+ 
+     public static class Result implements Comparable<Result> {
+         public static final String DOMAIN = "domain";
+-        public static final String IP = "ip";
+         public static final String HOSTNAME = "hostname";
+         public static final String PORT = "port";
+         public static final String PRIORITY = "priority";
+         public static final String DIRECT_TLS = "directTls";
+         public static final String AUTHENTICATED = "authenticated";
+-        private InetAddress ip;
+         private DNSName hostname;
+         private int port = DEFAULT_PORT_XMPP;
+         private boolean directTls = false;
+@@ -288,25 +230,15 @@ static Result fromRecord(SRV srv, boolean directTls) {
+             return result;
+         }
+ 
+-        static Result createDefault(DNSName hostname, InetAddress ip) {
++        static Result createDefault(DNSName hostname) {
+             Result result = new Result();
+             result.port = DEFAULT_PORT_XMPP;
+             result.hostname = hostname;
+-            result.ip = ip;
+             return result;
+         }
+ 
+-        static Result createDefault(DNSName hostname) {
+-            return createDefault(hostname, null);
+-        }
+-
+         public static Result fromCursor(Cursor cursor) {
+             final Result result = new Result();
+-            try {
+-                result.ip = InetAddress.getByAddress(cursor.getBlob(cursor.getColumnIndex(IP)));
+-            } catch (UnknownHostException e) {
+-                result.ip = null;
+-            }
+             final String hostname = cursor.getString(cursor.getColumnIndex(HOSTNAME));
+             result.hostname = hostname == null ? null : DNSName.from(hostname);
+             result.port = cursor.getInt(cursor.getColumnIndex(PORT));
+@@ -327,14 +259,12 @@ public boolean equals(Object o) {
+             if (directTls != result.directTls) return false;
+             if (authenticated != result.authenticated) return false;
+             if (priority != result.priority) return false;
+-            if (ip != null ? !ip.equals(result.ip) : result.ip != null) return false;
+             return hostname != null ? hostname.equals(result.hostname) : result.hostname == null;
+         }
+ 
+         @Override
+         public int hashCode() {
+-            int result = ip != null ? ip.hashCode() : 0;
+-            result = 31 * result + (hostname != null ? hostname.hashCode() : 0);
++            int result = hostname != null ? hostname.hashCode() : 0;
+             result = 31 * result + port;
+             result = 31 * result + (directTls ? 1 : 0);
+             result = 31 * result + (authenticated ? 1 : 0);
+@@ -342,10 +272,6 @@ public int hashCode() {
+             return result;
+         }
+ 
+-        public InetAddress getIp() {
+-            return ip;
+-        }
+-
+         public int getPort() {
+             return port;
+         }
+@@ -365,7 +291,6 @@ public boolean isAuthenticated() {
+         @Override
+         public String toString() {
+             return "Result{" +
+-                    "ip='" + (ip == null ? null : ip.getHostAddress()) + '\'' +
+                     ", hostame='" + hostname.toString() + '\'' +
+                     ", port=" + port +
+                     ", directTls=" + directTls +
+@@ -378,17 +303,7 @@ public String toString() {
+         public int compareTo(@NonNull Result result) {
+             if (result.priority == priority) {
+                 if (directTls == result.directTls) {
+-                    if (ip == null && result.ip == null) {
+                         return 0;
+-                    } else if (ip != null && result.ip != null) {
+-                        if (ip instanceof Inet4Address && result.ip instanceof Inet4Address) {
+-                            return 0;
+-                        } else {
+-                            return ip instanceof Inet4Address ? -1 : 1;
+-                        }
+-                    } else {
+-                        return ip != null ? -1 : 1;
+-                    }
+                 } else {
+                     return directTls ? -1 : 1;
+                 }
+@@ -399,7 +314,6 @@ public int compareTo(@NonNull Result result) {
+ 
+         public ContentValues toContentValues() {
+             final ContentValues contentValues = new ContentValues();
+-            contentValues.put(IP, ip == null ? null : ip.getAddress());
+             contentValues.put(HOSTNAME, hostname == null ? null : hostname.toString());
+             contentValues.put(PORT, port);
+             contentValues.put(PRIORITY, priority);
+@@ -408,4 +322,5 @@ public ContentValues toContentValues() {
+             return contentValues;
+         }
+     }
+-}
+\ No newline at end of file
++
++}
+diff --git a/src/main/java/de/pixart/messenger/xmpp/XmppConnection.java b/src/main/java/de/pixart/messenger/xmpp/XmppConnection.java
+index 1445b9b67..5eb59f959 100644
+--- a/src/main/java/de/pixart/messenger/xmpp/XmppConnection.java
++++ b/src/main/java/de/pixart/messenger/xmpp/XmppConnection.java
+@@ -351,18 +351,10 @@ protected void connect() {
+                         features.encryptionEnabled = result.isDirectTls();
+                         verifiedHostname = result.isAuthenticated() ? result.getHostname().toString() : null;
+                         Log.d(Config.LOGTAG, "verified hostname " + verifiedHostname);
+-                        final InetSocketAddress addr;
+-                        if (result.getIp() != null) {
+-                            addr = new InetSocketAddress(result.getIp(), result.getPort());
+-                            Log.d(Config.LOGTAG, account.getJid().asBareJid().toString()
+-                                    + ": using values from resolver " + (result.getHostname() == null ? "" : result.getHostname().toString()
+-                                    + "/") + result.getIp().getHostAddress() + ":" + result.getPort() + " tls: " + features.encryptionEnabled);
+-                        } else {
+-                            addr = new InetSocketAddress(IDN.toASCII(result.getHostname().toString()), result.getPort());
+-                            Log.d(Config.LOGTAG, account.getJid().asBareJid().toString()
+-                                    + ": using values from resolver "
+-                                    + result.getHostname().toString() + ":" + result.getPort() + " tls: " + features.encryptionEnabled);
+-                        }
++                        final InetSocketAddress addr = new InetSocketAddress(IDN.toASCII(result.getHostname().toString()), result.getPort());
++                        Log.d(Config.LOGTAG, account.getJid().asBareJid().toString()
++                                + ": using values from resolver "
++                                + result.getHostname().toString() + ":" + result.getPort() + " tls: " + features.encryptionEnabled);
+ 
+                         localSocket = new Socket();
+                         localSocket.connect(addr, Config.SOCKET_TIMEOUT * 1000);
+@@ -1999,4 +1991,4 @@ public boolean stanzaIds() {
+             return hasDiscoFeature(account.getJid().asBareJid(), Namespace.STANZA_IDS);
+         }
+     }
+-}
+\ No newline at end of file
++}
+
+From 48cc277aa5359606f37e61052245afdb6dde0597 Mon Sep 17 00:00:00 2001
+From: Martin/Geno <geno+dev@fireorbit.de>
+Date: Fri, 7 Jun 2019 08:41:43 +0200
+Subject: [PATCH 2/3] Networkstack: drop own implementation of DNS-Server
+ selection
+
+---
+ .../utils/AndroidUsingExecLowPriority.java    | 92 -------------------
+ .../utils/AndroidUsingLinkProperties.java     | 90 ------------------
+ .../de/pixart/messenger/utils/Resolver.java   |  4 -
+ 3 files changed, 186 deletions(-)
+ delete mode 100644 src/main/java/de/pixart/messenger/utils/AndroidUsingExecLowPriority.java
+ delete mode 100644 src/main/java/de/pixart/messenger/utils/AndroidUsingLinkProperties.java
+
+diff --git a/src/main/java/de/pixart/messenger/utils/AndroidUsingExecLowPriority.java b/src/main/java/de/pixart/messenger/utils/AndroidUsingExecLowPriority.java
+deleted file mode 100644
+index 6097fcd03..000000000
+--- a/src/main/java/de/pixart/messenger/utils/AndroidUsingExecLowPriority.java
++++ /dev/null
+@@ -1,92 +0,0 @@
+-/*
+- * Copyright 2015-2016 the original author or authors
+- *
+- * This software is licensed under the Apache License, Version 2.0,
+- * the GNU Lesser General Public License version 2 or later ("LGPL")
+- * and the WTFPL.
+- * You may choose either license to govern your use of this software only
+- * upon the condition that you accept all of the terms of either
+- * the Apache License 2.0, the LGPL 2.1+ or the WTFPL.
+- */
+-
+-package de.pixart.messenger.utils;
+-
+-import java.io.IOException;
+-import java.io.InputStream;
+-import java.io.InputStreamReader;
+-import java.io.LineNumberReader;
+-import java.net.InetAddress;
+-import java.util.HashSet;
+-import java.util.logging.Level;
+-
+-import de.measite.minidns.dnsserverlookup.AbstractDNSServerLookupMechanism;
+-import de.measite.minidns.dnsserverlookup.AndroidUsingReflection;
+-import de.measite.minidns.dnsserverlookup.DNSServerLookupMechanism;
+-import de.measite.minidns.util.PlatformDetection;
+-
+-/**
+- * Try to retrieve the list of DNS server by executing getprop.
+- */
+-public class AndroidUsingExecLowPriority extends AbstractDNSServerLookupMechanism {
+-
+-    public static final DNSServerLookupMechanism INSTANCE = new AndroidUsingExecLowPriority();
+-    public static final int PRIORITY = AndroidUsingReflection.PRIORITY + 1;
+-
+-    private AndroidUsingExecLowPriority() {
+-        super(AndroidUsingExecLowPriority.class.getSimpleName(), PRIORITY);
+-    }
+-
+-    @Override
+-    public String[] getDnsServerAddresses() {
+-        try {
+-            Process process = Runtime.getRuntime().exec("getprop");
+-            InputStream inputStream = process.getInputStream();
+-            LineNumberReader lnr = new LineNumberReader(
+-                    new InputStreamReader(inputStream));
+-            String line;
+-            HashSet<String> server = new HashSet<>(6);
+-            while ((line = lnr.readLine()) != null) {
+-                int split = line.indexOf("]: [");
+-                if (split == -1) {
+-                    continue;
+-                }
+-                String property = line.substring(1, split);
+-                String value = line.substring(split + 4, line.length() - 1);
+-
+-                if (value.isEmpty()) {
+-                    continue;
+-                }
+-
+-                if (property.endsWith(".dns") || property.endsWith(".dns1") ||
+-                        property.endsWith(".dns2") || property.endsWith(".dns3") ||
+-                        property.endsWith(".dns4")) {
+-
+-                    // normalize the address
+-
+-                    InetAddress ip = InetAddress.getByName(value);
+-
+-                    if (ip == null) continue;
+-
+-                    value = ip.getHostAddress();
+-
+-                    if (value == null) continue;
+-                    if (value.length() == 0) continue;
+-
+-                    server.add(value);
+-                }
+-            }
+-            if (server.size() > 0) {
+-                return server.toArray(new String[server.size()]);
+-            }
+-        } catch (IOException e) {
+-            LOGGER.log(Level.WARNING, "Exception in findDNSByExec", e);
+-        }
+-        return null;
+-    }
+-
+-    @Override
+-    public boolean isAvailable() {
+-        return PlatformDetection.isAndroid();
+-    }
+-
+-}
+\ No newline at end of file
+diff --git a/src/main/java/de/pixart/messenger/utils/AndroidUsingLinkProperties.java b/src/main/java/de/pixart/messenger/utils/AndroidUsingLinkProperties.java
+deleted file mode 100644
+index f2f33dc1b..000000000
+--- a/src/main/java/de/pixart/messenger/utils/AndroidUsingLinkProperties.java
++++ /dev/null
+@@ -1,90 +0,0 @@
+-package de.pixart.messenger.utils;
+-
+-import android.annotation.TargetApi;
+-import android.content.Context;
+-import android.net.ConnectivityManager;
+-import android.net.LinkProperties;
+-import android.net.Network;
+-import android.net.NetworkInfo;
+-import android.net.RouteInfo;
+-import android.os.Build;
+-
+-import java.net.Inet4Address;
+-import java.net.InetAddress;
+-import java.util.ArrayList;
+-import java.util.List;
+-
+-import de.measite.minidns.dnsserverlookup.AbstractDNSServerLookupMechanism;
+-import de.measite.minidns.dnsserverlookup.AndroidUsingExec;
+-
+-public class AndroidUsingLinkProperties extends AbstractDNSServerLookupMechanism {
+-
+-    private final Context context;
+-
+-    AndroidUsingLinkProperties(Context context) {
+-        super(AndroidUsingLinkProperties.class.getSimpleName(), AndroidUsingExec.PRIORITY - 1);
+-        this.context = context;
+-    }
+-
+-    @Override
+-    public boolean isAvailable() {
+-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+-    }
+-
+-    @Override
+-    @TargetApi(21)
+-    public String[] getDnsServerAddresses() {
+-        final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+-        final Network[] networks = connectivityManager == null ? null : connectivityManager.getAllNetworks();
+-        if (networks == null) {
+-            return new String[0];
+-        }
+-        final Network activeNetwork = getActiveNetwork(connectivityManager);
+-        final List<String> servers = new ArrayList<>();
+-        int vpnOffset = 0;
+-        for (Network network : networks) {
+-            LinkProperties linkProperties = connectivityManager.getLinkProperties(network);
+-            if (linkProperties == null) {
+-                continue;
+-            }
+-            final NetworkInfo networkInfo = connectivityManager.getNetworkInfo(network);
+-            final boolean isActiveNetwork = network.equals(activeNetwork);
+-            final boolean isVpn = networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_VPN;
+-            if (isActiveNetwork && isVpn) {
+-                final List<String> tmp = getIPv4First(linkProperties.getDnsServers());
+-                servers.addAll(0, tmp);
+-                vpnOffset += tmp.size();
+-            } else if (hasDefaultRoute(linkProperties) || isActiveNetwork || activeNetwork == null || isVpn) {
+-                servers.addAll(vpnOffset, getIPv4First(linkProperties.getDnsServers()));
+-            }
+-        }
+-        return servers.toArray(new String[0]);
+-    }
+-
+-    @TargetApi(23)
+-    private static Network getActiveNetwork(ConnectivityManager cm) {
+-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? cm.getActiveNetwork() : null;
+-    }
+-
+-    private static List<String> getIPv4First(List<InetAddress> in) {
+-        List<String> out = new ArrayList<>();
+-        for (InetAddress address : in) {
+-            if (address instanceof Inet4Address) {
+-                out.add(0, address.getHostAddress());
+-            } else {
+-                out.add(address.getHostAddress());
+-            }
+-        }
+-        return out;
+-    }
+-
+-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+-    private static boolean hasDefaultRoute(LinkProperties linkProperties) {
+-        for (RouteInfo route : linkProperties.getRoutes()) {
+-            if (route.isDefaultRoute()) {
+-                return true;
+-            }
+-        }
+-        return false;
+-    }
+-}
+\ No newline at end of file
+diff --git a/src/main/java/de/pixart/messenger/utils/Resolver.java b/src/main/java/de/pixart/messenger/utils/Resolver.java
+index 9512733ea..acf1130fc 100644
+--- a/src/main/java/de/pixart/messenger/utils/Resolver.java
++++ b/src/main/java/de/pixart/messenger/utils/Resolver.java
+@@ -17,7 +17,6 @@
+ import de.measite.minidns.Question;
+ import de.measite.minidns.Record;
+ import de.measite.minidns.dnssec.DNSSECResultNotAuthenticException;
+-import de.measite.minidns.dnsserverlookup.AndroidUsingExec;
+ import de.measite.minidns.hla.DnssecResolverApi;
+ import de.measite.minidns.hla.ResolverApi;
+ import de.measite.minidns.hla.ResolverResult;
+@@ -40,9 +39,6 @@
+ 
+     public static void init(XmppConnectionService service) {
+         Resolver.SERVICE = service;
+-        DNSClient.removeDNSServerLookupMechanism(AndroidUsingExec.INSTANCE);
+-        DNSClient.addDnsServerLookupMechanism(AndroidUsingExecLowPriority.INSTANCE);
+-        DNSClient.addDnsServerLookupMechanism(new AndroidUsingLinkProperties(service));
+         final AbstractDNSClient client = ResolverApi.INSTANCE.getClient();
+         if (client instanceof ReliableDNSClient) {
+             disableHardcodedDnsServers((ReliableDNSClient) client);
+
+From dc775a9748df59b9bf51e2138d2fafd67ba7ed63 Mon Sep 17 00:00:00 2001
+From: Martin/Geno <geno+dev@fireorbit.de>
+Date: Sat, 8 Jun 2019 15:51:59 +0200
+Subject: [PATCH 3/3] Networkstack: remove dns resolver cache
+
+---
+ .../persistance/DatabaseBackend.java          | 54 +------------------
+ .../pixart/messenger/xmpp/XmppConnection.java | 13 -----
+ 2 files changed, 2 insertions(+), 65 deletions(-)
+
+diff --git a/src/main/java/de/pixart/messenger/persistance/DatabaseBackend.java b/src/main/java/de/pixart/messenger/persistance/DatabaseBackend.java
+index d5ebc3b97..88645d790 100644
+--- a/src/main/java/de/pixart/messenger/persistance/DatabaseBackend.java
++++ b/src/main/java/de/pixart/messenger/persistance/DatabaseBackend.java
+@@ -52,7 +52,6 @@
+ import de.pixart.messenger.services.ShortcutService;
+ import de.pixart.messenger.utils.CryptoHelper;
+ import de.pixart.messenger.utils.FtsUtils;
+-import de.pixart.messenger.utils.Resolver;
+ import de.pixart.messenger.xmpp.InvalidJid;
+ import de.pixart.messenger.xmpp.mam.MamReference;
+ import rocks.xmpp.addr.Jid;
+@@ -148,16 +147,6 @@
+             + ") ON CONFLICT IGNORE"
+             + ");";
+ 
+-    private static String RESOLVER_RESULTS_TABLENAME = "resolver_results";
+-    private static String CREATE_RESOLVER_RESULTS_TABLE = "create table " + RESOLVER_RESULTS_TABLENAME + "("
+-            + Resolver.Result.DOMAIN + " TEXT,"
+-            + Resolver.Result.HOSTNAME + " TEXT,"
+-            + Resolver.Result.PRIORITY + " NUMBER,"
+-            + Resolver.Result.DIRECT_TLS + " NUMBER,"
+-            + Resolver.Result.AUTHENTICATED + " NUMBER,"
+-            + Resolver.Result.PORT + " NUMBER,"
+-            + "UNIQUE(" + Resolver.Result.DOMAIN + ") ON CONFLICT REPLACE"
+-            + ");";
+     private static String CREATE_MESSAGE_TIME_INDEX = "create INDEX message_time_index ON " + Message.TABLENAME + "(" + Message.TIME_SENT + ")";
+     private static String CREATE_MESSAGE_CONVERSATION_INDEX = "create INDEX message_conversation_index ON " + Message.TABLENAME + "(" + Message.CONVERSATION + ")";
+     private static String CREATE_MESSAGE_DELETED_INDEX = "create index message_deleted_index ON " + Message.TABLENAME + "(" + Message.DELETED + ")";
+@@ -256,7 +245,6 @@ public void onCreate(SQLiteDatabase db) {
+         db.execSQL(CREATE_SIGNED_PREKEYS_STATEMENT);
+         db.execSQL(CREATE_IDENTITIES_STATEMENT);
+         db.execSQL(CREATE_PRESENCE_TEMPLATES_STATEMENT);
+-        db.execSQL(CREATE_RESOLVER_RESULTS_TABLE);
+         db.execSQL(CREATE_MESSAGE_INDEX_TABLE);
+         db.execSQL(CREATE_MESSAGE_INSERT_TRIGGER);
+         db.execSQL(CREATE_MESSAGE_UPDATE_TRIGGER);
+@@ -526,10 +514,6 @@ public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+             db.execSQL("ALTER TABLE " + Message.TABLENAME + " ADD COLUMN " + Message.MARKABLE + " NUMBER DEFAULT 0");
+         }
+ 
+-        if (oldVersion < 40 && newVersion >= 40) {
+-            db.execSQL(CREATE_RESOLVER_RESULTS_TABLE);
+-        }
+-
+         if (oldVersion < 42 && newVersion >= 42) {
+             db.execSQL(CREATE_MESSAGE_INDEX_TABLE);
+             db.execSQL(CREATE_MESSAGE_INSERT_TRIGGER);
+@@ -559,17 +543,11 @@ public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+             }
+         }
+ 
+-        if (oldVersion < 48 && newVersion >= 48) {
+-            try {
+-                db.execSQL(CREATE_RESOLVER_RESULTS_TABLE);
+-            } catch (Exception e) {
+-                //ignore
+-            }
+-        }
+-
+         if (oldVersion < 49 && newVersion >= 49) {
+             db.execSQL("ALTER TABLE " + Message.TABLENAME + " ADD COLUMN " + Message.BODY_LANGUAGE);
+         }
++
++        db.execSQL("DROP TABLE IF EXISTS resolver_results");
+     }
+ 
+     private boolean isColumnExisting(SQLiteDatabase db, String TableName, String ColumnName) {
+@@ -706,34 +684,6 @@ public ServiceDiscoveryResult findDiscoveryResult(final String hash, final Strin
+         return result;
+     }
+ 
+-    public void saveResolverResult(String domain, Resolver.Result result) {
+-        SQLiteDatabase db = this.getWritableDatabase();
+-        ContentValues contentValues = result.toContentValues();
+-        contentValues.put(Resolver.Result.DOMAIN, domain);
+-        db.insert(RESOLVER_RESULTS_TABLENAME, null, contentValues);
+-    }
+-
+-    public synchronized Resolver.Result findResolverResult(String domain) {
+-        SQLiteDatabase db = this.getReadableDatabase();
+-        String where = Resolver.Result.DOMAIN + "=?";
+-        String[] whereArgs = {domain};
+-        final Cursor cursor = db.query(RESOLVER_RESULTS_TABLENAME, null, where, whereArgs, null, null, null);
+-        Resolver.Result result = null;
+-        if (cursor != null) {
+-            try {
+-                if (cursor.moveToFirst()) {
+-                    result = Resolver.Result.fromCursor(cursor);
+-                }
+-            } catch (Exception e) {
+-                Log.d(Config.LOGTAG, "unable to find cached resolver result in database " + e.getMessage());
+-                return null;
+-            } finally {
+-                cursor.close();
+-            }
+-        }
+-        return result;
+-    }
+-
+     public void insertPresenceTemplate(PresenceTemplate template) {
+         SQLiteDatabase db = this.getWritableDatabase();
+         String whereToDelete = PresenceTemplate.MESSAGE + "=?";
+diff --git a/src/main/java/de/pixart/messenger/xmpp/XmppConnection.java b/src/main/java/de/pixart/messenger/xmpp/XmppConnection.java
+index 5eb59f959..0d5ac20ef 100644
+--- a/src/main/java/de/pixart/messenger/xmpp/XmppConnection.java
++++ b/src/main/java/de/pixart/messenger/xmpp/XmppConnection.java
+@@ -330,16 +330,6 @@ protected void connect() {
+                     Log.e(Config.LOGTAG, account.getJid().asBareJid() + ": Resolver results were empty");
+                     return;
+                 }
+-                final Resolver.Result storedBackupResult;
+-                if (hardcoded) {
+-                    storedBackupResult = null;
+-                } else {
+-                    storedBackupResult = mXmppConnectionService.databaseBackend.findResolverResult(domain);
+-                    if (storedBackupResult != null && !results.contains(storedBackupResult)) {
+-                        results.add(storedBackupResult);
+-                        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": loaded backup resolver result from db: " + storedBackupResult);
+-                    }
+-                }
+                 for (Iterator<Resolver.Result> iterator = results.iterator(); iterator.hasNext(); ) {
+                     final Resolver.Result result = iterator.next();
+                     if (Thread.currentThread().isInterrupted()) {
+@@ -366,9 +356,6 @@ protected void connect() {
+                         localSocket.setSoTimeout(Config.SOCKET_TIMEOUT * 1000);
+                         if (startXmpp(localSocket)) {
+                             localSocket.setSoTimeout(0); //reset to 0; once the connection is established we don’t want this
+-                            if (!hardcoded && !result.equals(storedBackupResult)) {
+-                                mXmppConnectionService.databaseBackend.saveResolverResult(domain, result);
+-                            }
+                             break; // successfully connected to server that speaks xmpp
+                         } else {
+                             FileBackend.close(localSocket);
