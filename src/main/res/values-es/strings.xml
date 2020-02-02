@@ -309,6 +309,7 @@
     <string name="notification_restored_backup_title">Tu copia de seguridad ha sido restaurada</string>
     <string name="notification_restored_backup_subtitle">No olvides habilitar la cuenta.</string>
     <string name="choose_file">Seleccionar archivo</string>
+    <string name="receiving_file">Recibiendo %1$s</string>
     <string name="download_x_file">Descargar %s</string>
     <string name="delete_x_file">Eliminar %s</string>
     <string name="file">archivo</string>
