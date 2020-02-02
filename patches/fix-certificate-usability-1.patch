@@ -1,0 +1,30 @@
+From 90de6e5e1cd1de0ce738be228aba45a41adb4ee6 Mon Sep 17 00:00:00 2001
+From: intika <intika@librefox.org>
+Date: Wed, 29 Jan 2020 08:42:04 +0100
+Subject: [PATCH] Fix client certificate usability
+
+https://github.com/kriztan/Pix-Art-Messenger/issues/438
+---
+ src/main/java/de/pixart/messenger/xmpp/XmppConnection.java | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/main/java/de/pixart/messenger/xmpp/XmppConnection.java b/src/main/java/de/pixart/messenger/xmpp/XmppConnection.java
+index b8cddc170..2aad36e6d 100644
+--- a/src/main/java/de/pixart/messenger/xmpp/XmppConnection.java
++++ b/src/main/java/de/pixart/messenger/xmpp/XmppConnection.java
+@@ -462,7 +462,7 @@ private TlsFactoryVerifier getTlsFactoryVerifier() throws NoSuchAlgorithmExcepti
+         final SSLContext sc = SSLSocketHelper.getSSLContext();
+         MemorizingTrustManager trustManager = this.mXmppConnectionService.getMemorizingTrustManager();
+         KeyManager[] keyManager;
+-        if (account.getPrivateKeyAlias() != null && account.getPassword().isEmpty()) {
++        if (account.getPrivateKeyAlias() != null) {
+             keyManager = new KeyManager[]{new MyKeyManager()};
+         } else {
+             keyManager = null;
+@@ -2030,4 +2030,4 @@ public boolean bookmarks2() {
+             return Config.USE_BOOKMARKS2 /* || hasDiscoFeature(account.getJid().asBareJid(), Namespace.BOOKMARKS2_COMPAT)*/;
+         }
+     }
+-}
+\ No newline at end of file
++}

@@ -1,0 +1,33 @@
+From b2d222fbfb8ffd112a46fecc623be63d53fb3264 Mon Sep 17 00:00:00 2001
+From: intika <intika@librefox.org>
+Date: Wed, 29 Jan 2020 11:19:45 +0100
+Subject: [PATCH] Add account creation with certificate to initial setup
+
+---
+ src/main/res/menu/editaccount.xml | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/src/main/res/menu/editaccount.xml b/src/main/res/menu/editaccount.xml
+index a31d6f032..9feb215e0 100644
+--- a/src/main/res/menu/editaccount.xml
++++ b/src/main/res/menu/editaccount.xml
+@@ -19,6 +19,12 @@
+         </menu>
+     </item>
+ 
++    <item
++        android:id="@+id/action_add_account_with_cert"
++        android:icon="?attr/icon_add_person"
++        android:title="@string/action_add_account_with_certificate"
++        android:visible="false"
++        app:showAsAction="never" />
+     <item
+         android:id="@+id/action_import_backup"
+         android:title="@string/restore_backup"
+@@ -80,4 +86,4 @@
+         android:orderInCategory="100"
+         android:title="@string/action_settings"
+         app:showAsAction="never" />
+-</menu>
+\ No newline at end of file
++</menu>

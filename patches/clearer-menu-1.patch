@@ -1,0 +1,44 @@
+From d6e8bb680d9f6b2d653e3ad441f55bf5944e12b9 Mon Sep 17 00:00:00 2001
+From: intika <intika@librefox.org>
+Date: Wed, 29 Jan 2020 12:11:55 +0100
+Subject: [PATCH] clearer menu xml
+
+---
+ src/main/res/menu/manageaccounts.xml | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/src/main/res/menu/manageaccounts.xml b/src/main/res/menu/manageaccounts.xml
+index cf2c80510..aa1d7b0ca 100644
+--- a/src/main/res/menu/manageaccounts.xml
++++ b/src/main/res/menu/manageaccounts.xml
+@@ -7,20 +7,24 @@
+         android:icon="?attr/icon_add_person"
+         android:title="@string/action_add_new_account"
+         app:showAsAction="always" />
+-    <item
+-        android:id="@+id/action_import_backup"
+-        android:title="@string/restore_backup"
+-        app:showAsAction="never" />
+     <item
+         android:id="@+id/action_add_account_with_cert"
+         android:icon="?attr/icon_add_person"
+         android:title="@string/action_add_account_with_certificate"
+         android:visible="true"
+         app:showAsAction="never" />
++    <item
++        android:id="@+id/action_add_account_menu"
++        android:title="@string/action_add_new_account"
++        app:showAsAction="never" />
++    <item
++        android:id="@+id/action_import_backup"
++        android:title="@string/restore_backup"
++        app:showAsAction="never" />
+     <item
+         android:id="@+id/action_settings"
+         android:orderInCategory="100"
+         android:title="@string/action_settings"
+         app:showAsAction="never" />
+ 
+-</menu>
+\ No newline at end of file
++</menu>
