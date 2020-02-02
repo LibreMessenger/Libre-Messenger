@@ -1,29 +1,56 @@
-From df7534356c7c11060241f8cad3baf5b3b7d2c4c7 Mon Sep 17 00:00:00 2001
+From 5bc0dff5d79254df2677055afbda71b15633152f Mon Sep 17 00:00:00 2001
 From: intika <intika@librefox.org>
-Date: Wed, 29 Jan 2020 11:22:54 +0100
-Subject: [PATCH] Add account creation with certificate to initial setup
+Date: Wed, 29 Jan 2020 11:33:51 +0100
+Subject: [PATCH] Add account creation with certificate functions
 
 ---
- src/main/java/de/pixart/messenger/ui/EditAccountActivity.java | 2 ++
- 1 file changed, 2 insertions(+)
+ .../pixart/messenger/ui/EditAccountActivity.java  | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
 diff --git a/src/main/java/de/pixart/messenger/ui/EditAccountActivity.java b/src/main/java/de/pixart/messenger/ui/EditAccountActivity.java
-index 26ebf5d4b..5de41d49d 100644
+index 5de41d49d..43a29a41e 100644
 --- a/src/main/java/de/pixart/messenger/ui/EditAccountActivity.java
 +++ b/src/main/java/de/pixart/messenger/ui/EditAccountActivity.java
-@@ -716,6 +716,7 @@ public boolean onCreateOptionsMenu(final Menu menu) {
+@@ -716,7 +716,7 @@ public boolean onCreateOptionsMenu(final Menu menu) {
          final MenuItem shareQRCode = menu.findItem(R.id.action_show_qr_code);
          final MenuItem announcePGP = menu.findItem(R.id.mgmt_account_announce_pgp);
          final MenuItem forgotPassword = menu.findItem(R.id.mgmt_account_password_forgotten);
-+        final MenuItem addAccountWithCert = menu.findItem(R.id.action_add_account_with_cert);
+-        final MenuItem addAccountWithCert = menu.findItem(R.id.action_add_account_with_cert);
++        final MenuItem addAccountWithCertificate = menu.findItem(R.id.action_add_account_with_cert);
          renewCertificate.setVisible(mAccount != null && mAccount.getPrivateKeyAlias() != null);
  
          if (mAccount != null && mAccount.isOnlineAndConnected()) {
-@@ -747,6 +748,7 @@ public boolean onCreateOptionsMenu(final Menu menu) {
+@@ -748,7 +748,7 @@ public boolean onCreateOptionsMenu(final Menu menu) {
                      && !mAccount.isOptionSet(Account.OPTION_REGISTER));
          } else {
              showPassword.setVisible(false);
-+            addAccountWithCert.setVisible(true);
+-            addAccountWithCert.setVisible(true);
++            addAccountWithCertificate.setVisible(true);
          }
          return super.onCreateOptionsMenu(menu);
      }
+@@ -948,6 +948,9 @@ public boolean onOptionsItemSelected(final MenuItem item) {
+             case R.id.action_share_http:
+                 shareLink(true);
+                 break;
++            case R.id.action_add_account_with_cert:
++                addAccountFromKey();
++                break;
+             case R.id.action_share_uri:
+                 shareLink(false);
+                 break;
+@@ -985,6 +988,14 @@ public boolean onOptionsItemSelected(final MenuItem item) {
+         return super.onOptionsItemSelected(item);
+     }
+ 
++    private void addAccountFromKey() {
++        try {
++            KeyChain.choosePrivateKeyAlias(this, this, null, null, null, -1, null);
++        } catch (ActivityNotFoundException e) {
++            Toast.makeText(this, R.string.device_does_not_support_certificates, Toast.LENGTH_LONG).show();
++        }
++    }
++
+     private String getSupportSite(String domain) {
+         int i = -1;
+         for (String domains : getResources().getStringArray(R.array.support_domains)) {
