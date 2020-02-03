@@ -112,7 +112,7 @@ android {
 
         archivesBaseName += "-$versionName"
         archivesBaseName += " $versionNameSuffix"
-        applicationId "be.libre.messenger"
+        applicationId "de.pixart.messenger"
         multiDexEnabled true
 
         buildConfigField("String", "LOGTAG", '"Pix-Art_Messenger"')
