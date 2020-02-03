@@ -23,9 +23,9 @@
     <bool name="autojoin">true</bool>
     <bool name="indicate_received">true</bool>
     <bool name="use_tor">false</bool>
-    <bool name="show_connection_options">false</bool>
+    <bool name="show_connection_options">true</bool>
     <bool name="last_activity">true</bool>
-    <bool name="dont_trust_system_cas">false</bool>
+    <bool name="dont_trust_system_cas">true</bool>
     <bool name="btbv">true</bool>
     <bool name="send_button_status">true</bool>
     <bool name="display_enter_key">false</bool>
@@ -36,7 +36,7 @@
     <bool name="send_crashreport">true</bool>
     <bool name="use_invidious">false</bool>
     <bool name="plain_text_logs">false</bool>
-    <bool name="validate_hostname">false</bool>
+    <bool name="validate_hostname">true</bool>
     <bool name="show_foreground_service">true</bool>
     <bool name="warn_unencrypted_chat">true</bool>
     <bool name="hide_you_are_not_participating">false</bool>
