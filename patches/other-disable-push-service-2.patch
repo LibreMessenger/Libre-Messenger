@@ -1,0 +1,37 @@
+From 6c9ec77119598dc50f00722a7937e5275432d323 Mon Sep 17 00:00:00 2001
+From: intika <intika@librefox.org>
+Date: Mon, 3 Feb 2020 15:48:41 +0100
+Subject: [PATCH] disable-push-service-part-2
+
+---
+ .../de/pixart/messenger/services/XmppConnectionService.java    | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/src/main/java/de/pixart/messenger/services/XmppConnectionService.java b/src/main/java/de/pixart/messenger/services/XmppConnectionService.java
+index 5b9e6a51a..883c1aa3a 100644
+--- a/src/main/java/de/pixart/messenger/services/XmppConnectionService.java
++++ b/src/main/java/de/pixart/messenger/services/XmppConnectionService.java
+@@ -921,7 +921,6 @@ private void checkMucStillJoined(final Account account, final String hash, final
+                 }
+             }
+         }
+-        mPushManagementService.unregisterChannel(account, hash);
+     }
+ 
+     public void reinitializeMuclumbusService() {
+@@ -2407,7 +2406,6 @@ private void archiveConversation(Conversation conversation, final boolean maySyn
+                 }
+                 if (conversation.getMucOptions().push()) {
+                     disableDirectMucPush(conversation);
+-                    mPushManagementService.disablePushOnServer(conversation);
+                 }
+                 leaveMuc(conversation);
+             } else {
+@@ -3047,7 +3045,6 @@ private void enableDirectMucPush(final Conversation conversation) {
+ 
+     private void enableMucPush(final Conversation conversation) {
+         enableDirectMucPush(conversation);
+-        mPushManagementService.registerPushTokenOnServer(conversation);
+     }
+ 
+     private void disableDirectMucPush(final Conversation conversation) {

@@ -1,0 +1,497 @@
+From d5a880464b312e30ac1d20d61e431f883dafc013 Mon Sep 17 00:00:00 2001
+From: intika <intika@librefox.org>
+Date: Mon, 3 Feb 2020 15:26:02 +0100
+Subject: [PATCH] disable-push-service-part-1
+
+---
+ .../services/PushManagementService.java       |  37 ----
+ .../services/XmppConnectionService.java       |  27 ---
+ .../messenger/ui/ConversationsActivity.java   |  15 +-
+ .../messenger/ui/EditAccountActivity.java     |   9 +-
+ .../services/MaintenanceReceiver.java         |  38 ----
+ .../services/PushManagementService.java       | 194 ------------------
+ .../services/PushMessageReceiver.java         |  39 ----
+ 7 files changed, 3 insertions(+), 356 deletions(-)
+ delete mode 100644 src/git/java/de/pixart/messenger/services/PushManagementService.java
+ delete mode 100644 src/playstore/java/de/pixart/messenger/services/MaintenanceReceiver.java
+ delete mode 100644 src/playstore/java/de/pixart/messenger/services/PushManagementService.java
+ delete mode 100644 src/playstore/java/de/pixart/messenger/services/PushMessageReceiver.java
+
+diff --git a/src/git/java/de/pixart/messenger/services/PushManagementService.java b/src/git/java/de/pixart/messenger/services/PushManagementService.java
+deleted file mode 100644
+index 9d4673fd3..000000000
+--- a/src/git/java/de/pixart/messenger/services/PushManagementService.java
++++ /dev/null
+@@ -1,37 +0,0 @@
+-package de.pixart.messenger.services;
+-
+-import de.pixart.messenger.entities.Account;
+-import de.pixart.messenger.entities.Conversation;
+-
+-public class PushManagementService {
+-
+-    protected final XmppConnectionService mXmppConnectionService;
+-
+-    public PushManagementService(XmppConnectionService service) {
+-        this.mXmppConnectionService = service;
+-    }
+-
+-    void registerPushTokenOnServer(Account account) {
+-        //stub implementation. only affects playstore flavor
+-    }
+-
+-    void registerPushTokenOnServer(Conversation conversation) {
+-        //stub implementation. only affects playstore flavor
+-    }
+-
+-    void unregisterChannel(Account account, String hash) {
+-        //stub implementation. only affects playstore flavor
+-    }
+-
+-    void disablePushOnServer(Conversation conversation) {
+-        //stub implementation. only affects playstore flavor
+-    }
+-
+-    public boolean available(Account account) {
+-        return false;
+-    }
+-
+-    public boolean isStub() {
+-        return true;
+-    }
+-}
+diff --git a/src/main/java/de/pixart/messenger/services/XmppConnectionService.java b/src/main/java/de/pixart/messenger/services/XmppConnectionService.java
+index 6f857889b..5b9e6a51a 100644
+--- a/src/main/java/de/pixart/messenger/services/XmppConnectionService.java
++++ b/src/main/java/de/pixart/messenger/services/XmppConnectionService.java
+@@ -185,8 +185,6 @@
+     public static final String ACTION_DISMISS_ERROR_NOTIFICATIONS = "dismiss_error";
+     public static final String ACTION_TRY_AGAIN = "try_again";
+     public static final String ACTION_IDLE_PING = "idle_ping";
+-    public static final String ACTION_FCM_TOKEN_REFRESH = "fcm_token_refresh";
+-    public static final String ACTION_FCM_MESSAGE_RECEIVED = "fcm_message_received";
+     private static final String ACTION_POST_CONNECTIVITY_CHANGE = "de.pixart.messenger.POST_CONNECTIVITY_CHANGE";
+     public static final String FDroid = "org.fdroid.fdroid";
+     public static final String PlayStore = "com.android.vending";
+@@ -269,7 +267,6 @@ public void onJinglePacketReceived(Account account, JinglePacket packet) {
+     public HttpConnectionManager mHttpConnectionManager = new HttpConnectionManager(this);
+     private AvatarService mAvatarService = new AvatarService(this);
+     private MessageArchiveService mMessageArchiveService = new MessageArchiveService(this);
+-    private PushManagementService mPushManagementService = new PushManagementService(this);
+     private QuickConversationsService mQuickConversationsService = new QuickConversationsService(this);
+     private final ConversationsFileObserver fileObserver = new ConversationsFileObserver(
+             Environment.getExternalStorageDirectory().getAbsolutePath()
+@@ -360,9 +357,6 @@ public void onBind(final Account account) {
+                 });
+             }
+             sendPresence(account);
+-            if (mPushManagementService.available(account)) {
+-                mPushManagementService.registerPushTokenOnServer(account);
+-            }
+             connectMultiModeConversations(account);
+             syncDirtyContacts(account);
+         }
+@@ -749,19 +743,11 @@ public int onStartCommand(Intent intent, int flags, int startId) {
+                         refreshAllPresences();
+                     }
+                     break;
+-                case ACTION_FCM_TOKEN_REFRESH:
+-                    refreshAllFcmTokens();
+-                    break;
+                 case ACTION_IDLE_PING:
+                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                         scheduleNextIdlePing();
+                     }
+                     break;
+-                case ACTION_FCM_MESSAGE_RECEIVED:
+-                    pushedAccountHash = intent.getStringExtra("account");
+-                    pushedChannelHash = intent.getStringExtra("channel");
+-                    Log.d(Config.LOGTAG, "push message arrived in service. account=" + pushedAccountHash);
+-                    break;
+                 case Intent.ACTION_SEND:
+                     Uri uri = intent.getData();
+                     if (uri != null) {
+@@ -4630,15 +4616,6 @@ public void refreshAllPresences() {
+         }
+     }
+ 
+-    private void refreshAllFcmTokens() {
+-        for (Account account : getAccounts()) {
+-            if (account.isOnlineAndConnected() && mPushManagementService.available(account)) {
+-                mPushManagementService.registerPushTokenOnServer(account);
+-                //TODO renew mucs
+-            }
+-        }
+-    }
+-
+     private void sendOfflinePresence(final Account account) {
+         Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": sending offline presence");
+         sendPresencePacket(account, mPresenceGenerator.sendOfflinePresence(account));
+@@ -4908,10 +4885,6 @@ public void fetchMamPreferences(Account account, final OnMamPreferencesFetched c
+         });
+     }
+ 
+-    public PushManagementService getPushManagementService() {
+-        return mPushManagementService;
+-    }
+-
+     public void changeStatus(Account account, PresenceTemplate template, String signature) {
+         if (!template.getStatusMessage().isEmpty()) {
+             databaseBackend.insertPresenceTemplate(template);
+diff --git a/src/main/java/de/pixart/messenger/ui/ConversationsActivity.java b/src/main/java/de/pixart/messenger/ui/ConversationsActivity.java
+index 51023c348..b1b78c293 100644
+--- a/src/main/java/de/pixart/messenger/ui/ConversationsActivity.java
++++ b/src/main/java/de/pixart/messenger/ui/ConversationsActivity.java
+@@ -278,8 +278,7 @@ private void setNeverAskForBatteryOptimizationsAgain() {
+     }
+ 
+     private void openBatteryOptimizationDialogIfNeeded() {
+-        if (hasAccountWithoutPush()
+-                && isOptimizingBattery()
++        if (isOptimizingBattery()
+                 && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M
+                 && getPreferences().getBoolean(getBatteryOptimizationPreferenceKey(), true)) {
+             AlertDialog.Builder builder = new AlertDialog.Builder(this);
+@@ -304,16 +303,6 @@ private void openBatteryOptimizationDialogIfNeeded() {
+         }
+     }
+ 
+-    private boolean hasAccountWithoutPush() {
+-        for (Account account : xmppConnectionService.getAccounts()) {
+-            if (account.getStatus() == Account.State.ONLINE && !xmppConnectionService.getPushManagementService().available(account)) {
+-                return true;
+-            }
+-        }
+-        return false;
+-    }
+-
+-
+     private void notifyFragmentOfBackendConnected(@IdRes int id) {
+         final Fragment fragment = getFragmentManager().findFragmentById(id);
+         if (fragment instanceof OnBackendConnected) {
+@@ -944,4 +933,4 @@ public void onRoomDestroyFailed() {
+         final boolean groupChat = conversation != null && conversation.isPrivateAndNonAnonymous();
+         displayToast(getString(groupChat ? R.string.destroy_room_failed : R.string.destroy_channel_failed));
+     }
+-}
+\ No newline at end of file
++}
+diff --git a/src/main/java/de/pixart/messenger/ui/EditAccountActivity.java b/src/main/java/de/pixart/messenger/ui/EditAccountActivity.java
+index b868eb4e4..f51b43b06 100644
+--- a/src/main/java/de/pixart/messenger/ui/EditAccountActivity.java
++++ b/src/main/java/de/pixart/messenger/ui/EditAccountActivity.java
+@@ -1215,7 +1215,7 @@ private void updateAccountInformation(boolean init) {
+         if (this.mAccount.isOnlineAndConnected() && !this.mFetchingAvatar) {
+             Features features = this.mAccount.getXmppConnection().getFeatures();
+             this.binding.stats.setVisibility(View.VISIBLE);
+-            boolean showBatteryWarning = !xmppConnectionService.getPushManagementService().available(mAccount) && isOptimizingBattery();
++            boolean showBatteryWarning = isOptimizingBattery();
+             boolean showDataSaverWarning = isAffectedByDataSaver();
+             showOsOptimizationWarning(showBatteryWarning, showDataSaverWarning);
+             this.binding.sessionEst.setText(UIHelper.readableTimeDifferenceFull(this, this.mAccount.getXmppConnection().getLastSessionEstablished()));
+@@ -1280,13 +1280,6 @@ private void updateAccountInformation(boolean init) {
+                 this.binding.serverInfoHttpUpload.setText(R.string.server_info_unavailable);
+             }
+ 
+-            this.binding.pushRow.setVisibility(xmppConnectionService.getPushManagementService().isStub() ? View.GONE : View.VISIBLE);
+-
+-            if (xmppConnectionService.getPushManagementService().available(mAccount)) {
+-                this.binding.serverInfoPush.setText(R.string.server_info_available);
+-            } else {
+-                this.binding.serverInfoPush.setText(R.string.server_info_unavailable);
+-            }
+             final long pgpKeyId = this.mAccount.getPgpId();
+             if (pgpKeyId != 0 && Config.supportOpenPgp()) {
+                 OnClickListener openPgp = view -> launchOpenKeyChain(pgpKeyId);
+diff --git a/src/playstore/java/de/pixart/messenger/services/MaintenanceReceiver.java b/src/playstore/java/de/pixart/messenger/services/MaintenanceReceiver.java
+deleted file mode 100644
+index 31ed95a88..000000000
+--- a/src/playstore/java/de/pixart/messenger/services/MaintenanceReceiver.java
++++ /dev/null
+@@ -1,38 +0,0 @@
+-package de.pixart.messenger.services;
+-
+-import android.content.BroadcastReceiver;
+-import android.content.Context;
+-import android.content.Intent;
+-import android.util.Log;
+-
+-import com.google.firebase.iid.FirebaseInstanceId;
+-
+-import java.io.IOException;
+-
+-import de.pixart.messenger.Config;
+-import de.pixart.messenger.utils.Compatibility;
+-
+-public class MaintenanceReceiver extends BroadcastReceiver {
+-    @Override
+-    public void onReceive(Context context, Intent intent) {
+-        Log.d(Config.LOGTAG, "received intent in maintenance receiver");
+-        if ("de.pixart.messenger.RENEW_INSTANCE_ID".equals(intent.getAction())) {
+-            renewInstanceToken(context);
+-
+-        }
+-    }
+-
+-    private void renewInstanceToken(final Context context) {
+-        new Thread(() -> {
+-            try {
+-                FirebaseInstanceId.getInstance().deleteInstanceId();
+-                final Intent intent = new Intent(context, XmppConnectionService.class);
+-                intent.setAction(XmppConnectionService.ACTION_FCM_TOKEN_REFRESH);
+-                Compatibility.startService(context, intent);
+-            } catch (IOException e) {
+-                Log.d(Config.LOGTAG, "unable to renew instance token", e);
+-            }
+-        }).start();
+-
+-    }
+-}
+\ No newline at end of file
+diff --git a/src/playstore/java/de/pixart/messenger/services/PushManagementService.java b/src/playstore/java/de/pixart/messenger/services/PushManagementService.java
+deleted file mode 100644
+index a7054cf2f..000000000
+--- a/src/playstore/java/de/pixart/messenger/services/PushManagementService.java
++++ /dev/null
+@@ -1,194 +0,0 @@
+-package de.pixart.messenger.services;
+-
+-import android.util.Log;
+-
+-import com.google.android.gms.common.ConnectionResult;
+-import com.google.android.gms.common.GoogleApiAvailability;
+-import com.google.firebase.iid.FirebaseInstanceId;
+-import com.google.firebase.iid.InstanceIdResult;
+-
+-import de.pixart.messenger.Config;
+-import de.pixart.messenger.R;
+-import de.pixart.messenger.entities.Account;
+-import de.pixart.messenger.entities.Conversation;
+-import de.pixart.messenger.utils.Namespace;
+-import de.pixart.messenger.utils.PhoneHelper;
+-import de.pixart.messenger.xml.Element;
+-import de.pixart.messenger.xmpp.XmppConnection;
+-import de.pixart.messenger.xmpp.forms.Data;
+-import de.pixart.messenger.xmpp.stanzas.IqPacket;
+-import rocks.xmpp.addr.Jid;
+-
+-public class PushManagementService {
+-
+-    protected final XmppConnectionService mXmppConnectionService;
+-
+-    PushManagementService(XmppConnectionService service) {
+-        this.mXmppConnectionService = service;
+-    }
+-
+-    private static Data findResponseData(IqPacket response) {
+-        final Element command = response.findChild("command", Namespace.COMMANDS);
+-        final Element x = command == null ? null : command.findChild("x", Namespace.DATA);
+-        return x == null ? null : Data.parse(x);
+-    }
+-
+-    private Jid getAppServer() {
+-        return Jid.of(mXmppConnectionService.getString(R.string.app_server));
+-    }
+-
+-    void registerPushTokenOnServer(final Account account) {
+-        Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": has push support");
+-        retrieveFcmInstanceToken(token -> {
+-            final String androidId = PhoneHelper.getAndroidId(mXmppConnectionService);
+-            final IqPacket packet = mXmppConnectionService.getIqGenerator().pushTokenToAppServer(getAppServer(), token, androidId);
+-            mXmppConnectionService.sendIqPacket(account, packet, (a, response) -> {
+-                final Data data = findResponseData(response);
+-                if (response.getType() == IqPacket.TYPE.RESULT && data != null) {
+-                    try {
+-                        String node = data.getValue("node");
+-                        String secret = data.getValue("secret");
+-                        Jid jid = Jid.of(data.getValue("jid"));
+-                        if (node != null && secret != null) {
+-                            enablePushOnServer(a, jid, node, secret);
+-                        }
+-                    } catch (IllegalArgumentException e) {
+-                        e.printStackTrace();
+-                    }
+-                } else {
+-                    Log.d(Config.LOGTAG, a.getJid().asBareJid() + ": invalid response from app server");
+-                }
+-            });
+-        });
+-    }
+-
+-    public void unregisterChannel(final Account account, final String channel) {
+-        final String androidId = PhoneHelper.getAndroidId(mXmppConnectionService);
+-        final Jid appServer = getAppServer();
+-        final IqPacket packet = mXmppConnectionService.getIqGenerator().unregisterChannelOnAppServer(appServer, androidId, channel);
+-        mXmppConnectionService.sendIqPacket(account, packet, (a, response) -> {
+-            if (response.getType() == IqPacket.TYPE.RESULT) {
+-                Log.d(Config.LOGTAG, a.getJid().asBareJid() + ": successfully unregistered channel");
+-            } else if (response.getType() == IqPacket.TYPE.ERROR) {
+-                Log.d(Config.LOGTAG, a.getJid().asBareJid() + ": unable to unregister channel with hash " + channel);
+-            }
+-        });
+-    }
+-
+-    void registerPushTokenOnServer(final Conversation conversation) {
+-        Log.d(Config.LOGTAG, conversation.getAccount().getJid().asBareJid() + ": room " + conversation.getJid().asBareJid() + " has push support");
+-        retrieveFcmInstanceToken(token -> {
+-            final Jid muc = conversation.getJid().asBareJid();
+-            final String androidId = PhoneHelper.getAndroidId(mXmppConnectionService);
+-            final IqPacket packet = mXmppConnectionService.getIqGenerator().pushTokenToAppServer(getAppServer(), token, androidId, muc);
+-            packet.setTo(muc);
+-            mXmppConnectionService.sendIqPacket(conversation.getAccount(), packet, (a, response) -> {
+-                final Data data = findResponseData(response);
+-                if (response.getType() == IqPacket.TYPE.RESULT && data != null) {
+-                    try {
+-                        final String node = data.getValue("node");
+-                        final String secret = data.getValue("secret");
+-                        final Jid jid = Jid.of(data.getValue("jid"));
+-                        if (node != null && secret != null) {
+-                            enablePushOnServer(conversation, jid, node, secret);
+-                        }
+-                    } catch (IllegalArgumentException e) {
+-                        e.printStackTrace();
+-                    }
+-                } else {
+-                    Log.d(Config.LOGTAG, a.getJid().asBareJid() + ": invalid response from app server");
+-                }
+-            });
+-        });
+-    }
+-
+-    private void enablePushOnServer(final Account account, final Jid appServer, final String node, final String secret) {
+-        final IqPacket enable = mXmppConnectionService.getIqGenerator().enablePush(appServer, node, secret);
+-        mXmppConnectionService.sendIqPacket(account, enable, (a, p) -> {
+-            if (p.getType() == IqPacket.TYPE.RESULT) {
+-                Log.d(Config.LOGTAG, a.getJid().asBareJid() + ": successfully enabled push on server");
+-            } else if (p.getType() == IqPacket.TYPE.ERROR) {
+-                Log.d(Config.LOGTAG, a.getJid().asBareJid() + ": enabling push on server failed");
+-            }
+-        });
+-    }
+-
+-    private void enablePushOnServer(final Conversation conversation, final Jid appServer, final String node, final String secret) {
+-        final Jid muc = conversation.getJid().asBareJid();
+-        final IqPacket enable = mXmppConnectionService.getIqGenerator().enablePush(appServer, node, secret);
+-        enable.setTo(muc);
+-        mXmppConnectionService.sendIqPacket(conversation.getAccount(), enable, (a, p) -> {
+-            if (p.getType() == IqPacket.TYPE.RESULT) {
+-                Log.d(Config.LOGTAG, a.getJid().asBareJid() + ": successfully enabled push on " + muc);
+-                if (conversation.setAttribute(Conversation.ATTRIBUTE_ALWAYS_NOTIFY, node)) {
+-                    mXmppConnectionService.updateConversation(conversation);
+-                }
+-            } else if (p.getType() == IqPacket.TYPE.ERROR) {
+-                Log.d(Config.LOGTAG, a.getJid().asBareJid() + ": enabling push on " + muc + " failed");
+-            }
+-        });
+-    }
+-
+-    public void disablePushOnServer(final Conversation conversation) {
+-        final Jid muc = conversation.getJid().asBareJid();
+-        final String node = conversation.getAttribute(Conversation.ATTRIBUTE_PUSH_NODE);
+-        if (node != null) {
+-            final IqPacket disable = mXmppConnectionService.getIqGenerator().disablePush(getAppServer(), node);
+-            disable.setTo(muc);
+-            mXmppConnectionService.sendIqPacket(conversation.getAccount(), disable, (account, response) -> {
+-                if (response.getType() == IqPacket.TYPE.ERROR) {
+-                    Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": unable to disable push for room " + muc);
+-                }
+-            });
+-        } else {
+-            Log.d(Config.LOGTAG, conversation.getAccount().getJid().asBareJid() + ": room " + muc + " has no stored node. unable to disable push");
+-        }
+-    }
+-
+-    private void retrieveFcmInstanceToken(final OnGcmInstanceTokenRetrieved instanceTokenRetrieved) {
+-        final FirebaseInstanceId firebaseInstanceId;
+-        try {
+-            firebaseInstanceId = FirebaseInstanceId.getInstance();
+-        } catch (IllegalStateException e) {
+-            Log.d(Config.LOGTAG, "unable to get firebase instance token ", e);
+-            return;
+-        }
+-        firebaseInstanceId.getInstanceId().addOnCompleteListener(task -> {
+-            if (!task.isSuccessful()) {
+-                Log.d(Config.LOGTAG, "unable to get Firebase instance token", task.getException());
+-            }
+-            final InstanceIdResult result;
+-            try {
+-                result = task.getResult();
+-            } catch (Exception e) {
+-                Log.d(Config.LOGTAG, "unable to get Firebase instance token due to bug in library ", e);
+-                return;
+-            }
+-            if (result != null) {
+-                instanceTokenRetrieved.onGcmInstanceTokenRetrieved(result.getToken());
+-            }
+-        });
+-
+-    }
+-
+-
+-    public boolean available(Account account) {
+-        final XmppConnection connection = account.getXmppConnection();
+-        return connection != null
+-                && connection.getFeatures().sm()
+-                && connection.getFeatures().push()
+-                && playServicesAvailable();
+-    }
+-
+-    private boolean playServicesAvailable() {
+-        return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(mXmppConnectionService) == ConnectionResult.SUCCESS;
+-    }
+-
+-    public boolean isStub() {
+-        return false;
+-    }
+-
+-    interface OnGcmInstanceTokenRetrieved {
+-        void onGcmInstanceTokenRetrieved(String token);
+-    }
+-}
+\ No newline at end of file
+diff --git a/src/playstore/java/de/pixart/messenger/services/PushMessageReceiver.java b/src/playstore/java/de/pixart/messenger/services/PushMessageReceiver.java
+deleted file mode 100644
+index c6d9b96be..000000000
+--- a/src/playstore/java/de/pixart/messenger/services/PushMessageReceiver.java
++++ /dev/null
+@@ -1,39 +0,0 @@
+-package de.pixart.messenger.services;
+-
+-import android.content.Intent;
+-import android.util.Log;
+-
+-import com.google.firebase.messaging.FirebaseMessagingService;
+-import com.google.firebase.messaging.RemoteMessage;
+-
+-import java.util.Map;
+-
+-import de.pixart.messenger.Config;
+-import de.pixart.messenger.utils.Compatibility;
+-
+-public class PushMessageReceiver extends FirebaseMessagingService {
+-
+-    @Override
+-    public void onMessageReceived(RemoteMessage message) {
+-        if (!EventReceiver.hasEnabledAccounts(this)) {
+-            Log.d(Config.LOGTAG, "PushMessageReceiver ignored message because no accounts are enabled");
+-            return;
+-        }
+-        final Map<String, String> data = message.getData();
+-        final Intent intent = new Intent(this, XmppConnectionService.class);
+-        intent.setAction(XmppConnectionService.ACTION_FCM_MESSAGE_RECEIVED);
+-        intent.putExtra("account", data.get("account"));
+-        Compatibility.startService(this, intent);
+-    }
+-
+-    @Override
+-    public void onNewToken(String token) {
+-        if (!EventReceiver.hasEnabledAccounts(this)) {
+-            Log.d(Config.LOGTAG, "PushMessageReceiver ignored new token because no accounts are enabled");
+-            return;
+-        }
+-        final Intent intent = new Intent(this, XmppConnectionService.class);
+-        intent.setAction(XmppConnectionService.ACTION_FCM_TOKEN_REFRESH);
+-        Compatibility.startService(this, intent);
+-    }
+-}
+\ No newline at end of file
