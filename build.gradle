@@ -117,7 +117,6 @@ android {
 
         buildConfigField("String", "LOGTAG", '"Pix-Art_Messenger"')
         buildConfigField("String", "DOMAIN_LOCK", 'null')
-        buildConfigField("String", "MAGIC_CREATE_DOMAIN", '"blabber.im"')
         buildConfigField("boolean", "SHOW_INTRO", 'true')
         buildConfigField("String", "UPDATE_URL", '""')
         resValue "string", "applicationId", applicationId

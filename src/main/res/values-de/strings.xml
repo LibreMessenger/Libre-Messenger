@@ -776,7 +776,7 @@
     <string name="delete_message">Nachricht löschen</string>
     <string name="conference_destroyed">Dieser Gruppenchat wurde aufgelöst</string>
     <string name="no_application_found_to_view_contact">Keine Anwendung zum Anzeigen von Kontakten gefunden</string>
-    <string name="welcome_server_info">Wir empfehlen dir blabber.im als Anbieter.</string>
+    <string name="welcome_server_info"></string>
     <string name="no_location_permission">Pix-Art Messenger benötigt Zugriff auf die Standortdienste</string>
     <string name="pref_show_record_voice_btn_summary">Zeige Sprachaufnahme-Taste als Schnell-Taste in den Chats</string>
     <string name="pref_show_record_voice_btn">Zeige Sprachaufnahme-Taste</string>

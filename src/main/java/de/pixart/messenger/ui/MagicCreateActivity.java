@@ -72,10 +72,8 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher, Ad
         final List<String> domains = Arrays.asList(getResources().getStringArray(R.array.domains));
         Collections.sort(domains, String::compareToIgnoreCase);
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_selectable_list_item, domains);
-        int defaultServer = adapter.getPosition("blabber.im");
         binding.useOwn.setOnCheckedChangeListener(this);
         binding.server.setAdapter(adapter);
-        binding.server.setSelection(defaultServer);
         binding.server.setOnItemSelectedListener(this);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         setSupportActionBar((Toolbar) this.binding.toolbar);
@@ -103,10 +101,10 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher, Ad
                 } else {
                     fixedUsername = false;
                     if (domain == null && !useOwnProvider) {
-                        domain = Config.MAGIC_CREATE_DOMAIN;
+                        domain = "your-own-domain-com";
                     }
                     if (useOwnProvider) {
-                        domain = "your-domain.com";
+                        domain = "your-own-domain-com";
                     }
                     jid = Jid.ofLocalAndDomain(username, domain);
                 }
@@ -199,7 +197,7 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher, Ad
                 binding.fullJid.setVisibility(View.VISIBLE);
                 final Jid jid;
                 if (this.domain == null) {
-                    jid = Jid.ofLocalAndDomain(username, Config.MAGIC_CREATE_DOMAIN);
+                    jid = Jid.ofLocalAndDomain(username, "your-own-domain-com");
                 } else {
                     jid = Jid.ofLocalAndDomain(username, this.domain);
                 }

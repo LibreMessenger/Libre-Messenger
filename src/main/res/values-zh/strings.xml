@@ -767,7 +767,7 @@
     <string name="delete_message">删除消息</string>
     <string name="conference_destroyed">这个群聊已被解散</string>
     <string name="no_application_found_to_view_contact">没有发现查看联系人的应用程序</string>
-    <string name="welcome_server_info">我们建议您使用blabber.im作为提供商。</string>
+    <string name="welcome_server_info"></string>
     <string name="no_location_permission">Pix-Art聊天需要访问位置服务</string>
     <string name="pref_show_record_voice_btn_summary">在聊天中显示录制语音按钮作为快速操作</string>
     <string name="pref_show_record_voice_btn">显示录制语音按钮</string>

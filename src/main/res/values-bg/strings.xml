@@ -754,7 +754,7 @@
     <string name="delete_message">Изтриване на съобщение</string>
     <string name="conference_destroyed">Този групов чат е унищожен</string>
     <string name="no_application_found_to_view_contact">Не е намерена програма за преглед на контакта</string>
-    <string name="welcome_server_info">Препоръчваме използването на blabber.im като доставчик.</string>
+    <string name="welcome_server_info"></string>
     <string name="no_location_permission">Pix-Art Messenger се нуждае от достъп до услуги за местоположение</string>
     <string name="pref_show_record_voice_btn_summary">Покажи гласов бутон за запис в разговорите като бързо действие</string>
     <string name="pref_show_record_voice_btn">Покажи гласов бутон</string>

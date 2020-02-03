@@ -368,7 +368,7 @@ public class ManageAccountActivity extends XmppActivity implements OnAccountUpda
                 (dialog, which) -> {
                     xmppConnectionService.deleteAccount(account);
                     selectedAccount = null;
-                    if (xmppConnectionService.getAccounts().size() == 0 && Config.MAGIC_CREATE_DOMAIN != null) {
+                    if (xmppConnectionService.getAccounts().size() == 0) {
                         WelcomeActivity.launch(this);
                     }
                 });
@@ -378,7 +378,7 @@ public class ManageAccountActivity extends XmppActivity implements OnAccountUpda
                     if (account.isOnlineAndConnected()) {
                         xmppConnectionService.deleteAccountFromServer(account);
                         selectedAccount = null;
-                        if (xmppConnectionService.getAccounts().size() == 0 && Config.MAGIC_CREATE_DOMAIN != null) {
+                        if (xmppConnectionService.getAccounts().size() == 0) {
                             WelcomeActivity.launch(this);
                         }
                     } else {

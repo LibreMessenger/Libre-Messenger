@@ -4525,9 +4525,6 @@ public class XmppConnectionService extends Service {
         if (Config.DOMAIN_LOCK != null) {
             hosts.add(Config.DOMAIN_LOCK);
         }
-        if (Config.MAGIC_CREATE_DOMAIN != null) {
-            hosts.add(Config.MAGIC_CREATE_DOMAIN);
-        }
         return hosts;
     }
 

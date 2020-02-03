@@ -480,7 +480,7 @@
     <string name="create_dialog_group_chat_name">اسم فريق المحادثة</string>
     <string name="delete_message">حذف الرسالة</string>
     <string name="conference_destroyed">لقد تم تدمير هذه المحادثة الجماعية</string>
-    <string name="welcome_server_info">ننصح باستخدام blabber.im كمزوّد الخدمة الخاص بك.</string>
+    <string name="welcome_server_info"></string>
     <string name="pref_quick_share_attachment_choice">اختيار الملفات المرفَقة</string>
     <string name="unable_to_save_recording">لا يمكن الاحتفاظ بالتسجيل</string>
     <string name="foreground_service_channel_name">الخدمة الأمامية</string>

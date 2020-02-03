@@ -355,7 +355,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         final boolean magicCreate = mAccount != null && mAccount.isOptionSet(Account.OPTION_MAGIC_CREATE) && !mAccount.isOptionSet(Account.OPTION_LOGGED_IN_SUCCESSFULLY);
         final Jid jid = mAccount == null ? null : mAccount.getJid();
 
-        if (SignupUtils.isSupportTokenRegistry() && jid != null && magicCreate && !jid.getDomain().equals(Config.MAGIC_CREATE_DOMAIN)) {
+        if (SignupUtils.isSupportTokenRegistry() && jid != null && magicCreate) {
             final Jid preset;
             if (mAccount.isOptionSet(Account.OPTION_FIXED_USERNAME)) {
                 preset = jid.asBareJid();
@@ -367,13 +367,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             startActivity(intent);
             return;
         }
-
-        if (xmppConnectionService.getAccounts().size() == 0 && Config.MAGIC_CREATE_DOMAIN != null) {
-            Intent intent = SignupUtils.getSignUpIntent(this, mForceRegister != null && mForceRegister);
-            StartConversationActivity.addInviteUri(intent, getIntent());
-            startActivity(intent);
-            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
-        }
+		
     }
 
     @Override
@@ -805,7 +799,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 this.binding.yourNameBox.setVisibility(View.GONE);
                 this.binding.yourStatusBox.setVisibility(View.GONE);
                 this.binding.avater.setVisibility(View.GONE);
-                configureActionBar(getSupportActionBar(), !(init && Config.MAGIC_CREATE_DOMAIN == null));
+                configureActionBar(getSupportActionBar(), !(init && true));
                 if (mForceRegister != null) {
                     if (mForceRegister) {
                         setTitle(R.string.action_add_new_account);
@@ -883,7 +877,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         }
 
 
-        if (Config.MAGIC_CREATE_DOMAIN == null && this.xmppConnectionService.getAccounts().size() == 0) {
+        if (this.xmppConnectionService.getAccounts().size() == 0) {
             this.binding.cancelButton.setEnabled(false);
         }
         if (mUsernameMode) {

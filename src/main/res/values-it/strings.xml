@@ -776,7 +776,7 @@
     <string name="delete_message">Elimina messaggio</string>
     <string name="conference_destroyed">Questa conversazione di gruppo è stata eliminata</string>
     <string name="no_application_found_to_view_contact">Nessuna applicazione trovata per la visualizzazione di questo contatto</string>
-    <string name="welcome_server_info">Consigliamo di utilizzare blabber.im come tuo fornitore.</string>
+    <string name="welcome_server_info"></string>
     <string name="no_location_permission">Pix-Art Messenger ha bisogno di accedere ai servizi di localizzazione</string>
     <string name="pref_show_record_voice_btn_summary">Mostra pulsante di registrazione vocale nelle conversazioni come scelta rapida</string>
     <string name="pref_show_record_voice_btn">Mostra pulsante di registrazione vocale</string>

@@ -14,7 +14,6 @@
 			along with this program. If not, see https://www.gnu.org/licenses
 			\n\nDownload the full original source code at https://github.com/siacs/Conversations (Copyright © Daniel Gultsch)
 			\n\nDownload the modified source code at https://github.com/kriztan/Pix-Art-Messenger
-            \n\nPix-Art Messenger recommends blabber.im as provider. More information can be found at https://blabber.im
             \n\nYou can support me by making a donation in form of a gift in sense of § 516 ff BGB i.e. a gratuitous donation.
 	</string>
     <string name="pref_about_libraries" translatable="false"><b>Libraries</b>

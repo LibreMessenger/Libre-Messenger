@@ -777,7 +777,7 @@
     <string name="delete_message">Delete message</string>
     <string name="conference_destroyed">This group chat has been destroyed</string>
     <string name="no_application_found_to_view_contact">No application found to view contact</string>
-    <string name="welcome_server_info">We recommend the use of blabber.im as your provider.</string>
+    <string name="welcome_server_info"></string>
     <string name="no_location_permission">Pix-Art Messenger needs access to location services</string>
     <string name="pref_show_record_voice_btn_summary">Show record voice button in chats as quick action</string>
     <string name="pref_show_record_voice_btn">Show record voice button</string>

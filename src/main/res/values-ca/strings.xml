@@ -768,7 +768,7 @@
     <string name="delete_message">Borrar missatge</string>
     <string name="conference_destroyed">Aquest grup de xat ha de ser destruit</string>
     <string name="no_application_found_to_view_contact">No s\'han trobat ninguna aplicació amb la que poder veure aquest contacte</string>
-    <string name="welcome_server_info">Recomanem l\'ús de blabber.im como el teu proveïdor.</string>
+    <string name="welcome_server_info"></string>
     <string name="no_location_permission">Pix-Art Messenger necessita accedir als serveis d\'ubicació</string>
     <string name="pref_show_record_voice_btn_summary">Mostrar el botó de gravació de veu en converses com acció ràpida</string>
     <string name="pref_show_record_voice_btn">Mostrar botó de gravació de veu</string>
