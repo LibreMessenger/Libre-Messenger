@@ -1,0 +1,22 @@
+From d51af782ca0c74463f7eabed9b684109ea8dc2d3 Mon Sep 17 00:00:00 2001
+From: intika <intika@librefox.org>
+Date: Mon, 3 Feb 2020 16:31:53 +0100
+Subject: [PATCH] disable-updater-and-invite-3
+
+---
+ src/main/java/de/pixart/messenger/ui/ConversationFragment.java | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/main/java/de/pixart/messenger/ui/ConversationFragment.java b/src/main/java/de/pixart/messenger/ui/ConversationFragment.java
+index fbafd988e..d9011ae6e 100644
+--- a/src/main/java/de/pixart/messenger/ui/ConversationFragment.java
++++ b/src/main/java/de/pixart/messenger/ui/ConversationFragment.java
+@@ -1147,7 +1147,7 @@ public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+             ConversationMenuConfigurator.configureEncryptionMenu(conversation, menu);
+         } else {
+             menuNeedHelp.setVisible(false);
+-            menuInviteContact.stVisible(false);
++            menuInviteContact.setVisible(false);
+             menuGroupDetails.setVisible(false);
+             menuContactDetails.setVisible(false);
+             menuMediaBrowser.setVisible(false);
