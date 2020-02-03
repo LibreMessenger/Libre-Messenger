@@ -871,7 +871,8 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             this.mInitMode |= this.mAccount.isOptionSet(Account.OPTION_REGISTER);
             this.mUsernameMode |= mAccount.isOptionSet(Account.OPTION_MAGIC_CREATE) && mAccount.isOptionSet(Account.OPTION_REGISTER) && !useOwnProvider;
             if (this.mAccount.getPrivateKeyAlias() != null) {
-                binding.accountPassword.setHint(R.string.authenticate_with_certificate);
+                //binding.accountPassword.setHint(R.string.authenticate_with_certificate); //need more work to make it compatible with default hint on click/focus, replaced with toast
+                Toast.makeText(this, R.string.authenticate_with_certificate, Toast.LENGTH_LONG).show(); 
                 if (this.mInitMode) {
                     binding.accountPassword.requestFocus();
                 }
