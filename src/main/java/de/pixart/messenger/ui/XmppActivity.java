@@ -367,9 +367,6 @@ public abstract class XmppActivity extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_create_issue:
-                createIssue();
-                break;
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
