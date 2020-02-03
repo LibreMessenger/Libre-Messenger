@@ -72,21 +72,21 @@
                         android:visibility="gone" />
 
                     <Button
-                        android:id="@+id/create_account"
+                        android:id="@+id/add_new_account"
                         style="@style/Widget.Conversations.Button.Borderless"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:text="@string/create_account"
+                        android:text="@string/action_add_new_account"
                         android:textColor="?attr/colorAccent" />
 
                     <Button
-                        android:id="@+id/use_existing_account"
+                        android:id="@+id/add_account_with_certificate"
                         style="@style/Widget.Conversations.Button.Borderless"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:text="@string/welcome_existing_account"
+                        android:text="@string/action_add_account_with_certificate"
                         android:textColor="?attr/colorAccent" />
                 </LinearLayout>
 

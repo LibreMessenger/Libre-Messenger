@@ -121,16 +121,16 @@ public class WelcomeActivity extends XmppActivity {
             binding.importText.setVisibility(View.VISIBLE);
         }
         binding.importDatabase.setOnClickListener(v -> startActivity(new Intent(this, ImportBackupActivity.class)));
-        binding.createAccount.setOnClickListener(v -> {
+        binding.addNewAccount.setOnClickListener(v -> {
             final Intent intent = new Intent(WelcomeActivity.this, MagicCreateActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             addInviteUri(intent);
             startActivity(intent);
         });
         if (DISALLOW_REGISTRATION_IN_UI) {
-            binding.createAccount.setVisibility(View.GONE);
+            binding.addNewAccount.setVisibility(View.GONE);
         }
-        binding.useExistingAccount.setOnClickListener(v -> {
+        binding.addAccountWithCertificate.setOnClickListener(v -> {
             final List<Account> accounts = xmppConnectionService.getAccounts();
             Intent intent = new Intent(WelcomeActivity.this, EditAccountActivity.class);
             if (accounts.size() == 1) {
