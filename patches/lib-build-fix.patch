@@ -1,0 +1,22 @@
+From b82737a8094b314c6e6c65c525f51899e4195003 Mon Sep 17 00:00:00 2001
+From: intika <intika@librefox.org>
+Date: Mon, 3 Feb 2020 17:25:47 +0100
+Subject: [PATCH] fix ARMEABI build
+
+---
+ build.gradle | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/build.gradle b/build.gradle
+index 644f3c981..e483b9223 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -135,6 +135,8 @@ android {
+         //X86_64
+         exclude "lib/x86_64/libconscrypt_jni.so"
+         exclude "lib/x86_64/libpl_droidsonroids_gif.so"
++        //exclude ARMEABI native so file, ARMEABI has been removed in NDK r17.
++        exclude "lib/armeabi/**"
+     }
+ 
+     dexOptions {
