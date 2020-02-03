@@ -134,7 +134,7 @@
     <string name="mgmt_account_are_you_sure">هل أنت متأكد؟</string>
     <string name="attach_record_voice">تسجيل مقطع صوتي</string>
     <string name="account_settings_jabber_id">حساب جابر</string>
-    <string name="account_settings_example_jabber_id">username@pix-art.de</string>
+    <string name="account_settings_example_jabber_id"></string>
     <string name="password">الكلمة السرية</string>
     <string name="server_info_show_more">معلومات الخادم</string>
     <string name="server_info_available">نعم</string>
@@ -304,7 +304,7 @@
     <string name="download_started">بدأ التنزيل</string>
     <string name="account_status_tor_unavailable">شبكة تور غير متوفرة</string>
     <string name="pref_presence_settings">التوفر</string>
-    <string name="hostname_example">xmpp.pix-art.de</string>
+    <string name="hostname_example"></string>
     <string name="action_add_account_with_certificate">إضافة حساب يحوي شهادة</string>
     <string name="unable_to_parse_certificate">لا يمكن تحليل لشهادة</string>
     <string name="mam_prefs">خيارات الأرشفة</string>

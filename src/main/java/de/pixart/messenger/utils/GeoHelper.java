@@ -42,7 +42,7 @@ public class GeoHelper {
         } catch (NumberFormatException nfe) {
             return null;
         }
-        return "https://xmpp.pix-art.de/staticmap/staticmap.php?center=" + latitude + "," + longitude + "&size=500x500&markers=" + latitude + "," + longitude + "&zoom= " + Config.DEFAULT_ZOOM;
+        return "";
     }
 
     private static GeoPoint parseGeoPoint(String body) throws IllegalArgumentException {

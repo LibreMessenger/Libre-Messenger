@@ -443,7 +443,7 @@
     <string name="pref_dnd_on_silent_mode_summary">Маркира вашия ресурс като \"Не безпокойте\", когато устройството е в безшумен режим</string>
     <string name="pref_treat_vibrate_as_silent">Третирайте вибрацията като безшумен режим</string>
     <string name="pref_treat_vibrate_as_dnd_summary">Маркира вашия ресурс като \"Не ме безпокойте\", когато устройството е на вибрaция</string>
-    <string name="hostname_example">xmpp.pix-art.de</string>
+    <string name="hostname_example"></string>
     <string name="action_add_account_with_certificate">Добавете акаунт със сертификат</string>
     <string name="unable_to_parse_certificate">Сертификатът не може да се анализира</string>
     <string name="authenticate_with_certificate">Оставете празно, за да удостоверите w/ сертификата</string>

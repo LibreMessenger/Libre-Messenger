@@ -139,7 +139,7 @@ public class XmppUri {
         String scheme = uri.getScheme();
         String host = uri.getHost();
         List<String> segments = uri.getPathSegments();
-        if ("https".equalsIgnoreCase(scheme) && "jabber.pix-art.de".equalsIgnoreCase(host)) {
+        /*if ("https".equalsIgnoreCase(scheme) && "jabber.pix-art".equalsIgnoreCase(host)) {
             if (segments.size() >= 2 && segments.get(1).contains("@")) {
                 // sample : https://conversations.im/i/foo@bar.com
                 try {
@@ -156,7 +156,8 @@ public class XmppUri {
             }
             final Map<String, String> parameters = parseParameters(uri.getQuery(), '&');
             this.fingerprints = parseFingerprints(parameters);
-        } else if ("xmpp".equalsIgnoreCase(scheme)) {
+        } else */
+		if ("xmpp".equalsIgnoreCase(scheme)) {
             // sample: xmpp:foo@bar.com
             this.parameters = parseParameters(uri.getQuery(), ';');
             if (uri.getAuthority() != null) {

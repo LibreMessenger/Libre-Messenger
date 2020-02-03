@@ -146,7 +146,7 @@
     <string name="mgmt_account_are_you_sure">Sure jud ka?</string>
     <string name="attach_record_voice">Irekord ang tingog</string>
     <string name="account_settings_jabber_id">Jabber-ID</string>
-    <string name="account_settings_example_jabber_id">username@pix-art.de</string>
+    <string name="account_settings_example_jabber_id"></string>
     <string name="password">Password</string>
     <string name="invalid_jid">Dili kini balido nga Jabber-ID</string>
     <string name="error_out_of_memory">Wala nay memorya. Ang hulagway dako kaayo</string>
@@ -371,7 +371,7 @@
     <string name="pref_dnd_on_silent_mode_summary">Markahi imung gepanguhaan sa \"Ayaw ug Samoka\" kung ang device kay naa sa hilum nga mode</string>
     <string name="pref_treat_vibrate_as_silent">Tratuha ang pag-vibrate ingun nga hilum nga mode</string>
     <string name="pref_treat_vibrate_as_dnd_summary">Markahi ang imung gepanguhaan as \"Ayaw ug samoka\" kung ang device naka vibrate</string>
-    <string name="hostname_example">xmpp.pix-art.de</string>
+    <string name="hostname_example"></string>
     <string name="action_add_account_with_certificate">Idugang ang account sa sertipiko</string>
     <string name="unable_to_parse_certificate">Dili ma-parse ang certificate</string>
     <string name="authenticate_with_certificate">Biyai ang walay sulod aron pamatud-an ang w / certificate</string>

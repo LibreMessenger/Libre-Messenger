@@ -146,7 +146,7 @@
     <string name="mgmt_account_are_you_sure">Emin misiniz?</string>
     <string name="attach_record_voice">Kayıt sesi</string>
     <string name="account_settings_jabber_id">Jabber-ID</string>
-    <string name="account_settings_example_jabber_id">kullanıcıadı@pix-art.de</string>
+    <string name="account_settings_example_jabber_id"></string>
     <string name="password">Parola</string>
     <string name="invalid_jid">Bu geçerli bir Jabber-ID değil</string>
     <string name="error_out_of_memory">Bellek yetersiz. Görüntü çok büyük</string>
@@ -403,7 +403,7 @@
     <string name="pref_dnd_on_silent_mode_summary">Cihaz sessiz moddayken kaynağınızı \"Rahatsız etmeyin\" olarak işaretler</string>
     <string name="pref_treat_vibrate_as_silent">Titreşimsiz mod olarak işlem yap</string>
     <string name="pref_treat_vibrate_as_dnd_summary">Cihaz titrediğinde kaynağı \"Rahatsız etmeyin\" olarak işaretler</string>
-    <string name="hostname_example">xmpp.pix-art.de</string>
+    <string name="hostname_example"></string>
     <string name="action_add_account_with_certificate">Sertifika ile hesap ekle</string>
     <string name="unable_to_parse_certificate">Sertifika çözümlenemedi</string>
     <string name="authenticate_with_certificate">Sertifikanın kimliğini doğrulamak için boş bırakın</string>

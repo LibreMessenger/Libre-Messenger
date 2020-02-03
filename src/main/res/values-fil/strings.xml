@@ -146,7 +146,7 @@
     <string name="mgmt_account_are_you_sure">Sigurado ka ba?</string>
     <string name="attach_record_voice">I-rekord ang boses</string>
     <string name="account_settings_jabber_id">Jabber-ID</string>
-    <string name="account_settings_example_jabber_id">username@pix-art.de</string>
+    <string name="account_settings_example_jabber_id"></string>
     <string name="password">Ang password</string>
     <string name="invalid_jid">Hindi ito balido na Jabber-ID</string>
     <string name="error_out_of_memory">Wala ng memorya. Ang imahe ay napakalaki</string>
@@ -403,7 +403,7 @@
     <string name="pref_dnd_on_silent_mode_summary">Markahan ang iyong mapagkukunan bilang \"Huwag abalahin\" kapag ang aparato ay nasa tahimik na mode</string>
     <string name="pref_treat_vibrate_as_silent">Tratuhin ang vibrate bilang silent mode</string>
     <string name="pref_treat_vibrate_as_dnd_summary">Binibigyang marka ang iyong mapagkukunan bilang \"Huwag mang-istorbo\" kapag ang aparato ay nasa vibrate</string>
-    <string name="hostname_example">xmpp.pix-art.de</string>
+    <string name="hostname_example"></string>
     <string name="action_add_account_with_certificate">Magdagdag ng account na may sertipiko</string>
     <string name="unable_to_parse_certificate">Hindi ma-parse ang certificate</string>
     <string name="authenticate_with_certificate">Mag-iwan ng walang laman upang mapatunayan ang w / certificate</string>

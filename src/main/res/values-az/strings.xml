@@ -139,7 +139,7 @@
     <string name="encryption_choice_omemo">OMEMO</string>
     <string name="action_account">Hesaba düzəliş et</string>
     <string name="attach_record_voice">Səs yazmaq</string>
-    <string name="account_settings_example_jabber_id">istifadəçininadı@pix-art.de</string>
+    <string name="account_settings_example_jabber_id"></string>
     <string name="add_phone_book_text">Ünvan kitabınıza %s əlavə etmək istəyirsiniz?</string>
     <string name="install_openkeychain">Şifrəli mesaj. Zəhmət olmasa şifrəni açmaq üçün OpenKeychain quraşdır.</string>
     <string name="unknown_otr_fingerprint">Bilinməyən OTR barmaq izi</string>

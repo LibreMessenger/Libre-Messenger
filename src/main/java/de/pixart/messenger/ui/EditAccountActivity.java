@@ -518,10 +518,10 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         if (this.binding.accountRegisterNew.isChecked() && this.binding.accountJid.getText().length() > 0 && !this.binding.accountJid.getText().toString().contains("@")) {
             try {
                 final String jid = this.binding.accountJid.getText().toString();
-                if (!mUsernameMode && Jid.of(jid).getDomain().toLowerCase().equals("pix-art.de")) {
-                    this.binding.showPrivacyPolicy.setVisibility(View.VISIBLE);
-                    this.binding.showTermsOfUse.setVisibility(View.VISIBLE);
-                }
+                //if (!mUsernameMode && Jid.of(jid).getDomain().toLowerCase().equals("pix-art")) {
+                //    this.binding.showPrivacyPolicy.setVisibility(View.VISIBLE);
+                //    this.binding.showTermsOfUse.setVisibility(View.VISIBLE);
+                //}
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -568,10 +568,10 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                     if (!accountInfoEdited) {
                         this.binding.saveButton.setEnabled(false);
                     }
-                    if (!mUsernameMode && Jid.of(mAccount.getJid()).getDomain().toLowerCase().equals("pix-art.de")) {
-                        this.binding.showPrivacyPolicy.setVisibility(View.VISIBLE);
-                        this.binding.showTermsOfUse.setVisibility(View.VISIBLE);
-                    }
+                    //if (!mUsernameMode && Jid.of(mAccount.getJid()).getDomain().toLowerCase().equals("pix-art")) {
+                    //    this.binding.showPrivacyPolicy.setVisibility(View.VISIBLE);
+                    //    this.binding.showTermsOfUse.setVisibility(View.VISIBLE);
+                    //}
                 } else {
                     this.binding.yourStatusBox.setVisibility(View.GONE);
                     this.binding.showPrivacyPolicy.setVisibility(View.GONE);
@@ -671,12 +671,12 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             this.binding.accountRegisterNew.setVisibility(View.GONE);
         }
         this.binding.showPrivacyPolicy.setOnClickListener(view -> {
-            final Uri uri = Uri.parse("https://jabber.pix-art.de/privacy/");
+            final Uri uri = Uri.parse("");
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(browserIntent);
         });
         this.binding.showTermsOfUse.setOnClickListener(view -> {
-            final Uri uri = Uri.parse("https://jabber.pix-art.de/termsofuse/");
+            final Uri uri = Uri.parse("");
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(browserIntent);
         });

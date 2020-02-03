@@ -159,7 +159,7 @@
     <string name="mgmt_account_delete_confirm_message">Wenn du dein Profil löschst, gehen deine lokal gespeicherten Chatverläufe verloren.\n\nWenn du dein Profil vom Server löschst, wird dein gesamtes Benutzerprofil ebenfalls gelöscht, du wirst dich nicht mehr einloggen können bis du ein neues Profil erstellt hast.</string>
     <string name="attach_record_voice">Sprache aufzeichnen</string>
     <string name="account_settings_jabber_id">Jabber-ID</string>
-    <string name="account_settings_example_jabber_id">benutzer@pix-art.de</string>
+    <string name="account_settings_example_jabber_id"></string>
     <string name="password">Passwort</string>
     <string name="invalid_jid">Ungültige Jabber-ID</string>
     <string name="error_out_of_memory">Zu wenig Speicher vorhanden. Das Bild ist zu groß</string>
@@ -448,7 +448,7 @@
     <string name="pref_dnd_on_silent_mode_summary">Setze deinen Status auf \"Bitte nicht stören\", solange dein Gerät stummgeschaltet ist</string>
     <string name="pref_treat_vibrate_as_silent">Vibration als Lautlos behandeln</string>
     <string name="pref_treat_vibrate_as_dnd_summary">Setze deinen Status auf \"Bitte nicht stören\", solange das Gerät auf Vibration geschaltet ist</string>
-    <string name="hostname_example">xmpp.pix-art.de</string>
+    <string name="hostname_example"></string>
     <string name="action_add_account_with_certificate">Profil mit Zertifikat hinzufügen</string>
     <string name="unable_to_parse_certificate">Zertifikat kann nicht gelesen werden</string>
     <string name="authenticate_with_certificate">Leer lassen, um mit Zertifikat anzumelden</string>

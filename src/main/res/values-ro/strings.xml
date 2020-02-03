@@ -140,7 +140,7 @@
     <string name="mgmt_account_are_you_sure">Sigur doriți asta?</string>
     <string name="attach_record_voice">Înregistrare voce</string>
     <string name="account_settings_jabber_id">ID-ul Jabber</string>
-    <string name="account_settings_example_jabber_id">username@pix-art.de</string>
+    <string name="account_settings_example_jabber_id"></string>
     <string name="password">Parolă</string>
     <string name="invalid_jid">Acesta nu este un ID Jabber valabil</string>
     <string name="error_out_of_memory">Memorie epuizată. Imaginea este prea mare.</string>
@@ -390,7 +390,7 @@
     <string name="pref_dnd_on_silent_mode_summary">Prezintă clientul drept \"Nu deranja\" atunci când dispozitivul este în mod silențios</string>
     <string name="pref_treat_vibrate_as_silent">Tratează modul vibrație ca silențios</string>
     <string name="pref_treat_vibrate_as_dnd_summary">Prezintă clientul drept \"Nu deranja\" atunci când dispozitivul este în mod vibrație</string>
-    <string name="hostname_example">xmpp.pix-art.de</string>
+    <string name="hostname_example"></string>
     <string name="action_add_account_with_certificate">Adaugă un cont cu certificat</string>
     <string name="unable_to_parse_certificate">Nu se poate analiza certificatul</string>
     <string name="authenticate_with_certificate">Lăsați gol pentru a autentifica cu un certificat</string>
