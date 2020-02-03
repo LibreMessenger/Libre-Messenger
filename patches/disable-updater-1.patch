@@ -1,0 +1,142 @@
+From 417ca94fbe5147a5f73cd37fd1b7857abd198a41 Mon Sep 17 00:00:00 2001
+From: intika <intika@librefox.org>
+Date: Mon, 3 Feb 2020 16:08:36 +0100
+Subject: [PATCH] disable-updater-and-invite
+
+---
+ .../messenger/ui/ConversationsActivity.java   | 46 -------------------
+ src/main/res/menu/activity_conversations.xml  | 10 ----
+ src/main/res/values/defaults.xml              |  2 +-
+ src/main/res/xml/preferences.xml              |  1 +
+ 4 files changed, 2 insertions(+), 57 deletions(-)
+
+diff --git a/src/main/java/de/pixart/messenger/ui/ConversationsActivity.java b/src/main/java/de/pixart/messenger/ui/ConversationsActivity.java
+index b1b78c293..29fd5cabc 100644
+--- a/src/main/java/de/pixart/messenger/ui/ConversationsActivity.java
++++ b/src/main/java/de/pixart/messenger/ui/ConversationsActivity.java
+@@ -200,16 +200,6 @@ void onBackendConnected() {
+             System.exit(0);
+         }
+ 
+-        if (useInternalUpdater()) {
+-            if (xmppConnectionService.getAccounts().size() != 0) {
+-                if (xmppConnectionService.hasInternetConnection()) {
+-                    if (xmppConnectionService.isWIFI() || (xmppConnectionService.isMobile() && !xmppConnectionService.isMobileRoaming())) {
+-                        AppUpdate(xmppConnectionService.installedFrom());
+-                    }
+-                }
+-            }
+-        }
+-
+         for (@IdRes int id : FRAGMENT_ID_NOTIFICATION_ORDER) {
+             notifyFragmentOfBackendConnected(id);
+         }
+@@ -436,7 +426,6 @@ public boolean onCreateOptionsMenu(Menu menu) {
+         getMenuInflater().inflate(R.menu.activity_conversations, menu);
+         final MenuItem qrCodeScanMenuItem = menu.findItem(R.id.action_scan_qr_code);
+         final MenuItem menuEditProfiles = menu.findItem(R.id.action_accounts);
+-        final MenuItem inviteUser = menu.findItem(R.id.action_invite_user);
+         if (qrCodeScanMenuItem != null) {
+             if (isCameraFeatureAvailable()) {
+                 Fragment fragment = getFragmentManager().findFragmentById(R.id.main_fragment);
+@@ -453,11 +442,6 @@ public boolean onCreateOptionsMenu(Menu menu) {
+         } else {
+             menuEditProfiles.setTitle(R.string.action_accounts);
+         }
+-        if (xmppConnectionServiceBound && xmppConnectionService.getAccounts().size() > 0) {
+-            inviteUser.setVisible(true);
+-        } else {
+-            inviteUser.setVisible(false);
+-        }
+         return super.onCreateOptionsMenu(menu);
+     }
+ 
+@@ -559,16 +543,6 @@ public boolean onOptionsItemSelected(MenuItem item) {
+             case R.id.action_scan_qr_code:
+                 UriHandlerActivity.scan(this);
+                 return true;
+-            case R.id.action_check_updates:
+-                if (xmppConnectionService.hasInternetConnection()) {
+-                    openInstallFromUnknownSourcesDialogIfNeeded(true);
+-                } else {
+-                    ToastCompat.makeText(this, R.string.account_status_no_internet, Toast.LENGTH_LONG).show();
+-                }
+-                break;
+-            case R.id.action_invite_user:
+-                inviteUser();
+-                break;
+         }
+         return super.onOptionsItemSelected(item);
+     }
+@@ -900,26 +874,6 @@ public void onShowErrorToast(int resId) {
+         runOnUiThread(() -> ToastCompat.makeText(this, resId, Toast.LENGTH_SHORT).show());
+     }
+ 
+-    protected void AppUpdate(String Store) {
+-        String PREFS_NAME = "UpdateTimeStamp";
+-        SharedPreferences UpdateTimeStamp = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+-        long lastUpdateTime = UpdateTimeStamp.getLong("lastUpdateTime", 0);
+-        Log.d(Config.LOGTAG, "AppUpdater: LastUpdateTime: " + lastUpdateTime);
+-        if ((lastUpdateTime + (Config.UPDATE_CHECK_TIMER * 1000)) < System.currentTimeMillis()) {
+-            lastUpdateTime = System.currentTimeMillis();
+-            SharedPreferences.Editor editor = UpdateTimeStamp.edit();
+-            editor.putLong("lastUpdateTime", lastUpdateTime);
+-            editor.apply();
+-            Log.d(Config.LOGTAG, "AppUpdater: CurrentTime: " + lastUpdateTime);
+-            if (Store == null) {
+-                Log.d(Config.LOGTAG, "AppUpdater started");
+-                openInstallFromUnknownSourcesDialogIfNeeded(false);
+-            }
+-        } else {
+-            Log.d(Config.LOGTAG, "AppUpdater stopped");
+-        }
+-    }
+-
+     @Override
+     public void onRoomDestroySucceeded() {
+         Conversation conversation = ConversationFragment.getConversationReliable(this);
+diff --git a/src/main/res/menu/activity_conversations.xml b/src/main/res/menu/activity_conversations.xml
+index f2a2d2ebb..d9dbbbda9 100644
+--- a/src/main/res/menu/activity_conversations.xml
++++ b/src/main/res/menu/activity_conversations.xml
+@@ -18,15 +18,5 @@
+         android:orderInCategory="100"
+         android:title="@string/action_settings"
+         app:showAsAction="never" />
+-    <item
+-        android:id="@+id/action_check_updates"
+-        android:title="@string/action_check_update"
+-        app:showAsAction="never" />
+-    <item
+-        android:id="@+id/action_invite_user"
+-        android:orderInCategory="100"
+-        android:title="@string/invite_user"
+-        android:visible="false"
+-        app:showAsAction="never" />
+ 
+ </menu>
+diff --git a/src/main/res/values/defaults.xml b/src/main/res/values/defaults.xml
+index 5791ab32d..3369f166d 100644
+--- a/src/main/res/values/defaults.xml
++++ b/src/main/res/values/defaults.xml
+@@ -52,7 +52,7 @@
+     <bool name="prefer_xmpp_avatar">true</bool>
+     <bool name="show_links_inside">true</bool>
+     <bool name="show_maps_inside">true</bool>
+-    <bool name="use_internal_updater">true</bool>
++    <bool name="use_internal_updater">false</bool>
+     <bool name="show_own_accounts">true</bool>
+     <bool name="vibrate_in_chat">true</bool>
+     <bool name="enable_otr">false</bool>
+diff --git a/src/main/res/xml/preferences.xml b/src/main/res/xml/preferences.xml
+index f6f018cd2..b94e5f08e 100644
+--- a/src/main/res/xml/preferences.xml
++++ b/src/main/res/xml/preferences.xml
+@@ -331,6 +331,7 @@
+         <CheckBoxPreference
+             android:defaultValue="@bool/use_internal_updater"
+             android:key="use_internal_updater"
++            android:disabled="true"
+             android:summary="@string/pref_use_internal_updater_summary"
+             android:title="@string/pref_use_internal_updater" />
+         <CheckBoxPreference

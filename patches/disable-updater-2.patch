@@ -1,0 +1,50 @@
+From 70588d257d0865fe0f9c233b1a2f0e2653593a0d Mon Sep 17 00:00:00 2001
+From: intika <intika@librefox.org>
+Date: Mon, 3 Feb 2020 16:19:40 +0100
+Subject: [PATCH] disable-updater-and-invite-2
+
+---
+ .../java/de/pixart/messenger/ui/ConversationFragment.java    | 5 +----
+ src/main/res/xml/preferences.xml                             | 2 +-
+ 2 files changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/src/main/java/de/pixart/messenger/ui/ConversationFragment.java b/src/main/java/de/pixart/messenger/ui/ConversationFragment.java
+index 5a6f542f3..fbafd988e 100644
+--- a/src/main/java/de/pixart/messenger/ui/ConversationFragment.java
++++ b/src/main/java/de/pixart/messenger/ui/ConversationFragment.java
+@@ -1114,7 +1114,6 @@ public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+         menuInflater.inflate(R.menu.fragment_conversation, menu);
+         final MenuItem menuInviteContact = menu.findItem(R.id.action_invite);
+         final MenuItem menuNeedHelp = menu.findItem(R.id.action_create_issue);
+-        final MenuItem menuSearchUpdates = menu.findItem(R.id.action_check_updates);
+         final MenuItem menuArchiveChat = menu.findItem(R.id.action_archive_chat);
+         final MenuItem menuGroupDetails = menu.findItem(R.id.action_group_details);
+         final MenuItem menuContactDetails = menu.findItem(R.id.action_contact_details);
+@@ -1144,13 +1143,11 @@ public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+             }
+             menuMediaBrowser.setVisible(true);
+             menuNeedHelp.setVisible(true);
+-            menuSearchUpdates.setVisible(false);
+             ConversationMenuConfigurator.configureAttachmentMenu(conversation, menu, activity.xmppConnectionService.getAttachmentChoicePreference(), hasAttachments);
+             ConversationMenuConfigurator.configureEncryptionMenu(conversation, menu);
+         } else {
+             menuNeedHelp.setVisible(false);
+-            menuSearchUpdates.setVisible(true);
+-            menuInviteContact.setVisible(false);
++            menuInviteContact.stVisible(false);
+             menuGroupDetails.setVisible(false);
+             menuContactDetails.setVisible(false);
+             menuMediaBrowser.setVisible(false);
+diff --git a/src/main/res/xml/preferences.xml b/src/main/res/xml/preferences.xml
+index b94e5f08e..546dd2faf 100644
+--- a/src/main/res/xml/preferences.xml
++++ b/src/main/res/xml/preferences.xml
+@@ -331,7 +331,7 @@
+         <CheckBoxPreference
+             android:defaultValue="@bool/use_internal_updater"
+             android:key="use_internal_updater"
+-            android:disabled="true"
++            android:enabled="false"
+             android:summary="@string/pref_use_internal_updater_summary"
+             android:title="@string/pref_use_internal_updater" />
+         <CheckBoxPreference
