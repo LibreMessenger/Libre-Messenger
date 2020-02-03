@@ -717,7 +717,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
         final MenuItem shareQRCode = menu.findItem(R.id.action_show_qr_code);
         final MenuItem announcePGP = menu.findItem(R.id.mgmt_account_announce_pgp);
         final MenuItem forgotPassword = menu.findItem(R.id.mgmt_account_password_forgotten);
-        final MenuItem addAccountWithCertificate = menu.findItem(R.id.action_add_account_with_cert);
         renewCertificate.setVisible(mAccount != null && mAccount.getPrivateKeyAlias() != null);
 
         if (mAccount != null && mAccount.isOnlineAndConnected()) {
@@ -749,7 +748,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                     && !mAccount.isOptionSet(Account.OPTION_REGISTER));
         } else {
             showPassword.setVisible(false);
-            addAccountWithCertificate.setVisible(true);
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -950,9 +948,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             case R.id.action_share_http:
                 shareLink(true);
                 break;
-            case R.id.action_add_account_with_cert:
-                addAccountFromKey();
-                break;
             case R.id.action_share_uri:
                 shareLink(false);
                 break;
@@ -988,14 +983,6 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 builder.create().show();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void addAccountFromKey() {
-        try {
-            KeyChain.choosePrivateKeyAlias(this, this, null, null, null, -1, null);
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(this, R.string.device_does_not_support_certificates, Toast.LENGTH_LONG).show();
-        }
     }
 
     private String getSupportSite(String domain) {
