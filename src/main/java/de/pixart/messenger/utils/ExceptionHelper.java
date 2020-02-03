@@ -88,9 +88,9 @@ public class ExceptionHelper {
             builder.setMessage(activity.getText(R.string.crash_report_message));
             builder.setPositiveButton(activity.getText(R.string.send_now), (dialog, which) -> {
                 Log.d(Config.LOGTAG, "using account=" + account.getJid().asBareJid() + " to send in stack trace");
-                Conversation conversation = service.findOrCreateConversation(account, Config.BUG_REPORTS, false, true);
-                Message message = new Message(conversation, report.toString(), Message.ENCRYPTION_NONE);
-                service.sendMessage(message);
+                //Conversation conversation = service.findOrCreateConversation(account, Config.BUG_REPORTS, false, true);
+                //Message message = new Message(conversation, report.toString(), Message.ENCRYPTION_NONE);
+                //service.sendMessage(message);
             });
             builder.setNegativeButton(activity.getText(R.string.send_never), (dialog, which) -> preferences.edit().putBoolean("never_send", true).apply());
             builder.create().show();
