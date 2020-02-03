@@ -52,7 +52,7 @@
     <bool name="prefer_xmpp_avatar">true</bool>
     <bool name="show_links_inside">true</bool>
     <bool name="show_maps_inside">true</bool>
-    <bool name="use_internal_updater">true</bool>
+    <bool name="use_internal_updater">false</bool>
     <bool name="show_own_accounts">true</bool>
     <bool name="vibrate_in_chat">true</bool>
     <bool name="enable_otr">false</bool>

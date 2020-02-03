@@ -200,16 +200,6 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
             System.exit(0);
         }
 
-        if (useInternalUpdater()) {
-            if (xmppConnectionService.getAccounts().size() != 0) {
-                if (xmppConnectionService.hasInternetConnection()) {
-                    if (xmppConnectionService.isWIFI() || (xmppConnectionService.isMobile() && !xmppConnectionService.isMobileRoaming())) {
-                        AppUpdate(xmppConnectionService.installedFrom());
-                    }
-                }
-            }
-        }
-
         for (@IdRes int id : FRAGMENT_ID_NOTIFICATION_ORDER) {
             notifyFragmentOfBackendConnected(id);
         }
@@ -436,7 +426,6 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
         getMenuInflater().inflate(R.menu.activity_conversations, menu);
         final MenuItem qrCodeScanMenuItem = menu.findItem(R.id.action_scan_qr_code);
         final MenuItem menuEditProfiles = menu.findItem(R.id.action_accounts);
-        final MenuItem inviteUser = menu.findItem(R.id.action_invite_user);
         if (qrCodeScanMenuItem != null) {
             if (isCameraFeatureAvailable()) {
                 Fragment fragment = getFragmentManager().findFragmentById(R.id.main_fragment);
@@ -452,11 +441,6 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
             menuEditProfiles.setTitle(R.string.action_account);
         } else {
             menuEditProfiles.setTitle(R.string.action_accounts);
-        }
-        if (xmppConnectionServiceBound && xmppConnectionService.getAccounts().size() > 0) {
-            inviteUser.setVisible(true);
-        } else {
-            inviteUser.setVisible(false);
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -559,16 +543,6 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
             case R.id.action_scan_qr_code:
                 UriHandlerActivity.scan(this);
                 return true;
-            case R.id.action_check_updates:
-                if (xmppConnectionService.hasInternetConnection()) {
-                    openInstallFromUnknownSourcesDialogIfNeeded(true);
-                } else {
-                    ToastCompat.makeText(this, R.string.account_status_no_internet, Toast.LENGTH_LONG).show();
-                }
-                break;
-            case R.id.action_invite_user:
-                inviteUser();
-                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -898,26 +872,6 @@ public class ConversationsActivity extends XmppActivity implements OnConversatio
     @Override
     public void onShowErrorToast(int resId) {
         runOnUiThread(() -> ToastCompat.makeText(this, resId, Toast.LENGTH_SHORT).show());
-    }
-
-    protected void AppUpdate(String Store) {
-        String PREFS_NAME = "UpdateTimeStamp";
-        SharedPreferences UpdateTimeStamp = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        long lastUpdateTime = UpdateTimeStamp.getLong("lastUpdateTime", 0);
-        Log.d(Config.LOGTAG, "AppUpdater: LastUpdateTime: " + lastUpdateTime);
-        if ((lastUpdateTime + (Config.UPDATE_CHECK_TIMER * 1000)) < System.currentTimeMillis()) {
-            lastUpdateTime = System.currentTimeMillis();
-            SharedPreferences.Editor editor = UpdateTimeStamp.edit();
-            editor.putLong("lastUpdateTime", lastUpdateTime);
-            editor.apply();
-            Log.d(Config.LOGTAG, "AppUpdater: CurrentTime: " + lastUpdateTime);
-            if (Store == null) {
-                Log.d(Config.LOGTAG, "AppUpdater started");
-                openInstallFromUnknownSourcesDialogIfNeeded(false);
-            }
-        } else {
-            Log.d(Config.LOGTAG, "AppUpdater stopped");
-        }
     }
 
     @Override
