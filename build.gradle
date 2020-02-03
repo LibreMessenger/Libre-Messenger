@@ -119,9 +119,9 @@ android {
         buildConfigField("String", "DOMAIN_LOCK", 'null')
         buildConfigField("String", "MAGIC_CREATE_DOMAIN", '"blabber.im"')
         buildConfigField("boolean", "SHOW_INTRO", 'true')
-        buildConfigField("String", "UPDATE_URL", '"https://xmpp.pix-art.de/Pix-Art_Messenger/update/"')
+        buildConfigField("String", "UPDATE_URL", '""')
         resValue "string", "applicationId", applicationId
-        resValue "string", "app_name", "Pix-Art Messenger"
+        resValue "string", "app_name", "Libre Messenger"
     }
 
     dataBinding {
