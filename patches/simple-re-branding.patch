@@ -1,0 +1,25 @@
+From 2f2473670b0af6417e95bb4e6583bf618bce3f35 Mon Sep 17 00:00:00 2001
+From: intika <intika@librefox.org>
+Date: Mon, 3 Feb 2020 05:28:41 +0100
+Subject: [PATCH] initial rebranding
+
+---
+ build.gradle | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/build.gradle b/build.gradle
+index 7ee0da74a..644f3c981 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -119,9 +119,9 @@ android {
+         buildConfigField("String", "DOMAIN_LOCK", 'null')
+         buildConfigField("String", "MAGIC_CREATE_DOMAIN", '"blabber.im"')
+         buildConfigField("boolean", "SHOW_INTRO", 'true')
+-        buildConfigField("String", "UPDATE_URL", '"https://xmpp.pix-art.de/Pix-Art_Messenger/update/"')
++        buildConfigField("String", "UPDATE_URL", '""')
+         resValue "string", "applicationId", applicationId
+-        resValue "string", "app_name", "Pix-Art Messenger"
++        resValue "string", "app_name", "Libre Messenger"
+     }
+ 
+     dataBinding {
