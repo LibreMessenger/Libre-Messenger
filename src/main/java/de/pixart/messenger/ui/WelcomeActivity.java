@@ -34,7 +34,13 @@ import static de.pixart.messenger.Config.DISALLOW_REGISTRATION_IN_UI;
 import static de.pixart.messenger.utils.PermissionUtils.allGranted;
 import static de.pixart.messenger.utils.PermissionUtils.readGranted;
 
-public class WelcomeActivity extends XmppActivity {
+import android.security.KeyChain;
+import android.security.KeyChainAliasCallback;
+import android.util.Log;
+import android.content.ActivityNotFoundException;
+import de.pixart.messenger.services.XmppConnectionService;
+
+public class WelcomeActivity extends XmppActivity implements KeyChainAliasCallback, XmppConnectionService.OnAccountCreated {
 
     private static final int REQUEST_IMPORT_BACKUP = 0x63fb;
     private static final int REQUEST_READ_EXTERNAL_STORAGE = 0XD737;
@@ -122,15 +128,10 @@ public class WelcomeActivity extends XmppActivity {
         }
         binding.importDatabase.setOnClickListener(v -> startActivity(new Intent(this, ImportBackupActivity.class)));
         binding.addNewAccount.setOnClickListener(v -> {
-            final Intent intent = new Intent(WelcomeActivity.this, MagicCreateActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            addInviteUri(intent);
-            startActivity(intent);
-        });
-        if (DISALLOW_REGISTRATION_IN_UI) {
-            binding.addNewAccount.setVisibility(View.GONE);
-        }
-        binding.addAccountWithCertificate.setOnClickListener(v -> {
+            //final Intent intent = new Intent(WelcomeActivity.this, MagicCreateActivity.class); //old register account
+            //intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            //addInviteUri(intent);
+            //startActivity(intent);            
             final List<Account> accounts = xmppConnectionService.getAccounts();
             Intent intent = new Intent(WelcomeActivity.this, EditAccountActivity.class);
             if (accounts.size() == 1) {
@@ -146,6 +147,37 @@ public class WelcomeActivity extends XmppActivity {
             finish();
             overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
         });
+        if (DISALLOW_REGISTRATION_IN_UI) {
+            binding.addNewAccount.setVisibility(View.GONE);
+        }
+        binding.addAccountWithCertificate.setOnClickListener(v -> {
+                        try {
+                KeyChain.choosePrivateKeyAlias(this, this, null, null, null, -1, null);
+                } catch (ActivityNotFoundException e) {
+                Toast.makeText(this, R.string.device_does_not_support_certificates, Toast.LENGTH_LONG).show();
+                }
+        });
+    }
+
+        @Override
+        public void alias(String alias) {
+                if (alias != null) {
+                        xmppConnectionService.createAccountFromKey(alias, this);
+                }
+        }
+
+    @Override
+    public void onAccountCreated(Account account) {
+        Intent intent = new Intent(this, EditAccountActivity.class);
+        intent.putExtra("jid", account.getJid().asBareJid().toString());
+        intent.putExtra("init", true);
+        startActivity(intent);
+        overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+    }
+
+        @Override
+    public void informUser(final int r) {
+        runOnUiThread(() -> ToastCompat.makeText(WelcomeActivity.this, r, Toast.LENGTH_LONG).show());
     }
 
     public void addInviteUri(Intent to) {
