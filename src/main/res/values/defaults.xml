@@ -26,13 +26,13 @@
     <bool name="show_connection_options">true</bool>
     <bool name="last_activity">true</bool>
     <bool name="dont_trust_system_cas">true</bool>
-    <bool name="btbv">true</bool>
+    <bool name="btbv">false</bool>
     <bool name="send_button_status">true</bool>
     <bool name="display_enter_key">false</bool>
     <bool name="show_dynamic_tags">false</bool>
     <bool name="presence_colored_names">false</bool>
-    <bool name="use_max_brightness">true</bool>
-    <bool name="auto_rotate">true</bool>
+    <bool name="use_max_brightness">false</bool>
+    <bool name="auto_rotate">false</bool>
     <bool name="send_crashreport">false</bool>
     <bool name="use_invidious">false</bool>
     <bool name="plain_text_logs">false</bool>
@@ -48,29 +48,29 @@
     <bool name="show_record_voice_btn">true</bool>
     <bool name="quick_share_attachment_choice">true</bool>
     <bool name="screen_security">false</bool>
-    <bool name="play_gif_inside">false</bool>
+    <bool name="play_gif_inside">true</bool>
     <bool name="prefer_xmpp_avatar">true</bool>
     <bool name="show_links_inside">true</bool>
     <bool name="show_maps_inside">true</bool>
     <bool name="use_internal_updater">false</bool>
     <bool name="show_own_accounts">true</bool>
-    <bool name="vibrate_in_chat">true</bool>
+    <bool name="vibrate_in_chat">false</bool>
     <bool name="enable_otr">false</bool>
     <integer name="auto_accept_filesize_wifi">10485760</integer>
-    <integer name="auto_accept_filesize_mobile">524288</integer>
+    <integer name="auto_accept_filesize_mobile">10485760</integer>
     <integer name="auto_accept_filesize_roaming">0</integer>
     <integer name="automatic_message_deletion">0</integer>
     <integer name="grace_period">144</integer>
     <string name="default_resource" translatable="false">Phone</string>
     <string name="notification_ringtone">content://settings/system/notification_sound</string>
-    <string name="image_compression">mid</string>
+    <string name="image_compression">high</string>
     <string name="video_compression">mid</string>
     <string name="quick_action">recent</string>
     <string name="omemo_setting_default">default_on</string>
     <string name="theme">auto</string>
     <string name="theme_color">blue</string>
     <string name="default_font_size">small</string>
-    <string name="default_channel_discovery">JABBER_NETWORK</string>
+    <string name="default_channel_discovery">LOCAL_SERVER</string>
 
     <string-array name="domains">
         <item>xmpp.org</item>
