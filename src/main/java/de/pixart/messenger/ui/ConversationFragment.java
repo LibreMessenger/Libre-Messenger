@@ -1147,7 +1147,7 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
             ConversationMenuConfigurator.configureEncryptionMenu(conversation, menu);
         } else {
             menuNeedHelp.setVisible(false);
-            menuInviteContact.stVisible(false);
+            menuInviteContact.setVisible(false);
             menuGroupDetails.setVisible(false);
             menuContactDetails.setVisible(false);
             menuMediaBrowser.setVisible(false);
