@@ -185,8 +185,6 @@ public class XmppConnectionService extends Service {
     public static final String ACTION_DISMISS_ERROR_NOTIFICATIONS = "dismiss_error";
     public static final String ACTION_TRY_AGAIN = "try_again";
     public static final String ACTION_IDLE_PING = "idle_ping";
-    public static final String ACTION_FCM_TOKEN_REFRESH = "fcm_token_refresh";
-    public static final String ACTION_FCM_MESSAGE_RECEIVED = "fcm_message_received";
     private static final String ACTION_POST_CONNECTIVITY_CHANGE = "de.pixart.messenger.POST_CONNECTIVITY_CHANGE";
     public static final String FDroid = "org.fdroid.fdroid";
     public static final String PlayStore = "com.android.vending";
@@ -269,7 +267,6 @@ public class XmppConnectionService extends Service {
     public HttpConnectionManager mHttpConnectionManager = new HttpConnectionManager(this);
     private AvatarService mAvatarService = new AvatarService(this);
     private MessageArchiveService mMessageArchiveService = new MessageArchiveService(this);
-    private PushManagementService mPushManagementService = new PushManagementService(this);
     private QuickConversationsService mQuickConversationsService = new QuickConversationsService(this);
     private final ConversationsFileObserver fileObserver = new ConversationsFileObserver(
             Environment.getExternalStorageDirectory().getAbsolutePath()
@@ -360,9 +357,6 @@ public class XmppConnectionService extends Service {
                 });
             }
             sendPresence(account);
-            if (mPushManagementService.available(account)) {
-                mPushManagementService.registerPushTokenOnServer(account);
-            }
             connectMultiModeConversations(account);
             syncDirtyContacts(account);
         }
@@ -749,18 +743,10 @@ public class XmppConnectionService extends Service {
                         refreshAllPresences();
                     }
                     break;
-                case ACTION_FCM_TOKEN_REFRESH:
-                    refreshAllFcmTokens();
-                    break;
                 case ACTION_IDLE_PING:
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         scheduleNextIdlePing();
                     }
-                    break;
-                case ACTION_FCM_MESSAGE_RECEIVED:
-                    pushedAccountHash = intent.getStringExtra("account");
-                    pushedChannelHash = intent.getStringExtra("channel");
-                    Log.d(Config.LOGTAG, "push message arrived in service. account=" + pushedAccountHash);
                     break;
                 case Intent.ACTION_SEND:
                     Uri uri = intent.getData();
@@ -4630,15 +4616,6 @@ public class XmppConnectionService extends Service {
         }
     }
 
-    private void refreshAllFcmTokens() {
-        for (Account account : getAccounts()) {
-            if (account.isOnlineAndConnected() && mPushManagementService.available(account)) {
-                mPushManagementService.registerPushTokenOnServer(account);
-                //TODO renew mucs
-            }
-        }
-    }
-
     private void sendOfflinePresence(final Account account) {
         Log.d(Config.LOGTAG, account.getJid().asBareJid() + ": sending offline presence");
         sendPresencePacket(account, mPresenceGenerator.sendOfflinePresence(account));
@@ -4906,10 +4883,6 @@ public class XmppConnectionService extends Service {
                 callback.onPreferencesFetchFailed();
             }
         });
-    }
-
-    public PushManagementService getPushManagementService() {
-        return mPushManagementService;
     }
 
     public void changeStatus(Account account, PresenceTemplate template, String signature) {
