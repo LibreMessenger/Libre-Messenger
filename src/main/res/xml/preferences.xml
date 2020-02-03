@@ -331,7 +331,7 @@
         <CheckBoxPreference
             android:defaultValue="@bool/use_internal_updater"
             android:key="use_internal_updater"
-            android:disabled="true"
+            android:enabled="false"
             android:summary="@string/pref_use_internal_updater_summary"
             android:title="@string/pref_use_internal_updater" />
         <CheckBoxPreference
