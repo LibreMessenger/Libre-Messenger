@@ -921,7 +921,6 @@ public class XmppConnectionService extends Service {
                 }
             }
         }
-        mPushManagementService.unregisterChannel(account, hash);
     }
 
     public void reinitializeMuclumbusService() {
@@ -2407,7 +2406,6 @@ public class XmppConnectionService extends Service {
                 }
                 if (conversation.getMucOptions().push()) {
                     disableDirectMucPush(conversation);
-                    mPushManagementService.disablePushOnServer(conversation);
                 }
                 leaveMuc(conversation);
             } else {
@@ -3047,7 +3045,6 @@ public class XmppConnectionService extends Service {
 
     private void enableMucPush(final Conversation conversation) {
         enableDirectMucPush(conversation);
-        mPushManagementService.registerPushTokenOnServer(conversation);
     }
 
     private void disableDirectMucPush(final Conversation conversation) {
