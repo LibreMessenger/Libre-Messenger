@@ -1113,7 +1113,6 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
         boolean hasAttachments = mediaPreviewAdapter != null && mediaPreviewAdapter.hasAttachments();
         menuInflater.inflate(R.menu.fragment_conversation, menu);
         final MenuItem menuInviteContact = menu.findItem(R.id.action_invite);
-        final MenuItem menuNeedHelp = menu.findItem(R.id.action_create_issue);
         final MenuItem menuArchiveChat = menu.findItem(R.id.action_archive_chat);
         final MenuItem menuGroupDetails = menu.findItem(R.id.action_group_details);
         final MenuItem menuContactDetails = menu.findItem(R.id.action_contact_details);
@@ -1142,11 +1141,9 @@ public class ConversationFragment extends XmppFragment implements EditMessage.Ke
                 menuContactDetails.setVisible(false);
             }
             menuMediaBrowser.setVisible(true);
-            menuNeedHelp.setVisible(true);
             ConversationMenuConfigurator.configureAttachmentMenu(conversation, menu, activity.xmppConnectionService.getAttachmentChoicePreference(), hasAttachments);
             ConversationMenuConfigurator.configureEncryptionMenu(conversation, menu);
         } else {
-            menuNeedHelp.setVisible(false);
             menuInviteContact.setVisible(false);
             menuGroupDetails.setVisible(false);
             menuContactDetails.setVisible(false);
