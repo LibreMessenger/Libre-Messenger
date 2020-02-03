@@ -33,7 +33,7 @@
     <bool name="presence_colored_names">false</bool>
     <bool name="use_max_brightness">true</bool>
     <bool name="auto_rotate">true</bool>
-    <bool name="send_crashreport">true</bool>
+    <bool name="send_crashreport">false</bool>
     <bool name="use_invidious">false</bool>
     <bool name="plain_text_logs">false</bool>
     <bool name="validate_hostname">true</bool>

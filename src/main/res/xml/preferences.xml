@@ -359,6 +359,7 @@
         <CheckBoxPreference
             android:defaultValue="@bool/send_crashreport"
             android:key="crashreport"
+            android:enabled="false"
             android:summary="@string/pref_send_crash_summary"
             android:title="@string/pref_send_crash" />
         <CheckBoxPreference
