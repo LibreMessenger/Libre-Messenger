@@ -342,6 +342,7 @@
         <CheckBoxPreference
             android:defaultValue="@bool/show_maps_inside"
             android:key="show_maps_inside"
+			android:enabled="false"
             android:summary="@string/pref_show_mappreview_inside_summary"
             android:title="@string/pref_show_mappreview_inside" />
         <CheckBoxPreference
