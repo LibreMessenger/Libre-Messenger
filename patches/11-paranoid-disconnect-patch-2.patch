@@ -1,0 +1,88 @@
+From 5879b917b8a37ee98aaf90cf49d1b77e0f8a44d5 Mon Sep 17 00:00:00 2001
+From: intika <intika@librefox.org>
+Date: Tue, 4 Feb 2020 18:13:01 +0100
+Subject: [PATCH] paranoid-disconnect-patch-2
+
+---
+ src/main/java/de/pixart/messenger/ui/AboutActivity.java   | 4 ++--
+ .../java/de/pixart/messenger/ui/EditAccountActivity.java  | 4 ++--
+ src/main/java/de/pixart/messenger/ui/UpdaterActivity.java | 8 ++++----
+ 3 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/src/main/java/de/pixart/messenger/ui/AboutActivity.java b/src/main/java/de/pixart/messenger/ui/AboutActivity.java
+index 2ed76948e..709fcc6b3 100644
+--- a/src/main/java/de/pixart/messenger/ui/AboutActivity.java
++++ b/src/main/java/de/pixart/messenger/ui/AboutActivity.java
+@@ -41,13 +41,13 @@ protected void onCreate(Bundle savedInstanceState) {
+ 
+         privacyButton = findViewById(R.id.show_privacy_policy);
+         privacyButton.setOnClickListener(view -> {
+-            final Uri uri = Uri.parse("");
++            final Uri uri = Uri.parse("http://127.0.0.1");
+             Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+             startActivity(browserIntent);
+         });
+         termsOfUseButton = findViewById(R.id.show_terms_of_use);
+         termsOfUseButton.setOnClickListener(view -> {
+-            final Uri uri = Uri.parse("");
++            final Uri uri = Uri.parse("http://127.0.0.1");
+             Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+             startActivity(browserIntent);
+         });
+diff --git a/src/main/java/de/pixart/messenger/ui/EditAccountActivity.java b/src/main/java/de/pixart/messenger/ui/EditAccountActivity.java
+index 1ae7f3602..34f4d4463 100644
+--- a/src/main/java/de/pixart/messenger/ui/EditAccountActivity.java
++++ b/src/main/java/de/pixart/messenger/ui/EditAccountActivity.java
+@@ -665,12 +665,12 @@ protected void onCreate(final Bundle savedInstanceState) {
+             this.binding.accountRegisterNew.setVisibility(View.GONE);
+         }
+         this.binding.showPrivacyPolicy.setOnClickListener(view -> {
+-            final Uri uri = Uri.parse("");
++            final Uri uri = Uri.parse("http://127.0.0.1");
+             Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+             startActivity(browserIntent);
+         });
+         this.binding.showTermsOfUse.setOnClickListener(view -> {
+-            final Uri uri = Uri.parse("");
++            final Uri uri = Uri.parse("http://127.0.0.1");
+             Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+             startActivity(browserIntent);
+         });
+diff --git a/src/main/java/de/pixart/messenger/ui/UpdaterActivity.java b/src/main/java/de/pixart/messenger/ui/UpdaterActivity.java
+index f6c6424b6..e50a19703 100644
+--- a/src/main/java/de/pixart/messenger/ui/UpdaterActivity.java
++++ b/src/main/java/de/pixart/messenger/ui/UpdaterActivity.java
+@@ -130,7 +130,7 @@ protected void onStart() {
+                         if (isStoragePermissionGranted() && isNetworkAvailable(getApplicationContext())) {
+                             //start downloading the file using the download manager
+                             if (store != null && store.equalsIgnoreCase(PlayStore)) {
+-                                Uri uri = Uri.parse("");
++                                Uri uri = Uri.parse("http://127.0.0.1");
+                                 Intent marketIntent = new Intent(Intent.ACTION_VIEW, uri);
+                                 PackageManager manager = getApplicationContext().getPackageManager();
+                                 List<ResolveInfo> infos = manager.queryIntentActivities(marketIntent, 0);
+@@ -138,13 +138,13 @@ protected void onStart() {
+                                     startActivity(marketIntent);
+                                     overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+                                 } else {
+-                                    uri = Uri.parse("");
++                                    uri = Uri.parse("http://127.0.0.1");
+                                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+                                     startActivity(browserIntent);
+                                     overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+                                 }
+                             } else if (store != null && store.equalsIgnoreCase(FDroid)) {
+-                                Uri uri = Uri.parse("");
++                                Uri uri = Uri.parse("http://127.0.0.1");
+                                 Intent marketIntent = new Intent(Intent.ACTION_VIEW, uri);
+                                 PackageManager manager = getApplicationContext().getPackageManager();
+                                 List<ResolveInfo> infos = manager.queryIntentActivities(marketIntent, 0);
+@@ -152,7 +152,7 @@ protected void onStart() {
+                                     startActivity(marketIntent);
+                                     overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+                                 } else {
+-                                    uri = Uri.parse("");
++                                    uri = Uri.parse("http://127.0.0.1");
+                                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+                                     startActivity(browserIntent);
+                                     overridePendingTransition(R.animator.fade_in, R.animator.fade_out);

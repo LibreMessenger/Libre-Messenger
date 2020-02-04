@@ -1,0 +1,63 @@
+From 4687886e111d0c7f70956c5dee800636e49c80ae Mon Sep 17 00:00:00 2001
+From: intika <intika@librefox.org>
+Date: Tue, 4 Feb 2020 19:26:28 +0100
+Subject: [PATCH] blabber-blob-removal-2
+
+---
+ .../java/de/pixart/messenger/ui/EditAccountActivity.java | 9 ++++++++-
+ .../java/de/pixart/messenger/ui/MagicCreateActivity.java | 6 +++---
+ 2 files changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/src/main/java/de/pixart/messenger/ui/EditAccountActivity.java b/src/main/java/de/pixart/messenger/ui/EditAccountActivity.java
+index dcb9d38cf..1b52572db 100644
+--- a/src/main/java/de/pixart/messenger/ui/EditAccountActivity.java
++++ b/src/main/java/de/pixart/messenger/ui/EditAccountActivity.java
+@@ -368,6 +368,13 @@ private void deleteAccountAndReturnIfNecessary() {
+             return;
+         }
+ 		
++        if (xmppConnectionService.getAccounts().size() == 0) {
++            Intent intent = SignupUtils.getSignUpIntent(this, mForceRegister != null && mForceRegister);
++            StartConversationActivity.addInviteUri(intent, getIntent());
++            startActivity(intent);
++            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
++        }
++		
+     }
+ 
+     @Override
+@@ -799,7 +806,7 @@ protected void onStart() {
+                 this.binding.yourNameBox.setVisibility(View.GONE);
+                 this.binding.yourStatusBox.setVisibility(View.GONE);
+                 this.binding.avater.setVisibility(View.GONE);
+-                configureActionBar(getSupportActionBar(), !(init && true));
++                configureActionBar(getSupportActionBar(), !(init));
+                 if (mForceRegister != null) {
+                     if (mForceRegister) {
+                         setTitle(R.string.action_add_new_account);
+diff --git a/src/main/java/de/pixart/messenger/ui/MagicCreateActivity.java b/src/main/java/de/pixart/messenger/ui/MagicCreateActivity.java
+index e9b7c249a..67321d5c5 100644
+--- a/src/main/java/de/pixart/messenger/ui/MagicCreateActivity.java
++++ b/src/main/java/de/pixart/messenger/ui/MagicCreateActivity.java
+@@ -101,10 +101,10 @@ protected void onCreate(final Bundle savedInstanceState) {
+                 } else {
+                     fixedUsername = false;
+                     if (domain == null && !useOwnProvider) {
+-                        domain = "your-own-domain-com";
++                        domain = "your-own-domain-example.invalid";
+                     }
+                     if (useOwnProvider) {
+-                        domain = "your-own-domain-com";
++                        domain = "your-own-domain-example.invalid";
+                     }
+                     jid = Jid.ofLocalAndDomain(username, domain);
+                 }
+@@ -197,7 +197,7 @@ private void updateFullJidInformation(String username) {
+                 binding.fullJid.setVisibility(View.VISIBLE);
+                 final Jid jid;
+                 if (this.domain == null) {
+-                    jid = Jid.ofLocalAndDomain(username, "your-own-domain-com");
++                    jid = Jid.ofLocalAndDomain(username, "your-own-domain-example.invalid");
+                 } else {
+                     jid = Jid.ofLocalAndDomain(username, this.domain);
+                 }

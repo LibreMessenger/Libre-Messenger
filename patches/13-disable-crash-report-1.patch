@@ -1,0 +1,35 @@
+From 5bb9d1e55c66c0ad19c9fa9d6c0f70612ffa6fb5 Mon Sep 17 00:00:00 2001
+From: intika <intika@librefox.org>
+Date: Mon, 3 Feb 2020 21:20:20 +0100
+Subject: [PATCH] disable-crash-report
+
+---
+ src/main/res/values/defaults.xml | 2 +-
+ src/main/res/xml/preferences.xml | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/main/res/values/defaults.xml b/src/main/res/values/defaults.xml
+index 90103e36c..06bea2936 100644
+--- a/src/main/res/values/defaults.xml
++++ b/src/main/res/values/defaults.xml
+@@ -33,7 +33,7 @@
+     <bool name="presence_colored_names">false</bool>
+     <bool name="use_max_brightness">true</bool>
+     <bool name="auto_rotate">true</bool>
+-    <bool name="send_crashreport">true</bool>
++    <bool name="send_crashreport">false</bool>
+     <bool name="use_invidious">false</bool>
+     <bool name="plain_text_logs">false</bool>
+     <bool name="validate_hostname">true</bool>
+diff --git a/src/main/res/xml/preferences.xml b/src/main/res/xml/preferences.xml
+index 546dd2faf..095e740ee 100644
+--- a/src/main/res/xml/preferences.xml
++++ b/src/main/res/xml/preferences.xml
+@@ -359,6 +359,7 @@
+         <CheckBoxPreference
+             android:defaultValue="@bool/send_crashreport"
+             android:key="crashreport"
++            android:enabled="false"
+             android:summary="@string/pref_send_crash_summary"
+             android:title="@string/pref_send_crash" />
+         <CheckBoxPreference

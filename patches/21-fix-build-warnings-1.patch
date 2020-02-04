@@ -1,0 +1,31 @@
+From 20f3b1244abf98590e2cb6c548bc08c103de6b2f Mon Sep 17 00:00:00 2001
+From: intika <intika@librefox.org>
+Date: Tue, 4 Feb 2020 00:52:05 +0100
+Subject: [PATCH] fix-build-warnings
+
+---
+ src/main/AndroidManifest.xml | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/src/main/AndroidManifest.xml b/src/main/AndroidManifest.xml
+index ba55d339c..4dcbdd483 100644
+--- a/src/main/AndroidManifest.xml
++++ b/src/main/AndroidManifest.xml
+@@ -23,9 +23,6 @@
+     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+     <uses-permission android:name="android.permission.CAMERA" />
+     <uses-permission android:name="com.google.android.apps.photos.permission.GOOGLE_PHOTOS" />
+-    <uses-permission
+-        android:name="android.permission.READ_PHONE_STATE"
+-        tools:node="remove" />
+ 
+     <uses-sdk tools:overrideLibrary="net.ypresto.androidtranscoder" />
+ 
+@@ -60,7 +57,6 @@
+         android:supportsRtl="true"
+         android:theme="@style/ConversationsTheme"
+         tools:ignore="GoogleAppIndexingWarning"
+-        tools:replace="android:label, android:allowBackup"
+         tools:targetApi="q">
+ 
+         <meta-data

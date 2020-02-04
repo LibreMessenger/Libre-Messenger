@@ -1,0 +1,26 @@
+From 0f3c5a76ae32dffd6da98d1801bd612f03efff0d Mon Sep 17 00:00:00 2001
+From: intika <intika@librefox.org>
+Date: Mon, 3 Feb 2020 21:26:32 +0100
+Subject: [PATCH] disable-crash-report-2
+
+---
+ .../java/de/pixart/messenger/utils/ExceptionHelper.java     | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/main/java/de/pixart/messenger/utils/ExceptionHelper.java b/src/main/java/de/pixart/messenger/utils/ExceptionHelper.java
+index 8d59c83bf..324b6646c 100644
+--- a/src/main/java/de/pixart/messenger/utils/ExceptionHelper.java
++++ b/src/main/java/de/pixart/messenger/utils/ExceptionHelper.java
+@@ -88,9 +88,9 @@ public static boolean checkForCrash(XmppActivity activity) {
+             builder.setMessage(activity.getText(R.string.crash_report_message));
+             builder.setPositiveButton(activity.getText(R.string.send_now), (dialog, which) -> {
+                 Log.d(Config.LOGTAG, "using account=" + account.getJid().asBareJid() + " to send in stack trace");
+-                Conversation conversation = service.findOrCreateConversation(account, Config.BUG_REPORTS, false, true);
+-                Message message = new Message(conversation, report.toString(), Message.ENCRYPTION_NONE);
+-                service.sendMessage(message);
++                //Conversation conversation = service.findOrCreateConversation(account, Config.BUG_REPORTS, false, true);
++                //Message message = new Message(conversation, report.toString(), Message.ENCRYPTION_NONE);
++                //service.sendMessage(message);
+             });
+             builder.setNegativeButton(activity.getText(R.string.send_never), (dialog, which) -> preferences.edit().putBoolean("never_send", true).apply());
+             builder.create().show();

@@ -1,0 +1,22 @@
+From 9819499d23c867b235df30653cb8cf9cce7c472b Mon Sep 17 00:00:00 2001
+From: intika <intika@librefox.org>
+Date: Tue, 4 Feb 2020 01:18:57 +0100
+Subject: [PATCH] fix-apk-build
+
+---
+ build.gradle | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/build.gradle b/build.gradle
+index fc0ed8732..dee5f73bf 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -107,7 +107,7 @@ android {
+ 
+         versionCode 283
+         versionName "2.3.5b"
+-        versionNameSuffix "" //beta (XXXX-XX-XX)
++        //versionNameSuffix "" //beta (XXXX-XX-XX)
+         //resConfigs "en"
+ 
+         archivesBaseName += "-$versionName"

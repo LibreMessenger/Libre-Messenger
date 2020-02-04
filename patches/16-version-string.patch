@@ -1,0 +1,24 @@
+From 6484d941f64354bb387ff8088f06f7022537c515 Mon Sep 17 00:00:00 2001
+From: intika <intika@librefox.org>
+Date: Mon, 3 Feb 2020 21:34:34 +0100
+Subject: [PATCH] update-version
+
+---
+ build.gradle | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/build.gradle b/build.gradle
+index e483b9223..7be6cec27 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -106,8 +106,8 @@ android {
+         targetSdkVersion 29
+ 
+         versionCode 283
+-        versionName "2.3.5"
+-        versionNameSuffix "beta (2020-02-01)" //beta (XXXX-XX-XX)
++        versionName "2.3.5b"
++        versionNameSuffix "" //beta (XXXX-XX-XX)
+         //resConfigs "en"
+ 
+         archivesBaseName += "-$versionName"

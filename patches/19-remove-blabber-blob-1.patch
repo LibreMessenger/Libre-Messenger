@@ -1,0 +1,324 @@
+From 865fafb252954bfce797fd35503f7f8de9f90c43 Mon Sep 17 00:00:00 2001
+From: intika <intika@librefox.org>
+Date: Tue, 4 Feb 2020 00:04:52 +0100
+Subject: [PATCH] blabber blob removal
+
+---
+ build.gradle                                       |  1 -
+ src/main/java/de/pixart/messenger/Config.java      |  1 -
+ .../messenger/services/XmppConnectionService.java  |  3 ---
+ .../pixart/messenger/ui/EditAccountActivity.java   | 14 ++++----------
+ .../pixart/messenger/ui/MagicCreateActivity.java   |  8 +++-----
+ .../pixart/messenger/ui/ManageAccountActivity.java |  4 ++--
+ .../de/pixart/messenger/utils/SignupUtils.java     |  2 --
+ src/main/res/values-ar/strings.xml                 |  2 +-
+ src/main/res/values-bg/strings.xml                 |  2 +-
+ src/main/res/values-ca/strings.xml                 |  2 +-
+ src/main/res/values-de/strings.xml                 |  2 +-
+ src/main/res/values-es/strings.xml                 |  2 +-
+ src/main/res/values-fr/strings.xml                 |  2 +-
+ src/main/res/values-it/strings.xml                 |  2 +-
+ src/main/res/values-uk/strings.xml                 |  2 +-
+ src/main/res/values-zh/strings.xml                 |  2 +-
+ src/main/res/values/about.xml                      |  1 -
+ src/main/res/values/strings.xml                    |  2 +-
+ 18 files changed, 19 insertions(+), 35 deletions(-)
+
+diff --git a/build.gradle b/build.gradle
+index 7be6cec27..fc0ed8732 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -117,7 +117,6 @@ android {
+ 
+         buildConfigField("String", "LOGTAG", '"Pix-Art_Messenger"')
+         buildConfigField("String", "DOMAIN_LOCK", 'null')
+-        buildConfigField("String", "MAGIC_CREATE_DOMAIN", '"blabber.im"')
+         buildConfigField("boolean", "SHOW_INTRO", 'true')
+         buildConfigField("String", "UPDATE_URL", '""')
+         resValue "string", "applicationId", applicationId
+diff --git a/src/main/java/de/pixart/messenger/Config.java b/src/main/java/de/pixart/messenger/Config.java
+index 764c511f7..744e7e70d 100644
+--- a/src/main/java/de/pixart/messenger/Config.java
++++ b/src/main/java/de/pixart/messenger/Config.java
+@@ -51,7 +51,6 @@ public static boolean multipleEncryptionChoices() {
+     public static final String XMPP_IP = null; //BuildConfig.XMPP_IP; // set to null means disable
+     public static final Integer[] XMPP_Ports = null; //BuildConfig.XMPP_Ports; // set to null means disable
+     public static final String DOMAIN_LOCK = BuildConfig.DOMAIN_LOCK; //only allow account creation for this domain
+-    public static final String MAGIC_CREATE_DOMAIN = BuildConfig.MAGIC_CREATE_DOMAIN; //"blabber.im";
+     public static final String QUICKSY_DOMAIN = "quicksy.im";
+     public static final String CHANNEL_DISCOVERY = "https://search.jabber.network";
+     public static final String DEFAULT_INVIDIOUS_HOST = "invidio.us";
+diff --git a/src/main/java/de/pixart/messenger/services/XmppConnectionService.java b/src/main/java/de/pixart/messenger/services/XmppConnectionService.java
+index 883c1aa3a..bc6118824 100644
+--- a/src/main/java/de/pixart/messenger/services/XmppConnectionService.java
++++ b/src/main/java/de/pixart/messenger/services/XmppConnectionService.java
+@@ -4525,9 +4525,6 @@ public void syncRosterToDisk(final Account account) {
+         if (Config.DOMAIN_LOCK != null) {
+             hosts.add(Config.DOMAIN_LOCK);
+         }
+-        if (Config.MAGIC_CREATE_DOMAIN != null) {
+-            hosts.add(Config.MAGIC_CREATE_DOMAIN);
+-        }
+         return hosts;
+     }
+ 
+diff --git a/src/main/java/de/pixart/messenger/ui/EditAccountActivity.java b/src/main/java/de/pixart/messenger/ui/EditAccountActivity.java
+index 80d9684dc..1ae7f3602 100644
+--- a/src/main/java/de/pixart/messenger/ui/EditAccountActivity.java
++++ b/src/main/java/de/pixart/messenger/ui/EditAccountActivity.java
+@@ -355,7 +355,7 @@ private void deleteAccountAndReturnIfNecessary() {
+         final boolean magicCreate = mAccount != null && mAccount.isOptionSet(Account.OPTION_MAGIC_CREATE) && !mAccount.isOptionSet(Account.OPTION_LOGGED_IN_SUCCESSFULLY);
+         final Jid jid = mAccount == null ? null : mAccount.getJid();
+ 
+-        if (SignupUtils.isSupportTokenRegistry() && jid != null && magicCreate && !jid.getDomain().equals(Config.MAGIC_CREATE_DOMAIN)) {
++        if (SignupUtils.isSupportTokenRegistry() && jid != null && magicCreate) {
+             final Jid preset;
+             if (mAccount.isOptionSet(Account.OPTION_FIXED_USERNAME)) {
+                 preset = jid.asBareJid();
+@@ -367,13 +367,7 @@ private void deleteAccountAndReturnIfNecessary() {
+             startActivity(intent);
+             return;
+         }
+-
+-        if (xmppConnectionService.getAccounts().size() == 0 && Config.MAGIC_CREATE_DOMAIN != null) {
+-            Intent intent = SignupUtils.getSignUpIntent(this, mForceRegister != null && mForceRegister);
+-            StartConversationActivity.addInviteUri(intent, getIntent());
+-            startActivity(intent);
+-            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+-        }
++		
+     }
+ 
+     @Override
+@@ -805,7 +799,7 @@ protected void onStart() {
+                 this.binding.yourNameBox.setVisibility(View.GONE);
+                 this.binding.yourStatusBox.setVisibility(View.GONE);
+                 this.binding.avater.setVisibility(View.GONE);
+-                configureActionBar(getSupportActionBar(), !(init && Config.MAGIC_CREATE_DOMAIN == null));
++                configureActionBar(getSupportActionBar(), !(init && true));
+                 if (mForceRegister != null) {
+                     if (mForceRegister) {
+                         setTitle(R.string.action_add_new_account);
+@@ -883,7 +877,7 @@ protected void onBackendConnected() {
+         }
+ 
+ 
+-        if (Config.MAGIC_CREATE_DOMAIN == null && this.xmppConnectionService.getAccounts().size() == 0) {
++        if (this.xmppConnectionService.getAccounts().size() == 0) {
+             this.binding.cancelButton.setEnabled(false);
+         }
+         if (mUsernameMode) {
+diff --git a/src/main/java/de/pixart/messenger/ui/MagicCreateActivity.java b/src/main/java/de/pixart/messenger/ui/MagicCreateActivity.java
+index 683db3929..e9b7c249a 100644
+--- a/src/main/java/de/pixart/messenger/ui/MagicCreateActivity.java
++++ b/src/main/java/de/pixart/messenger/ui/MagicCreateActivity.java
+@@ -72,10 +72,8 @@ protected void onCreate(final Bundle savedInstanceState) {
+         final List<String> domains = Arrays.asList(getResources().getStringArray(R.array.domains));
+         Collections.sort(domains, String::compareToIgnoreCase);
+         final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_selectable_list_item, domains);
+-        int defaultServer = adapter.getPosition("blabber.im");
+         binding.useOwn.setOnCheckedChangeListener(this);
+         binding.server.setAdapter(adapter);
+-        binding.server.setSelection(defaultServer);
+         binding.server.setOnItemSelectedListener(this);
+         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+         setSupportActionBar((Toolbar) this.binding.toolbar);
+@@ -103,10 +101,10 @@ protected void onCreate(final Bundle savedInstanceState) {
+                 } else {
+                     fixedUsername = false;
+                     if (domain == null && !useOwnProvider) {
+-                        domain = Config.MAGIC_CREATE_DOMAIN;
++                        domain = "your-own-domain-com";
+                     }
+                     if (useOwnProvider) {
+-                        domain = "your-domain.com";
++                        domain = "your-own-domain-com";
+                     }
+                     jid = Jid.ofLocalAndDomain(username, domain);
+                 }
+@@ -199,7 +197,7 @@ private void updateFullJidInformation(String username) {
+                 binding.fullJid.setVisibility(View.VISIBLE);
+                 final Jid jid;
+                 if (this.domain == null) {
+-                    jid = Jid.ofLocalAndDomain(username, Config.MAGIC_CREATE_DOMAIN);
++                    jid = Jid.ofLocalAndDomain(username, "your-own-domain-com");
+                 } else {
+                     jid = Jid.ofLocalAndDomain(username, this.domain);
+                 }
+diff --git a/src/main/java/de/pixart/messenger/ui/ManageAccountActivity.java b/src/main/java/de/pixart/messenger/ui/ManageAccountActivity.java
+index 2fbd79032..be1637698 100644
+--- a/src/main/java/de/pixart/messenger/ui/ManageAccountActivity.java
++++ b/src/main/java/de/pixart/messenger/ui/ManageAccountActivity.java
+@@ -368,7 +368,7 @@ private void deleteAccount(final Account account) {
+                 (dialog, which) -> {
+                     xmppConnectionService.deleteAccount(account);
+                     selectedAccount = null;
+-                    if (xmppConnectionService.getAccounts().size() == 0 && Config.MAGIC_CREATE_DOMAIN != null) {
++                    if (xmppConnectionService.getAccounts().size() == 0) {
+                         WelcomeActivity.launch(this);
+                     }
+                 });
+@@ -378,7 +378,7 @@ private void deleteAccount(final Account account) {
+                     if (account.isOnlineAndConnected()) {
+                         xmppConnectionService.deleteAccountFromServer(account);
+                         selectedAccount = null;
+-                        if (xmppConnectionService.getAccounts().size() == 0 && Config.MAGIC_CREATE_DOMAIN != null) {
++                        if (xmppConnectionService.getAccounts().size() == 0) {
+                             WelcomeActivity.launch(this);
+                         }
+                     } else {
+diff --git a/src/main/java/de/pixart/messenger/utils/SignupUtils.java b/src/main/java/de/pixart/messenger/utils/SignupUtils.java
+index 52534b89d..94d428388 100644
+--- a/src/main/java/de/pixart/messenger/utils/SignupUtils.java
++++ b/src/main/java/de/pixart/messenger/utils/SignupUtils.java
+@@ -52,8 +52,6 @@ public static Intent getRedirectionIntent(final ConversationsActivity activity)
+             if (service.getAccounts().size() == 0) {
+                 if (Config.X509_VERIFICATION) {
+                     intent = new Intent(activity, ManageAccountActivity.class);
+-                } else if (Config.MAGIC_CREATE_DOMAIN != null) {
+-                    intent = getSignUpIntent(activity);
+                 } else {
+                     intent = new Intent(activity, EditAccountActivity.class);
+                 }
+diff --git a/src/main/res/values-ar/strings.xml b/src/main/res/values-ar/strings.xml
+index 677423586..b58239b8a 100644
+--- a/src/main/res/values-ar/strings.xml
++++ b/src/main/res/values-ar/strings.xml
+@@ -480,7 +480,7 @@
+     <string name="create_dialog_group_chat_name">اسم فريق المحادثة</string>
+     <string name="delete_message">حذف الرسالة</string>
+     <string name="conference_destroyed">لقد تم تدمير هذه المحادثة الجماعية</string>
+-    <string name="welcome_server_info">ننصح باستخدام blabber.im كمزوّد الخدمة الخاص بك.</string>
++    <string name="welcome_server_info"></string>
+     <string name="pref_quick_share_attachment_choice">اختيار الملفات المرفَقة</string>
+     <string name="unable_to_save_recording">لا يمكن الاحتفاظ بالتسجيل</string>
+     <string name="foreground_service_channel_name">الخدمة الأمامية</string>
+diff --git a/src/main/res/values-bg/strings.xml b/src/main/res/values-bg/strings.xml
+index 0649dcef6..efa187801 100644
+--- a/src/main/res/values-bg/strings.xml
++++ b/src/main/res/values-bg/strings.xml
+@@ -754,7 +754,7 @@
+     <string name="delete_message">Изтриване на съобщение</string>
+     <string name="conference_destroyed">Този групов чат е унищожен</string>
+     <string name="no_application_found_to_view_contact">Не е намерена програма за преглед на контакта</string>
+-    <string name="welcome_server_info">Препоръчваме използването на blabber.im като доставчик.</string>
++    <string name="welcome_server_info"></string>
+     <string name="no_location_permission">Pix-Art Messenger се нуждае от достъп до услуги за местоположение</string>
+     <string name="pref_show_record_voice_btn_summary">Покажи гласов бутон за запис в разговорите като бързо действие</string>
+     <string name="pref_show_record_voice_btn">Покажи гласов бутон</string>
+diff --git a/src/main/res/values-ca/strings.xml b/src/main/res/values-ca/strings.xml
+index 493c4591e..0aa99905b 100644
+--- a/src/main/res/values-ca/strings.xml
++++ b/src/main/res/values-ca/strings.xml
+@@ -768,7 +768,7 @@
+     <string name="delete_message">Borrar missatge</string>
+     <string name="conference_destroyed">Aquest grup de xat ha de ser destruit</string>
+     <string name="no_application_found_to_view_contact">No s\'han trobat ninguna aplicació amb la que poder veure aquest contacte</string>
+-    <string name="welcome_server_info">Recomanem l\'ús de blabber.im como el teu proveïdor.</string>
++    <string name="welcome_server_info"></string>
+     <string name="no_location_permission">Pix-Art Messenger necessita accedir als serveis d\'ubicació</string>
+     <string name="pref_show_record_voice_btn_summary">Mostrar el botó de gravació de veu en converses com acció ràpida</string>
+     <string name="pref_show_record_voice_btn">Mostrar botó de gravació de veu</string>
+diff --git a/src/main/res/values-de/strings.xml b/src/main/res/values-de/strings.xml
+index 868ad3eae..365289093 100644
+--- a/src/main/res/values-de/strings.xml
++++ b/src/main/res/values-de/strings.xml
+@@ -776,7 +776,7 @@
+     <string name="delete_message">Nachricht löschen</string>
+     <string name="conference_destroyed">Dieser Gruppenchat wurde aufgelöst</string>
+     <string name="no_application_found_to_view_contact">Keine Anwendung zum Anzeigen von Kontakten gefunden</string>
+-    <string name="welcome_server_info">Wir empfehlen dir blabber.im als Anbieter.</string>
++    <string name="welcome_server_info"></string>
+     <string name="no_location_permission">Pix-Art Messenger benötigt Zugriff auf die Standortdienste</string>
+     <string name="pref_show_record_voice_btn_summary">Zeige Sprachaufnahme-Taste als Schnell-Taste in den Chats</string>
+     <string name="pref_show_record_voice_btn">Zeige Sprachaufnahme-Taste</string>
+diff --git a/src/main/res/values-es/strings.xml b/src/main/res/values-es/strings.xml
+index 54b242bba..3f56e895f 100644
+--- a/src/main/res/values-es/strings.xml
++++ b/src/main/res/values-es/strings.xml
+@@ -776,7 +776,7 @@
+     <string name="delete_message">Borrar mensaje</string>
+     <string name="conference_destroyed">Este grupo de chat ha sido destruido</string>
+     <string name="no_application_found_to_view_contact">No se ha encontrado ninguna aplicación con la que ver este contacto</string>
+-    <string name="welcome_server_info">Recomendamos el uso de blabber.im como tu proveedor.</string>
++    <string name="welcome_server_info"></string>
+     <string name="no_location_permission">Pix-Art Messenger necesita acceder a los servicios de ubicación</string>
+     <string name="pref_show_record_voice_btn_summary">Mostrar el botón de grabación de voz en conversaciones como acción rápida</string>
+     <string name="pref_show_record_voice_btn">Mostrar botón de grabación de voz</string>
+diff --git a/src/main/res/values-fr/strings.xml b/src/main/res/values-fr/strings.xml
+index 7fd86e809..fb1e50d71 100644
+--- a/src/main/res/values-fr/strings.xml
++++ b/src/main/res/values-fr/strings.xml
+@@ -753,7 +753,7 @@
+     <string name="delete_message">Supprimer le message</string>
+     <string name="conference_destroyed">La conférence a été supprimée</string>
+     <string name="no_application_found_to_view_contact">Aucune application permettant d’afficher ce contact n’a été trouvée</string>
+-    <string name="welcome_server_info">Nous vous recommandons d’utiliser blabber.im en tant que votre fournisseur.</string>
++    <string name="welcome_server_info"></string>
+     <string name="no_location_permission">Pix-Art Messenger a besoin d’accéder aux services de géolocalisation</string>
+     <string name="pref_show_record_voice_btn_summary">Affiche le bouton d’enregisrement de la voix dans les conversations en tant que bouton d’action rapide</string>
+     <string name="pref_show_record_voice_btn">Afficher le bouton d’enregisrement de la voix</string>
+diff --git a/src/main/res/values-it/strings.xml b/src/main/res/values-it/strings.xml
+index 4d700218e..3ebe686d7 100644
+--- a/src/main/res/values-it/strings.xml
++++ b/src/main/res/values-it/strings.xml
+@@ -776,7 +776,7 @@
+     <string name="delete_message">Elimina messaggio</string>
+     <string name="conference_destroyed">Questa conversazione di gruppo è stata eliminata</string>
+     <string name="no_application_found_to_view_contact">Nessuna applicazione trovata per la visualizzazione di questo contatto</string>
+-    <string name="welcome_server_info">Consigliamo di utilizzare blabber.im come tuo fornitore.</string>
++    <string name="welcome_server_info"></string>
+     <string name="no_location_permission">Pix-Art Messenger ha bisogno di accedere ai servizi di localizzazione</string>
+     <string name="pref_show_record_voice_btn_summary">Mostra pulsante di registrazione vocale nelle conversazioni come scelta rapida</string>
+     <string name="pref_show_record_voice_btn">Mostra pulsante di registrazione vocale</string>
+diff --git a/src/main/res/values-uk/strings.xml b/src/main/res/values-uk/strings.xml
+index ce34ff935..f08036156 100644
+--- a/src/main/res/values-uk/strings.xml
++++ b/src/main/res/values-uk/strings.xml
+@@ -792,7 +792,7 @@
+     <string name="delete_message">Вилучити повідомлення</string>
+     <string name="conference_destroyed">Цю групу знищено</string>
+     <string name="no_application_found_to_view_contact">Не знайдено програми, щоб переглянути контакт</string>
+-    <string name="welcome_server_info">Рекомендуємо використовувати blabber.im як постачальника послуг XMPP. </string>
++    <string name="welcome_server_info"></string>
+     <string name="no_location_permission">Месенджер Pix-Art потребує доступу до служб геолокації</string>
+     <string name="pref_show_record_voice_btn_summary">Показувати кнопку голосового запису в чаті яко швидку дію</string>
+     <string name="pref_show_record_voice_btn">Показувати кнопку голосового запису</string>
+diff --git a/src/main/res/values-zh/strings.xml b/src/main/res/values-zh/strings.xml
+index 633daf20e..3e26ec7d6 100644
+--- a/src/main/res/values-zh/strings.xml
++++ b/src/main/res/values-zh/strings.xml
+@@ -767,7 +767,7 @@
+     <string name="delete_message">删除消息</string>
+     <string name="conference_destroyed">这个群聊已被解散</string>
+     <string name="no_application_found_to_view_contact">没有发现查看联系人的应用程序</string>
+-    <string name="welcome_server_info">我们建议您使用blabber.im作为提供商。</string>
++    <string name="welcome_server_info"></string>
+     <string name="no_location_permission">Pix-Art聊天需要访问位置服务</string>
+     <string name="pref_show_record_voice_btn_summary">在聊天中显示录制语音按钮作为快速操作</string>
+     <string name="pref_show_record_voice_btn">显示录制语音按钮</string>
+diff --git a/src/main/res/values/about.xml b/src/main/res/values/about.xml
+index 6c3b3f2fe..5738b43e6 100644
+--- a/src/main/res/values/about.xml
++++ b/src/main/res/values/about.xml
+@@ -14,7 +14,6 @@
+ 			along with this program. If not, see https://www.gnu.org/licenses
+ 			\n\nDownload the full original source code at https://github.com/siacs/Conversations (Copyright © Daniel Gultsch)
+ 			\n\nDownload the modified source code at https://github.com/kriztan/Pix-Art-Messenger
+-            \n\nPix-Art Messenger recommends blabber.im as provider. More information can be found at https://blabber.im
+             \n\nYou can support me by making a donation in form of a gift in sense of § 516 ff BGB i.e. a gratuitous donation.
+ 	</string>
+     <string name="pref_about_libraries" translatable="false"><b>Libraries</b>
+diff --git a/src/main/res/values/strings.xml b/src/main/res/values/strings.xml
+index 1aed597e1..c6af7fa1d 100644
+--- a/src/main/res/values/strings.xml
++++ b/src/main/res/values/strings.xml
+@@ -777,7 +777,7 @@
+     <string name="delete_message">Delete message</string>
+     <string name="conference_destroyed">This group chat has been destroyed</string>
+     <string name="no_application_found_to_view_contact">No application found to view contact</string>
+-    <string name="welcome_server_info">We recommend the use of blabber.im as your provider.</string>
++    <string name="welcome_server_info"></string>
+     <string name="no_location_permission">Pix-Art Messenger needs access to location services</string>
+     <string name="pref_show_record_voice_btn_summary">Show record voice button in chats as quick action</string>
+     <string name="pref_show_record_voice_btn">Show record voice button</string>

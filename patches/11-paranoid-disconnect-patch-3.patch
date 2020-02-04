@@ -1,0 +1,153 @@
+From 7776765c9a2b0c5bc6c090c6adb0d20262655b17 Mon Sep 17 00:00:00 2001
+From: intika <intika@librefox.org>
+Date: Tue, 4 Feb 2020 18:59:48 +0100
+Subject: [PATCH] paranoid-disconnect-patch-3
+
+---
+ src/main/java/de/pixart/messenger/Config.java          | 10 +++++-----
+ .../pixart/messenger/generator/PresenceGenerator.java  |  2 +-
+ .../java/de/pixart/messenger/ui/AboutActivity.java     |  4 ++--
+ .../de/pixart/messenger/ui/EditAccountActivity.java    |  4 ++--
+ .../java/de/pixart/messenger/ui/UpdaterActivity.java   |  8 ++++----
+ src/main/java/de/pixart/messenger/xmpp/Patches.java    |  4 ++--
+ 6 files changed, 16 insertions(+), 16 deletions(-)
+
+diff --git a/src/main/java/de/pixart/messenger/Config.java b/src/main/java/de/pixart/messenger/Config.java
+index 744e7e70d..35148ae94 100644
+--- a/src/main/java/de/pixart/messenger/Config.java
++++ b/src/main/java/de/pixart/messenger/Config.java
+@@ -41,11 +41,11 @@ public static boolean multipleEncryptionChoices() {
+ 
+     public static final String LOGTAG = BuildConfig.LOGTAG;
+ 
+-    public static final Jid BUG_REPORTS = Jid.of("");
++    public static final Jid BUG_REPORTS = Jid.of("bugs@0.0.0.0");
+ 
+-    public static final String inviteUserURL = "";
+-    public static final String inviteMUCURL = "";
+-    public static final String inviteHostURL = ""; // without http(s)
++    public static final String inviteUserURL = "https://0.0.0.0";
++    public static final String inviteMUCURL = "https://0.0.0.0";
++    public static final String inviteHostURL = "0.0.0.0"; // without http(s)
+     public static final String CHANGELOG_URL = "https://github.com/kriztan/Pix-Art-Messenger/blob/master/CHANGELOG.md";
+ 
+     public static final String XMPP_IP = null; //BuildConfig.XMPP_IP; // set to null means disable
+@@ -148,7 +148,7 @@ public static boolean multipleEncryptionChoices() {
+     public static final String UPDATE_URL = BuildConfig.UPDATE_URL;
+     public static final long UPDATE_CHECK_TIMER = 24 * 60 * 60; // 24 h in seconds
+ 
+-    public static final String ISSUE_URL = "";
++    public static final String ISSUE_URL = "xmpp://support@0.0.0.0?join";
+ 
+     public static final String[] ENABLED_CIPHERS = {
+             "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+diff --git a/src/main/java/de/pixart/messenger/generator/PresenceGenerator.java b/src/main/java/de/pixart/messenger/generator/PresenceGenerator.java
+index 154c19ca0..f3e077bb1 100644
+--- a/src/main/java/de/pixart/messenger/generator/PresenceGenerator.java
++++ b/src/main/java/de/pixart/messenger/generator/PresenceGenerator.java
+@@ -70,7 +70,7 @@ public PresencePacket selfPresence(final Account account, final Presence.Status
+             Element cap = packet.addChild("c",
+                     "http://jabber.org/protocol/caps");
+             cap.setAttribute("hash", "sha-1");
+-            cap.setAttribute("node", "");
++            cap.setAttribute("node", "http://0.0.0.0");
+             cap.setAttribute("ver", capHash);
+         }
+         return packet;
+diff --git a/src/main/java/de/pixart/messenger/ui/AboutActivity.java b/src/main/java/de/pixart/messenger/ui/AboutActivity.java
+index 709fcc6b3..7d07a621c 100644
+--- a/src/main/java/de/pixart/messenger/ui/AboutActivity.java
++++ b/src/main/java/de/pixart/messenger/ui/AboutActivity.java
+@@ -41,13 +41,13 @@ protected void onCreate(Bundle savedInstanceState) {
+ 
+         privacyButton = findViewById(R.id.show_privacy_policy);
+         privacyButton.setOnClickListener(view -> {
+-            final Uri uri = Uri.parse("http://127.0.0.1");
++            final Uri uri = Uri.parse("http://0.0.0.0");
+             Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+             startActivity(browserIntent);
+         });
+         termsOfUseButton = findViewById(R.id.show_terms_of_use);
+         termsOfUseButton.setOnClickListener(view -> {
+-            final Uri uri = Uri.parse("http://127.0.0.1");
++            final Uri uri = Uri.parse("http://0.0.0.0");
+             Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+             startActivity(browserIntent);
+         });
+diff --git a/src/main/java/de/pixart/messenger/ui/EditAccountActivity.java b/src/main/java/de/pixart/messenger/ui/EditAccountActivity.java
+index 34f4d4463..dcb9d38cf 100644
+--- a/src/main/java/de/pixart/messenger/ui/EditAccountActivity.java
++++ b/src/main/java/de/pixart/messenger/ui/EditAccountActivity.java
+@@ -665,12 +665,12 @@ protected void onCreate(final Bundle savedInstanceState) {
+             this.binding.accountRegisterNew.setVisibility(View.GONE);
+         }
+         this.binding.showPrivacyPolicy.setOnClickListener(view -> {
+-            final Uri uri = Uri.parse("http://127.0.0.1");
++            final Uri uri = Uri.parse("http://0.0.0.0");
+             Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+             startActivity(browserIntent);
+         });
+         this.binding.showTermsOfUse.setOnClickListener(view -> {
+-            final Uri uri = Uri.parse("http://127.0.0.1");
++            final Uri uri = Uri.parse("http://0.0.0.0");
+             Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+             startActivity(browserIntent);
+         });
+diff --git a/src/main/java/de/pixart/messenger/ui/UpdaterActivity.java b/src/main/java/de/pixart/messenger/ui/UpdaterActivity.java
+index e50a19703..6f7fc33e5 100644
+--- a/src/main/java/de/pixart/messenger/ui/UpdaterActivity.java
++++ b/src/main/java/de/pixart/messenger/ui/UpdaterActivity.java
+@@ -130,7 +130,7 @@ protected void onStart() {
+                         if (isStoragePermissionGranted() && isNetworkAvailable(getApplicationContext())) {
+                             //start downloading the file using the download manager
+                             if (store != null && store.equalsIgnoreCase(PlayStore)) {
+-                                Uri uri = Uri.parse("http://127.0.0.1");
++                                Uri uri = Uri.parse("http://0.0.0.0");
+                                 Intent marketIntent = new Intent(Intent.ACTION_VIEW, uri);
+                                 PackageManager manager = getApplicationContext().getPackageManager();
+                                 List<ResolveInfo> infos = manager.queryIntentActivities(marketIntent, 0);
+@@ -138,13 +138,13 @@ protected void onStart() {
+                                     startActivity(marketIntent);
+                                     overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+                                 } else {
+-                                    uri = Uri.parse("http://127.0.0.1");
++                                    uri = Uri.parse("http://0.0.0.0");
+                                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+                                     startActivity(browserIntent);
+                                     overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+                                 }
+                             } else if (store != null && store.equalsIgnoreCase(FDroid)) {
+-                                Uri uri = Uri.parse("http://127.0.0.1");
++                                Uri uri = Uri.parse("http://0.0.0.0");
+                                 Intent marketIntent = new Intent(Intent.ACTION_VIEW, uri);
+                                 PackageManager manager = getApplicationContext().getPackageManager();
+                                 List<ResolveInfo> infos = manager.queryIntentActivities(marketIntent, 0);
+@@ -152,7 +152,7 @@ protected void onStart() {
+                                     startActivity(marketIntent);
+                                     overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+                                 } else {
+-                                    uri = Uri.parse("http://127.0.0.1");
++                                    uri = Uri.parse("http://0.0.0.0");
+                                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+                                     startActivity(browserIntent);
+                                     overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+diff --git a/src/main/java/de/pixart/messenger/xmpp/Patches.java b/src/main/java/de/pixart/messenger/xmpp/Patches.java
+index 826fbd591..e36fd4f71 100644
+--- a/src/main/java/de/pixart/messenger/xmpp/Patches.java
++++ b/src/main/java/de/pixart/messenger/xmpp/Patches.java
+@@ -5,12 +5,12 @@
+ 
+ public class Patches {
+     public static final List<String> DISCO_EXCEPTIONS = Arrays.asList(
+-            "nimbuzz-com"
++            "nimbuzz.com"
+     );
+     public static final List<XmppConnection.Identity> BAD_MUC_REFLECTION = Arrays.asList(
+             XmppConnection.Identity.SLACK
+     );
+     public static final List<String> ENCRYPTION_EXCEPTIONS = Arrays.asList(
+-            "bugs@pix-art"
++            "bugs@0.0.0.0"
+     );
+ }
+\ No newline at end of file

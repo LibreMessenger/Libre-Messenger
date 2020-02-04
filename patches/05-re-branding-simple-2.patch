@@ -1,0 +1,92 @@
+From ce5a1df9556a1c372e37a21b4b916fb3e80c914a Mon Sep 17 00:00:00 2001
+From: intika <intika@librefox.org>
+Date: Tue, 4 Feb 2020 19:45:03 +0100
+Subject: [PATCH] re-branding-simple-2
+
+---
+ src/main/res/values-de/strings.xml | 2 +-
+ src/main/res/values-es/strings.xml | 2 +-
+ src/main/res/values-it/strings.xml | 2 +-
+ src/main/res/values-uk/strings.xml | 2 +-
+ src/main/res/values-zh/strings.xml | 2 +-
+ src/main/res/values/strings.xml    | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/src/main/res/values-de/strings.xml b/src/main/res/values-de/strings.xml
+index 365289093..2582ae1d3 100644
+--- a/src/main/res/values-de/strings.xml
++++ b/src/main/res/values-de/strings.xml
+@@ -938,7 +938,7 @@
+     <string name="pref_use_invidious_summary">Invidious ist eine datenschutzfreundliche Alternative zu YouTube</string>
+     <string name="this_device">Dieses Gerät</string>
+     <string name="intro_desc_main">Mehr erfahren…</string>
+-    <string name="welcome_header">Willkommen beim\nPix-Art Messenger</string>
++    <string name="welcome_header">Willkommen beim\nLibre Messenger</string>
+     <string name="intro_required_permissions">Erforderliche Berechtigungen</string>
+     <string name="intro_desc_required_permissions">Am Ende des Intros wirst du gefragt, Zugriff auf externen Speicher zuzulassen (erforderlich), wenn du ihn nicht bereits erteilt hast. Zusätzliche Berechtigungen werden bei Bedarf angefragt und sind optional.</string>
+     <string name="intro_account">Dein Profil</string>
+diff --git a/src/main/res/values-es/strings.xml b/src/main/res/values-es/strings.xml
+index 3f56e895f..bfe7689cc 100644
+--- a/src/main/res/values-es/strings.xml
++++ b/src/main/res/values-es/strings.xml
+@@ -938,7 +938,7 @@
+     <string name="pref_use_invidious_summary">Invidious es una alternativa a YouTube respetuosa con la privacidad</string>
+     <string name="this_device">Este dispositivo</string>
+     <string name="intro_desc_main">Averiguar más…</string>
+-    <string name="welcome_header">Bienvenido a\nPix-Art Messenger</string>
++    <string name="welcome_header">Bienvenido a\nLibre Messenger</string>
+     <string name="intro_required_permissions">Permisos necesarios</string>
+     <string name="intro_desc_required_permissions">Al final de la introducción, se te pedirá que otorgues permisos para almacenamiento (obligatorio), si no lo has hecho ya. Los permisos adicionales se pedirán cuando sea necesario y son opcionales.</string>
+     <string name="intro_account">Tu cuenta</string>
+diff --git a/src/main/res/values-it/strings.xml b/src/main/res/values-it/strings.xml
+index 3ebe686d7..7a3d60e59 100644
+--- a/src/main/res/values-it/strings.xml
++++ b/src/main/res/values-it/strings.xml
+@@ -938,7 +938,7 @@
+     <string name="pref_use_invidious_summary">Invidious è un\'interfaccia alternativa di YouTube che rispetta la tua privacy</string>
+     <string name="this_device">Questo dispositivo</string>
+     <string name="intro_desc_main">Scopri di più…</string>
+-    <string name="welcome_header">Benvenuto su\nPix-Art Messenger</string>
++    <string name="welcome_header">Benvenuto su\nLibre Messenger</string>
+     <string name="intro_required_permissions">Permessi richiesti</string>
+     <string name="intro_desc_required_permissions">Alla fine dell\'introduzione ti sarà chiesto di dare il permesso di archiviazione (obbligatorio), se già non l\'hai consentito. Altri permessi sono richiesti al bisogno e sono opzionali.</string>
+     <string name="intro_account">Il tuo account</string>
+diff --git a/src/main/res/values-uk/strings.xml b/src/main/res/values-uk/strings.xml
+index f08036156..ae8e538ae 100644
+--- a/src/main/res/values-uk/strings.xml
++++ b/src/main/res/values-uk/strings.xml
+@@ -954,7 +954,7 @@
+     <string name="pref_use_invidious_summary">Invidious це альтернатива YouTube, яка чутлива до питань конфіденційності</string>
+     <string name="this_device">Цей пристрій</string>
+     <string name="intro_desc_main">Дізнатися більше…</string>
+-    <string name="welcome_header">Ласкаво просимо до\nмесенджера Pix-Art</string>
++    <string name="welcome_header">Ласкаво просимо до\nмесенджера Libre</string>
+     <string name="intro_required_permissions">Потрібні дозволи</string>
+     <string name="intro_desc_required_permissions">Наприкінці заставки вас спитають про доступ до місця зберігання (обов\'язково), якщо ви ще не надали його. Вас також можуть запитати про додаткові дозволи.</string>
+     <string name="intro_account">Ваш обліковий запис</string>
+diff --git a/src/main/res/values-zh/strings.xml b/src/main/res/values-zh/strings.xml
+index 3e26ec7d6..522ea1959 100644
+--- a/src/main/res/values-zh/strings.xml
++++ b/src/main/res/values-zh/strings.xml
+@@ -930,7 +930,7 @@
+     <string name="this_device">此设备</string>
+     <string name="intro_desc_main">了解更多...</string>
+     <string name="welcome_header">欢迎来到\n
+-Pix-Arr Messenger</string>
++Libre Messenger</string>
+     <string name="intro_required_permissions">所需权限:</string>
+     <string name="intro_desc_required_permissions">如果没有必须的储存权限的话，本应用将在向导末尾请求权限。其他权限都是可选。</string>
+     <string name="intro_account">您的帐户</string>
+diff --git a/src/main/res/values/strings.xml b/src/main/res/values/strings.xml
+index c6af7fa1d..ddedf6019 100644
+--- a/src/main/res/values/strings.xml
++++ b/src/main/res/values/strings.xml
+@@ -943,7 +943,7 @@
+     <string name="pref_use_invidious_summary">Invidious is a privacy friendly alternative to YouTube</string>
+     <string name="this_device">This device</string>
+     <string name="intro_desc_main">Learn more…</string>
+-    <string name="welcome_header">Welcome to\nPix-Art Messenger</string>
++    <string name="welcome_header">Welcome to\nLibre Messenger</string>
+     <string name="intro_required_permissions">Required permissions</string>
+     <string name="intro_desc_required_permissions">At the end of the intro you will be asked to grant storage permissions (mandatory), if you have not already given them. Addition permissions are requested as needed and are optional.</string>
+     <string name="intro_account">Your account</string>

@@ -1,0 +1,29 @@
+From d7b90234c990700170b15bf389109a3481f5eecb Mon Sep 17 00:00:00 2001
+From: intika <intika@librefox.org>
+Date: Tue, 4 Feb 2020 01:23:05 +0100
+Subject: [PATCH] fix-apk-build
+
+---
+ build.gradle | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/build.gradle b/build.gradle
+index dee5f73bf..d75d278ad 100644
+--- a/build.gradle
++++ b/build.gradle
+@@ -106,12 +106,12 @@ android {
+         targetSdkVersion 29
+ 
+         versionCode 283
+-        versionName "2.3.5b"
+-        //versionNameSuffix "" //beta (XXXX-XX-XX)
++        versionName "2.3.5"
++        versionNameSuffix "b" //beta + date if needed
+         //resConfigs "en"
+ 
+         archivesBaseName += "-$versionName"
+-        archivesBaseName += " $versionNameSuffix"
++        archivesBaseName += "$versionNameSuffix"
+         applicationId "de.pixart.messenger"
+         multiDexEnabled true
+ 

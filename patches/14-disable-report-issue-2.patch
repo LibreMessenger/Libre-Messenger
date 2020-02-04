@@ -1,0 +1,23 @@
+From 16346c7e9d2e65e5cde06f0dc3ed3543c1d27099 Mon Sep 17 00:00:00 2001
+From: intika <intika@librefox.org>
+Date: Mon, 3 Feb 2020 21:21:55 +0100
+Subject: [PATCH] disable-report-issue-2
+
+---
+ src/main/java/de/pixart/messenger/ui/XmppActivity.java | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/src/main/java/de/pixart/messenger/ui/XmppActivity.java b/src/main/java/de/pixart/messenger/ui/XmppActivity.java
+index 9d6fd1bf6..fce5c5d6a 100644
+--- a/src/main/java/de/pixart/messenger/ui/XmppActivity.java
++++ b/src/main/java/de/pixart/messenger/ui/XmppActivity.java
+@@ -367,9 +367,6 @@ protected void unregisterListeners() {
+     @Override
+     public boolean onOptionsItemSelected(final MenuItem item) {
+         switch (item.getItemId()) {
+-            case R.id.action_create_issue:
+-                createIssue();
+-                break;
+             case R.id.action_settings:
+                 startActivity(new Intent(this, SettingsActivity.class));
+                 overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
