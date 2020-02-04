@@ -106,12 +106,12 @@ android {
         targetSdkVersion 29
 
         versionCode 283
-        versionName "2.3.5b"
-        //versionNameSuffix "" //beta (XXXX-XX-XX)
+        versionName "2.3.5"
+        versionNameSuffix "b" //beta + date if needed
         //resConfigs "en"
 
         archivesBaseName += "-$versionName"
-        archivesBaseName += " $versionNameSuffix"
+        archivesBaseName += "$versionNameSuffix"
         applicationId "de.pixart.messenger"
         multiDexEnabled true
 
