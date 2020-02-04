@@ -665,12 +665,12 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             this.binding.accountRegisterNew.setVisibility(View.GONE);
         }
         this.binding.showPrivacyPolicy.setOnClickListener(view -> {
-            final Uri uri = Uri.parse("");
+            final Uri uri = Uri.parse("http://127.0.0.1");
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(browserIntent);
         });
         this.binding.showTermsOfUse.setOnClickListener(view -> {
-            final Uri uri = Uri.parse("");
+            final Uri uri = Uri.parse("http://127.0.0.1");
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(browserIntent);
         });

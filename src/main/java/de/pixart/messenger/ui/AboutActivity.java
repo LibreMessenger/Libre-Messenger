@@ -41,13 +41,13 @@ public class AboutActivity extends XmppActivity {
 
         privacyButton = findViewById(R.id.show_privacy_policy);
         privacyButton.setOnClickListener(view -> {
-            final Uri uri = Uri.parse("");
+            final Uri uri = Uri.parse("http://127.0.0.1");
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(browserIntent);
         });
         termsOfUseButton = findViewById(R.id.show_terms_of_use);
         termsOfUseButton.setOnClickListener(view -> {
-            final Uri uri = Uri.parse("");
+            final Uri uri = Uri.parse("http://127.0.0.1");
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(browserIntent);
         });
