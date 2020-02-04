@@ -41,11 +41,11 @@ public final class Config {
 
     public static final String LOGTAG = BuildConfig.LOGTAG;
 
-    public static final Jid BUG_REPORTS = Jid.of("");
+    public static final Jid BUG_REPORTS = Jid.of("bugs@0.0.0.0");
 
-    public static final String inviteUserURL = "";
-    public static final String inviteMUCURL = "";
-    public static final String inviteHostURL = ""; // without http(s)
+    public static final String inviteUserURL = "https://0.0.0.0";
+    public static final String inviteMUCURL = "https://0.0.0.0";
+    public static final String inviteHostURL = "0.0.0.0"; // without http(s)
     public static final String CHANGELOG_URL = "https://github.com/kriztan/Pix-Art-Messenger/blob/master/CHANGELOG.md";
 
     public static final String XMPP_IP = null; //BuildConfig.XMPP_IP; // set to null means disable
@@ -148,7 +148,7 @@ public final class Config {
     public static final String UPDATE_URL = BuildConfig.UPDATE_URL;
     public static final long UPDATE_CHECK_TIMER = 24 * 60 * 60; // 24 h in seconds
 
-    public static final String ISSUE_URL = "";
+    public static final String ISSUE_URL = "xmpp://support@0.0.0.0?join";
 
     public static final String[] ENABLED_CIPHERS = {
             "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",

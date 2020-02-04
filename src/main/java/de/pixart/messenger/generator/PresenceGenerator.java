@@ -70,7 +70,7 @@ public class PresenceGenerator extends AbstractGenerator {
             Element cap = packet.addChild("c",
                     "http://jabber.org/protocol/caps");
             cap.setAttribute("hash", "sha-1");
-            cap.setAttribute("node", "");
+            cap.setAttribute("node", "http://0.0.0.0");
             cap.setAttribute("ver", capHash);
         }
         return packet;

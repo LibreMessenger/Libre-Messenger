@@ -130,7 +130,7 @@ public class UpdaterActivity extends XmppActivity {
                         if (isStoragePermissionGranted() && isNetworkAvailable(getApplicationContext())) {
                             //start downloading the file using the download manager
                             if (store != null && store.equalsIgnoreCase(PlayStore)) {
-                                Uri uri = Uri.parse("http://127.0.0.1");
+                                Uri uri = Uri.parse("http://0.0.0.0");
                                 Intent marketIntent = new Intent(Intent.ACTION_VIEW, uri);
                                 PackageManager manager = getApplicationContext().getPackageManager();
                                 List<ResolveInfo> infos = manager.queryIntentActivities(marketIntent, 0);
@@ -138,13 +138,13 @@ public class UpdaterActivity extends XmppActivity {
                                     startActivity(marketIntent);
                                     overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                                 } else {
-                                    uri = Uri.parse("http://127.0.0.1");
+                                    uri = Uri.parse("http://0.0.0.0");
                                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
                                     startActivity(browserIntent);
                                     overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                                 }
                             } else if (store != null && store.equalsIgnoreCase(FDroid)) {
-                                Uri uri = Uri.parse("http://127.0.0.1");
+                                Uri uri = Uri.parse("http://0.0.0.0");
                                 Intent marketIntent = new Intent(Intent.ACTION_VIEW, uri);
                                 PackageManager manager = getApplicationContext().getPackageManager();
                                 List<ResolveInfo> infos = manager.queryIntentActivities(marketIntent, 0);
@@ -152,7 +152,7 @@ public class UpdaterActivity extends XmppActivity {
                                     startActivity(marketIntent);
                                     overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
                                 } else {
-                                    uri = Uri.parse("http://127.0.0.1");
+                                    uri = Uri.parse("http://0.0.0.0");
                                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
                                     startActivity(browserIntent);
                                     overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
