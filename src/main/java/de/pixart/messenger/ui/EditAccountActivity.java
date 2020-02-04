@@ -368,6 +368,13 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
             return;
         }
 		
+        if (xmppConnectionService.getAccounts().size() == 0) {
+            Intent intent = SignupUtils.getSignUpIntent(this, mForceRegister != null && mForceRegister);
+            StartConversationActivity.addInviteUri(intent, getIntent());
+            startActivity(intent);
+            overridePendingTransition(R.animator.fade_in, R.animator.fade_out);
+        }
+		
     }
 
     @Override
@@ -799,7 +806,7 @@ public class EditAccountActivity extends OmemoActivity implements OnAccountUpdat
                 this.binding.yourNameBox.setVisibility(View.GONE);
                 this.binding.yourStatusBox.setVisibility(View.GONE);
                 this.binding.avater.setVisibility(View.GONE);
-                configureActionBar(getSupportActionBar(), !(init && true));
+                configureActionBar(getSupportActionBar(), !(init));
                 if (mForceRegister != null) {
                     if (mForceRegister) {
                         setTitle(R.string.action_add_new_account);

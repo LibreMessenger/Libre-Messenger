@@ -101,10 +101,10 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher, Ad
                 } else {
                     fixedUsername = false;
                     if (domain == null && !useOwnProvider) {
-                        domain = "your-own-domain-com";
+                        domain = "your-own-domain-example.invalid";
                     }
                     if (useOwnProvider) {
-                        domain = "your-own-domain-com";
+                        domain = "your-own-domain-example.invalid";
                     }
                     jid = Jid.ofLocalAndDomain(username, domain);
                 }
@@ -197,7 +197,7 @@ public class MagicCreateActivity extends XmppActivity implements TextWatcher, Ad
                 binding.fullJid.setVisibility(View.VISIBLE);
                 final Jid jid;
                 if (this.domain == null) {
-                    jid = Jid.ofLocalAndDomain(username, "your-own-domain-com");
+                    jid = Jid.ofLocalAndDomain(username, "your-own-domain-example.invalid");
                 } else {
                     jid = Jid.ofLocalAndDomain(username, this.domain);
                 }
