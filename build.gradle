@@ -107,7 +107,7 @@ android {
 
         versionCode 283
         versionName "2.3.5b"
-        versionNameSuffix "" //beta (XXXX-XX-XX)
+        //versionNameSuffix "" //beta (XXXX-XX-XX)
         //resConfigs "en"
 
         archivesBaseName += "-$versionName"
