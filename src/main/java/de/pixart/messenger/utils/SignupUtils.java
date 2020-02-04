@@ -53,7 +53,7 @@ public class SignupUtils {
                 if (Config.X509_VERIFICATION) {
                     intent = new Intent(activity, ManageAccountActivity.class);
                 } else {
-                    intent = new Intent(activity, EditAccountActivity.class);
+					intent = getSignUpIntent(activity);
                 }
             } else {
                 intent = new Intent(activity, StartConversationActivity.class);
