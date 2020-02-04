@@ -930,7 +930,7 @@
     <string name="this_device">此设备</string>
     <string name="intro_desc_main">了解更多...</string>
     <string name="welcome_header">欢迎来到\n
-Pix-Arr Messenger</string>
+Libre Messenger</string>
     <string name="intro_required_permissions">所需权限:</string>
     <string name="intro_desc_required_permissions">如果没有必须的储存权限的话，本应用将在向导末尾请求权限。其他权限都是可选。</string>
     <string name="intro_account">您的帐户</string>

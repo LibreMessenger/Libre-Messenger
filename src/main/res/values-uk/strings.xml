@@ -954,7 +954,7 @@
     <string name="pref_use_invidious_summary">Invidious це альтернатива YouTube, яка чутлива до питань конфіденційності</string>
     <string name="this_device">Цей пристрій</string>
     <string name="intro_desc_main">Дізнатися більше…</string>
-    <string name="welcome_header">Ласкаво просимо до\nмесенджера Pix-Art</string>
+    <string name="welcome_header">Ласкаво просимо до\nмесенджера Libre</string>
     <string name="intro_required_permissions">Потрібні дозволи</string>
     <string name="intro_desc_required_permissions">Наприкінці заставки вас спитають про доступ до місця зберігання (обов\'язково), якщо ви ще не надали його. Вас також можуть запитати про додаткові дозволи.</string>
     <string name="intro_account">Ваш обліковий запис</string>

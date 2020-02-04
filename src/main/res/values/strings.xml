@@ -943,7 +943,7 @@
     <string name="pref_use_invidious_summary">Invidious is a privacy friendly alternative to YouTube</string>
     <string name="this_device">This device</string>
     <string name="intro_desc_main">Learn more…</string>
-    <string name="welcome_header">Welcome to\nPix-Art Messenger</string>
+    <string name="welcome_header">Welcome to\nLibre Messenger</string>
     <string name="intro_required_permissions">Required permissions</string>
     <string name="intro_desc_required_permissions">At the end of the intro you will be asked to grant storage permissions (mandatory), if you have not already given them. Addition permissions are requested as needed and are optional.</string>
     <string name="intro_account">Your account</string>

@@ -938,7 +938,7 @@
     <string name="pref_use_invidious_summary">Invidious es una alternativa a YouTube respetuosa con la privacidad</string>
     <string name="this_device">Este dispositivo</string>
     <string name="intro_desc_main">Averiguar más…</string>
-    <string name="welcome_header">Bienvenido a\nPix-Art Messenger</string>
+    <string name="welcome_header">Bienvenido a\nLibre Messenger</string>
     <string name="intro_required_permissions">Permisos necesarios</string>
     <string name="intro_desc_required_permissions">Al final de la introducción, se te pedirá que otorgues permisos para almacenamiento (obligatorio), si no lo has hecho ya. Los permisos adicionales se pedirán cuando sea necesario y son opcionales.</string>
     <string name="intro_account">Tu cuenta</string>
